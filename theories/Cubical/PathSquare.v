@@ -400,8 +400,6 @@ Section PathSquareConcat.
     1,2: apply inverse, concat_p1.
   Defined.
 
-  Infix "@@h" := sq_concat_h : square_scope.
-
   (* Vertical concatenation of squares *)
   Definition sq_concat_v {a20 a21 : A}
     {py0 : a10 = a20} {py1 : a11 = a21} {p2x : a20 = a21}
@@ -414,9 +412,10 @@ Section PathSquareConcat.
     1,2: apply inverse, concat_p1.
   Defined.
 
-  Infix "@@v" := sq_concat_v : square_scope.
-
 End PathSquareConcat.
+
+Infix "@@h" := sq_concat_h : square_scope.
+Infix "@@v" := sq_concat_v : square_scope.
 
 (* Horizontal groupoid laws for concatenation *)
 Section GroupoidLawsH.
@@ -433,13 +432,25 @@ Section GroupoidLawsH.
 
   Local Open Scope square_scope.
   Notation hr := (sq_refl_h _).
+  Notation vr := (sq_refl_v _).
+
 
   Definition sq_concat_h_s1 : sq_concat_h s hr = sq_ccGG (concat_p1 _)^ (concat_p1 _)^ s.
+  Proof.
+    by destruct px1.
+  Defined.
+
+  Definition sq_concat_h_1s : sq_concat_h hr s = sq_ccGG (concat_1p _)^ (concat_1p _)^ s.
   Proof.
     by destruct s.
   Defined.
 
-  Definition sq_concat_h_1s : sq_concat_h hr s = sq_ccGG (concat_1p _)^ (concat_1p _)^ s.
+  Definition sq_concat_v_s1 : sq_concat_v s vr = sq_GGcc (concat_p1 _)^ (concat_p1 _)^ s.
+  Proof.
+    by destruct p1x.
+  Defined.
+
+  Definition sq_concat_v_1s : sq_concat_v vr s = sq_GGcc (concat_1p _)^ (concat_1p _)^ s.
   Proof.
     by destruct s.
   Defined.
@@ -497,19 +508,10 @@ Section Kan.
     exact (s' @ concat_1p _).
   Defined.
 
+  (* TODO: Maybe this should just be removed, since it has a simple proof that avoids squares? It's not used anywhere. *)
   Definition equiv_sq_fill_lr (p0x : a00 = a01) (p1x : a10 = a11)
-    : (a00 = a10) <~> (a01 = a11).
-  Proof.
-    srapply equiv_adjointify.
-    - intros px0; exact (sq_fill_r px0 p0x p1x).1.
-    - intros px1; exact (sq_fill_l px1 p0x p1x).1.
-    - intros px1.
-      exact (sq_fill_r_uniq (sq_fill_r _ p0x p1x).2
-                            (sq_fill_l px1 p0x p1x).2).
-    - intros px0.
-      exact (sq_fill_l_uniq (sq_fill_l _ p0x p1x).2
-                            (sq_fill_r px0 p0x p1x).2).
-  Defined.
+    : (a00 = a10) <~> (a01 = a11)
+    := equiv_concat_r p1x _ oE equiv_concat_l p0x^ a10.
 
   Definition sq_fill_t (px0 : a00 = a10) (px1 : a01 = a11) (p1x : a10 = a11)
     : {p0x : a00 = a01 & PathSquare px0 px1 p0x p1x}.
@@ -526,6 +528,104 @@ Section Kan.
   Defined.
 
 End Kan.
+
+(** To prove stronger uniqueness results and related induction principles, we need to start a new section so we can generalize over all of the points. *)
+
+Section KanUnique.
+
+  Context {A : Type} {a00 a10 a01 a11 : A}.
+
+  Definition sq_fill_l_uniq'
+             {px1 : a01 = a11} {p0x : a00 = a01} {p1x : a10 = a11}
+    : Contr {px0 : a00 = a10 & PathSquare px0 px1 p0x p1x}.
+  Proof.
+    apply (Build_Contr _ (sq_fill_l px1 p0x p1x)).
+    intros [px0' s'].
+    by destruct s'.
+  Defined.
+
+  Definition sq_fill_r_uniq'
+             {px0 : a00 = a10} {p0x : a00 = a01} {p1x : a10 = a11}
+    : Contr {px1 : a01 = a11 & PathSquare px0 px1 p0x p1x}.
+  Proof.
+    apply (Build_Contr _ (sq_fill_r px0 p0x p1x)).
+    intros [px1' s'].
+    by destruct s'.
+  Defined.
+
+  Definition sq_fill_t_uniq'
+             {px0 : a00 = a10} {px1 : a01 = a11} {p1x : a10 = a11}
+    : Contr {p0x : a00 = a01 & PathSquare px0 px1 p0x p1x}.
+  Proof.
+    apply (Build_Contr _ (sq_fill_t px0 px1 p1x)).
+    intros [p0x' s'].
+    by destruct s'.
+  Defined.
+
+  Definition sq_fill_b_uniq'
+             {px0 : a00 = a10} {px1 : a01 = a11} {p0x : a00 = a01}
+    : Contr {p1x : a10 = a11 & PathSquare px0 px1 p0x p1x}.
+  Proof.
+    apply (Build_Contr _ (sq_fill_b px0 px1 p0x)).
+    intros [p1x' s'].
+    by destruct s'.
+  Defined.
+
+  (* TODO: Should we remove the earlier uniqueness results which are weaker? *)
+
+  (** Induction principles that only require one edge to be free. *)
+
+  Definition pathsquare_ind_l
+                      {px1 : a01 = a11}
+    {p0x : a00 = a01} {p1x : a10 = a11}
+    (P : forall (px0 : a00 = a10) (sq : PathSquare px0 px1 p0x p1x), Type)
+    (fill := (sq_fill_l px1 p0x p1x))
+    (p : P fill.1 fill.2)
+    : forall px0 sq, P px0 sq.
+  Proof.
+    intros px0 sq.
+    by destruct sq.
+  Defined.
+
+ Definition pathsquare_ind_r
+    {px0 : a00 = a10}
+    {p0x : a00 = a01} {p1x : a10 = a11}
+    (P : forall (px1 : a01 = a11) (sq : PathSquare px0 px1 p0x p1x), Type)
+    (fill := (sq_fill_r px0 p0x p1x))
+    (p : P fill.1 fill.2)
+    : forall px1 sq, P px1 sq.
+  Proof.
+    intros px1 sq.
+    by destruct sq.
+  Defined.
+
+  Definition pathsquare_ind_t
+    {px0 : a00 = a10} {px1 : a01 = a11}
+                      {p1x : a10 = a11}
+    (P : forall (p0x : a00 = a01) (sq : PathSquare px0 px1 p0x p1x), Type)
+    (fill := (sq_fill_t px0 px1 p1x))
+    (p : P fill.1 fill.2)
+    : forall p0x sq, P p0x sq.
+  Proof.
+    intros p0x sq.
+    by destruct sq.
+  Defined.
+
+  Definition pathsquare_ind_b
+    {px0 : a00 = a10} {px1 : a01 = a11}
+    {p0x : a00 = a01}
+    (P : forall (p1x : a10 = a11) (sq : PathSquare px0 px1 p0x p1x), Type)
+    (fill := (sq_fill_b px0 px1 p0x))
+    (p : P fill.1 fill.2)
+    : forall p1x sq, P p1x sq.
+  Proof.
+    intros p1x sq.
+    by destruct sq.
+  Defined.
+
+
+
+End KanUnique.
 
 (* Apply a function to the sides of square *)
 Definition sq_ap {A B : Type} {a00 a10 a01 a11 : A} (f : A -> B)
@@ -611,3 +711,58 @@ Proof.
   exact (apD (fun y => ap (fun x => f x y) p) q).
 Defined.
 
+(* Interchange playground *)
+
+Definition experimental {A}
+(a : A)
+(P : A -> Type)
+(f : forall (x : A), (a = x) -> P(x))
+(g : forall (x : A), P(x) -> (a = x))
+(fxgxid: forall (x : A) (p : P x), (p = f x (g x p)))
+:
+forall (x : A)(p : P x), p = transport P (g x p) (f a 1).
+
+Proof.
+  intros.
+  remember (g x p) as gxp eqn:H.
+  destruct gxp. (* Syntax error: destruct (g x p) as gxp eqn:H.  *)
+  simpl. (* Here you see that p = f a 1 if g a p = 1 *)
+  destruct H.
+  apply fxgxid.
+Defined.
+
+Definition interchange {A}
+  {a00 a10 a20 a01 a11 a21 a02 a12 a22 : A} (* 9 points in big square of 2x2 squares *)
+  (* sq00, top left, 4 paths *)
+  (vi0 : a00 = a10) (* i = 0,1 *)
+  (h0i : a00 = a01)
+  (vi1 : a01 = a11)
+  (h1i : a10 = a11)
+  (* sq10, bottom left, 3 paths, h1i shared with sq00 *)
+  (vj0 : a10 = a20) (* j = 1,2 *)
+  (vj1 : a11 = a21)
+  (h2i : a20 = a21)
+  (* sq01, top right, 3 paths, vi1 shared with sq00 *)
+  (vi2 : a02 = a12)
+  (h0j : a01 = a02)
+  (h1j : a11 = a12)
+  (* sq11, bottom right, 2 paths, vj1 shared with sq10 and h1j with sq01 *)
+  (vj2 : a12 = a22)
+  (h2j : a21 = a22)
+  (sq00 : PathSquare vi0 vi1 h0i h1i)
+  (sq10 : PathSquare vj0 vj1 h1i h2i)
+  (sq01 : PathSquare vi1 vi2 h0j h1j)
+  (sq11 : PathSquare vj1 vj2 h1j h2j)
+  : 
+  sq_concat_h (sq_concat_v sq00 sq10) (sq_concat_v sq01 sq11)
+  = 
+  sq_concat_v (sq_concat_h sq00 sq01) (sq_concat_h sq10 sq11).
+Proof.
+  destruct sq00, sq11.
+  destruct vi2, h2i. revert vj0 sq10. 
+  rapply pathsquare_ind_l. 
+  reflexivity.
+(*  revert vj0 sq10; rapply pathsquare_ind_l; simpl.
+  revert h0j sq01; rapply pathsquare_ind_t; simpl.
+  reflexivity. *)
+Defined.
