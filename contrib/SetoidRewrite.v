@@ -139,8 +139,7 @@ Proposition IsEpic_HasSection {A} `{Is1Cat A}
   SectionOf f -> Epic f.
 Proof.
   intros [right_inverse is_section] c g h eq_gf_hf.
-  apply (fmap (cat_precomp _ right_inverse)) in eq_gf_hf;
-    unfold cat_precomp in eq_gf_hf.
+  apply cat_prewhisker with (h:=right_inverse) in eq_gf_hf.
   rewrite 2 cat_assoc, is_section, 2 cat_idr in eq_gf_hf.
   exact eq_gf_hf.
 Defined.
