@@ -668,27 +668,6 @@ Proof.
   by destruct p.
 Defined.
 
-(** [PathSquare]s respect products *)
-Definition equiv_sq_prod {A B : Type} {a00 a10 a01 a11 : A} {px0 : a00 = a10}
-  {px1 : a01 = a11} {p0x : a00 = a01} {p1x : a10 = a11} {b00 b10 b01 b11 : B}
-  {qx0 : b00 = b10} {qx1 : b01 = b11} {q0x : b00 = b01} {q1x : b10 = b11}
-  : (PathSquare px0 px1 p0x p1x) * (PathSquare qx0 qx1 q0x q1x)
-    <~> PathSquare (path_prod' px0 qx0) (path_prod' px1 qx1)
-        (path_prod' p0x q0x) (path_prod' p1x q1x).
-Proof.
-  refine (_ oE (equiv_functor_prod' sq_path sq_path)^-1%equiv).
-  refine (_ oE equiv_path_prod (_,_) (_,_)).
-  srefine (_ oE equiv_ap' _ _ _).
-  3: exact (equiv_path_prod (_,_) (_,_)).
-  refine (_ oE equiv_concat_l _^ _).
-  2: apply (path_prod_pp (_,_) (_,_) (_,_)).
-  refine (_ oE equiv_concat_r _ _).
-  2: apply (path_prod_pp (_,_) (_,_) (_,_)).
-  exact sq_path.
-Defined.
-
-Notation sq_prod := equiv_sq_prod.
-
 (** The natural square from an [ap] *)
 Definition ap_nat {A B} {f f' : A -> B} (h : f == f') {x y : A} (p : x = y)
   : PathSquare (ap f p) (ap f' p) (h x) (h y).
@@ -731,3 +710,23 @@ Proof.
   exact (apD (fun y => ap (fun x => f x y) p) q).
 Defined.
 
+(** [PathSquare]s respect products. *)
+Definition equiv_sq_prod {A B : Type} {a00 a10 a01 a11 : A} {px0 : a00 = a10}
+  {px1 : a01 = a11} {p0x : a00 = a01} {p1x : a10 = a11} {b00 b10 b01 b11 : B}
+  {qx0 : b00 = b10} {qx1 : b01 = b11} {q0x : b00 = b01} {q1x : b10 = b11}
+  : (PathSquare px0 px1 p0x p1x) * (PathSquare qx0 qx1 q0x q1x)
+    <~> PathSquare (path_prod' px0 qx0) (path_prod' px1 qx1)
+        (path_prod' p0x q0x) (path_prod' p1x q1x).
+Proof.
+  refine (_ oE (equiv_functor_prod' sq_path sq_path)^-1%equiv).
+  refine (_ oE equiv_path_prod (_,_) (_,_)).
+  srefine (_ oE equiv_ap' _ _ _).
+  3: exact (equiv_path_prod (_,_) (_,_)).
+  refine (_ oE equiv_concat_l _^ _).
+  2: apply (path_prod_pp (_,_) (_,_) (_,_)).
+  refine (_ oE equiv_concat_r _ _).
+  2: apply (path_prod_pp (_,_) (_,_) (_,_)).
+  exact sq_path.
+Defined.
+
+Notation sq_prod := equiv_sq_prod.
