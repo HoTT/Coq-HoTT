@@ -132,6 +132,7 @@ Notation sq_G1 := equiv_sq_G1.
 Notation sq_1G := equiv_sq_1G.
 
 Local Open Scope equiv_scope.
+Local Open Scope square_scope.
 Local Open Scope path_scope.
 
 (** [PathSquare] horizontal reflexivity *)
@@ -430,7 +431,6 @@ Section GroupoidLawsH.
     {px3 : a03 = a13} {p0z : a02 = a03} {p1z : a12 = a13}
     (s : PathSquare px0 px1 p0x p1x).
 
-  Local Open Scope square_scope.
   Notation hr := (sq_refl_h _).
 
   Definition sq_concat_h_s1 : sq_concat_h s hr = sq_ccGG (concat_p1 _)^ (concat_p1 _)^ s.
