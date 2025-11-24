@@ -9,7 +9,9 @@ Local Unset Elimination Schemes.
 
 (** * Homogeneous squares *)
 
-(** 
+(** Squares are fillers in diagrams of the following form:
+
+<<
         a00 ----p0i---- a01
          |               |
          |         >     |
@@ -17,7 +19,8 @@ Local Unset Elimination Schemes.
          |     =         |
          |               |
         a10-----p1i-----a11
- 
+>>
+
 Indexing of points in a square follows the convention for matrices, first a row index, then a column index. Unless stated otherwise, paths are oriented in the direction of increasing index i (or x, etc). The stylized 2-path on the antidiagonal goes from [pi0 @ p1i] to [p0i @ pi1], complying with the definition of [equiv_sq_path] below. *)
 
 (** Contents:
@@ -601,7 +604,25 @@ Section KanUnique.
 
 End KanUnique.
 
-(** Interchange law. *)
+(** An interchange law between horizontal and vertical composites in the following square:
+<<
+            h0i          h0j
+       a00 ━━━━━━━━ a01 ━━━━━━━━ a02
+        ┃            ┃            ┃
+        ┃  sq00      ┃  sq01      ┃
+    vi0 ┃        vi1 ┃            ┃ vi2
+        ┃            ┃            ┃
+        ┃   h1i      ┃   h1j      ┃
+       a10 ━━━━━━━━ a11 ━━━━━━━━ a12
+        ┃            ┃            ┃
+        ┃  sq10      ┃  sq11      ┃
+    vj0 ┃        vj1 ┃            ┃ vj2
+        ┃            ┃            ┃
+        ┃   h2i      ┃   h2j      ┃
+       a20 ━━━━━━━━ a21 ━━━━━━━━ a22
+>>
+*)
+
 Definition sq_interchange {A}
   {a00 a10 a20 a01 a11 a21 a02 a12 a22 : A} (* 9 points in big square of 2x2 squares *)
   (* sq00, top left, 4 paths *)
