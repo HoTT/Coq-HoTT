@@ -616,6 +616,37 @@ Section KanUnique.
 
 End KanUnique.
 
+(** Interchange law. *)
+Definition sq_interchange {A}
+  {a00 a10 a20 a01 a11 a21 a02 a12 a22 : A} (* 9 points in big square of 2x2 squares *)
+  (* sq00, top left, 4 paths *)
+  (vi0 : a00 = a10) (* i = 0,1 *)
+  (h0i : a00 = a01)
+  (vi1 : a01 = a11)
+  (h1i : a10 = a11)
+  (* sq10, bottom left, 3 paths, h1i shared with sq00 *)
+  (vj0 : a10 = a20) (* j = 1,2 *)
+  (vj1 : a11 = a21)
+  (h2i : a20 = a21)
+  (* sq01, top right, 3 paths, vi1 shared with sq00 *)
+  (vi2 : a02 = a12)
+  (h0j : a01 = a02)
+  (h1j : a11 = a12)
+  (* sq11, bottom right, 2 paths, vj1 shared with sq10 and h1j with sq01 *)
+  (vj2 : a12 = a22)
+  (h2j : a21 = a22)
+  (sq00 : PathSquare vi0 vi1 h0i h1i)
+  (sq10 : PathSquare vj0 vj1 h1i h2i)
+  (sq01 : PathSquare vi1 vi2 h0j h1j)
+  (sq11 : PathSquare vj1 vj2 h1j h2j)
+  : (sq00 @@v sq10) @@h (sq01 @@v sq11) = (sq00 @@h sq01) @@v (sq10 @@h sq11).
+Proof.
+  destruct sq00, sq11.
+  destruct vi2, h2i.
+  revert vj0 sq10; rapply pathsquare_ind_l.
+  reflexivity.
+Defined.
+
 (* Apply a function to the sides of square *)
 Definition sq_ap {A B : Type} {a00 a10 a01 a11 : A} (f : A -> B)
   {px0 : a00 = a10} {px1 : a01 = a11} {p0x : a00 = a01} {p1x : a10 = a11}
