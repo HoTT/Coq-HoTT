@@ -432,13 +432,25 @@ Section GroupoidLawsH.
     (s : PathSquare px0 px1 p0x p1x).
 
   Notation hr := (sq_refl_h _).
+  Notation vr := (sq_refl_v _).
+
 
   Definition sq_concat_h_s1 : sq_concat_h s hr = sq_ccGG (concat_p1 _)^ (concat_p1 _)^ s.
+  Proof.
+    by destruct px1.
+  Defined.
+
+  Definition sq_concat_h_1s : sq_concat_h hr s = sq_ccGG (concat_1p _)^ (concat_1p _)^ s.
   Proof.
     by destruct s.
   Defined.
 
-  Definition sq_concat_h_1s : sq_concat_h hr s = sq_ccGG (concat_1p _)^ (concat_1p _)^ s.
+  Definition sq_concat_v_s1 : sq_concat_v s vr = sq_GGcc (concat_p1 _)^ (concat_p1 _)^ s.
+  Proof.
+    by destruct p1x.
+  Defined.
+
+  Definition sq_concat_v_1s : sq_concat_v vr s = sq_GGcc (concat_1p _)^ (concat_1p _)^ s.
   Proof.
     by destruct s.
   Defined.
