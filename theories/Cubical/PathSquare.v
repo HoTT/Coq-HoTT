@@ -7,9 +7,9 @@ Delimit Scope square_scope with square.
 
 Local Unset Elimination Schemes.
 
-(* Homogeneous squares *)
+(** * Homogeneous squares *)
 
-(* 
+(** 
         a00 ----p0i---- a01
          |               |
          |         >     |
@@ -18,32 +18,25 @@ Local Unset Elimination Schemes.
          |               |
         a10-----p1i-----a11
  
-Indexing of points in a square follows the convention for matrices,
-first a row index, then a column index. Unless stated otherwise,
-paths are oriented in the direction of increasing index i (or x, etc).
-In PathSquare below, the order of the paths is: left, right, top, bottom.
-The stylized 2-path on the antidiagonal goes from pi0 @ p1i to p0i @ pi1,
-complying with the definition of equiv_sq_path below.
-
-*)
+Indexing of points in a square follows the convention for matrices, first a row index, then a column index. Unless stated otherwise, paths are oriented in the direction of increasing index i (or x, etc). The stylized 2-path on the antidiagonal goes from [pi0 @ p1i] to [p0i @ pi1], complying with the definition of [equiv_sq_path] below. *)
 
 (** Contents:
 
-  * Definition of [PathSquare]
+  * Definition of [PathSquare] and basic properties
   * Degenerate [PathSquare]s as paths between paths
   * Flipping squares horizontally and vertically
   * [PathSquare] transpose
   * [PathSquare] inverse
   * [PathSquare] rotations
   * Edge rewriting
-  * Concatenation
-  * Kan fillers
-  * natural squares from [ap]
-
+  * Concatenation and groupoid laws
+  * Kan fillers and uniqueness, induction principles requiring only one free edge
+  * Interchange law
+  * Squares arising from [ap]
+  * [PathSquare]s respect products
 *)
 
-(** Definition of [PathSquare] *)
-(** [PathSquare] left right up down *)
+(** Definition of [PathSquare left right up down]. *)
 Cumulative Inductive PathSquare {A} : forall a00 {a10 a01 a11 : A},
   a00 = a10 -> a01 = a11 -> a00 = a01 -> a10 = a11 -> Type
   := sq_id : forall {x : A},
@@ -53,14 +46,14 @@ Arguments sq_id {A x}.
 Arguments PathSquare {A _ _ _ _}.
 Notation "1" := sq_id : square_scope.
 
-(* TODO: ": rename" is needed because the default names changed in Rocq 9.2.0.  When the minimum supported version is >= 9.2.0, the ": rename" can be removed. *)
-(* register=no: otherwise the scheme confuses the make_equiv tactic. When the minimum supported version is >= 9.2.0, the warning can be re-enabled. *)
+(** TODO: ": rename" is needed because the default names changed in Rocq 9.2.0.  When the minimum supported version is >= 9.2.0, the ": rename" can be removed. *)
+(** register=no: otherwise the scheme confuses the make_equiv tactic. When the minimum supported version is >= 9.2.0, the warning can be re-enabled. *)
 #[warnings="-unsupported-attributes",register=no] Scheme PathSquare_ind := Induction for PathSquare Sort Type.
 Arguments PathSquare_ind {A} P f {_ _ _ _ _ _ _ _} _ : rename.
 #[warnings="-unsupported-attributes",register=no] Scheme PathSquare_rec := Minimality for PathSquare Sort Type.
 Arguments PathSquare_rec {A} P f {_ _ _ _ _ _ _ _} _ : rename.
 
-(** [PathSquare_ind] is an equivalence, similar to how [paths_ind] is *)
+(** [PathSquare_ind] is an equivalence, similar to how [paths_ind] is. *)
 Instance isequiv_PathSquare_ind `{Funext} {A}
   (P : forall (a00 a10 a01 a11 : A) (p : a00 = a10) (p0 : a01 = a11)
     (p1 : a00 = a01) (p2 : a10 = a11),
@@ -75,7 +68,7 @@ Proof.
   by intros [].
 Defined.
 
-(** [PathSquare]s can be given by 2-dimensional paths *)
+(** [PathSquare]s can be given by 2-dimensional paths. *)
 Definition equiv_sq_path {A} {a00 a10 a01 a11 : A}
   {px0 : a00 = a10} {px1 : a01 = a11}
   {p0x : a00 = a01} {p1x : a10 = a11}
@@ -103,7 +96,7 @@ Defined.
 
 Notation sq_path := equiv_sq_path.
 
-(** Squares in (n+2)-truncated types are n-truncated *)
+(** Squares in (n+2)-truncated types are n-truncated. *)
 Instance istrunc_sq n
   {A} `{!IsTrunc n.+2 A} {a00 a10 a01 a11 : A}
   {px0 : a00 = a10} {px1 : a01 = a11}
@@ -113,7 +106,7 @@ Proof.
   exact (istrunc_equiv_istrunc _ sq_path).
 Defined.
 
-(* We can give degenerate squares *)
+(** We can give degenerate squares. *)
 Section PathSquaresFromPaths.
 
   Context
@@ -135,15 +128,15 @@ Local Open Scope equiv_scope.
 Local Open Scope square_scope.
 Local Open Scope path_scope.
 
-(** [PathSquare] horizontal reflexivity *)
+(** [PathSquare] horizontal reflexivity. *)
 Definition sq_refl_h {A} {a0 a1 : A} (p : a0 = a1)
   : PathSquare p p 1 1 := sq_G1 1.
 
-(** [PathSquare] vertical reflexivity *)
+(** [PathSquare] vertical reflexivity. *)
 Definition sq_refl_v {A} {a0 a1 : A} (p : a0 = a1)
   : PathSquare 1 1 p p := sq_1G 1.
 
-(** Horizontal flip *)
+(** Horizontal flip. *)
 Definition equiv_sq_flip_h {A : Type} {a00 a10 a01 a11 : A}
   {px0 : a00 = a10} {px1 : a01 = a11} {p0x : a00 = a01} {p1x : a10 = a11}
   : PathSquare px0 px1 p0x p1x <~> PathSquare px1 px0 p0x^ p1x^.
@@ -156,7 +149,7 @@ Defined.
 
 Notation sq_flip_h := equiv_sq_flip_h.
 
-(** Vertical flip *)
+(** Vertical flip. *)
 Definition equiv_sq_flip_v {A : Type} {a00 a10 a01 a11 : A}
   {px0 : a00 = a10} {px1 : a01 = a11} {p0x : a00 = a01} {p1x : a10 = a11}
   : PathSquare px0 px1 p0x p1x <~> PathSquare px0^ px1^ p1x p0x.
@@ -169,9 +162,7 @@ Defined.
 
 Notation sq_flip_v := equiv_sq_flip_v.
 
-(** Transpose of a square *)
-
-(** We make a local definition that will never get unfolded *)
+(** Transpose of a square. We make a local definition that will never get unfolded. *)
 Local Definition tr {A : Type} {a00 a10 a01 a11 : A}
   {px0 : a00 = a10} {px1 : a01 = a11} {p0x : a00 = a01} {p1x : a10 = a11}
   : PathSquare px0 px1 p0x p1x -> PathSquare p0x p1x px0 px1.
@@ -191,10 +182,7 @@ Defined.
 
 Notation sq_tr := equiv_sq_tr.
 
-(* NOTE: sq_tr ought to be some sort of involution but it obviously isn't
-   since it is not of the form A -> A. Perhaps there is a more general
-   "involution" but between equivalent types? But then that very equivalence
-   is given by sq_tr so it seems a bit circular... *)
+(** NOTE: sq_tr ought to be some sort of involution but it obviously isn't since it is not of the form A -> A. Perhaps there is a more general "involution" but between equivalent types? But then that very equivalence is given by sq_tr so it seems a bit circular... *)
 
 Definition sq_tr_refl_h {A} {a b : A} {p : a = b}
   : sq_tr (sq_refl_h p) = sq_refl_v p.
@@ -208,7 +196,7 @@ Proof.
   by destruct p.
 Defined.
 
-(* Operations on squares *)
+(** Operations on squares. *)
 Section PathSquareOps.
 
   Context
@@ -217,7 +205,7 @@ Section PathSquareOps.
     {px0 : a00 = a10} {px1 : a01 = a11}
     {p0x : a00 = a01} {p1x : a10 = a11}.
 
-  (* Inverse square *)
+  (** Inverse square. *)
   Definition equiv_sq_V : PathSquare px0 px1 p0x p1x <~> PathSquare px1^ px0^ p1x^ p0x^.
   Proof.
     refine (sq_path oE _ ).
@@ -227,7 +215,7 @@ Section PathSquareOps.
     exact sq_tr.
   Defined.
 
-  (* Left rotation : left right top bottom  ->  top bottom right left *)
+  (** Left rotation : left right top bottom  ->  top bottom right left. *)
   Definition equiv_sq_rot_l : PathSquare px0 px1 p0x p1x <~> PathSquare p0x^ p1x^ px1 px0.
   Proof.
     refine (sq_path oE _).
@@ -237,7 +225,7 @@ Section PathSquareOps.
     exact sq_path^-1.
   Defined.
 
-  (* Right rotation : left right top bottom -> bottom top left right *)
+  (** Right rotation : left right top bottom -> bottom top left right. *)
   Definition equiv_sq_rot_r : PathSquare px0 px1 p0x p1x -> PathSquare p1x p0x px0^ px1^.
   Proof.
     refine (sq_path oE _).
@@ -253,7 +241,7 @@ Notation sq_V := equiv_sq_V.
 Notation sq_rot_l:= equiv_sq_rot_l.
 Notation sq_rot_r := equiv_sq_rot_r.
 
-(* Lemmas for rewriting sides of squares *)
+(** Lemmas for rewriting sides of squares. *)
 Section PathSquareRewriting.
 
   Context {A : Type}
@@ -261,9 +249,7 @@ Section PathSquareRewriting.
     {px0 : a00 = a10} {px1 : a01 = a11}
     {p0x : a00 = a01} {p1x : a10 = a11}.
 
-  (* These are all special cases of the following "rewrite all sides"
-     lemma which we prove is an equivalence giving us all special cases
-     as equivalences too *)
+  (** These are all special cases of the following "rewrite all sides" lemma which we prove is an equivalence giving us all special cases as equivalences too. *)
 
   Definition equiv_sq_GGGG {px0' px1' p0x' p1x'} (qx0 : px0 = px0')
     (qx1 : px1 = px1') (q0x : p0x = p0x') (q1x : p1x = p1x')
@@ -367,7 +353,7 @@ Notation sq_move_42 := equiv_sq_move_42.
 Notation sq_move_13 := equiv_sq_move_13.
 Notation sq_move_31 := equiv_sq_move_31.
 
-(* Dependent path product definition of [PathSquare] CoqDoc *)
+(** Dependent path product definition of [PathSquare]. *)
 Definition equiv_sq_dp_prod {A : Type} {a00 a10 a01 a11 : A}
   {px0 : a00 = a10} {px1 : a01 = a11} {p0x : a00 = a01} {p1x : a10 = a11}
   : DPath (fun xy => fst xy = snd xy) (path_prod' p0x p1x) px0 px1
@@ -382,14 +368,14 @@ Defined.
 
 Notation sq_dp_prod := equiv_sq_dp_prod.
 
-(* Concatenation of squares *)
+(** Concatenation of squares. *)
 Section PathSquareConcat.
 
   Context {A : Type} {a00 a10 a01 a11 : A}
     {px0 : a00 = a10} {px1 : a01 = a11}
     {p0x : a00 = a01} {p1x : a10 = a11}.
 
-  (* Horizontal concatenation of squares *)
+  (** Horizontal concatenation of squares. *)
   Definition sq_concat_h  {a02 a12 : A}
     {p0y : a01 = a02} {p1y : a11 = a12} {px2 : a02 = a12}
     : PathSquare px0 px1 p0x p1x -> PathSquare px1 px2 p0y p1y
@@ -401,7 +387,7 @@ Section PathSquareConcat.
     1,2: apply inverse, concat_p1.
   Defined.
 
-  (* Vertical concatenation of squares *)
+  (** Vertical concatenation of squares. *)
   Definition sq_concat_v {a20 a21 : A}
     {py0 : a10 = a20} {py1 : a11 = a21} {p2x : a20 = a21}
     : PathSquare px0 px1 p0x p1x -> PathSquare py0 py1 p1x p2x
@@ -418,10 +404,10 @@ End PathSquareConcat.
 Infix "@@h" := sq_concat_h : square_scope.
 Infix "@@v" := sq_concat_v : square_scope.
 
-(* Horizontal groupoid laws for concatenation *)
+(** Horizontal groupoid laws for concatenation. *)
 Section GroupoidLawsH.
 
-  (* There are many more laws to write, but it seems we don't really need them *)
+  (** There are many more laws to write, but it seems we don't really need them. *)
 
   Context
     {A : Type}
@@ -433,7 +419,6 @@ Section GroupoidLawsH.
 
   Notation hr := (sq_refl_h _).
   Notation vr := (sq_refl_v _).
-
 
   Definition sq_concat_h_s1 : sq_concat_h s hr = sq_ccGG (concat_p1 _)^ (concat_p1 _)^ s.
   Proof.
@@ -465,11 +450,11 @@ Section GroupoidLawsH.
 
 End GroupoidLawsH.
 
-(** [PathSquare] Kan fillers ~ Every open box has a lid *)
+(** [PathSquare] Kan fillers ~ Every open box has a lid. *)
 
 Section Kan.
 
-  (* These can be used to prove groupoid laws about paths *)
+  (** These can be used to prove groupoid laws about paths. *)
   Context {A : Type} {a00 a10 a01 a11 : A}.
 
   Definition sq_fill_l (px1 : a01 = a11) (p0x : a00 = a01) (p1x : a10 = a11)
@@ -647,7 +632,9 @@ Proof.
   reflexivity.
 Defined.
 
-(* Apply a function to the sides of square *)
+(** Squares arising from [ap]. *)
+
+(** Apply a function to the sides of square. *)
 Definition sq_ap {A B : Type} {a00 a10 a01 a11 : A} (f : A -> B)
   {px0 : a00 = a10} {px1 : a01 = a11} {p0x : a00 = a01} {p1x : a10 = a11}
   : PathSquare px0 px1 p0x p1x -> PathSquare (ap f px0) (ap f px1) (ap f p0x) (ap f p1x).
@@ -655,7 +642,7 @@ Proof.
   by intros [].
 Defined.
 
-(** This preserves reflexivity *)
+(** This preserves reflexivity. *)
 Definition sq_ap_refl_h {A B} (f : A -> B) {a0 a1 : A} (p : a0 = a1)
   : sq_ap f (sq_refl_h p) = sq_refl_h (ap f p).
 Proof.
@@ -668,28 +655,28 @@ Proof.
   by destruct p.
 Defined.
 
-(** The natural square from an [ap] *)
+(** The naturality square from an [ap]. *)
 Definition ap_nat {A B} {f f' : A -> B} (h : f == f') {x y : A} (p : x = y)
   : PathSquare (ap f p) (ap f' p) (h x) (h y).
 Proof.
   by destruct p; apply sq_1G.
 Defined.
 
-(** The transpose of the natural square *)
+(** The transpose of the naturality square. *)
 Definition ap_nat' {A B} {f f' : A -> B} (h : f == f') {x y : A} (p : x = y)
   : PathSquare (h x) (h y) (ap f p) (ap f' p).
 Proof.
   by destruct p; apply sq_G1.
 Defined.
 
-(** [ap_compose] fits naturally into a square *)
+(** [ap_compose] fits into a square. *)
 Definition ap_compose_sq {A B C} (f : A -> B) (g : B -> C) {x y : A} (p : x = y)
   : PathSquare (ap (g o f) p) (ap g (ap f p)) 1 1 := sq_G1 (ap_compose f g p).
 
 Definition ap_idmap_sq {A} {x y : A} (p : x = y) : PathSquare (ap idmap p) p 1 1
   := sq_G1 (ap_idmap p).
 
-(** A [DPath] of a certain form can be turned into a square *)
+(** A [DPath] of a certain form can be turned into a square. *)
 Definition equiv_sq_dp {A B : Type} {f g : A -> B} {a1 a2 : A} {p : a1 = a2}
   {q1 : f a1 = g a1} {q2 : f a2 = g a2}
   : DPath (fun x => f x = g x) p q1 q2 <~> PathSquare q1 q2 (ap f p) (ap g p).
@@ -700,7 +687,7 @@ Defined.
 
 Notation sq_dp := equiv_sq_dp.
 
-(** [ap011] fits into a square *)
+(** [ap011] fits into a square. *)
 Definition sq_ap011 {A B C} (f : A -> B -> C)
   {a a' : A} (p : a = a') {b b' : B} (q : b = b')
   : PathSquare (ap (fun x => f x b) p) (ap (fun x => f x b') p)
