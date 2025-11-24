@@ -479,33 +479,11 @@ Section Kan.
     by destruct px1, p0x, p1x.
   Defined.
 
-  Definition sq_fill_l_uniq
-             {px1 : a01 = a11} {p0x : a00 = a01} {p1x : a10 = a11}
-             {px0 : a00 = a10} (s : PathSquare px0 px1 p0x p1x)
-             {px0' : a00 = a10} (s' : PathSquare px0' px1 p0x p1x)
-    : px0 = px0'.
-  Proof.
-    destruct s.
-    apply sq_path^-1 in s'.
-    exact (s'^ @ concat_p1 _).
-  Defined.
-
   Definition sq_fill_r (px0 : a00 = a10) (p0x : a00 = a01) (p1x : a10 = a11)
     : {px1 : a01 = a11 & PathSquare px0 px1 p0x p1x}.
   Proof.
     exists (p0x^ @ px0 @ p1x).
     by destruct px0, p0x, p1x.
-  Defined.
-
-  Definition sq_fill_r_uniq
-             {px0 : a00 = a10} {p0x : a00 = a01} {p1x : a10 = a11}
-             {px1 : a01 = a11} (s : PathSquare px0 px1 p0x p1x)
-             {px1' : a01 = a11} (s' : PathSquare px0 px1' p0x p1x)
-    : px1 = px1'.
-  Proof.
-    destruct s.
-    apply sq_path^-1 in s'.
-    exact (s' @ concat_1p _).
   Defined.
 
   Definition sq_fill_t (px0 : a00 = a10) (px1 : a01 = a11) (p1x : a10 = a11)
@@ -523,6 +501,120 @@ Section Kan.
   Defined.
 
 End Kan.
+
+(** To prove stronger uniqueness results and related induction principles, we need to start a new section so we can generalize over all of the points. *)
+
+Section KanUnique.
+
+  Context {A : Type} {a00 a10 a01 a11 : A}.
+
+  #[export] Instance sq_fill_l_contr (px1 : a01 = a11) (p0x : a00 = a01) (p1x : a10 = a11)
+    : Contr {px0 : a00 = a10 & PathSquare px0 px1 p0x p1x}.
+  Proof.
+    apply (Build_Contr _ (sq_fill_l px1 p0x p1x)).
+    intros [px0' s'].
+    by destruct s'.
+  Defined.
+
+  Definition sq_fill_l_uniq {px1 : a01 = a11} {p0x : a00 = a01} {p1x : a10 = a11}
+    {px0 : a00 = a10} (s : PathSquare px0 px1 p0x p1x)
+    {px0' : a00 = a10} (s' : PathSquare px0' px1 p0x p1x)
+    : px0 = px0'
+    := ap pr1 (@path_contr _ (sq_fill_l_contr px1 p0x p1x) (px0; s) (px0'; s')).
+
+  #[export] Instance sq_fill_r_contr (px0 : a00 = a10) (p0x : a00 = a01) (p1x : a10 = a11)
+    : Contr {px1 : a01 = a11 & PathSquare px0 px1 p0x p1x}.
+  Proof.
+    apply (Build_Contr _ (sq_fill_r px0 p0x p1x)).
+    intros [px1' s'].
+    by destruct s'.
+  Defined.
+
+  Definition sq_fill_r_uniq {px0 : a00 = a10} {p0x : a00 = a01} {p1x : a10 = a11}
+    {px1 : a01 = a11} (s : PathSquare px0 px1 p0x p1x)
+    {px1' : a01 = a11} (s' : PathSquare px0 px1' p0x p1x)
+    : px1 = px1'
+    := ap pr1 (@path_contr _ (sq_fill_r_contr px0 p0x p1x) (px1; s) (px1'; s')).
+
+  #[export] Instance sq_fill_t_contr (px0 : a00 = a10) (px1 : a01 = a11) (p1x : a10 = a11)
+    : Contr {p0x : a00 = a01 & PathSquare px0 px1 p0x p1x}.
+  Proof.
+    apply (Build_Contr _ (sq_fill_t px0 px1 p1x)).
+    intros [p0x' s'].
+    by destruct s'.
+  Defined.
+
+  Definition sq_fill_t_uniq {px0 : a00 = a10} {px1 : a01 = a11} {p1x : a10 = a11}
+    {p0x : a00 = a01} (s : PathSquare px0 px1 p0x p1x)
+    {p0x' : a00 = a01} (s' : PathSquare px0 px1 p0x' p1x)
+    : p0x = p0x'
+    := ap pr1 (@path_contr _ (sq_fill_t_contr px0 px1 p1x) (p0x; s) (p0x'; s')).
+
+  #[export] Instance sq_fill_b_contr (px0 : a00 = a10) (px1 : a01 = a11) (p0x : a00 = a01)
+    : Contr {p1x : a10 = a11 & PathSquare px0 px1 p0x p1x}.
+  Proof.
+    apply (Build_Contr _ (sq_fill_b px0 px1 p0x)).
+    intros [p1x' s'].
+    by destruct s'.
+  Defined.
+
+  Definition sq_fill_b_uniq {px0 : a00 = a10} {px1 : a01 = a11} {p0x : a00 = a01}
+    {p1x : a10 = a11} (s : PathSquare px0 px1 p0x p1x)
+    {p1x' : a10 = a11} (s' : PathSquare px0 px1 p0x p1x')
+    : p1x = p1x'
+    := ap pr1 (@path_contr _ (sq_fill_b_contr px0 px1 p0x) (p1x; s) (p1x'; s')).
+
+  (** Induction principles that only require one edge to be free.  It might be possible to use these to simplify other work involving squares, including work earlier in the file, so we could consider moving these and the material on fillers earlier in the file. *)
+
+  Definition pathsquare_ind_l
+                      {px1 : a01 = a11}
+    {p0x : a00 = a01} {p1x : a10 = a11}
+    (P : forall (px0 : a00 = a10) (sq : PathSquare px0 px1 p0x p1x), Type)
+    (fill := (sq_fill_l px1 p0x p1x))
+    (p : P fill.1 fill.2)
+    : forall px0 sq, P px0 sq.
+  Proof.
+    intros px0 sq.
+    by destruct sq.
+  Defined.
+
+  Definition pathsquare_ind_r
+    {px0 : a00 = a10}
+    {p0x : a00 = a01} {p1x : a10 = a11}
+    (P : forall (px1 : a01 = a11) (sq : PathSquare px0 px1 p0x p1x), Type)
+    (fill := (sq_fill_r px0 p0x p1x))
+    (p : P fill.1 fill.2)
+    : forall px1 sq, P px1 sq.
+  Proof.
+    intros px1 sq.
+    by destruct sq.
+  Defined.
+
+  Definition pathsquare_ind_t
+    {px0 : a00 = a10} {px1 : a01 = a11}
+                      {p1x : a10 = a11}
+    (P : forall (p0x : a00 = a01) (sq : PathSquare px0 px1 p0x p1x), Type)
+    (fill := (sq_fill_t px0 px1 p1x))
+    (p : P fill.1 fill.2)
+    : forall p0x sq, P p0x sq.
+  Proof.
+    intros p0x sq.
+    by destruct sq.
+  Defined.
+
+  Definition pathsquare_ind_b
+    {px0 : a00 = a10} {px1 : a01 = a11}
+    {p0x : a00 = a01}
+    (P : forall (p1x : a10 = a11) (sq : PathSquare px0 px1 p0x p1x), Type)
+    (fill := (sq_fill_b px0 px1 p0x))
+    (p : P fill.1 fill.2)
+    : forall p1x sq, P p1x sq.
+  Proof.
+    intros p1x sq.
+    by destruct sq.
+  Defined.
+
+End KanUnique.
 
 (* Apply a function to the sides of square *)
 Definition sq_ap {A B : Type} {a00 a10 a01 a11 : A} (f : A -> B)
