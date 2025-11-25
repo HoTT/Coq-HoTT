@@ -1,20 +1,16 @@
-(** * Typeclass instances to allow rewriting in categories *)
+(** * Typeclass instances to allow rewriting in wild categories *)
 
-(** The file using the setoid rewriting machinery from the Coq standard library to allow rewriting in wild-categories.  Examples are given later in the file. *)
+(** This file uses the setoid rewriting machinery from the Coq standard library to allow rewriting in wild-categories.  Examples are given in test/WildCat/SetoidRewrite.v. *)
 
-(** Init.Tactics contains the definition of the Coq stdlib typeclass_inferences database.  It must be imported before Basics.Overture.  Otherwise, the typeclasses hintdb is cleared, breaking typeclass inference.  Because of this, this file also needs to be the first file Require'd in any file that uses it.  Moreover, if Foo Requires this file, then Foo must also be the first file Require'd in any file that Requires Foo, and so on.  In the long term it would be good if this could be avoided. *)
+(** Init.Tactics contains the definition of the Coq stdlib typeclass_inferences database.  With Coq 8.x, it must be imported before Basics.Overture.  Otherwise, the typeclasses hintdb is cleared, breaking typeclass inference.  Because of this, this file also needs to be the first file Require'd in any file that uses it.  Moreover, if Foo Requires this file, then Foo must also be the first file Require'd in any file that Requires Foo, and so on.  Once we assume Rocq 9.0 as our minimum, these comments can be removed. *)
 
 #[warnings="-deprecated-from-Coq"]
 From Coq Require Init.Tactics.
 From HoTT Require Import Basics.Overture Basics.Tactics.
-From HoTT Require Import Types.Forall.
 #[warnings="-deprecated-from-Coq"]
 From Coq Require Setoids.Setoid.
 Import CMorphisms.ProperNotations.
-From HoTT Require Import WildCat.Core
-  WildCat.NatTrans WildCat.Equiv.
-
-(** ** Setoid rewriting *)
+From HoTT Require Import WildCat.Core.
 
 #[export] Instance reflexive_proper_proxy {A : Type}
   {R : Relation A} `(Reflexive A R) (x : A)
@@ -134,93 +130,3 @@ Defined.
   : CMorphisms.Proper
       (Hom ==> CRelationClasses.arrow) (Hom x)
   := fun y z => cat_comp.
-
-(** ** Examples of setoid rewriting *)
-
-(** Rewriting works in hypotheses. *)
-Proposition IsEpic_HasSection {A} `{Is1Cat A}
-  {a b : A} (f : a $-> b) :
-  SectionOf f -> Epic f.
-Proof.
-  intros [right_inverse is_section] c g h eq_gf_hf.
-  apply cat_prewhisker with (h:=right_inverse) in eq_gf_hf.
-  rewrite 2 cat_assoc, is_section, 2 cat_idr in eq_gf_hf.
-  exact eq_gf_hf.
-Defined.
-
-(** A different approach, working in the goal. *)
-Proposition IsMonic_HasRetraction {A} `{Is1Cat A}
-  {b c : A} (f : b $-> c) :
-  RetractionOf f -> Monic f.
-Proof.
-  intros [left_inverse is_retraction] a g h eq_fg_fh.
-  rewrite <- (cat_idl g), <- (cat_idl h).
-  rewrite <- is_retraction.
-  rewrite 2 cat_assoc.
-  exact (_ $@L eq_fg_fh).
-Defined.
-
-Proposition nat_equiv_faithful {A B : Type}
-  {F G : A -> B} `{Is1Functor _ _ F}
-  `{!Is0Functor G, !Is1Functor G}
-  `{!HasEquivs B} (tau : NatEquiv F G)
-  : Faithful F -> Faithful G.
-Proof.
-  intros faithful_F x y f g eq_Gf_Gg.
-  apply faithful_F.
-  apply (cate_monic_equiv (tau y)).
-  rewrite 2 (isnat tau).
-  by apply cat_prewhisker.
-Defined.
-
-Section SetoidRewriteTests.
-  Goal forall (A : Type) `(H : Is0Gpd A) (a b c : A),
-      a $== b -> b $== c -> a $== c.
-  Proof.
-    intros A ? ? ? a b c eq_ab eq_bc.
-    rewrite eq_ab, <- eq_bc.
-  Abort.
-  Goal forall (A : Type) `(H : Is0Gpd A) (a b c : A),
-      a $== b -> b $== c -> a $== c.
-  Proof.
-    intros A ? ? ? a b c eq_ab eq_bc.
-    symmetry.
-    rewrite eq_ab, <- eq_bc.
-    rewrite eq_bc.
-    rewrite <- eq_bc.
-  Abort.
-
-  Goal forall (A B : Type) (F : A -> B) `{Is1Functor _ _ F} (a b : A) (f g : a $-> b), f $== g -> fmap F f $== fmap F g.
-  Proof.
-    do 17 intro.
-    intro eq_fg.
-    rewrite eq_fg.
-  Abort.
-
-  Goal forall (A : Type) `{Is1Cat A} (a b c : A) (f1 f2 : a $-> b) (g : b $-> c), f1 $== f2 -> g $o f1 $== g $o f2.
-  Proof.
-    do 11 intro.
-    intro eq.
-    rewrite <- eq.
-    rewrite eq.
-  Abort.
-
-  Goal forall (A : Type) `{Is1Cat A} (a b c : A) (f : a $-> b) (g1 g2 : b $-> c), g1 $== g2 -> g1 $o f $== g2 $o f.
-  Proof.
-  do 11 intro.
-  intro eq.
-  rewrite <- eq.
-  rewrite eq.
-  rewrite <- eq.
-  Abort.
-
-  Goal forall (A : Type) `{Is1Cat A} (a b c : A) (f1 f2 : a $-> b) (g1 g2 : b $-> c), g1 $== g2 -> f1 $== f2 -> g1 $o f1 $== g2 $o f2.
-  Proof.
-    do 12 intro.
-    intros eq_g eq_f.
-    rewrite eq_g.
-    rewrite <- eq_f.
-    rewrite eq_f.
-    rewrite <- eq_g.
-  Abort.
-End SetoidRewriteTests.
