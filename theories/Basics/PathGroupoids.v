@@ -808,6 +808,8 @@ Proof.
   exact q.
 Defined.
 
+Register ap011 as core.eq.congr2.
+
 Definition ap011_V {A B C} (f : A -> B -> C) {x x' y y'} (p : x = x') (q : y = y')
   : ap011 f p^ q^ = (ap011 f p q)^.
 Proof.

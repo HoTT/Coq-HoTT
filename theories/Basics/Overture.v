@@ -282,6 +282,10 @@ Definition paths_rect := paths_ind.
 Register paths as core.identity.type.
 Register idpath as core.identity.refl.
 Register paths_rect as core.identity.ind.
+Register paths as core.eq.type.
+Register idpath as core.eq.refl.
+Register paths_ind as core.eq.ind.
+Register paths_rect as core.eq.rect.
 
 Notation "x = y :> A" := (@paths A x y) : type_scope.
 Notation "x = y" := (x = y :>_) : type_scope.
@@ -309,6 +313,11 @@ Proof.
   exact u.
 Defined.
 
+Definition paths_rect_r := @paths_ind_r.
+
+Register paths_ind_r as core.eq.ind_r.
+Register paths_rect_r as core.eq.rect_r.
+
 Definition related_reflexive_path {A : Type} (R : Relation A) `{Reflexive A R}
   {a b : A} (p : a = b)
   : R a b.
@@ -328,6 +337,7 @@ Definition inverse {A : Type} {x y : A} (p : x = y) : y = x
   := match p with idpath => idpath end.
 
 Register inverse as core.identity.sym.
+Register inverse as core.eq.sym.
 
 (** Declaring this as [simpl nomatch] prevents the tactic [simpl] from expanding it out into [match] statements.  We only want [inverse] to simplify when applied to an identity path. *)
 Arguments inverse {A x y} p : simpl nomatch.
@@ -368,6 +378,7 @@ Instance transitive_paths {A} : Transitive (@paths A) | 0 := @concat A.
 Arguments transitive_paths / .
 
 Register concat as core.identity.trans.
+Register concat as core.eq.trans.
 
 (** Note that you can use the Coq tactics [reflexivity], [transitivity], [etransitivity], and [symmetry] when working with paths; we've redefined them above to use typeclasses and to unfold the instances so you get proof terms with [concat] and [inverse]. *)
 
@@ -395,6 +406,16 @@ Arguments transport {A}%_type_scope P%_function_scope {x y} p%_path_scope u : si
 (** Transport is very common so it is worth introducing a parsing notation for it.  However, we do not use the notation for output because it hides the fibration, and so makes it very hard to read involved transport expression. *)
 Notation "p # u" := (transport _ p u) (only parsing) : path_scope.
 
+(** Functions act on paths: if [f : A -> B] and [p : x = y] is a path in [A], then [ap f p : f x = f y].  We typically pronounce [ap] as a single syllable, short for "application"; but it may also be considered as an acronym, "action on paths". *)
+
+Definition ap {A B : Type} (f : A -> B) {x y : A} (p : x = y) : f x = f y
+  := match p with idpath => idpath end.
+
+Global Arguments ap {A B}%_type_scope f%_function_scope {x y} p%_path_scope : simpl nomatch.
+
+Register ap as core.identity.congr.
+Register ap as core.eq.congr.
+
 (** The first time [rewrite] is used in each direction, it creates transport lemmas called [internal_paths_rew] and [internal_paths_rew_r].  See ../Tactics.v for how these compare to [transport].  We use [rewrite] here to trigger the creation of these lemmas.  This ensures that they are defined outside of sections, so they are not unnecessarily polymorphic.  The lemmas below are not used in the library. *)
 (** TODO: Since Coq 8.20 has PR#18299, once that is our minimum version we can instead register wrappers for [transport] to be used for rewriting.  See the comment by Dan Christensen in that PR for how to do this.  Then the tactics [internal_paths_rew_to_transport] and [rewrite_to_transport] can be removed from ../Tactics.v. *)
 Local Lemma define_internal_paths_rew A x y P (u : P x) (H : x = y :> A) : P y.
@@ -409,14 +430,7 @@ Arguments internal_paths_rew_r {A%_type_scope} {a y} P%_function_scope HC X.
 
 (** Having defined transport, we can use it to talk about what a homotopy theorist might see as "paths in a fibration over paths in the base"; and what a type theorist might see as "heterogeneous equality in a dependent type".  We will first see this appearing in the type of [apD]. *)
 
-(** Functions act on paths: if [f : A -> B] and [p : x = y] is a path in [A], then [ap f p : f x = f y].  We typically pronounce [ap] as a single syllable, short for "application"; but it may also be considered as an acronym, "action on paths". *)
 
-Definition ap {A B : Type} (f : A -> B) {x y : A} (p : x = y) : f x = f y
-  := match p with idpath => idpath end.
-
-Global Arguments ap {A B}%_type_scope f%_function_scope {x y} p%_path_scope : simpl nomatch.
-
-Register ap as core.identity.congr.
 
 (** We introduce the convention that [apKN] denotes the application of a K-path between functions to an N-path between elements, where a 0-path is simply a function or an element. Thus, [ap] is a shorthand for [ap01]. *)
 Notation ap01 := ap (only parsing).
