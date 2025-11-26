@@ -1,4 +1,4 @@
-Require Import Basics.
+From HoTT Require Import Basics.
 Require Import Diagrams.Diagram.
 Require Import Diagrams.Graph.
 Require Import Diagrams.Cone.

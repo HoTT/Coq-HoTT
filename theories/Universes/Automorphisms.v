@@ -1,4 +1,4 @@
-Require Import Basics Types.
+From HoTT Require Import Basics Types.
 Require Import HoTT.Truncations.
 Require Import Universes.BAut Universes.Rigid.
 Require Import ExcludedMiddle.

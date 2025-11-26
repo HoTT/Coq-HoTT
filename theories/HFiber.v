@@ -1,4 +1,4 @@
-Require Import Basics Types Diagrams.CommutativeSquares HSet.
+From HoTT Require Import Basics Types Diagrams.CommutativeSquares HSet.
 
 Local Open Scope equiv_scope.
 Local Open Scope path_scope.

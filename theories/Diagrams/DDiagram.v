@@ -1,4 +1,4 @@
-Require Import Basics.
+From HoTT Require Import Basics.
 Require Import Diagrams.Graph.
 Require Import Diagrams.Diagram.
 
@@ -17,7 +17,7 @@ Defined.
 Definition DDiagram {G : Graph} (D : Diagram G)
   := Diagram (integral D).
 
-(** Given a dependent diagram, we c.an recover a diagram over G by considering the Σ types. *)
+(** Given a dependent diagram, we can recover a diagram over G by considering the Σ types. *)
 
   Definition diagram_sigma {G : Graph} {D : Diagram G} (E : DDiagram D)
     : Diagram G.

@@ -1,4 +1,4 @@
-Require Import Basics Types.
+From HoTT Require Import Basics Types.
 Require Import WildCat.Equiv.
 Require Import Homotopy.NullHomotopy.
 Require Import Homotopy.Suspension.

@@ -1,6 +1,6 @@
 (** * Uniform structure on types of sequences *)
 
-Require Import Basics Types.
+From HoTT Require Import Basics Types.
 Require Import Spaces.Nat.Core.
 Require Import Misc.UStructures.
 Require Import List.Core List.Theory.

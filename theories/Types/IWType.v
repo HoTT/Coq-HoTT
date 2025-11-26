@@ -1,4 +1,4 @@
-Require Import Basics.
+From HoTT Require Import Basics.
 Require Import Types.Forall Types.Sigma Types.Prod Types.WType.
 
 (** In this file we define indexed W-types. We show that indexed W-types can be reduced to W-types whilst still having definitional computation rules. We also characterize the path space of indexed W-types. This allows us to derive sufficient conditions for an indexed W-type to be truncated. *)
@@ -10,7 +10,7 @@ Require Import Types.Forall Types.Sigma Types.Prod Types.WType.
 Inductive IW
   (I : Type) (** The indexing type *)
   (A : Type) (** The type of labels / constructors / data *)
-  (B : A -> Type) (** The the type of arities / arguments / children *)
+  (B : A -> Type) (** The type of arities / arguments / children *)
   (i : A -> I) (** The index map (for labels) *)
   (j : forall x, B x -> I) (** The index map for arguments *)
   : I -> Type :=

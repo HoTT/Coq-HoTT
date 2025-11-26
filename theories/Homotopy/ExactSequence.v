@@ -1,4 +1,4 @@
-Require Import Basics Types.
+From HoTT Require Import Basics Types.
 Require Import SuccessorStructure.
 Require Import WildCat.
 Require Import Pointed.

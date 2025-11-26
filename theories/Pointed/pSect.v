@@ -1,4 +1,4 @@
-Require Import Basics Types Pointed.Core Pointed.pEquiv.
+From HoTT Require Import Basics Types Pointed.Core Pointed.pEquiv.
 
 (** * Pointed sections of pointed maps *)
 

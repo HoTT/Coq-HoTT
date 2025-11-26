@@ -1,4 +1,4 @@
-Require Import Basics.
+From HoTT Require Import Basics.
 Require Import Nat.Core.
 Require Import Spaces.Int.
 Require Import Spaces.Finite.Fin.

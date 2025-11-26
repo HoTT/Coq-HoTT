@@ -33,6 +33,11 @@
 
         devShells.default =
           makeDevShell
+            { coq = pkgs.coq_9_0; }
+            { };
+
+        devShells.coq_8_20 =
+          makeDevShell
             { coq = pkgs.coq_8_20; }
             { };
 

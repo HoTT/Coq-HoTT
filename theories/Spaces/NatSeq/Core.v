@@ -1,6 +1,6 @@
 (** * Types of Sequences [nat -> X] *)
 
-Require Import Basics Types.
+From HoTT Require Import Basics Types.
 Require Import Spaces.Nat.Core.
 
 Local Open Scope nat_scope.

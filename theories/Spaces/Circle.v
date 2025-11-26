@@ -1,4 +1,4 @@
-Require Import Basics Types.
+From HoTT Require Import Basics Types.
 Require Import Pointed.Core Pointed.Loops Pointed.pEquiv.
 Require Import HSet.
 Require Import Spaces.Int.

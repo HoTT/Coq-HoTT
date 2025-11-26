@@ -1,4 +1,4 @@
-Require Import Basics.
+From HoTT Require Import Basics.
 Require Import Types.Sigma Types.Paths Types.Unit Types.Arrow.
 
 (** * H-Sets *)

@@ -1,4 +1,4 @@
-Require Import Basics Types.
+From HoTT Require Import Basics Types.
 Require Import Pointed.
 Require Import WildCat.Core HFiber.
 Require Import Truncations.
