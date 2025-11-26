@@ -1,4 +1,4 @@
-Require Import Basics Types.
+From HoTT Require Import Basics Types.
 Require Import Pointed.Core.
 
 Local Open Scope pointed_scope.

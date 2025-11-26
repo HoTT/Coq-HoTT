@@ -1,4 +1,4 @@
-Require Import Basics Types Truncations.Core.
+From HoTT Require Import Basics Types Truncations.Core.
 Require Import Pointed WildCat.
 Require Import Truncations.SeparatedTrunc.
 Require Import AbelianGroup AbHom AbProjective.

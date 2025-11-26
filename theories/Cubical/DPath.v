@@ -1,4 +1,4 @@
-Require Import Basics.
+From HoTT Require Import Basics.
 Require Import Types.Paths Types.Sigma Types.Forall.
 
 Declare Scope dpath_scope.

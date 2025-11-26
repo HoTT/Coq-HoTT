@@ -1,4 +1,4 @@
-Require Import Basics Types.Sigma Types.Paths.
+From HoTT Require Import Basics Types.Sigma Types.Paths.
 
 (** Equalizers *)
 

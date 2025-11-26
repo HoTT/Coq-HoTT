@@ -3,7 +3,7 @@ Require Import WildCat.Core WildCat.NatTrans WildCat.FunctorCat.
 
 (** * Category of categories *)
 
-(** TODO: make into a bicategory *)
+(** TODO: make into a bicategory; define equivalences *)
 
 (** ** Definition *)
 

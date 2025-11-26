@@ -1,6 +1,6 @@
 (** * Definitions and theorems about {iso,epi,mono,}morphisms in a precategory *)
 Require Import Category.Core Functor.Core.
-Require Import HoTT.Tactics Basics.Trunc Basics.Tactics Types.Sigma Equivalences.
+Require Import HoTT.Tactics Basics.Trunc Basics.Tactics Basics.Equivalences Types.Sigma.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.
@@ -44,9 +44,6 @@ Local Infix "<~=~>" := Isomorphic : category_scope.
 (** ** Theorems about isomorphisms *)
 Section iso_contr.
   Variable C : PreCategory.
-
-
-
   Variables s d : C.
 
   Local Notation IsIsomorphism_sig_T m :=

@@ -1,4 +1,4 @@
-Require Import Basics.
+From HoTT Require Import Basics.
 Require Import Types.Paths Types.Arrow Types.Sigma Types.Forall Types.Universe Types.Prod.
 Require Import Colimits.GraphQuotient.
 Require Import Homotopy.IdentitySystems.

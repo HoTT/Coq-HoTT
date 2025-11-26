@@ -1,4 +1,4 @@
-Require Import Basics Types.
+From HoTT Require Import Basics Types.
 Require Import Diagrams.Sequence.
 Require Import Homotopy.Join.Core.
 Require Import Colimits.Colimit Colimits.Sequential.

@@ -1,4 +1,4 @@
-Require Import Basics Types HFiber WildCat.Core WildCat.Equiv.
+From HoTT Require Import Basics Types HFiber WildCat.Core WildCat.Equiv.
 Require Import Truncations.Core Modalities.Modality.
 Require Export Modalities.Modality (conn_map_factor1_image).
 Require Import Algebra.Groups.Group Universes.TruncType Universes.HSet.

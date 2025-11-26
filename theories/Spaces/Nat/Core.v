@@ -135,7 +135,7 @@ Scheme leq_ind := Induction for leq Sort Type.
 Scheme leq_rect := Induction for leq Sort Type.
 Scheme leq_rec := Induction for leq Sort Type.
 
-Notation "n <= m" := (leq n m) : nat_scope.
+Infix "<=" := leq : nat_scope.
 
 Existing Class leq.
 Existing Instances leq_refl leq_succ_r.
@@ -144,25 +144,27 @@ Existing Instances leq_refl leq_succ_r.
 
 (** We define the less-than relation [lt] in terms of [leq] *)
 Definition lt n m : Type0 := leq (S n) m.
+Infix "<" := lt : nat_scope.
 
 (** We declare it as an existing class so typeclass search is performed on its goals. *)
 Existing Class lt.
 #[export] Hint Unfold lt : typeclass_instances.
-Infix "<" := lt : nat_scope.
 
 (** *** Greater than or equal To [>=] *)
 
 Definition geq n m := leq m n.
+Infix ">=" := geq : nat_scope.
+
 Existing Class geq.
 #[export] Hint Unfold geq : typeclass_instances.
-Infix ">=" := geq : nat_scope.
 
 (*** Greater Than [>] *)
 
 Definition gt n m := lt m n.
+Infix ">" := gt : nat_scope.
+
 Existing Class gt.
 #[export] Hint Unfold gt : typeclass_instances.
-Infix ">" := gt : nat_scope.
 
 (** *** Combined comparison predicates *)
 

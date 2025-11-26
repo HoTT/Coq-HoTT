@@ -1,4 +1,4 @@
-Require Import Basics Types.
+From HoTT Require Import Basics Types.
 Require Import WildCat.Core WildCat.Coproducts.
 Require Import Cubical.DPath.
 Require Import Spaces.List.Core Spaces.List.Theory.

@@ -9,7 +9,7 @@ library to use in your own project or to play around with.
   - [Source Versions](#source-versions)
   - [Development Versions](#development-versions)
 - [3. Setup for developers (using git)](#3-setup-for-developers-using-git)
-  - [3.1. Prequisites (Installing Coq)](#31-prequisites-installing-coq)
+  - [3.1. Prerequisites (Installing Coq)](#31-prerequisites-installing-coq)
     - [3.1.1. Development in OSX and Windows](#311-development-in-osx-and-windows)
   - [3.2. Forking and obtaining the HoTT library](#32-forking-and-obtaining-the-hott-library)
   - [3.3. Building the HoTT library](#33-building-the-hott-library)
@@ -20,6 +20,11 @@ library to use in your own project or to play around with.
 - [6. Troubleshooting](#6-troubleshooting)
 
 # 1. Installation using Coq Platform
+
+**Note:** As of version 9.0, Coq has been renamed Rocq.  When you install Coq-HoTT
+following the instructions in this section, it should automatically
+install the compatibility wrappers, so that the nothing about the build process
+needs to change.
 
 In order to install the HoTT library, we recommend that you use the [Coq
 Platform][1]. This will install the [Coq Proof Assistant][2] together with the
@@ -63,6 +68,11 @@ From HoTT Require Import HoTT.
 
 # 2. Installation of HoTT library using opam
 
+**Note:** As of version 9.0, Coq has been renamed Rocq.  When you install Coq-HoTT
+following the instructions in this section, it should automatically
+install the compatibility wrappers, so that the nothing about the build process
+needs to change.
+
 ## Released Versions
 
 More advanced users may wish to install the HoTT library via `opam` ([See here
@@ -99,15 +109,24 @@ Then install the library with `opam install coq-hott`, as for the released versi
 
 # 3. Setup for developers (using git)
 
-## 3.1. Prequisites (Installing Coq)
+## 3.1. Prerequisites (Installing Coq)
 
 We recommend that you use the `opam` package manager to install `coq`. Details
 about [installing Opam can be found here][3].
+We also recommend working within an [opam switch][20], to keep your work
+isolated from other packages installed via opam.
 
-Using `opam` you can install the latest version of `coq` by doing the following:
+After setting up a switch (if you choose to do so),
+you can install the latest 8.x version of `coq` by doing the following:
 
 ```shell
 $ opam install coq
+```
+
+To install the latest 9.x version of Rocq and the Coq compatibility wrappers, do
+
+```shell
+$ opam install rocq-core coq-core
 ```
 
 You will also need `make` and `git` in a typical workflow.
@@ -252,3 +271,5 @@ GitHub](https://github.com/HoTT/HoTT).
 [17]: https://stackoverflow.com/a/54086635
 [18]: https://git-scm.com/book/en/v2/Getting-Started-Installing-Git
 [19]: https://coq.inria.fr/user-interfaces.html
+
+[20]: https://ocaml.org/docs/opam-switch-introduction

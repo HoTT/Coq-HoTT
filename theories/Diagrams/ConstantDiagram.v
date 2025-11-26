@@ -1,4 +1,4 @@
-Require Import Basics Types.Paths.
+From HoTT Require Import Basics Types.Paths.
 Require Import Cone.
 Require Import Cocone.
 Require Import Diagram.

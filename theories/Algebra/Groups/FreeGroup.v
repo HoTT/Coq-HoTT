@@ -1,4 +1,5 @@
-Require Import Basics Types Group Subgroup
+From HoTT Require Import Basics Types.
+Require Import Group Subgroup
   WildCat.Core WildCat.Universe Colimits.Coeq
   Truncations.Core Truncations.SeparatedTrunc
   Spaces.List.Core Spaces.List.Theory.

@@ -1,4 +1,4 @@
-Require Import Basics.
+From HoTT Require Import Basics.
 Require Import Truncations.
 Require Import Algebra.ooGroup.
 Require Import Universes.BAut.

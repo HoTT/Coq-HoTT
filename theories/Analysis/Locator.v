@@ -1,4 +1,4 @@
-Require Import
+From HoTT Require Import
   Basics DProp Misc.BoundedSearch Spaces.Finite.Fin ExcludedMiddle
   Classes.interfaces.abstract_algebra
   Classes.interfaces.orders

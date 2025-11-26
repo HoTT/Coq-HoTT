@@ -1,4 +1,4 @@
-Require Import Basics Types Pointed HSet.
+From HoTT Require Import Basics Types Pointed HSet.
 Require Import Modalities.Modality.
 Require Import Truncations.Core Truncations.SeparatedTrunc.
 Require Import Algebra.AbGroups.

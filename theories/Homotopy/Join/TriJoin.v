@@ -1,4 +1,4 @@
-Require Import Basics Types.Paths WildCat Join.Core HoTT.Tactics.
+From HoTT Require Import Basics Types.Paths WildCat Join.Core Tactics.
 
 (** * Induction and recursion principles for the triple join
 

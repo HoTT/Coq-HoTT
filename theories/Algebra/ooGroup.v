@@ -1,4 +1,4 @@
-Require Import Basics Types.
+From HoTT Require Import Basics Types.
 Require Import Pointed.
 Require Import Truncations.Core Truncations.Connectedness.
 Require Import Homotopy.ClassifyingSpace.

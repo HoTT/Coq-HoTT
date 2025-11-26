@@ -1,4 +1,4 @@
-Require Import Basics Types WildCat.
+From HoTT Require Import Basics Types WildCat.
 Require Import HFiber.
 Require Import Pointed.Core.
 Require Import Pointed.pEquiv.

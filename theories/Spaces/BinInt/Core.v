@@ -1,4 +1,4 @@
-Require Import Basics.
+From HoTT Require Import Basics.
 Require Import Spaces.Pos.Core.
 
 Local Set Universe Minimization ToSet.

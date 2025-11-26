@@ -1,4 +1,4 @@
-Require Import Basics Types.
+From HoTT Require Import Basics Types.
 Require Import Pointed.Core Pointed.pSusp.
 Require Import Colimits.Pushout.
 Require Import WildCat.Coproducts WildCat.Products.

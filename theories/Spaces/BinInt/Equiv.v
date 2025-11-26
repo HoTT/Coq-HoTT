@@ -1,4 +1,4 @@
-Require Import Basics.
+From HoTT Require Import Basics.
 Require Import Spaces.Pos.
 Require Import Spaces.BinInt.Core.
 Require Import Spaces.BinInt.Spec.

@@ -6,7 +6,7 @@ Require Import Category.Morphisms Cat.Morphisms.
 Require Import Functor.Composition.Core.
 Require Import Functor.Identity.
 Require Import FunctorCategory.Core.
-Require Import Basics Types HoTT.Tactics.
+From HoTT Require Import Basics Types Tactics.
 
 Set Universe Polymorphism.
 Set Implicit Arguments.

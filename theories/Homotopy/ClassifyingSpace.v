@@ -1,4 +1,4 @@
-Require Import Basics Types.
+From HoTT Require Import Basics Types.
 Require Import Pointed WildCat.
 Require Import Cubical.DPath Cubical.PathSquare Cubical.DPathSquare.
 Require Import Algebra.AbGroups.

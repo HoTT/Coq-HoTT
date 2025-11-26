@@ -1,4 +1,4 @@
-Require Import Types Basics Pointed Truncations.
+From HoTT Require Import Basics Types Pointed Truncations.
 Require Import HSpace Suspension ExactSequence HomotopyGroup.
 Require Import WildCat.Core WildCat.Universe WildCat.Equiv Modalities.ReflectiveSubuniverse Modalities.Descent.
 Require Import HSet Spaces.Nat.Core.

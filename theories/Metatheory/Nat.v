@@ -1,5 +1,5 @@
 (** * Defining the natural numbers from univalence and propositional resizing. *)
-Require Import Basics.
+From HoTT Require Import Basics.
 Require Import Types.
 Require Import HProp.
 Require Import Universes.Smallness.

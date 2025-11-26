@@ -1,4 +1,4 @@
-Require Import Basics Types.
+From HoTT Require Import Basics Types.
 Require Import Homotopy.IdentitySystems.
 Require Import WildCat.
 Require Import Truncations.Core.

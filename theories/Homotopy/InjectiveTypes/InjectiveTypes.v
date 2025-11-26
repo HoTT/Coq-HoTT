@@ -2,7 +2,7 @@
 
 (** Formalization of the paper: Injective Types in Univalent Mathematics by Martín Escardó (with some extra results). *)
 
-Require Import Basics Types.
+From HoTT Require Import Basics Types.
 Require Import Truncations.Core Truncations.Constant.
 Require Import Modalities.Modality.
 Require Import HFiber.

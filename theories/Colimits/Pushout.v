@@ -1,4 +1,4 @@
-Require Import Basics.
+From HoTT Require Import Basics.
 Require Import Types.Paths Types.Forall Types.Arrow Types.Sigma Types.Sum Types.Universe.
 Require Export Colimits.Coeq.
 Require Import Homotopy.IdentitySystems.

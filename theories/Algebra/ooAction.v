@@ -1,4 +1,4 @@
-Require Import Basics.
+From HoTT Require Import Basics.
 Require Import Algebra.ooGroup.
 
 Local Open Scope path_scope.

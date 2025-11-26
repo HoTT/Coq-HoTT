@@ -3,7 +3,7 @@ Require Export Classes.interfaces.canonical_names (SgOp, sg_op,
     Negate, negate, Associative, simple_associativity, associativity,
     LeftInverse, left_inverse, RightInverse, right_inverse, Commutative, commutativity).
 Export canonical_names.BinOpNotations.
-Require Import Basics Types Pointed WildCat.Core.
+From HoTT Require Import Basics Types Pointed WildCat.Core.
 Require Import Truncations.Core Truncations.Connectedness.
 
 Local Open Scope pointed_scope.
