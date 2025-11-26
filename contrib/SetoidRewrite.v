@@ -27,6 +27,8 @@ From HoTT Require Import WildCat.Core
          GpdHom ==>
          CRelationClasses.flip CRelationClasses.arrow) GpdHom.
 Proof.
+  (* Add the next line to the start of any proof to see what it means: *)
+  unfold "==>", CMorphisms.Proper, CRelationClasses.arrow, CRelationClasses.flip in *.
   intros x y eq_xy a b eq_ab eq_yb.
   exact (transitivity eq_xy (transitivity eq_yb
                               (symmetry _ _ eq_ab))).
@@ -48,7 +50,7 @@ Proof.
   exact (symmetry _ _ eq_xy).
 Defined.
 
-(** forall a : A, x $== y -> a $== x -> a $== y *)
+(** forall a x y : A, x $== y -> a $== x -> a $== y *)
 #[export] Instance IsProper_GpdHom_to_a {A : Type} `{Is0Gpd A}
   {a : A}
   : CMorphisms.Proper
@@ -59,7 +61,7 @@ Proof.
   by transitivity x.
 Defined.
 
-(** forall a : A, x $== y -> a $== y -> a $== x *)
+(** forall a x y : A, x $== y -> a $== y -> a $== x *)
 #[export] Instance IsProper_GpdHom_from_a {A : Type} `{Is0Gpd A}
   {a : A}
   : CMorphisms.Proper
@@ -72,6 +74,7 @@ Defined.
 
 Open Scope signatureT_scope.
 
+(** If [R] is symmetric and [R x y -> R' (f x) (f y)], then [R y x -> R' (f x) (f y)]. *)
 #[export] Instance symmetry_flip {A B : Type} {f : A -> B}
   {R : Relation A} {R' : Relation B} `{Symmetric _ R}
   (H0 : CMorphisms.Proper (R ++> R') f)
@@ -81,6 +84,7 @@ Proof.
   apply H0. symmetry. exact Rba.
 Defined.
 
+(** If [R'] is symmetric and [R x y -> R' x' y' -> R'' (f x x') (f y y')], then [R x y -> R' y' x' -> R'' (f x x') (f y y')]. *)
 #[export] Instance symmetric_flip_snd {A B C : Type} {R : Relation A}
   {R' : Relation B} {R'' : Relation C} `{Symmetric _ R'}
   (f : A -> B -> C) (H1 : CMorphisms.Proper (R ++> R' ++> R'') f)
@@ -116,7 +120,7 @@ Proof.
   intros a b eq_ab; apply H2; exact eq_ab.
 Defined.
 
-#[export] Instance gpd_hom_is_proper1 {A : Type} `{Is0Gpd A}
+#[export] Instance IsProper_Hom {A : Type} `{Is0Gpd A}
   : CMorphisms.Proper
       (Hom ==> Hom ==> CRelationClasses.arrow) Hom.
 Proof.
