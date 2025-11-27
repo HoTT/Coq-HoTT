@@ -3,8 +3,8 @@
 (** This file defines some of the most basic types and type formers, such as sums, products, Sigma types and path types.  It defines the action of functions on paths [ap], transport, equivalences, and function extensionality.  It also defines truncatedness, and a number of other fundamental definitions used throughout the library. *)
 
 (** Import the file of reserved notations so we maintain consistent level notations throughout the library. *)
+Require Export Equality.
 Require Export Basics.Settings Basics.Notations.
-
 Local Set Polymorphic Inductive Cumulativity.
 
 (** This command prevents Coq from automatically defining the eliminator functions for inductive types.  We will define them ourselves to match the naming scheme of the HoTT Book.  In principle we ought to make this [Global], but unfortunately the tactics [induction] and [elim] assume that the eliminators are named in Coq's way, e.g. [thing_rect], so making it global could cause unpleasant surprises for people defining new inductive types.  However, when you do define your own inductive types you are encouraged to also do [Local Unset Elimination Schemes] and then use [Scheme] to define [thing_ind], [thing_rec], and (for compatibility with [induction] and [elim]) [thing_rect], as we have done below for [paths], [Empty], [Unit], etc.  We are hoping that this will be fixed eventually; see https://github.com/coq/coq/issues/3745.  *)
@@ -395,17 +395,28 @@ Arguments transport {A}%_type_scope P%_function_scope {x y} p%_path_scope u : si
 (** Transport is very common so it is worth introducing a parsing notation for it.  However, we do not use the notation for output because it hides the fibration, and so makes it very hard to read involved transport expression. *)
 Notation "p # u" := (transport _ p u) (only parsing) : path_scope.
 
-(** The first time [rewrite] is used in each direction, it creates transport lemmas called [internal_paths_rew] and [internal_paths_rew_r].  See ../Tactics.v for how these compare to [transport].  We use [rewrite] here to trigger the creation of these lemmas.  This ensures that they are defined outside of sections, so they are not unnecessarily polymorphic.  The lemmas below are not used in the library. *)
-(** TODO: Since Coq 8.20 has PR#18299, once that is our minimum version we can instead register wrappers for [transport] to be used for rewriting.  See the comment by Dan Christensen in that PR for how to do this.  Then the tactics [internal_paths_rew_to_transport] and [rewrite_to_transport] can be removed from ../Tactics.v. *)
-Local Lemma define_internal_paths_rew A x y P (u : P x) (H : x = y :> A) : P y.
-Proof. rewrite <- H. exact u. Defined.
+Instance path_Has_refl@{l} : Has_refl@{Type Type;l l} (@paths@{l}) 
+  := @idpath.
 
-Local Lemma define_internal_paths_rew_r A x y P (u : P y) (H : x = y :> A) : P x.
-Proof. rewrite -> H. exact u. Defined.
+Definition path_Has_J_elim@{l l'} : Has_J@{Type Type Type; l l l'} (@paths) _ 
+  := paths_rect.
 
-(* TODO: ": rename" is needed because the default names changed in Rocq 9.2.0.  When the minimum supported version is >= 9.2.0, the ": rename" can be removed. *)
-Arguments internal_paths_rew {A%_type_scope} {a} P%_function_scope f {a0} p : rename.
-Arguments internal_paths_rew_r {A%_type_scope} {a y} P%_function_scope HC X.
+Hint Resolve path_Has_J_elim : rewrite_instances.
+
+Definition path_Has_Leibniz_elim@{l l'} : Has_Leibniz@{Type Type Type;l l l'} (@paths) 
+  := @paths_rec.
+
+Hint Resolve path_Has_Leibniz_elim : rewrite_instances.
+
+Definition path_Has_J_r_elim@{l l'} : Has_J_r@{Type Type Type; l l l'} (@paths) _
+  := @paths_ind_r.
+
+Hint Resolve path_Has_J_r_elim : rewrite_instances.
+
+Definition path_Has_Leibniz_r_elim@{l l'} : Has_Leibniz_r@{Type Type s;l l l'} (@paths) :=
+  fun A x P t y e => @paths_ind_r A x (fun a _ => P a) t y e.
+  
+Hint Resolve path_Has_Leibniz_r_elim : rewrite_instances.
 
 (** Having defined transport, we can use it to talk about what a homotopy theorist might see as "paths in a fibration over paths in the base"; and what a type theorist might see as "heterogeneous equality in a dependent type".  We will first see this appearing in the type of [apD]. *)
 
