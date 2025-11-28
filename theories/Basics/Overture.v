@@ -282,6 +282,7 @@ Definition paths_rect := paths_ind.
 Register paths as core.identity.type.
 Register idpath as core.identity.refl.
 Register paths_rect as core.identity.ind.
+Register paths_rec as core.identity.rec.
 
 Notation "x = y :> A" := (@paths A x y) : type_scope.
 Notation "x = y" := (x = y :>_) : type_scope.
