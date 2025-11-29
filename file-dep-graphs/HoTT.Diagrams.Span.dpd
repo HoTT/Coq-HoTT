@@ -1,0 +1,3 @@
+N: 1 "span" [body=yes, kind=cnst, prop=no, path="Span", ];
+N: 2 "span_graph" [body=yes, kind=cnst, prop=no, path="Span", ];
+E: 1 2 [weight=17, ];

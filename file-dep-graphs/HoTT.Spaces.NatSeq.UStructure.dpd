@@ -1,0 +1,15 @@
+N: 1 "cons_decreases_modulus" [body=yes, kind=cnst, prop=no, path="UStructure", ];
+N: 3 "list_restrict_eq_iff_seq_agree_inductive" [body=yes, kind=cnst, prop=no, path="UStructure", ];
+N: 4 "list_restrict_eq_iff_seq_agree_lt" [body=yes, kind=cnst, prop=no, path="UStructure", ];
+N: 5 "seq_cons_of_eq" [body=yes, kind=cnst, prop=no, path="UStructure", ];
+N: 7 "sequence_type_us" [body=yes, kind=cnst, prop=no, path="UStructure", ];
+N: 6 "sequence_type_us_zero" [body=yes, kind=cnst, prop=no, path="UStructure", ];
+N: 2 "uniformly_continuous_extensionality" [body=yes, kind=cnst, prop=no, path="UStructure", ];
+E: 1 5 [weight=1, ];
+E: 1 7 [weight=5, ];
+E: 2 7 [weight=2, ];
+E: 3 4 [weight=1, ];
+E: 3 7 [weight=1, ];
+E: 4 7 [weight=5, ];
+E: 5 7 [weight=4, ];
+E: 6 7 [weight=1, ];

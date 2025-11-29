@@ -1,0 +1,11 @@
+digraph HoTT_Spaces_BAut_Bool_IncoherentIdempotent {
+  graph [ratio=0.5]
+  node [style=filled]
+IncoherentIdempotent_not_all_coherent_qidem_baut_baut_bool [label="not_all_coherent_qidem_baut_baut_bool", URL=<IncoherentIdempotent.html#not_all_coherent_qidem_baut_baut_bool>, peripheries=3, fillcolor="#F070D1"] ;
+IncoherentIdempotent_splitting_preidem_notequiv_qidem_baut_baut_bool [label="splitting_preidem_notequiv_qidem_baut_baut_bool", URL=<IncoherentIdempotent.html#splitting_preidem_notequiv_qidem_baut_baut_bool>, fillcolor="#F070D1"] ;
+IncoherentIdempotent_nontrivial_qidem_baut_baut_bool [label="nontrivial_qidem_baut_baut_bool", URL=<IncoherentIdempotent.html#nontrivial_qidem_baut_baut_bool>, fillcolor="#F070D1"] ;
+  IncoherentIdempotent_not_all_coherent_qidem_baut_baut_bool -> IncoherentIdempotent_splitting_preidem_notequiv_qidem_baut_baut_bool [] ;
+  IncoherentIdempotent_splitting_preidem_notequiv_qidem_baut_baut_bool -> IncoherentIdempotent_nontrivial_qidem_baut_baut_bool [] ;
+subgraph cluster_IncoherentIdempotent { label="IncoherentIdempotent"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+IncoherentIdempotent_nontrivial_qidem_baut_baut_bool; IncoherentIdempotent_splitting_preidem_notequiv_qidem_baut_baut_bool; IncoherentIdempotent_not_all_coherent_qidem_baut_baut_bool; };
+} /* END */

@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>Core.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-wsp"><span class="sd">(** * ∑-categories - exploded Grothendieck constructions, or generalizations of subcategories *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc1c" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc1c"><span class="kn">Require Import</span> Category.Core Functor.Core.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Basics.Trunc Types.Sigma.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Universe Polymorphism</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Implicit Arguments</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Generalizable All Variables</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Asymmetric Patterns</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Notation</span> <span class="nf">sig_type</span> := sig.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** We can generalize the notion of [sig] to categories.  This is, essentially, a type-theoretic perspective on the Grothendieck construction. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">sig_obj_mor</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">A</span> : PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">Pobj</span> : A -&gt; <span class="kt">Type</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Notation</span> <span class="nf">obj</span> := (sig Pobj).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">Pmor</span> : <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : obj, morphism A s.<span class="mi">1</span> d.<span class="mi">1</span> -&gt; <span class="kt">Type</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Notation</span> <span class="nf">mor</span> s d := (sig (Pmor s d)).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `(HPmor : <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span>, IsHSet (mor s d)).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">Pidentity</span> : <span class="kr">forall</span> <span class="nv">x</span>, @Pmor x x (@identity A _).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">Pcompose</span> : <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> <span class="nv">d&#39;</span> <span class="nv">m1</span> <span class="nv">m2</span>,
+                        @Pmor d d&#39; m1
+                        -&gt; @Pmor s d m2
+                        -&gt; @Pmor s d&#39; (m1 o m2).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Notation</span> <span class="nf">identity</span> x := (@identity A x.<span class="mi">1</span>; @Pidentity x).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Notation</span> <span class="nf">compose</span> m1 m2 := (m1.<span class="mi">1</span> o m2.<span class="mi">1</span>; @Pcompose _ _ _ m1.<span class="mi">1</span> m2.<span class="mi">1</span> m1.<span class="mi">2</span> m2.<span class="mi">2</span>)%morphism.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Hypothesis</span> <span class="nv">P_associativity</span>
+  : <span class="kr">forall</span> <span class="nv">x1</span> <span class="nv">x2</span> <span class="nv">x3</span> <span class="nv">x4</span> (<span class="nv">m1</span> : mor x1 x2) (<span class="nv">m2</span> : mor x2 x3) (<span class="nv">m3</span> : mor x3 x4),
+      compose (compose m3 m2) m1 = compose m3 (compose m2 m1).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Hypothesis</span> <span class="nv">P_left_identity</span>
+  : <span class="kr">forall</span> <span class="nv">a</span> <span class="nv">b</span> (<span class="nv">f</span> : mor a b),
+      compose (identity b) f = f.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Hypothesis</span> <span class="nv">P_right_identity</span>
+  : <span class="kr">forall</span> <span class="nv">a</span> <span class="nv">b</span> (<span class="nv">f</span> : mor a b),
+      compose f (identity a) = f.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** ** Definition of a [sig]-precategory *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc1d" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc1d"><span class="kn">Definition</span> <span class="nf">sig&#39;</span> : PreCategory.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>Pobj</var><span class="hyp-type"><b>: </b><span>A -&gt; <span class="kt">Type</span></span></span></span><br><span><var>Pmor</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : obj, morphism A s.<span class="mi">1</span> d.<span class="mi">1</span> -&gt; <span class="kt">Type</span></span></span></span><br><span><var>HPmor</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : obj, IsHSet (mor s d)</span></span></span><br><span><var>Pidentity</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> : obj, Pmor x x <span class="mi">1</span></span></span></span><br><span><var>Pcompose</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">s</span> <span class="nv">d</span> <span class="nv">d&#39;</span> : obj)
+(<span class="nv">m1</span> : morphism A d.<span class="mi">1</span> d&#39;.<span class="mi">1</span>)
+(<span class="nv">m2</span> : morphism A s.<span class="mi">1</span> d.<span class="mi">1</span>),
+Pmor d d&#39; m1 -&gt;
+Pmor s d m2 -&gt; Pmor s d&#39; (m1 o m2)</span></span></span><br><span><var>P_associativity</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">x1</span> <span class="nv">x2</span> <span class="nv">x3</span> <span class="nv">x4</span> : obj)
+(<span class="nv">m1</span> : mor x1 x2) (<span class="nv">m2</span> : mor x2 x3)
+(<span class="nv">m3</span> : mor x3 x4),
+compose (compose m3 m2) m1 =
+compose m3 (compose m2 m1)</span></span></span><br><span><var>P_left_identity</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">a</span> <span class="nv">b</span> : obj) (<span class="nv">f</span> : mor a b),
+compose (identity b) f = f</span></span></span><br><span><var>P_right_identity</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">a</span> <span class="nv">b</span> : obj) (<span class="nv">f</span> : mor a b),
+compose f (identity a) = f</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">PreCategory</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc1e" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc1e"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>Pobj</var><span class="hyp-type"><b>: </b><span>A -&gt; <span class="kt">Type</span></span></span></span><br><span><var>Pmor</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : obj, morphism A s.<span class="mi">1</span> d.<span class="mi">1</span> -&gt; <span class="kt">Type</span></span></span></span><br><span><var>HPmor</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : obj, IsHSet (mor s d)</span></span></span><br><span><var>Pidentity</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> : obj, Pmor x x <span class="mi">1</span></span></span></span><br><span><var>Pcompose</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">s</span> <span class="nv">d</span> <span class="nv">d&#39;</span> : obj)
+(<span class="nv">m1</span> : morphism A d.<span class="mi">1</span> d&#39;.<span class="mi">1</span>)
+(<span class="nv">m2</span> : morphism A s.<span class="mi">1</span> d.<span class="mi">1</span>),
+Pmor d d&#39; m1 -&gt;
+Pmor s d m2 -&gt; Pmor s d&#39; (m1 o m2)</span></span></span><br><span><var>P_associativity</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">x1</span> <span class="nv">x2</span> <span class="nv">x3</span> <span class="nv">x4</span> : obj)
+(<span class="nv">m1</span> : mor x1 x2) (<span class="nv">m2</span> : mor x2 x3)
+(<span class="nv">m3</span> : mor x3 x4),
+compose (compose m3 m2) m1 =
+compose m3 (compose m2 m1)</span></span></span><br><span><var>P_left_identity</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">a</span> <span class="nv">b</span> : obj) (<span class="nv">f</span> : mor a b),
+compose (identity b) f = f</span></span></span><br><span><var>P_right_identity</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">a</span> <span class="nv">b</span> : obj) (<span class="nv">f</span> : mor a b),
+compose f (identity a) = f</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">PreCategory</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">refine</span> (@Build_PreCategory
+              obj
+              (<span class="kr">fun</span> <span class="nv">s</span> <span class="nv">d</span> =&gt; mor s d)
+              (<span class="kr">fun</span> <span class="nv">x</span> =&gt; identity x)
+              (<span class="kr">fun</span> <span class="nv">s</span> <span class="nv">d</span> <span class="nv">d&#39;</span> <span class="nv">m1</span> <span class="nv">m2</span> =&gt; compose m1 m2)
+              _
+              _
+              _
+              _);
+    <span class="bp">assumption</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** ** First projection functor *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">pr1&#39;</span> : Functor sig&#39; A
+    := Build_Functor
+         sig&#39; A
+         (@pr1 _ _)
+         (<span class="kr">fun</span> <span class="nv">_</span> <span class="nv">_</span> =&gt; @pr1 _ _)
+         (<span class="kr">fun</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> =&gt; idpath)
+         (<span class="kr">fun</span> <span class="nv">_</span> =&gt; idpath).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">sig_obj_mor</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> pr1&#39; {A Pobj Pmor HPmor Pidentity Pcompose P_associativity P_left_identity P_right_identity}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Variant of [sig&#39;]-precategory when we are taking a subset of morphisms *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">sig_obj_mor_hProp</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">A</span> : PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">Pobj</span> : A -&gt; <span class="kt">Type</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Notation</span> <span class="nf">obj</span> := (sig_type Pobj).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">Pmor</span> : <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : obj, morphism A s.<span class="mi">1</span> d.<span class="mi">1</span> -&gt; <span class="kt">Type</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Notation</span> <span class="nf">mor</span> s d := (sig_type (Pmor s d)).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `(HPmor : <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> <span class="nv">m</span>, IsHProp (Pmor s d m)).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">Pidentity</span> : <span class="kr">forall</span> <span class="nv">x</span>, @Pmor x x (@identity A _).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">Pcompose</span> : <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> <span class="nv">d&#39;</span> <span class="nv">m1</span> <span class="nv">m2</span>,
+                        @Pmor d d&#39; m1
+                        -&gt; @Pmor s d m2
+                        -&gt; @Pmor s d&#39; (m1 o m2).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Notation</span> <span class="nf">identity</span> x := (@identity A x.<span class="mi">1</span>; @Pidentity x).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Notation</span> <span class="nf">compose</span> m1 m2 := (m1.<span class="mi">1</span> o m2.<span class="mi">1</span>; @Pcompose _ _ _ m1.<span class="mi">1</span> m2.<span class="mi">1</span> m1.<span class="mi">2</span> m2.<span class="mi">2</span>)%morphism.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Ltac</span> <span class="nf">t</span> ex_tac :=
+    <span class="nb">intros</span>;
+    <span class="nb">simpl</span>;
+    <span class="nb">apply</span> path_sigma_uncurried;
+    <span class="nb">simpl</span>;
+    ex_tac;
+    <span class="nb">apply</span> path_ishprop.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc1f" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc1f"><span class="kn">Let</span> <span class="nf">P_associativity</span>
+  : <span class="kr">forall</span> <span class="nv">x1</span> <span class="nv">x2</span> <span class="nv">x3</span> <span class="nv">x4</span> (<span class="nv">m1</span> : mor x1 x2) (<span class="nv">m2</span> : mor x2 x3) (<span class="nv">m3</span> : mor x3 x4),
+      compose (compose m3 m2) m1 = compose m3 (compose m2 m1).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>Pobj</var><span class="hyp-type"><b>: </b><span>A -&gt; <span class="kt">Type</span></span></span></span><br><span><var>Pmor</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : obj, morphism A s.<span class="mi">1</span> d.<span class="mi">1</span> -&gt; <span class="kt">Type</span></span></span></span><br><span><var>HPmor</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">s</span> <span class="nv">d</span> : obj) (<span class="nv">m</span> : morphism A s.<span class="mi">1</span> d.<span class="mi">1</span>),
+IsHProp (Pmor s d m)</span></span></span><br><span><var>Pidentity</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> : obj, Pmor x x <span class="mi">1</span></span></span></span><br><span><var>Pcompose</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">s</span> <span class="nv">d</span> <span class="nv">d&#39;</span> : obj)
+(<span class="nv">m1</span> : morphism A d.<span class="mi">1</span> d&#39;.<span class="mi">1</span>)
+(<span class="nv">m2</span> : morphism A s.<span class="mi">1</span> d.<span class="mi">1</span>),
+Pmor d d&#39; m1 -&gt;
+Pmor s d m2 -&gt; Pmor s d&#39; (m1 o m2)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">x1</span> <span class="nv">x2</span> <span class="nv">x3</span> <span class="nv">x4</span> : obj) (<span class="nv">m1</span> : mor x1 x2)
+(<span class="nv">m2</span> : mor x2 x3) (<span class="nv">m3</span> : mor x3 x4),
+compose (compose m3 m2) m1 =
+compose m3 (compose m2 m1)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc20" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc20"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>Pobj</var><span class="hyp-type"><b>: </b><span>A -&gt; <span class="kt">Type</span></span></span></span><br><span><var>Pmor</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : obj, morphism A s.<span class="mi">1</span> d.<span class="mi">1</span> -&gt; <span class="kt">Type</span></span></span></span><br><span><var>HPmor</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">s</span> <span class="nv">d</span> : obj) (<span class="nv">m</span> : morphism A s.<span class="mi">1</span> d.<span class="mi">1</span>),
+IsHProp (Pmor s d m)</span></span></span><br><span><var>Pidentity</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> : obj, Pmor x x <span class="mi">1</span></span></span></span><br><span><var>Pcompose</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">s</span> <span class="nv">d</span> <span class="nv">d&#39;</span> : obj)
+(<span class="nv">m1</span> : morphism A d.<span class="mi">1</span> d&#39;.<span class="mi">1</span>)
+(<span class="nv">m2</span> : morphism A s.<span class="mi">1</span> d.<span class="mi">1</span>),
+Pmor d d&#39; m1 -&gt;
+Pmor s d m2 -&gt; Pmor s d&#39; (m1 o m2)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">x1</span> <span class="nv">x2</span> <span class="nv">x3</span> <span class="nv">x4</span> : obj) (<span class="nv">m1</span> : mor x1 x2)
+(<span class="nv">m2</span> : mor x2 x3) (<span class="nv">m3</span> : mor x3 x4),
+compose (compose m3 m2) m1 =
+compose m3 (compose m2 m1)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kp">abstract</span> t <span class="kp">ltac</span>:(<span class="kr">exists</span> (<span class="nv">associativity</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span>))
+      <span class="nb">using</span> P_associativity_core_subproof.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc21" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc21"><span class="kn">Let</span> <span class="nf">P_left_identity</span>
+  : <span class="kr">forall</span> <span class="nv">a</span> <span class="nv">b</span> (<span class="nv">f</span> : mor a b),
+      compose (identity b) f = f.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>Pobj</var><span class="hyp-type"><b>: </b><span>A -&gt; <span class="kt">Type</span></span></span></span><br><span><var>Pmor</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : obj, morphism A s.<span class="mi">1</span> d.<span class="mi">1</span> -&gt; <span class="kt">Type</span></span></span></span><br><span><var>HPmor</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">s</span> <span class="nv">d</span> : obj) (<span class="nv">m</span> : morphism A s.<span class="mi">1</span> d.<span class="mi">1</span>),
+IsHProp (Pmor s d m)</span></span></span><br><span><var>Pidentity</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> : obj, Pmor x x <span class="mi">1</span></span></span></span><br><span><var>Pcompose</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">s</span> <span class="nv">d</span> <span class="nv">d&#39;</span> : obj)
+(<span class="nv">m1</span> : morphism A d.<span class="mi">1</span> d&#39;.<span class="mi">1</span>)
+(<span class="nv">m2</span> : morphism A s.<span class="mi">1</span> d.<span class="mi">1</span>),
+Pmor d d&#39; m1 -&gt;
+Pmor s d m2 -&gt; Pmor s d&#39; (m1 o m2)</span></span></span><br><span><var>P_associativity</var><span><span class="hyp-body"><b>:= </b><span>P_associativity_core_subproof</span></span><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">x1</span> <span class="nv">x2</span> <span class="nv">x3</span> <span class="nv">x4</span> : obj)
+(<span class="nv">m1</span> : mor x1 x2) (<span class="nv">m2</span> : mor x2 x3)
+(<span class="nv">m3</span> : mor x3 x4),
+compose (compose m3 m2) m1 =
+compose m3 (compose m2 m1)</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">a</span> <span class="nv">b</span> : obj) (<span class="nv">f</span> : mor a b),
+compose (identity b) f = f</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc22" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc22"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>Pobj</var><span class="hyp-type"><b>: </b><span>A -&gt; <span class="kt">Type</span></span></span></span><br><span><var>Pmor</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : obj, morphism A s.<span class="mi">1</span> d.<span class="mi">1</span> -&gt; <span class="kt">Type</span></span></span></span><br><span><var>HPmor</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">s</span> <span class="nv">d</span> : obj) (<span class="nv">m</span> : morphism A s.<span class="mi">1</span> d.<span class="mi">1</span>),
+IsHProp (Pmor s d m)</span></span></span><br><span><var>Pidentity</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> : obj, Pmor x x <span class="mi">1</span></span></span></span><br><span><var>Pcompose</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">s</span> <span class="nv">d</span> <span class="nv">d&#39;</span> : obj)
+(<span class="nv">m1</span> : morphism A d.<span class="mi">1</span> d&#39;.<span class="mi">1</span>)
+(<span class="nv">m2</span> : morphism A s.<span class="mi">1</span> d.<span class="mi">1</span>),
+Pmor d d&#39; m1 -&gt;
+Pmor s d m2 -&gt; Pmor s d&#39; (m1 o m2)</span></span></span><br><span><var>P_associativity</var><span><span class="hyp-body"><b>:= </b><span>P_associativity_core_subproof</span></span><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">x1</span> <span class="nv">x2</span> <span class="nv">x3</span> <span class="nv">x4</span> : obj)
+(<span class="nv">m1</span> : mor x1 x2) (<span class="nv">m2</span> : mor x2 x3)
+(<span class="nv">m3</span> : mor x3 x4),
+compose (compose m3 m2) m1 =
+compose m3 (compose m2 m1)</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">a</span> <span class="nv">b</span> : obj) (<span class="nv">f</span> : mor a b),
+compose (identity b) f = f</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc23" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc23"><span class="nb">clear</span> P_associativity.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>Pobj</var><span class="hyp-type"><b>: </b><span>A -&gt; <span class="kt">Type</span></span></span></span><br><span><var>Pmor</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : obj, morphism A s.<span class="mi">1</span> d.<span class="mi">1</span> -&gt; <span class="kt">Type</span></span></span></span><br><span><var>HPmor</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">s</span> <span class="nv">d</span> : obj) (<span class="nv">m</span> : morphism A s.<span class="mi">1</span> d.<span class="mi">1</span>),
+IsHProp (Pmor s d m)</span></span></span><br><span><var>Pidentity</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> : obj, Pmor x x <span class="mi">1</span></span></span></span><br><span><var>Pcompose</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">s</span> <span class="nv">d</span> <span class="nv">d&#39;</span> : obj)
+(<span class="nv">m1</span> : morphism A d.<span class="mi">1</span> d&#39;.<span class="mi">1</span>)
+(<span class="nv">m2</span> : morphism A s.<span class="mi">1</span> d.<span class="mi">1</span>),
+Pmor d d&#39; m1 -&gt;
+Pmor s d m2 -&gt; Pmor s d&#39; (m1 o m2)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">a</span> <span class="nv">b</span> : obj) (<span class="nv">f</span> : mor a b),
+compose (identity b) f = f</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kp">abstract</span> t <span class="kp">ltac</span>:(<span class="kr">exists</span> (<span class="nv">left_identity</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span>))
+      <span class="nb">using</span> P_left_identity_core_subproof.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc24" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc24"><span class="kn">Let</span> <span class="nf">P_right_identity</span>
+  : <span class="kr">forall</span> <span class="nv">a</span> <span class="nv">b</span> (<span class="nv">f</span> : mor a b),
+      compose f (identity a) = f.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>Pobj</var><span class="hyp-type"><b>: </b><span>A -&gt; <span class="kt">Type</span></span></span></span><br><span><var>Pmor</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : obj, morphism A s.<span class="mi">1</span> d.<span class="mi">1</span> -&gt; <span class="kt">Type</span></span></span></span><br><span><var>HPmor</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">s</span> <span class="nv">d</span> : obj) (<span class="nv">m</span> : morphism A s.<span class="mi">1</span> d.<span class="mi">1</span>),
+IsHProp (Pmor s d m)</span></span></span><br><span><var>Pidentity</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> : obj, Pmor x x <span class="mi">1</span></span></span></span><br><span><var>Pcompose</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">s</span> <span class="nv">d</span> <span class="nv">d&#39;</span> : obj)
+(<span class="nv">m1</span> : morphism A d.<span class="mi">1</span> d&#39;.<span class="mi">1</span>)
+(<span class="nv">m2</span> : morphism A s.<span class="mi">1</span> d.<span class="mi">1</span>),
+Pmor d d&#39; m1 -&gt;
+Pmor s d m2 -&gt; Pmor s d&#39; (m1 o m2)</span></span></span><br><span><var>P_associativity</var><span><span class="hyp-body"><b>:= </b><span>P_associativity_core_subproof</span></span><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">x1</span> <span class="nv">x2</span> <span class="nv">x3</span> <span class="nv">x4</span> : obj)
+(<span class="nv">m1</span> : mor x1 x2) (<span class="nv">m2</span> : mor x2 x3)
+(<span class="nv">m3</span> : mor x3 x4),
+compose (compose m3 m2) m1 =
+compose m3 (compose m2 m1)</span></span></span></span><br><span><var>P_left_identity</var><span><span class="hyp-body"><b>:= </b><span>P_left_identity_core_subproof</span></span><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">a</span> <span class="nv">b</span> : obj) (<span class="nv">f</span> : mor a b),
+compose (identity b) f = f</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">a</span> <span class="nv">b</span> : obj) (<span class="nv">f</span> : mor a b),
+compose f (identity a) = f</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc25" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc25"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>Pobj</var><span class="hyp-type"><b>: </b><span>A -&gt; <span class="kt">Type</span></span></span></span><br><span><var>Pmor</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : obj, morphism A s.<span class="mi">1</span> d.<span class="mi">1</span> -&gt; <span class="kt">Type</span></span></span></span><br><span><var>HPmor</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">s</span> <span class="nv">d</span> : obj) (<span class="nv">m</span> : morphism A s.<span class="mi">1</span> d.<span class="mi">1</span>),
+IsHProp (Pmor s d m)</span></span></span><br><span><var>Pidentity</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> : obj, Pmor x x <span class="mi">1</span></span></span></span><br><span><var>Pcompose</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">s</span> <span class="nv">d</span> <span class="nv">d&#39;</span> : obj)
+(<span class="nv">m1</span> : morphism A d.<span class="mi">1</span> d&#39;.<span class="mi">1</span>)
+(<span class="nv">m2</span> : morphism A s.<span class="mi">1</span> d.<span class="mi">1</span>),
+Pmor d d&#39; m1 -&gt;
+Pmor s d m2 -&gt; Pmor s d&#39; (m1 o m2)</span></span></span><br><span><var>P_associativity</var><span><span class="hyp-body"><b>:= </b><span>P_associativity_core_subproof</span></span><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">x1</span> <span class="nv">x2</span> <span class="nv">x3</span> <span class="nv">x4</span> : obj)
+(<span class="nv">m1</span> : mor x1 x2) (<span class="nv">m2</span> : mor x2 x3)
+(<span class="nv">m3</span> : mor x3 x4),
+compose (compose m3 m2) m1 =
+compose m3 (compose m2 m1)</span></span></span></span><br><span><var>P_left_identity</var><span><span class="hyp-body"><b>:= </b><span>P_left_identity_core_subproof</span></span><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">a</span> <span class="nv">b</span> : obj) (<span class="nv">f</span> : mor a b),
+compose (identity b) f = f</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">a</span> <span class="nv">b</span> : obj) (<span class="nv">f</span> : mor a b),
+compose f (identity a) = f</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc26" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc26"><span class="nb">clear</span> P_associativity P_left_identity.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>Pobj</var><span class="hyp-type"><b>: </b><span>A -&gt; <span class="kt">Type</span></span></span></span><br><span><var>Pmor</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : obj, morphism A s.<span class="mi">1</span> d.<span class="mi">1</span> -&gt; <span class="kt">Type</span></span></span></span><br><span><var>HPmor</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">s</span> <span class="nv">d</span> : obj) (<span class="nv">m</span> : morphism A s.<span class="mi">1</span> d.<span class="mi">1</span>),
+IsHProp (Pmor s d m)</span></span></span><br><span><var>Pidentity</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> : obj, Pmor x x <span class="mi">1</span></span></span></span><br><span><var>Pcompose</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">s</span> <span class="nv">d</span> <span class="nv">d&#39;</span> : obj)
+(<span class="nv">m1</span> : morphism A d.<span class="mi">1</span> d&#39;.<span class="mi">1</span>)
+(<span class="nv">m2</span> : morphism A s.<span class="mi">1</span> d.<span class="mi">1</span>),
+Pmor d d&#39; m1 -&gt;
+Pmor s d m2 -&gt; Pmor s d&#39; (m1 o m2)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">a</span> <span class="nv">b</span> : obj) (<span class="nv">f</span> : mor a b),
+compose f (identity a) = f</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kp">abstract</span> t <span class="kp">ltac</span>:(<span class="kr">exists</span> (<span class="nv">right_identity</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span>))
+      <span class="nb">using</span> P_right_identity_core_subproof.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** *** Definition of [sig]-precategory *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">sig</span> : PreCategory
+    := <span class="kn">Eval</span> <span class="nb">cbv</span> delta [P_associativity P_left_identity P_right_identity]
+      <span class="kr">in</span> @sig&#39; A Pobj Pmor _ Pidentity Pcompose P_associativity P_left_identity P_right_identity.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** *** First projection functor *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">proj1_sig</span> : Functor sig A
+    := pr1&#39;.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">sig_obj_mor_hProp</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> proj1_sig {A Pobj Pmor HPmor Pidentity Pcompose}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="nf">subcategory</span> := sig.</span></span></pre>
+</div>
+</div></body>
+</html>

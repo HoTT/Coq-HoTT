@@ -1,0 +1,162 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Algebra.Universal.Congruence</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Algebra.Universal.Congruence</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+This file implements algebra congruence relation. It serves as a
+    universal algebra generalization of normal subgroup, ring ideal, etc.
+
+<div class="paragraph"> </div>
+
+    Congruence is used to construct quotients, in similarity with how
+    normal subgroup and ring ideal are used to construct quotients. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Export</span> <a class="idref" href="HoTT.Algebra.Universal.Algebra.html#"><span class="id" title="library">HoTT.Algebra.Universal.Algebra</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span><br/>
+&nbsp;&nbsp;<a class="idref" href="HoTT.Universes.HProp.html#"><span class="id" title="library">HoTT.Universes.HProp</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#"><span class="id" title="library">HoTT.Classes.interfaces.canonical_names</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="HoTT.Algebra.Universal.Homomorphism.html#"><span class="id" title="library">HoTT.Algebra.Universal.Homomorphism</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Unset</span> <span class="id" title="var">Elimination</span> <span class="id" title="var">Schemes</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">Algebra_scope</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="congruence" class="idref" href="#congruence"><span class="id" title="section">congruence</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> {<a id="037d1dbc1a02d6ef6874dcc89df346e1" class="idref" href="#037d1dbc1a02d6ef6874dcc89df346e1"><span class="id" title="binder">σ</span></a> : <a class="idref" href="HoTT.Algebra.Universal.Algebra.html#Signature"><span class="id" title="record">Signature</span></a>} (<a id="A:2" class="idref" href="#A:2"><span class="id" title="binder">A</span></a> : <a class="idref" href="HoTT.Algebra.Universal.Algebra.html#Algebra"><span class="id" title="record">Algebra</span></a> <a class="idref" href="HoTT.Algebra.Universal.Congruence.html#037d1dbc1a02d6ef6874dcc89df346e1"><span class="id" title="variable">σ</span></a>) (<a id="f838c42210310bbc1cef1f28376650f1" class="idref" href="#f838c42210310bbc1cef1f28376650f1"><span class="id" title="binder">Φ</span></a> : <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="s:3" class="idref" href="#s:3"><span class="id" title="binder">s</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Basics.Overture.html#Relation"><span class="id" title="definition">Relation</span></a> (<a class="idref" href="HoTT.Algebra.Universal.Congruence.html#A:2"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Algebra.Universal.Congruence.html#s:3"><span class="id" title="variable">s</span></a>)).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+A finitary operation <span class="inlinecode"><a class="idref" href="HoTT.Types.Bool.html#EquivBoolEquiv.f"><span class="id" title="variable">f</span></a></span> <span class="inlinecode">:</span> <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> <span class="inlinecode"><span class="id" title="var">s1</span></span> <span class="inlinecode">×</span> <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> <span class="inlinecode"><span class="id" title="var">s2</span></span> <span class="inlinecode">×</span> <span class="inlinecode">...</span> <span class="inlinecode">×</span> <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> <span class="inlinecode"><span class="id" title="var">sn</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> <span class="inlinecode"><span class="id" title="var">t</span></span>
+    satisfies <span class="inlinecode"><a class="idref" href="HoTT.Classes.interfaces.ua_congruence.html#OpCompatible"><span class="id" title="definition">OpCompatible</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Types.Bool.html#EquivBoolEquiv.f"><span class="id" title="variable">f</span></a></span> iff
+
+<div class="paragraph"> </div>
+
+<pre>
+      Φ s1 x1 y1 * Φ s2 x2 y2 * ... * Φ sn xn yn
+</pre>
+
+<div class="paragraph"> </div>
+
+    implies
+
+<div class="paragraph"> </div>
+
+<pre>
+      Φ t (f (x1, x2, ..., xn)) (f (y1, y2, ..., yn)).
+</pre>
+
+<div class="paragraph"> </div>
+
+    The below definition generalizes this to infinitary operations.
+
+</div>
+<div class="code">
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="OpCompatible" class="idref" href="#OpCompatible"><span class="id" title="definition">OpCompatible</span></a> {<a id="w:5" class="idref" href="#w:5"><span class="id" title="binder">w</span></a> : <a class="idref" href="HoTT.Algebra.Universal.Algebra.html#SymbolType"><span class="id" title="abbreviation">SymbolType</span></a> <a class="idref" href="HoTT.Algebra.Universal.Congruence.html#a43e2b4b56ded75617cf9cdc42804f7f"><span class="id" title="variable">σ</span></a>} (<a id="f:6" class="idref" href="#f:6"><span class="id" title="binder">f</span></a> : <a class="idref" href="HoTT.Algebra.Universal.Algebra.html#Operation"><span class="id" title="definition">Operation</span></a> <a class="idref" href="HoTT.Algebra.Universal.Congruence.html#congruence.A"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Algebra.Universal.Congruence.html#w:5"><span class="id" title="variable">w</span></a>) : <span class="id" title="keyword">Type</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;:= <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">(</span></a><a id="a:7" class="idref" href="#a:7"><span class="id" title="binder">a</span></a> <a id="b:8" class="idref" href="#b:8"><span class="id" title="binder">b</span></a> : <a class="idref" href="HoTT.Algebra.Universal.Algebra.html#DomOperation"><span class="id" title="abbreviation">DomOperation</span></a> <a class="idref" href="HoTT.Algebra.Universal.Congruence.html#congruence.A"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Algebra.Universal.Congruence.html#w:5"><span class="id" title="variable">w</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">),</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="i:9" class="idref" href="#i:9"><span class="id" title="binder">i</span></a> : <a class="idref" href="HoTT.Algebra.Universal.Algebra.html#Arity"><span class="id" title="projection">Arity</span></a> <a class="idref" href="HoTT.Algebra.Universal.Congruence.html#w:5"><span class="id" title="variable">w</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Algebra.Universal.Congruence.html#f1b7c3dea25e38bc630150fe031070e1"><span class="id" title="variable">Φ</span></a> (<a class="idref" href="HoTT.Algebra.Universal.Algebra.html#sorts_dom"><span class="id" title="projection">sorts_dom</span></a> <a class="idref" href="HoTT.Algebra.Universal.Congruence.html#w:5"><span class="id" title="variable">w</span></a> <a class="idref" href="HoTT.Algebra.Universal.Congruence.html#i:9"><span class="id" title="variable">i</span></a>) (<a class="idref" href="HoTT.Algebra.Universal.Congruence.html#a:7"><span class="id" title="variable">a</span></a> <a class="idref" href="HoTT.Algebra.Universal.Congruence.html#i:9"><span class="id" title="variable">i</span></a>) (<a class="idref" href="HoTT.Algebra.Universal.Congruence.html#b:8"><span class="id" title="variable">b</span></a> <a class="idref" href="HoTT.Algebra.Universal.Congruence.html#i:9"><span class="id" title="variable">i</span></a>)<a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Algebra.Universal.Congruence.html#f1b7c3dea25e38bc630150fe031070e1"><span class="id" title="variable">Φ</span></a> (<a class="idref" href="HoTT.Algebra.Universal.Algebra.html#sort_cod"><span class="id" title="projection">sort_cod</span></a> <a class="idref" href="HoTT.Algebra.Universal.Congruence.html#w:5"><span class="id" title="variable">w</span></a>) (<a class="idref" href="HoTT.Algebra.Universal.Congruence.html#f:6"><span class="id" title="variable">f</span></a> <a class="idref" href="HoTT.Algebra.Universal.Congruence.html#a:7"><span class="id" title="variable">a</span></a>) (<a class="idref" href="HoTT.Algebra.Universal.Congruence.html#f:6"><span class="id" title="variable">f</span></a> <a class="idref" href="HoTT.Algebra.Universal.Congruence.html#b:8"><span class="id" title="variable">b</span></a>).<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Class</span> <a id="OpsCompatible" class="idref" href="#OpsCompatible"><span class="id" title="inductive, record"><span id="OpsCompatible" class="id">OpsCompatible</span></span></a> : <span class="id" title="keyword">Type</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;:= <a id="ops_compatible" class="idref" href="#ops_compatible"><span class="id" title="constructor, projection"><span id="ops_compatible" class="id">ops_compatible</span></span></a> : <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">(</span></a><a id="u:11" class="idref" href="#u:11"><span class="id" title="binder">u</span></a> : <a class="idref" href="HoTT.Algebra.Universal.Algebra.html#Symbol"><span class="id" title="projection">Symbol</span></a> <a class="idref" href="HoTT.Algebra.Universal.Congruence.html#a43e2b4b56ded75617cf9cdc42804f7f"><span class="id" title="variable">σ</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">),</span></a> <a class="idref" href="HoTT.Algebra.Universal.Congruence.html#OpCompatible"><span class="id" title="definition">OpCompatible</span></a> <a class="idref" href="HoTT.Algebra.Universal.Congruence.html#u:11"><span class="id" title="variable">u</span></a><a class="idref" href="HoTT.Algebra.Universal.Algebra.html#bb40f36e099e09184dd335a609d6343d"><span class="id" title="notation">.#</span></a><a class="idref" href="HoTT.Algebra.Universal.Congruence.html#congruence.A"><span class="id" title="variable">A</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="trunc_ops_compatible" class="idref" href="#trunc_ops_compatible"><span class="id" title="instance">trunc_ops_compatible</span></a> `{<a id="H:13" class="idref" href="#H:13"><span class="id" title="binder">Funext</span></a>} {<a id="n:14" class="idref" href="#n:14"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#trunc_index"><span class="id" title="inductive">trunc_index</span></a>}<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;`{<a id="H0:18" class="idref" href="#H0:18"><span class="id" title="binder">!</span></a><a id="H0:18" class="idref" href="#H0:18"><span class="id" title="binder">∀</span></a> <a id="s:15" class="idref" href="#s:15"><span class="id" title="binder"><span id="H0:18" class="id">s</span></span></a> <a id="x:16" class="idref" href="#x:16"><span class="id" title="binder"><span id="H0:18" class="id">x</span></span></a> <a id="y:17" class="idref" href="#y:17"><span class="id" title="binder"><span id="H0:18" class="id">y</span></span></a><a id="H0:18" class="idref" href="#H0:18"><span class="id" title="binder">,</span></a> <a id="H0:18" class="idref" href="#H0:18"><span class="id" title="binder">IsTrunc</span></a> <a id="H0:18" class="idref" href="#H0:18"><span class="id" title="binder">n</span></a> <a id="H0:18" class="idref" href="#H0:18"><span class="id" title="binder">(</span></a><a id="H0:18" class="idref" href="#H0:18"><span class="id" title="binder">Φ</span></a> <a id="H0:18" class="idref" href="#H0:18"><span class="id" title="binder">s</span></a> <a id="H0:18" class="idref" href="#H0:18"><span class="id" title="binder">x</span></a> <a id="H0:18" class="idref" href="#H0:18"><span class="id" title="binder">y</span></a><a id="H0:18" class="idref" href="#H0:18"><span class="id" title="binder">)</span></a>}<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Overture.html#IsTrunc"><span class="id" title="abbreviation">IsTrunc</span></a> <a class="idref" href="HoTT.Algebra.Universal.Congruence.html#n:14"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Algebra.Universal.Congruence.html#OpsCompatible"><span class="id" title="class">OpsCompatible</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Basics.Trunc.html#istrunc_forall"><span class="id" title="instance">istrunc_forall</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+A family of relations <span class="inlinecode"><span class="id" title="var">Φ</span></span> is a congruence iff it is a family of
+      mere equivalence relations and <span class="inlinecode"><a class="idref" href="HoTT.Classes.interfaces.ua_congruence.html#OpsCompatible"><span class="id" title="record">OpsCompatible</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> <span class="inlinecode"><span class="id" title="var">Φ</span></span> holds. 
+</div>
+<div class="code">
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Class</span> <a id="IsCongruence" class="idref" href="#IsCongruence"><span class="id" title="record">IsCongruence</span></a> : <span class="id" title="keyword">Type</span> := <span class="id" title="var">Build_IsCongruence</span><br/>
+&nbsp;&nbsp;&nbsp;{ <a id="is_mere_relation_cong" class="idref" href="#is_mere_relation_cong"><span class="id" title="projection">is_mere_relation_cong</span></a> :: <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">(</span></a><a id="s:20" class="idref" href="#s:20"><span class="id" title="binder">s</span></a> : <a class="idref" href="HoTT.Algebra.Universal.Algebra.html#Sort"><span class="id" title="projection">Sort</span></a> <a class="idref" href="HoTT.Algebra.Universal.Congruence.html#a43e2b4b56ded75617cf9cdc42804f7f"><span class="id" title="variable">σ</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">),</span></a> <a class="idref" href="HoTT.Basics.Overture.html#is_mere_relation"><span class="id" title="abbreviation">is_mere_relation</span></a> (<a class="idref" href="HoTT.Algebra.Universal.Congruence.html#congruence.A"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Algebra.Universal.Congruence.html#s:20"><span class="id" title="variable">s</span></a>) (<a class="idref" href="HoTT.Algebra.Universal.Congruence.html#f1b7c3dea25e38bc630150fe031070e1"><span class="id" title="variable">Φ</span></a> <a class="idref" href="HoTT.Algebra.Universal.Congruence.html#s:20"><span class="id" title="variable">s</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;; <a id="equiv_rel_cong" class="idref" href="#equiv_rel_cong"><span class="id" title="projection">equiv_rel_cong</span></a> :: <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">(</span></a><a id="s:22" class="idref" href="#s:22"><span class="id" title="binder">s</span></a> : <a class="idref" href="HoTT.Algebra.Universal.Algebra.html#Sort"><span class="id" title="projection">Sort</span></a> <a class="idref" href="HoTT.Algebra.Universal.Congruence.html#a43e2b4b56ded75617cf9cdc42804f7f"><span class="id" title="variable">σ</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">),</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#EquivRel"><span class="id" title="class">EquivRel</span></a> (<a class="idref" href="HoTT.Algebra.Universal.Congruence.html#f1b7c3dea25e38bc630150fe031070e1"><span class="id" title="variable">Φ</span></a> <a class="idref" href="HoTT.Algebra.Universal.Congruence.html#s:22"><span class="id" title="variable">s</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;; <a id="ops_compatible_cong" class="idref" href="#ops_compatible_cong"><span class="id" title="projection">ops_compatible_cong</span></a> :: <a class="idref" href="HoTT.Algebra.Universal.Congruence.html#OpsCompatible"><span class="id" title="class">OpsCompatible</span></a> }.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Global Arguments</span> <a class="idref" href="HoTT.Algebra.Universal.Congruence.html#Build_IsCongruence"><span class="id" title="constructor">Build_IsCongruence</span></a> {<span class="id" title="var">is_mere_relation_cong</span>}<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<span class="id" title="var">equiv_rel_cong</span>}<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<span class="id" title="var">ops_compatible_cong</span>}.<br/>
+
+<br/>
+&nbsp;&nbsp;#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="hprop_is_congruence" class="idref" href="#hprop_is_congruence"><span class="id" title="instance">hprop_is_congruence</span></a> `{<a id="H:25" class="idref" href="#H:25"><span class="id" title="binder">Funext</span></a>} : <a class="idref" href="HoTT.Basics.Overture.html#IsHProp"><span class="id" title="abbreviation">IsHProp</span></a> <a class="idref" href="HoTT.Algebra.Universal.Congruence.html#IsCongruence"><span class="id" title="class">IsCongruence</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Basics.Overture.html#f3f2d22838b594a6e5dbfb541ecf90ae"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Universes.HProp.html#equiv_hprop_allpath"><span class="id" title="lemma">equiv_hprop_allpath</span></a> <span class="id" title="var">_</span><a class="idref" href="HoTT.Basics.Overture.html#f3f2d22838b594a6e5dbfb541ecf90ae"><span class="id" title="notation">)^-1</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> [<span class="id" title="var">C1</span> <span class="id" title="var">C2</span> <span class="id" title="var">C3</span>] [<span class="id" title="var">D1</span> <span class="id" title="var">D2</span> <span class="id" title="var">D3</span>].<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="tactic">destruct</span> (<a class="idref" href="HoTT.Basics.Trunc.html#path_ishprop"><span class="id" title="lemma">path_ishprop</span></a> <span class="id" title="var">C1</span> <span class="id" title="var">D1</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="HoTT.Basics.Trunc.html#path_ishprop"><span class="id" title="lemma">path_ishprop</span></a> <span class="id" title="var">C2</span> <span class="id" title="var">D2</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="HoTT.Basics.Trunc.html#path_ishprop"><span class="id" title="lemma">path_ishprop</span></a> <span class="id" title="var">C3</span> <span class="id" title="var">D3</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Algebra.Universal.Congruence.html#congruence"><span class="id" title="section">congruence</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+A homomorphism <span class="inlinecode"><a class="idref" href="HoTT.Types.Bool.html#EquivBoolEquiv.f"><span class="id" title="variable">f</span></a></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">∀</span></span> <span class="inlinecode"><a class="idref" href="HoTT.Spaces.BAut.Bool.IncoherentIdempotent.html#IncoherentQuasiIdempotent.s"><span class="id" title="variable">s</span></a>,</span> <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#NoCodes.A"><span class="id" title="variable">A</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Spaces.BAut.Bool.IncoherentIdempotent.html#IncoherentQuasiIdempotent.s"><span class="id" title="variable">s</span></a></span> <span class="inlinecode">→</span> <span class="inlinecode"><a class="idref" href="HoTT.Homotopy.ClassifyingSpace.html#ClassifyingSpaceNotation.B"><span class="id" title="definition">B</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Spaces.BAut.Bool.IncoherentIdempotent.html#IncoherentQuasiIdempotent.s"><span class="id" title="variable">s</span></a></span> is compatible
+    with a congruence <span class="inlinecode"><span class="id" title="var">Φ</span></span> iff <span class="inlinecode"><span class="id" title="var">Φ</span></span> <span class="inlinecode"><a class="idref" href="HoTT.Spaces.BAut.Bool.IncoherentIdempotent.html#IncoherentQuasiIdempotent.s"><span class="id" title="variable">s</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Grothendieck.ToSet.Core.html#x"><span class="id" title="projection">x</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Functor.Attributes.html#fully_faithful_helpers.y"><span class="id" title="variable">y</span></a></span> implies <span class="inlinecode"><a class="idref" href="HoTT.Types.Bool.html#EquivBoolEquiv.f"><span class="id" title="variable">f</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Spaces.BAut.Bool.IncoherentIdempotent.html#IncoherentQuasiIdempotent.s"><span class="id" title="variable">s</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Grothendieck.ToSet.Core.html#x"><span class="id" title="projection">x</span></a></span> <span class="inlinecode">=</span> <span class="inlinecode"><a class="idref" href="HoTT.Types.Bool.html#EquivBoolEquiv.f"><span class="id" title="variable">f</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Spaces.BAut.Bool.IncoherentIdempotent.html#IncoherentQuasiIdempotent.s"><span class="id" title="variable">s</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Functor.Attributes.html#fully_faithful_helpers.y"><span class="id" title="variable">y</span></a></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="HomCompatible" class="idref" href="#HomCompatible"><span class="id" title="definition">HomCompatible</span></a> {<a id="17b9a5ba653b503cf4087ea21d5f1992" class="idref" href="#17b9a5ba653b503cf4087ea21d5f1992"><span class="id" title="binder">σ</span></a> : <a class="idref" href="HoTT.Algebra.Universal.Algebra.html#Signature"><span class="id" title="record">Signature</span></a>} {<a id="A:27" class="idref" href="#A:27"><span class="id" title="binder">A</span></a> <a id="B:28" class="idref" href="#B:28"><span class="id" title="binder">B</span></a> : <a class="idref" href="HoTT.Algebra.Universal.Algebra.html#Algebra"><span class="id" title="record">Algebra</span></a> <a class="idref" href="HoTT.Algebra.Universal.Congruence.html#17b9a5ba653b503cf4087ea21d5f1992"><span class="id" title="variable">σ</span></a>}<br/>
+&nbsp;&nbsp;(<a id="01a46550ac8db3a3545feae0533fc1da" class="idref" href="#01a46550ac8db3a3545feae0533fc1da"><span class="id" title="binder">Φ</span></a> : <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="s:29" class="idref" href="#s:29"><span class="id" title="binder">s</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Basics.Overture.html#Relation"><span class="id" title="definition">Relation</span></a> (<a class="idref" href="HoTT.Algebra.Universal.Congruence.html#A:27"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Algebra.Universal.Congruence.html#s:29"><span class="id" title="variable">s</span></a>)) `{<a id="IsCongruence0:31" class="idref" href="#IsCongruence0:31"><span class="id" title="binder">!</span></a><a id="IsCongruence0:31" class="idref" href="#IsCongruence0:31"><span class="id" title="binder">IsCongruence</span></a> <a id="IsCongruence0:31" class="idref" href="#IsCongruence0:31"><span class="id" title="binder">A</span></a> <a id="IsCongruence0:31" class="idref" href="#IsCongruence0:31"><span class="id" title="binder">Φ</span></a>}<br/>
+&nbsp;&nbsp;(<a id="f:33" class="idref" href="#f:33"><span class="id" title="binder">f</span></a> : <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="s:32" class="idref" href="#s:32"><span class="id" title="binder">s</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Algebra.Universal.Congruence.html#A:27"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Algebra.Universal.Congruence.html#s:32"><span class="id" title="variable">s</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Algebra.Universal.Congruence.html#B:28"><span class="id" title="variable">B</span></a> <a class="idref" href="HoTT.Algebra.Universal.Congruence.html#s:32"><span class="id" title="variable">s</span></a>) `{<a id="IsHomomorphism0:34" class="idref" href="#IsHomomorphism0:34"><span class="id" title="binder">!</span></a><a id="IsHomomorphism0:34" class="idref" href="#IsHomomorphism0:34"><span class="id" title="binder">IsHomomorphism</span></a> <a id="IsHomomorphism0:34" class="idref" href="#IsHomomorphism0:34"><span class="id" title="binder">f</span></a>}<br/>
+&nbsp;&nbsp;: <span class="id" title="keyword">Type</span><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="s:35" class="idref" href="#s:35"><span class="id" title="binder">s</span></a> (<a id="x:36" class="idref" href="#x:36"><span class="id" title="binder">x</span></a> <a id="y:37" class="idref" href="#y:37"><span class="id" title="binder">y</span></a> : <a class="idref" href="HoTT.Algebra.Universal.Congruence.html#A:27"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Algebra.Universal.Congruence.html#s:35"><span class="id" title="variable">s</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">),</span></a> <a class="idref" href="HoTT.Algebra.Universal.Congruence.html#01a46550ac8db3a3545feae0533fc1da"><span class="id" title="variable">Φ</span></a> <a class="idref" href="HoTT.Algebra.Universal.Congruence.html#s:35"><span class="id" title="variable">s</span></a> <a class="idref" href="HoTT.Algebra.Universal.Congruence.html#x:36"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Algebra.Universal.Congruence.html#y:37"><span class="id" title="variable">y</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Algebra.Universal.Congruence.html#f:33"><span class="id" title="variable">f</span></a> <a class="idref" href="HoTT.Algebra.Universal.Congruence.html#s:35"><span class="id" title="variable">s</span></a> <a class="idref" href="HoTT.Algebra.Universal.Congruence.html#x:36"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Algebra.Universal.Congruence.html#f:33"><span class="id" title="variable">f</span></a> <a class="idref" href="HoTT.Algebra.Universal.Congruence.html#s:35"><span class="id" title="variable">s</span></a> <a class="idref" href="HoTT.Algebra.Universal.Congruence.html#y:37"><span class="id" title="variable">y</span></a>.<br/>
+
+<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

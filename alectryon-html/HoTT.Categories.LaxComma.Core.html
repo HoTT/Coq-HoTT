@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>Core.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-wsp"><span class="sd">(** * Lax Comma Category *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc88" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc88"><span class="kn">Require Import</span> Functor.Core.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Category.Dual.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> InitialTerminalCategory.Core InitialTerminalCategory.Pseudofunctors.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Cat.Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require</span> Pseudofunctor.Identity.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Category.Strict.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> NaturalTransformation.Paths.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Pseudofunctor.Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require</span> LaxComma.CoreLaws.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Import</span> Functor.Identity.FunctorIdentityNotations.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Import</span> Pseudofunctor.Identity.PseudofunctorIdentityNotations.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Import</span> LaxComma.CoreLaws.LaxCommaCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Universe Polymorphism</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Implicit Arguments</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Generalizable All Variables</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Asymmetric Patterns</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> morphism_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> category_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Quoting David Spivak:</span>
+
+<span class="sd">    David: ok</span>
+<span class="sd">       so an object of [FC ⇓ D] is a pair [(X, G)], where [X] is a</span>
+<span class="sd">       finite category (or a small category or whatever you wanted)</span>
+<span class="sd">       and [G : X --&gt; D] is a functor.</span>
+<span class="sd">       a morphism in [FC ⇓ D] is a ``natural transformation diagram&#39;&#39;</span>
+<span class="sd">       (as opposed to a commutative diagram, in which the natural</span>
+<span class="sd">       transformation would be ``identity&#39;&#39;)</span>
+<span class="sd">       so a map in [FC ⇓ D] from [(X, G)] to [(X&#39;, G&#39;)] is a pair</span>
+<span class="sd">       [(F, α)] where [F : X --&gt; X&#39;] is a functor and</span>
+<span class="sd">       [α : G --&gt; G&#39; ∘ F] is a natural transformation</span>
+<span class="sd">       and the punchline is that there is a functor</span>
+<span class="sd">       [colim : FC ⇓ D --&gt; D]</span>
+
+<span class="sd">     David: consider for yourself the case where [F : X --&gt; X&#39;] is</span>
+<span class="sd">       identity ([X = X&#39;]) and (separately) the case where</span>
+<span class="sd">       [α : G --&gt; G ∘ F] is identity.</span>
+<span class="sd">       the point is, you&#39;ve already done the work to get this colim</span>
+<span class="sd">       functor.</span>
+<span class="sd">       because every map in [FC ⇓ D] can be written as a composition</span>
+<span class="sd">       of two maps, one where the [F]-part is identity and one where</span>
+<span class="sd">       the [α]-part is identity.</span>
+<span class="sd">       and you&#39;ve worked both of those cases out already.</span>
+<span class="sd">       *)</span>
+
+<span class="sd">(** ** Definition of Lax Comma Category *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">lax_comma_category</span> `{Funext} A B
+           (S : Pseudofunctor A) (T : Pseudofunctor B)
+           `{<span class="kr">forall</span> <span class="nv">a</span> <span class="nv">b</span>, IsHSet (Functor (S a) (T b))}
+: PreCategory
+  := @Build_PreCategory
+       (@object _ _ _ S T)
+       (@morphism _ _ _ S T)
+       (@identity _ _ _ S T)
+       (@compose _ _ _ S T)
+       (@associativity _ _ _ S T)
+       (@left_identity _ _ _ S T)
+       (@right_identity _ _ _ S T)
+       _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">oplax_comma_category</span> `{Funext} A B
+           (S : Pseudofunctor A) (T : Pseudofunctor B)
+           `{<span class="kr">forall</span> <span class="nv">a</span> <span class="nv">b</span>, IsHSet (Functor (S a) (T b))}
+: PreCategory
+  := (lax_comma_category S T)^op.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc89" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc89"><span class="kn">Instance</span> <span class="nf">isstrict_lax_comma_category</span> `{Funext} A B
+       (S : Pseudofunctor A) (T : Pseudofunctor B)
+       `{IsStrictCategory A, IsStrictCategory B}
+       `{<span class="kr">forall</span> <span class="nv">a</span> <span class="nv">b</span>, IsHSet (Functor (S a) (T b))}
+: IsStrictCategory (@lax_comma_category _ A B S T _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>S</var><span class="hyp-type"><b>: </b><span>Pseudofunctor A</span></span></span><br><span><var>T</var><span class="hyp-type"><b>: </b><span>Pseudofunctor B</span></span></span><br><span><var>IsStrictCategory0</var><span class="hyp-type"><b>: </b><span>IsStrictCategory A</span></span></span><br><span><var>IsStrictCategory1</var><span class="hyp-type"><b>: </b><span>IsStrictCategory B</span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">a</span> : A) (<span class="nv">b</span> : B),
+IsHSet (Functor (S a) (T b))</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsStrictCategory (lax_comma_category S T)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc8a" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc8a"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>S</var><span class="hyp-type"><b>: </b><span>Pseudofunctor A</span></span></span><br><span><var>T</var><span class="hyp-type"><b>: </b><span>Pseudofunctor B</span></span></span><br><span><var>IsStrictCategory0</var><span class="hyp-type"><b>: </b><span>IsStrictCategory A</span></span></span><br><span><var>IsStrictCategory1</var><span class="hyp-type"><b>: </b><span>IsStrictCategory B</span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">a</span> : A) (<span class="nv">b</span> : B),
+IsHSet (Functor (S a) (T b))</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsStrictCategory (lax_comma_category S T)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">typeclasses eauto</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Qed</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Instance</span> <span class="nf">isstrict_oplax_comma_category</span> `{fs : Funext} A B S T HA HB H
+: IsStrictCategory (@oplax_comma_category fs A B S T H)
+  := @isstrict_lax_comma_category fs A B S T HA HB H.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(*  Section category.</span>
+<span class="c">    Context `{IsCategory A, IsCategory B}.</span>
+<span class="c">    (*Context `{Funext}. *)</span>
+
+<span class="c">    Definition comma_category_isotoid (x y : comma_category)</span>
+<span class="c">    : x ≅ y -&gt; x = y.</span>
+<span class="c">    Proof.</span>
+<span class="c">      intro i.</span>
+<span class="c">      destruct i as [i [i&#39; ? ?]].</span>
+<span class="c">      hnf in *.</span>
+<span class="c">      destruct i, i&#39;.</span>
+<span class="c">      simpl in *.</span>
+
+
+<span class="c">    #[export] Instance comma_category_IsCategory `{IsCategory A, IsCategory B}</span>
+<span class="c">    : IsCategory comma_category.</span>
+<span class="c">    Proof.</span>
+<span class="c">      hnf.</span>
+<span class="c">      unfold IsStrictCategory in *.</span>
+<span class="c">      typeclasses eauto.</span>
+<span class="c">    Qed.</span>
+<span class="c">  End category.</span>
+<span class="c"> *)</span>
+
+<span class="sd">(** ** Definition of Lax (Co)Slice Category *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">lax_slice_category</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `{Funext}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variables</span> <span class="nv">A</span> <span class="nv">a</span> : PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">S</span> : Pseudofunctor A.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `{<span class="kr">forall</span> <span class="nv">a0</span>, IsHSet (Functor (S a0) a)}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `{<span class="kr">forall</span> <span class="nv">a0</span>, IsHSet (Functor a (S a0))}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">lax_slice_category</span> : PreCategory := lax_comma_category S !a.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">lax_coslice_category</span> : PreCategory := lax_comma_category !a S.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">oplax_slice_category</span> : PreCategory := oplax_comma_category S !a.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">oplax_coslice_category</span> : PreCategory := oplax_comma_category !a S.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** [x ↓ F] is a coslice category; [F ↓ x] is a slice category; [x ↓ F] deals with morphisms [x -&gt; F y]; [F ↓ x] has morphisms [F y -&gt; x] *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">lax_slice_category</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> lax_slice_category {_} [A] a S {_}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> lax_coslice_category {_} [A] a S {_}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> oplax_slice_category {_} [A] a S {_}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> oplax_coslice_category {_} [A] a S {_}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Definition of Lax (Co)Slice Category Over *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">lax_slice_category_over</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> type_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `{Funext}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">P</span> : PreCategory -&gt; <span class="kt">Type</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `{HF : <span class="kr">forall</span> <span class="nv">C</span> <span class="nv">D</span>, P C -&gt; P D -&gt; IsHSet (Functor C D)}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Notation</span> <span class="nf">cat</span> := (@sub_pre_cat _ P HF).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">a</span> : PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `{<span class="kr">forall</span> <span class="nv">a0</span> : cat, IsHSet (Functor a0.<span class="mi">1</span> a)}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `{<span class="kr">forall</span> <span class="nv">a0</span> : cat, IsHSet (Functor a a0.<span class="mi">1</span>)}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">lax_slice_category_over</span> : PreCategory := @lax_slice_category _ cat a (Pseudofunctor.Identity.identity P) _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">lax_coslice_category_over</span> : PreCategory := @lax_coslice_category _ cat a (Pseudofunctor.Identity.identity P) _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">oplax_slice_category_over</span> : PreCategory := @oplax_slice_category _ cat a (Pseudofunctor.Identity.identity P) _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">oplax_coslice_category_over</span> : PreCategory := @oplax_coslice_category _ cat a (Pseudofunctor.Identity.identity P) _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">lax_slice_category_over</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> lax_slice_category_over {_} P {HF} a {_}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> lax_coslice_category_over {_} P {HF} a {_}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> oplax_slice_category_over {_} P {HF} a {_}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> oplax_coslice_category_over {_} P {HF} a {_}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Definition of Lax (Co)Slice Arrow Category *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">lax_arrow_category</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> type_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `{Funext}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">P</span> : PreCategory -&gt; <span class="kt">Type</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `{HF : <span class="kr">forall</span> <span class="nv">C</span> <span class="nv">D</span>, P C -&gt; P D -&gt; IsHSet (Functor C D)}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Notation</span> <span class="nf">cat</span> := (@sub_pre_cat _ P HF).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">lax_arrow_category</span> : PreCategory := @lax_comma_category _ cat cat (Pseudofunctor.Identity.identity P) (Pseudofunctor.Identity.identity P) (<span class="kr">fun</span> <span class="nv">C</span> <span class="nv">D</span> =&gt; HF C.<span class="mi">2</span> D.<span class="mi">2</span>).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">oplax_arrow_category</span> : PreCategory := @oplax_comma_category _ cat cat (Pseudofunctor.Identity.identity P) (Pseudofunctor.Identity.identity P) (<span class="kr">fun</span> <span class="nv">C</span> <span class="nv">D</span> =&gt; HF C.<span class="mi">2</span> D.<span class="mi">2</span>).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">lax_arrow_category</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> lax_arrow_category {_} P {_}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> oplax_arrow_category {_} P {_}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Set Warnings</span> <span class="s2">&quot;-notation-overridden&quot;</span>. <span class="c">(* work around bug #5567, https://coq.inria.fr/bugs/show_bug.cgi?id=5567, notation-overridden,parsing should not trigger for only printing notations *)</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Module</span> <span class="nf">Export</span> LaxCommaCoreNotations.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  <span class="sd">(** We play some games to get nice notations for lax comma categories. *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">tc_notation_boiler_plate</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> type_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Class</span> <span class="nf">LCC_Builder</span> {<span class="nv">A</span> <span class="nv">B</span> <span class="nv">C</span>} (<span class="nv">x</span> : A) (<span class="nv">y</span> : B) (<span class="nv">z</span> : C) : <span class="kt">Set</span> := lcc_builder_dummy : Unit.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">get_LCC</span> `{@LCC_Builder A B C x y z} : C := z.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> get_LCC / {A B C} x y {z} {_}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input">#[export] <span class="kn">Instance</span> <span class="nf">LCC_comma</span> `{Funext} A B
+           (S : Pseudofunctor A) (T : Pseudofunctor B)
+           {_ : <span class="kr">forall</span> <span class="nv">a</span> <span class="nv">b</span>, IsHSet (Functor (S a) (T b))}
+    : LCC_Builder S T (lax_comma_category S T) | <span class="mi">1000</span>
+      := tt.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input">#[export] <span class="kn">Instance</span> <span class="nf">LCC_slice</span> `{Funext} A x (F : Pseudofunctor A)
+           `{<span class="kr">forall</span> <span class="nv">a0</span>, IsHSet (Functor (F a0) x)}
+    : LCC_Builder F x (lax_slice_category x F) | <span class="mi">100</span>
+      := tt.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input">#[export] <span class="kn">Instance</span> <span class="nf">LCC_coslice</span> `{Funext} A x (F : Pseudofunctor A)
+           `{<span class="kr">forall</span> <span class="nv">a0</span>, IsHSet (Functor x (F a0))}
+    : LCC_Builder x F (lax_coslice_category x F) | <span class="mi">100</span>
+      := tt.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input">#[export] <span class="kn">Instance</span> <span class="nf">LCC_slice_over</span> `{Funext}
+           P `{HF : <span class="kr">forall</span> <span class="nv">C</span> <span class="nv">D</span>, P C -&gt; P D -&gt; IsHSet (Functor C D)}
+           a
+           `{<span class="kr">forall</span> <span class="nv">a0</span> : @sub_pre_cat _ P HF, IsHSet (Functor a0.<span class="mi">1</span> a)}
+    : LCC_Builder a (@sub_pre_cat _ P HF) (@lax_slice_category_over _ P HF a _) | <span class="mi">10</span>
+      := tt.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input">#[export] <span class="kn">Instance</span> <span class="nf">LCC_coslice_over</span> `{Funext}
+           P `{HF : <span class="kr">forall</span> <span class="nv">C</span> <span class="nv">D</span>, P C -&gt; P D -&gt; IsHSet (Functor C D)}
+           a
+           `{<span class="kr">forall</span> <span class="nv">a0</span> : @sub_pre_cat _ P HF, IsHSet (Functor a a0.<span class="mi">1</span>)}
+    : LCC_Builder (@sub_pre_cat _ P HF) a (@lax_coslice_category_over _ P HF a _) | <span class="mi">10</span>
+      := tt.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Class</span> <span class="nf">OLCC_Builder</span> {<span class="nv">A</span> <span class="nv">B</span> <span class="nv">C</span>} (<span class="nv">x</span> : A) (<span class="nv">y</span> : B) (<span class="nv">z</span> : C) : <span class="kt">Set</span> := olcc_builder_dummy : Unit.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">get_OLCC</span> `{@OLCC_Builder A B C x y z} : C := z.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> get_OLCC / {A B C} x y {z} {_}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input">#[export] <span class="kn">Instance</span> <span class="nf">OLCC_comma</span> `{Funext} A B
+           (S : Pseudofunctor A) (T : Pseudofunctor B)
+           {_ : <span class="kr">forall</span> <span class="nv">a</span> <span class="nv">b</span>, IsHSet (Functor (S a) (T b))}
+    : OLCC_Builder S T (lax_comma_category S T) | <span class="mi">1000</span>
+      := tt.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input">#[export] <span class="kn">Instance</span> <span class="nf">OLCC_slice</span> `{Funext} A x (F : Pseudofunctor A)
+           `{<span class="kr">forall</span> <span class="nv">a0</span>, IsHSet (Functor (F a0) x)}
+    : OLCC_Builder F x (lax_slice_category x F) | <span class="mi">100</span>
+      := tt.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input">#[export] <span class="kn">Instance</span> <span class="nf">OLCC_coslice</span> `{Funext} A x (F : Pseudofunctor A)
+           `{<span class="kr">forall</span> <span class="nv">a0</span>, IsHSet (Functor x (F a0))}
+    : OLCC_Builder x F (lax_coslice_category x F) | <span class="mi">100</span>
+      := tt.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input">#[export] <span class="kn">Instance</span> <span class="nf">OLCC_slice_over</span> `{Funext}
+           P `{HF : <span class="kr">forall</span> <span class="nv">C</span> <span class="nv">D</span>, P C -&gt; P D -&gt; IsHSet (Functor C D)}
+           a
+           `{<span class="kr">forall</span> <span class="nv">a0</span> : @sub_pre_cat _ P HF, IsHSet (Functor a0.<span class="mi">1</span> a)}
+    : OLCC_Builder a (@sub_pre_cat _ P HF) (@lax_slice_category_over _ P HF a _) | <span class="mi">10</span>
+      := tt.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input">#[export] <span class="kn">Instance</span> <span class="nf">OLCC_coslice_over</span> `{Funext}
+           P `{HF : <span class="kr">forall</span> <span class="nv">C</span> <span class="nv">D</span>, P C -&gt; P D -&gt; IsHSet (Functor C D)}
+           a
+           `{<span class="kr">forall</span> <span class="nv">a0</span> : @sub_pre_cat _ P HF, IsHSet (Functor a a0.<span class="mi">1</span>)}
+    : OLCC_Builder (@sub_pre_cat _ P HF) a (@lax_coslice_category_over _ P HF a _) | <span class="mi">10</span>
+      := tt.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">tc_notation_boiler_plate</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** We really want to use infix [⇓] and [⇑] for lax comma categories, but that&#39;s Unicode.  Infix [,] might also be reasonable, but I can&#39;t seem to get it to work without destroying the [(_, _)] notation for ordered pairs.  So I settle for the ugly ASCII rendition [//] of [⇓] and [\\] for [⇑]. *)</span>
+  <span class="sd">(** Set some notations for printing *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;&#39;CAT&#39; // a&quot;</span> := (@lax_slice_category_over _ _ _ a _) : category_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;a // &#39;CAT&#39;&quot;</span> := (@lax_coslice_category_over _ _ _ a _) : category_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;x // F&quot;</span> := (lax_coslice_category x F) (<span class="kn">only printing</span>) : category_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;F // x&quot;</span> := (lax_slice_category x F) (<span class="kn">only printing</span>) : category_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;S // T&quot;</span> := (lax_comma_category S T) (<span class="kn">only printing</span>) : category_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  <span class="sd">(** Set the notation for parsing; typeclasses will automatically decide which of the arguments are functors and which are objects, i.e., functors from the terminal category. *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;S // T&quot;</span> := (get_LCC S T) : category_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;&#39;CAT&#39; \\ a&quot;</span> := (@oplax_slice_category_over _ _ _ a _) : category_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;a \\ &#39;CAT&#39;&quot;</span> := (@oplax_coslice_category_over _ _ _ a _) : category_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;x \\ F&quot;</span> := (oplax_coslice_category x F) (<span class="kn">only printing</span>) : category_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;F \\ x&quot;</span> := (oplax_slice_category x F) (<span class="kn">only printing</span>) : category_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;S \\ T&quot;</span> := (oplax_comma_category S T) (<span class="kn">only printing</span>) : category_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  <span class="sd">(** Set the notation for parsing; typeclasses will automatically decide which of the arguments are functors and which are objects, i.e., functors from the terminal category. *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;S \\ T&quot;</span> := (get_OLCC S T) : category_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">LaxCommaCoreNotations</span>.</span></span></pre>
+</div>
+</div></body>
+</html>

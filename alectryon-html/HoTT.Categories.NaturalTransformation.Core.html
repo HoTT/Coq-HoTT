@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>Core.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-wsp"><span class="sd">(** * Definition of natural transformation *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc94" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc94"><span class="kn">Require Import</span> Category.Core Functor.Core.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Universe Polymorphism</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Implicit Arguments</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Generalizable All Variables</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Asymmetric Patterns</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Declare Scope</span> natural_transformation_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Delimit Scope</span> natural_transformation_scope <span class="kr">with</span> natural_transformation.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> morphism_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> natural_transformation_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">NaturalTransformation</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variables</span> <span class="nv">C</span> <span class="nv">D</span> : PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variables</span> <span class="nv">F</span> <span class="nv">G</span> : Functor C D.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(**</span>
+<span class="sd">     Quoting from the lecture notes for 18.705, Commutative Algebra:</span>
+
+<span class="sd">     A map of functors is known as a natural transformation. Namely,</span>
+<span class="sd">     given two functors [F : C -&gt; D], [G : C -&gt; D], a natural</span>
+<span class="sd">     transformation [T: F -&gt; G] is a collection of maps [T A : F A -&gt;</span>
+<span class="sd">     G A], one for each object [A] of [C], such that [(T B) ∘ (F m) =</span>
+<span class="sd">     (G m) ∘ (T A)] for every map [m : A -&gt; B] of [C]; that is, the</span>
+<span class="sd">     following diagram is commutative:</span>
+
+<span class="sd">&lt;&lt;</span>
+<span class="sd">           F m</span>
+<span class="sd">     F A -------&gt; F B</span>
+<span class="sd">      |            |</span>
+<span class="sd">      |            |</span>
+<span class="sd">      | T A        | T B</span>
+<span class="sd">      |            |</span>
+<span class="sd">      V    G m     V</span>
+<span class="sd">     G A --------&gt; G B</span>
+<span class="sd">&gt;&gt;</span>
+<span class="sd">     **)</span>
+
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Record</span> <span class="nf">NaturalTransformation</span> :=
+    Build_NaturalTransformation&#39; {
+        components_of :&gt; <span class="kr">forall</span> <span class="nv">c</span>, morphism D (F c) (G c);
+        commutes : <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> (<span class="nv">m</span> : morphism C s d),
+                     components_of d o F _1 m = G _1 m o components_of s;
+        <span class="c">(* We require the following symmetrized version so that for eta-expanded [T], we have [(T^op)^op = T] judgementally. *)</span>
+        commutes_sym : <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> (<span class="nv">m</span> : C.(morphism) s d),
+                         G _1 m o components_of s = components_of d o F _1 m
+      }.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Build_NaturalTransformation</span> <span class="nv">CO</span> <span class="nv">COM</span>
+    := Build_NaturalTransformation&#39;
+         CO
+         COM
+         (<span class="kr">fun</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> =&gt; <span class="nb">symmetry</span> _ _ (COM _ _ _)).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">NaturalTransformation</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Bind Scope</span> natural_transformation_scope <span class="kr">with</span> NaturalTransformation.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Create HintDb</span> natural_transformation <span class="kn">discriminated</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> components_of {C D}%_category {F G}%_functor T%_natural_transformation /
+          c%_object : <span class="nb">rename</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> commutes {C D F G} !T / _ _ _ : <span class="nb">rename</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> commutes_sym {C D F G} !T / _ _ _ : <span class="nb">rename</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input">#[export]
+<span class="kn">Hint Resolve</span> commutes : category natural_transformation.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Helper lemmas *)</span>
+<span class="sd">(** Some helper lemmas for rewriting.  In the names, [p] stands for a</span>
+<span class="sd">    morphism, [T] for natural transformation, and [F] for functor. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">commutes_pT_F</span> <span class="nv">C</span> <span class="nv">D</span> (<span class="nv">F</span> <span class="nv">G</span> : Functor C D) (<span class="nv">T</span> : NaturalTransformation F G)
+      <span class="nv">s</span> <span class="nv">d</span> <span class="nv">d&#39;</span> (<span class="nv">m</span> : morphism C s d) (<span class="nv">m&#39;</span> : morphism D _ d&#39;)
+: (m&#39; o T d) o F _1 m = (m&#39; o G _1 m) o T s
+  := ((Category.Core.associativity _ _ _ _ _ _ _ _)
+        @ ap _ (commutes _ _ _ _)
+        @ (Category.Core.associativity_sym _ _ _ _ _ _ _ _))%path.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">commutes_T_Fp</span> <span class="nv">C</span> <span class="nv">D</span> (<span class="nv">F</span> <span class="nv">G</span> : Functor C D) (<span class="nv">T</span> : NaturalTransformation F G)
+      <span class="nv">s</span> <span class="nv">d</span> <span class="nv">d&#39;</span> (<span class="nv">m</span> : morphism C s d) (<span class="nv">m&#39;</span> : morphism D d&#39; _)
+: T d o (F _1 m o m&#39;) = G _1 m o (T s o m&#39;)
+  := ((Category.Core.associativity_sym _ _ _ _ _ _ _ _)
+        @ ap10 (ap _ (commutes _ _ _ _)) _
+        @ (Category.Core.associativity _ _ _ _ _ _ _ _))%path.</span></span></pre>
+</div>
+</div></body>
+</html>

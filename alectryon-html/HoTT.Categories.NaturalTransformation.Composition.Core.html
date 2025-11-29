@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>Core.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-wsp"><span class="sd">(** * Composition of natural transformations *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="core-v-chkc93" style="display: none" type="checkbox"><label class="alectryon-input" for="core-v-chkc93"><span class="kn">Require Import</span> Category.Core Functor.Core Functor.Composition.Core NaturalTransformation.Core.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Universe Polymorphism</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Implicit Arguments</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Generalizable All Variables</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Asymmetric Patterns</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> path_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> morphism_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> natural_transformation_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Vertical composition *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">composition</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  <span class="sd">(**</span>
+<span class="sd">     We have the diagram</span>
+<span class="sd">&lt;&lt;</span>
+<span class="sd">          F</span>
+<span class="sd">     C -------&gt; D</span>
+<span class="sd">          |</span>
+<span class="sd">          |</span>
+<span class="sd">          | T</span>
+<span class="sd">          |</span>
+<span class="sd">          V</span>
+<span class="sd">     C -------&gt; D</span>
+<span class="sd">          F&#39;</span>
+<span class="sd">          |</span>
+<span class="sd">          | T&#39;</span>
+<span class="sd">          |</span>
+<span class="sd">          V</span>
+<span class="sd">     C ------&gt; D</span>
+<span class="sd">          F&#39;&#39;</span>
+<span class="sd">&gt;&gt;</span>
+
+<span class="sd">     And we want the commutative diagram</span>
+<span class="sd">&lt;&lt;</span>
+<span class="sd">           F m</span>
+<span class="sd">     F A -------&gt; F B</span>
+<span class="sd">      |            |</span>
+<span class="sd">      |            |</span>
+<span class="sd">      | T A        | T B</span>
+<span class="sd">      |            |</span>
+<span class="sd">      V    F&#39; m    V</span>
+<span class="sd">     F&#39; A -------&gt; F&#39; B</span>
+<span class="sd">      |            |</span>
+<span class="sd">      |            |</span>
+<span class="sd">      | T&#39; A       | T&#39; B</span>
+<span class="sd">      |            |</span>
+<span class="sd">      V    F&#39;&#39; m   V</span>
+<span class="sd">     F&#39;&#39; A ------&gt; F&#39;&#39; B</span>
+<span class="sd">&gt;&gt;</span>
+<span class="sd">  *)</span>
+
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">compose</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variables</span> <span class="nv">C</span> <span class="nv">D</span> : PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variables</span> <span class="nv">F</span> <span class="nv">F&#39;</span> <span class="nv">F&#39;&#39;</span> : Functor C D.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">T&#39;</span> : NaturalTransformation F&#39; F&#39;&#39;.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">T</span> : NaturalTransformation F F&#39;.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Notation</span> <span class="nf">CO</span> c := (T&#39; c o T c).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">compose_commutes</span> <span class="nv">s</span> <span class="nv">d</span> (<span class="nv">m</span> : morphism C s d)
+    : CO d o F _1 m = F&#39;&#39; _1 m o CO s
+      := (associativity _ _ _ _ _ _ _ _)
+           @ ap (<span class="kr">fun</span> <span class="nv">x</span> =&gt; _ o x) (commutes T _ _ m)
+           @ (associativity_sym _ _ _ _ _ _ _ _)
+           @ ap (<span class="kr">fun</span> <span class="nv">x</span> =&gt; x o _) (commutes T&#39; _ _ m)
+           @ (associativity _ _ _ _ _ _ _ _).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+    <span class="sd">(** We define the symmetrized version separately so that we can get more unification in the functor [(C → D)ᵒᵖ → (Cᵒᵖ → Dᵒᵖ)] *)</span>
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">compose_commutes_sym</span> <span class="nv">s</span> <span class="nv">d</span> (<span class="nv">m</span> : morphism C s d)
+    : F&#39;&#39; _1 m o CO s = CO d o F _1 m
+      := (associativity_sym _ _ _ _ _ _ _ _)
+           @ ap (<span class="kr">fun</span> <span class="nv">x</span> =&gt; x o _) (commutes_sym T&#39; _ _ m)
+           @ (associativity _ _ _ _ _ _ _ _)
+           @ ap (<span class="kr">fun</span> <span class="nv">x</span> =&gt; _ o x) (commutes_sym T _ _ m)
+           @ (associativity_sym _ _ _ _ _ _ _ _).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> compose_commutes : <span class="nb">simpl</span> never.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> compose_commutes_sym : <span class="nb">simpl</span> never.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">compose</span>
+    : NaturalTransformation F F&#39;&#39;
+      := Build_NaturalTransformation&#39; F F&#39;&#39;
+                                      (<span class="kr">fun</span> <span class="nv">c</span> =&gt; CO c)
+                                      compose_commutes
+                                      compose_commutes_sym.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">compose</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** ** Whiskering *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">whisker</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variables</span> <span class="nv">C</span> <span class="nv">D</span> <span class="nv">E</span> : PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">L</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">F</span> : Functor D E.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variables</span> <span class="nv">G</span> <span class="nv">G&#39;</span> : Functor C D.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">T</span> : NaturalTransformation G G&#39;.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Notation</span> <span class="nf">CO</span> c := (F _1 (T c)).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">whisker_l_commutes</span> <span class="nv">s</span> <span class="nv">d</span> (<span class="nv">m</span> : morphism C s d)
+      : F _1 (T d) o (F o G) _1 m = (F o G&#39;) _1 m o F _1 (T s)
+        := ((composition_of F _ _ _ _ _)^)
+             @ (ap (<span class="kr">fun</span> <span class="nv">m</span> =&gt; F _1 m) (commutes T _ _ _))
+             @ (composition_of F _ _ _ _ _).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">whisker_l_commutes_sym</span> <span class="nv">s</span> <span class="nv">d</span> (<span class="nv">m</span> : morphism C s d)
+      : (F o G&#39;) _1 m o F _1 (T s) = F _1 (T d) o (F o G) _1 m
+        := ((composition_of F _ _ _ _ _)^)
+             @ (ap (<span class="kr">fun</span> <span class="nv">m</span> =&gt; F _1 m) (commutes_sym T _ _ _))
+             @ (composition_of F _ _ _ _ _).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> whisker_l_commutes : <span class="nb">simpl</span> never.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> whisker_l_commutes_sym : <span class="nb">simpl</span> never.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">whisker_l</span>
+        := Build_NaturalTransformation&#39;
+             (F o G) (F o G&#39;)
+             (<span class="kr">fun</span> <span class="nv">c</span> =&gt; CO c)
+             whisker_l_commutes
+             whisker_l_commutes_sym.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">L</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">R</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variables</span> <span class="nv">F</span> <span class="nv">F&#39;</span> : Functor D E.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">T</span> : NaturalTransformation F F&#39;.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">G</span> : Functor C D.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Notation</span> <span class="nf">CO</span> c := (T (G c)).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">whisker_r_commutes</span> <span class="nv">s</span> <span class="nv">d</span> (<span class="nv">m</span> : morphism C s d)
+      : T (G d) o (F o G) _1 m = (F&#39; o G) _1 m o T (G s)
+        := commutes T _ _ _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">whisker_r_commutes_sym</span> <span class="nv">s</span> <span class="nv">d</span> (<span class="nv">m</span> : morphism C s d)
+      : (F&#39; o G) _1 m o T (G s) = T (G d) o (F o G) _1 m
+        := commutes_sym T _ _ _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> whisker_r_commutes : <span class="nb">simpl</span> never.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> whisker_r_commutes_sym : <span class="nb">simpl</span> never.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">whisker_r</span>
+        := Build_NaturalTransformation&#39;
+             (F o G) (F&#39; o G)
+             (<span class="kr">fun</span> <span class="nv">c</span> =&gt; CO c)
+             whisker_r_commutes
+             whisker_r_commutes_sym.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">R</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">whisker</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">composition</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Module</span> <span class="nf">Export</span> NaturalTransformationCompositionCoreNotations.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Infix</span> <span class="s2">&quot;o&quot;</span> := compose : natural_transformation_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Infix</span> <span class="s2">&quot;oL&quot;</span> := whisker_l : natural_transformation_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Infix</span> <span class="s2">&quot;oR&quot;</span> := whisker_r : natural_transformation_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">NaturalTransformationCompositionCoreNotations</span>.</span></span></pre>
+</div>
+</div></body>
+</html>

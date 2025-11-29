@@ -1,0 +1,499 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>Tactics.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="tactics-v-chk6" style="display: none" type="checkbox"><label class="alectryon-input" for="tactics-v-chk6"><span class="kn">Require Import</span> Basics.Overture Basics.Tactics Basics.PathGroupoids Basics.Contractible Basics.Equivalences.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Types.Prod Types.Forall.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Export</span> Tactics.BinderApply.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** * Extra tactics for homotopy type theory. *)</span>
+
+<span class="sd">(** ** Tactics for dealing with [Funext] *)</span>
+<span class="sd">(** *** Tactics about [transport]ing with [path_forall] *)</span>
+
+<span class="sd">(** Given using the variable names from [transport : forall {A : Type} (P : A -&gt; Type) {x y : A}, x = y -&gt; P x -&gt; P y] and [path_forall : {Funext} -&gt; forall {A B} (f g : forall x : A, B x), (forall x : A, f x = g x) -&gt; f = g]:</span>
+
+<span class="sd">The high-level idea is that we don&#39;t really need functional extensionality if we end up just applying the functions to arguments anyway.  That is, if we have that [forall x, f x = g x], and we only talk about [f y] and [f z], then we don&#39;t actually need to transport across [f = g], just [f y = g y] and [f z = g z].</span>
+
+<span class="sd">In a bit more detail, if we are transporting across [path_forall f g H], and in the function [P], all instances of [f] are applied to some expressions, say we only see [f x], [f y], ..., [f z], then we can eliminate the [path_forall] by explicitly transporting across [H x], [H y], ..., [H z].  The lemma [path_forall_1_beta] expresses this fact in the case that we see [f] applied to only a single argument in [P], and the tactic [transport_path_forall_hammer] is some fancy Ltac to auto-infer what [P] is and what the argument to [f] is.</span>
+
+<span class="sd">The way the tactic does this is by creating an evar for [P] and an evar for the argument to [f], and then using a combination of [assert], [pattern], etc to figure out what each should be.  If you want to see how it works, you can step through each step of [transport_path_forall_hammer] when trying to prove [path_forall_2_beta]. *)</span>
+
+<span class="sd">(** First, we prove some helpful lemmas about [path_forall] and [transport] *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Ltac</span> <span class="nf">path_forall_beta_t</span> :=
+  <span class="kr">lazymatch goal with</span>
+    | [ |- <span class="kp">context</span>[@path_forall <span class="nl">?H</span> <span class="nl">?A</span> <span class="nl">?B</span> <span class="nl">?f</span> <span class="nl">?g</span> <span class="nl">?e</span>] ]
+      =&gt; <span class="kr">let</span> <span class="nv">X</span> := <span class="kp">fresh</span> <span class="kr">in</span>
+         <span class="nb">pose proof</span> (eissect (@path_forall H A B f g) e) <span class="kr">as</span> X;
+           <span class="nb">case</span> X;
+           <span class="nb">generalize</span> (@path_forall H A B f g e);
+           <span class="nb">clear</span> X; <span class="nb">clear</span> e;
+           <span class="nb">intro</span> X; <span class="nb">destruct</span> X;
+           <span class="nb">cbn</span>;
+           <span class="nb">unfold</span> apD10;
+           <span class="nb">rewrite</span> !(path_forall_1 f)
+  <span class="kr">end</span>;
+  <span class="bp">reflexivity</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** The basic idea is expressed in the type of this lemma. *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="tactics-v-chk7" style="display: none" type="checkbox"><label class="alectryon-input" for="tactics-v-chk7"><span class="kn">Lemma</span> <span class="nf">path_forall_1_beta</span> `{Funext} A B x P f g e Px
+: @transport (<span class="kr">forall</span> <span class="nv">a</span> : A, B a) (<span class="kr">fun</span> <span class="nv">f</span> =&gt; P (f x)) f g (@path_forall _ _ _ _ _ e) Px
+  = @transport (B x) P (f x) (g x) (e x) Px.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>B</var><span class="hyp-type"><b>: </b><span>A -&gt; <span class="kt">Type</span></span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>B x -&gt; <span class="kt">Type</span></span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">a</span> : A, B a</span></span></span><br><span><var>e</var><span class="hyp-type"><b>: </b><span>f == g</span></span></span><br><span><var>Px</var><span class="hyp-type"><b>: </b><span>P (f x)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport (<span class="kr">fun</span> <span class="nv">f</span> : <span class="kr">forall</span> <span class="nv">a</span> : A, B a =&gt; P (f x))
+  (path_forall f g e) Px = transport P (e x) Px</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="tactics-v-chk8" style="display: none" type="checkbox"><label class="alectryon-input" for="tactics-v-chk8"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>B</var><span class="hyp-type"><b>: </b><span>A -&gt; <span class="kt">Type</span></span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>B x -&gt; <span class="kt">Type</span></span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">a</span> : A, B a</span></span></span><br><span><var>e</var><span class="hyp-type"><b>: </b><span>f == g</span></span></span><br><span><var>Px</var><span class="hyp-type"><b>: </b><span>P (f x)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport (<span class="kr">fun</span> <span class="nv">f</span> : <span class="kr">forall</span> <span class="nv">a</span> : A, B a =&gt; P (f x))
+  (path_forall f g e) Px = transport P (e x) Px</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input">path_forall_beta_t.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** The powerful recursive case *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="tactics-v-chk9" style="display: none" type="checkbox"><label class="alectryon-input" for="tactics-v-chk9"><span class="kn">Lemma</span> <span class="nf">path_forall_recr_beta&#39;</span> `{Funext} A B x0 P f g e Px
+: @transport (<span class="kr">forall</span> <span class="nv">a</span> : A, B a)
+             (<span class="kr">fun</span> <span class="nv">f</span> =&gt; P f (f x0))
+             f
+             g
+             (@path_forall _ _ _ _ _ e)
+             Px
+  = @transport ((<span class="kr">forall</span> <span class="nv">a</span>, B a) * B x0)
+               (<span class="kr">fun</span> <span class="nv">x</span> =&gt; P (fst x) (snd x))
+               (f, f x0)
+               (g, g x0)
+               (path_prod&#39; (@path_forall _ _ _ _ _ e) (e x0))
+               Px.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>B</var><span class="hyp-type"><b>: </b><span>A -&gt; <span class="kt">Type</span></span></span></span><br><span><var>x0</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>(<span class="kr">forall</span> <span class="nv">a</span> : A, B a) -&gt; B x0 -&gt; <span class="kt">Type</span></span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">a</span> : A, B a</span></span></span><br><span><var>e</var><span class="hyp-type"><b>: </b><span>f == g</span></span></span><br><span><var>Px</var><span class="hyp-type"><b>: </b><span>P f (f x0)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport (<span class="kr">fun</span> <span class="nv">f</span> : <span class="kr">forall</span> <span class="nv">a</span> : A, B a =&gt; P f (f x0))
+  (path_forall f g e) Px =
+transport
+  (<span class="kr">fun</span> <span class="nv">x</span> : (<span class="kr">forall</span> <span class="nv">a</span> : A, B a) * B x0 =&gt;
+   P (fst x) (snd x))
+  (path_prod&#39; (path_forall f g e) (e x0)) Px</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="tactics-v-chka" style="display: none" type="checkbox"><label class="alectryon-input" for="tactics-v-chka"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>B</var><span class="hyp-type"><b>: </b><span>A -&gt; <span class="kt">Type</span></span></span></span><br><span><var>x0</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>(<span class="kr">forall</span> <span class="nv">a</span> : A, B a) -&gt; B x0 -&gt; <span class="kt">Type</span></span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">a</span> : A, B a</span></span></span><br><span><var>e</var><span class="hyp-type"><b>: </b><span>f == g</span></span></span><br><span><var>Px</var><span class="hyp-type"><b>: </b><span>P f (f x0)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport (<span class="kr">fun</span> <span class="nv">f</span> : <span class="kr">forall</span> <span class="nv">a</span> : A, B a =&gt; P f (f x0))
+  (path_forall f g e) Px =
+transport
+  (<span class="kr">fun</span> <span class="nv">x</span> : (<span class="kr">forall</span> <span class="nv">a</span> : A, B a) * B x0 =&gt;
+   P (fst x) (snd x))
+  (path_prod&#39; (path_forall f g e) (e x0)) Px</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input">path_forall_beta_t.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Rewrite the recursive case after clean-up *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="tactics-v-chkb" style="display: none" type="checkbox"><label class="alectryon-input" for="tactics-v-chkb"><span class="kn">Lemma</span> <span class="nf">path_forall_recr_beta</span> `{Funext} A B x0 P f g e Px
+: @transport (<span class="kr">forall</span> <span class="nv">a</span> : A, B a)
+             (<span class="kr">fun</span> <span class="nv">f</span> =&gt; P f (f x0))
+             f
+             g
+             (@path_forall _ _ _ _ _ e)
+             Px
+  = @transport (<span class="kr">forall</span> <span class="nv">x</span> : A, B x)
+               (<span class="kr">fun</span> <span class="nv">x</span> =&gt; P x (g x0))
+               f
+               g
+               (@path_forall H A B f g e)
+               (@transport (B x0)
+                           (<span class="kr">fun</span> <span class="nv">y</span> =&gt; P f y)
+                           (f x0)
+                           (g x0)
+                           (e x0)
+                           Px).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>B</var><span class="hyp-type"><b>: </b><span>A -&gt; <span class="kt">Type</span></span></span></span><br><span><var>x0</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>(<span class="kr">forall</span> <span class="nv">a</span> : A, B a) -&gt; B x0 -&gt; <span class="kt">Type</span></span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">a</span> : A, B a</span></span></span><br><span><var>e</var><span class="hyp-type"><b>: </b><span>f == g</span></span></span><br><span><var>Px</var><span class="hyp-type"><b>: </b><span>P f (f x0)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport (<span class="kr">fun</span> <span class="nv">f</span> : <span class="kr">forall</span> <span class="nv">a</span> : A, B a =&gt; P f (f x0))
+  (path_forall f g e) Px =
+transport (<span class="kr">fun</span> <span class="nv">x</span> : <span class="kr">forall</span> <span class="nv">x</span> : A, B x =&gt; P x (g x0))
+  (path_forall f g e)
+  (transport (<span class="kr">fun</span> <span class="nv">y</span> : B x0 =&gt; P f y) (e x0) Px)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="tactics-v-chkc" style="display: none" type="checkbox"><label class="alectryon-input" for="tactics-v-chkc"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>B</var><span class="hyp-type"><b>: </b><span>A -&gt; <span class="kt">Type</span></span></span></span><br><span><var>x0</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>(<span class="kr">forall</span> <span class="nv">a</span> : A, B a) -&gt; B x0 -&gt; <span class="kt">Type</span></span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">a</span> : A, B a</span></span></span><br><span><var>e</var><span class="hyp-type"><b>: </b><span>f == g</span></span></span><br><span><var>Px</var><span class="hyp-type"><b>: </b><span>P f (f x0)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport (<span class="kr">fun</span> <span class="nv">f</span> : <span class="kr">forall</span> <span class="nv">a</span> : A, B a =&gt; P f (f x0))
+  (path_forall f g e) Px =
+transport (<span class="kr">fun</span> <span class="nv">x</span> : <span class="kr">forall</span> <span class="nv">x</span> : A, B x =&gt; P x (g x0))
+  (path_forall f g e)
+  (transport (<span class="kr">fun</span> <span class="nv">y</span> : B x0 =&gt; P f y) (e x0) Px)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="tactics-v-chkd" style="display: none" type="checkbox"><label class="alectryon-input" for="tactics-v-chkd"><span class="nb">etransitivity</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>B</var><span class="hyp-type"><b>: </b><span>A -&gt; <span class="kt">Type</span></span></span></span><br><span><var>x0</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>(<span class="kr">forall</span> <span class="nv">a</span> : A, B a) -&gt; B x0 -&gt; <span class="kt">Type</span></span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">a</span> : A, B a</span></span></span><br><span><var>e</var><span class="hyp-type"><b>: </b><span>f == g</span></span></span><br><span><var>Px</var><span class="hyp-type"><b>: </b><span>P f (f x0)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport (<span class="kr">fun</span> <span class="nv">f</span> : <span class="kr">forall</span> <span class="nv">a</span> : A, B a =&gt; P f (f x0))
+  (path_forall f g e) Px = <span class="nl">?Goal</span></div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="tactics-v-chke" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>B</var><span class="hyp-type"><b>: </b><span>A -&gt; <span class="kt">Type</span></span></span></span><br><span><var>x0</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>(<span class="kr">forall</span> <span class="nv">a</span> : A, B a) -&gt; B x0 -&gt; <span class="kt">Type</span></span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">a</span> : A, B a</span></span></span><br><span><var>e</var><span class="hyp-type"><b>: </b><span>f == g</span></span></span><br><span><var>Px</var><span class="hyp-type"><b>: </b><span>P f (f x0)</span></span></span><br></div><label class="goal-separator" for="tactics-v-chke"><hr></label><div class="goal-conclusion"><span class="nl">?Goal</span> =
+transport (<span class="kr">fun</span> <span class="nv">x</span> : <span class="kr">forall</span> <span class="nv">x</span> : A, B x =&gt; P x (g x0))
+  (path_forall f g e)
+  (transport (<span class="kr">fun</span> <span class="nv">y</span> : B x0 =&gt; P f y) (e x0) Px)</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="tactics-v-chkf" style="display: none" type="checkbox"><label class="alectryon-input" for="tactics-v-chkf">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>B</var><span class="hyp-type"><b>: </b><span>A -&gt; <span class="kt">Type</span></span></span></span><br><span><var>x0</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>(<span class="kr">forall</span> <span class="nv">a</span> : A, B a) -&gt; B x0 -&gt; <span class="kt">Type</span></span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">a</span> : A, B a</span></span></span><br><span><var>e</var><span class="hyp-type"><b>: </b><span>f == g</span></span></span><br><span><var>Px</var><span class="hyp-type"><b>: </b><span>P f (f x0)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport (<span class="kr">fun</span> <span class="nv">f</span> : <span class="kr">forall</span> <span class="nv">a</span> : A, B a =&gt; P f (f x0))
+  (path_forall f g e) Px = <span class="nl">?Goal</span></div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">apply</span> path_forall_recr_beta&#39;.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="tactics-v-chk10" style="display: none" type="checkbox"><label class="alectryon-input" for="tactics-v-chk10">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>B</var><span class="hyp-type"><b>: </b><span>A -&gt; <span class="kt">Type</span></span></span></span><br><span><var>x0</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>(<span class="kr">forall</span> <span class="nv">a</span> : A, B a) -&gt; B x0 -&gt; <span class="kt">Type</span></span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">a</span> : A, B a</span></span></span><br><span><var>e</var><span class="hyp-type"><b>: </b><span>f == g</span></span></span><br><span><var>Px</var><span class="hyp-type"><b>: </b><span>P f (f x0)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport
+  (<span class="kr">fun</span> <span class="nv">x</span> : (<span class="kr">forall</span> <span class="nv">a</span> : A, B a) * B x0 =&gt;
+   P (fst x) (snd x))
+  (path_prod&#39; (path_forall f g e) (e x0)) Px =
+transport (<span class="kr">fun</span> <span class="nv">x</span> : <span class="kr">forall</span> <span class="nv">x</span> : A, B x =&gt; P x (g x0))
+  (path_forall f g e)
+  (transport (<span class="kr">fun</span> <span class="nv">y</span> : B x0 =&gt; P f y) (e x0) Px)</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (transport_path_prod&#39; _ _ _ _).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+
+<span class="sd">(** The sledge-hammer for computing with [transport]ing across a [path_forall].  Note that it uses [rewrite], and so should only be used in opaque proofs. *)</span>
+
+<span class="sd">(** This helper tactic takes a [term] and a function [f], finds [f x] in [term] and patterns that, returning a pair [(x, term&#39;)] such that [term&#39; (f x) ≡ term]. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">pull_app</span> term f :=
+  <span class="kr">let</span> <span class="nv">term&#39;</span> := (<span class="kp">eval</span> <span class="nb">cbv</span> beta <span class="kr">in</span> term) <span class="kr">in</span>
+  <span class="kr">match</span> term&#39; <span class="kr">with</span>
+    | <span class="kp">context</span>[f <span class="nl">?x</span>]
+      =&gt; <span class="kr">match</span> <span class="kp">eval</span> <span class="nb">pattern</span> (f x) <span class="kr">in</span> term&#39; <span class="kr">with</span>
+           | <span class="nl">?term&#39;</span> (f x) =&gt; <span class="kp">constr</span>:((x, term&#39;))
+         <span class="kr">end</span>
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">infer_path_forall_recr_beta</span> term :=
+  <span class="kr">let</span> <span class="nv">path_forall_recr_beta&#39;</span> :=
+      <span class="kr">match</span> term <span class="kr">with</span>
+        | @transport _ (<span class="kr">fun</span> <span class="nv">x</span> =&gt; @<span class="nl">?P0</span> x) _ _ (@path_forall <span class="nl">?H</span> <span class="nl">?A</span> <span class="nl">?B</span> <span class="nl">?f</span> <span class="nl">?g</span> <span class="nl">?e</span>) _
+          =&gt; <span class="kp">constr</span>:(<span class="kr">fun</span> <span class="nv">x0</span> <span class="nv">P</span> <span class="nv">Px</span> =&gt; @path_forall_recr_beta H A B x0 P f g e Px)
+      <span class="kr">end</span> <span class="kr">in</span>
+  <span class="kr">let</span> <span class="nv">Px</span> := <span class="kr">match</span> term <span class="kr">with</span> @transport _ _ _ _ _ <span class="nl">?Px</span> =&gt; <span class="kp">constr</span>:(Px) <span class="kr">end</span> <span class="kr">in</span>
+  <span class="kr">let</span> <span class="nv">P0</span> := <span class="kr">match</span> term <span class="kr">with</span> @transport _ (<span class="kr">fun</span> <span class="nv">f</span> =&gt; @<span class="nl">?P0</span> f) _ _ _ _ =&gt; <span class="kp">constr</span>:(P0) <span class="kr">end</span> <span class="kr">in</span>
+  <span class="sd">(** pattern some [f x0] in [P0] *)</span>
+  <span class="sd">(** Hopefully, no goal will have a variable called [WORKAROUND_FOR_BUG_3458] in the context.  At least not until bug #3458 is fixed. *)</span>
+  <span class="kr">let</span> <span class="nv">P0f</span> := <span class="kp">constr</span>:(<span class="kr">fun</span> <span class="nv">WORKAROUND_FOR_BUG_3458</span> =&gt; <span class="kp">ltac</span>:(
+                                                      <span class="kr">let</span> <span class="nv">ret</span> := pull_app (P0 WORKAROUND_FOR_BUG_3458) WORKAROUND_FOR_BUG_3458 <span class="kr">in</span>
+                                                      <span class="bp">exact</span> ret)) <span class="kr">in</span>
+  <span class="kr">let</span> <span class="nv">x0</span> := <span class="kr">match</span> P0f <span class="kr">with</span> <span class="kr">fun</span> <span class="nv">f</span> =&gt; (<span class="nl">?x0</span>, @<span class="nl">?P</span> f) =&gt; <span class="kp">constr</span>:(x0) <span class="kr">end</span> <span class="kr">in</span>
+  <span class="kr">let</span> <span class="nv">P</span> := <span class="kr">match</span> P0f <span class="kr">with</span> <span class="kr">fun</span> <span class="nv">f</span> =&gt; (<span class="nl">?x0</span>, @<span class="nl">?P</span> f) =&gt; <span class="kp">constr</span>:(P) <span class="kr">end</span> <span class="kr">in</span>
+  <span class="kr">let</span> <span class="nv">ret</span> := <span class="kp">constr</span>:(path_forall_recr_beta&#39; x0 P Px) <span class="kr">in</span>
+  <span class="kr">let</span> <span class="nv">retT</span> := <span class="kp">type of</span> ret <span class="kr">in</span>
+  <span class="kr">let</span> <span class="nv">ret&#39;</span> := (<span class="kp">eval</span> <span class="nb">cbv</span> beta <span class="kr">in</span> ret) <span class="kr">in</span>
+  <span class="kr">let</span> <span class="nv">retT&#39;</span> := (<span class="kp">eval</span> <span class="nb">cbv</span> beta <span class="kr">in</span> retT) <span class="kr">in</span>
+  <span class="kp">constr</span>:(ret&#39; : retT&#39;).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">transport_path_forall_hammer_helper</span> :=
+  <span class="kr">let</span> <span class="nv">term</span> := <span class="kr">match goal with</span>
+                | |- <span class="kp">context</span>[@transport <span class="nl">?At</span> (<span class="kr">fun</span> <span class="nv">x</span> =&gt; @<span class="nl">?Bt</span> x) <span class="nl">?ft</span> <span class="nl">?gt</span> (@path_forall <span class="nl">?H</span> <span class="nl">?A</span> <span class="nl">?B</span> <span class="nl">?f</span> <span class="nl">?g</span> <span class="nl">?e</span>) <span class="nl">?Px</span>]
+                  =&gt; <span class="kp">constr</span>:(@transport At Bt ft gt (@path_forall H A B f g e) Px)
+              <span class="kr">end</span> <span class="kr">in</span>
+  <span class="kr">let</span> <span class="nv">lem</span> := infer_path_forall_recr_beta term <span class="kr">in</span>
+  <span class="nb">pattern</span> term;
+    <span class="nb">refine</span> (transport _ lem^ _);
+    <span class="nb">cbv</span> beta.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">transport_path_forall_hammer</span> :=
+  transport_path_forall_hammer_helper;
+  <span class="nb">rewrite</span> <span class="nl">?transport_const</span>;
+  <span class="kp">repeat</span> (
+      transport_path_forall_hammer_helper;
+      <span class="nb">rewrite</span> <span class="nl">?transport_const</span>
+    ).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** An example showing that it works *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="tactics-v-chk11" style="display: none" type="checkbox"><label class="alectryon-input" for="tactics-v-chk11"><span class="kn">Lemma</span> <span class="nf">path_forall_2_beta&#39;</span> `{Funext} A B x0 x1 P f g e Px
+: @transport (<span class="kr">forall</span> <span class="nv">a</span> : A, B a) (<span class="kr">fun</span> <span class="nv">f</span> =&gt; P (f x0) (f x1)) f g (@path_forall _ _ _ _ _ e) Px
+  = @transport (B x0 * B x1) (<span class="kr">fun</span> <span class="nv">x</span> =&gt; P (fst x) (snd x)) (f x0, f x1) (g x0, g x1) (path_prod&#39; (e x0) (e x1)) Px.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>B</var><span class="hyp-type"><b>: </b><span>A -&gt; <span class="kt">Type</span></span></span></span><br><span><var>x0, x1</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>B x0 -&gt; B x1 -&gt; <span class="kt">Type</span></span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">a</span> : A, B a</span></span></span><br><span><var>e</var><span class="hyp-type"><b>: </b><span>f == g</span></span></span><br><span><var>Px</var><span class="hyp-type"><b>: </b><span>P (f x0) (f x1)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport
+  (<span class="kr">fun</span> <span class="nv">f</span> : <span class="kr">forall</span> <span class="nv">a</span> : A, B a =&gt; P (f x0) (f x1))
+  (path_forall f g e) Px =
+transport (<span class="kr">fun</span> <span class="nv">x</span> : B x0 * B x1 =&gt; P (fst x) (snd x))
+  (path_prod&#39; (e x0) (e x1)) Px</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="tactics-v-chk12" style="display: none" type="checkbox"><label class="alectryon-input" for="tactics-v-chk12"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>B</var><span class="hyp-type"><b>: </b><span>A -&gt; <span class="kt">Type</span></span></span></span><br><span><var>x0, x1</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>B x0 -&gt; B x1 -&gt; <span class="kt">Type</span></span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">a</span> : A, B a</span></span></span><br><span><var>e</var><span class="hyp-type"><b>: </b><span>f == g</span></span></span><br><span><var>Px</var><span class="hyp-type"><b>: </b><span>P (f x0) (f x1)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport
+  (<span class="kr">fun</span> <span class="nv">f</span> : <span class="kr">forall</span> <span class="nv">a</span> : A, B a =&gt; P (f x0) (f x1))
+  (path_forall f g e) Px =
+transport (<span class="kr">fun</span> <span class="nv">x</span> : B x0 * B x1 =&gt; P (fst x) (snd x))
+  (path_prod&#39; (e x0) (e x1)) Px</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="tactics-v-chk13" style="display: none" type="checkbox"><label class="alectryon-input" for="tactics-v-chk13">transport_path_forall_hammer.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>B</var><span class="hyp-type"><b>: </b><span>A -&gt; <span class="kt">Type</span></span></span></span><br><span><var>x0, x1</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>B x0 -&gt; B x1 -&gt; <span class="kt">Type</span></span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">a</span> : A, B a</span></span></span><br><span><var>e</var><span class="hyp-type"><b>: </b><span>f == g</span></span></span><br><span><var>Px</var><span class="hyp-type"><b>: </b><span>P (f x0) (f x1)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport (<span class="kr">fun</span> <span class="nv">y</span> : B x1 =&gt; P (g x0) y) (e x1)
+  (transport (<span class="kr">fun</span> <span class="nv">y</span> : B x0 =&gt; P y (f x1)) (e x0) Px) =
+transport (<span class="kr">fun</span> <span class="nv">x</span> : B x0 * B x1 =&gt; P (fst x) (snd x))
+  (path_prod&#39; (e x0) (e x1)) Px</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="tactics-v-chk14" style="display: none" type="checkbox"><label class="alectryon-input" for="tactics-v-chk14"><span class="kp">repeat</span> <span class="kr">match goal with</span>
+           | [ |- <span class="kp">context</span>[e <span class="nl">?x</span>] ] =&gt; <span class="nb">induction</span> (e x)
+         <span class="kr">end</span>;
+    <span class="nb">cbn</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>B</var><span class="hyp-type"><b>: </b><span>A -&gt; <span class="kt">Type</span></span></span></span><br><span><var>x0, x1</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>B x0 -&gt; B x1 -&gt; <span class="kt">Type</span></span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">a</span> : A, B a</span></span></span><br><span><var>e</var><span class="hyp-type"><b>: </b><span>f == g</span></span></span><br><span><var>Px</var><span class="hyp-type"><b>: </b><span>P (f x0) (f x1)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Px = Px</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">reflexivity</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Qed</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="tactics-v-chk15" style="display: none" type="checkbox"><label class="alectryon-input" for="tactics-v-chk15"><span class="kn">Lemma</span> <span class="nf">path_forall_2_beta</span> `{Funext} A B x0 x1 P f g e Px
+: @transport (<span class="kr">forall</span> <span class="nv">a</span> : A, B a) (<span class="kr">fun</span> <span class="nv">f</span> =&gt; P (f x0) (f x1)) f g (@path_forall _ _ _ _ _ e) Px
+  = transport (<span class="kr">fun</span> <span class="nv">y</span> : B x1 =&gt; P (g x0) y) (e x1)
+     (transport (<span class="kr">fun</span> <span class="nv">y</span> : B x0 =&gt; P y (f x1)) (e x0) Px).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>B</var><span class="hyp-type"><b>: </b><span>A -&gt; <span class="kt">Type</span></span></span></span><br><span><var>x0, x1</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>B x0 -&gt; B x1 -&gt; <span class="kt">Type</span></span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">a</span> : A, B a</span></span></span><br><span><var>e</var><span class="hyp-type"><b>: </b><span>f == g</span></span></span><br><span><var>Px</var><span class="hyp-type"><b>: </b><span>P (f x0) (f x1)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport
+  (<span class="kr">fun</span> <span class="nv">f</span> : <span class="kr">forall</span> <span class="nv">a</span> : A, B a =&gt; P (f x0) (f x1))
+  (path_forall f g e) Px =
+transport (<span class="kr">fun</span> <span class="nv">y</span> : B x1 =&gt; P (g x0) y) (e x1)
+  (transport (<span class="kr">fun</span> <span class="nv">y</span> : B x0 =&gt; P y (f x1)) (e x0) Px)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="tactics-v-chk16" style="display: none" type="checkbox"><label class="alectryon-input" for="tactics-v-chk16"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>B</var><span class="hyp-type"><b>: </b><span>A -&gt; <span class="kt">Type</span></span></span></span><br><span><var>x0, x1</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>B x0 -&gt; B x1 -&gt; <span class="kt">Type</span></span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">a</span> : A, B a</span></span></span><br><span><var>e</var><span class="hyp-type"><b>: </b><span>f == g</span></span></span><br><span><var>Px</var><span class="hyp-type"><b>: </b><span>P (f x0) (f x1)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport
+  (<span class="kr">fun</span> <span class="nv">f</span> : <span class="kr">forall</span> <span class="nv">a</span> : A, B a =&gt; P (f x0) (f x1))
+  (path_forall f g e) Px =
+transport (<span class="kr">fun</span> <span class="nv">y</span> : B x1 =&gt; P (g x0) y) (e x1)
+  (transport (<span class="kr">fun</span> <span class="nv">y</span> : B x0 =&gt; P y (f x1)) (e x0) Px)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="tactics-v-chk17" style="display: none" type="checkbox"><label class="alectryon-input" for="tactics-v-chk17">transport_path_forall_hammer.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>B</var><span class="hyp-type"><b>: </b><span>A -&gt; <span class="kt">Type</span></span></span></span><br><span><var>x0, x1</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>B x0 -&gt; B x1 -&gt; <span class="kt">Type</span></span></span></span><br><span><var>f, g</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">a</span> : A, B a</span></span></span><br><span><var>e</var><span class="hyp-type"><b>: </b><span>f == g</span></span></span><br><span><var>Px</var><span class="hyp-type"><b>: </b><span>P (f x0) (f x1)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport (<span class="kr">fun</span> <span class="nv">y</span> : B x1 =&gt; P (g x0) y) (e x1)
+  (transport (<span class="kr">fun</span> <span class="nv">y</span> : B x0 =&gt; P y (f x1)) (e x0) Px) =
+transport (<span class="kr">fun</span> <span class="nv">y</span> : B x1 =&gt; P (g x0) y) (e x1)
+  (transport (<span class="kr">fun</span> <span class="nv">y</span> : B x0 =&gt; P y (f x1)) (e x0) Px)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">reflexivity</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Qed</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** A more powerful variant of [path_induction] *)</span>
+<span class="sd">(** We first define some helper tactics, and then define [path_induction_hammer], which has poor computational behavior, but is vastly more powerful than [path_induction], and removes paths which are discoverably contractible, and paths which only appear in the goal, etc. *)</span>
+
+<span class="sd">(** A variant of [induction] which also tries [destruct] and [case], and may be extended to using other [destruct]-like tactics. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">induction_hammer</span> H :=
+  <span class="nb">destruct</span> H || <span class="nb">induction</span> H || (<span class="nb">case</span> H; <span class="nb">clear</span> H).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Takes a term of type [_ = _], and tries to replace it by [idpath] by trying to prove that it&#39;s an hProp.  The ordering of attempts is tuned for speed. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">clear_contr_path</span> p :=
+  <span class="kr">let</span> <span class="nv">H</span> := <span class="kp">fresh</span> <span class="kr">in</span>
+  <span class="kr">let</span> <span class="nv">T</span> := <span class="kp">type of</span> p <span class="kr">in</span>
+  <span class="kp">progress</span> (
+      <span class="kp">first</span> [ <span class="nb">assert</span> (H : idpath = p) <span class="bp">by</span> <span class="bp">exact</span> (center _)
+            | <span class="nb">assert</span> (H : idpath = p)
+              <span class="bp">by</span> (
+                  <span class="kr">let</span> <span class="nv">a</span> := <span class="kr">match goal with</span> |- @paths (<span class="nl">?x</span> = <span class="nl">?y</span>) <span class="nl">?a</span> <span class="nl">?b</span> =&gt; <span class="kp">constr</span>:(a) <span class="kr">end</span> <span class="kr">in</span>
+                  <span class="kr">let</span> <span class="nv">b</span> := <span class="kr">match goal with</span> |- @paths (<span class="nl">?x</span> = <span class="nl">?y</span>) <span class="nl">?a</span> <span class="nl">?b</span> =&gt; <span class="kp">constr</span>:(b) <span class="kr">end</span> <span class="kr">in</span>
+                  <span class="kr">let</span> <span class="nv">x</span> := <span class="kr">match goal with</span> |- @paths (<span class="nl">?x</span> = <span class="nl">?y</span>) <span class="nl">?a</span> <span class="nl">?b</span> =&gt; <span class="kp">constr</span>:(x) <span class="kr">end</span> <span class="kr">in</span>
+                  <span class="kr">let</span> <span class="nv">y</span> := <span class="kr">match goal with</span> |- @paths (<span class="nl">?x</span> = <span class="nl">?y</span>) <span class="nl">?a</span> <span class="nl">?b</span> =&gt; <span class="kp">constr</span>:(y) <span class="kr">end</span> <span class="kr">in</span>
+                  <span class="nb">apply</span> (@equiv_inv _ _ _ (@equiv_ap _ _ _ (@isequiv_apD10 _ _ _ x y) a b));
+                  <span class="bp">exact</span> (center _)
+                )
+            | <span class="nb">pose proof</span> (@path_contr T _ idpath p) <span class="kr">as</span> H ];
+      <span class="nb">destruct</span> H;
+      <span class="c">(* now reduce any matches on [idpath] (and on other things too) *)</span>
+      <span class="nb">cbv</span> iota <span class="kr">in</span> *
+    ).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Use both [induction_hammer] and [clear_contr_path] on a path, to try to get rid of it *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">clear_path_no_check</span> p :=
+  induction_hammer p || clear_contr_path p.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">clear_path</span> p :=
+  <span class="kr">let</span> <span class="nv">t</span> := <span class="kp">type of</span> p <span class="kr">in</span>
+  <span class="kr">lazymatch</span> <span class="kp">eval</span> <span class="nb">hnf</span> <span class="kr">in</span> t <span class="kr">with</span>
+    | @paths _ _ _ =&gt; clear_path_no_check p || <span class="kp">fail</span> <span class="mi">1</span> <span class="s2">&quot;cannot clear path&quot;</span> p
+    | _ =&gt; <span class="kp">fail</span> <span class="mi">0</span> <span class="s2">&quot;clear_path only works on paths;&quot;</span> p <span class="s2">&quot;is not a path&quot;</span>
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Run [clear_path] on hypotheses *)</span>
+<span class="sd">(** We don&#39;t match only on things of type [_ = _], because maybe that&#39;s the head normal form, but it&#39;s hiding behind something else; [clear_path] will make sure it&#39;s of the right type.  We include some redundant cases at the top, for speed; it is faster to try to destruct everything first, and then do the full battery of tactics, than to just run the hammer. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">step_clear_paths</span> :=
+  <span class="kp">idtac</span>;
+  <span class="kr">match goal with</span>
+    | [ p : _ = _ |- _ ] =&gt; <span class="nb">destruct</span> p
+    | [ p : _ = _ |- _ ] =&gt; clear_path_no_check p
+    | [ p : _ |- _ ] =&gt; clear_path p
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">clear_paths</span> := <span class="kp">progress</span> <span class="kp">repeat</span> step_clear_paths.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Run [clear_path] on anything inside a [match] *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">step_clear_paths_in_match</span> :=
+  <span class="kp">idtac</span>;
+  <span class="kr">match goal with</span>
+    | [ |- <span class="kp">context</span>[<span class="kr">match</span> <span class="nl">?p</span> <span class="kr">with</span> idpath =&gt; _ <span class="kr">end</span>] ] =&gt; <span class="kp">progress</span> <span class="nb">destruct</span> p
+    | [ |- <span class="kp">context</span>[<span class="kr">match</span> <span class="nl">?p</span> <span class="kr">with</span> idpath =&gt; _ <span class="kr">end</span>] ] =&gt; clear_path_no_check p
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">clear_paths_in_match</span> := <span class="kp">progress</span> <span class="kp">repeat</span> step_clear_paths_in_match.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Now some lemmas about trivial [match]es *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">match_eta</span> {<span class="nv">T</span>} {<span class="nv">x</span> <span class="nv">y</span> : T} (<span class="nv">H0</span> : x = y)
+: (H0 = <span class="kr">match</span> H0 <span class="kr">in</span> (_ = y) <span class="kr">return</span> (x = y) <span class="kr">with</span>
+          | idpath =&gt; idpath
+        <span class="kr">end</span>)
+  := <span class="kr">match</span> H0 <span class="kr">with</span> idpath =&gt; idpath <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">match_eta1</span> {<span class="nv">T</span>} {<span class="nv">x</span> : T} (<span class="nv">E</span> : x = x)
+: (<span class="kr">match</span> E <span class="kr">in</span> (_ = y) <span class="kr">return</span> (x = y) <span class="kr">with</span>
+     | idpath =&gt; idpath
+   <span class="kr">end</span> = idpath)
+  -&gt; idpath = E
+  := <span class="kr">fun</span> <span class="nv">H</span> =&gt; ((H # match_eta E) ^)%path.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">match_eta2</span> {<span class="nv">T</span>} {<span class="nv">x</span> : T} (<span class="nv">E</span> : x = x)
+: (idpath
+   = <span class="kr">match</span> E <span class="kr">in</span> (_ = y) <span class="kr">return</span> (x = y) <span class="kr">with</span>
+       | idpath =&gt; idpath
+     <span class="kr">end</span>)
+  -&gt; idpath = E
+  := <span class="kr">fun</span> <span class="nv">H</span> =&gt; match_eta1 E (H ^)%path.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** And now the actual tactic.  Note that the order of the cases in the [match goal with ... end] is somewhat finely tuned for speed. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">step_path_induction_hammer</span> :=
+  <span class="kp">idtac</span>;
+  <span class="kr">match goal with</span>
+    | _ =&gt; <span class="bp">reflexivity</span>
+    | _ =&gt; <span class="nb">intro</span>
+    | _ =&gt; <span class="kp">progress</span> <span class="nb">cbn</span> <span class="kr">in</span> *
+    | _ =&gt; <span class="bp">exact</span> (contr _)
+    | [ p : _ = _ |- _ ]
+      =&gt; <span class="kp">progress</span> <span class="nb">destruct</span> p <span class="c">(* placed up here for speed *)</span>
+    | [ H : _ |- _ ]
+      =&gt; <span class="kr">let</span> <span class="nv">H&#39;</span> := <span class="kp">fresh</span> <span class="kr">in</span> <span class="nb">assert</span> (H&#39; := match_eta1 _ H); <span class="nb">destruct</span> H&#39;
+    | [ H : _ |- _ ]
+      =&gt; <span class="kr">let</span> <span class="nv">H&#39;</span> := <span class="kp">fresh</span> <span class="kr">in</span> <span class="nb">assert</span> (H&#39; := match_eta2 _ H); <span class="nb">destruct</span> H&#39;
+    | _ =&gt; step_clear_paths
+    | _ =&gt; expand; step_clear_paths_in_match
+    | _ =&gt; <span class="kp">progress</span> <span class="nb">auto with</span> path_hints
+    | _ =&gt; <span class="bp">done</span>
+    | _ =&gt; <span class="bp">exact</span> (center _)
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">path_induction_hammer</span> := <span class="kp">progress</span> <span class="kp">repeat</span> step_path_induction_hammer.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** * Miscellaneous tactics *)</span>
+
+<span class="sd">(** Substitute all hypotheses with bodies, i.e., of the form [H := _]. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">subst_body</span> :=
+  <span class="kp">repeat</span> <span class="kr">match goal with</span>
+           | [ H := _ |- _ ] =&gt; <span class="nb">subst</span> H
+         <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Some tactics to do things with some arbitrary hypothesis in the context.  These tactics are similar to, e.g., [assumption]. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">do_with_hyp</span> tac :=
+  <span class="kp">idtac</span>;
+  <span class="kr">match goal with</span>
+    | [ H : _ |- _ ] =&gt; tac H
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">rewrite_hyp&#39;</span> := do_with_hyp <span class="kp">ltac</span>:(<span class="kr">fun</span> <span class="nv">H</span> =&gt; <span class="nb">rewrite</span> H).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">rewrite_hyp</span> := <span class="kp">repeat</span> rewrite_hyp&#39;.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">rewrite_rev_hyp&#39;</span> := do_with_hyp <span class="kp">ltac</span>:(<span class="kr">fun</span> <span class="nv">H</span> =&gt; <span class="nb">rewrite</span> &lt;- H).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">rewrite_rev_hyp</span> := <span class="kp">repeat</span> rewrite_rev_hyp&#39;.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">apply_hyp&#39;</span> := do_with_hyp <span class="kp">ltac</span>:(<span class="kr">fun</span> <span class="nv">H</span> =&gt; <span class="nb">apply</span> H).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">apply_hyp</span> := <span class="kp">repeat</span> apply_hyp&#39;.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">eapply_hyp&#39;</span> := do_with_hyp <span class="kp">ltac</span>:(<span class="kr">fun</span> <span class="nv">H</span> =&gt; <span class="nb">eapply</span> H).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">eapply_hyp</span> := <span class="kp">repeat</span> eapply_hyp&#39;.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Run [simpl] on a hypothesis before rewriting with it. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">simpl_do_clear</span> tac term :=
+  <span class="kr">let</span> <span class="nv">H</span> := <span class="kp">fresh</span> <span class="kr">in</span>
+  <span class="nb">assert</span> (H := term);
+    <span class="nb">cbn</span> <span class="kr">in</span> H |- *;
+    tac H;
+    <span class="nb">clear</span> H.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** The behavior of [simpl rewrite] with respect to implicit arguments is slightly different from that of [rewrite].  In some ways, it is a little more like [erewrite], but in fact both [rewrite] and [erewrite] use magic that we are unable to exactly duplicate with a user-defined tactic.</span>
+
+<span class="sd">The point is that for a user-defined tactic, Coq has to resolve the meaning of the term passed to it in some way before the tactic begins executing.  In particular, if that term involves maximally inserted implicit arguments, then it will have to fill them in; but often there will be no way to do that.  If we declared the argument of [simpl rewrite] as a [constr], then this would cause it to fail.  Instead, we declare it as an [open_constr], which allows Coq to fill in those implicit arguments with existential variables, which can then be instantiated later during the rewriting. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;simpl&quot;</span> <span class="s2">&quot;rewrite&quot;</span>      open_constr(term) := simpl_do_clear <span class="kp">ltac</span>:(<span class="kr">fun</span> <span class="nv">H</span> =&gt; <span class="nb">rewrite</span>    H) term.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;simpl&quot;</span> <span class="s2">&quot;rewrite&quot;</span> <span class="s2">&quot;-&gt;&quot;</span> open_constr(term) := simpl_do_clear <span class="kp">ltac</span>:(<span class="kr">fun</span> <span class="nv">H</span> =&gt; <span class="nb">rewrite</span> -&gt; H) term.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;simpl&quot;</span> <span class="s2">&quot;rewrite&quot;</span> <span class="s2">&quot;&lt;-&quot;</span> open_constr(term) := simpl_do_clear <span class="kp">ltac</span>:(<span class="kr">fun</span> <span class="nv">H</span> =&gt; <span class="nb">rewrite</span> &lt;- H) term.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;simpl&quot;</span> <span class="s2">&quot;rewrite&quot;</span>      open_constr(term) <span class="s2">&quot;in&quot;</span> hyp(hyp) := simpl_do_clear <span class="kp">ltac</span>:(<span class="kr">fun</span> <span class="nv">H</span> =&gt; <span class="nb">rewrite</span>    H <span class="kr">in</span> hyp) term.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;simpl&quot;</span> <span class="s2">&quot;rewrite&quot;</span> <span class="s2">&quot;-&gt;&quot;</span> open_constr(term) <span class="s2">&quot;in&quot;</span> hyp(hyp) := simpl_do_clear <span class="kp">ltac</span>:(<span class="kr">fun</span> <span class="nv">H</span> =&gt; <span class="nb">rewrite</span> -&gt; H <span class="kr">in</span> hyp) term.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;simpl&quot;</span> <span class="s2">&quot;rewrite&quot;</span> <span class="s2">&quot;&lt;-&quot;</span> open_constr(term) <span class="s2">&quot;in&quot;</span> hyp(hyp) := simpl_do_clear <span class="kp">ltac</span>:(<span class="kr">fun</span> <span class="nv">H</span> =&gt; <span class="nb">rewrite</span> &lt;- H <span class="kr">in</span> hyp) term.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;simpl&quot;</span> <span class="s2">&quot;rewrite&quot;</span>      open_constr(term) <span class="s2">&quot;in&quot;</span> <span class="s2">&quot;*&quot;</span> := simpl_do_clear <span class="kp">ltac</span>:(<span class="kr">fun</span> <span class="nv">H</span> =&gt; <span class="nb">rewrite</span>    H <span class="kr">in</span> * ) term.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;simpl&quot;</span> <span class="s2">&quot;rewrite&quot;</span> <span class="s2">&quot;-&gt;&quot;</span> open_constr(term) <span class="s2">&quot;in&quot;</span> <span class="s2">&quot;*&quot;</span> := simpl_do_clear <span class="kp">ltac</span>:(<span class="kr">fun</span> <span class="nv">H</span> =&gt; <span class="nb">rewrite</span> -&gt; H <span class="kr">in</span> * ) term.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;simpl&quot;</span> <span class="s2">&quot;rewrite&quot;</span> <span class="s2">&quot;&lt;-&quot;</span> open_constr(term) <span class="s2">&quot;in&quot;</span> <span class="s2">&quot;*&quot;</span> := simpl_do_clear <span class="kp">ltac</span>:(<span class="kr">fun</span> <span class="nv">H</span> =&gt; <span class="nb">rewrite</span> &lt;- H <span class="kr">in</span> * ) term.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;simpl&quot;</span> <span class="s2">&quot;rewrite&quot;</span>      open_constr(term) <span class="s2">&quot;in&quot;</span> hyp(hyp) <span class="s2">&quot;|-&quot;</span> <span class="s2">&quot;*&quot;</span> := simpl_do_clear <span class="kp">ltac</span>:(<span class="kr">fun</span> <span class="nv">H</span> =&gt; <span class="nb">rewrite</span>    H <span class="kr">in</span> hyp |- * ) term.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;simpl&quot;</span> <span class="s2">&quot;rewrite&quot;</span> <span class="s2">&quot;-&gt;&quot;</span> open_constr(term) <span class="s2">&quot;in&quot;</span> hyp(hyp) <span class="s2">&quot;|-&quot;</span> <span class="s2">&quot;*&quot;</span> := simpl_do_clear <span class="kp">ltac</span>:(<span class="kr">fun</span> <span class="nv">H</span> =&gt; <span class="nb">rewrite</span> -&gt; H <span class="kr">in</span> hyp |- * ) term.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;simpl&quot;</span> <span class="s2">&quot;rewrite&quot;</span> <span class="s2">&quot;&lt;-&quot;</span> open_constr(term) <span class="s2">&quot;in&quot;</span> hyp(hyp) <span class="s2">&quot;|-&quot;</span> <span class="s2">&quot;*&quot;</span> := simpl_do_clear <span class="kp">ltac</span>:(<span class="kr">fun</span> <span class="nv">H</span> =&gt; <span class="nb">rewrite</span> &lt;- H <span class="kr">in</span> hyp |- * ) term.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;simpl&quot;</span> <span class="s2">&quot;rewrite&quot;</span>      open_constr(term) <span class="s2">&quot;in&quot;</span> <span class="s2">&quot;*&quot;</span> <span class="s2">&quot;|-&quot;</span> := simpl_do_clear <span class="kp">ltac</span>:(<span class="kr">fun</span> <span class="nv">H</span> =&gt; <span class="nb">rewrite</span>    H <span class="kr">in</span> * |- ) term.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;simpl&quot;</span> <span class="s2">&quot;rewrite&quot;</span> <span class="s2">&quot;-&gt;&quot;</span> open_constr(term) <span class="s2">&quot;in&quot;</span> <span class="s2">&quot;*&quot;</span> <span class="s2">&quot;|-&quot;</span> := simpl_do_clear <span class="kp">ltac</span>:(<span class="kr">fun</span> <span class="nv">H</span> =&gt; <span class="nb">rewrite</span> -&gt; H <span class="kr">in</span> * |- ) term.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;simpl&quot;</span> <span class="s2">&quot;rewrite&quot;</span> <span class="s2">&quot;&lt;-&quot;</span> open_constr(term) <span class="s2">&quot;in&quot;</span> <span class="s2">&quot;*&quot;</span> <span class="s2">&quot;|-&quot;</span> := simpl_do_clear <span class="kp">ltac</span>:(<span class="kr">fun</span> <span class="nv">H</span> =&gt; <span class="nb">rewrite</span> &lt;- H <span class="kr">in</span> * |- ) term.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;simpl&quot;</span> <span class="s2">&quot;rewrite&quot;</span>      <span class="s2">&quot;!&quot;</span> open_constr(term) := simpl_do_clear <span class="kp">ltac</span>:(<span class="kr">fun</span> <span class="nv">H</span> =&gt; <span class="nb">rewrite</span>    !H) term.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;simpl&quot;</span> <span class="s2">&quot;rewrite&quot;</span> <span class="s2">&quot;-&gt;&quot;</span> <span class="s2">&quot;!&quot;</span> open_constr(term) := simpl_do_clear <span class="kp">ltac</span>:(<span class="kr">fun</span> <span class="nv">H</span> =&gt; <span class="nb">rewrite</span> -&gt; !H) term.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;simpl&quot;</span> <span class="s2">&quot;rewrite&quot;</span> <span class="s2">&quot;&lt;-&quot;</span> <span class="s2">&quot;!&quot;</span> open_constr(term) := simpl_do_clear <span class="kp">ltac</span>:(<span class="kr">fun</span> <span class="nv">H</span> =&gt; <span class="nb">rewrite</span> &lt;- !H) term.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;simpl&quot;</span> <span class="s2">&quot;rewrite&quot;</span>      <span class="s2">&quot;!&quot;</span> open_constr(term) <span class="s2">&quot;in&quot;</span> hyp(hyp) := simpl_do_clear <span class="kp">ltac</span>:(<span class="kr">fun</span> <span class="nv">H</span> =&gt; <span class="nb">rewrite</span>    !H <span class="kr">in</span> hyp) term.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;simpl&quot;</span> <span class="s2">&quot;rewrite&quot;</span> <span class="s2">&quot;-&gt;&quot;</span> <span class="s2">&quot;!&quot;</span> open_constr(term) <span class="s2">&quot;in&quot;</span> hyp(hyp) := simpl_do_clear <span class="kp">ltac</span>:(<span class="kr">fun</span> <span class="nv">H</span> =&gt; <span class="nb">rewrite</span> -&gt; !H <span class="kr">in</span> hyp) term.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;simpl&quot;</span> <span class="s2">&quot;rewrite&quot;</span> <span class="s2">&quot;&lt;-&quot;</span> <span class="s2">&quot;!&quot;</span> open_constr(term) <span class="s2">&quot;in&quot;</span> hyp(hyp) := simpl_do_clear <span class="kp">ltac</span>:(<span class="kr">fun</span> <span class="nv">H</span> =&gt; <span class="nb">rewrite</span> &lt;- !H <span class="kr">in</span> hyp) term.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;simpl&quot;</span> <span class="s2">&quot;rewrite&quot;</span>      <span class="s2">&quot;!&quot;</span> open_constr(term) <span class="s2">&quot;in&quot;</span> <span class="s2">&quot;*&quot;</span> := simpl_do_clear <span class="kp">ltac</span>:(<span class="kr">fun</span> <span class="nv">H</span> =&gt; <span class="nb">rewrite</span>    !H <span class="kr">in</span> * ) term.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;simpl&quot;</span> <span class="s2">&quot;rewrite&quot;</span> <span class="s2">&quot;-&gt;&quot;</span> <span class="s2">&quot;!&quot;</span> open_constr(term) <span class="s2">&quot;in&quot;</span> <span class="s2">&quot;*&quot;</span> := simpl_do_clear <span class="kp">ltac</span>:(<span class="kr">fun</span> <span class="nv">H</span> =&gt; <span class="nb">rewrite</span> -&gt; !H <span class="kr">in</span> * ) term.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;simpl&quot;</span> <span class="s2">&quot;rewrite&quot;</span> <span class="s2">&quot;&lt;-&quot;</span> <span class="s2">&quot;!&quot;</span> open_constr(term) <span class="s2">&quot;in&quot;</span> <span class="s2">&quot;*&quot;</span> := simpl_do_clear <span class="kp">ltac</span>:(<span class="kr">fun</span> <span class="nv">H</span> =&gt; <span class="nb">rewrite</span> &lt;- !H <span class="kr">in</span> * ) term.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;simpl&quot;</span> <span class="s2">&quot;rewrite&quot;</span>      <span class="s2">&quot;!&quot;</span> open_constr(term) <span class="s2">&quot;in&quot;</span> hyp(hyp) <span class="s2">&quot;|-&quot;</span> <span class="s2">&quot;*&quot;</span> := simpl_do_clear <span class="kp">ltac</span>:(<span class="kr">fun</span> <span class="nv">H</span> =&gt; <span class="nb">rewrite</span>    !H <span class="kr">in</span> hyp |- * ) term.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;simpl&quot;</span> <span class="s2">&quot;rewrite&quot;</span> <span class="s2">&quot;-&gt;&quot;</span> <span class="s2">&quot;!&quot;</span> open_constr(term) <span class="s2">&quot;in&quot;</span> hyp(hyp) <span class="s2">&quot;|-&quot;</span> <span class="s2">&quot;*&quot;</span> := simpl_do_clear <span class="kp">ltac</span>:(<span class="kr">fun</span> <span class="nv">H</span> =&gt; <span class="nb">rewrite</span> -&gt; !H <span class="kr">in</span> hyp |- * ) term.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;simpl&quot;</span> <span class="s2">&quot;rewrite&quot;</span> <span class="s2">&quot;&lt;-&quot;</span> <span class="s2">&quot;!&quot;</span> open_constr(term) <span class="s2">&quot;in&quot;</span> hyp(hyp) <span class="s2">&quot;|-&quot;</span> <span class="s2">&quot;*&quot;</span> := simpl_do_clear <span class="kp">ltac</span>:(<span class="kr">fun</span> <span class="nv">H</span> =&gt; <span class="nb">rewrite</span> &lt;- !H <span class="kr">in</span> hyp |- * ) term.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;simpl&quot;</span> <span class="s2">&quot;rewrite&quot;</span>      <span class="s2">&quot;!&quot;</span> open_constr(term) <span class="s2">&quot;in&quot;</span> <span class="s2">&quot;*&quot;</span> <span class="s2">&quot;|-&quot;</span> := simpl_do_clear <span class="kp">ltac</span>:(<span class="kr">fun</span> <span class="nv">H</span> =&gt; <span class="nb">rewrite</span>    !H <span class="kr">in</span> * |- ) term.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;simpl&quot;</span> <span class="s2">&quot;rewrite&quot;</span> <span class="s2">&quot;-&gt;&quot;</span> <span class="s2">&quot;!&quot;</span> open_constr(term) <span class="s2">&quot;in&quot;</span> <span class="s2">&quot;*&quot;</span> <span class="s2">&quot;|-&quot;</span> := simpl_do_clear <span class="kp">ltac</span>:(<span class="kr">fun</span> <span class="nv">H</span> =&gt; <span class="nb">rewrite</span> -&gt; !H <span class="kr">in</span> * |- ) term.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;simpl&quot;</span> <span class="s2">&quot;rewrite&quot;</span> <span class="s2">&quot;&lt;-&quot;</span> <span class="s2">&quot;!&quot;</span> open_constr(term) <span class="s2">&quot;in&quot;</span> <span class="s2">&quot;*&quot;</span> <span class="s2">&quot;|-&quot;</span> := simpl_do_clear <span class="kp">ltac</span>:(<span class="kr">fun</span> <span class="nv">H</span> =&gt; <span class="nb">rewrite</span> &lt;- !H <span class="kr">in</span> * |- ) term.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;simpl&quot;</span> <span class="s2">&quot;rewrite&quot;</span>      <span class="s2">&quot;?&quot;</span> open_constr(term) := simpl_do_clear <span class="kp">ltac</span>:(<span class="kr">fun</span> <span class="nv">H</span> =&gt; <span class="nb">rewrite</span>    <span class="nl">?H</span>) term.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;simpl&quot;</span> <span class="s2">&quot;rewrite&quot;</span> <span class="s2">&quot;-&gt;&quot;</span> <span class="s2">&quot;?&quot;</span> open_constr(term) := simpl_do_clear <span class="kp">ltac</span>:(<span class="kr">fun</span> <span class="nv">H</span> =&gt; <span class="nb">rewrite</span> -&gt; <span class="nl">?H</span>) term.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;simpl&quot;</span> <span class="s2">&quot;rewrite&quot;</span> <span class="s2">&quot;&lt;-&quot;</span> <span class="s2">&quot;?&quot;</span> open_constr(term) := simpl_do_clear <span class="kp">ltac</span>:(<span class="kr">fun</span> <span class="nv">H</span> =&gt; <span class="nb">rewrite</span> &lt;- <span class="nl">?H</span>) term.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;simpl&quot;</span> <span class="s2">&quot;rewrite&quot;</span>      <span class="s2">&quot;?&quot;</span> open_constr(term) <span class="s2">&quot;in&quot;</span> hyp(hyp) := simpl_do_clear <span class="kp">ltac</span>:(<span class="kr">fun</span> <span class="nv">H</span> =&gt; <span class="nb">rewrite</span>    <span class="nl">?H</span> <span class="kr">in</span> hyp) term.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;simpl&quot;</span> <span class="s2">&quot;rewrite&quot;</span> <span class="s2">&quot;-&gt;&quot;</span> <span class="s2">&quot;?&quot;</span> open_constr(term) <span class="s2">&quot;in&quot;</span> hyp(hyp) := simpl_do_clear <span class="kp">ltac</span>:(<span class="kr">fun</span> <span class="nv">H</span> =&gt; <span class="nb">rewrite</span> -&gt; <span class="nl">?H</span> <span class="kr">in</span> hyp) term.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;simpl&quot;</span> <span class="s2">&quot;rewrite&quot;</span> <span class="s2">&quot;&lt;-&quot;</span> <span class="s2">&quot;?&quot;</span> open_constr(term) <span class="s2">&quot;in&quot;</span> hyp(hyp) := simpl_do_clear <span class="kp">ltac</span>:(<span class="kr">fun</span> <span class="nv">H</span> =&gt; <span class="nb">rewrite</span> &lt;- <span class="nl">?H</span> <span class="kr">in</span> hyp) term.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;simpl&quot;</span> <span class="s2">&quot;rewrite&quot;</span>      <span class="s2">&quot;?&quot;</span> open_constr(term) <span class="s2">&quot;in&quot;</span> <span class="s2">&quot;*&quot;</span> := simpl_do_clear <span class="kp">ltac</span>:(<span class="kr">fun</span> <span class="nv">H</span> =&gt; <span class="nb">rewrite</span>    <span class="nl">?H</span> <span class="kr">in</span> * ) term.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;simpl&quot;</span> <span class="s2">&quot;rewrite&quot;</span> <span class="s2">&quot;-&gt;&quot;</span> <span class="s2">&quot;?&quot;</span> open_constr(term) <span class="s2">&quot;in&quot;</span> <span class="s2">&quot;*&quot;</span> := simpl_do_clear <span class="kp">ltac</span>:(<span class="kr">fun</span> <span class="nv">H</span> =&gt; <span class="nb">rewrite</span> -&gt; <span class="nl">?H</span> <span class="kr">in</span> * ) term.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;simpl&quot;</span> <span class="s2">&quot;rewrite&quot;</span> <span class="s2">&quot;&lt;-&quot;</span> <span class="s2">&quot;?&quot;</span> open_constr(term) <span class="s2">&quot;in&quot;</span> <span class="s2">&quot;*&quot;</span> := simpl_do_clear <span class="kp">ltac</span>:(<span class="kr">fun</span> <span class="nv">H</span> =&gt; <span class="nb">rewrite</span> &lt;- <span class="nl">?H</span> <span class="kr">in</span> * ) term.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;simpl&quot;</span> <span class="s2">&quot;rewrite&quot;</span>      <span class="s2">&quot;?&quot;</span> open_constr(term) <span class="s2">&quot;in&quot;</span> hyp(hyp) <span class="s2">&quot;|-&quot;</span> <span class="s2">&quot;*&quot;</span> := simpl_do_clear <span class="kp">ltac</span>:(<span class="kr">fun</span> <span class="nv">H</span> =&gt; <span class="nb">rewrite</span>    <span class="nl">?H</span> <span class="kr">in</span> hyp |- * ) term.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;simpl&quot;</span> <span class="s2">&quot;rewrite&quot;</span> <span class="s2">&quot;-&gt;&quot;</span> <span class="s2">&quot;?&quot;</span> open_constr(term) <span class="s2">&quot;in&quot;</span> hyp(hyp) <span class="s2">&quot;|-&quot;</span> <span class="s2">&quot;*&quot;</span> := simpl_do_clear <span class="kp">ltac</span>:(<span class="kr">fun</span> <span class="nv">H</span> =&gt; <span class="nb">rewrite</span> -&gt; <span class="nl">?H</span> <span class="kr">in</span> hyp |- * ) term.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;simpl&quot;</span> <span class="s2">&quot;rewrite&quot;</span> <span class="s2">&quot;&lt;-&quot;</span> <span class="s2">&quot;?&quot;</span> open_constr(term) <span class="s2">&quot;in&quot;</span> hyp(hyp) <span class="s2">&quot;|-&quot;</span> <span class="s2">&quot;*&quot;</span> := simpl_do_clear <span class="kp">ltac</span>:(<span class="kr">fun</span> <span class="nv">H</span> =&gt; <span class="nb">rewrite</span> &lt;- <span class="nl">?H</span> <span class="kr">in</span> hyp |- * ) term.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;simpl&quot;</span> <span class="s2">&quot;rewrite&quot;</span>      <span class="s2">&quot;?&quot;</span> open_constr(term) <span class="s2">&quot;in&quot;</span> <span class="s2">&quot;*&quot;</span> <span class="s2">&quot;|-&quot;</span> := simpl_do_clear <span class="kp">ltac</span>:(<span class="kr">fun</span> <span class="nv">H</span> =&gt; <span class="nb">rewrite</span>    <span class="nl">?H</span> <span class="kr">in</span> * |- ) term.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;simpl&quot;</span> <span class="s2">&quot;rewrite&quot;</span> <span class="s2">&quot;-&gt;&quot;</span> <span class="s2">&quot;?&quot;</span> open_constr(term) <span class="s2">&quot;in&quot;</span> <span class="s2">&quot;*&quot;</span> <span class="s2">&quot;|-&quot;</span> := simpl_do_clear <span class="kp">ltac</span>:(<span class="kr">fun</span> <span class="nv">H</span> =&gt; <span class="nb">rewrite</span> -&gt; <span class="nl">?H</span> <span class="kr">in</span> * |- ) term.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;simpl&quot;</span> <span class="s2">&quot;rewrite&quot;</span> <span class="s2">&quot;&lt;-&quot;</span> <span class="s2">&quot;?&quot;</span> open_constr(term) <span class="s2">&quot;in&quot;</span> <span class="s2">&quot;*&quot;</span> <span class="s2">&quot;|-&quot;</span> := simpl_do_clear <span class="kp">ltac</span>:(<span class="kr">fun</span> <span class="nv">H</span> =&gt; <span class="nb">rewrite</span> &lt;- <span class="nl">?H</span> <span class="kr">in</span> * |- ) term.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">head_hnf</span> expr := <span class="kr">let</span> <span class="nv">expr&#39;</span> := <span class="kp">eval</span> <span class="nb">hnf</span> <span class="kr">in</span> expr <span class="kr">in</span> head expr&#39;.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* given a [matcher] that succeeds on some hypotheses and fails on</span>
+<span class="c">   others, destruct any matching hypotheses, and then execute [tac]</span>
+<span class="c">   after each [destruct].</span>
+
+<span class="c">   The [tac] part exists so that you can, e.g., [simpl in *], to</span>
+<span class="c">   speed things up. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">destruct_all_matches_then</span> matcher tac :=
+  <span class="kp">repeat</span> <span class="kr">match goal with</span>
+           | [ H : <span class="nl">?T</span> |- _ ] =&gt; matcher T; <span class="nb">destruct</span> H; tac
+         <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">destruct_all_matches</span> matcher := destruct_all_matches_then matcher <span class="kp">ltac</span>:(<span class="nb">simpl</span> <span class="kr">in</span> *).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">destruct_all_matches&#39;</span> matcher := destruct_all_matches_then matcher <span class="kp">idtac</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** matches anything whose type has a [T] in it *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">destruct_type_matcher</span> T HT :=
+  <span class="kr">match</span> HT <span class="kr">with</span>
+    | <span class="kp">context</span>[T] =&gt; <span class="kp">idtac</span>
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">destruct_type</span> T := destruct_all_matches <span class="kp">ltac</span>:(destruct_type_matcher T).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">destruct_type&#39;</span> T := destruct_all_matches&#39; <span class="kp">ltac</span>:(destruct_type_matcher T).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">destruct_head_matcher</span> T HT :=
+  <span class="kr">match</span> head HT <span class="kr">with</span>
+    | T =&gt; <span class="kp">idtac</span>
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">destruct_head</span> T := destruct_all_matches <span class="kp">ltac</span>:(destruct_head_matcher T).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">destruct_head&#39;</span> T := destruct_all_matches&#39; <span class="kp">ltac</span>:(destruct_head_matcher T).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">destruct_head_hnf_matcher</span> T HT :=
+  <span class="kr">match</span> head_hnf HT <span class="kr">with</span>
+    | T =&gt; <span class="kp">idtac</span>
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">destruct_head_hnf</span> T := destruct_all_matches <span class="kp">ltac</span>:(destruct_head_hnf_matcher T).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">destruct_head_hnf&#39;</span> T := destruct_all_matches&#39; <span class="kp">ltac</span>:(destruct_head_hnf_matcher T).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Turns a context object, obtained via, e.g., [match goal with |- context G[...] =&gt; ... end], into a lambda / Gallina function. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">context_to_lambda</span> G :=
+  <span class="kr">let</span> <span class="nv">ret</span> := <span class="kp">constr</span>:(<span class="kr">fun</span> <span class="nv">x</span> =&gt; <span class="kr">let</span> <span class="nv">k</span> := x <span class="kr">in</span>
+                              <span class="kp">ltac</span>:(
+                                <span class="kr">let</span> <span class="nv">ret</span> := <span class="kp">context</span> G[k] <span class="kr">in</span>
+                                <span class="bp">exact</span> ret)) <span class="kr">in</span>
+  (<span class="kp">eval</span> <span class="nb">cbv</span> zeta <span class="kr">in</span> ret).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** The [rewrite &lt;-] tactic uses [internal_paths_rew], which is definitionally equal to [transport], except for the order of the arguments.  The following replaces the former with the latter. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">internal_paths_rew_to_transport</span> :=
+  <span class="kp">repeat</span> <span class="kr">match goal with</span> |- <span class="kp">context</span> [ internal_paths_rew <span class="nl">?P</span> <span class="nl">?u</span> <span class="nl">?p</span> ] =&gt;
+                           <span class="nb">change</span> (internal_paths_rew P u p) <span class="kr">with</span> (transport P p u) <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Unfortunately, the more common [rewrite -&gt;] uses [internal_paths_rew_r], which is not definitionally equal to something involving [transport].  However, we do have a propositional equality. The arguments here match the arguments that [internal_paths_rew_r] takes. *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="tactics-v-chk18" style="display: none" type="checkbox"><label class="alectryon-input" for="tactics-v-chk18"><span class="kn">Definition</span> <span class="nf">internal_paths_rew_r_to_transport</span> {<span class="nv">A</span> : <span class="kt">Type</span>} {<span class="nv">x</span> <span class="nv">y</span> : A} (<span class="nv">P</span> : A -&gt; <span class="kt">Type</span>) (<span class="nv">u</span> : P y) (<span class="nv">p</span> : x = y)
+  : internal_paths_rew_r P u p = transport P p^ u.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>x, y</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>A -&gt; <span class="kt">Type</span></span></span></span><br><span><var>u</var><span class="hyp-type"><b>: </b><span>P y</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>x = y</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">internal_paths_rew_r P u p = transport P p^ u</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="tactics-v-chk19" style="display: none" type="checkbox"><label class="alectryon-input" for="tactics-v-chk19"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>x, y</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>A -&gt; <span class="kt">Type</span></span></span></span><br><span><var>u</var><span class="hyp-type"><b>: </b><span>P y</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>x = y</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">internal_paths_rew_r P u p = transport P p^ u</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">destruct</span> p; <span class="bp">reflexivity</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** This tactic replaces both [internal_paths_rew] and [internal_paths_rew_r] with [transport], using [rewrite] for the latter. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">rewrite_to_transport</span> :=
+  internal_paths_rew_to_transport;
+  <span class="nb">rewrite</span> ! internal_paths_rew_r_to_transport.</span></span></pre>
+</div>
+</div></body>
+</html>
