@@ -134,7 +134,7 @@ Proof.
   - intros P; unfold dprop_to_bool.
     destruct (dec P); symmetry; apply path_dprop, path_universe_uncurried.
     + apply if_hprop_then_equiv_Unit; [ exact _ | assumption ].
-    + apply if_not_hprop_then_equiv_Empty; [ exact _ | assumption ].
+    + apply if_not_hprop_then_equiv_Empty; assumption.
 Defined.
 
 Definition equiv_dprop_to_bool `{Univalence}

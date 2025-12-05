@@ -9,8 +9,6 @@ Require Import Spaces.Spheres.
 
 Section HSpace_S1.
 
-  Context `{Univalence}.
-
   Definition Sph1_ind (P : Sphere 1 -> Type) (b : P North)
     (p : DPath P (merid North @ (merid South)^) b b)
     : forall x : Sphere 1, P x.
@@ -87,7 +85,9 @@ Section HSpace_S1.
   Definition iscohhspace_s1 : IsCohHSpace (psphere 1)
     := Build_IsCohHSpace _ _ _.
 
-  #[export] Instance associative_sgop_s1
+  (* [Univalence] implies that S^1 is 1-truncated, which means that any two parallel 2-paths are equal.  This lets us trivialize some path algebra in the following results.  Is it possible to prove these results without [Univalence]? *)
+
+  #[export] Instance associative_sgop_s1 `{Univalence}
     : Associative sgop_s1.
   Proof.
     intros x y z.
@@ -100,10 +100,10 @@ Section HSpace_S1.
     { apply (sq_flip_v (px0:=1) (px1:=1)).
       exact (ap_nat' (fun a => ap (fun b => sgop_s1 b z)
         (rightidentity_s1 a)) (merid North @ (merid South)^)). }
-    apply path_ishprop.
+    apply path_ishprop. (* Uses Univalence. *)
   Defined.
 
-  #[export] Instance commutative_sgop_s1
+  #[export] Instance commutative_sgop_s1 `{Univalence}
     : Commutative sgop_s1.
   Proof.
     intros x y.
@@ -114,7 +114,7 @@ Section HSpace_S1.
     revert y.
     srapply Sph1_ind.
     1: exact (ap_nat' rightidentity_s1 _).
-    srapply dp_ishprop.
+    srapply dp_ishprop. (* Uses Univalence. *)
   Defined.
 
 End HSpace_S1.

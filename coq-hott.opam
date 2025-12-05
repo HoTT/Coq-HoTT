@@ -15,11 +15,6 @@ authors: ["The HoTT Library Development Team"]
 license: "BSD-2-Clause"
 homepage: "http://homotopytypetheory.org/"
 bug-reports: "https://github.com/HoTT/HoTT/issues"
-depends: [
-  "dune" {>= "3.13"}
-  "coq" {>= "8.19.0"}
-  "odoc" {with-doc}
-]
 build: [
   ["dune" "subst"] {dev}
   [
@@ -35,3 +30,7 @@ build: [
   ]
 ]
 dev-repo: "git+https://github.com/HoTT/HoTT.git"
+depends: [
+  "dune" {>= "3.13"}
+  (("rocq-core" {>= "9.0"} & "coq-core" {>= "9.0"}) | "coq" {>= "8.19.0" & < "9~"})
+]

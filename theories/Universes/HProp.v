@@ -1,6 +1,6 @@
 (** * HPropositions *)
 
-Require Import Basics.
+From HoTT Require Import Basics.
 Require Import Types.Empty Types.Unit Types.Prod Types.Paths Types.Sigma Types.Equiv.
 
 Local Open Scope path_scope.
@@ -128,12 +128,9 @@ Proof.
   - exact (fun _ => p).
 Defined.
 
-(** If an hprop is not inhabited, then it is equivalent to [Empty]. *)
-Lemma if_not_hprop_then_equiv_Empty (hprop : Type) `{IsHProp hprop} : ~hprop -> hprop <~> Empty.
-Proof.
-  intro np.
-  exact (Build_Equiv _ _ np _).
-Defined.
+(** If an hprop is not inhabited, then it is equivalent to [Empty]. Note that we don't need the assumption that the type is an hprop here. *)
+Definition if_not_hprop_then_equiv_Empty (hprop : Type) : ~hprop -> hprop <~> Empty
+  := equiv_to_empty.
 
 (** Thus, a decidable hprop is either equivalent to [Unit] or [Empty]. *)
 Definition equiv_decidable_hprop (hprop : Type)

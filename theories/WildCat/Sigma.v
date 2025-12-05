@@ -1,7 +1,9 @@
 Require Import Basics.Overture Basics.Tactics.
 Require Import WildCat.Core.
 
-(** ** Indexed sum of categories *)
+(** * Indexed sum of categories *)
+
+(** We define a wild category structure on [sig B] where [B : A -> Type] is a family of wild categories.  In this construction, we implicitly regard [A] as a wild category using its path groupoid structure. *)
 
 Section Sigma.
 

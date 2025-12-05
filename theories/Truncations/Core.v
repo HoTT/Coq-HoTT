@@ -1,4 +1,4 @@
-Require Import Basics Types WildCat.Core WildCat.Universe HFiber.
+From HoTT Require Import Basics Types WildCat.Core WildCat.Universe HFiber.
 Require Import Modalities.Modality.
 (** Users of this file almost always want to be able to write [Tr n] for both a [Modality] and a [ReflectiveSubuniverse], so they want the coercion [modality_to_reflective_subuniverse]: *)
 Require Export (coercions) Modalities.Modality.
@@ -28,9 +28,9 @@ Module Export Trunc.
     tr : A -> Trunc n A.
   Arguments tr {n A} a.
 
-  (** Without explicit universe parameters, this instance is insufficiently polymorphic. *)
-  #[export] Instance istrunc_truncation (n : trunc_index) (A : Type@{i})
-    : IsTrunc@{j} n (Trunc@{i} n A).
+  (** Because [IsTrunc] is cumulative, we can use only one universe variable here. *)
+  #[export] Instance istrunc_truncation@{i} (n : trunc_index) (A : Type@{i})
+    : IsTrunc@{i} n (Trunc@{i} n A).
   Admitted.
 
   Definition Trunc_ind {n A}

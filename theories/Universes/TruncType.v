@@ -169,4 +169,46 @@ Section TruncType.
     exact (equiv_path_trunctype' _ _ oE equiv_path_iff_ishprop).
   Defined.
 
+  (** An [HProp] cannot be not equal to [Unit_hp] and not equal to [False_hp]. *)
+  Definition not_not_unit_and_not_empty_hprop (P : HProp)
+    : ~ ((P <> Unit_hp) * (P <> False_hp)).
+  Proof.
+    intros [h1 h2].
+    apply (iff_contradiction (~ P)); constructor.
+    - intro p. apply h1. exact (path_iff_hprop (fun _ => tt) (fun _ => p)).
+    - intro q. apply h2. exact (path_iff_hprop q Empty_rec).
+  Defined.
+
+  (** Any map from [HProp] to a type with [~~]-stable paths that maps [Unit_hp] and [False_hp] to equal terms is weakly constant. *)
+  Definition weaklyconstant_hprop_to_stable_paths' {A : Type}
+    (F : HProp -> A) (s : forall x y : HProp, Stable (F x = F y))
+    (h1 : F Unit_hp = F False_hp)
+    : forall (B : HProp), F B = F Unit_hp.
+  Proof.
+    intros B.
+    apply (s B Unit_hp); intro h'.
+    apply (not_not_unit_and_not_empty_hprop B).
+    split; intro p; apply h'.
+    - exact (ap F p).
+    - exact (ap F p @ h1^).
+  Defined.
+
+  Definition weaklyconstant_hprop_to_stable_paths {A : Type}
+    (F : HProp -> A) (s : forall x y : HProp, Stable (F x = F y))
+    (h1 : F Unit_hp = F False_hp)
+    : WeaklyConstant F
+    := fun B C => weaklyconstant_hprop_to_stable_paths' F s h1 B
+                  @ (weaklyconstant_hprop_to_stable_paths' F s h1 C)^.
+
+  Definition not_not_constant_family_hprop (P : HProp -> Type)
+    (p : P Unit_hp) (p' : P False_hp) (x : HProp)
+    : ~~P x.
+  Proof.
+    intro f.
+    apply (not_not_unit_and_not_empty_hprop x).
+    split; intro h; apply f.
+    - exact (h^ # p).
+    - exact (h^ # p').
+  Defined.
+
 End TruncType.

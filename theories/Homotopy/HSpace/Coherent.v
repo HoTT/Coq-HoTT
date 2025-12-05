@@ -1,4 +1,4 @@
-Require Import Basics HSpace.Core Pointed.Core Pointed.Loops.
+From HoTT Require Import Basics HSpace.Core Pointed.Core Pointed.Loops.
 
 Local Open Scope mc_mult_scope.
 Local Open Scope pointed_scope.

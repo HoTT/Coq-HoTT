@@ -222,7 +222,7 @@ Defined.
 (** A version that shows that the underlying functions are equal. *)
 Definition transport_equiv' {A : Type} {B C : A -> Type}
   {x1 x2 : A} (p : x1 = x2) (f : B x1 <~> C x1)
-  : transport (fun x => B x <~> C x) p f = (equiv_transport _ p) oE f oE (equiv_transport _ p^) :> (B x2 -> C x2).
+  : transport (fun x => B x <~> C x) p f = (transport _ p) o f o (transport _ p^) :> (B x2 -> C x2).
 Proof.
   destruct p; auto.
 Defined.
@@ -234,4 +234,50 @@ Definition transport_equiv'' `{Funext} {A : Type} {B C : A -> Type}
 Proof.
   apply path_equiv.
   destruct p; auto.
+Defined.
+
+(** The special case when the codomain type is constant. *)
+Definition transport_equiv_toconst {A : Type} {B : A -> Type} {C : Type}
+  {x1 x2 : A} (p : x1 = x2) (f : B x1 <~> C) (y : B x2)
+  : (transport (fun x => B x <~> C) p f) y = f (p^ # y).
+Proof.
+  by destruct p.
+Defined.
+
+Definition transport_equiv_toconst' {A : Type} {B : A -> Type} {C : Type}
+  {x1 x2 : A} (p : x1 = x2) (f : B x1 <~> C)
+  : transport (fun x => B x <~> C) p f = f o (transport _ p^) :> (B x2 -> C).
+Proof.
+  by destruct p.
+Defined.
+
+Definition transport_equiv_toconst'' `{Funext} {A : Type} {B : A -> Type} {C : Type}
+  {x1 x2 : A} (p : x1 = x2) (f : B x1 <~> C)
+  : transport (fun x => B x <~> C) p f = f oE (equiv_transport _ p^).
+Proof.
+  apply path_equiv.
+  by destruct p.
+Defined.
+
+(** The special case when the domain type is constant. *)
+Definition transport_equiv_fromconst {A B : Type} {C : A -> Type}
+  {x1 x2 : A} (p : x1 = x2) (f : B <~> C x1) (y : B)
+  : (transport (fun x => B <~> C x) p f) y = p # (f y).
+Proof.
+  by destruct p.
+Defined.
+
+Definition transport_equiv_fromconst' {A B : Type} {C : A -> Type}
+  {x1 x2 : A} (p : x1 = x2) (f : B <~> C x1)
+  : (transport (fun x => B <~> C x) p f) = transport C p o f :> (B -> C x2).
+Proof.
+  by destruct p.
+Defined.
+
+Definition transport_equiv_fromconst'' `{Funext} {A B : Type} {C : A -> Type}
+  {x1 x2 : A} (p : x1 = x2) (f : B <~> C x1)
+  : (transport (fun x => B <~> C x) p f) = equiv_transport C p oE f.
+Proof.
+  apply path_equiv.
+  by destruct p.
 Defined.

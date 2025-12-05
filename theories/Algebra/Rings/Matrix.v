@@ -243,7 +243,7 @@ Proof.
   snapply rng_mult_assoc.
 Defined.
 
-(** The same doesn't hold for the right matrix, since the ring is not commutative. However we could say an analagous statement for the right action. We haven't yet stated a definition of right module yet though. *)
+(** The same doesn't hold for the right matrix, since the ring is not commutative. However we could say an analogous statement for the right action. We haven't yet stated a definition of right module yet though. *)
 
 (** In a commutative ring, matrix multiplication over the ring and the opposite ring agree. *)
 Definition matrix_mult_rng_op {R : CRing} {m n p}
@@ -667,7 +667,7 @@ Class IsUpperTriangular@{i} {R : Ring@{i}} {n : nat} (M : Matrix@{i} R n n) : Ty
 Instance ishprop_isuppertriangular@{i} {R : Ring@{i}} {n : nat} (M : Matrix R n n)
   : IsHProp (IsUpperTriangular M).
 Proof.
-  apply istrunc_truncation@{i i}.
+  apply istrunc_truncation@{i}.
 Defined.
 
 (** A matrix is lower triangular if all the entries above the diagonal are zero. We define it as the transpose being upper triangular. *)
@@ -678,7 +678,7 @@ Instance ishprop_islowertriangular@{i} {R : Ring@{i}} {n : nat}
   (M : Matrix R n n)
   : IsHProp (IsLowerTriangular M).
 Proof.
-  apply istrunc_truncation@{i i}.
+  apply istrunc_truncation@{i}.
 Defined.
 
 (** The transpose of a matrix is lower triangular if and only if the matrix is upper triangular. *)

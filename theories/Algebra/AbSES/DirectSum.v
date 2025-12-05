@@ -1,4 +1,4 @@
-Require Import Basics Types Truncations.Core.
+From HoTT Require Import Basics Types Truncations.Core.
 Require Import Pointed.Core.
 Require Import WildCat.Core Homotopy.ExactSequence.
 Require Import AbGroups.AbelianGroup AbSES.Core AbGroups.Biproduct.

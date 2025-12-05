@@ -1,4 +1,4 @@
-Require Import Basics Types.
+From HoTT Require Import Basics Types.
 Require Import Truncations.Core.
 Require Import Algebra.Groups.Group.
 Require Import Algebra.Groups.FreeGroup.

@@ -1,4 +1,4 @@
-Require Import Basics Types.
+From HoTT Require Import Basics Types.
 Require Import Cubical.DPath Cubical.PathSquare.
 Require Import Homotopy.NullHomotopy.
 Require Import Extensions.
@@ -30,7 +30,7 @@ Section Join.
 
   Definition Join_ind {A B : Type} (P : Join A B -> Type)
     (P_A : forall a, P (joinl a)) (P_B : forall b, P (joinr b))
-    (P_g : forall a b, transport P (jglue a b) (P_A a) = (P_B b))
+    (P_g : forall a b, transport P (jglue a b) (P_A a) = P_B b)
     : forall (x : Join A B), P x.
   Proof.
     apply (Pushout_ind P P_A P_B).
@@ -145,7 +145,7 @@ Arguments joinr {A B}%_type_scope _ , A [B] _.
 
 (** ** Zigzags in joins *)
 
-(** These paths are very common, so we give them names. *)
+(** These paths are very common, so we give them names and prove a few results about them. *)
 Definition zigzag {A B : Type} (a a' : A) (b : B)
   : joinl a = joinl a'
   := jglue a b @ (jglue a' b)^.
@@ -153,6 +153,14 @@ Definition zigzag {A B : Type} (a a' : A) (b : B)
 Definition zagzig {A B : Type} (a : A) (b b' : B)
   : joinr b = joinr b'
   := (jglue a b)^ @ jglue a b'.
+
+Definition zigzag_zigzag {A B : Type} (a a' : A) (b : B)
+  : zigzag a a' b @ zigzag a' a b = 1
+  := concat_pp_p _ _ _ @ (1 @@ concat_V_pp _ _) @ concat_pV _.
+
+Definition zigzag_inv {A B : Type} (a a' : A) (b : B)
+  : (zigzag a a' b)^ = zigzag a' a b
+  := inv_pp _ _ @ (inv_V _ @@ 1).
 
 (** And we give a beta rule for zigzags. *)
 Definition Join_rec_beta_zigzag {A B P : Type} (P_A : A -> P)

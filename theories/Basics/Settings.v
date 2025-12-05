@@ -2,8 +2,6 @@
 
 (** This file contains all the tweaks and settings we make to Coq. *)
 
-(** ** Warnings *)
-
 (** ** Plugins *)
 
 (** Load the Ltac plugin. This is the tactic language we use for proofs. *)
