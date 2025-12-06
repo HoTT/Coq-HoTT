@@ -1,5 +1,5 @@
 From HoTT Require Import Basics Types.
-From HoTT.WildCat Require Import Core Opposite Bifunctor.
+From HoTT.WildCat Require Import Core Opposite Bifunctor AbEnriched.
 Require Import HSet Truncations.Core Modalities.ReflectiveSubuniverse.
 Require Import Groups.Group AbelianGroup Biproduct.
 
@@ -98,6 +98,34 @@ Proof.
   1,2: exact _.
   intros A A' f B B' g phi; cbn.
   by apply equiv_path_grouphomomorphism.
+Defined.
+
+(** ** [AbGroup] has a wild enrichment in wild abelian groups *)
+
+(** Using arguments very similar to the above, but without using [Funext], we can show that [AbGroup] is enriched in the wild sense.  We could use this combined with [Funext] to deduce the results above, but we wouldn't get the extra generality where the domain group does not need to be abelian.  And conversely we don't want to use the above results here, since we don't need to rely on [Funext]. *)
+
+Instance abenriched_abgroup : IsAbEnriched AbGroup.
+Proof.
+  snapply Build_IsAbEnriched.
+  - intros A B.
+    snapply (Build_IsAbGroup_0gpd _ _ _ _ sgop_hom grp_homo_const inverse_hom).
+    3-8: hnf; intros; intro; cbn.
+    + srapply Build_Is0Bifunctor'.
+      snapply Build_Is0Functor.
+      intros [f f'] [g g'] [p p'] a; cbn in *.
+      exact (ap011 _ (p a) (p' a)).
+    + snapply Build_Is0Functor.
+      intros f g p a; cbn.
+      apply (ap _ (p a)).
+    + symmetry; apply associativity.
+    + apply left_identity.
+    + apply right_identity.
+    + apply left_inverse.
+    + apply right_inverse.
+    + apply commutativity.
+  - intros A B C g f f' a; cbn.
+    apply grp_homo_op.
+  - intros A B C f g g' a; cbn. reflexivity.
 Defined.
 
 (** ** Properties of [ab_hom] *)
