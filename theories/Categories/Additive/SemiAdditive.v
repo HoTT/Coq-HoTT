@@ -22,27 +22,27 @@ Class SemiAdditiveCategory := {
 Coercion cat : SemiAdditiveCategory >-> PreCategory.
 
 (** Notation for biproduct objects *)
-Local Notation "X ⊕ Y" := 
+Local Notation "X ⊕ Y" :=
   (biproduct_obj (biproduct_data (semiadditive_biproduct X Y)))
   (at level 40, left associativity).
 
-(** ** Morphism addition via biproducts 
+(** ** Morphism addition via biproducts
 
     Addition is the codiagonal composed with the pairing morphism. *)
 
 Section MorphismAddition.
   Context (C : SemiAdditiveCategory) (X Y : object C).
-  
+
   (** Codiagonal composed with pairing. *)
   #[export] Instance sgop_morphism : SgOp (morphism C X Y) :=
     fun f g =>
       (biproduct_coprod_mor _ Y 1%morphism 1%morphism
        o biproduct_prod_mor _ X f g)%morphism.
-  
+
   (** The zero morphism is the unit for addition. *)
   #[export] Instance monunit_morphism : MonUnit (morphism C X Y)
     := @zero_morphism C semiadditive_zero X Y.
-    
+
 End MorphismAddition.
 
 (** ** Identity laws for morphism addition *)
@@ -145,17 +145,17 @@ End BiproductSwap.
 
 (** ** Commutativity of morphism addition *)
 
-  Theorem morphism_addition_commutative (C : SemiAdditiveCategory)
-    (X Y : object C)
-    : Commutative (@sgop_morphism C X Y).
-  Proof.
-    intros f g.
-    unfold sgop_morphism.
-    rewrite (biproduct_prod_swap C X Y f g).
-    rewrite <- Category.Core.associativity.
-    rewrite codiagonal_swap_invariant.
-    reflexivity.
-  Qed.
+Theorem morphism_addition_commutative (C : SemiAdditiveCategory)
+  (X Y : object C)
+  : Commutative (@sgop_morphism C X Y).
+Proof.
+  intros f g.
+  unfold sgop_morphism.
+  rewrite (biproduct_prod_swap C X Y f g).
+  rewrite <- Category.Core.associativity.
+  rewrite codiagonal_swap_invariant.
+  reflexivity.
+Qed.
 
 (** ** Associativity of morphism addition *)
 
@@ -204,7 +204,7 @@ Section Associativity.
       rewrite biproduct_prod_beta_r.
       reflexivity.
   Qed.
-  
+
   Lemma codiagonal_pair_inl (Y Y' : object C) (a b : morphism C Y Y')
     : (biproduct_coprod_mor _ Y' 1%morphism 1%morphism
        o (biproduct_prod_mor _ (Y ⊕ Y) (a o outl _) (b o outr _)
@@ -264,7 +264,7 @@ Section Associativity.
     rewrite <- (biproduct_pair_naturality X Y Y' a f g).
     reflexivity.
   Qed.
-  
+
   Lemma addition_of_pairs (X Y : object C) (f1 f2 g1 g2 : morphism C X Y)
     : sgop_morphism C X (Y ⊕ Y)
         (biproduct_prod_mor _ X f1 g1)
@@ -292,7 +292,7 @@ Section Associativity.
     unfold sgop_morphism at 1.
     etransitivity
       ((biproduct_coprod_mor BY Y 1%morphism 1%morphism
-        o biproduct_prod_mor BY X ((f + g)%morphism) 
+        o biproduct_prod_mor BY X ((f + g)%morphism)
             ((zero_morphism X Y + h)%morphism))%morphism).
     { refine (
         ap011 (fun x y =>
@@ -321,7 +321,7 @@ End Associativity.
 
 (** ** Main theorem: morphism sets form commutative monoids *)
 
-#[export] Instance is_commutative_monoid_morphisms 
+#[export] Instance is_commutative_monoid_morphisms
   (C : SemiAdditiveCategory) (X Y : object C)
   : IsCommutativeMonoid (morphism C X Y).
 Proof.
