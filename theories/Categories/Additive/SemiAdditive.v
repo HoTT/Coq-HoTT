@@ -16,7 +16,7 @@ Local Open Scope mc_add_scope.
 Class SemiAdditiveCategory := {
   cat : PreCategory;
   semiadditive_zero :: ZeroObject cat;
-  semiadditive_biproduct : forall (X Y : object cat), Biproduct X Y
+  semiadditive_biproduct :: forall (X Y : object cat), Biproduct X Y
 }.
 
 Coercion cat : SemiAdditiveCategory >-> PreCategory.
@@ -36,10 +36,8 @@ Section MorphismAddition.
   (** Codiagonal composed with pairing. *)
   #[export] Instance sgop_morphism : SgOp (morphism C X Y) :=
     fun f g =>
-      (biproduct_coprod_mor (semiadditive_biproduct Y Y) Y 
-         1%morphism 1%morphism
-       o biproduct_prod_mor (semiadditive_biproduct Y Y) X 
-         f g)%morphism.
+      (biproduct_coprod_mor _ Y 1%morphism 1%morphism
+       o biproduct_prod_mor _ X f g)%morphism.
   
   (** The zero morphism is the unit for addition. *)
   #[export] Instance monunit_morphism : MonUnit (morphism C X Y)
@@ -82,17 +80,14 @@ Section BiproductSwap.
   Context (C : SemiAdditiveCategory).
 
   (** The swap morphism for biproducts. *)
-  Definition biproduct_swap (A : object C) 
-  : morphism C (A ⊕ A) (A ⊕ A)
-  := biproduct_prod_mor (semiadditive_biproduct A A) 
-       (A ⊕ A)
-       (outr (biproduct_data (semiadditive_biproduct A A)))
-       (outl (biproduct_data (semiadditive_biproduct A A))).
+  Definition biproduct_swap (A : object C)
+    : morphism C (A ⊕ A) (A ⊕ A)
+    := biproduct_prod_mor _ (A ⊕ A) (outr _) (outl _).
 
   (** Swapping components of a biproduct morphism. *)
   Lemma biproduct_prod_swap (A B : object C) (f g : morphism C A B)
-    : biproduct_prod_mor (semiadditive_biproduct B B) A g f
-      = (biproduct_swap B o biproduct_prod_mor (semiadditive_biproduct B B) A f g)%morphism.
+    : biproduct_prod_mor _ A g f
+      = (biproduct_swap B o biproduct_prod_mor _ A f g)%morphism.
   Proof.
     symmetry.
     rapply biproduct_prod_unique.
@@ -108,13 +103,12 @@ Section BiproductSwap.
 
   (** Swap composed with left injection gives right injection. *)
   Lemma swap_inl (Y : object C)
-    : (biproduct_swap Y o Biproducts.inl (biproduct_data (semiadditive_biproduct Y Y)))%morphism
-      = Biproducts.inr (biproduct_data (semiadditive_biproduct Y Y)).
+    : (biproduct_swap Y o Biproducts.inl _)%morphism = Biproducts.inr _.
   Proof.
     unfold biproduct_swap.
     rewrite biproduct_prod_comp.
-    rewrite (beta_l (biproduct_is (semiadditive_biproduct Y Y))).
-    rewrite (mixed_r (biproduct_is (semiadditive_biproduct Y Y))).
+    rewrite (beta_l (biproduct_is _)).
+    rewrite (mixed_r (biproduct_is _)).
     rewrite biproduct_prod_zero_l.
     rewrite Category.Core.right_identity.
     reflexivity.
@@ -122,13 +116,12 @@ Section BiproductSwap.
 
   (** Swap composed with right injection gives left injection. *)
   Lemma swap_inr (Y : object C)
-    : (biproduct_swap Y o Biproducts.inr (biproduct_data (semiadditive_biproduct Y Y)))%morphism
-      = Biproducts.inl (biproduct_data (semiadditive_biproduct Y Y)).
+    : (biproduct_swap Y o Biproducts.inr _)%morphism = Biproducts.inl _.
   Proof.
     unfold biproduct_swap.
     rewrite biproduct_prod_comp.
-    rewrite (mixed_l (biproduct_is (semiadditive_biproduct Y Y))).
-    rewrite (beta_r (biproduct_is (semiadditive_biproduct Y Y))).
+    rewrite (mixed_l (biproduct_is _)).
+    rewrite (beta_r (biproduct_is _)).
     rewrite biproduct_prod_zero_r.
     rewrite Category.Core.right_identity.
     reflexivity.
@@ -136,10 +129,10 @@ Section BiproductSwap.
 
   (** The codiagonal is invariant under swapping. *)
   Lemma codiagonal_swap_invariant (Y : object C)
-    : (biproduct_coprod_mor (semiadditive_biproduct Y Y) Y 1%morphism 1%morphism o biproduct_swap Y)%morphism
-      = biproduct_coprod_mor (semiadditive_biproduct Y Y) Y 1%morphism 1%morphism.
+    : (biproduct_coprod_mor _ Y 1%morphism 1%morphism o biproduct_swap Y)%morphism
+      = biproduct_coprod_mor _ Y 1%morphism 1%morphism.
   Proof.
-    rapply (biproduct_coprod_unique (semiadditive_biproduct Y Y)).
+    rapply (biproduct_coprod_unique _).
     - rewrite Category.Core.associativity.
       rewrite swap_inl.
       rapply biproduct_coprod_beta_r.
@@ -170,11 +163,10 @@ Section Associativity.
   Context (C : SemiAdditiveCategory).
 
   Lemma codiagonal_postcompose_any (Y Y' : object C) (a : morphism C Y Y')
-    : (a o biproduct_coprod_mor (semiadditive_biproduct Y Y) Y
-           1%morphism 1%morphism)%morphism
-      = biproduct_coprod_mor (semiadditive_biproduct Y Y) Y' a a.
+    : (a o biproduct_coprod_mor _ Y 1%morphism 1%morphism)%morphism
+      = biproduct_coprod_mor _ Y' a a.
   Proof.
-    rapply (biproduct_coprod_unique (semiadditive_biproduct Y Y) Y' a a).
+    rapply (biproduct_coprod_unique _ Y' a a).
     - rewrite Category.Core.associativity.
       rewrite biproduct_coprod_beta_l.
       rapply Category.Core.right_identity.
@@ -190,17 +182,14 @@ Section Associativity.
   Proof.
     unfold sgop_morphism.
     rewrite Category.Core.associativity.
-    rewrite (@biproduct_prod_comp C semiadditive_zero Y Y
-               (semiadditive_biproduct Y Y) W X f g a).
+    rewrite (@biproduct_prod_comp C semiadditive_zero Y Y _ W X f g a).
     reflexivity.
   Qed.
 
   Lemma biproduct_pair_naturality (X Y Y' : object C) (a : morphism C Y Y') (f g : morphism C X Y)
-    : biproduct_prod_mor (semiadditive_biproduct Y' Y') X (a o f) (a o g)
-      = (biproduct_prod_mor (semiadditive_biproduct Y' Y') (Y ⊕ Y)
-           (a o outl (biproduct_data (semiadditive_biproduct Y Y)))
-           (a o outr (biproduct_data (semiadditive_biproduct Y Y)))
-         o biproduct_prod_mor (semiadditive_biproduct Y Y) X f g)%morphism.
+    : biproduct_prod_mor _ X (a o f) (a o g)
+      = (biproduct_prod_mor _ (Y ⊕ Y) (a o outl _) (a o outr _)
+         o biproduct_prod_mor _ X f g)%morphism.
   Proof.
     symmetry.
     rapply biproduct_prod_unique.
@@ -217,51 +206,45 @@ Section Associativity.
   Qed.
   
   Lemma codiagonal_pair_inl (Y Y' : object C) (a b : morphism C Y Y')
-    : (biproduct_coprod_mor (semiadditive_biproduct Y' Y') Y' 1%morphism 1%morphism
-       o (biproduct_prod_mor (semiadditive_biproduct Y' Y') (Y ⊕ Y)
-            (a o outl (biproduct_data (semiadditive_biproduct Y Y)))
-            (b o outr (biproduct_data (semiadditive_biproduct Y Y)))
-          o Biproducts.inl (biproduct_data (semiadditive_biproduct Y Y))))%morphism
+    : (biproduct_coprod_mor _ Y' 1%morphism 1%morphism
+       o (biproduct_prod_mor _ (Y ⊕ Y) (a o outl _) (b o outr _)
+          o Biproducts.inl _))%morphism
       = a.
   Proof.
     rewrite <- Category.Core.associativity.
     rewrite addition_precompose.
     rewrite Category.Core.associativity.
-    rewrite (beta_l (biproduct_is (semiadditive_biproduct Y Y))).
+    rewrite (beta_l (biproduct_is _)).
     rewrite Category.Core.right_identity.
     rewrite Category.Core.associativity.
-    rewrite (mixed_r (biproduct_is (semiadditive_biproduct Y Y))).
+    rewrite (mixed_r (biproduct_is _)).
     rewrite zero_morphism_right.
     apply zero_right_identity.
   Qed.
 
   Lemma codiagonal_pair_inr (Y Y' : object C) (a b : morphism C Y Y')
-    : (biproduct_coprod_mor (semiadditive_biproduct Y' Y') Y' 1%morphism 1%morphism
-       o (biproduct_prod_mor (semiadditive_biproduct Y' Y') (Y ⊕ Y)
-            (a o outl (biproduct_data (semiadditive_biproduct Y Y)))
-            (b o outr (biproduct_data (semiadditive_biproduct Y Y)))
-          o Biproducts.inr (biproduct_data (semiadditive_biproduct Y Y))))%morphism
+    : (biproduct_coprod_mor _ Y' 1%morphism 1%morphism
+       o (biproduct_prod_mor _ (Y ⊕ Y) (a o outl _) (b o outr _)
+          o Biproducts.inr _))%morphism
       = b.
   Proof.
     rewrite <- Category.Core.associativity.
     rewrite addition_precompose.
     rewrite Category.Core.associativity.
-    rewrite (mixed_l (biproduct_is (semiadditive_biproduct Y Y))).
+    rewrite (mixed_l (biproduct_is _)).
     rewrite zero_morphism_right.
     rewrite Category.Core.associativity.
-    rewrite (beta_r (biproduct_is (semiadditive_biproduct Y Y))).
+    rewrite (beta_r (biproduct_is _)).
     rewrite Category.Core.right_identity.
     apply zero_left_identity.
   Qed.
 
   Lemma codiagonal_factor_through_pair (Y Y' : object C) (a b : morphism C Y Y')
-    : (biproduct_coprod_mor (semiadditive_biproduct Y' Y') Y' 1%morphism 1%morphism
-       o biproduct_prod_mor (semiadditive_biproduct Y' Y') (Y ⊕ Y)
-           (a o outl (biproduct_data (semiadditive_biproduct Y Y)))
-           (b o outr (biproduct_data (semiadditive_biproduct Y Y))))%morphism
-      = biproduct_coprod_mor (semiadditive_biproduct Y Y) Y' a b.
+    : (biproduct_coprod_mor _ Y' 1%morphism 1%morphism
+       o biproduct_prod_mor _ (Y ⊕ Y) (a o outl _) (b o outr _))%morphism
+      = biproduct_coprod_mor _ Y' a b.
   Proof.
-    rapply (biproduct_coprod_unique (semiadditive_biproduct Y Y) Y' a b).
+    rapply (biproduct_coprod_unique _ Y' a b).
     - rewrite Category.Core.associativity.
       rapply codiagonal_pair_inl.
     - rewrite Category.Core.associativity.
@@ -284,9 +267,9 @@ Section Associativity.
   
   Lemma addition_of_pairs (X Y : object C) (f1 f2 g1 g2 : morphism C X Y)
     : sgop_morphism C X (Y ⊕ Y)
-        (biproduct_prod_mor (semiadditive_biproduct Y Y) X f1 g1)
-        (biproduct_prod_mor (semiadditive_biproduct Y Y) X f2 g2)
-      = biproduct_prod_mor (semiadditive_biproduct Y Y) X
+        (biproduct_prod_mor _ X f1 g1)
+        (biproduct_prod_mor _ X f2 g2)
+      = biproduct_prod_mor _ X
           (sgop_morphism C X Y f1 f2)
           (sgop_morphism C X Y g1 g2).
   Proof.
