@@ -1,7 +1,8 @@
 Require Import Basics.Equivalences Basics.Overture Basics.Tactics Basics.Trunc.
 Require Import Limits.Pullback.
-Require Import WildCat.Core WildCat.Equiv WildCat.EquivGpd
-               WildCat.Universe WildCat.Yoneda WildCat.Graph WildCat.ZeroGroupoid.
+Require Import WildCat.Core WildCat.Equiv WildCat.EquivGpd.
+Require Import WildCat.Universe WildCat.Yoneda WildCat.Graph WildCat.ZeroGroupoid.
+Require Import WildCat.Induced.
 
 (** * Categories with pullbacks *)
 
@@ -174,6 +175,35 @@ Definition flip_pullback_pr2_pr1 {A : Type} `{Is1Cat A}
   (pb : CatPullback f g)
   : (flip_cat_pb f g pb).(cat_pb_pr2) $== cat_pb_pr1
   := Id _.
+
+(** ** Pullbacks in induced wild categories *)
+
+Section Induced.
+
+  (** If the 1-category structure on [A] is induced from that on [B] along a map [F], the pullback of [F f] and [F g] exists in [B], and that pullback object is in the image of [F], then the preimage is also a pullback.  Typically this will be applied with [h] being [idpath], but it would be awkward to state this lemma assuming that. *)
+  Instance cat_pb_induced {A B} `{Is1Cat B}
+    (F : A -> B)
+    {a b c : A} (f : F a $-> F c) (g : F b $-> F c)
+    {p : CatPullback f g}
+    (q : A) (h : F q = cat_pb f g)
+    : CatPullback (A:=A) (H:=is1cat_induced F) f g.
+  Proof.
+    destruct p as [pb pr1 pr2 glue iseq].
+    unfold cat_pb in h; destruct h.
+    exact (Build_CatPullback' (H:=is1cat_induced F) f g q pr1 pr2 glue (iseq o F)).
+  Defined.
+
+  Instance haspullbacks_induced {A B} `{HasPullbacks B}
+    (F : A -> B)
+    (K : forall (a b c : A) (f : F a $-> F c) (g : F b $-> F c), exists q, F q = cat_pb f g)
+    : HasPullbacks A (H:=is1cat_induced F).
+  Proof.
+    intros a b c f g.
+    destruct (K a b c f g) as [q h].
+    exact (cat_pb_induced F f g q h).
+  Defined.
+
+End Induced.
 
 (** ** Examples *)
 
