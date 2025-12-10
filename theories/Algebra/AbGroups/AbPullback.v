@@ -2,7 +2,7 @@ From HoTT Require Import Basics.
 Require Import Limits.Pullback Cubical.PathSquare.
 Require Export Algebra.Groups.GrpPullback.
 Require Import Algebra.AbGroups.AbelianGroup.
-Require Import WildCat.Core.
+Require Import WildCat.Core WildCat.Pullbacks.
 
 Local Open Scope mc_add_scope.
 
@@ -28,3 +28,11 @@ Section AbPullback.
   (** The corecursion principle is inherited from [Group]; use [grp_pullback_corec] and friends from Groups/GrpPullback.v. *)
 
 End AbPullback.
+
+Definition haspullbacks_abgroup : HasPullbacks AbGroup.
+Proof.
+  rapply (haspullbacks_induced abgroup_group).
+  intros A B C f g.
+  exists (ab_pullback f g).
+  reflexivity.
+Defined.
