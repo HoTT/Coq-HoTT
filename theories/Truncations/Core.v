@@ -1,4 +1,4 @@
-From HoTT Require Import Basics Types WildCat.Core WildCat.Universe HFiber.
+From HoTT Require Import Basics Types Limits.Pullback WildCat.Core WildCat.Universe HFiber.
 Require Import Modalities.Modality.
 (** Users of this file almost always want to be able to write [Tr n] for both a [Modality] and a [ReflectiveSubuniverse], so they want the coercion [modality_to_reflective_subuniverse]: *)
 Require Export (coercions) Modalities.Modality.
@@ -287,6 +287,25 @@ Proof.
   intro y.
   rapply contr_inhabited_hprop.
   exact (tr (s y; h y)).
+Defined.
+
+(** Surjections are preserved by pullback. *)
+Definition issurj_pullback_pr1 {A B C} (f : B -> A) (g : C -> A)
+  `{sg : IsSurjection g}
+  : IsSurjection (pullback_pr1 (f:=f) (g:=g)).
+Proof.
+  intro b.
+  specialize (sg (f b)).
+  exact (isconnected_equiv' _ _ (hfiber_pullback_along f g b)^-1%equiv _).
+Defined.
+
+Definition issurj_pullback_pr2 {A B C} (f : B -> A) (g : C -> A)
+  `{sg : IsSurjection f}
+  : IsSurjection (pullback_pr2 (f:=f) (g:=g)).
+Proof.
+  intro c.
+  specialize (sg (g c)).
+  exact (isconnected_equiv' _ _ (hfiber_pullback_along' g f c)^-1%equiv _).
 Defined.
 
 (** ** Embeddings *)
