@@ -255,6 +255,32 @@ Definition emap11 {A B C : Type} `{HasEquivs A, HasEquivs B, HasEquivs C}
   : F a0 b0 $<~> F a1 b1
   := Build_CatEquiv (fmap11 F f g).
 
+(** *** Square preservation *)
+
+Definition fmap11_square {A B C : Type} `{Is1Cat A, Is1Cat B, Is1Cat C}
+  (F : A -> B -> C) `{!Is0Bifunctor F, !Is1Bifunctor F}
+  {a00 a20 a02 a22 : A} {f10 : a00 $-> a20} {f12 : a02 $-> a22}
+  {f01 : a00 $-> a02} {f21 : a20 $-> a22}
+  {b00 b20 b02 b22 : B} {g10 : b00 $-> b20} {g12 : b02 $-> b22}
+  {g01 : b00 $-> b02} {g21 : b20 $-> b22}
+  (p : Square f01 f21 f10 f12) (q : Square g01 g21 g10 g12)
+  : Square (fmap11 F f01 g01) (fmap11 F f21 g21) (fmap11 F f10 g10) (fmap11 F f12 g12)
+  := (fmap11_comp F _ _ _ _)^$ $@ fmap22 F p q $@ fmap11_comp F _ _ _ _.
+
+Definition fmap01_square {A B C : Type} `{Is1Cat A, Is1Cat B, Is1Cat C}
+  (F : A -> B -> C) `{!Is0Bifunctor F, !Is1Bifunctor F}
+  {a : A}  {b00 b20 b02 b22 : B} {g10 : b00 $-> b20} {g12 : b02 $-> b22}
+  {g01 : b00 $-> b02} {g21 : b20 $-> b22} (q : Square g01 g21 g10 g12)
+  : Square (fmap01 F a g01) (fmap01 F a g21) (fmap01 F a g10) (fmap01 F a g12)
+  := (fmap01_comp F _ _ _)^$ $@ fmap02 F a q $@ fmap01_comp F _ _ _.
+
+Definition fmap10_square {A B C : Type} `{Is1Cat A, Is1Cat B, Is1Cat C}
+  (F : A -> B -> C) `{!Is0Bifunctor F, !Is1Bifunctor F}
+  {a00 a20 a02 a22 : A} {f10 : a00 $-> a20} {f12 : a02 $-> a22}
+  {f01 : a00 $-> a02} {f21 : a20 $-> a22} {b : B} (p : Square f01 f21 f10 f12)
+  : Square (fmap10 F f01 b) (fmap10 F f21 b) (fmap10 F f10 b) (fmap10 F f12 b)
+  := (fmap10_comp F _ _ _)^$ $@ fmap20 F p _ $@ fmap10_comp F _ _ _.
+
 (** ** Flipping bifunctors *)
 
 Definition is0bifunctor_flip {A B C : Type}
@@ -389,32 +415,6 @@ Proof.
   - intros cab cab' cab'' [[h f] g] [[h' f'] g'].
     exact (fmap12 G _ (fmap11_comp F _ _ _ _) $@ fmap11_comp G _ _ _ _).
 Defined.  
-
-(** *** Square preservation *)
-
-Definition fmap11_square {A B C : Type} `{Is1Cat A, Is1Cat B, Is1Cat C}
-  (F : A -> B -> C) `{!Is0Bifunctor F, !Is1Bifunctor F}
-  {a00 a20 a02 a22 : A} {f10 : a00 $-> a20} {f12 : a02 $-> a22}
-  {f01 : a00 $-> a02} {f21 : a20 $-> a22}
-  {b00 b20 b02 b22 : B} {g10 : b00 $-> b20} {g12 : b02 $-> b22}
-  {g01 : b00 $-> b02} {g21 : b20 $-> b22}
-  (p : Square f01 f21 f10 f12) (q : Square g01 g21 g10 g12)
-  : Square (fmap11 F f01 g01) (fmap11 F f21 g21) (fmap11 F f10 g10) (fmap11 F f12 g12)
-  := (fmap11_comp F _ _ _ _)^$ $@ fmap22 F p q $@ fmap11_comp F _ _ _ _.
-
-Definition fmap01_square {A B C : Type} `{Is1Cat A, Is1Cat B, Is1Cat C}
-  (F : A -> B -> C) `{!Is0Bifunctor F, !Is1Bifunctor F}
-  {a : A}  {b00 b20 b02 b22 : B} {g10 : b00 $-> b20} {g12 : b02 $-> b22}
-  {g01 : b00 $-> b02} {g21 : b20 $-> b22} (q : Square g01 g21 g10 g12)
-  : Square (fmap01 F a g01) (fmap01 F a g21) (fmap01 F a g10) (fmap01 F a g12)
-  := (fmap01_comp F _ _ _)^$ $@ fmap02 F a q $@ fmap01_comp F _ _ _.
-
-Definition fmap10_square {A B C : Type} `{Is1Cat A, Is1Cat B, Is1Cat C}
-  (F : A -> B -> C) `{!Is0Bifunctor F, !Is1Bifunctor F}
-  {a00 a20 a02 a22 : A} {f10 : a00 $-> a20} {f12 : a02 $-> a22}
-  {f01 : a00 $-> a02} {f21 : a20 $-> a22} {b : B} (p : Square f01 f21 f10 f12)
-  : Square (fmap10 F f01 b) (fmap10 F f21 b) (fmap10 F f10 b) (fmap10 F f12 b)
-  := (fmap10_comp F _ _ _)^$ $@ fmap20 F p _ $@ fmap10_comp F _ _ _.
 
 (** ** Natural transformations between bifunctors *)
 
