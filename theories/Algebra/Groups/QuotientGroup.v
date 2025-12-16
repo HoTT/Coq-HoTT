@@ -257,6 +257,16 @@ Proof.
   reflexivity.
 Defined.
 
+(** The quotient map is trivial on the normal subgroup. *)
+Definition grp_quotient_map_trivial {G : Group} (N : NormalSubgroup G)
+  (n : G) (inN : N n)
+  : grp_quotient_map (N:=N) n = 1.
+Proof.
+  apply qglue; cbn.
+  rewrite right_identity.
+  by apply issubgroup_in_inv.
+Defined.
+
 (** The universal mapping property for groups *)
 Theorem equiv_grp_quotient_ump {F : Funext} {G : Group} (N : NormalSubgroup G) (H : Group)
   : {f : G $-> H & forall (n : G), N n -> f n = mon_unit}
@@ -267,12 +277,10 @@ Proof.
     exact (grp_quotient_rec _ _ f p).
   - intro f.
     exists (f $o grp_quotient_map).
-    intros n h; cbn.
-    refine (_ @ grp_homo_unit f).
-    apply ap.
-    apply qglue; cbn.
-    rewrite right_identity;
-      by apply issubgroup_in_inv.
+    intros n h.
+    rhs_V napply (grp_homo_unit f).
+    apply (ap f).
+    by apply grp_quotient_map_trivial.
   - intros f.
     rapply equiv_path_grouphomomorphism.
       by srapply Quotient_ind_hprop.
@@ -336,11 +344,9 @@ Definition grp_kernel_quotient_iso `{Univalence} {G : Group} (N : NormalSubgroup
 Proof.
   srapply Build_GroupIsomorphism.
   - srapply (grp_kernel_corec (subgroup_incl N)).
-    intro x; cbn.
-    apply qglue.
-    apply issubgroup_in_op.
-    + exact (issubgroup_in_inv _ x.2).
-    + exact issubgroup_in_unit.
+    intro x.
+    apply grp_quotient_map_trivial.
+    exact x.2.
   - apply isequiv_surj_emb.
     2: exact (cancelL_isembedding (g:=pr1)).
     intros [g p].
@@ -382,17 +388,27 @@ Proof.
   apply qglue, max.
 Defined.
 
-(** Conversely, a trivial quotient means the subgroup is maximal. *)
-Definition ismaximalsubgroup_istrivial_grp_quotient `{Univalence}
+(** Conversely, a trivial quotient means the subgroup is maximal.  First a version where we only assume that the quotient map is trivial. *)
+Definition ismaximalsubgroup_istrivial_grp_quotient_map `{Univalence}
   (G : Group) (N : NormalSubgroup G)
-  : IsTrivialGroup (G / N) -> IsMaximalSubgroup N.
+  (triv : forall x, grp_quotient_map (N:=N) x = 1)
+  : IsMaximalSubgroup N.
 Proof.
-  intros triv x.
-  specialize (triv (grp_quotient_map x) tt).
-  simpl in triv.
+  intro x.
+  specialize (triv x).
   apply related_quotient_paths in triv.
   2-5: exact _.
   apply equiv_subgroup_inv.
   napply (subgroup_in_op_l _ _ 1 triv) .
   apply subgroup_in_unit.
+Defined.
+
+Definition ismaximalsubgroup_istrivial_grp_quotient `{Univalence}
+  (G : Group) (N : NormalSubgroup G)
+  (triv : IsTrivialGroup (G / N))
+  : IsMaximalSubgroup N.
+Proof.
+  apply ismaximalsubgroup_istrivial_grp_quotient_map.
+  intro x.
+  exact (triv (grp_quotient_map x) tt).
 Defined.
