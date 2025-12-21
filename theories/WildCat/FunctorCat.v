@@ -16,13 +16,19 @@ Record Fun01 (A B : Type) `{IsGraph A} `{IsGraph B} := {
 
 Coercion fun01_F : Fun01 >-> Funclass.
 
-Arguments Build_Fun01 A B {isgraph_A isgraph_B} F {fun01_is0functor} : rename.
+Arguments Build_Fun01 {A B isgraph_A isgraph_B} F {fun01_is0functor} : rename.
 Arguments fun01_F {A B isgraph_A isgraph_B} : rename.
+
+(** An alternate constructor that expects the [fmap] argument. *)
+Definition Build_Fun01' {A B : Type} `{IsGraph A} `{IsGraph B}
+  (F : A -> B) (fmap : forall a b (f : a $-> b), F a $-> F b)
+  : Fun01 A B
+  := Build_Fun01 F (fun01_is0functor:=Build_Is0Functor F fmap).
 
 Definition issig_Fun01 (A B : Type) `{IsGraph A} `{IsGraph B}
   : _  <~> Fun01 A B := ltac:(issig).
 
-(* Note that even if [A] and [B] are fully coherent oo-categories, the objects of our "functor category" are not fully coherent.  Thus we cannot in general expect this "functor category" to itself be fully coherent.  However, it is at least a 0-coherent 1-category, as long as [B] is a 1-coherent 1-category. *)
+(** Note that even if [A] and [B] are fully coherent oo-categories, the objects of our "functor category" are not fully coherent.  Thus we cannot in general expect this "functor category" to itself be fully coherent.  However, it is at least a 0-coherent 1-category, as long as [B] is a 1-coherent 1-category. *)
 
 Instance isgraph_fun01 (A B : Type) `{IsGraph A} `{Is1Cat B} : IsGraph (Fun01 A B).
 Proof.
@@ -104,7 +110,7 @@ Definition fun01_op (A B : Type) `{IsGraph A} `{IsGraph B}
   : Fun01 A B -> Fun01 A^op B^op.
 Proof.
   intros F.
-  exact (Build_Fun01 A^op B^op F).
+  exact (Build_Fun01 (A:=A^op) (B:=B^op) F).
 Defined.
 
 (** ** Categories of 1-coherent 1-functors *)
@@ -153,7 +159,7 @@ Instance hasequivs_fun11 {A B : Type} `{Is1Cat A} `{HasEquivs B}
 (** * Identity functors *)
 
 Definition fun01_id {A} `{IsGraph A} : Fun01 A A
-  := Build_Fun01 A A idmap.
+  := Build_Fun01 idmap.
 
 Definition fun11_id {A} `{Is1Cat A} : Fun11 A A
   := Build_Fun11 _ _ idmap.
@@ -162,7 +168,7 @@ Definition fun11_id {A} `{Is1Cat A} : Fun11 A A
 
 Definition fun01_compose {A B C} `{IsGraph A, IsGraph B, IsGraph C}
   : Fun01 B C -> Fun01 A B -> Fun01 A C
-  := fun G F => Build_Fun01 _ _ (G o F).
+  := fun G F => Build_Fun01 (G o F).
 
 Definition fun01_postcomp {A B C}
   `{IsGraph A, Is1Cat B, Is1Cat C} (F : Fun11 B C)

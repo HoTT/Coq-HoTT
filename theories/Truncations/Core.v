@@ -111,7 +111,7 @@ Section TruncationModality.
     := O_functor@{k k k} (Tr n) f.
 
   #[export] Instance is0functor_Tr : Is0Functor (Tr n)
-    := Build_Is0Functor _ _ _ _ (Tr n) (@Trunc_functor).
+    := Build_Is0Functor (Tr n) (@Trunc_functor).
 
   #[export] Instance Trunc_functor_isequiv {X Y : Type}
     (f : X -> Y) `{IsEquiv _ _ f}

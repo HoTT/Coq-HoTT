@@ -32,13 +32,13 @@ Record Adjunction {C D : Type} (F : C -> D) (G : D -> C)
   `{Is1Cat C, Is1Cat D, !Is0Functor F, !Is0Functor G} :=
 {
   equiv_adjunction (x : C) (y : D) : (F x $-> y) <~> (x $-> G y) ;
-  (** Naturality condition in both variable separately *)
+  (** Naturality condition in both variables separately. *)
   (** The left variable is a bit trickier to state since we have opposite categories involved. *)
   is1natural_equiv_adjunction_l (y : D)
     :: Is1Natural (A := C^op) (yon y o F)
         (** We have to explicitly give a witness to the functoriality of [yon y o F]. *)
         (is0functor_F := is0functor_compose (A:=C^op) (B:=D^op) (C:=Type) _ _)
-        (yon (G y)) (fun x => equiv_adjunction _ y) ;
+        (yon (G y)) (fun x => equiv_adjunction x y) ;
   (** Naturality in the right variable *)
   is1natural_equiv_adjunction_r (x : C)
     :: Is1Natural (opyon (F x)) (opyon x o G) (equiv_adjunction x) ;
@@ -66,13 +66,9 @@ Lemma fun01_profunctor {A B C D : Type} (F : A -> B) (G : C -> D)
   : Fun01 (A^op * C) (B^op * D).
 Proof.
   snapply Build_Fun01.
-  1: exact (functor_prod F G).
-  rapply is0functor_prod_functor.
+  1: exact (functor_prod (F : A^op -> B^op) G).
+  rapply is0functor_prod_functor. (* Typeclass search gets confused by the opposite categories. *)
 Defined.
-
-Definition fun01_hom {C : Type} `{Is01Cat C}
-  : Fun01 (C^op * C) Type
-  := @Build_Fun01 _ _ _ _ _ is0functor_hom.
 
 (** ** Natural equivalences coming from adjunctions. *)
 

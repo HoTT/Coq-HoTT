@@ -617,9 +617,7 @@ Instance is0functor_trijoinrecdata_0gpd (A B C : Type) : Is0Functor (trijoinrecd
 Proof.
   apply Build_Is0Functor.
   intros P Q g.
-  snapply Build_Fun01.
-  - exact (trijoinrecdata_fun g).
-  - apply is0functor_trijoinrecdata_fun.
+  exact (Build_Fun01 (trijoinrecdata_fun g)).
 Defined.
 
 (** [trijoinrecdata_0gpd A B C] is a 1-functor from [Type] to [ZeroGpd]. *)

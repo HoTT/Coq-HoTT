@@ -202,7 +202,7 @@ Proof.
 Defined.
 
 Instance is0functor_monoid_type : Is0Functor monoid_type
-  := Build_Is0Functor _ _ _ _ monoid_type (@mnd_homo_map).
+  := Build_Is0Functor monoid_type (@mnd_homo_map).
 
 Instance is1functor_monoid_type : Is1Functor monoid_type.
 Proof.
