@@ -1,5 +1,6 @@
 From HoTT Require Import Basics Types Truncations.Core.
-Require Import Pointed WildCat.
+From HoTT.WildCat Require Import Core Universe Opposite Bifunctor.
+Require Import Pointed.Core Pointed.pTrunc.
 Require Import Truncations.SeparatedTrunc.
 Require Import AbelianGroup AbHom AbProjective.
 Require Import AbSES.Pullback AbSES.Pushout AbSES.BaerSum AbSES.Core.

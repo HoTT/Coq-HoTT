@@ -1,5 +1,6 @@
 From HoTT Require Import Basics Types.
-Require Import WildCat HSet Truncations.Core Modalities.ReflectiveSubuniverse.
+From HoTT.WildCat Require Import Core Opposite Bifunctor Square Equiv.
+Require Import HSet Truncations.Core Modalities.ReflectiveSubuniverse.
 Require Import Groups.Group Groups.QuotientGroup AbelianGroup Biproduct.
 
 (** * Homomorphisms from a group to an abelian group form an abelian group. *)

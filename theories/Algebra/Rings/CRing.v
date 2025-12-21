@@ -1,4 +1,4 @@
-Require Import WildCat.
+From HoTT.WildCat Require Import Core Equiv Induced.
 (* Some of the material in abstract_algebra and canonical names could be selectively exported to the user, as is done in Groups/Group.v. *)
 Require Import Classes.interfaces.abstract_algebra.
 Require Import Algebra.AbGroups.

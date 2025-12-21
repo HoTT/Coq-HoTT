@@ -1,6 +1,7 @@
 From HoTT Require Import Basics Types.
+From HoTT.WildCat Require Import Core NatTrans Universe Opposite.
 Require Import HSet Limits.Pullback.
-Require Import WildCat Pointed.Core Homotopy.ExactSequence.
+Require Import Pointed.Core Homotopy.ExactSequence.
 Require Import Modalities.ReflectiveSubuniverse.
 Require Import AbGroups.AbelianGroup AbGroups.AbPullback AbGroups.Biproduct.
 Require Import AbSES.Core AbSES.DirectSum.
@@ -482,7 +483,6 @@ Proof.
   - exact abses_pullback_id.
   - symmetry; apply abses_pullback_compose.
 Defined.
-
 
 Instance is0functor_abses10 `{Univalence} {A : AbGroup}
   : Is0Functor (fun B : AbGroup^op => AbSES B A).

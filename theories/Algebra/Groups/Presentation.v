@@ -4,8 +4,7 @@ Require Import Algebra.Groups.Group.
 Require Import Algebra.Groups.FreeGroup.
 Require Import Algebra.Groups.GroupCoeq.
 Require Import Spaces.Finite Spaces.List.Core.
-Require Import WildCat.
-
+From HoTT.WildCat Require Import Core Equiv Yoneda.
 
 Local Open Scope mc_scope.
 Local Open Scope mc_mult_scope.

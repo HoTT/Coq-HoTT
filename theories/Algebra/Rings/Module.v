@@ -1,4 +1,4 @@
-Require Import WildCat.
+From HoTT.WildCat Require Import Core Equiv Induced Products.
 Require Import Spaces.Nat.Core.
 (* Some of the material in abstract_algebra and canonical names could be selectively exported to the user, as is done in Groups/Group.v. *)
 Require Import Classes.interfaces.canonical_names.

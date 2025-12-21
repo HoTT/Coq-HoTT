@@ -1,7 +1,8 @@
 From HoTT Require Import Basics.
 Require Import Types.
 Require Import Cubical.DPath Cubical.DPathSquare.
-Require Import WildCat.
+From HoTT.WildCat Require Import Core Forall Universe Paths Sigma
+  EquivGpd NatTrans.
 Require Import Colimits.Pushout.
 Require Import Homotopy.NullHomotopy.
 Require Import Truncations.Core.

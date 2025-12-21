@@ -1,7 +1,8 @@
 From HoTT Require Import Basics Types.
-Require Import Pointed WildCat.
+From HoTT.WildCat Require Import Core Equiv.
+Require Import Pointed.
 Require Import Modalities.ReflectiveSubuniverse Truncations.Core.
-Require Import Algebra.AbGroups.
+From HoTT.Algebra.AbGroups Require Import AbelianGroup Z.
 Require Import Homotopy.HomotopyGroup.
 Require Import Homotopy.PinSn.
 Require Import Spaces.Int Spaces.Circle.

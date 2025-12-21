@@ -6,7 +6,7 @@ Require Import Algebra.Groups.Subgroup.
 Require Export Colimits.Quotient.
 Require Import HSet.
 Require Import Spaces.Finite.Finite.
-Require Import WildCat.
+From HoTT.WildCat Require Import Core Equiv.
 Require Import Modalities.Modality.
 
 (** * Quotient groups *)

@@ -1,4 +1,6 @@
-From HoTT Require Import Basics Types.Paths WildCat Join.Core Tactics.
+From HoTT Require Import Basics Types.Paths Join.Core Tactics.
+From HoTT.WildCat Require Import Core Universe Equiv EquivGpd
+  ZeroGroupoid Yoneda FunctorCat NatTrans.
 
 (** * Induction and recursion principles for the triple join
 

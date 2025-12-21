@@ -1,5 +1,6 @@
 From HoTT Require Import Basics Types Truncations.Core.
-Require Import HSet WildCat Pointed.
+From HoTT.WildCat Require Import Core Equiv Induced NatTrans.
+Require Import HSet Pointed.Core Pointed.Loops.
 Require Import Groups.QuotientGroup Groups.ShortExactSequence.
 Require Import AbelianGroup AbGroups.Biproduct AbHom.
 Require Import Homotopy.ExactSequence.

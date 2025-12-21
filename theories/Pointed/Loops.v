@@ -1,6 +1,6 @@
 Require Import HoTT.Basics HoTT.Types.
 Require Import HFiber Factorization Truncations.Core Truncations.Connectedness HProp.
-Require Import WildCat.
+From HoTT.WildCat Require Import Core Equiv PointedCat NatTrans.
 Require Import Pointed.Core Pointed.pEquiv.
 Require Import Spaces.Nat.Core.
 

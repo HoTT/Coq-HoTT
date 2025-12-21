@@ -1,6 +1,6 @@
 From HoTT Require Import Basics.
 Require Import Types.
-Require Import WildCat.
+From HoTT.WildCat Require Import Core Universe PointedCat NatTrans Yoneda.
 Require Import Pointed.Core.
 Require Import Pointed.Loops.
 Require Import Pointed.pTrunc.

@@ -1,14 +1,14 @@
 From HoTT Require Import Basics Types.
+From HoTT.WildCat Require Import Core Universe Equiv.
 Require Import Pointed.
 Require Import Cubical.DPath.
-Require Import Algebra.AbGroups.
+Require Import Algebra.AbGroups.AbelianGroup.
 Require Import Homotopy.Suspension.
 Require Import Homotopy.ClassifyingSpace.
 Require Import Homotopy.HSpace.Coherent.
 Require Import Homotopy.HomotopyGroup.
 Require Import Homotopy.Hopf.
 Require Import Truncations.Core Truncations.Connectedness.
-Require Import WildCat.
 
 (** * Eilenberg-Mac Lane spaces *)
 

@@ -1,6 +1,6 @@
 From HoTT Require Import Basics Types.
 Require Import Truncations.Core.
-Require Import WildCat.Core Pointed.
+Require Import WildCat.Core Pointed.Core.
 Require Import Groups.Group Groups.Subgroup.
 Require Import Homotopy.ExactSequence Modalities.Identity.
 
