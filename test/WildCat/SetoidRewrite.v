@@ -7,8 +7,10 @@ From HoTT.WildCat Require Import Core NatTrans Equiv SetoidRewrite.
 
 (** ** Examples of setoid rewriting *)
 
+(** See theories/WildCat/HomologicalAlgebra.v for many more examples of setoid rewriting. *)
+
 (** Rewriting works in hypotheses. *)
-Proposition IsEpic_HasSection {A} `{Is1Cat A}
+Proposition epic_sectionof {A} `{Is1Cat A}
   {a b : A} (f : a $-> b) :
   SectionOf f -> Epic f.
 Proof.
@@ -19,7 +21,7 @@ Proof.
 Defined.
 
 (** A different approach, working in the goal. *)
-Proposition IsMonic_HasRetraction {A} `{Is1Cat A}
+Proposition monic_retractionof {A} `{Is1Cat A}
   {b c : A} (f : b $-> c) :
   RetractionOf f -> Monic f.
 Proof.
@@ -30,7 +32,7 @@ Proof.
   exact (_ $@L eq_fg_fh).
 Defined.
 
-Proposition nat_equiv_faithful {A B : Type}
+Proposition faithful_nat_equiv_faithful {A B : Type}
   {F G : A -> B} `{Is1Functor _ _ F}
   `{!Is0Functor G, !Is1Functor G}
   `{!HasEquivs B} (tau : NatEquiv F G)
@@ -46,12 +48,14 @@ Defined.
 (** ** Tests of setoid rewriting *)
 
 Section SetoidRewriteTests.
+
   Goal forall (A : Type) `(H : Is0Gpd A) (a b c : A),
       a $== b -> b $== c -> a $== c.
   Proof.
     intros A ? ? ? a b c eq_ab eq_bc.
-    rewrite eq_ab, <- eq_bc.
+    by rewrite eq_ab, <- eq_bc.
   Abort.
+
   Goal forall (A : Type) `(H : Is0Gpd A) (a b c : A),
       a $== b -> b $== c -> a $== c.
   Proof.
@@ -59,14 +63,14 @@ Section SetoidRewriteTests.
     symmetry.
     rewrite eq_ab, <- eq_bc.
     rewrite eq_bc.
-    rewrite <- eq_bc.
+    by rewrite <- eq_bc.
   Abort.
 
   Goal forall (A B : Type) (F : A -> B) `{Is1Functor _ _ F} (a b : A) (f g : a $-> b), f $== g -> fmap F f $== fmap F g.
   Proof.
     do 17 intro.
     intro eq_fg.
-    rewrite eq_fg.
+    by rewrite eq_fg.
   Abort.
 
   Goal forall (A : Type) `{Is1Cat A} (a b c : A) (f1 f2 : a $-> b) (g : b $-> c), f1 $== f2 -> g $o f1 $== g $o f2.
@@ -74,7 +78,7 @@ Section SetoidRewriteTests.
     do 11 intro.
     intro eq.
     rewrite <- eq.
-    rewrite eq.
+    by rewrite eq.
   Abort.
 
   Goal forall (A : Type) `{Is1Cat A} (a b c : A) (f : a $-> b) (g1 g2 : b $-> c), g1 $== g2 -> g1 $o f $== g2 $o f.
@@ -83,7 +87,7 @@ Section SetoidRewriteTests.
   intro eq.
   rewrite <- eq.
   rewrite eq.
-  rewrite <- eq.
+  by rewrite <- eq.
   Abort.
 
   Goal forall (A : Type) `{Is1Cat A} (a b c : A) (f1 f2 : a $-> b) (g1 g2 : b $-> c), g1 $== g2 -> f1 $== f2 -> g1 $o f1 $== g2 $o f2.
@@ -93,6 +97,7 @@ Section SetoidRewriteTests.
     rewrite eq_g.
     rewrite <- eq_f.
     rewrite eq_f.
-    rewrite <- eq_g.
+    by rewrite <- eq_g.
   Abort.
+
 End SetoidRewriteTests.
