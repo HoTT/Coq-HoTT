@@ -1,6 +1,7 @@
 From HoTT Require Import Basics Types.
-Require Import Pointed WildCat.
-Require Import Algebra.Groups.
+From HoTT.WildCat Require Import Core Universe Equiv NatTrans Yoneda.
+Require Import Pointed.
+From HoTT.Algebra.Groups Require Import Group FreeGroup.
 Require Import Modalities.ReflectiveSubuniverse Truncations.Core.
 Require Import Homotopy.Suspension.
 Require Import Homotopy.ClassifyingSpace.

@@ -5,7 +5,8 @@ Require Import Extensions.
 Require Import Colimits.Pushout.
 Require Import Truncations.Core Truncations.Connectedness.
 Require Import Pointed.Core.
-Require Import WildCat.
+From HoTT.WildCat Require Import Core Universe Equiv EquivGpd
+  ZeroGroupoid Yoneda FunctorCat NatTrans Bifunctor Monoidal.
 Require Import Spaces.Nat.Core.
 
 Local Open Scope pointed_scope.

@@ -1,11 +1,11 @@
 From HoTT Require Import Basics Types.
+From HoTT.WildCat Require Import Core Universe Equiv Induced PointedCat.
 Require Import Spaces.Nat.Core Spaces.Int.
 Require Export Classes.interfaces.canonical_names (Zero, zero, Plus, plus, Negate, negate, Involutive, involutive).
 Require Export Classes.interfaces.abstract_algebra (IsAbGroup(..), abgroup_group, abgroup_commutative).
 Require Export Algebra.Groups.Group.
 Require Export Algebra.Groups.Subgroup.
 Require Import Algebra.Groups.QuotientGroup.
-Require Import WildCat.
 
 Local Set Polymorphic Inductive Cumulativity.
 

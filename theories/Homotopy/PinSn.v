@@ -1,9 +1,9 @@
 From HoTT Require Import Basics Types.
-Require Import WildCat.
+From HoTT.WildCat Require Import Core Equiv NatTrans Yoneda.
 Require Import Pointed.
 Require Import Truncations.Core Truncations.Connectedness.
 Require Import Spaces.Int Spaces.Circle Spaces.Spheres.
-Require Import Algebra.AbGroups.
+From HoTT.Algebra.AbGroups Require Import AbelianGroup Z.
 Require Import Homotopy.HomotopyGroup.
 Require Import Homotopy.HSpaceS1.
 Require Import Homotopy.Hopf.

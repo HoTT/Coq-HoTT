@@ -1,8 +1,8 @@
 From HoTT Require Import Basics Types Pointed HSet.
 Require Import Modalities.Modality.
 Require Import Truncations.Core Truncations.SeparatedTrunc.
-Require Import Algebra.AbGroups.
-Require Import WildCat.
+Require Import Algebra.AbGroups.AbelianGroup.
+From HoTT.WildCat Require Import Core Universe Equiv.
 
 Local Open Scope nat_scope.
 Local Open Scope pointed_scope.

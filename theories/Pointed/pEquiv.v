@@ -1,6 +1,6 @@
 From HoTT Require Import Basics.
 Require Import Types.
-Require Import WildCat.
+From HoTT.WildCat Require Import Core Equiv Yoneda.
 Require Import Pointed.Core.
 
 Local Open Scope pointed_scope.

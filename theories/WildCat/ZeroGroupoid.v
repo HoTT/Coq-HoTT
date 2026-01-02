@@ -1,7 +1,6 @@
-Require Import Basics.Overture Basics.Tactics
-               Basics.PathGroupoids.
-Require Import WildCat.Core WildCat.Equiv WildCat.EquivGpd WildCat.Prod
-               WildCat.Forall WildCat.Graph WildCat.Induced WildCat.FunctorCat.
+Require Import Basics.Overture Basics.Tactics Basics.PathGroupoids.
+From HoTT.WildCat Require Import Core Equiv EquivGpd Prod UnitCat
+  Forall Graph Induced FunctorCat.
 
 (** * The wild 1-category of 0-groupoids. *)
 
@@ -72,14 +71,27 @@ Proof.
   exact ((cat_eissect f x)^$ $@ fmap (equiv_fun_0gpd f^-1$) h $@ cat_eissect f y).
 Defined.
 
-(** This is one example of many things that could be ported from Basics/Equivalences.v. *)
-Definition moveR_equiv_V_0gpd {G H : ZeroGpd} (f : G $<~> H) (x : H) (y : G) (p : x $== equiv_fun_0gpd f y)
+Definition isinj_isequiv_0gpd {G H : ZeroGpd} (f : G $-> H) `{!Cat_IsBiInv f}
+  {x y : G} (h : f x $== f y)
+  : x $== y
+  := isinj_equiv_0gpd (Build_Cat_BiInv _ _ _ _ _ _ _ f _) h.
+
+(** These are some examples of things that could be ported from Basics/Equivalences.v. *)
+Definition moveR_equiv_V_0gpd {G H : ZeroGpd} (f : G $<~> H) {x : H} {y : G} (p : x $== equiv_fun_0gpd f y)
   : equiv_fun_0gpd f^-1$ x $== y
   := fmap (equiv_fun_0gpd f^-1$) p $@ cat_eissect f y.
 
-Definition moveL_equiv_V_0gpd {G H : ZeroGpd} (f : G $<~> H) (x : H) (y : G) (p : equiv_fun_0gpd f y $== x)
+Definition moveL_equiv_V_0gpd {G H : ZeroGpd} (f : G $<~> H) {x : H} {y : G} (p : equiv_fun_0gpd f y $== x)
   : y $== equiv_fun_0gpd f^-1$ x
   := (cat_eissect f y)^$ $@ fmap (equiv_fun_0gpd f^-1$) p.
+
+Definition moveR_equiv_M_0gpd {G H : ZeroGpd} (f : G $<~> H) {x : G} {y : H} (p : x $== equiv_fun_0gpd f^-1$ y)
+  : equiv_fun_0gpd f x $== y
+  := fmap (equiv_fun_0gpd f) p $@ cat_eisretr f y.
+
+Definition moveL_equiv_M_0gpd {G H : ZeroGpd} (f : G $<~> H) {x : G} {y : H} (p : equiv_fun_0gpd f^-1$ y $== x)
+  : y $== equiv_fun_0gpd f x
+  := (cat_eisretr f y)^$ $@ fmap (equiv_fun_0gpd f) p.
 
 (** ** [f] is an equivalence of 0-groupoids iff [IsSurjInj f]
 
@@ -200,6 +212,10 @@ Section BinProd.
   Definition binprod_0gpd : ZeroGpd
     := Build_ZeroGpd (G * H) _ _ _.
 
+  (* Helper function to produce a term of binprod_0gpd. *)
+  Definition binprod_0gpd_pair (g : G) (h : H) : binprod_0gpd
+    := (g, h).
+
   (** The projections. *)
   Definition binprod_0gpd_pr1 : binprod_0gpd $-> G.
   Proof.
@@ -227,6 +243,19 @@ Section BinProd.
   Defined.
 
 End BinProd.
+
+(** ** The terminal 0-groupoid *)
+
+Definition Unit_0gpd : ZeroGpd := Build_ZeroGpd Unit _ _ _.
+
+Instance is_terminal_unit_0gpd : IsTerminal Unit_0gpd.
+Proof.
+  intro A.
+  pose proof (f:=Build_Fun01 (fun _ : A => tt)).
+  exists f.
+  intros g a; simpl.
+  exact tt.
+Defined.
 
 (** ** Pullbacks of 0-groupoids *)
 

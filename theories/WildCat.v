@@ -17,8 +17,9 @@ Require Export WildCat.Products.
 Require Export WildCat.Coproducts.
 Require Export WildCat.Displayed.
 Require Export WildCat.DisplayedEquiv.
+Require Export WildCat.Pullbacks.
 
-(* See also contrib/SetoidRewrite.v for tools that can be used for rewriting in wild categories. *)
+Require Export WildCat.SetoidRewrite.
 
 (* Examples *)
 Require Export WildCat.Universe.

@@ -1,4 +1,6 @@
-From HoTT Require Import Basics Types WildCat Join.Core Join.TriJoin Spaces.Nat.Core.
+From HoTT Require Import Basics Types Join.Core Join.TriJoin Spaces.Nat.Core.
+From HoTT.WildCat Require Import Core Universe Equiv ZeroGroupoid
+  Yoneda FunctorCat NatTrans Monoidal.
 
 (** * The associativity of [Join]
 
