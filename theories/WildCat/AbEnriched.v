@@ -9,13 +9,13 @@ Require Export Classes.interfaces.canonical_names (SgOp, sg_op,
     MonUnit, mon_unit, Inverse, inv).
 Export canonical_names.BinOpNotations.
 
+Local Open Scope mc_add_scope.
+
 (** * Wild categories enriched in abelian groups *)
 
 (** ** 0-groupoid abelian groups *)
 
-(** Hom sets in wild categories are 0-groupoids, and we'd like to put an abelian group structure on these hom sets that satisfies the axioms up to 1-cells, to avoid needing function extensionality.  So we define the abstract idea of a 0-groupoid with an abelian group structure.  Because we use 1-cells, not paths, we can't reuse any of the work done in Algebra/Groups or Algebra/AbGroups. *)
-
-Local Open Scope mc_add_scope.
+(** Hom sets in wild categories are 0-groupoids, and we'd like to put an abelian group structure on these hom sets that satisfies the axioms up to 1-cells, to avoid needing function extensionality.  So we define the abstract idea of a 0-groupoid with an abelian group structure.  Because we use 1-cells, not paths, we can't reuse any of the work done in Algebra/Groups or Algebra/AbGroups. Note that our definition has redundant fields, which could be filled in using a "smart constructor":  [is0functor_inverse_0gpd], [mon_unit_r_0gpd], [inverse_r_0gpd] and the fact that [sgop_0gpd] is a 0-functor in the second variable. *)
 
 Class IsAbGroup_0gpd (A : Type) `{Is0Gpd A} := {
     (* Data: *)
@@ -27,7 +27,7 @@ Class IsAbGroup_0gpd (A : Type) `{Is0Gpd A} := {
     is0bifunctor_sgop_0gpd :: Is0Bifunctor sgop_0gpd;
     is0functor_inverse_0gpd :: Is0Functor inverse_0gpd;
 
-    (* Axioms (with some redundancy): *)
+    (* Axioms: *)
     assoc_0gpd : forall a b c, (a + b) + c $== a + (b + c);
     mon_unit_l_0gpd : forall a, 0 + a $== a;
     mon_unit_r_0gpd : forall a, a + 0 $== a;
