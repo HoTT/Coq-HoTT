@@ -4,25 +4,25 @@ Require Import WildCat.Core WildCat.Equiv WildCat.EquivGpd WildCat.PointedCat
   WildCat.Yoneda WildCat.Graph WildCat.ZeroGroupoid WildCat.Pullbacks
   WildCat.AbEnriched WildCat.FunctorCat.
 
-(** * A variant of regular categories in which one can do diagram chasing *)
+(** * Epi-stable categories *)
+
+(** Epi-stable categories are those in which pullbacks exist and epimorphisms are stable under pullback.  This is somewhat similar to a regular category, but differs in a couple of ways.  First, we use the ordinary epimorphisms rather than the effective epimorphisms, mostly because they are easier to formalize.  Second, we don't assume that kernel pairs have co-equalizers. *)
 
 (** ** Definition *)
 
-(** We study a type of wild category that is similar to a regular category.  We assume that the category has all pullbacks and that epimorphisms are preserved by pullbacks.  Note that we are dealing with the ordinary epimorphisms rather than the effective epimorphisms.  This is simply because they are easier to formalize.  Also note that we don't assume that kernel pairs have co-equalizers. *)
-
-Class IsRegular (A : Type) `{Is1Cat A} := {
+Class IsEpiStable (A : Type) `{Is1Cat A} := {
     haspullbacks :: HasPullbacks A;
     stable_epic :: forall {a b c} (f : a $-> c) (g : b $-> c) {ep : Epic f},
         Epic (cat_pb_pr2 (CatPullback:=haspullbacks a b c f g));
   }.
 
-(** ** Diagram chasing in a regular category *)
+(** ** Diagram chasing in an epi-stable category *)
 
-(** One can do a certain amount of diagram chasing in a regular category.  We'll see below that more can be done with an enrichment over abelian groups. *)
+(** One can do a certain amount of diagram chasing in an epi-stable category.  We'll see below that more can be done with an enrichment over abelian groups. *)
 
-Section Regular.
+Section EpiStable.
 
-  Context {A : Type} `{IsRegular A}.
+  Context {A : Type} `{IsEpiStable A}.
 
   (** A generalized element of [B] with domain [P]. *)
   Definition elt (P B : A) := P $-> B.
@@ -82,23 +82,23 @@ Section Regular.
     exact h.
   Defined.
 
-End Regular.
+End EpiStable.
 
 (** Many proofs using diagram chasing end by supplying an element of [Lift] with [e] being the identity map.  This helps with this common case. See below for an example. *)
 Tactic Notation "provide_lift" uconstr(a) :=
   refine (_; id_epi _; a; _);
   try rhs' napply cat_idr.
 
-(** ** Regular categories enriched in abelian groups *)
+(** ** Epi-stable categories enriched in abelian groups *)
 
-Class IsAbRegular (A : Type) `{Is1Cat A} := {
-    isregular_abregular :: IsRegular A;
-    isabenriched_abregular :: IsAbEnriched A;
+Class IsAbEpiStable (A : Type) `{Is1Cat A} := {
+    isepistable_abepistable :: IsEpiStable A;
+    isabenriched_abepistable :: IsAbEnriched A;
   }.
 
-Section AbRegular.
+Section AbEpiStable.
 
-  Context {A : Type} `{IsAbRegular A}.
+  Context {A : Type} `{IsAbEpiStable A}.
 
   Open Scope mc_add_scope.
 
@@ -182,11 +182,11 @@ Section AbRegular.
     exact h^$.
   Defined.
 
-End AbRegular.
+End AbEpiStable.
 
 (** ** Tactics *)
 
-(** The [fix_left] tactic is the key to smooth diagram chasing in an [IsAbRegular] category.  Given [lift : Lift ? ?]; we extract the lifted element using the provided name [d] and the proof it is a lift using the name [l].  Then we update all other generalized elements to have the same domain as [d].  We could also have a limited version of this tactic for an [IsRegular] category. *)
+(** The [fix_left] tactic is the key to smooth diagram chasing in an [IsAbEpiStable] category.  Given [lift : Lift ? ?]; we extract the lifted element using the provided name [d] and the proof it is a lift using the name [l].  Then we update all other generalized elements to have the same domain as [d].  We could also have a limited version of this tactic for an [IsEpiStable] category. *)
 Ltac fix_lift lift d l :=
   let P2 := fresh "P" in
   let e := fresh "e" in
