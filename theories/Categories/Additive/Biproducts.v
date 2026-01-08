@@ -4,8 +4,8 @@
     to additive category theory.
 *)
 
-From HoTT Require Import Basics Types.
-From HoTT.Categories Require Import Category Functor.
+From HoTT Require Import Basics.Overture Basics.Tactics.
+From HoTT.Categories Require Import Category.Core.
 From HoTT.Categories.Additive Require Import ZeroObjects.
 
 Local Notation fst_type := Basics.Overture.fst.
@@ -170,6 +170,66 @@ Section BiproductOperations.
     (Hr : (outr B o h = g)%morphism)
     : h = biproduct_prod_mor W f g
     := ap pr1 (contr (h; (Hl, Hr)))^.
+
+  (** Product pairing with zero on right equals left injection composed. *)
+  Lemma biproduct_prod_zero_r (W : object C) (h : morphism C W X)
+    : biproduct_prod_mor W h (zero_morphism W Y)
+      = (inl B o h)%morphism.
+  Proof.
+    symmetry.
+    rapply biproduct_prod_unique.
+    - rewrite <- associativity.
+      rewrite (beta_l (biproduct_is B)).
+      apply left_identity.
+    - rewrite <- associativity.
+      rewrite (mixed_r (biproduct_is B)).
+      apply zero_morphism_left.
+  Qed.
+
+  (** Product pairing with zero on left equals right injection composed. *)
+  Lemma biproduct_prod_zero_l (W : object C) (h : morphism C W Y)
+    : biproduct_prod_mor W (zero_morphism W X) h
+      = (inr B o h)%morphism.
+  Proof.
+    symmetry.
+    rapply biproduct_prod_unique.
+    - rewrite <- associativity.
+      rewrite (mixed_l (biproduct_is B)).
+      apply zero_morphism_left.
+    - rewrite <- associativity.
+      rewrite (beta_r (biproduct_is B)).
+      apply left_identity.
+  Qed.
+
+  (** Product pairing is natural in the domain. *)
+  Lemma biproduct_prod_comp (V W : object C)
+    (f : morphism C W X) (g : morphism C W Y) (h : morphism C V W)
+    : (biproduct_prod_mor W f g o h)%morphism
+      = biproduct_prod_mor V (f o h) (g o h).
+  Proof.
+    rapply biproduct_prod_unique.
+    - rewrite <- associativity.
+      rewrite biproduct_prod_beta_l.
+      reflexivity.
+    - rewrite <- associativity.
+      rewrite biproduct_prod_beta_r.
+      reflexivity.
+  Qed.
+
+  (** Coproduct copairing is natural in the codomain. *)
+  Lemma biproduct_coprod_comp (W V : object C)
+    (f : morphism C X W) (g : morphism C Y W) (h : morphism C W V)
+    : (h o biproduct_coprod_mor W f g)%morphism
+      = biproduct_coprod_mor V (h o f) (h o g).
+  Proof.
+    rapply biproduct_coprod_unique.
+    - rewrite associativity.
+      rewrite biproduct_coprod_beta_l.
+      reflexivity.
+    - rewrite associativity.
+      rewrite biproduct_coprod_beta_r.
+      reflexivity.
+  Qed.
 
 End BiproductOperations.
 
