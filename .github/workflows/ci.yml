@@ -82,15 +82,6 @@ jobs:
           sudo chown -R 1000:1000 .
           endGroup
           echo "::remove-matcher owner=coq-problem-matcher::" # remove problem matcher installed by Coq docker action, so we don't get duplicate warning annotations
-          # Workaround for Rocq 9.0 naming transition
-          if ! command -v coq_makefile >/dev/null 2>&1 && command -v rocq >/dev/null 2>&1; then
-            opam install coq-core coq-stdlib coq -y >/dev/null 2>&1 || true
-            if ! command -v coq_makefile >/dev/null 2>&1; then
-              sudo sh -c 'echo "#!/bin/bash" > /usr/local/bin/coq_makefile'
-              sudo sh -c 'echo "exec rocq makefile \"\$@\"" >> /usr/local/bin/coq_makefile'
-              sudo chmod +x /usr/local/bin/coq_makefile
-            fi
-          fi
           make -j2
     - name: Revert permissions
       # to avoid a warning at cleanup time - https://github.com/coq-community/docker-coq-action#permissions
@@ -125,15 +116,6 @@ jobs:
             sudo chown -R 1000:1000 .
           endGroup
           echo "::remove-matcher owner=coq-problem-matcher::" # remove problem matcher installed by Coq docker action, so we don't get duplicate warning annotations
-          # Workaround for Rocq 9.0 naming transition
-          if ! command -v coq_makefile >/dev/null 2>&1 && command -v rocq >/dev/null 2>&1; then
-            opam install coq-core coq-stdlib coq -y >/dev/null 2>&1 || true
-            if ! command -v coq_makefile >/dev/null 2>&1; then
-              sudo sh -c 'echo "#!/bin/bash" > /usr/local/bin/coq_makefile'
-              sudo sh -c 'echo "exec rocq makefile \"\$@\"" >> /usr/local/bin/coq_makefile'
-              sudo chmod +x /usr/local/bin/coq_makefile
-            fi
-          fi
           sudo apt-get -o Acquire::Retries=30 update -q
           sudo apt-get -o Acquire::Retries=30 install python3 python-is-python3 -y --allow-unauthenticated
           etc/coq-scripts/github/reportify-coq.sh --errors ${{ matrix.extra-gh-reportify }} make TIMED=1 -j2 --output-sync
@@ -202,15 +184,6 @@ jobs:
         coq_version: ${{ env.coq-version-supported }}
         ocaml_version: ${{ env.ocaml-version }}
         custom_script: |
-          # Workaround for Rocq 9.0 naming transition
-          if ! command -v coq_makefile >/dev/null 2>&1 && command -v rocq >/dev/null 2>&1; then
-            opam install coq-core coq-stdlib coq -y >/dev/null 2>&1 || true
-            if ! command -v coq_makefile >/dev/null 2>&1; then
-              sudo sh -c 'echo "#!/bin/bash" > /usr/local/bin/coq_makefile'
-              sudo sh -c 'echo "exec rocq makefile \"\$@\"" >> /usr/local/bin/coq_makefile'
-              sudo chmod +x /usr/local/bin/coq_makefile
-            fi
-          fi
           opam install -y coq-serapi
           sudo apt-get -o Acquire::Retries=30 update -q
           sudo apt-get -o Acquire::Retries=30 install python3-pip python3-venv autoconf -y --allow-unauthenticated
@@ -259,15 +232,6 @@ jobs:
         coq_version: ${{ env.coq-version-supported }}
         ocaml_version: ${{ env.ocaml-version }}
         custom_script: |
-          # Workaround for Rocq 9.0 naming transition
-          if ! command -v coq_makefile >/dev/null 2>&1 && command -v rocq >/dev/null 2>&1; then
-            opam install coq-core coq-stdlib coq -y >/dev/null 2>&1 || true
-            if ! command -v coq_makefile >/dev/null 2>&1; then
-              sudo sh -c 'echo "#!/bin/bash" > /usr/local/bin/coq_makefile'
-              sudo sh -c 'echo "exec rocq makefile \"\$@\"" >> /usr/local/bin/coq_makefile'
-              sudo chmod +x /usr/local/bin/coq_makefile
-            fi
-          fi
           sudo apt-get update
           sudo apt-get install -y ghc
           sudo apt-get install -y --allow-unauthenticated \
@@ -361,15 +325,6 @@ jobs:
         coq_version: ${{ env.coq-version-supported }}
         ocaml_version: ${{ env.ocaml-version }}
         custom_script: |
-          # Workaround for Rocq 9.0 naming transition
-          if ! command -v coq_makefile >/dev/null 2>&1 && command -v rocq >/dev/null 2>&1; then
-            opam install coq-core coq-stdlib coq -y >/dev/null 2>&1 || true
-            if ! command -v coq_makefile >/dev/null 2>&1; then
-              sudo sh -c 'echo "#!/bin/bash" > /usr/local/bin/coq_makefile'
-              sudo sh -c 'echo "exec rocq makefile \"\$@\"" >> /usr/local/bin/coq_makefile'
-              sudo chmod +x /usr/local/bin/coq_makefile
-            fi
-          fi
           startGroup "Workaround permission issue" # https://github.com/coq-community/docker-coq-action#permissions
             sudo chown -R 1000:1000 .
           endGroup
@@ -413,15 +368,6 @@ jobs:
         coq_version: ${{ env.coq-version-supported }}
         ocaml_version: ${{ env.ocaml-version }}
         custom_script: |
-          # Workaround for Rocq 9.0 naming transition
-          if ! command -v coq_makefile >/dev/null 2>&1 && command -v rocq >/dev/null 2>&1; then
-            opam install coq-core coq-stdlib coq -y >/dev/null 2>&1 || true
-            if ! command -v coq_makefile >/dev/null 2>&1; then
-              sudo sh -c 'echo "#!/bin/bash" > /usr/local/bin/coq_makefile'
-              sudo sh -c 'echo "exec rocq makefile \"\$@\"" >> /usr/local/bin/coq_makefile'
-              sudo chmod +x /usr/local/bin/coq_makefile
-            fi
-          fi
           sudo apt-get update
           sudo apt-get install -y time python3 python-is-python3 lua5.1
           startGroup "Workaround permission issue" # https://github.com/coq-community/docker-coq-action#permissions
@@ -472,15 +418,6 @@ jobs:
         coq_version: ${{ matrix.coq-version }}
         ocaml_version: ${{ env.ocaml-version }}
         custom_script: |
-          # Workaround for Rocq 9.0 naming transition
-          if ! command -v coq_makefile >/dev/null 2>&1 && command -v rocq >/dev/null 2>&1; then
-            opam install coq-core coq-stdlib coq -y >/dev/null 2>&1 || true
-            if ! command -v coq_makefile >/dev/null 2>&1; then
-              sudo sh -c 'echo "#!/bin/bash" > /usr/local/bin/coq_makefile'
-              sudo sh -c 'echo "exec rocq makefile \"\$@\"" >> /usr/local/bin/coq_makefile'
-              sudo chmod +x /usr/local/bin/coq_makefile
-            fi
-          fi
           startGroup "Workaround permission issue" # https://github.com/coq-community/docker-coq-action#permissions
             sudo chown -R 1000:1000 .
           endGroup
@@ -519,27 +456,13 @@ jobs:
         coq_version: ${{ matrix.coq-version }}
         ocaml_version: ${{ env.ocaml-version }}
         custom_script: |
-          # Workaround for Rocq 9.0 naming transition
-          if ! command -v coq_makefile >/dev/null 2>&1 && command -v rocq >/dev/null 2>&1; then
-            opam install coq-core coq-stdlib coq -y >/dev/null 2>&1 || true
-            if ! command -v coq_makefile >/dev/null 2>&1; then
-              sudo sh -c 'echo "#!/bin/bash" > /usr/local/bin/coq_makefile'
-              sudo sh -c 'echo "exec rocq makefile \"\$@\"" >> /usr/local/bin/coq_makefile'
-              sudo chmod +x /usr/local/bin/coq_makefile
-            fi
-            if ! command -v coqtop >/dev/null 2>&1; then
-              sudo sh -c 'echo "#!/bin/bash" > /usr/local/bin/coqtop'
-              sudo sh -c 'echo "exec rocq \"\$@\"" >> /usr/local/bin/coqtop'
-              sudo chmod +x /usr/local/bin/coqtop
-            fi
-          fi
           startGroup "Workaround permission issue" # https://github.com/coq-community/docker-coq-action#permissions
             sudo chown -R 1000:1000 .
           endGroup
           echo "::remove-matcher owner=coq-problem-matcher::" # remove problem matcher installed by Coq docker action, so we don't get duplicate warning annotations
           ## Test install target
           make install
-          echo 'Require Import HoTT.HoTT.' | coqtop -q
+          echo 'Require Import HoTT.HoTT.' | rocq -q
 
     - name: Revert permissions
       # to avoid a warning at cleanup time - https://github.com/coq-community/docker-coq-action#permissions
