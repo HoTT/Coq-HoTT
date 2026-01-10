@@ -462,7 +462,7 @@ jobs:
           echo "::remove-matcher owner=coq-problem-matcher::" # remove problem matcher installed by Coq docker action, so we don't get duplicate warning annotations
           ## Test install target
           make install
-          echo 'Require Import HoTT.HoTT.' | rocq -q
+          echo 'Require Import HoTT.HoTT.' | rocq repl -q
 
     - name: Revert permissions
       # to avoid a warning at cleanup time - https://github.com/coq-community/docker-coq-action#permissions
