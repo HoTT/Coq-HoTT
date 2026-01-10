@@ -1,0 +1,170 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Classes.implementations.hprop_lattice</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Classes.implementations.hprop_lattice</h1>
+
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span><br/>
+&nbsp;&nbsp;<a class="idref" href="HoTT.Classes.interfaces.abstract_algebra.html#"><span class="id" title="library">HoTT.Classes.interfaces.abstract_algebra</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="HoTT.Universes.TruncType.html#"><span class="id" title="library">HoTT.Universes.TruncType</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Demonstrate the <span class="inlinecode"><a class="idref" href="HoTT.Basics.Trunc.html#HProp"><span class="id" title="abbreviation">HProp</span></a></span> is a (bounded) lattice w.r.t. the logical
+operations. This requires Univalence. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Instance</span> <a id="join_hor" class="idref" href="#join_hor"><span class="id" title="instance">join_hor</span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Join"><span class="id" title="class">Join</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#HProp"><span class="id" title="abbreviation">HProp</span></a> := <a class="idref" href="HoTT.Truncations.Core.html#hor"><span class="id" title="definition">hor</span></a>.<br/>
+<span class="id" title="keyword">Definition</span> <a id="hand" class="idref" href="#hand"><span class="id" title="definition">hand</span></a> (<a id="X:1" class="idref" href="#X:1"><span class="id" title="binder">X</span></a> <a id="Y:2" class="idref" href="#Y:2"><span class="id" title="binder">Y</span></a> : <a class="idref" href="HoTT.Basics.Trunc.html#HProp"><span class="id" title="abbreviation">HProp</span></a>) : <a class="idref" href="HoTT.Basics.Trunc.html#HProp"><span class="id" title="abbreviation">HProp</span></a> := <a class="idref" href="HoTT.Basics.Trunc.html#Build_HProp"><span class="id" title="abbreviation">Build_HProp</span></a> (<a class="idref" href="HoTT.Classes.implementations.hprop_lattice.html#X:1"><span class="id" title="variable">X</span></a> <a class="idref" href="HoTT.Basics.Overture.html#11c698c8685bb8ab1cf725545c085ac4"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Classes.implementations.hprop_lattice.html#Y:2"><span class="id" title="variable">Y</span></a>).<br/>
+<span class="id" title="keyword">Instance</span> <a id="meet_hprop" class="idref" href="#meet_hprop"><span class="id" title="instance">meet_hprop</span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Meet"><span class="id" title="class">Meet</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#HProp"><span class="id" title="abbreviation">HProp</span></a> := <a class="idref" href="HoTT.Classes.implementations.hprop_lattice.html#hand"><span class="id" title="definition">hand</span></a>.<br/>
+<span class="id" title="keyword">Instance</span> <a id="bottom_hprop" class="idref" href="#bottom_hprop"><span class="id" title="instance">bottom_hprop</span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Bottom"><span class="id" title="class">Bottom</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#HProp"><span class="id" title="abbreviation">HProp</span></a> := <a class="idref" href="HoTT.Universes.TruncType.html#False_hp"><span class="id" title="definition">False_hp</span></a>.<br/>
+<span class="id" title="keyword">Instance</span> <a id="top_hprop" class="idref" href="#top_hprop"><span class="id" title="instance">top_hprop</span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Top"><span class="id" title="class">Top</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#HProp"><span class="id" title="abbreviation">HProp</span></a> := <a class="idref" href="HoTT.Universes.TruncType.html#Unit_hp"><span class="id" title="definition">Unit_hp</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="contents" class="idref" href="#contents"><span class="id" title="section">contents</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> `{<a id="H:3" class="idref" href="#H:3"><span class="id" title="binder">Univalence</span></a>}.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="comment">(*&nbsp;We&nbsp;use&nbsp;this&nbsp;notation&nbsp;because&nbsp;<span class="inlinecode"><span class="id" title="var">hor</span></span>&nbsp;can&nbsp;accept&nbsp;arguments&nbsp;of&nbsp;type&nbsp;<span class="inlinecode"><span class="id" title="keyword">Type</span></span>,&nbsp;which&nbsp;leads&nbsp;to&nbsp;minor&nbsp;confusion&nbsp;in&nbsp;the&nbsp;instances&nbsp;below&nbsp;*)</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Notation</span> <a id="lor" class="idref" href="#lor"><span class="id" title="abbreviation">lor</span></a> := (<a class="idref" href="HoTT.Truncations.Core.html#hor"><span class="id" title="definition">hor</span></a> : <a class="idref" href="HoTT.Basics.Trunc.html#HProp"><span class="id" title="abbreviation">HProp</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#HProp"><span class="id" title="abbreviation">HProp</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#HProp"><span class="id" title="abbreviation">HProp</span></a>).<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="comment">(*&nbsp;This&nbsp;tactic&nbsp;attempts&nbsp;to&nbsp;destruct&nbsp;a&nbsp;truncated&nbsp;sum&nbsp;(disjunction)&nbsp;*)</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Local Ltac</span> <span class="id" title="var">hor_intros</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">x</span> := <span class="id" title="tactic">fresh</span> <span class="id" title="tactic">in</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">x</span>; <span class="id" title="tactic">repeat</span> (<span class="id" title="var">strip_truncations</span>; <span class="id" title="tactic">destruct</span> <span class="id" title="var">x</span> <span class="id" title="keyword">as</span> [<span class="id" title="var">x</span> | <span class="id" title="var">x</span>]).<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Instance</span> <a id="commutative_hor" class="idref" href="#commutative_hor"><span class="id" title="instance">commutative_hor</span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Commutative"><span class="id" title="class">Commutative</span></a> <a class="idref" href="HoTT.Classes.implementations.hprop_lattice.html#lor"><span class="id" title="abbreviation">lor</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> ??.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Universes.TruncType.html#path_iff_hprop"><span class="id" title="definition">path_iff_hprop</span></a>; <span class="id" title="var">hor_intros</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Truncations.Core.html#Trunc.tr"><span class="id" title="constructor">tr</span></a>; <span class="id" title="tactic">auto</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Instance</span> <a id="commutative_hand" class="idref" href="#commutative_hand"><span class="id" title="instance">commutative_hand</span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Commutative"><span class="id" title="class">Commutative</span></a> <a class="idref" href="HoTT.Classes.implementations.hprop_lattice.html#hand"><span class="id" title="definition">hand</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> ??.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Universes.TruncType.html#path_hprop"><span class="id" title="definition">path_hprop</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Types.Prod.html#equiv_prod_symm"><span class="id" title="definition">equiv_prod_symm</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Instance</span> <a id="associative_hor" class="idref" href="#associative_hor"><span class="id" title="instance">associative_hor</span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Associative"><span class="id" title="class">Associative</span></a> <a class="idref" href="HoTT.Classes.implementations.hprop_lattice.html#lor"><span class="id" title="abbreviation">lor</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> ???.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Universes.TruncType.html#path_iff_hprop"><span class="id" title="definition">path_iff_hprop</span></a>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">hor_intros</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Truncations.Core.html#Trunc.tr"><span class="id" title="constructor">tr</span></a>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;((<span class="id" title="tactic">by</span> <span class="id" title="tactic">auto</span>) || (<span class="id" title="tactic">left</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Truncations.Core.html#Trunc.tr"><span class="id" title="constructor">tr</span></a>) || (<span class="id" title="tactic">right</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Truncations.Core.html#Trunc.tr"><span class="id" title="constructor">tr</span></a>));<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">auto</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Instance</span> <a id="associative_hand" class="idref" href="#associative_hand"><span class="id" title="instance">associative_hand</span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Associative"><span class="id" title="class">Associative</span></a> <a class="idref" href="HoTT.Classes.implementations.hprop_lattice.html#hand"><span class="id" title="definition">hand</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> ???.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Universes.TruncType.html#path_hprop"><span class="id" title="definition">path_hprop</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Types.Prod.html#equiv_prod_assoc"><span class="id" title="definition">equiv_prod_assoc</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Instance</span> <a id="idempotent_hor" class="idref" href="#idempotent_hor"><span class="id" title="instance">idempotent_hor</span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#BinaryIdempotent"><span class="id" title="class">BinaryIdempotent</span></a> <a class="idref" href="HoTT.Classes.implementations.hprop_lattice.html#lor"><span class="id" title="abbreviation">lor</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> ?. <span class="id" title="tactic">compute</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Universes.TruncType.html#path_iff_hprop"><span class="id" title="definition">path_iff_hprop</span></a>; <span class="id" title="var">hor_intros</span>; <span class="id" title="tactic">auto</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Truncations.Core.html#Trunc.tr"><span class="id" title="constructor">tr</span></a>, <a class="idref" href="HoTT.Basics.Overture.html#inl"><span class="id" title="constructor">inl</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Instance</span> <a id="idempotent_hand" class="idref" href="#idempotent_hand"><span class="id" title="instance">idempotent_hand</span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#BinaryIdempotent"><span class="id" title="class">BinaryIdempotent</span></a> <a class="idref" href="HoTT.Classes.implementations.hprop_lattice.html#hand"><span class="id" title="definition">hand</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> ?.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Universes.TruncType.html#path_iff_hprop"><span class="id" title="definition">path_iff_hprop</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> [<span class="id" title="var">a</span> <span class="id" title="var">_</span>] ; <span class="id" title="tactic">apply</span> <span class="id" title="var">a</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">a</span>; <span class="id" title="tactic">apply</span> (<a class="idref" href="HoTT.Basics.Overture.html#pair"><span class="id" title="constructor">pair</span></a> <span class="id" title="var">a</span> <span class="id" title="var">a</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Instance</span> <a id="leftidentity_hor" class="idref" href="#leftidentity_hor"><span class="id" title="instance">leftidentity_hor</span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#LeftIdentity"><span class="id" title="class">LeftIdentity</span></a> <a class="idref" href="HoTT.Classes.implementations.hprop_lattice.html#lor"><span class="id" title="abbreviation">lor</span></a> <a class="idref" href="HoTT.Universes.TruncType.html#False_hp"><span class="id" title="definition">False_hp</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> ?.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Universes.TruncType.html#path_iff_hprop"><span class="id" title="definition">path_iff_hprop</span></a>; <span class="id" title="var">hor_intros</span>; <span class="id" title="tactic">try</span> <span class="id" title="var">contradiction</span> || <span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Truncations.Core.html#Trunc.tr"><span class="id" title="constructor">tr</span></a>, <a class="idref" href="HoTT.Basics.Overture.html#inr"><span class="id" title="constructor">inr</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Instance</span> <a id="rightidentity_hor" class="idref" href="#rightidentity_hor"><span class="id" title="instance">rightidentity_hor</span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#RightIdentity"><span class="id" title="class">RightIdentity</span></a> <a class="idref" href="HoTT.Classes.implementations.hprop_lattice.html#lor"><span class="id" title="abbreviation">lor</span></a> <a class="idref" href="HoTT.Universes.TruncType.html#False_hp"><span class="id" title="definition">False_hp</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> ?.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Universes.TruncType.html#path_iff_hprop"><span class="id" title="definition">path_iff_hprop</span></a>; <span class="id" title="var">hor_intros</span>; <span class="id" title="tactic">try</span> <span class="id" title="var">contradiction</span> || <span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Truncations.Core.html#Trunc.tr"><span class="id" title="constructor">tr</span></a>, <a class="idref" href="HoTT.Basics.Overture.html#inl"><span class="id" title="constructor">inl</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Instance</span> <a id="leftidentity_hand" class="idref" href="#leftidentity_hand"><span class="id" title="instance">leftidentity_hand</span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#LeftIdentity"><span class="id" title="class">LeftIdentity</span></a> <a class="idref" href="HoTT.Classes.implementations.hprop_lattice.html#hand"><span class="id" title="definition">hand</span></a> <a class="idref" href="HoTT.Universes.TruncType.html#Unit_hp"><span class="id" title="definition">Unit_hp</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> ?.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Universes.TruncType.html#path_trunctype"><span class="id" title="definition">path_trunctype</span></a>, <a class="idref" href="HoTT.Types.Prod.html#prod_unit_l"><span class="id" title="definition">prod_unit_l</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Instance</span> <a id="rightidentity_hand" class="idref" href="#rightidentity_hand"><span class="id" title="instance">rightidentity_hand</span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#RightIdentity"><span class="id" title="class">RightIdentity</span></a> <a class="idref" href="HoTT.Classes.implementations.hprop_lattice.html#hand"><span class="id" title="definition">hand</span></a> <a class="idref" href="HoTT.Universes.TruncType.html#Unit_hp"><span class="id" title="definition">Unit_hp</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> ?.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Universes.TruncType.html#path_trunctype"><span class="id" title="definition">path_trunctype</span></a>, <a class="idref" href="HoTT.Types.Prod.html#prod_unit_r"><span class="id" title="definition">prod_unit_r</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Instance</span> <a id="absorption_hor_hand" class="idref" href="#absorption_hor_hand"><span class="id" title="instance">absorption_hor_hand</span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Absorption"><span class="id" title="class">Absorption</span></a> <a class="idref" href="HoTT.Classes.implementations.hprop_lattice.html#lor"><span class="id" title="abbreviation">lor</span></a> <a class="idref" href="HoTT.Classes.implementations.hprop_lattice.html#hand"><span class="id" title="definition">hand</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> ??.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Universes.TruncType.html#path_iff_hprop"><span class="id" title="definition">path_iff_hprop</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">X</span>; <span class="id" title="var">strip_truncations</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">X</span> <span class="id" title="keyword">as</span> [? | [? <span class="id" title="var">_</span>]]; <span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> ?. <span class="id" title="tactic">by</span> <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Truncations.Core.html#Trunc.tr"><span class="id" title="constructor">tr</span></a>, <a class="idref" href="HoTT.Basics.Overture.html#inl"><span class="id" title="constructor">inl</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Instance</span> <a id="absorption_hand_hor" class="idref" href="#absorption_hand_hor"><span class="id" title="instance">absorption_hand_hor</span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Absorption"><span class="id" title="class">Absorption</span></a> <a class="idref" href="HoTT.Classes.implementations.hprop_lattice.html#hand"><span class="id" title="definition">hand</span></a> <a class="idref" href="HoTT.Classes.implementations.hprop_lattice.html#lor"><span class="id" title="abbreviation">lor</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> ??.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Universes.TruncType.html#path_iff_hprop"><span class="id" title="definition">path_iff_hprop</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> [? <span class="id" title="var">_</span>]; <span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> ?.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">split</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;× <span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;× <span class="id" title="tactic">by</span> <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Truncations.Core.html#Trunc.tr"><span class="id" title="constructor">tr</span></a>, <a class="idref" href="HoTT.Basics.Overture.html#inl"><span class="id" title="constructor">inl</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="boundedlattice_hprop" class="idref" href="#boundedlattice_hprop"><span class="id" title="instance">boundedlattice_hprop</span></a> : <a class="idref" href="HoTT.Classes.interfaces.abstract_algebra.html#IsBoundedLattice"><span class="id" title="class">IsBoundedLattice</span></a> <a class="idref" href="HoTT.Basics.Trunc.html#HProp"><span class="id" title="abbreviation">HProp</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">repeat</span> <span class="id" title="tactic">split</span>; <span class="id" title="tactic">apply</span> <span class="id" title="var">_</span>. <span class="id" title="keyword">Defined</span>.<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Classes.implementations.hprop_lattice.html#contents"><span class="id" title="section">contents</span></a>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

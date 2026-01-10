@@ -1,0 +1,28 @@
+digraph HoTT_Pointed_pModality {
+  graph [ratio=0.5]
+  node [style=filled]
+pModality_pequiv_O_inverts [label="pequiv_O_inverts", URL=<pModality.html#pequiv_O_inverts>, peripheries=3, fillcolor="#F070D1"] ;
+pModality_pto_O_natural [label="pto_O_natural", URL=<pModality.html#pto_O_natural>, peripheries=3, fillcolor="#F070D1"] ;
+pModality_equiv_O_pfunctor [label="equiv_O_pfunctor", URL=<pModality.html#equiv_O_pfunctor>, peripheries=3, fillcolor="#F070D1"] ;
+pModality_O_pfunctor [label="O_pfunctor", URL=<pModality.html#O_pfunctor>, fillcolor="#F070D1"] ;
+pModality_pequiv_o_pto_O [label="pequiv_o_pto_O", URL=<pModality.html#pequiv_o_pto_O>, peripheries=3, fillcolor="#F070D1"] ;
+pModality_pO_rec_beta [label="pO_rec_beta", URL=<pModality.html#pO_rec_beta>, fillcolor="#F070D1"] ;
+pModality_pO_rec [label="pO_rec", URL=<pModality.html#pO_rec>, fillcolor="#F070D1"] ;
+pModality_pequiv_pto [label="pequiv_pto", URL=<pModality.html#pequiv_pto>, peripheries=3, fillcolor="#F070D1"] ;
+pModality_pto [label="pto", URL=<pModality.html#pto>, fillcolor="#F070D1"] ;
+pModality_ispointed_O [label="ispointed_O", URL=<pModality.html#ispointed_O>, fillcolor="#F070D1"] ;
+  pModality_pequiv_O_inverts -> pModality_O_pfunctor [] ;
+  pModality_pto_O_natural -> pModality_O_pfunctor [] ;
+  pModality_pto_O_natural -> pModality_pO_rec_beta [] ;
+  pModality_equiv_O_pfunctor -> pModality_O_pfunctor [] ;
+  pModality_O_pfunctor -> pModality_pO_rec [] ;
+  pModality_O_pfunctor -> pModality_pto [] ;
+  pModality_pequiv_o_pto_O -> pModality_pto [] ;
+  pModality_pO_rec_beta -> pModality_pO_rec [] ;
+  pModality_pO_rec_beta -> pModality_pto [] ;
+  pModality_pO_rec -> pModality_ispointed_O [] ;
+  pModality_pequiv_pto -> pModality_pto [] ;
+  pModality_pto -> pModality_ispointed_O [] ;
+subgraph cluster_pModality { label="pModality"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+pModality_ispointed_O; pModality_pto; pModality_pequiv_pto; pModality_pO_rec; pModality_pO_rec_beta; pModality_pequiv_o_pto_O; pModality_O_pfunctor; pModality_equiv_O_pfunctor; pModality_pto_O_natural; pModality_pequiv_O_inverts; };
+} /* END */

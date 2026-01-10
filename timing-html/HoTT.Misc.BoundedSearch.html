@@ -1,0 +1,854 @@
+<html>
+<head>
+<title>BoundedSearch.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for BoundedSearch.v</h1>
+
+<div class="code" title="File: BoundedSearch.v
+Line: 1
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>(** * Bounded Search *)
+
+(** The main result of this file is [minimal_n], which say that if [P : nat -&gt; Type] is a family such that each [P n] is decidable and [{n &amp; P n}] is merely inhabited, then [{n &amp; P n}] is inhabited.  Since [P n] is decidable, it is sufficient to prove [{n &amp; merely (P n)}], and to do this, we prove the stronger claim that there is a *minimal* [n] satisfying [merely (P n)].  This stronger claim is a proposition, which is what makes the argument work.  Along the way, we also prove that [{ l : nat &amp; (l &lt;= n) * P l }] is decidable for each [n]. *)
+
+</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 4
+Time: 0.026s">
+<div class="time" style="width: 76.470588235294%"></div>
+<pre>Require Import Basics.Overture Basics.Decidable Basics.Trunc Basics.Tactics.</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 4
+Time: 0.004s">
+<div class="time" style="width: 11.764705882353%"></div>
+<pre>
+Require Import Types.Sigma Types.Prod.</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 5
+Time: 0.034s">
+<div class="time" style="width: 100%"></div>
+<pre>
+Require Import Truncations.Core.</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 6
+Time: 0.001s">
+<div class="time" style="width: 2.9411764705882%"></div>
+<pre>
+Require Import Spaces.Nat.Core.</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section bounded_search.</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 9
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context (P : nat -&gt; Type) (P_dec : forall n, Decidable (P n)).</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  
+  (** We open [type_scope] again after [nat_scope] in order to use the product type notation. *)
+ </pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Open Scope nat_scope.</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Local Open Scope type_scope.</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  
+  Local Definition minimal (n : nat) : Type := forall m : nat, P m -&gt; n &lt;= m.</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** If we assume [Funext], then [minimal n] is a proposition.  But to avoid needing [Funext], we propositionally truncate it. *)
+ </pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Definition min_n_Type : Type := { n : nat &amp; merely (P n) * merely (minimal n) }.</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Instance ishpropmin_n : IsHProp min_n_Type.</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 23
+Time: 0.001s">
+<div class="time" style="width: 2.9411764705882%"></div>
+<pre>
+    apply ishprop_sigma_disjoint.</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros n n' [p m] [p' m'].</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 25
+Time: 0.017s">
+<div class="time" style="width: 50%"></div>
+<pre>
+    strip_truncations.</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply leq_antisym.</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (m n' p').</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (m' n p).</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Definition smaller (n : nat) := { l : nat &amp; P l * minimal l * (l &lt;= n) }.</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Definition smaller_S (n : nat) (k : smaller n) : smaller (S n).</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct k as [l [[p m] z]].</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists l.</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    repeat split.</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1,2: assumption.</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 39
+Time: 0.001s">
+<div class="time" style="width: 2.9411764705882%"></div>
+<pre>
+    exact _.</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Definition bounded_search (n : nat) : smaller n + forall l : nat, (l &lt;= n) -&gt; not (P l).</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    induction n as [|n IHn].</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (dec (P 0)) as [h|n].</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> left.</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        exact (0; (h, fun _ _ =&gt; _, _)).</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> right.</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        intros l lleq0.</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        by rewrite (leq_antisym lleq0 _ : l = 0).</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct IHn as [s|n0].</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> left; by apply smaller_S.</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (dec (P n.+1)) as [h|nP].</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        *</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> left.</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          refine (n.+1; (h, _, _)).</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          intros m pm.</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          apply leq_iff_not_gt.</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          unfold gt, lt; intro leq_Sm_Sn.</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          apply leq_pred' in leq_Sm_Sn.</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          destruct (n0 m leq_Sm_Sn pm).</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        *</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> right.</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          by apply leq_ind_l.</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 63
+Time: 0.001s">
+<div class="time" style="width: 2.9411764705882%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Definition n_to_min_n (n : nat) (Pn : P n) : min_n_Type.</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct (bounded_search n) as [[l [[Pl ml] _]] | none].</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (l; (tr Pl, tr ml)).</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (none n (leq_refl n) Pn).</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Definition prop_n_to_min_n (P_inhab : hexists P) : min_n_Type.</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 74
+Time: 0.002s">
+<div class="time" style="width: 5.8823529411765%"></div>
+<pre>
+    strip_truncations.</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (n_to_min_n (P_inhab.1) (P_inhab.2)).</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition minimal_n (P_inhab : hexists P) : { n : nat &amp; P n }.</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct (prop_n_to_min_n P_inhab) as [n [p _]].</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (n; fst merely_inhabited_iff_inhabited_stable p).</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** As a consequence of [bounded_search] we deduce that bounded existence is decidable.  See also [decidable_exists_bounded_nat] in Spaces/Lists/Theory.v for a similar result with different dependencies. *)
+ </pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition decidable_search (n : nat) : Decidable { l : nat &amp; (l &lt;= n) * P l }.</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct (bounded_search n) as [s | no_l].</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct s as [l [[Pl min] l_leq_n]].</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (inl (l; (l_leq_n, Pl))).</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> right.</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      intros [l [l_leq_n Pl]].</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (no_l l l_leq_n Pl).</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 94
+Time: 0.001s">
+<div class="time" style="width: 2.9411764705882%"></div>
+<pre>
+
+End bounded_search.</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section bounded_search_alt_type.</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context (X : Type)
+          (e : nat &lt;~&gt; X)
+          (P : X -&gt; Type)
+          (P_dec : forall x, Decidable (P x))
+          (P_inhab : hexists P).</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Bounded search works for types equivalent to the naturals even without full univalence. *)
+ </pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition minimal_n_alt_type : {x : X &amp; P x}.</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    pose (P' n := P (e n)).</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    pose (P'_dec n := P_dec (e n) : Decidable (P' n)).</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    assert (P'_inhab : hexists P').</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 112
+Time: 0.002s">
+<div class="time" style="width: 5.8823529411765%"></div>
+<pre>
+      strip_truncations.</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr.</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      destruct P_inhab as [x p].</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exists (e ^-1 x).</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      unfold P'.</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite (eisretr e).</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact p.</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    }</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 118
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct (minimal_n P' P'_dec P'_inhab) as [n p'].</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact ((e n); p').</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 121
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End bounded_search_alt_type.</pre>
+</div>
+<div class="code" title="File: BoundedSearch.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

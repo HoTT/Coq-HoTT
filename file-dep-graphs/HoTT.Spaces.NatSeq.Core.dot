@@ -1,0 +1,26 @@
+digraph HoTT_Spaces_NatSeq_Core {
+  graph [ratio=0.5]
+  node [style=filled]
+Core_seq_agree_lt_iff_seq_agree_inductive [label="seq_agree_lt_iff_seq_agree_inductive", URL=<Core.html#seq_agree_lt_iff_seq_agree_inductive>, peripheries=3, fillcolor="#F070D1"] ;
+Core_seq_agree_lt_seq_agree_inductive [label="seq_agree_lt_seq_agree_inductive", URL=<Core.html#seq_agree_lt_seq_agree_inductive>, fillcolor="#F070D1"] ;
+Core_seq_agree_inductive_seq_agree_lt [label="seq_agree_inductive_seq_agree_lt", URL=<Core.html#seq_agree_inductive_seq_agree_lt>, fillcolor="#F070D1"] ;
+Core_seq_agree_inductive [label="seq_agree_inductive", URL=<Core.html#seq_agree_inductive>, fillcolor="#F070D1"] ;
+Core_seq_agree_lt [label="seq_agree_lt", URL=<Core.html#seq_agree_lt>, fillcolor="#F070D1"] ;
+Core_tail_cons [label="tail_cons", URL=<Core.html#tail_cons>, peripheries=3, fillcolor="#F070D1"] ;
+Core_seq_cons_head_tail [label="seq_cons_head_tail", URL=<Core.html#seq_cons_head_tail>, peripheries=3, fillcolor="#F070D1"] ;
+Core_seq_cons [label="seq_cons", URL=<Core.html#seq_cons>, fillcolor="#F070D1"] ;
+Core_seq_tail [label="seq_tail", URL=<Core.html#seq_tail>, fillcolor="#F070D1"] ;
+  Core_seq_agree_lt_iff_seq_agree_inductive -> Core_seq_agree_lt_seq_agree_inductive [] ;
+  Core_seq_agree_lt_iff_seq_agree_inductive -> Core_seq_agree_inductive_seq_agree_lt [] ;
+  Core_seq_agree_lt_seq_agree_inductive -> Core_seq_agree_inductive [] ;
+  Core_seq_agree_lt_seq_agree_inductive -> Core_seq_agree_lt [] ;
+  Core_seq_agree_inductive_seq_agree_lt -> Core_seq_agree_inductive [] ;
+  Core_seq_agree_inductive_seq_agree_lt -> Core_seq_agree_lt [] ;
+  Core_seq_agree_inductive -> Core_seq_tail [] ;
+  Core_tail_cons -> Core_seq_cons [] ;
+  Core_tail_cons -> Core_seq_tail [] ;
+  Core_seq_cons_head_tail -> Core_seq_cons [] ;
+  Core_seq_cons_head_tail -> Core_seq_tail [] ;
+subgraph cluster_Core { label="Core"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Core_seq_tail; Core_seq_cons; Core_seq_cons_head_tail; Core_tail_cons; Core_seq_agree_lt; Core_seq_agree_inductive; Core_seq_agree_inductive_seq_agree_lt; Core_seq_agree_lt_seq_agree_inductive; Core_seq_agree_lt_iff_seq_agree_inductive; };
+} /* END */

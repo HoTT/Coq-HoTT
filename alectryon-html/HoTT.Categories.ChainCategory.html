@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>ChainCategory.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-wsp"><span class="sd">(** * The category ω of (ℕ, ≤), and the chain categories [[n]] *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="chaincategory-v-chk0" style="display: none" type="checkbox"><label class="alectryon-input" for="chaincategory-v-chk0"><span class="kn">Require Import</span> Category.Subcategory.Full.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Category.Sigma.Univalent.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Category.Morphisms Category.Univalent Category.Strict.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> HoTT.Basics HoTT.Types HoTT.Spaces.Nat.Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Universe Polymorphism</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Implicit Arguments</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Generalizable All Variables</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Asymmetric Patterns</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> nat_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Definitions *)</span>
+<span class="sd">(** Quoting Wikipedia (http://en.wikipedia.org/wiki/Total_order##Chains):</span>
+
+<span class="sd">    While chain is sometimes merely a synonym for totally ordered set,</span>
+<span class="sd">    it can also refer to a totally ordered subset of some partially</span>
+<span class="sd">    ordered set. The latter definition has a crucial role in Zorn&#39;s</span>
+<span class="sd">    lemma. *)</span>
+<span class="sd">(** We take the convention that a &quot;chain&quot; is a totally ordered or</span>
+<span class="sd">    linearly ordered set; the corresponding category on that set has,</span>
+<span class="sd">    as morphisms, the order relation. *)</span>
+<span class="c">(* N.B. The notation here (including that [[n]] have as objects the</span>
+<span class="c">   set [{0, 1, ..., n}]) was originally suggested by David Spivak.</span>
+<span class="c">   It&#39;s possible that we should pick a different or more common</span>
+<span class="c">   terminology. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Module</span> <span class="nf">Export</span> Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  <span class="sd">(** *** [[ω]], the linear order on ℕ *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">omega</span> : PreCategory
+    := @Build_PreCategory
+         nat
+         leq
+         leq_refl
+         (<span class="kr">fun</span> <span class="nv">x</span> <span class="nv">y</span> <span class="nv">z</span> <span class="nv">p</span> <span class="nv">q</span> =&gt; leq_trans q p)
+         (<span class="kr">fun</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> =&gt; path_ishprop _ _)
+         (<span class="kr">fun</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> =&gt; path_ishprop _ _)
+         (<span class="kr">fun</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> =&gt; path_ishprop _ _)
+         _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** *** [[n]], a linear order on a finite set with [n + 1] elements *)</span>
+  <span class="sd">(** Using [n + 1] elements allows us to agree with the common</span>
+<span class="sd">      definition of an [n]-simplex, where a 0-simplex is a point, and</span>
+<span class="sd">      a 1-simplex has two end-points, etc. *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">chain</span> (<span class="nv">n</span> : nat) : PreCategory
+    := { m : omega | m &lt;= n }%category.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** TODO: Possibly generalize this to arbitrary sets with arbitrary</span>
+<span class="sd">      (total?) orders on them? *)</span>
+
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Module</span> <span class="nf">Export</span> ChainCategoryCoreNotations.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;[ n ]&quot;</span> := (chain n) : category_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">ChainCategoryCoreNotations</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">Core</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Module</span> <span class="nf">Export</span> Notations.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Include</span> ChainCategoryCoreNotations.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">Notations</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Module</span> <span class="nf">Utf8</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Export</span> Notations.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;[ ∞ ]&quot;</span> := omega : category_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;[ &#39;ω&#39; ]&quot;</span> := omega : category_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">Utf8</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Module</span> <span class="nf">Export</span> Strict.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="chaincategory-v-chk1" style="display: none" type="checkbox"><label class="alectryon-input" for="chaincategory-v-chk1"><span class="kn">Definition</span> <span class="nf">isstrict_omega</span> : IsStrictCategory omega.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">IsStrictCategory omega</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="chaincategory-v-chk2" style="display: none" type="checkbox"><label class="alectryon-input" for="chaincategory-v-chk2"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">IsStrictCategory omega</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="chaincategory-v-chk3" style="display: none" type="checkbox"><label class="alectryon-input" for="chaincategory-v-chk3"><span class="kn">Definition</span> <span class="nf">isstrict_chain</span> {<span class="nv">n</span>} : IsStrictCategory [n].</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsStrictCategory [n]</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="chaincategory-v-chk4" style="display: none" type="checkbox"><label class="alectryon-input" for="chaincategory-v-chk4"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsStrictCategory [n]</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">Strict</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Module</span> <span class="nf">Export</span> Univalent.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="chaincategory-v-chk5" style="display: none" type="checkbox"><label class="alectryon-input" for="chaincategory-v-chk5"><span class="kn">Instance</span> <span class="nf">iscategory_omega</span> : IsCategory omega.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">IsCategory omega</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="chaincategory-v-chk6" style="display: none" type="checkbox"><label class="alectryon-input" for="chaincategory-v-chk6"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">IsCategory omega</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="chaincategory-v-chk7" style="display: none" type="checkbox"><label class="alectryon-input" for="chaincategory-v-chk7"><span class="nb">intros</span> s d.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>s, d</var><span class="hyp-type"><b>: </b><span>omega</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsEquiv (idtoiso omega (y:=d))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="chaincategory-v-chk8" style="display: none" type="checkbox"><label class="alectryon-input" for="chaincategory-v-chk8"><span class="nb">refine</span> (isequiv_iff_hprop _ _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>s, d</var><span class="hyp-type"><b>: </b><span>omega</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsHProp (s &lt;~=~&gt; d)%category</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="chaincategory-v-chk9" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>s, d</var><span class="hyp-type"><b>: </b><span>omega</span></span></span><br></div><label class="goal-separator" for="chaincategory-v-chk9"><hr></label><div class="goal-conclusion">(s &lt;~=~&gt; d)%category -&gt; s = d</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="chaincategory-v-chka" style="display: none" type="checkbox"><label class="alectryon-input" for="chaincategory-v-chka">{</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>s, d</var><span class="hyp-type"><b>: </b><span>omega</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsHProp (s &lt;~=~&gt; d)%category</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (istrunc_equiv_istrunc _ (issig_isomorphic _ _ _)).</span><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="chaincategory-v-chkb" style="display: none" type="checkbox"><label class="alectryon-input" for="chaincategory-v-chkb">}</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>s, d</var><span class="hyp-type"><b>: </b><span>omega</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(s &lt;~=~&gt; d)%category -&gt; s = d</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="chaincategory-v-chkc" style="display: none" type="checkbox"><label class="alectryon-input" for="chaincategory-v-chkc">{</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>s, d</var><span class="hyp-type"><b>: </b><span>omega</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(s &lt;~=~&gt; d)%category -&gt; s = d</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">intro</span> m; <span class="nb">apply</span> leq_antisym; <span class="nb">apply</span> m.</span><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input">}</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="chaincategory-v-chkd" style="display: none" type="checkbox"><label class="alectryon-input" for="chaincategory-v-chkd"><span class="kn">Definition</span> <span class="nf">iscategory_chain</span> {<span class="nv">n</span>} : IsCategory [n].</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsCategory [n]</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="chaincategory-v-chke" style="display: none" type="checkbox"><label class="alectryon-input" for="chaincategory-v-chke"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsCategory [n]</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">Univalent</span>.</span></span></pre>
+</div>
+</div></body>
+</html>

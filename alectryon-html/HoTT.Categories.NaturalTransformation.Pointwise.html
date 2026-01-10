@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>Pointwise.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-wsp"><span class="sd">(** * Pointwise Natural Transformations *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="pointwise-v-chkac" style="display: none" type="checkbox"><label class="alectryon-input" for="pointwise-v-chkac"><span class="kn">Require Import</span> Category.Core Functor.Core NaturalTransformation.Core.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> FunctorCategory.Core NaturalTransformation.Paths Functor.Composition.Core NaturalTransformation.Composition.Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Functor.Pointwise.Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Universe Polymorphism</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Implicit Arguments</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Generalizable All Variables</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Asymmetric Patterns</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Recall that a &quot;pointwise&quot; functor is a functor [Aᴮ → Cᴰ] induced</span>
+<span class="sd">    by functors [D → B] and [A → C].  Given two functors [D → B] and a</span>
+<span class="sd">    natural transformation between them, there is an induced natural</span>
+<span class="sd">    transformation between the resulting functors between functor</span>
+<span class="sd">    categories, and similarly for two functors [A → C].  In this file,</span>
+<span class="sd">    we construct these natural transformations. They will be used to</span>
+<span class="sd">    construct the pointwise induced adjunction [Fˣ ⊣ Gˣ] of an</span>
+<span class="sd">    adjunction [F ⊣ G] for all categories [X]. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> morphism_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> category_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> functor_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> natural_transformation_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">pointwise</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `{Funext}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variables</span> <span class="nv">C</span> <span class="nv">D</span> <span class="nv">C&#39;</span> <span class="nv">D&#39;</span> : PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Ltac</span> <span class="nf">t</span> :=
+    path_natural_transformation; <span class="nb">simpl</span>;
+    <span class="nb">rewrite</span> &lt;- <span class="nl">?composition_of</span>;
+    <span class="kp">try</span> <span class="nb">apply</span> ap;
+    <span class="kp">first</span> [ <span class="nb">apply</span> commutes
+          | <span class="nb">symmetry</span>; <span class="nb">apply</span> commutes ].</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** ** [Tˣ] for a natural transformation [T : F → G] and a functor [x : C → D] *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="pointwise-v-chkad" style="display: none" type="checkbox"><label class="alectryon-input" for="pointwise-v-chkad"><span class="kn">Definition</span> <span class="nf">pointwise_l</span>
+             (<span class="nv">F</span> <span class="nv">G</span> : Functor C D)
+             (<span class="nv">T</span> : NaturalTransformation F G)
+             (<span class="nv">F&#39;</span> : Functor C&#39; D&#39;)
+  : NaturalTransformation (pointwise F F&#39;) (pointwise G F&#39;).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D, C', D'</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F, G</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br><span><var>T</var><span class="hyp-type"><b>: </b><span>NaturalTransformation F G</span></span></span><br><span><var>F'</var><span class="hyp-type"><b>: </b><span>Functor C&#39; D&#39;</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">NaturalTransformation (pointwise F F&#39;)
+  (pointwise G F&#39;)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="pointwise-v-chkae" style="display: none" type="checkbox"><label class="alectryon-input" for="pointwise-v-chkae"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D, C', D'</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F, G</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br><span><var>T</var><span class="hyp-type"><b>: </b><span>NaturalTransformation F G</span></span></span><br><span><var>F'</var><span class="hyp-type"><b>: </b><span>Functor C&#39; D&#39;</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">NaturalTransformation (pointwise F F&#39;)
+  (pointwise G F&#39;)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="pointwise-v-chkaf" style="display: none" type="checkbox"><label class="alectryon-input" for="pointwise-v-chkaf"><span class="nb">refine</span> (Build_NaturalTransformation
+              (pointwise F F&#39;) (pointwise G F&#39;)
+              (<span class="kr">fun</span> <span class="nv">f</span> : object (D -&gt; C&#39;) =&gt; (F&#39; o f) oL T)%natural_transformation
+              _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D, C', D'</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F, G</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br><span><var>T</var><span class="hyp-type"><b>: </b><span>NaturalTransformation F G</span></span></span><br><span><var>F'</var><span class="hyp-type"><b>: </b><span>Functor C&#39; D&#39;</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">s</span> <span class="nv">d</span> : (D -&gt; C&#39;)%category)
+(<span class="nv">m</span> : morphism (D -&gt; C&#39;) s d),
+(F&#39; o d oL T o (pointwise F F&#39;) _1 m)%morphism =
+((pointwise G F&#39;) _1 m o (F&#39; o s oL T))%morphism</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kp">abstract</span> t.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** ** [Fᵀ] for a natural transformation [T : F&#39; → G&#39;] and a functor [F : C → D] *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="pointwise-v-chkb0" style="display: none" type="checkbox"><label class="alectryon-input" for="pointwise-v-chkb0"><span class="kn">Definition</span> <span class="nf">pointwise_r</span>
+             (<span class="nv">F</span> : Functor C D)
+             (<span class="nv">F&#39;</span> <span class="nv">G&#39;</span> : Functor C&#39; D&#39;)
+             (<span class="nv">T&#39;</span> : NaturalTransformation F&#39; G&#39;)
+  : NaturalTransformation (pointwise F F&#39;) (pointwise F G&#39;).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D, C', D'</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br><span><var>F', G'</var><span class="hyp-type"><b>: </b><span>Functor C&#39; D&#39;</span></span></span><br><span><var>T'</var><span class="hyp-type"><b>: </b><span>NaturalTransformation F&#39; G&#39;</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">NaturalTransformation (pointwise F F&#39;)
+  (pointwise F G&#39;)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="pointwise-v-chkb1" style="display: none" type="checkbox"><label class="alectryon-input" for="pointwise-v-chkb1"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D, C', D'</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br><span><var>F', G'</var><span class="hyp-type"><b>: </b><span>Functor C&#39; D&#39;</span></span></span><br><span><var>T'</var><span class="hyp-type"><b>: </b><span>NaturalTransformation F&#39; G&#39;</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">NaturalTransformation (pointwise F F&#39;)
+  (pointwise F G&#39;)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="pointwise-v-chkb2" style="display: none" type="checkbox"><label class="alectryon-input" for="pointwise-v-chkb2"><span class="nb">refine</span> (Build_NaturalTransformation
+              (pointwise F F&#39;) (pointwise F G&#39;)
+              (<span class="kr">fun</span> <span class="nv">f</span> : object (D -&gt; C&#39;) =&gt; T&#39; oR f oR F)%natural_transformation
+              _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D, C', D'</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br><span><var>F', G'</var><span class="hyp-type"><b>: </b><span>Functor C&#39; D&#39;</span></span></span><br><span><var>T'</var><span class="hyp-type"><b>: </b><span>NaturalTransformation F&#39; G&#39;</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">s</span> <span class="nv">d</span> : (D -&gt; C&#39;)%category)
+(<span class="nv">m</span> : morphism (D -&gt; C&#39;) s d),
+(T&#39; oR d oR F o (pointwise F F&#39;) _1 m)%morphism =
+((pointwise F G&#39;) _1 m o (T&#39; oR s oR F))%morphism</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kp">abstract</span> t.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">pointwise</span>.</span></span></pre>
+</div>
+</div></body>
+</html>

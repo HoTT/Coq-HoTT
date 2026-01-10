@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>Biproducts.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-wsp"><span class="sd">(** * Biproducts in categories with zero objects</span>
+
+<span class="sd">    Objects that are simultaneously products and coproducts, fundamental</span>
+<span class="sd">    to additive category theory.</span>
+<span class="sd">*)</span>
+
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="biproducts-v-chk0" style="display: none" type="checkbox"><label class="alectryon-input" for="biproducts-v-chk0"><span class="kn">From</span> HoTT <span class="kn">Require Import</span> Basics Types.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">From</span> HoTT.Categories <span class="kn">Require Import</span> Category Functor.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">From</span> HoTT.Categories.Additive <span class="kn">Require Import</span> ZeroObjects.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Notation</span> <span class="nf">fst_type</span> := Basics.Overture.fst.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Notation</span> <span class="nf">snd_type</span> := Basics.Overture.snd.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** * Biproduct structures *)</span>
+
+<span class="sd">(** ** Biproduct data</span>
+
+<span class="sd">    The data of a biproduct consists of an object together with injection</span>
+<span class="sd">    and projection morphisms.</span>
+<span class="sd">*)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Record</span> <span class="nf">BiproductData</span> {<span class="nv">C</span> : PreCategory} (<span class="nv">X</span> <span class="nv">Y</span> : object C) := {
+  biproduct_obj : object C;
+
+  <span class="c">(* Coproduct structure: injections *)</span>
+  inl : morphism C X biproduct_obj;
+  inr : morphism C Y biproduct_obj;
+
+  <span class="c">(* Product structure: projections *)</span>
+  outl : morphism C biproduct_obj X;
+  outr : morphism C biproduct_obj Y
+}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Coercion</span> <span class="nf">biproduct_obj</span> : BiproductData &gt;-&gt; object.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> biproduct_obj {C X Y} b : <span class="nb">rename</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> inl {C X Y} b : <span class="nb">rename</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> inr {C X Y} b : <span class="nb">rename</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> outl {C X Y} b : <span class="nb">rename</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> outr {C X Y} b : <span class="nb">rename</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Biproduct axioms</span>
+
+<span class="sd">    The axioms that make biproduct data into an actual biproduct.</span>
+<span class="sd">    These ensure the projection-injection pairs behave correctly.</span>
+<span class="sd">*)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Record</span> <span class="nf">IsBiproduct</span> {<span class="nv">C</span> : PreCategory} `{Z : ZeroObject C} {X Y : object C} 
+                   (B : BiproductData X Y) := {
+  <span class="c">(* Projection-injection identities *)</span>
+  beta_l : (outl B o inl B = <span class="mi">1</span>)%morphism;
+  beta_r : (outr B o inr B = <span class="mi">1</span>)%morphism;
+
+  <span class="c">(* Mixed terms are zero *)</span>
+  mixed_l : (outl B o inr B)%morphism = zero_morphism Y X;
+  mixed_r : (outr B o inl B)%morphism = zero_morphism X Y
+}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> beta_l {C Z X Y B} i : <span class="nb">rename</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> beta_r {C Z X Y B} i : <span class="nb">rename</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> mixed_l {C Z X Y B} i : <span class="nb">rename</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> mixed_r {C Z X Y B} i : <span class="nb">rename</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Universal property of biproducts</span>
+
+<span class="sd">    The universal property states that morphisms into/out of the biproduct</span>
+<span class="sd">    are uniquely determined by their components.</span>
+<span class="sd">*)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Record</span> <span class="nf">HasBiproductUniversal</span> {<span class="nv">C</span> : PreCategory} {<span class="nv">X</span> <span class="nv">Y</span> : object C}
+  (<span class="nv">B</span> : BiproductData X Y) := {
+  <span class="c">(* Universal property as a coproduct *)</span>
+  coprod_universal : <span class="kr">forall</span> (<span class="nv">W</span> : object C) 
+    (<span class="nv">f</span> : morphism C X W) (<span class="nv">g</span> : morphism C Y W),
+    Contr {h : morphism C B W &amp; 
+           ((h o inl B = f)%morphism * (h o inr B = g)%morphism)};
+
+  <span class="c">(* Universal property as a product *)</span>
+  prod_universal : <span class="kr">forall</span> (<span class="nv">W</span> : object C) 
+    (<span class="nv">f</span> : morphism C W X) (<span class="nv">g</span> : morphism C W Y),
+    Contr {h : morphism C W B &amp; 
+           ((outl B o h = f)%morphism * (outr B o h = g)%morphism)}
+}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> coprod_universal {C X Y B} u W f g : <span class="nb">rename</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> prod_universal {C X Y B} u W f g : <span class="nb">rename</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Complete biproduct structure</span>
+
+<span class="sd">    A biproduct is biproduct data together with the proof that it satisfies</span>
+<span class="sd">    the biproduct axioms and universal property.</span>
+<span class="sd">*)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Class</span> <span class="nf">Biproduct</span> {<span class="nv">C</span> : PreCategory} `{Z : ZeroObject C} (X Y : object C) := {
+  biproduct_data : BiproductData X Y;
+  biproduct_is : IsBiproduct biproduct_data;
+  biproduct_universal : HasBiproductUniversal biproduct_data
+}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Coercion</span> <span class="nf">biproduct_data</span> : Biproduct &gt;-&gt; BiproductData.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> biproduct_data {C Z X Y} b : <span class="nb">rename</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> biproduct_is {C Z X Y} b : <span class="nb">rename</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> biproduct_universal {C Z X Y} b : <span class="nb">rename</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** * Biproduct operations *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">BiproductOperations</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> {<span class="nv">C</span> : PreCategory} `{Z : ZeroObject C} {X Y : object C}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> (<span class="nv">B</span> : Biproduct X Y).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** ** Uniqueness from universal property *)</span>
+
+  <span class="sd">(** The coproduct universal morphism and its properties. *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">biproduct_coprod_universal</span> (<span class="nv">W</span> : object C) 
+    (<span class="nv">f</span> : morphism C X W) (<span class="nv">g</span> : morphism C Y W)
+    : {h : morphism C B W &amp; ((h o inl B = f)%morphism * (h o inr B = g)%morphism)}
+    := @center _ (coprod_universal (biproduct_universal B) W f g).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** Extract the unique morphism from the coproduct universal property. *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">biproduct_coprod_mor</span> (<span class="nv">W</span> : object C) 
+    (<span class="nv">f</span> : morphism C X W) (<span class="nv">g</span> : morphism C Y W)
+    : morphism C B W
+    := (biproduct_coprod_universal W f g).<span class="mi">1</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">biproduct_coprod_beta_l</span> (<span class="nv">W</span> : object C)
+    (<span class="nv">f</span> : morphism C X W) (<span class="nv">g</span> : morphism C Y W)
+    : (biproduct_coprod_mor W f g o inl B = f)%morphism
+    := fst_type (biproduct_coprod_universal W f g).<span class="mi">2</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">biproduct_coprod_beta_r</span> (<span class="nv">W</span> : object C)
+    (<span class="nv">f</span> : morphism C X W) (<span class="nv">g</span> : morphism C Y W)
+    : (biproduct_coprod_mor W f g o inr B = g)%morphism
+    := snd_type (biproduct_coprod_universal W f g).<span class="mi">2</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">biproduct_coprod_unique</span> (<span class="nv">W</span> : object C)
+    (<span class="nv">f</span> : morphism C X W) (<span class="nv">g</span> : morphism C Y W)
+    (<span class="nv">h</span> : morphism C B W)
+    (<span class="nv">Hl</span> : (h o inl B = f)%morphism)
+    (<span class="nv">Hr</span> : (h o inr B = g)%morphism)
+    : h = biproduct_coprod_mor W f g
+    := ap pr1 (contr (h; (Hl, Hr)))^.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** The product universal morphism and its properties. *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">biproduct_prod_universal</span> (<span class="nv">W</span> : object C) 
+    (<span class="nv">f</span> : morphism C W X) (<span class="nv">g</span> : morphism C W Y)
+    : {h : morphism C W B &amp; ((outl B o h = f)%morphism * (outr B o h = g)%morphism)}
+    := @center _ (prod_universal (biproduct_universal B) W f g).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** Extract the unique morphism from the product universal property. *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">biproduct_prod_mor</span> (<span class="nv">W</span> : object C) 
+    (<span class="nv">f</span> : morphism C W X) (<span class="nv">g</span> : morphism C W Y)
+    : morphism C W B
+    := (biproduct_prod_universal W f g).<span class="mi">1</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">biproduct_prod_beta_l</span> (<span class="nv">W</span> : object C)
+    (<span class="nv">f</span> : morphism C W X) (<span class="nv">g</span> : morphism C W Y)
+    : (outl B o biproduct_prod_mor W f g = f)%morphism
+    := fst_type (biproduct_prod_universal W f g).<span class="mi">2</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">biproduct_prod_beta_r</span> (<span class="nv">W</span> : object C)
+    (<span class="nv">f</span> : morphism C W X) (<span class="nv">g</span> : morphism C W Y)
+    : (outr B o biproduct_prod_mor W f g = g)%morphism
+    := snd_type (biproduct_prod_universal W f g).<span class="mi">2</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">biproduct_prod_unique</span> (<span class="nv">W</span> : object C)
+    (<span class="nv">f</span> : morphism C W X) (<span class="nv">g</span> : morphism C W Y)
+    (<span class="nv">h</span> : morphism C W B)
+    (<span class="nv">Hl</span> : (outl B o h = f)%morphism)
+    (<span class="nv">Hr</span> : (outr B o h = g)%morphism)
+    : h = biproduct_prod_mor W f g
+    := ap pr1 (contr (h; (Hl, Hr)))^.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">BiproductOperations</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** * Export hints *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Hint Resolve</span> 
+  biproduct_coprod_beta_l biproduct_coprod_beta_r
+  biproduct_prod_beta_l biproduct_prod_beta_r
+  : biproduct.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Hint Rewrite</span> 
+  @zero_morphism_left @zero_morphism_right
+  : biproduct_simplify.</span></span></pre>
+</div>
+</div></body>
+</html>

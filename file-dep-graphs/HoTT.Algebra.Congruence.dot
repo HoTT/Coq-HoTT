@@ -1,0 +1,21 @@
+digraph HoTT_Algebra_Congruence {
+  graph [ratio=0.5]
+  node [style=filled]
+Congruence_iscong [label="iscong", URL=<Congruence.html#iscong>, peripheries=3, fillcolor="#F070D1"] ;
+Congruence_IsCongruence_sind [label="IsCongruence_sind", URL=<Congruence.html#IsCongruence_sind>, peripheries=3, fillcolor="#F070D1"] ;
+Congruence_IsCongruence_rec [label="IsCongruence_rec", URL=<Congruence.html#IsCongruence_rec>, peripheries=3, fillcolor="#F070D1"] ;
+Congruence_IsCongruence_ind [label="IsCongruence_ind", URL=<Congruence.html#IsCongruence_ind>, peripheries=3, fillcolor="#7FFFD4"] ;
+Congruence_IsCongruence_rect [label="IsCongruence_rect", URL=<Congruence.html#IsCongruence_rect>, fillcolor="#F070D1"] ;
+Congruence_Build_IsCongruence [label="Build_IsCongruence", URL=<Congruence.html#Build_IsCongruence>, fillcolor="#7FAAFF"] ;
+Congruence_IsCongruence [label="IsCongruence", URL=<Congruence.html#IsCongruence>, fillcolor="#E2CDFA"] ;
+  Congruence_iscong -> Congruence_IsCongruence [] ;
+  Congruence_IsCongruence_sind -> Congruence_Build_IsCongruence [] ;
+  Congruence_IsCongruence_sind -> Congruence_IsCongruence [] ;
+  Congruence_IsCongruence_rec -> Congruence_IsCongruence_rect [] ;
+  Congruence_IsCongruence_ind -> Congruence_Build_IsCongruence [] ;
+  Congruence_IsCongruence_ind -> Congruence_IsCongruence [] ;
+  Congruence_IsCongruence_rect -> Congruence_Build_IsCongruence [] ;
+  Congruence_IsCongruence_rect -> Congruence_IsCongruence [] ;
+subgraph cluster_Congruence { label="Congruence"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Congruence_IsCongruence; Congruence_Build_IsCongruence; Congruence_IsCongruence_rect; Congruence_IsCongruence_ind; Congruence_IsCongruence_rec; Congruence_IsCongruence_sind; Congruence_iscong; };
+} /* END */

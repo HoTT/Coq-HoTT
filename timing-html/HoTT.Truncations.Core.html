@@ -1,0 +1,1944 @@
+<html>
+<head>
+<title>Core.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Core.v</h1>
+
+<div class="code" title="File: Core.v
+Line: 1
+Time: 0.045s">
+<div class="time" style="width: 71.428571428571%"></div>
+<pre>From HoTT Require Import Basics Types WildCat.Core WildCat.Universe HFiber.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 1
+Time: 0.019s">
+<div class="time" style="width: 30.15873015873%"></div>
+<pre>
+Require Import Modalities.Modality.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 2
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+(** Users of this file almost always want to be able to write [Tr n] for both a [Modality] and a [ReflectiveSubuniverse], so they want the coercion [modality_to_reflective_subuniverse]: *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Require Export (coercions) Modalities.Modality.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Truncations of types *)
+
+</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Open Scope path_scope.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Generalizable Variables A X n.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** The definition *)
+
+(** The definition of [Trunc n], the n-truncation of a type.
+
+If Coq supported higher inductive types natively, we would construct this as something like:
+
+   Inductive Trunc n (A : Type) : Type :=
+   | tr : A -&gt; Trunc n A
+   | istrunc_truncation : forall (f : Sphere n.+1 -&gt; Trunc n A)
+       (x : Sphere n.+1), f x = f North.
+
+However, while we are faking our higher-inductives anyway, we can take some shortcuts, rather than translating the definition above.  Firstly, we directly posit a “constructor” giving truncatedness, rather than rephrasing it in terms of maps of spheres.  Secondly, we omit the “computation rule” for this constructor, since it is implied by truncatedness of the result type (and, for essentially that reason, is never wanted in practice anyway).
+*)
+
+</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Module Export Trunc.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Cumulative Private Inductive Trunc (n : trunc_index) (A :Type) : Type :=
+    tr : A -&gt; Trunc n A.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Arguments tr {n A} a.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Because [IsTrunc] is cumulative, we can use only one universe variable here. *)
+ </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export] Instance istrunc_truncation@{i} (n : trunc_index) (A : Type@{i})
+    : IsTrunc@{i} n (Trunc@{i} n A).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Admitted.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 31
+Time: 0.001s">
+<div class="time" style="width: 1.5873015873016%"></div>
+<pre>
+
+  Definition Trunc_ind {n A}
+    (P : Trunc n A -&gt; Type) {Pt : forall aa, IsTrunc n (P aa)}
+    : (forall a, P (tr a)) -&gt; (forall aa, P aa)
+    := fun f aa =&gt; match aa with tr a =&gt; fun _ =&gt; f a end Pt.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End Trunc.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The non-dependent version of the eliminator. *)
+
+</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 41
+Time: 0.001s">
+<div class="time" style="width: 1.5873015873016%"></div>
+<pre>Definition Trunc_rec {n A X} `{IsTrunc n X}
+  : (A -&gt; X) -&gt; (Trunc n A -&gt; X)
+  := Trunc_ind (fun _ =&gt; X).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 43
+Time: 0.001s">
+<div class="time" style="width: 1.5873015873016%"></div>
+<pre>
+
+Definition Trunc_rec_tr n {A : Type}
+  : Trunc_rec (A:=A) (tr (n:=n)) == idmap
+  := Trunc_ind _ (fun a =&gt; idpath).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Tactic to remove truncations in hypotheses if possible *)
+
+</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Ltac strip_truncations :=
+  progress repeat
+    match goal with
+    | [ T : _ |- _ ]
+      =&gt; revert_opaque T;
+        refine (@Trunc_ind _ _ _ _ _);
+        (* Ensure that we didn't generate more than one subgoal, i.e. that the goal was appropriately truncated: *)
+        [];
+        intro T
+    end.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** See [strip_reflections] and [strip_modalities] for generalizations to other reflective subuniverses and modalities.  We provide this version because it sometimes needs fewer universes (due to the cumulativity of [Trunc]).  However, that same cumulativity sometimes causes free universe variables.  For a hypothesis of type [Trunc@{i} X], we can use [Trunc_ind@{i j}], but sometimes Coq uses [Trunc_ind@{k j}] with [i &lt;= k] and [k] otherwise free.  In these cases, [strip_reflections] and/or [strip_modalities] may generate fewer universe variables. *)
+
+(** ** [Trunc] is a modality *)
+
+</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Tr (n : trunc_index) : Modality.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 65
+Time: 0.003s">
+<div class="time" style="width: 4.7619047619048%"></div>
+<pre>
+  srapply (Build_Modality (fun A =&gt; IsTrunc n A)); cbn.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 67
+Time: 0.001s">
+<div class="time" style="width: 1.5873015873016%"></div>
+<pre> intros A B ? f ?; exact (istrunc_isequiv_istrunc A f).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (Trunc n).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros; apply istrunc_truncation.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros A; exact tr.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros A B ? f oa; cbn in *.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (Trunc_ind B f oa).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros; reflexivity.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (@istrunc_paths' n).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We don't usually declare modalities as coercions, but this particular one is convenient so that lemmas about (for instance) connected maps can be applied to truncation modalities without the user/reader needing to be (particularly) aware of the general notion of modality. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Coercion Tr : trunc_index &gt;-&gt; Modality.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+(** However, if the coercion is not printed, then we get things like [Tr (-1) X] being printed as [(-1) X], which is terribly confusing.  So we tell Coq to always print this coercion.  This does mean that although the user can type things like [IsConnected n X], it will always be displayed back as [IsConnected (Tr n) X]. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Add Printing Coercion Tr.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section TruncationModality.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context (n : trunc_index).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition trunc_iff_isequiv_truncation (A : Type)
+    : IsTrunc n A &lt;-&gt; IsEquiv (@tr n A)
+    := inO_iff_isequiv_to_O (Tr n) A.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance isequiv_tr A `{IsTrunc n A} : IsEquiv (@tr n A)
+    := fst (trunc_iff_isequiv_truncation A) _.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition equiv_tr (A : Type) `{IsTrunc n A}
+    : A &lt;~&gt; Tr n A
+  := Build_Equiv _ _ (@tr n A) _.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition untrunc_istrunc {A : Type} `{IsTrunc n A}
+    : Tr n A -&gt; A
+    := (@tr n A)^-1.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** ** Functoriality *)
+
+  (** Since a modality lives on a single universe, by default if we simply define [Trunc_functor] to be [O_functor] then it would force [X] and [Y] to live in the same universe.  But since we defined [Trunc] as a cumulative inductive, if we add universe annotations we can make [Trunc_functor] more universe-polymorphic than [O_functor] is.  This is sometimes useful.  *)
+ </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Trunc_functor@{i j k | i &lt;= k, j &lt;= k} {X : Type@{i}} {Y : Type@{j}} (f : X -&gt; Y)
+    : Tr@{i} n X -&gt; Tr@{j} n Y
+    := O_functor@{k k k} (Tr n) f.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance is0functor_Tr : Is0Functor (Tr n)
+    := Build_Is0Functor (Tr n) (@Trunc_functor).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance Trunc_functor_isequiv {X Y : Type}
+    (f : X -&gt; Y) `{IsEquiv _ _ f}
+    : IsEquiv (Trunc_functor f)
+    := isequiv_O_functor (Tr n) f.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition Trunc_functor_equiv {X Y : Type} (f : X &lt;~&gt; Y)
+    : Tr n X &lt;~&gt; Tr n Y
+    := equiv_O_functor (Tr n) f.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 115
+Time: 0.001s">
+<div class="time" style="width: 1.5873015873016%"></div>
+<pre>
+
+  Definition Trunc_functor_compose {X Y Z} (f : X -&gt; Y) (g : Y -&gt; Z)
+    : Trunc_functor (g o f) == Trunc_functor g o Trunc_functor f
+    := O_functor_compose (Tr n) f g.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition Trunc_functor_idmap (X : Type)
+    : @Trunc_functor X X idmap == idmap
+    := O_functor_idmap (Tr n) X.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition equiv_Trunc_prod_cmp {X Y}
+    : Tr n (X * Y) &lt;~&gt; Tr n X * Tr n Y
+    := equiv_O_prod_cmp (Tr n) X Y.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 127
+Time: 0.001s">
+<div class="time" style="width: 1.5873015873016%"></div>
+<pre>
+
+  #[export] Instance is1functor_Tr : Is1Functor (Tr n).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 130
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply Build_Is1Functor.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 131
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply @O_functor_homotopy.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact @Trunc_functor_idmap.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact @Trunc_functor_compose.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 135
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End TruncationModality.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 137
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We have to teach Coq to translate back and forth between [IsTrunc n] and [In (Tr n)]. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance inO_tr_istrunc {n : trunc_index} (A : Type) `{IsTrunc n A}
+  : In (Tr n) A.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  assumption.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Having both of these as [Instance]s would cause infinite loops. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 145
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition istrunc_inO_tr {n : trunc_index} (A : Type) `{In (Tr n) A}
+  : IsTrunc n A.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 147
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  assumption.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 148
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Instead, we make the latter an immediate instance, but with high cost (i.e. low priority) so that it doesn't override the ordinary lemmas about truncation.  Unfortunately, [Hint Immediate] doesn't allow specifying a cost, so we use [Hint Extern] instead. *)
+(** Hint Immediate istrunc_inO_tr : typeclass_instances. *)
+(** See https://github.com/coq/coq/issues/11697 *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export]
+Hint Extern 1000 (IsTrunc _ _) =&gt; simple apply istrunc_inO_tr; solve [ trivial ] : typeclass_instances.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 154
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+(** This doesn't seem to be quite the same as [Hint Immediate] with a different cost either, though.  *)
+
+(** Unfortunately, this isn't perfect; Coq still can't always find [In n] hypotheses in the context when it wants [IsTrunc].  You can always apply [istrunc_inO_tr] explicitly, but sometimes it also works to just [pose] it into the context (at the risk of causing loops in typeclass search). *)
+
+(** We do the same for [IsTruncMap n] and [MapIn (Tr n)]. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance mapinO_tr_istruncmap {n : trunc_index} {A B : Type}
+  (f : A -&gt; B) `{IsTruncMap n A B f}
+  : MapIn (Tr n) f.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  assumption.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 163
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 164
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition istruncmap_mapinO_tr {n : trunc_index} {A B : Type}
+  (f : A -&gt; B) `{MapIn (Tr n) _ _ f}
+  : IsTruncMap n f.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  assumption.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+#[export]
+Hint Immediate istruncmap_mapinO_tr : typeclass_instances.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 174
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** How stability and decidability interact with truncation *)
+
+(** For [n &gt;= -1], a stable type is logically equivalent to its [n]-truncation. (It follows that this is true for decidable types as well.) *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition trunc_inhabited_iff_inhabited_stable (n : trunc_index) {A} {A_stable : Stable A}
+  : Tr n.+1 A &lt;-&gt; A.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 179
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 180
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  nrefine (_, tr).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 181
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro ma.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 182
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply stable; intro na.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 183
+Time: 0.013s">
+<div class="time" style="width: 20.634920634921%"></div>
+<pre>
+  strip_truncations.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 184
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (na ma).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 186
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The most common case involves [Tr (-1)], so we give it its own name. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition merely_inhabited_iff_inhabited_stable {A} {A_stable : Stable A}
+  : Tr (-1) A &lt;-&gt; A
+  := trunc_inhabited_iff_inhabited_stable (-2).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 190
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance decidable_trunc_decidable (n : trunc_index) {A} {A_decidable : Decidable A}
+  : Decidable (Tr n.+1 A).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 193
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 194
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rapply decidable_iff.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 195
+Time: 0.001s">
+<div class="time" style="width: 1.5873015873016%"></div>
+<pre>
+  symmetry; rapply trunc_inhabited_iff_inhabited_stable.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** A few special things about the (-2)-truncation *)
+
+(** The type of contractible types is contractible. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 201
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition contr_tr_minus_two@{u su | u &lt; su} `{Univalence}
+  : Contr (Type_@{u su} (Tr (-2))).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 202
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 203
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (Build_Contr _ (exist@{su su} _ (Unit : Type@{u}) (inO_tr_istrunc _))).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 204
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [C ContrC].</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 205
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply equiv_path_sigma_hprop.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply path_universe_uncurried.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 207
+Time: 0.001s">
+<div class="time" style="width: 1.5873015873016%"></div>
+<pre>
+  symmetry; exact equiv_contr_unit.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 209
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** A few special things about the (-1)-truncation *)
+
+</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 212
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Open Scope trunc_scope.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 212
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We define [merely A] to be an inhabitant of the universe [hProp] of hprops, rather than a type.  We can always treat it as a type because there is a coercion, but this means that if we need an element of [hProp] then we don't need a separate name for it. *)
+
+</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 215
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition merely (A : Type@{i}) : HProp@{i} := Build_HProp (Tr (-1) A).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 215
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition hexists {X} (P : X -&gt; Type) : HProp := merely (sig P).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 217
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition hor (P Q : Type) : HProp := merely (P + Q).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 219
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Declare Scope hprop_scope.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 221
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Notation "A \/ B" := (hor A B) : hprop_scope.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 222
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition himage {X Y} (f : X -&gt; Y) := image (Tr (-1)) f.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 224
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Surjections *)
+
+(** Surjections are the (-1)-connected maps, but they can be characterized more simply since an inhabited hprop is automatically contractible. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Notation IsSurjection := (IsConnMap (Tr (-1))).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition BuildIsSurjection {A B} (f : A -&gt; B)
+  : (forall b, merely (hfiber f b)) -&gt; IsSurjection f.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 231
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 232
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros H b; refine (contr_inhabited_hprop _ _).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 233
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply H.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 234
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 235
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A family of types is pointwise merely inhabited if and only if the corresponding fibration is surjective. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 237
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma iff_merely_issurjection {X : Type} (P : X -&gt; Type)
+  : (forall x, merely (P x)) &lt;-&gt; IsSurjection (pr1 : {x : X &amp; P x} -&gt; X).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 238
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 239
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (iff_compose _ (iff_forall_inO_mapinO_pr1 (Conn _) P)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 240
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply iff_functor_forall; intro a.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 241
+Time: 0.001s">
+<div class="time" style="width: 1.5873015873016%"></div>
+<pre>
+  symmetry; exact (iff_contr_hprop (Tr (-1) (P a))).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 242
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 243
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma equiv_merely_issurjection `{Funext} {X : Type} (P : X -&gt; Type)
+  : (forall x, merely (P x)) &lt;~&gt; IsSurjection (pr1 : {x : X &amp; P x} -&gt; X).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 246
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 247
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> (* Can also be proved from equiv_forall_inO_mapinO_pr1. *)
+ </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 248
+Time: 0.002s">
+<div class="time" style="width: 3.1746031746032%"></div>
+<pre>exact (equiv_iff_hprop_uncurried (iff_merely_issurjection P)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 248
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 249
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Surjections cancel on the right *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 251
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma cancelR_issurjection {A B C : Type} (f : A -&gt; B) (g : B -&gt; C)
+      (isconn : IsSurjection (g o f))
+  : IsSurjection g.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 253
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 254
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro c.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 255
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rapply contr_inhabited_hprop.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 256
+Time: 0.002s">
+<div class="time" style="width: 3.1746031746032%"></div>
+<pre>
+  rapply (Trunc_functor _ (X:= (hfiber (g o f) c))).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 257
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 258
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [a p].</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 258
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (f a; p).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 259
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 260
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply center, isconn.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 260
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 261
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Retractions are surjective. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 263
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition issurj_retr {X Y : Type} {r : X -&gt; Y} (s : Y -&gt; X) (h : forall y:Y, r (s y) = y)
+  : IsSurjection r.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 264
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 265
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro y.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 266
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rapply contr_inhabited_hprop.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 267
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (tr (s y; h y)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 268
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 269
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Embeddings *)
+
+(** For any point in the image of an embedding, the fibers are contractible. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 273
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance contr_hfiber_emb {A B} (a : A) (f : A -&gt; B)
+  `{IsEmbedding f}
+  : Contr (hfiber f (f a)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 275
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 276
+Time: 0.001s">
+<div class="time" style="width: 1.5873015873016%"></div>
+<pre>
+  srapply contr_inhabited_hprop.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 277
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (a; idpath (f a)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 277
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 278
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Since embeddings are the (-1)-truncated maps, a map that is both a surjection and an embedding is an equivalence. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 280
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition isequiv_surj_emb {A B} (f : A -&gt; B)
+  `{IsSurjection f} `{IsEmbedding f}
+  : IsEquiv f.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 282
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 283
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (@isequiv_conn_ino_map (Tr (-1))); assumption.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 284
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 285
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** As a corollary, it follows that if [i o f] is an equivalence and [i] is an embedding, then [f] is an equivalence. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 287
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition isequiv_isequiv_compose_embedding {X Y Z : Type}
+  {f : X -&gt; Y} (i : Y -&gt; Z) `{IsEmbedding i}
+  `{!IsEquiv (i o f)}
+  : IsEquiv f.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 290
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 291
+Time: 0.001s">
+<div class="time" style="width: 1.5873015873016%"></div>
+<pre>
+  rapply (cancelL_isequiv i).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 292
+Time: 0.001s">
+<div class="time" style="width: 1.5873015873016%"></div>
+<pre>
+  refine (isequiv_surj_emb i).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 293
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rapply (cancelR_issurjection f).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 294
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 295
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** If [X] is a set and [f : Y -&gt; Z] is a surjection, then [- o f] is an embedding. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 297
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition isembedding_precompose_surjection_hset `{Funext} {X Y Z : Type}
+  `{IsHSet X} (f : Y -&gt; Z) `{IsSurjection f}
+  : IsEmbedding (fun phi : Z -&gt; X =&gt; phi o f).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 299
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 300
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros phi; apply istrunc_S.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 301
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros g0 g1; cbn.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 302
+Time: 0.01s">
+<div class="time" style="width: 15.873015873016%"></div>
+<pre>
+  rapply contr_inhabited_hprop.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 303
+Time: 0.004s">
+<div class="time" style="width: 6.3492063492063%"></div>
+<pre>
+  apply path_sigma_hprop, equiv_path_arrow.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 304
+Time: 0.003s">
+<div class="time" style="width: 4.7619047619048%"></div>
+<pre>
+  rapply conn_map_elim; intro y.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 305
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (ap10 (g0.2 @ g1.2^) y).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 306
+Time: 0.001s">
+<div class="time" style="width: 1.5873015873016%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 307
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We next prove that [paths : X -&gt; (X -&gt; Type)] is an embedding. This was proved by Escardó as Lemma 15 in "Injective types in univalent mathematics", but we give an argument similar to the proof of Theorem 2.25 of CORS. *)
+
+(** This will be an inverse to [ap paths].  We'll want to show that it is an embedding, so we'll construct it out of pieces that are clearly equivalences, except for one step, [equiv_fun]. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 311
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ap_paths_inverse `{Univalence} {X : Type} (x1 x2 : X)
+  : paths x1 = paths x2 -&gt; x1 = x2.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 312
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 313
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_ o @equiv_ap10 _ X Type (paths x1) (paths x2)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 314
+Time: 0.001s">
+<div class="time" style="width: 1.5873015873016%"></div>
+<pre>
+  refine (_ o equiv_functor_forall_id (fun y =&gt; equiv_equiv_path (x1 = y) (x2 = y))).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 315
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_ o functor_forall_id (fun y =&gt; @equiv_fun (x1 = y) (x2 = y))).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 316
+Time: 0.001s">
+<div class="time" style="width: 1.5873015873016%"></div>
+<pre>
+  refine (_ o (equiv_paths_ind x1 (fun y p =&gt; x2 = y))^-1%equiv).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 317
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (equiv_path_inverse x2 x1).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 318
+Time: 0.001s">
+<div class="time" style="width: 1.5873015873016%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 319
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A Yoneda-like embedding for path types: [paths : X -&gt; (X -&gt; Type)] is an embedding. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 321
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition isembedding_paths `{Univalence} {X : Type@{u}} : IsEmbedding (@paths X).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 321
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 322
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* To show that [paths] is an embedding, it suffices to show that [ap paths : x1 = x2 -&gt; (paths x1) = (paths x2)] is an equivalence. *)
+ </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 324
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>snapply isembedding_isequiv_ap.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 324
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x1 x2.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 325
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* And for that, it suffices to show that [i o (ap paths)] is an equivalence for a well-chosen embedding [i]. *)
+ </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 327
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>snapply (isequiv_isequiv_compose_embedding (ap_paths_inverse x1 x2)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 327
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 328
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> (* [ap_paths_inverse x1 x2] is an embedding since it is a composite of four equivalences and one embedding.  We can group these into three parts. *)
+   </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 329
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>unfold ap_paths_inverse.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 329
+Time: 0.001s">
+<div class="time" style="width: 1.5873015873016%"></div>
+<pre>
+    nrefine (mapinO_compose (O:=Tr (-1)) _ (equiv_path_inverse x2 x1 oE _)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 330
+Time: 0.003s">
+<div class="time" style="width: 4.7619047619048%"></div>
+<pre>
+    2: exact _.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 331
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> (* The second part is an equivalence, so it's an embedding. *)
+   </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 332
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>nrefine (mapinO_compose _ (functor_forall_id _)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 332
+Time: 0.034s">
+<div class="time" style="width: 53.968253968254%"></div>
+<pre>
+    1: exact _.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 333
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> (* The first part is an equivalence, so it's an embedding. *)
+   </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 334
+Time: 0.063s">
+<div class="time" style="width: 100%"></div>
+<pre>rapply mapinO_functor_forall_id.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 334
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro y.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 335
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact isembedding_equiv_fun.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 336
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 337
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> (* The composite is an equivalence because it is homotopic to the identity. *)
+   </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 338
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>simpl.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 338
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply (isequiv_homotopic idmap).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 339
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros [].</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 340
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    reflexivity.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 341
+Time: 0.002s">
+<div class="time" style="width: 3.1746031746032%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 342
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Iterated truncations *)
+
+(** Compare to [O_leq_Tr] and [O_strong_leq_Tr] in SeparatedTrunc.v. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 346
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition O_leq_Tr_leq {n m : trunc_index} (Hmn : m &lt;= n)
+  : O_leq (Tr m) (Tr n).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 347
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 348
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros A; rapply istrunc_leq.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 349
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 350
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition Trunc_min n m X : Tr (trunc_index_min n m) X &lt;~&gt; Tr n (Tr m X).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 352
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 353
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct (trunc_index_min_path n m) as [p|q].</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 354
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 355
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assert (l := trunc_index_min_leq_right n m).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 355
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct p^; clear p.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 356
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply (Build_Equiv _ _ (Trunc_functor _ tr)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 357
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    napply O_inverts_conn_map.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 358
+Time: 0.001s">
+<div class="time" style="width: 1.5873015873016%"></div>
+<pre>
+    rapply (conn_map_O_leq _ (Tr m)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 359
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rapply O_leq_Tr_leq.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 360
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 361
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assert (l := trunc_index_min_leq_left n m).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 361
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct q^; clear q.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 362
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply equiv_tr.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 363
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply istrunc_leq.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 364
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 365
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition Trunc_swap n m X : Tr n (Tr m X) &lt;~&gt; Tr m (Tr n X).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 367
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 368
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (Trunc_min m n _ oE equiv_transport (fun k =&gt; Tr k _) _ oE (Trunc_min n m _)^-1).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 369
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply trunc_index_min_swap.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 370
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 372
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** If you are looking for a theorem about truncation, you may want to read the note "Finding Theorems" in "STYLE.md". *)
+
+</pre>
+</div>
+</body>
+</html>
+

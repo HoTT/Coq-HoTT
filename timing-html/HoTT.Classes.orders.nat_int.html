@@ -1,0 +1,1442 @@
+<html>
+<head>
+<title>nat_int.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for nat_int.v</h1>
+
+<div class="code" title="File: nat_int.v
+Line: 1
+Time: 0.079s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import
+  HoTT.Classes.interfaces.abstract_algebra
+  HoTT.Classes.interfaces.orders
+  HoTT.Classes.theory.naturals
+  HoTT.Classes.theory.rings.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 5
+Time: 0.001s">
+<div class="time" style="width: 1.2658227848101%"></div>
+<pre>
+Require Export
+  HoTT.Classes.orders.semirings.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Generalizable Variables N R f.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 9
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section Univ.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Context `{Funext} `{Univalence}.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(**
+We axiomatize the order on the naturals and the integers as a non trivial
+pseudo semiring order that satisfies the biinduction principle. We prove
+some results that hold for the order on the naturals and the integers.
+In particular, we show that given another non trivial pseudo semiring order
+(that not necessarily has to satisfy the biinduction principle, for example
+the rationals or the reals), any morphism to it is an order embedding.
+*)</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 21
+Time: 0.004s">
+<div class="time" style="width: 5.0632911392405%"></div>
+<pre>Lemma to_semiring_nonneg `{FullPseudoSemiRingOrder N}
+  `{!NaturalsToSemiRing N} `{!Naturals N} `{FullPseudoSemiRingOrder R}
+  `{!IsSemiCRing R}
+  `{!IsSemiRingPreserving (f : N -&gt; R)} n : 0 ≤ f n.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+revert n.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 26
+Time: 0.001s">
+<div class="time" style="width: 1.2658227848101%"></div>
+<pre> apply naturals.induction.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+-</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite (preserves_0 (f:=f)).</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 27
+Time: 0.002s">
+<div class="time" style="width: 2.5316455696203%"></div>
+<pre>
+  reflexivity.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+-</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros n E.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 29
+Time: 0.001s">
+<div class="time" style="width: 1.2658227848101%"></div>
+<pre>
+  rewrite (preserves_plus (f:=f)), (preserves_1 (f:=f)).</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply nonneg_plus_compat.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 32
+Time: 0.001s">
+<div class="time" style="width: 1.2658227848101%"></div>
+<pre> solve_propholds.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> trivial.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 33
+Time: 0.001s">
+<div class="time" style="width: 1.2658227848101%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section nat_int_order.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 36
+Time: 0.003s">
+<div class="time" style="width: 3.7974683544304%"></div>
+<pre>
+Context `{Naturals N} `{Apart N} `{Le N} `{Lt N} `{!FullPseudoSemiRingOrder le lt}
+  `{FullPseudoSemiRingOrder R} `{!IsSemiCRing R}
+  `{!Biinduction R} `{PropHolds (1 ≶ 0)}.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* Add Ring R : (stdlib_semiring_theory R). *)
+
+</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 42
+Time: 0.001s">
+<div class="time" style="width: 1.2658227848101%"></div>
+<pre>Lemma nat_int_to_semiring : forall x : R, exists z,
+  x = naturals_to_semiring N R z |_| x + naturals_to_semiring N R z = 0.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+apply biinduction.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+-</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists 0.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  left.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> symmetry.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact preserves_0.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+-</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split;intros E.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct E as [z [E|E]].</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    *</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists (1+z).</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      left.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite E.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 51
+Time: 0.003s">
+<div class="time" style="width: 3.7974683544304%"></div>
+<pre>
+      rewrite (preserves_plus (f:=naturals_to_semiring N R)),
+      (preserves_1 (f:=naturals_to_semiring N R)).</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    *</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 54
+Time: 0.003s">
+<div class="time" style="width: 3.7974683544304%"></div>
+<pre> destruct (naturals.case z) as [Ez|[z' Ez]].</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      **</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 55
+Time: 0.001s">
+<div class="time" style="width: 1.2658227848101%"></div>
+<pre> rewrite Ez in *.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 55
+Time: 0.002s">
+<div class="time" style="width: 2.5316455696203%"></div>
+<pre>
+         rewrite (preserves_0 (A:=N)),plus_0_r in E.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+         rewrite E.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists 1.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> left.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 57
+Time: 0.002s">
+<div class="time" style="width: 2.5316455696203%"></div>
+<pre>
+         rewrite (preserves_1 (A:=N)),plus_0_r.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      **</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 59
+Time: 0.001s">
+<div class="time" style="width: 1.2658227848101%"></div>
+<pre> rewrite Ez in *;clear z Ez.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+         exists z';right.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 60
+Time: 0.002s">
+<div class="time" style="width: 2.5316455696203%"></div>
+<pre>
+         path_via (n + naturals_to_semiring N R (1 + z')).</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+         clear E.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 62
+Time: 0.003s">
+<div class="time" style="width: 3.7974683544304%"></div>
+<pre> rewrite (preserves_plus (A:=N)),(preserves_1 (A:=N)).</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 62
+Time: 0.001s">
+<div class="time" style="width: 1.2658227848101%"></div>
+<pre>
+         rewrite plus_assoc,(plus_comm n);reflexivity.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct E as [z [E|E]].</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    *</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 65
+Time: 0.006s">
+<div class="time" style="width: 7.5949367088608%"></div>
+<pre> destruct (naturals.case z) as [Ez|[z' Ez]];rewrite Ez in *;clear z Ez.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      **</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists 1;right.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 66
+Time: 0.002s">
+<div class="time" style="width: 2.5316455696203%"></div>
+<pre>
+         rewrite (preserves_1 (A:=N)),plus_comm,E.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 67
+Time: 0.001s">
+<div class="time" style="width: 1.2658227848101%"></div>
+<pre>
+         exact preserves_0.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      **</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists z';left.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 69
+Time: 0.002s">
+<div class="time" style="width: 2.5316455696203%"></div>
+<pre>
+         rewrite (preserves_plus (A:=N)),(preserves_1 (A:=N)) in E.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 70
+Time: 0.001s">
+<div class="time" style="width: 1.2658227848101%"></div>
+<pre>
+         apply (left_cancellation plus 1).</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> trivial.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    *</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists (1+z).</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      right.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 73
+Time: 0.003s">
+<div class="time" style="width: 3.7974683544304%"></div>
+<pre> rewrite (preserves_plus (A:=N)), (preserves_1 (A:=N)),&lt;-E.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 73
+Time: 0.001s">
+<div class="time" style="width: 1.2658227848101%"></div>
+<pre>
+      rewrite plus_assoc,(plus_comm n);reflexivity.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 74
+Time: 0.008s">
+<div class="time" style="width: 10.126582278481%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 75
+Time: 0.001s">
+<div class="time" style="width: 1.2658227848101%"></div>
+<pre>
+
+Lemma nat_int_nonneg_decompose x : 0 ≤ x -&gt; exists z, x = naturals_to_semiring N R z.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+destruct (nat_int_to_semiring x) as [z [Ez1 | Ez2]].</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+-</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists z.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> trivial.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+-</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros E.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists 0.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 81
+Time: 0.001s">
+<div class="time" style="width: 1.2658227848101%"></div>
+<pre> rewrite (preserves_0 (A:=N)).</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 81
+Time: 0.003s">
+<div class="time" style="width: 3.7974683544304%"></div>
+<pre>
+  apply (antisymmetry (≤)); trivial.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite &lt;-Ez2.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 83
+Time: 0.001s">
+<div class="time" style="width: 1.2658227848101%"></div>
+<pre> apply nonneg_plus_le_compat_r.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 83
+Time: 0.005s">
+<div class="time" style="width: 6.3291139240506%"></div>
+<pre>
+  apply to_semiring_nonneg.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 84
+Time: 0.002s">
+<div class="time" style="width: 2.5316455696203%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 85
+Time: 0.001s">
+<div class="time" style="width: 1.2658227848101%"></div>
+<pre>
+
+Lemma nat_int_le_plus x y : x ≤ y &lt;-&gt; exists z, y = x + naturals_to_semiring N R z.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+split.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+-</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros E.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 90
+Time: 0.002s">
+<div class="time" style="width: 2.5316455696203%"></div>
+<pre> destruct (decompose_le E) as [z [Ez1 Ez2]].</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct (nat_int_nonneg_decompose _ Ez1) as [u Eu].</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exists u.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite &lt;-Eu.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> trivial.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+-</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [z Ez].</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite Ez.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 93
+Time: 0.005s">
+<div class="time" style="width: 6.3291139240506%"></div>
+<pre>
+  apply nonneg_plus_le_compat_r, to_semiring_nonneg.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 94
+Time: 0.001s">
+<div class="time" style="width: 1.2658227848101%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 95
+Time: 0.001s">
+<div class="time" style="width: 1.2658227848101%"></div>
+<pre>
+
+Lemma nat_int_lt_plus x y : x &lt; y &lt;-&gt; exists z, y = x + 1 + naturals_to_semiring N R z.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+split.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+-</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros E.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 100
+Time: 0.001s">
+<div class="time" style="width: 1.2658227848101%"></div>
+<pre>
+  destruct ((fst (nat_int_le_plus x y) (lt_le _ _ E))) as [z0 Ez].</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 101
+Time: 0.024s">
+<div class="time" style="width: 30.379746835443%"></div>
+<pre>
+  destruct (naturals.case z0) as [E1|[z E1]];rewrite E1 in *;clear z0 E1.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 103
+Time: 0.001s">
+<div class="time" style="width: 1.2658227848101%"></div>
+<pre> rewrite preserves_0, plus_0_r in Ez.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 103
+Time: 0.001s">
+<div class="time" style="width: 1.2658227848101%"></div>
+<pre>
+    destruct (lt_ne_flip x y);trivial.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists z.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 105
+Time: 0.002s">
+<div class="time" style="width: 2.5316455696203%"></div>
+<pre>
+    rewrite (preserves_plus (A:=N)), preserves_1, plus_assoc in Ez.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    trivial.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+-</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [z Ez].</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite Ez.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply nonneg_plus_lt_compat_r.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 110
+Time: 0.004s">
+<div class="time" style="width: 5.0632911392405%"></div>
+<pre> apply to_semiring_nonneg.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 111
+Time: 0.001s">
+<div class="time" style="width: 1.2658227848101%"></div>
+<pre> apply pos_plus_lt_compat_r; solve_propholds.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 111
+Time: 0.002s">
+<div class="time" style="width: 2.5316455696203%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma lt_iff_plus_1_le x y : x &lt; y &lt;-&gt; x + 1 ≤ y.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 115
+Time: 0.003s">
+<div class="time" style="width: 3.7974683544304%"></div>
+<pre>
+etransitivity.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+-</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply nat_int_lt_plus.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+-</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 118
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply symmetry,nat_int_le_plus.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 118
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma lt_iff_S_le x y : x &lt; y &lt;-&gt; 1 + x ≤ y.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 121
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 122
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+rewrite plus_comm.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply lt_iff_plus_1_le.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma pos_ge_1 x : 0 &lt; x &lt;-&gt; 1 ≤ x.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 126
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+split; intros E.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 128
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+-</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite &lt;-(plus_0_l 1).</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply lt_iff_plus_1_le.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> trivial.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+-</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 130
+Time: 0.001s">
+<div class="time" style="width: 1.2658227848101%"></div>
+<pre> apply lt_le_trans with 1; [solve_propholds | trivial].</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 130
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 131
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma le_iff_lt_plus_1 x y : x ≤ y &lt;-&gt; x &lt; y + 1.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+split; intros E.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 135
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+-</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply lt_iff_plus_1_le.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 136
+Time: 0.001s">
+<div class="time" style="width: 1.2658227848101%"></div>
+<pre> apply (order_preserving (+1)).</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> trivial.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+-</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 137
+Time: 0.001s">
+<div class="time" style="width: 1.2658227848101%"></div>
+<pre> apply (order_reflecting (+1)), lt_iff_plus_1_le.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 137
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> trivial.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 137
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma le_iff_lt_S x y : x ≤ y &lt;-&gt; x &lt; 1 + y.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite plus_comm.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply le_iff_lt_plus_1.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> Qed.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section another_semiring.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 143
+Time: 0.002s">
+<div class="time" style="width: 2.5316455696203%"></div>
+<pre>
+  Context `{FullPseudoSemiRingOrder R2} `{!IsSemiCRing R2}
+    `{PropHolds ((1 : R2) ≶ 0)}
+    `{!IsSemiRingPreserving (f : R -&gt; R2)}.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Instance orderpreserving_semiring_homomorphism : OrderPreserving f.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 148
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  repeat (split; try exact _).</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y E.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply nat_int_le_plus in E.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct E as [z E].</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 151
+Time: 0.005s">
+<div class="time" style="width: 6.3291139240506%"></div>
+<pre>
+  rewrite E, (preserves_plus (f:=f)), (naturals.to_semiring_twice f _ _).</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 152
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply nonneg_plus_le_compat_r.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 153
+Time: 0.004s">
+<div class="time" style="width: 5.0632911392405%"></div>
+<pre> apply to_semiring_nonneg.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 153
+Time: 0.001s">
+<div class="time" style="width: 1.2658227848101%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 154
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance strictlyorderpreserving_semiring_homomorphism : StrictlyOrderPreserving f | 50.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  repeat (split; try exact _).</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y E.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply nat_int_lt_plus in E.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct E as [z E].</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 159
+Time: 0.019s">
+<div class="time" style="width: 24.050632911392%"></div>
+<pre>
+  rewrite E, !(preserves_plus (f:=f)), preserves_1,
+  (naturals.to_semiring_twice f _ _).</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply nonneg_plus_lt_compat_r.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 163
+Time: 0.005s">
+<div class="time" style="width: 6.3291139240506%"></div>
+<pre> apply to_semiring_nonneg.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 163
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 164
+Time: 0.001s">
+<div class="time" style="width: 1.2658227848101%"></div>
+<pre> apply pos_plus_lt_compat_r; solve_propholds.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 164
+Time: 0.001s">
+<div class="time" style="width: 1.2658227848101%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 165
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance nat_morphism_order_embedding : OrderEmbedding f | 50.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split; try exact _.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 168
+Time: 0.003s">
+<div class="time" style="width: 3.7974683544304%"></div>
+<pre> exact full_pseudo_order_reflecting.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> Qed.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+End another_semiring.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 169
+Time: 0.001s">
+<div class="time" style="width: 1.2658227848101%"></div>
+<pre>
+End nat_int_order.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 170
+Time: 0.001s">
+<div class="time" style="width: 1.2658227848101%"></div>
+<pre>
+End Univ.</pre>
+</div>
+<div class="code" title="File: nat_int.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

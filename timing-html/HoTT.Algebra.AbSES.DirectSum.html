@@ -1,0 +1,646 @@
+<html>
+<head>
+<title>DirectSum.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for DirectSum.v</h1>
+
+<div class="code" title="File: DirectSum.v
+Line: 1
+Time: 0.059s">
+<div class="time" style="width: 100%"></div>
+<pre>From HoTT Require Import Basics Types Truncations.Core.</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 1
+Time: 0.018s">
+<div class="time" style="width: 30.508474576271%"></div>
+<pre>
+Require Import Pointed.Core.</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 2
+Time: 0.017s">
+<div class="time" style="width: 28.813559322034%"></div>
+<pre>
+Require Import WildCat.Core Homotopy.ExactSequence.</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 3
+Time: 0.027s">
+<div class="time" style="width: 45.762711864407%"></div>
+<pre>
+Require Import AbGroups.AbelianGroup AbSES.Core AbGroups.Biproduct.</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope pointed_scope.</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope type_scope.</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope mc_add_scope.</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * The direct sum of short exact sequences *)
+
+(** Biproducts of abelian groups preserve exactness. *)</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 12
+Time: 0.003s">
+<div class="time" style="width: 5.0847457627119%"></div>
+<pre>Lemma ab_biprod_exact {A E B X F Y : AbGroup}
+      (i : A $-&gt; E) (p : E $-&gt; B) `{ex0 : IsExact (Tr (-1)) _ _ _ i p}
+      (j : X $-&gt; F) (q : F $-&gt; Y) `{ex1 : IsExact (Tr (-1)) _ _ _ j q}
+  : IsExact (Tr (-1)) (functor_ab_biprod i j)
+            (functor_ab_biprod p q).</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 17
+Time: 0.001s">
+<div class="time" style="width: 1.6949152542373%"></div>
+<pre>
+  snapply Build_IsExact.</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> snapply phomotopy_homotopy_hset.</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 19
+Time: 0.027s">
+<div class="time" style="width: 45.762711864407%"></div>
+<pre>
+    1: exact _.</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 20
+Time: 0.001s">
+<div class="time" style="width: 1.6949152542373%"></div>
+<pre>
+    intro x; apply path_prod; cbn.</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply ex0.</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply ex1.</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 24
+Time: 0.005s">
+<div class="time" style="width: 8.4745762711864%"></div>
+<pre> intros [[e f] u]; cbn.</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 24
+Time: 0.001s">
+<div class="time" style="width: 1.6949152542373%"></div>
+<pre>
+    rapply contr_inhabited_hprop.</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 25
+Time: 0.003s">
+<div class="time" style="width: 5.0847457627119%"></div>
+<pre>
+    pose (U := (equiv_path_prod _ _)^-1 u); cbn in U.</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    pose proof (a := isexact_preimage _ i p e (fst U)).</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    pose proof (x := isexact_preimage _ j q f (snd U)).</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 28
+Time: 0.049s">
+<div class="time" style="width: 83.050847457627%"></div>
+<pre>
+    strip_truncations; apply tr.</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 29
+Time: 0.002s">
+<div class="time" style="width: 3.3898305084746%"></div>
+<pre>
+    exists (ab_biprod_inl a.1 + ab_biprod_inr x.1); cbn.</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 30
+Time: 0.003s">
+<div class="time" style="width: 5.0847457627119%"></div>
+<pre>
+    pose (IS := sg_set (ab_biprod B Y)).</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> (* This hint speeds up the next line. *)
+   </pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 32
+Time: 0.003s">
+<div class="time" style="width: 5.0847457627119%"></div>
+<pre>apply path_sigma_hprop; cbn.</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_prod; cbn.</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 34
+Time: 0.001s">
+<div class="time" style="width: 1.6949152542373%"></div>
+<pre> rewrite right_identity.</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact a.2.</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 36
+Time: 0.001s">
+<div class="time" style="width: 1.6949152542373%"></div>
+<pre> rewrite left_identity.</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact x.2.</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 37
+Time: 0.014s">
+<div class="time" style="width: 23.728813559322%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The pointwise direct sum of two short exact sequences. *)</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 40
+Time: 0.003s">
+<div class="time" style="width: 5.0847457627119%"></div>
+<pre>Definition abses_direct_sum `{Funext} {B A B' A' : AbGroup} (E : AbSES B A) (F : AbSES B' A')
+  : AbSES (ab_biprod B B') (ab_biprod A A')
+  := Build_AbSES (ab_biprod E F)
+                 (functor_ab_biprod (inclusion E) (inclusion F))
+                 (functor_ab_biprod (projection E) (projection F))
+                 (functor_ab_biprod_embedding _ _)
+                 (functor_ab_biprod_surjection _ _)
+                 (ab_biprod_exact _ _ _ _).</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** For any short exact sequences [E], [E'], [F], [F'], and morphisms [f : E -&gt; E'] and [g : F -&gt; F'] there is a morphism [E + F -&gt; E' + F']. *)</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 49
+Time: 0.001s">
+<div class="time" style="width: 1.6949152542373%"></div>
+<pre>Lemma functor_abses_directsum `{Funext} {A A' B B' C C' D D' : AbGroup}
+      {E : AbSES B A} {E' : AbSES B' A'} {F : AbSES D C} {F' : AbSES D' C'}
+      (f : AbSESMorphism E E') (g : AbSESMorphism F F')
+  : AbSESMorphism (abses_direct_sum E F) (abses_direct_sum E' F').</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 53
+Time: 0.001s">
+<div class="time" style="width: 1.6949152542373%"></div>
+<pre>
+  snapply Build_AbSESMorphism.</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (functor_ab_biprod (component1 f) (component1 g)).</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (functor_ab_biprod (component2 f) (component2 g)).</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (functor_ab_biprod (component3 f) (component3 g)).</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro x.</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 58
+Time: 0.006s">
+<div class="time" style="width: 10.169491525424%"></div>
+<pre>
+    apply path_prod; apply left_square.</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro x.</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 60
+Time: 0.02s">
+<div class="time" style="width: 33.898305084746%"></div>
+<pre>
+    apply path_prod; apply right_square.</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 61
+Time: 0.002s">
+<div class="time" style="width: 3.3898305084746%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** For any short exact sequence [E], there is a morphism [E -&gt; abses_direct_sum E E], where each component is ab_diagonal. *)</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition abses_diagonal `{Funext} {A B : AbGroup} (E : AbSES B A)
+  : AbSESMorphism E (abses_direct_sum E E).</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 66
+Time: 0.001s">
+<div class="time" style="width: 1.6949152542373%"></div>
+<pre>
+  snapply Build_AbSESMorphism.</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1,2,3: exact ab_diagonal.</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 68
+Time: 0.001s">
+<div class="time" style="width: 1.6949152542373%"></div>
+<pre>
+  all: reflexivity.</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** For any short exact sequence [E], there is dually a morphism [abses_direct_sum E E -&gt; E], with each component being the codiagonal. *)</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition abses_codiagonal `{Funext} {A B : AbGroup} (E : AbSES B A)
+  : AbSESMorphism (abses_direct_sum E E) E.</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_AbSESMorphism.</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1,2,3: exact ab_codiagonal.</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 76
+Time: 0.001s">
+<div class="time" style="width: 1.6949152542373%"></div>
+<pre>
+  all: intro x; cbn; apply grp_homo_op.</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 77
+Time: 0.001s">
+<div class="time" style="width: 1.6949152542373%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** There is always a morphism [abses_direct_sum E F -&gt; abses_direct_sum F E] of short exact sequences, for any [E : AbSES B A] and [F : AbSES B' A']. *)</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition abses_swap_morphism `{Funext} {A A' B B' : AbGroup}
+           (E : AbSES B A) (F : AbSES B' A')
+  : AbSESMorphism (abses_direct_sum E F) (abses_direct_sum F E).</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 83
+Time: 0.001s">
+<div class="time" style="width: 1.6949152542373%"></div>
+<pre>
+  snapply Build_AbSESMorphism.</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 84
+Time: 0.001s">
+<div class="time" style="width: 1.6949152542373%"></div>
+<pre>
+  1,2,3: exact direct_sum_swap.</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 85
+Time: 0.002s">
+<div class="time" style="width: 3.3898305084746%"></div>
+<pre>
+  all: reflexivity.</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 86
+Time: 0.001s">
+<div class="time" style="width: 1.6949152542373%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** For [E, F, G : AbSES B A], there is a morphism [(E + F) + G -&gt; (G + F) + E] induced by the above map, where [+] denotes [abses_direct_sum]. *)</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 89
+Time: 0.001s">
+<div class="time" style="width: 1.6949152542373%"></div>
+<pre>Lemma abses_twist_directsum `{Funext} {A B : AbGroup} (E F G : AbSES B A)
+  : AbSESMorphism (abses_direct_sum (abses_direct_sum E F) G)
+                  (abses_direct_sum (abses_direct_sum G F) E).</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 92
+Time: 0.001s">
+<div class="time" style="width: 1.6949152542373%"></div>
+<pre>
+  snapply Build_AbSESMorphism.</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 93
+Time: 0.001s">
+<div class="time" style="width: 1.6949152542373%"></div>
+<pre>
+  1,2,3: exact ab_biprod_twist.</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 94
+Time: 0.003s">
+<div class="time" style="width: 5.0847457627119%"></div>
+<pre>
+  all: reflexivity.</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 95
+Time: 0.001s">
+<div class="time" style="width: 1.6949152542373%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: DirectSum.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

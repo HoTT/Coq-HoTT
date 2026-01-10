@@ -1,0 +1,2987 @@
+<html>
+<head>
+<title>Hartogs.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Hartogs.v</h1>
+
+<div class="code" title="File: Hartogs.v
+Line: 1
+Time: 0.073s">
+<div class="time" style="width: 52.142857142857%"></div>
+<pre>From HoTT Require Import TruncType ExcludedMiddle Modalities.ReflectiveSubuniverse abstract_algebra HSet.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 1
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+From HoTT Require Import Universes.Smallness.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 2
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+From HoTT Require Import Spaces.Card.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 3
+Time: 0.002s">
+<div class="time" style="width: 1.4285714285714%"></div>
+<pre>
+
+From HoTT.Sets Require Import Ordinals Powers.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Close Scope trunc_scope.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** This file contains a construction of the Hartogs number. *)
+
+(** We begin with some results about changing the universe of a power set using propositional resizing. *)
+
+</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition power_inj `{PropResizing} {C : Type@{i}} (p : C -&gt; HProp@{j})
+  : C -&gt; HProp@{k}.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 14
+Time: 0.002s">
+<div class="time" style="width: 1.4285714285714%"></div>
+<pre>
+  exact (fun a =&gt; Build_HProp (smalltype@{k j} (p a))).</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma injective_power_inj `{PropResizing} {ua : Univalence} (C : Type@{i})
+  : IsInjective (@power_inj _ C).</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros p p'.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> unfold power_inj.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros q.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply path_forall.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply path_iff_hprop; intros Ha.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> eapply equiv_smalltype.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 22
+Time: 0.002s">
+<div class="time" style="width: 1.4285714285714%"></div>
+<pre> change ((fun a =&gt; Build_HProp (smalltype (p' a))) a).</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite &lt;- q.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply equiv_smalltype.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact Ha.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> eapply equiv_smalltype.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 24
+Time: 0.002s">
+<div class="time" style="width: 1.4285714285714%"></div>
+<pre> change ((fun a =&gt; Build_HProp (smalltype (p a))) a).</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite q.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply equiv_smalltype.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact Ha.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 25
+Time: 0.001s">
+<div class="time" style="width: 0.71428571428571%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* TODO: Could factor this as something keeping the [HProp] universe the same, followed by [power_inj]. *)</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition power_morph `{PropResizing} {ua : Univalence} {C B : Type@{i}} (f : C -&gt; B)
+  : (C -&gt; HProp) -&gt; (B -&gt; HProp).</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros p b.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 31
+Time: 0.008s">
+<div class="time" style="width: 5.7142857142857%"></div>
+<pre> exact (Build_HProp (smalltype (forall a, f a = b -&gt; p a))).</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition injective_power_morph `{PropResizing} {ua : Univalence} {C B : Type@{i}} (f : C -&gt; B)
+  : IsInjective f -&gt; IsInjective (@power_morph _ _ C B f).</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros Hf p p' q.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply path_forall.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply path_iff_hprop; intros Ha.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> enough (Hp : power_morph f p (f a)).</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite q in Hp.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply equiv_smalltype in Hp.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply Hp.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply equiv_smalltype.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a' -&gt; % Hf.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact Ha.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> enough (Hp : power_morph f p' (f a)).</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite &lt;- q in Hp.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply equiv_smalltype in Hp.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply Hp.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply equiv_smalltype.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a' -&gt; % Hf.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact Ha.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 43
+Time: 0.001s">
+<div class="time" style="width: 0.71428571428571%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We'll also need this result. *)</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 46
+Time: 0.001s">
+<div class="time" style="width: 0.71428571428571%"></div>
+<pre>Lemma le_Cardinal_lt_Ordinal `{PropResizing} `{Univalence} (B C : Ordinal)
+  : B &lt; C -&gt; card B ≤ card C.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros B_C.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite (bound_property B_C).</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exists out.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply isinjective_simulation.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply is_simulation_out.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 50
+Time: 0.001s">
+<div class="time" style="width: 0.71428571428571%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Hartogs number *)
+
+</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section Hartogs_Number.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Declare Scope Hartogs.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Open Scope Hartogs.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Notation "'𝒫'" := power_type (at level 30) : Hartogs.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Coercion subtype_as_type' {X} (Y : 𝒫 X) := { x : X &amp; Y x }.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Universe A.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {univalence : Univalence}
+          {prop_resizing : PropResizing}
+          {lem: ExcludedMiddle}
+          (A : HSet@{A}).</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (* The Hartogs number of [A] consists of all ordinals that embed into [A]. Note that this construction necessarily increases the universe level. *)
+
+ </pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 71
+Time: 0.001s">
+<div class="time" style="width: 0.71428571428571%"></div>
+<pre>Fail Check { B : Ordinal@{A _} | card B &lt;= card A } : Type@{A}.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition hartogs_number' : Ordinal.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    set (carrier := {B : Ordinal@{A _} &amp; card B &lt;= card A}).</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    set (relation := fun (B C : carrier) =&gt; B.1 &lt; C.1).</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists carrier relation.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 77
+Time: 0.001s">
+<div class="time" style="width: 0.71428571428571%"></div>
+<pre> snapply (isordinal_simulation pr1).</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 77
+Time: 0.014s">
+<div class="time" style="width: 10%"></div>
+<pre>
+    1-4: exact _.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 79
+Time: 0.001s">
+<div class="time" style="width: 0.71428571428571%"></div>
+<pre> apply isinj_embedding, (mapinO_pr1 (Tr (-1))).</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> (* Faster than [exact _.] *)
+   </pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>-</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> constructor.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a a' a_a'.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact a_a'.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 82
+Time: 0.001s">
+<div class="time" style="width: 0.71428571428571%"></div>
+<pre> intros [B small_B] C C_B; cbn in *.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        unshelve eexists (C; _); cbn; auto.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        revert small_B.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> srapply Trunc_rec.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [f isinjective_f].</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        destruct C_B as [b -&gt;].</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 85
+Time: 0.001s">
+<div class="time" style="width: 0.71428571428571%"></div>
+<pre>
+        exists (fun '(x; x_b) =&gt; f x); cbn.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        intros [x x_b] [y y_b] fx_fy.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 87
+Time: 0.003s">
+<div class="time" style="width: 2.1428571428571%"></div>
+<pre> apply path_sigma_hprop; cbn.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply (isinjective_f x y).</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact fx_fy.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 88
+Time: 0.005s">
+<div class="time" style="width: 3.5714285714286%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 89
+Time: 0.001s">
+<div class="time" style="width: 0.71428571428571%"></div>
+<pre>
+
+  Definition proper_subtype_inclusion (U V : 𝒫 A)
+    := (forall a, U a -&gt; V a) /\ merely (exists a : A, V a /\ ~(U a)).</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Infix "⊊" := proper_subtype_inclusion (at level 50) : Hartogs.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 94
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Notation "(⊊)" := proper_subtype_inclusion : Hartogs.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (* The Hartogs number of [A] embeds into the threefold power set of [A].  This preliminary injection also increases the universe level though. *)
+
+ </pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma hartogs_number'_injection
+    : exists f : hartogs_number' -&gt; (𝒫 (𝒫 (𝒫 A))), IsInjective f.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    transparent assert (ϕ : (forall X : 𝒫 (𝒫 A), Lt X)).</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> {</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      intros X.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x1 x2.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (x1.1 ⊊ x2.1).</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    }</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unshelve eexists.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 106
+Time: 0.001s">
+<div class="time" style="width: 0.71428571428571%"></div>
+<pre> intros [B _].</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros X.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (merely (Isomorphism (X : Type; ϕ X) B)).</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 107
+Time: 0.002s">
+<div class="time" style="width: 1.4285714285714%"></div>
+<pre> intros [B B_A] [C C_A] H0.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 107
+Time: 0.002s">
+<div class="time" style="width: 1.4285714285714%"></div>
+<pre> apply path_sigma_hprop; cbn.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      revert B_A.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 108
+Time: 0.003s">
+<div class="time" style="width: 2.1428571428571%"></div>
+<pre> rapply Trunc_rec.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [f injective_f].</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply equiv_path_Ordinal.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      assert {X : 𝒫 (𝒫 A) &amp; Isomorphism (X : Type; ϕ X) B} as [X iso].</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> {</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 110
+Time: 0.001s">
+<div class="time" style="width: 0.71428571428571%"></div>
+<pre>
+        assert (H2 :
+                  forall X : 𝒫 A,
+                    IsHProp { b : B &amp; forall a, X a &lt;-&gt; exists b', b' &lt; b /\ a = f b' }).</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> {</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          intros X.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply hprop_allpath; intros [b1 Hb1] [b2 Hb2].</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 114
+Time: 0.001s">
+<div class="time" style="width: 0.71428571428571%"></div>
+<pre>
+          snapply path_sigma_hprop; cbn.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          -</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros b.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> snapply istrunc_forall.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+            intros a.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> snapply istrunc_prod.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 117
+Time: 0.002s">
+<div class="time" style="width: 1.4285714285714%"></div>
+<pre> 2: exact _.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+            snapply istrunc_arrow.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 118
+Time: 0.009s">
+<div class="time" style="width: 6.4285714285714%"></div>
+<pre>
+            rapply ishprop_sigma_disjoint.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros b1' b2' [_ -&gt;] [_ p].</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+            apply (injective_f).</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact p.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          -</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 121
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply extensionality.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 121
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros b'.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 121
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 121
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+            +</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 122
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros b'_b1.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 122
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+              specialize (Hb1 (f b')).</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply snd in Hb1.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+              specialize (Hb1 (b'; (b'_b1, idpath))).</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+              apply Hb2 in Hb1.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 125
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct Hb1 as (? &amp; H2 &amp; H3).</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 125
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+              apply injective in H3.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 126
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> 2: assumption.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 126
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct H3.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 126
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+              exact H2.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+            +</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 128
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros b'_b2.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 128
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+              specialize (Hb2 (f b')).</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply snd in Hb2.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+              specialize (Hb2 (b'; (b'_b2, idpath))).</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 130
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+              apply Hb1 in Hb2.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 131
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct Hb2 as (? &amp; H2 &amp; H3).</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 131
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+              apply injective in H3.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> 2: assumption.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct H3.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+              exact H2.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        }</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 134
+Time: 0.002s">
+<div class="time" style="width: 1.4285714285714%"></div>
+<pre>
+        exists (fun X : 𝒫 A =&gt;
+             Build_HProp { b : B &amp; forall a, X a &lt;-&gt; exists b', b' &lt; b /\ a = f b' }).</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> {</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          unfold subtype_as_type'.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 137
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          unshelve eexists.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          -</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> srapply equiv_adjointify.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+            +</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [X [b _]].</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact b.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+            +</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros b.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 141
+Time: 0.033s">
+<div class="time" style="width: 23.571428571429%"></div>
+<pre>
+              unshelve eexists (fun a =&gt; Build_HProp (exists b', b' &lt; b /\ a = f b')).</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+              1: exact _.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+              {</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+                apply hprop_allpath.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 145
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [b1 [b1_b p]] [b2 [b2_b q]].</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 145
+Time: 0.007s">
+<div class="time" style="width: 5%"></div>
+<pre>
+                apply path_sigma_hprop; cbn.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (injective f).</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+                destruct p, q.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 147
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 147
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+              }</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 148
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+              exists b.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros b'.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+            +</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+            +</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 151
+Time: 0.003s">
+<div class="time" style="width: 2.1428571428571%"></div>
+<pre> cbn.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 151
+Time: 0.003s">
+<div class="time" style="width: 2.1428571428571%"></div>
+<pre> intros [X [b Hb]].</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply path_sigma_hprop.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 151
+Time: 0.001s">
+<div class="time" style="width: 0.71428571428571%"></div>
+<pre> cbn.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+              apply path_forall; intros a.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 152
+Time: 0.001s">
+<div class="time" style="width: 0.71428571428571%"></div>
+<pre> apply path_iff_hprop; apply Hb.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 152
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          -</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 153
+Time: 0.001s">
+<div class="time" style="width: 0.71428571428571%"></div>
+<pre> cbn.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 153
+Time: 0.001s">
+<div class="time" style="width: 0.71428571428571%"></div>
+<pre> intros [X1 [b1 H'1]] [X2 [b2 H'2]].</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+            unfold ϕ, proper_subtype_inclusion.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 154
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 154
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+            split.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 155
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+            +</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros H3.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 156
+Time: 0.001s">
+<div class="time" style="width: 0.71428571428571%"></div>
+<pre>
+              refine (Trunc_rec _ (trichotomy_ordinal b1 b2)).</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [b1_b2 | H4].</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+              *</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact b1_b2.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+              *</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> revert H4.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 159
+Time: 0.002s">
+<div class="time" style="width: 1.4285714285714%"></div>
+<pre> rapply Trunc_rec.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [b1_b2 | b2_b1].</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+                --</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply Empty_rec.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct H3 as [_ H3].</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> revert H3.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 160
+Time: 0.001s">
+<div class="time" style="width: 0.71428571428571%"></div>
+<pre> rapply Trunc_rec.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [a [X2a not_X1a]].</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+                   apply not_X1a.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply H'1.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite b1_b2.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply H'2.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact X2a.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+                --</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply Empty_rec.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct H3 as [_ H3].</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> revert H3.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 162
+Time: 0.001s">
+<div class="time" style="width: 0.71428571428571%"></div>
+<pre> rapply Trunc_rec.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [a [X2a not_X1a]].</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+                   apply not_X1a.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 163
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply H'1.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 163
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+                   apply H'2 in X2a.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 164
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct X2a as [b' [b'_b2 a_fb']].</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 164
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+                   exists b'.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 165
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 165
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+                   ++</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 166
+Time: 0.001s">
+<div class="time" style="width: 0.71428571428571%"></div>
+<pre> transitivity b2; assumption.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 166
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+                   ++</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assumption.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+            +</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros b1_b2.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+              *</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a X1a.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply H'2.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply H'1 in X1a.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct X1a as [b' [b'_b1 a_fb']].</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+                exists b'.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+                --</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> transitivity b1; assumption.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+                --</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assumption.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+              *</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists (f b1).</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+                --</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 174
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply H'2.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 174
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists b1; auto.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 174
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+                --</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 175
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros X1_fb1.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 175
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply H'1 in X1_fb1.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 175
+Time: 0.008s">
+<div class="time" style="width: 5.7142857142857%"></div>
+<pre> destruct X1_fb1 as [b' [b'_b1 fb1_fb']].</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 175
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+                   apply (injective f) in fb1_fb'.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct fb1_fb'.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+                   apply irreflexivity in b'_b1.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> 2: exact _.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assumption.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        }</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      }</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 179
+Time: 0.031s">
+<div class="time" style="width: 22.142857142857%"></div>
+<pre>
+      assert (IsOrdinal X (ϕ X)) by exact (isordinal_simulation iso.1).</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 180
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> 
+      apply apD10 in H0.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 181
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> specialize (H0 X).</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 181
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn in H0.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 181
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      refine (transitive_Isomorphism _ (X : Type; ϕ X) _ _ _).</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 182
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> {</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 182
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply isomorphism_inverse.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 183
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assumption.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 183
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      }</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 184
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      enough (merely (Isomorphism (X : Type; ϕ X) C)).</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> {</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        revert X1.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 186
+Time: 0.001s">
+<div class="time" style="width: 0.71428571428571%"></div>
+<pre> napply Trunc_rec.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 186
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> {</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 186
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          exact (ishprop_Isomorphism (Build_Ordinal X (ϕ X) _) C).</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        }</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        auto.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 189
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      }</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 190
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite &lt;- H0.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 191
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 191
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact iso.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 191
+Time: 0.081s">
+<div class="time" style="width: 57.857142857143%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 192
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Using hprop resizing, the threefold power set can be pushed to the same universe level as [A]. *)
+
+ </pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition uni_fix (X : 𝒫 (𝒫 (𝒫 A))) : ((𝒫 (𝒫 (𝒫 A))) : Type@{A}).</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    revert X.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    napply power_morph.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 199
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    napply power_morph.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact power_inj.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 201
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 202
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma injective_uni_fix : IsInjective uni_fix.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 204
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 205
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros X Y.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> unfold uni_fix.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros H % injective_power_morph; trivial.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros P Q.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 207
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros H' % injective_power_morph; trivial.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 207
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros p q.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply injective_power_inj.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 209
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (* We can therefore resize the Hartogs number of A to the same universe level as A. *)
+
+ </pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 213
+Time: 0.001s">
+<div class="time" style="width: 0.71428571428571%"></div>
+<pre>Definition hartogs_number_carrier : Type@{A}
+    := {X : 𝒫 (𝒫 (𝒫 A)) | smalltype (merely (exists a, uni_fix (hartogs_number'_injection.1 a) = X))}.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 214
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma hartogs_equiv : hartogs_number_carrier &lt;~&gt; hartogs_number'.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 216
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 217
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply equiv_inverse.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 218
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> unshelve eexists.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 218
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 219
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 219
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists (uni_fix (hartogs_number'_injection.1 a)).</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 219
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply equiv_smalltype, tr.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 220
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists a.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 220
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 220
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 221
+Time: 0.001s">
+<div class="time" style="width: 0.71428571428571%"></div>
+<pre> snapply isequiv_surj_emb.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 221
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 222
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply BuildIsSurjection.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 222
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [X HX].</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 222
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> eapply merely_destruct.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 222
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        *</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 223
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> eapply equiv_smalltype, HX.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 223
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        *</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 224
+Time: 0.001s">
+<div class="time" style="width: 0.71428571428571%"></div>
+<pre> intros [a &lt;-].</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 224
+Time: 0.005s">
+<div class="time" style="width: 3.5714285714286%"></div>
+<pre> cbn.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 224
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 224
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists a.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 224
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 224
+Time: 0.001s">
+<div class="time" style="width: 0.71428571428571%"></div>
+<pre> apply ap.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 224
+Time: 0.001s">
+<div class="time" style="width: 0.71428571428571%"></div>
+<pre> apply path_ishprop.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 224
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 225
+Time: 0.016s">
+<div class="time" style="width: 11.428571428571%"></div>
+<pre> apply isembedding_isinj_hset.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a b.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros H % pr1_path.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn in H.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        specialize (injective_uni_fix (hartogs_number'_injection.1 a) (hartogs_number'_injection.1 b)).</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 226
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        intros H'.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 227
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply H' in H.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 227
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by apply hartogs_number'_injection.2.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 227
+Time: 0.025s">
+<div class="time" style="width: 17.857142857143%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition hartogs_number : Ordinal@{A _}
+    := resize_ordinal hartogs_number' hartogs_number_carrier hartogs_equiv.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 231
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (* This final definition by satisfies the expected cardinality properties. *)
+
+ </pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 235
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma hartogs_number_injection
+    : exists f : hartogs_number -&gt; 𝒫 (𝒫 (𝒫 A)), IsInjective f.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 236
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 237
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>  
+    cbn.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 238
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists proj1.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 238
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [X HX] [Y HY].</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 238
+Time: 0.002s">
+<div class="time" style="width: 1.4285714285714%"></div>
+<pre> cbn.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 238
+Time: 0.001s">
+<div class="time" style="width: 0.71428571428571%"></div>
+<pre> intros -&gt;.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 238
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply ap.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 239
+Time: 0.001s">
+<div class="time" style="width: 0.71428571428571%"></div>
+<pre> apply path_ishprop.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 239
+Time: 0.005s">
+<div class="time" style="width: 3.5714285714286%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 240
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma hartogs_number_no_injection
+    : ~ (exists f : hartogs_number -&gt; A, IsInjective f).</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 243
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 244
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    cbn.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 245
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [f Hf].</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 245
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn in f.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 245
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    assert (HN : card hartogs_number &lt;= card A).</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 246
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> {</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 246
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 246
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by exists f.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 246
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 246
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    transparent assert (HNO : hartogs_number').</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 247
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> {</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 247
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists hartogs_number.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 247
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact HN.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 247
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 247
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (ordinal_initial hartogs_number' HNO).</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 248
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    eapply (transitive_Isomorphism hartogs_number' hartogs_number).</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 249
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 250
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply isomorphism_inverse.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 250
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      unfold hartogs_number.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 251
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (resize_ordinal_iso hartogs_number' hartogs_number_carrier hartogs_equiv).</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 252
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 253
+Time: 0.001s">
+<div class="time" style="width: 0.71428571428571%"></div>
+<pre> assert (Isomorphism hartogs_number ↓hartogs_number) by apply isomorphism_to_initial_segment.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 253
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      eapply transitive_Isomorphism.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 254
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> 1: exact X.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 254
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      unshelve eexists.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 255
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 256
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> srapply equiv_adjointify.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 256
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        *</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 257
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [a Ha % equiv_smalltype].</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 257
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> unshelve eexists.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 257
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          --</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 258
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists a.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 258
+Time: 0.002s">
+<div class="time" style="width: 1.4285714285714%"></div>
+<pre> transitivity (card hartogs_number).</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 258
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+             ++</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 259
+Time: 0.004s">
+<div class="time" style="width: 2.8571428571429%"></div>
+<pre> napply le_Cardinal_lt_Ordinal; exact Ha.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 259
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+             ++</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 260
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact HN.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 260
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          --</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 261
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply equiv_smalltype.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 261
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 261
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact Ha.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 261
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        *</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 262
+Time: 0.001s">
+<div class="time" style="width: 0.71428571428571%"></div>
+<pre> intros [[a Ha] H % equiv_smalltype].</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 262
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists a.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 262
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          apply equiv_smalltype.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 263
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact H.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 263
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        *</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 264
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro a.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 264
+Time: 0.009s">
+<div class="time" style="width: 6.4285714285714%"></div>
+<pre> apply path_sigma_hprop.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 264
+Time: 0.004s">
+<div class="time" style="width: 2.8571428571429%"></div>
+<pre> apply path_sigma_hprop.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 264
+Time: 0.001s">
+<div class="time" style="width: 0.71428571428571%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 264
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        *</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 265
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro a.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 265
+Time: 0.004s">
+<div class="time" style="width: 2.8571428571429%"></div>
+<pre> apply path_sigma_hprop.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 265
+Time: 0.003s">
+<div class="time" style="width: 2.1428571428571%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 265
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 266
+Time: 0.022s">
+<div class="time" style="width: 15.714285714286%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 266
+Time: 0.14s">
+<div class="time" style="width: 100%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 267
+Time: 0.063s">
+<div class="time" style="width: 45%"></div>
+<pre>
+
+End Hartogs_Number.</pre>
+</div>
+<div class="code" title="File: Hartogs.v
+Line: 270
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

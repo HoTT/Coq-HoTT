@@ -1,0 +1,1307 @@
+<html>
+<head>
+<title>AbHom.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for AbHom.v</h1>
+
+<div class="code" title="File: AbHom.v
+Line: 1
+Time: 0.038s">
+<div class="time" style="width: 74.509803921569%"></div>
+<pre>From HoTT Require Import Basics Types.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 1
+Time: 0.015s">
+<div class="time" style="width: 29.411764705882%"></div>
+<pre>
+From HoTT.WildCat Require Import Core Opposite Bifunctor Square Equiv.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 2
+Time: 0.023s">
+<div class="time" style="width: 45.098039215686%"></div>
+<pre>
+Require Import HSet Truncations.Core Modalities.ReflectiveSubuniverse.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 3
+Time: 0.051s">
+<div class="time" style="width: 100%"></div>
+<pre>
+Require Import Groups.Group Groups.QuotientGroup AbelianGroup Biproduct.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Homomorphisms from a group to an abelian group form an abelian group. *)
+
+(** In this file, we use additive notation for the group operation, even though some of the groups we deal with are not assumed to be abelian. *)</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Open Scope mc_add_scope.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The sum of group homomorphisms [f] and [g] is [fun a =&gt; f(a) + g(a)].  While the group *laws* require [Funext], the operations do not, so we make them instances. *)</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance sgop_hom {A : Group} {B : AbGroup} : SgOp (A $-&gt; B).</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros f g.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (grp_homo_compose ab_codiagonal (grp_prod_corec f g)).</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We can negate a group homomorphism [A -&gt; B] by post-composing with [ab_homo_negation : B -&gt; B]. *)</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance inverse_hom {A : Group} {B : AbGroup}
+  : Inverse (@Hom Group _ A B) := grp_homo_compose ab_homo_negation.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** For [A] and [B] groups, with [B] abelian, homomorphisms [A $-&gt; B] form an abelian group. *)</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition grp_hom `{Funext} (A : Group) (B : AbGroup) : Group.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 20
+Time: 0.001s">
+<div class="time" style="width: 1.9607843137255%"></div>
+<pre>
+  snapply (Build_Group' (GroupHomomorphism A B) sgop_hom grp_homo_const inverse_hom).</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact _.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 22
+Time: 0.001s">
+<div class="time" style="width: 1.9607843137255%"></div>
+<pre>
+  all: hnf; intros; apply equiv_path_grouphomomorphism; intro; cbn.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 24
+Time: 0.002s">
+<div class="time" style="width: 3.921568627451%"></div>
+<pre> apply associativity.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 25
+Time: 0.001s">
+<div class="time" style="width: 1.9607843137255%"></div>
+<pre> apply left_identity.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply left_inverse.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 26
+Time: 0.002s">
+<div class="time" style="width: 3.921568627451%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition ab_hom `{Funext} (A : Group) (B : AbGroup) : AbGroup.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply (Build_AbGroup (grp_hom A B)).</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros f g; cbn.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply equiv_path_grouphomomorphism; intro x; cbn.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply commutativity.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 34
+Time: 0.001s">
+<div class="time" style="width: 1.9607843137255%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Coequalizers *)
+
+(** Using the cokernel and addition and negation for the homs of abelian groups, we can define the coequalizer of two group homomorphisms as the cokernel of their difference. *)</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 39
+Time: 0.001s">
+<div class="time" style="width: 1.9607843137255%"></div>
+<pre>Definition ab_coeq {A B : AbGroup} (f g : A $-&gt; B)
+  := ab_cokernel ((-f) + g).</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition ab_coeq_in {A B : AbGroup} {f g : A $-&gt; B} : B $-&gt; ab_coeq f g.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact grp_quotient_map.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 45
+Time: 0.001s">
+<div class="time" style="width: 1.9607843137255%"></div>
+<pre>
+
+Definition ab_coeq_glue {A B : AbGroup} {f g : A $-&gt; B}
+  : ab_coeq_in (f:=f) (g:=g) $o f $== ab_coeq_in $o g.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  napply qglue.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply tr.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by exists x.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 53
+Time: 0.001s">
+<div class="time" style="width: 1.9607843137255%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 54
+Time: 0.001s">
+<div class="time" style="width: 1.9607843137255%"></div>
+<pre>
+
+Definition ab_coeq_rec {A B : AbGroup} {f g : A $-&gt; B}
+  {C : AbGroup} (i : B $-&gt; C) (p : i $o f $== i $o g) 
+  : ab_coeq f g $-&gt; C.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply (grp_quotient_rec _ _ i).</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  cbn.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros b H.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 62
+Time: 0.019s">
+<div class="time" style="width: 37.254901960784%"></div>
+<pre>
+  strip_truncations.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct H as [a q].</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct q; simpl.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lhs napply grp_homo_op.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 66
+Time: 0.001s">
+<div class="time" style="width: 1.9607843137255%"></div>
+<pre>
+  lhs napply (ap (+ _)).</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: apply grp_homo_inv.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 68
+Time: 0.003s">
+<div class="time" style="width: 5.8823529411765%"></div>
+<pre>
+  apply grp_moveL_M1^-1.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (p a)^.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 70
+Time: 0.002s">
+<div class="time" style="width: 3.921568627451%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 71
+Time: 0.002s">
+<div class="time" style="width: 3.921568627451%"></div>
+<pre>
+
+Definition ab_coeq_rec_beta_in {A B : AbGroup} {f g : A $-&gt; B}
+  {C : AbGroup} (i : B $-&gt; C) (p : i $o f $== i $o g)
+  : ab_coeq_rec i p $o ab_coeq_in $== i
+  := fun _ =&gt; idpath.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 76
+Time: 0.001s">
+<div class="time" style="width: 1.9607843137255%"></div>
+<pre>
+
+Definition ab_coeq_ind_hprop {A B f g} (P : @ab_coeq A B f g -&gt; Type)
+  `{forall x, IsHProp (P x)}
+  (i : forall b, P (ab_coeq_in b))
+  : forall x, P x.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 82
+Time: 0.002s">
+<div class="time" style="width: 3.921568627451%"></div>
+<pre>
+  rapply Quotient_ind_hprop.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact i.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 85
+Time: 0.001s">
+<div class="time" style="width: 1.9607843137255%"></div>
+<pre>
+
+Definition ab_coeq_ind_homotopy {A B C f g}
+  {l r : @ab_coeq A B f g $-&gt; C}
+  (p : l $o ab_coeq_in $== r $o ab_coeq_in) 
+  : l $== r.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 91
+Time: 0.013s">
+<div class="time" style="width: 25.490196078431%"></div>
+<pre>
+  srapply ab_coeq_ind_hprop.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact p.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 93
+Time: 0.001s">
+<div class="time" style="width: 1.9607843137255%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 94
+Time: 0.003s">
+<div class="time" style="width: 5.8823529411765%"></div>
+<pre>
+
+Definition functor_ab_coeq {A B : AbGroup} {f g : A $-&gt; B} {A' B' : AbGroup} {f' g' : A' $-&gt; B'}
+  (a : A $-&gt; A') (b : B $-&gt; B') (p : f' $o a $== b $o f) (q : g' $o a $== b $o g)
+  : ab_coeq f g $-&gt; ab_coeq f' g'.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply ab_coeq_rec.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact (ab_coeq_in $o b).</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 101
+Time: 0.007s">
+<div class="time" style="width: 13.725490196078%"></div>
+<pre>
+  refine (cat_assoc _ _ _ $@ _ $@ cat_assoc_opp _ _ _).</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 102
+Time: 0.001s">
+<div class="time" style="width: 1.9607843137255%"></div>
+<pre>
+  refine ((_ $@L p^$) $@ _ $@ (_ $@L q)).</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 103
+Time: 0.018s">
+<div class="time" style="width: 35.294117647059%"></div>
+<pre>
+  refine (cat_assoc_opp _ _ _ $@ (_ $@R a) $@ cat_assoc _ _ _).</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 104
+Time: 0.002s">
+<div class="time" style="width: 3.921568627451%"></div>
+<pre>
+  exact ab_coeq_glue.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 105
+Time: 0.005s">
+<div class="time" style="width: 9.8039215686275%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 106
+Time: 0.005s">
+<div class="time" style="width: 9.8039215686275%"></div>
+<pre>
+
+Definition functor2_ab_coeq {A B : AbGroup} {f g : A $-&gt; B} {A' B' : AbGroup} {f' g' : A' $-&gt; B'}
+  {a a' : A $-&gt; A'} {b b' : B $-&gt; B'}
+  (p : f' $o a $== b $o f) (q : g' $o a $== b $o g)
+  (p' : f' $o a' $== b' $o f) (q' : g' $o a' $== b' $o g)
+  (s : b $== b')
+  : functor_ab_coeq a b p q $== functor_ab_coeq a' b' p' q'.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 114
+Time: 0.001s">
+<div class="time" style="width: 1.9607843137255%"></div>
+<pre>
+  snapply ab_coeq_ind_homotopy.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (ap ab_coeq_in (s x)).</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 117
+Time: 0.001s">
+<div class="time" style="width: 1.9607843137255%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 118
+Time: 0.008s">
+<div class="time" style="width: 15.686274509804%"></div>
+<pre>
+
+Definition functor_ab_coeq_compose {A B : AbGroup} {f g : A $-&gt; B}
+  {A' B' : AbGroup} {f' g' : A' $-&gt; B'} 
+  (a : A $-&gt; A') (b : B $-&gt; B') (p : f' $o a $== b $o f) (q : g' $o a $== b $o g)
+  {A'' B'' : AbGroup} {f'' g'' : A'' $-&gt; B''}
+  (a' : A' $-&gt; A'') (b' : B' $-&gt; B'')
+  (p' : f'' $o a' $== b' $o f') (q' : g'' $o a' $== b' $o g')
+  : functor_ab_coeq a' b' p' q' $o functor_ab_coeq a b p q
+  $== functor_ab_coeq (a' $o a) (b' $o b) (hconcat p p') (hconcat q q').</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 128
+Time: 0.001s">
+<div class="time" style="width: 1.9607843137255%"></div>
+<pre>
+  snapply ab_coeq_ind_homotopy.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 129
+Time: 0.003s">
+<div class="time" style="width: 5.8823529411765%"></div>
+<pre>
+  simpl; reflexivity.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 130
+Time: 0.003s">
+<div class="time" style="width: 5.8823529411765%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 131
+Time: 0.002s">
+<div class="time" style="width: 3.921568627451%"></div>
+<pre>
+
+Definition functor_ab_coeq_id {A B : AbGroup} (f g : A $-&gt; B)
+  : functor_ab_coeq (Id _) (Id _) (hrefl f) (hrefl g) $== Id _.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 135
+Time: 0.001s">
+<div class="time" style="width: 1.9607843137255%"></div>
+<pre>
+  snapply ab_coeq_ind_homotopy.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  reflexivity.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 137
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 138
+Time: 0.004s">
+<div class="time" style="width: 7.843137254902%"></div>
+<pre>
+
+Definition grp_iso_ab_coeq {A B : AbGroup} {f g : A $-&gt; B}
+  {A' B' : AbGroup} {f' g' : A' $-&gt; B'}
+  (a : A $&lt;~&gt; A') (b : B $&lt;~&gt; B') (p : f' $o a $== b $o f) (q : g' $o a $== b $o g)
+  : ab_coeq f g $&lt;~&gt; ab_coeq f' g'.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 144
+Time: 0.002s">
+<div class="time" style="width: 3.921568627451%"></div>
+<pre>
+  snapply cate_adjointify.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 145
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (functor_ab_coeq a b p q).</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 147
+Time: 0.002s">
+<div class="time" style="width: 3.921568627451%"></div>
+<pre> exact (functor_ab_coeq a^-1$ b^-1$ (hinverse a _ p) (hinverse a _ q)).</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 147
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 148
+Time: 0.036s">
+<div class="time" style="width: 70.588235294118%"></div>
+<pre> nrefine (functor_ab_coeq_compose _ _ _ _ _ _ _ _
+      $@ functor2_ab_coeq _ _ _ _ _ $@ functor_ab_coeq_id _ _).</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (cate_isretr b).</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 151
+Time: 0.024s">
+<div class="time" style="width: 47.058823529412%"></div>
+<pre> nrefine (functor_ab_coeq_compose _ _ _ _ _ _ _ _
+      $@ functor2_ab_coeq _ _ _ _ _ $@ functor_ab_coeq_id _ _).</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 152
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (cate_issect b).</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 153
+Time: 0.016s">
+<div class="time" style="width: 31.372549019608%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 154
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** The bifunctor [ab_hom] *)
+
+</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance is0functor_ab_hom01 `{Funext} {A : Group^op}
+  : Is0Functor (ab_hom A).</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_Is0Functor; intros B B' f.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_GroupHomomorphism.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact (fun g =&gt; grp_homo_compose f g).</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros phi psi.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 163
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply equiv_path_grouphomomorphism; intro a; cbn.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 164
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (grp_homo_op f _ _).</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 165
+Time: 0.001s">
+<div class="time" style="width: 1.9607843137255%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 166
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance is0functor_ab_hom10 `{Funext} {B : AbGroup@{u}}
+  : Is0Functor (flip (ab_hom : Group^op -&gt; AbGroup -&gt; AbGroup) B).</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_Is0Functor; intros A A' f.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_GroupHomomorphism.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact (fun g =&gt; grp_homo_compose g f).</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros phi psi.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 174
+Time: 0.002s">
+<div class="time" style="width: 3.921568627451%"></div>
+<pre>
+  by apply equiv_path_grouphomomorphism.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 175
+Time: 0.001s">
+<div class="time" style="width: 1.9607843137255%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 176
+Time: 0.001s">
+<div class="time" style="width: 1.9607843137255%"></div>
+<pre>
+
+Instance is1functor_ab_hom01 `{Funext} {A : Group^op}
+  : Is1Functor (ab_hom A).</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 179
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 180
+Time: 0.001s">
+<div class="time" style="width: 1.9607843137255%"></div>
+<pre>
+  napply Build_Is1Functor.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 181
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 182
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros B B' f g p phi.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 182
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply equiv_path_grouphomomorphism; intro a; cbn.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 183
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (p (phi a)).</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 184
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros B phi.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 185
+Time: 0.002s">
+<div class="time" style="width: 3.921568627451%"></div>
+<pre>
+    by apply equiv_path_grouphomomorphism.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 186
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros B C D f g phi.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 187
+Time: 0.002s">
+<div class="time" style="width: 3.921568627451%"></div>
+<pre>
+    by apply equiv_path_grouphomomorphism.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 188
+Time: 0.002s">
+<div class="time" style="width: 3.921568627451%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 189
+Time: 0.001s">
+<div class="time" style="width: 1.9607843137255%"></div>
+<pre>
+
+Instance is1functor_ab_hom10 `{Funext} {B : AbGroup@{u}}
+  : Is1Functor (flip (ab_hom : Group^op -&gt; AbGroup -&gt; AbGroup) B).</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 192
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 193
+Time: 0.002s">
+<div class="time" style="width: 3.921568627451%"></div>
+<pre>
+  napply Build_Is1Functor.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 194
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros A A' f g p phi.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply equiv_path_grouphomomorphism; intro a; cbn.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (ap phi (p a)).</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros A phi.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 198
+Time: 0.002s">
+<div class="time" style="width: 3.921568627451%"></div>
+<pre>
+    by apply equiv_path_grouphomomorphism.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 199
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros A C D f g phi.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 200
+Time: 0.002s">
+<div class="time" style="width: 3.921568627451%"></div>
+<pre>
+    by apply equiv_path_grouphomomorphism.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 201
+Time: 0.004s">
+<div class="time" style="width: 7.843137254902%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 202
+Time: 0.002s">
+<div class="time" style="width: 3.921568627451%"></div>
+<pre>
+
+Instance is0bifunctor_ab_hom `{Funext}
+  : Is0Bifunctor (ab_hom : Group^op -&gt; AbGroup -&gt; AbGroup)
+  := Build_Is0Bifunctor'' _.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 206
+Time: 0.001s">
+<div class="time" style="width: 1.9607843137255%"></div>
+<pre>
+
+Instance is1bifunctor_ab_hom `{Funext}
+  : Is1Bifunctor (ab_hom : Group^op -&gt; AbGroup -&gt; AbGroup).</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 209
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 210
+Time: 0.001s">
+<div class="time" style="width: 1.9607843137255%"></div>
+<pre>
+  napply Build_Is1Bifunctor''.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 211
+Time: 0.001s">
+<div class="time" style="width: 1.9607843137255%"></div>
+<pre>
+  1,2: exact _.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 212
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros A A' f B B' g phi; cbn.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 213
+Time: 0.001s">
+<div class="time" style="width: 1.9607843137255%"></div>
+<pre>
+  by apply equiv_path_grouphomomorphism.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 214
+Time: 0.002s">
+<div class="time" style="width: 3.921568627451%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 215
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Properties of [ab_hom] *)
+
+(** Precomposition with a surjection is an embedding. *)
+(* This could be deduced from [isembedding_precompose_surjection_hset], but relating precomposition of homomorphisms with precomposition of the underlying maps is tedious, so we give a direct proof. *)</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 220
+Time: 0.001s">
+<div class="time" style="width: 1.9607843137255%"></div>
+<pre>Instance isembedding_precompose_surjection_ab `{Funext} {A B C : AbGroup}
+  (f : A $-&gt; B) `{IsSurjection f}
+  : IsEmbedding (fmap10 (A:=Group^op) ab_hom f C).</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 222
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 223
+Time: 0.001s">
+<div class="time" style="width: 1.9607843137255%"></div>
+<pre>
+  apply isembedding_isinj_hset; intros g0 g1 p.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 224
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply equiv_path_grouphomomorphism.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 225
+Time: 0.025s">
+<div class="time" style="width: 49.019607843137%"></div>
+<pre>
+  rapply (conn_map_elim (Tr (-1)) f).</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 226
+Time: 0.002s">
+<div class="time" style="width: 3.921568627451%"></div>
+<pre>
+  exact (equiv_path_grouphomomorphism^-1 p).</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 227
+Time: 0.001s">
+<div class="time" style="width: 1.9607843137255%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: AbHom.v
+Line: 229
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

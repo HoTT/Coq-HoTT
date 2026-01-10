@@ -1,0 +1,40 @@
+digraph HoTT_Classes_orders_maps {
+  graph [ratio=0.5]
+  node [style=filled]
+maps_compose_order_embedding [label="compose_order_embedding", URL=<maps.html#compose_order_embedding>, peripheries=3, fillcolor="#F070D1"] ;
+maps_compose_order_reflecting [label="compose_order_reflecting", URL=<maps.html#compose_order_reflecting>, fillcolor="#F070D1"] ;
+maps_compose_order_preserving [label="compose_order_preserving", URL=<maps.html#compose_order_preserving>, fillcolor="#F070D1"] ;
+maps_id_order_reflecting [label="id_order_reflecting", URL=<maps.html#id_order_reflecting>, peripheries=3, fillcolor="#F070D1"] ;
+maps_id_order_preserving [label="id_order_preserving", URL=<maps.html#id_order_preserving>, peripheries=3, fillcolor="#F070D1"] ;
+maps_projected_full_pseudo_order [label="projected_full_pseudo_order", URL=<maps.html#projected_full_pseudo_order>, peripheries=3, fillcolor="#F070D1"] ;
+maps_projected_pseudo_order [label="projected_pseudo_order", URL=<maps.html#projected_pseudo_order>, fillcolor="#F070D1"] ;
+maps_projected_strict_order [label="projected_strict_order", URL=<maps.html#projected_strict_order>, peripheries=3, fillcolor="#F070D1"] ;
+maps_projected_total_order [label="projected_total_order", URL=<maps.html#projected_total_order>, peripheries=3, fillcolor="#F070D1"] ;
+maps_projected_partial_order [label="projected_partial_order", URL=<maps.html#projected_partial_order>, peripheries=3, fillcolor="#F070D1"] ;
+maps_strictly_order_preserving_flip_pos [label="strictly_order_preserving_flip_pos", URL=<maps.html#strictly_order_preserving_flip_pos>, peripheries=3, fillcolor="#F070D1"] ;
+maps_strictly_order_preserving_pos [label="strictly_order_preserving_pos", URL=<maps.html#strictly_order_preserving_pos>, peripheries=3, fillcolor="#F070D1"] ;
+maps_strictly_order_reflecting_flip [label="strictly_order_reflecting_flip", URL=<maps.html#strictly_order_reflecting_flip>, peripheries=3, fillcolor="#F070D1"] ;
+maps_strictly_order_preserving_flip [label="strictly_order_preserving_flip", URL=<maps.html#strictly_order_preserving_flip>, peripheries=3, fillcolor="#F070D1"] ;
+maps_order_reflecting_flip_pos [label="order_reflecting_flip_pos", URL=<maps.html#order_reflecting_flip_pos>, peripheries=3, fillcolor="#F070D1"] ;
+maps_order_reflecting_pos [label="order_reflecting_pos", URL=<maps.html#order_reflecting_pos>, peripheries=3, fillcolor="#F070D1"] ;
+maps_order_preserving_flip_nonneg [label="order_preserving_flip_nonneg", URL=<maps.html#order_preserving_flip_nonneg>, peripheries=3, fillcolor="#F070D1"] ;
+maps_order_preserving_nonneg [label="order_preserving_nonneg", URL=<maps.html#order_preserving_nonneg>, peripheries=3, fillcolor="#F070D1"] ;
+maps_order_reflecting_flip [label="order_reflecting_flip", URL=<maps.html#order_reflecting_flip>, peripheries=3, fillcolor="#F070D1"] ;
+maps_order_preserving_flip [label="order_preserving_flip", URL=<maps.html#order_preserving_flip>, peripheries=3, fillcolor="#F070D1"] ;
+maps_full_pseudo_order_reflecting [label="full_pseudo_order_reflecting", URL=<maps.html#full_pseudo_order_reflecting>, peripheries=3, fillcolor="#F070D1"] ;
+maps_full_pseudo_order_preserving [label="full_pseudo_order_preserving", URL=<maps.html#full_pseudo_order_preserving>, peripheries=3, fillcolor="#F070D1"] ;
+maps_pseudo_order_embedding_inj [label="pseudo_order_embedding_inj", URL=<maps.html#pseudo_order_embedding_inj>, peripheries=3, fillcolor="#F070D1"] ;
+maps_pseudo_order_embedding_ext [label="pseudo_order_embedding_ext", URL=<maps.html#pseudo_order_embedding_ext>, fillcolor="#F070D1"] ;
+maps_dec_strictly_order_reflecting_mor [label="dec_strictly_order_reflecting_mor", URL=<maps.html#dec_strictly_order_reflecting_mor>, peripheries=3, fillcolor="#F070D1"] ;
+maps_dec_strictly_order_preserving_inj [label="dec_strictly_order_preserving_inj", URL=<maps.html#dec_strictly_order_preserving_inj>, peripheries=3, fillcolor="#F070D1"] ;
+maps_strictly_order_reflecting_mor [label="strictly_order_reflecting_mor", URL=<maps.html#strictly_order_reflecting_mor>, fillcolor="#F070D1"] ;
+maps_strictly_order_preserving_inj [label="strictly_order_preserving_inj", URL=<maps.html#strictly_order_preserving_inj>, fillcolor="#F070D1"] ;
+  maps_compose_order_embedding -> maps_compose_order_reflecting [] ;
+  maps_compose_order_embedding -> maps_compose_order_preserving [] ;
+  maps_projected_full_pseudo_order -> maps_projected_pseudo_order [] ;
+  maps_pseudo_order_embedding_inj -> maps_pseudo_order_embedding_ext [] ;
+  maps_dec_strictly_order_reflecting_mor -> maps_strictly_order_reflecting_mor [] ;
+  maps_dec_strictly_order_preserving_inj -> maps_strictly_order_preserving_inj [] ;
+subgraph cluster_maps { label="maps"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+maps_strictly_order_preserving_inj; maps_strictly_order_reflecting_mor; maps_dec_strictly_order_preserving_inj; maps_dec_strictly_order_reflecting_mor; maps_pseudo_order_embedding_ext; maps_pseudo_order_embedding_inj; maps_full_pseudo_order_preserving; maps_full_pseudo_order_reflecting; maps_order_preserving_flip; maps_order_reflecting_flip; maps_order_preserving_nonneg; maps_order_preserving_flip_nonneg; maps_order_reflecting_pos; maps_order_reflecting_flip_pos; maps_strictly_order_preserving_flip; maps_strictly_order_reflecting_flip; maps_strictly_order_preserving_pos; maps_strictly_order_preserving_flip_pos; maps_projected_partial_order; maps_projected_total_order; maps_projected_strict_order; maps_projected_pseudo_order; maps_projected_full_pseudo_order; maps_id_order_preserving; maps_id_order_reflecting; maps_compose_order_preserving; maps_compose_order_reflecting; maps_compose_order_embedding; };
+} /* END */

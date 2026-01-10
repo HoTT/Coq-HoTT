@@ -1,0 +1,1274 @@
+<html>
+<head>
+<title>Addition.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Addition.v</h1>
+
+<div class="code" title="File: Addition.v
+Line: 1
+Time: 0.039s">
+<div class="time" style="width: 13.829787234043%"></div>
+<pre>Require Import HoTT.Basics HoTT.Types.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 1
+Time: 0.035s">
+<div class="time" style="width: 12.41134751773%"></div>
+<pre>
+Require Import HoTT.Spaces.No.Core HoTT.Spaces.No.Negation.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 2
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope path_scope.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope surreal_scope.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Addition of surreal numbers *)
+
+(** Addition requires the option sorts to be closed under finite sums. *)</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 9
+Time: 0.001s">
+<div class="time" style="width: 0.35460992907801%"></div>
+<pre>Class HasAddition (S : OptionSort) :=
+  { empty_options :: InSort S Empty Empty
+    ; sum_options :: forall L R L' R',
+        InSort S L R -&gt; InSort S L' R' -&gt; InSort S (L + L') (R + R')
+  }.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance hasaddition_maxsort : HasAddition MaxSort
+  := { empty_options := tt ;
+       sum_options := fun _ _ _ _ _ _ =&gt; tt }.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance hasaddition_ordsort : HasAddition OrdSort
+  := { empty_options := idmap ;
+       sum_options := fun _ _ _ _ f g =&gt; sum_ind _ f g }.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance hasaddition_decsort : HasAddition DecSort.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  constructor.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact insort_decsort.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 27
+Time: 0.001s">
+<div class="time" style="width: 0.35460992907801%"></div>
+<pre> intros L R L' R' [? ?] [? ?]; split; exact _.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section Addition.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{Univalence}.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Universe i.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {S : OptionSort@{i}} `{HasAddition S}.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Let No := GenNo S.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Section Inner.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+    Context {L R : Type@{i} } {Sx : InSort S L R}
+            (xL : L -&gt; No) (xR : R -&gt; No)
+            (xcut : forall (l : L) (r : R), xL l &lt; xR r).</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+    Let A := {g : No -&gt; No &amp;
+              (forall x y : No, x &lt;= y -&gt; g x &lt;= g y) *
+              (forall x y : No, x &lt; y -&gt; g x &lt; g y)}.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+    Context (xL_plus : L -&gt; A) (xR_plus : R -&gt; A)
+            (xL_lt_xR_plus : forall (l : L) (r : R) (x : No),
+                               (xL_plus l).1 x &lt; (xR_plus r).1 x).</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 48
+Time: 0.001s">
+<div class="time" style="width: 0.35460992907801%"></div>
+<pre>
+
+    Definition plus_inner
+    : { g : forall (y : No),
+              { x_plus_y : No &amp;
+                (forall l, (xL_plus l).1 y &lt; x_plus_y) *
+                (forall r, x_plus_y &lt; (xR_plus r).1 y) } &amp;
+        (forall y z : No, y &lt;= z -&gt; (g y).1 &lt;= (g z).1) *
+        (forall y z : No, y &lt;  z -&gt; (g y).1 &lt;  (g z).1) }.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    Proof.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 57
+Time: 0.008s">
+<div class="time" style="width: 2.8368794326241%"></div>
+<pre>
+      simple refine (No_ind_package
+                (fun y =&gt; { x_plus_y : No &amp;
+                            (forall l, (xL_plus l).1 y &lt; x_plus_y) *
+                            (forall r, x_plus_y &lt; (xR_plus r).1 y) })
+                (fun _ _ _ z w =&gt; z.1 &lt;= w.1)
+                (fun _ _ _ z w =&gt; z.1 &lt; w.1)
+                _ _ _ _ _).</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      -</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros L' R' ? yL yR ycut x_plus_yL x_plus_yR x_plus_yL_lt_yR.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        pose (L'' := L + L').</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>  pose (R'' := R + R').</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 66
+Time: 0.001s">
+<div class="time" style="width: 0.35460992907801%"></div>
+<pre>
+        pose (zL := sum_ind (fun _ =&gt; No)
+                            (fun l =&gt; (xL_plus l).1 {{ yL | yR // ycut }})
+                            (fun l =&gt; (x_plus_yL l).1)
+                    : L'' -&gt; No).</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        pose (zR := sum_ind (fun _ =&gt; No)
+                            (fun r =&gt; (xR_plus r).1 {{ yL | yR // ycut }})
+                            (fun r =&gt; (x_plus_yR r).1)
+                    : R'' -&gt; No).</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        assert (zcut : forall (l:L'') (r:R''), zL l &lt; zR r).</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        {</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 76
+Time: 0.006s">
+<div class="time" style="width: 2.1276595744681%"></div>
+<pre> abstract (
+          intros [l|l] [r|r]; cbn;
+          [ apply xL_lt_xR_plus
+          | transitivity ((xL_plus l).1 (yR r));
+            [ apply (snd (xL_plus l).2), lt_ropt; exact _
+            | exact (fst (x_plus_yR r).2 l) ]
+          | transitivity ((xR_plus r).1 (yL l));
+            [ exact (snd (x_plus_yL l).2 r)
+            | apply (snd (xR_plus r).2), lt_lopt; exact _ ]
+          | apply x_plus_yL_lt_yR ]).</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        assert (InSort S L'' R'') by (apply sum_options; exact _).</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        exists ({{ zL | zR // zcut }}); split.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        +</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros l.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          exact (lt_lopt zL zR zcut (inl l)).</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        +</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros r.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          exact (lt_ropt zL zR zcut (inl r)).</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      -</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 92
+Time: 0.012s">
+<div class="time" style="width: 4.2553191489362%"></div>
+<pre> abstract (
+        intros x y [a ?] [b ?] p q r s;
+        rewrite transport_sigma; cbn in *;
+        apply path_sigma_hprop, path_No; cbn;
+        rewrite transport_const; assumption).</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      -</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 97
+Time: 0.017s">
+<div class="time" style="width: 6.0283687943262%"></div>
+<pre> abstract (
+        intros L' R' ? yL yR ycut x_plus_yL x_plus_yR x_plus_yL_lt_yR
+               L'' R'' ? zL zR zcut x_plus_zL x_plus_zR x_plus_zL_lt_zR
+               yL_lt_z x_plus_yL_lt_z y_lt_zR x_plus_y_lt_zR;
+        cbn in *;
+        apply le_lr; [ intros [l|l] | intros [r|r] ]; cbn;
+        [ refine (le_lt_trans (fst (xL_plus l).2 _ {{ zL | zR // zcut}} _) _);
+          [ by (apply le_lr; assumption)
+          | exact (lt_lopt _ _ _ (inl l)) ]
+        | exact (x_plus_yL_lt_z l)
+        | refine (lt_le_trans _
+                    (fst (xR_plus r).2 {{ yL | yR // ycut}} _ _));
+          [ exact (lt_ropt _ _ _ (inl r))
+          | by (apply le_lr; assumption) ]
+        | exact (x_plus_y_lt_zR r) ] ).</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      -</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 112
+Time: 0.008s">
+<div class="time" style="width: 2.8368794326241%"></div>
+<pre> abstract (
+        intros L' R' ? yL yR ycut x_plus_yL x_plus_yR x_plus_yL_lt_yR
+               L'' R'' ? zL zR zcut x_plus_zL x_plus_zR x_plus_zL_lt_zR
+               l y_le_zL x_plus_y_le_zL; cbn;
+        apply lt_l with (inr l);
+        exact x_plus_y_le_zL ).</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      -</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 118
+Time: 0.008s">
+<div class="time" style="width: 2.8368794326241%"></div>
+<pre> abstract (
+        intros L' R' ? yL yR ycut x_plus_yL x_plus_yR x_plus_yL_lt_yR
+               L'' R'' ? zL zR zcut x_plus_zL x_plus_zR x_plus_zL_lt_zR
+               r yR_le_z x_plus_yR_le_z; cbn;
+        apply lt_r with (inr r);
+        exact x_plus_yR_le_z).</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 123
+Time: 0.006s">
+<div class="time" style="width: 2.1276595744681%"></div>
+<pre>
+    Defined.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+    (** We now prove a computation law for [plus_inner].  It holds definitionally, so we would like to prove it with just [:= 1] and then rewrite along it later, as we did above.  However, there is a subtlety in that the output should be a surreal defined by a cut, which in particular includes a proof of cut-ness, and that proof is rather long, so we would not like to see it in the type of this lemma.  Thus, instead we assert only that there *exists* some proof of cut-ness and an equality. *)
+   </pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 127
+Time: 0.005s">
+<div class="time" style="width: 1.7730496453901%"></div>
+<pre>Definition plus_inner_cut
+               {L' R' : Type@{i} } {Sy : InSort S L' R'}
+               (yL : L' -&gt; No) (yR : R' -&gt; No)
+               (ycut : forall (l : L') (r : R'), yL l &lt; yR r)
+    : let L'' := L + L' in
+      let R'' := R + R' in
+      let zL := sum_ind (fun _ =&gt; No)
+                        (fun l =&gt; (xL_plus l).1 {{ yL | yR // ycut }})
+                        (fun l =&gt; (plus_inner.1 (yL l)).1)
+                : L'' -&gt; No in
+      let zR := sum_ind (fun _ =&gt; No)
+                        (fun r =&gt; (xR_plus r).1 {{ yL | yR // ycut }})
+                        (fun r =&gt; (plus_inner.1 (yR r)).1)
+                : R'' -&gt; No in
+      let Sz := sum_options L R L' R' _ _ in
+      { zcut : forall (l:L'') (r:R''), zL l &lt; zR r &amp;
+        (plus_inner.1 {{ yL | yR // ycut }}).1 = (@No_cut _ _ _ Sz zL zR zcut) }.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    Proof.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      (** Now we tell Coq that we want the equality to be definitional, and let it figure out what the proof of cut-ness has to be. *)
+     </pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>eexists.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      (** Adding [rel_hnf] here speeds things up considerably, possibly because it puts the terms in a form where the evar can be instantiated without unfolding or reduction, preventing backtracking across the evar instantiation. *)
+     </pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 148
+Time: 0.004s">
+<div class="time" style="width: 1.4184397163121%"></div>
+<pre>rel_hnf.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 148
+Time: 0.006s">
+<div class="time" style="width: 2.1276595744681%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 148
+Time: 0.021s">
+<div class="time" style="width: 7.4468085106383%"></div>
+<pre>
+    Qed.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 149
+Time: 0.001s">
+<div class="time" style="width: 0.35460992907801%"></div>
+<pre>
+
+  End Inner.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 151
+Time: 0.01s">
+<div class="time" style="width: 3.5460992907801%"></div>
+<pre>
+
+  Definition plus_outer
+  : { f : No -&gt; { g : No -&gt; No &amp;
+                  (forall x y, x &lt;= y -&gt; g x &lt;= g y) *
+                  (forall x y, x &lt;  y -&gt; g x &lt;  g y) } &amp;
+      (forall x y, x &lt;= y -&gt; forall z, (f x).1 z &lt;= (f y).1 z) *
+      (forall x y, x &lt;  y -&gt; forall z, (f x).1 z &lt;  (f y).1 z) }.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 159
+Time: 0.01s">
+<div class="time" style="width: 3.5460992907801%"></div>
+<pre>
+    refine (No_rec_package
+              {g : No -&gt; No &amp;
+                (forall x y, x &lt;= y -&gt; g x &lt;= g y) *
+                (forall x y, x &lt;  y -&gt; g x &lt;  g y) }
+              (fun g h =&gt; forall x, g.1 x &lt;= h.1 x)
+              (fun g h =&gt; forall x, g.1 x &lt;  h.1 x)
+              (fun L R Sx xL xR xcut xL_plus xR_plus xL_lt_xR_plus =&gt;
+                 let g := plus_inner xL_plus xR_plus xL_lt_xR_plus in
+                 ((fun y =&gt; (g.1 y).1) ; (g.2)))
+               _ _ _ _).</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 170
+Time: 0.009s">
+<div class="time" style="width: 3.1914893617021%"></div>
+<pre> abstract (
+      intros [g ?] [h ?] p q;
+      apply path_sigma_hprop; cbn in *;
+      apply path_arrow; intros x;
+      apply path_No; [ apply p | apply q ] ).</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 174
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 175
+Time: 0.032s">
+<div class="time" style="width: 11.347517730496%"></div>
+<pre> abstract (
+      intros L R ? xL xR xcut xL_plus xR_plus xL_lt_xR_plus
+           L' R' ? yL yR ycut yL_plus yR_plus yL_lt_yR_plus;
+      intros xL_lt_y xL_lt_y_plus x_lt_yR x_lt_yR_plus z;
+      lazy beta zeta in *; cbn [pr1] in *;
+      pattern z; refine (No_ind_hprop _ _ z);
+      intros L'' R'' ? zL zR zcut x_le_y_plus_zL x_le_y_plus_zR;
+      destruct (plus_inner_cut xL_plus xR_plus xL_lt_xR_plus
+                               zL zR zcut) as [xzcut p]; rewrite p;
+      destruct (plus_inner_cut yL_plus yR_plus yL_lt_yR_plus
+                               zL zR zcut) as [yzcut q];rewrite q;
+      apply le_lr; [ intros [l|l] | intros [r|r] ];
+      [ (** x^L + z &lt; y + z *)
+        specialize (xL_lt_y_plus l {{ zL | zR // zcut }});
+        rewrite q in xL_lt_y_plus;
+        exact xL_lt_y_plus
+      | (** x + z^L &lt; y + z *)
+        refine (le_lt_trans (x_le_y_plus_zL l) _);
+        exact (lt_lopt _ _ _ (inr l))
+      | (** x + z &lt; y^R + z *)
+        specialize (x_lt_yR_plus r {{ zL | zR // zcut }});
+        rewrite p in x_lt_yR_plus;
+        exact x_lt_yR_plus
+      | (** x + z &lt; y + z^R *)
+        refine (lt_le_trans _ (x_le_y_plus_zR r));
+        exact (lt_ropt _ _ _ (inr r)) ]).</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 201
+Time: 0.04s">
+<div class="time" style="width: 14.184397163121%"></div>
+<pre> abstract (
+      intros L R ? xL xR xcut xL_plus xR_plus xL_lt_xR_plus
+             L' R' ? yL yR ycut yL_plus yR_plus yL_lt_yR_plus;
+      intros l x_le_yL x_le_yL_plus z;
+      lazy beta zeta in *; cbn [pr1] in *;
+      pattern z; refine (No_ind_hprop _ _ z);
+      intros L'' R'' ? zL zR zcut x_le_y_plus_zL x_le_y_plus_zR;
+      destruct (plus_inner_cut xL_plus xR_plus xL_lt_xR_plus
+                               zL zR zcut) as [xzcut p]; rewrite p;
+      destruct (plus_inner_cut yL_plus yR_plus yL_lt_yR_plus
+                               zL zR zcut) as [yzcut q];rewrite q;
+      refine (le_lt_trans (x_le_yL_plus {{ zL | zR // zcut }}) _);
+      exact (lt_lopt _ _ _ (inl l)) ).</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 213
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 214
+Time: 0.029s">
+<div class="time" style="width: 10.283687943262%"></div>
+<pre> abstract (
+      intros L R ? xL xR xcut xL_plus xR_plus xL_lt_xR_plus
+             L' R' ? yL yR ycut yL_plus yR_plus yL_lt_yR_plus;
+      intros r xR_le_y xR_le_y_plus z;
+      lazy beta zeta in *; cbn [pr1] in *;
+      pattern z; refine (No_ind_hprop _ _ z);
+      intros L'' R'' ? zL zR zcut x_le_y_plus_zL x_le_y_plus_zR;
+      destruct (plus_inner_cut xL_plus xR_plus xL_lt_xR_plus
+                               zL zR zcut) as [xzcut p]; rewrite p;
+      destruct (plus_inner_cut yL_plus yR_plus yL_lt_yR_plus
+                               zL zR zcut) as [yzcut q];rewrite q;
+      refine (lt_le_trans _ (xR_le_y_plus {{ zL | zR // zcut }}));
+      exact (lt_ropt _ _ _ (inl r)) ).</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 226
+Time: 0.008s">
+<div class="time" style="width: 2.8368794326241%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 227
+Time: 0.001s">
+<div class="time" style="width: 0.35460992907801%"></div>
+<pre>
+
+  Definition plus (x y : No) : No
+    := (plus_outer.1 x).1 y.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 230
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Infix "+" := plus : surreal_scope.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 232
+Time: 0.002s">
+<div class="time" style="width: 0.70921985815603%"></div>
+<pre>
+
+  Definition plus_le_l (x x' y : No) (p : x &lt;= x')
+  : (x + y) &lt;= (x' + y)
+    := fst (plus_outer.2) x x' p y.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 236
+Time: 0.002s">
+<div class="time" style="width: 0.70921985815603%"></div>
+<pre>
+
+  Definition plus_lt_l (x x' y : No) (p : x &lt; x')
+  : (x + y) &lt; (x' + y)
+    := snd (plus_outer.2) x x' p y.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 240
+Time: 0.002s">
+<div class="time" style="width: 0.70921985815603%"></div>
+<pre>
+
+  Definition plus_le_r (x y y' : No) (p : y &lt;= y')
+  : (x + y) &lt;= (x + y')
+    := fst (plus_outer.1 x).2 y y' p.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 244
+Time: 0.002s">
+<div class="time" style="width: 0.70921985815603%"></div>
+<pre>
+
+  Definition plus_lt_r (x y y' : No) (p : y &lt; y')
+  : (x + y) &lt; (x + y')
+    := snd (plus_outer.1 x).2 y y' p.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 248
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** See the remarks above [plus_inner_cut] to explain the type of this lemma. *)
+ </pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 251
+Time: 0.06s">
+<div class="time" style="width: 21.276595744681%"></div>
+<pre>Definition plus_cut
+             {L R : Type@{i} } {Sx : InSort S L R}
+             (xL : L -&gt; No) (xR : R -&gt; No)
+             (xcut : forall (l : L) (r : R), xL l &lt; xR r)
+             {L' R' : Type@{i} } {Sy : InSort S L' R'}
+             (yL : L' -&gt; No) (yR : R' -&gt; No)
+             (ycut : forall (l : L') (r : R'), yL l &lt; yR r)
+  : let L'' := (L + L')%type in
+    let R'' := (R + R')%type in
+    let x := {{ xL | xR // xcut }} in
+    let y := {{ yL | yR // ycut }} in
+    let zL := sum_ind (fun _ =&gt; No)
+                      (fun l =&gt; (xL l) + y) (fun l =&gt; x + (yL l))
+              : L'' -&gt; No in
+    let zR := sum_ind (fun _ =&gt; No)
+                      (fun r =&gt; (xR r) + y) (fun r =&gt; x + (yR r))
+              : R'' -&gt; No in
+    let Sz := sum_options L R L' R' _ _ in
+    { zcut : forall (l:L'') (r:R''), zL l &lt; zR r &amp;
+      x + y = @No_cut _ _ _ Sz zL zR zcut }
+    := plus_inner_cut (Sx := Sx)
+         (fun l =&gt; plus_outer.1 (xL l))
+         (fun r =&gt; plus_outer.1 (xR r))
+         (fun l r =&gt; snd plus_outer.2 (xL l) (xR r) (xcut l r))
+         yL yR ycut.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 275
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Because the conclusion of [plus_cut] is a sigma-type whose second component is the real equality we want to rewrite along, in order to rewrite along it we have to first destruct it.  This tactic takes care of that for us. *)
+ </pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 278
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Ltac do_plus_cut :=
+    repeat match goal with
+    | [ |- context ctx [ {{ ?xL | ?xR // ?xcut }} + {{ ?yL | ?yR // ?ycut }} ] ] =&gt;
+      let xycut := fresh "cut" in
+      let p := fresh "p" in
+      destruct (plus_cut xL xR xcut yL yR ycut) as [xycut p];
+        rewrite p; clear p
+    end.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 285
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Conway proves the basic properties of arithmetic using "one-line proofs".  We can't quite do them in one line of Ltac, but the following tactic does help a lot.  Note that it is specific to addition.  It requires the caller to specify the equivalences along which to identify the indexing types for the options, as well as a rewriting tactic for evaluating those equivalences on constructors.  Unfortunately, it doesn't usually manage to finish the whole proof, since in general it can't guess how to use the inductive hypotheses.  It's usually fairly easy to finish all the cases it leaves over, but we do generally have to refer by name to the inductive hypotheses that were automatically named by [intros] here.  I haven't thought of a good solution to that. *)
+ </pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 288
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Opaque No_cut plus.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 288
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> (* required to make [rewrite] fail quickly *)
+ </pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 289
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Unset Keyed Unification.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 289
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> (* shaves another second or two off of [rewrite] *)
+ </pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 290
+Time: 0.001s">
+<div class="time" style="width: 0.35460992907801%"></div>
+<pre>Tactic Notation "one_line_proof" uconstr(eL) uconstr(eR) :=
+    unfold No in *;
+    repeat_No_ind_hprop;
+    do_plus_cut;
+    refine (path_No_easy _ _ _ _ eL eR _ _ _ _);
+    intros;
+    repeat match goal with
+           | [ H : (?A + ?B) |- _ ] =&gt; destruct H
+           end;
+    repeat match goal with
+           | [ |- context[@equiv_fun ?A ?B ?e ?v] ]
+             =&gt; (* first check that we picked up either [eL] or [eR]; we can't use [unify] because it doesn't infer holes, and we can't Ltac-match on [eL] / [eR] because apparently matching on uconstr doesn't work when there are holes in the uconstr *)
+             first [ let unif := constr:(idpath : e = eL) in idtac
+                   | let unif := constr:(idpath : e = eR) in idtac ];
+             (* assume that the term reduces to a constructor; use [hnf] to get that constructor *)
+             let ef := constr:(@equiv_fun A B e v) in
+             let ef' := (eval hnf in ef) in
+             progress change ef with ef'
+           end;
+    repeat cbn [sum_ind];
+    (* rewrite with induction hypotheses from [repeat_No_ind_hprop] and [do_plus_cut] *)
+    repeat match goal with
+           | [ |- ?x = ?x ] =&gt; reflexivity
+           | [ |- ?a + _ = ?a + _ ] =&gt; apply ap
+           | [ |- _ + ?a = _ + ?a ] =&gt; apply (ap (fun x =&gt; x + a))
+           | [ e : Empty |- _ ] =&gt; elim e
+           | [ IH : (forall lr, _ + _ = _) |- _ ]
+             =&gt; rewrite IH; clear IH
+           | [ IH : (forall lr, _ + _ = _ + _) |- _ ]
+             =&gt; first [ rewrite IH | rewrite &lt;- IH ]; clear IH
+           | [ IH : (forall lr (y : GenNo _), _ + _ = _ + _) |- _ ]
+             =&gt; first [ rewrite IH | rewrite &lt;- IH ]; clear IH
+           | [ IH : (forall lr (y z : GenNo _), _ + _ = _ + _) |- _ ]
+             =&gt; first [ rewrite IH | rewrite &lt;- IH ]; clear IH
+           end.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 324
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** At last we are ready to prove that the surreal numbers are a commutative monoid under addition. *)
+
+ </pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 328
+Time: 0.001s">
+<div class="time" style="width: 0.35460992907801%"></div>
+<pre>Theorem plus_comm (x y : No) : x + y = y + x.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 328
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 329
+Time: 0.028s">
+<div class="time" style="width: 9.9290780141844%"></div>
+<pre>
+    one_line_proof (equiv_sum_symm _ _) (equiv_sum_symm _ _).</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 330
+Time: 0.007s">
+<div class="time" style="width: 2.4822695035461%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 331
+Time: 0.002s">
+<div class="time" style="width: 0.70921985815603%"></div>
+<pre>
+
+  Theorem plus_assoc (x y z : No) : (x + y) + z = x + (y + z).</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 333
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 334
+Time: 0.282s">
+<div class="time" style="width: 100%"></div>
+<pre>
+    one_line_proof (equiv_sum_assoc _ _ _) (equiv_sum_assoc _ _ _);
+      one_line_proof 1%equiv 1%equiv.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 336
+Time: 0.067s">
+<div class="time" style="width: 23.758865248227%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 337
+Time: 0.001s">
+<div class="time" style="width: 0.35460992907801%"></div>
+<pre>
+
+  Theorem plus_zero (x : No) : x + zero = x.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 339
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 340
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unfold zero.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 341
+Time: 0.009s">
+<div class="time" style="width: 3.1914893617021%"></div>
+<pre>
+    one_line_proof (sum_empty_r _) (sum_empty_r _).</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 342
+Time: 0.004s">
+<div class="time" style="width: 1.4184397163121%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 343
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Theorem zero_plus (x : No) : zero + x = x.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 345
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 346
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unfold zero.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 347
+Time: 0.008s">
+<div class="time" style="width: 2.8368794326241%"></div>
+<pre>
+    one_line_proof (sum_empty_l _) (sum_empty_l _).</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 348
+Time: 0.004s">
+<div class="time" style="width: 1.4184397163121%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 349
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** If we also have negation, we can prove that it gives additive inverses, so that we have an abelian group. *)
+ </pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 352
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Context `{HasNegation S}.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 352
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition plus_negate (x : No) : x + negate x = zero.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 354
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 355
+Time: 0.006s">
+<div class="time" style="width: 2.1276595744681%"></div>
+<pre>
+    unfold No in *;
+    repeat_No_ind_hprop;
+    destruct (negate_cut xL xR xcut) as [nxcut p];
+    rewrite p; clear p;
+    do_plus_cut.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 360
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_No.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 361
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 362
+Time: 0.001s">
+<div class="time" style="width: 0.35460992907801%"></div>
+<pre> apply le_lr; [ intros [l|r]; cbn [sum_ind] | intros [] ].</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 362
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 363
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> unfold zero in IHL; rewrite &lt;- (IHL l); clear IHL.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 363
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply plus_lt_r.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 364
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        exact (lt_ropt _ _ _ l).</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 365
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 366
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> unfold zero in IHR; rewrite &lt;- (IHR r); clear IHR.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 366
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply plus_lt_l.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 367
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        exact (lt_ropt _ _ _ r).</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 368
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 369
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply le_lr; [ intros [] | intros [r|l] ]; cbn [sum_ind].</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 369
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 370
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> unfold zero in IHR; rewrite &lt;- (IHR r); clear IHR.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 370
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply plus_lt_r.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 371
+Time: 0.003s">
+<div class="time" style="width: 1.063829787234%"></div>
+<pre>
+        exact (lt_lopt _ _ _ r).</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 372
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 373
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> unfold zero in IHL; rewrite &lt;- (IHL l); clear IHL.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 373
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply plus_lt_l.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 374
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        exact (lt_lopt _ _ _ l).</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 375
+Time: 0.006s">
+<div class="time" style="width: 2.1276595744681%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 376
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition sub (x y : No) : No := x + (negate y).</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 378
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Infix "-" := sub : surreal_scope.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 380
+Time: 0.043s">
+<div class="time" style="width: 15.248226950355%"></div>
+<pre>
+
+End Addition.</pre>
+</div>
+<div class="code" title="File: Addition.v
+Line: 383
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

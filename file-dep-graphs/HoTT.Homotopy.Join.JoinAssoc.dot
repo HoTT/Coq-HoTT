@@ -1,0 +1,68 @@
+digraph HoTT_Homotopy_Join_JoinAssoc {
+  graph [ratio=0.5]
+  node [style=filled]
+JoinAssoc_hexagon_join_assoc_sym [label="hexagon_join_assoc_sym", URL=<JoinAssoc.html#hexagon_join_assoc_sym>, peripheries=3, fillcolor="#F070D1"] ;
+JoinAssoc_square_join_sym_assoc_twist [label="square_join_sym_assoc_twist", URL=<JoinAssoc.html#square_join_sym_assoc_twist>, fillcolor="#F070D1"] ;
+JoinAssoc_hexagon_join_twist_sym [label="hexagon_join_twist_sym", URL=<JoinAssoc.html#hexagon_join_twist_sym>, fillcolor="#F070D1"] ;
+JoinAssoc_trijoin_rec_id_sym [label="trijoin_rec_id_sym", URL=<JoinAssoc.html#trijoin_rec_id_sym>, fillcolor="#F070D1"] ;
+JoinAssoc_trijoinrecdata_id_sym [label="trijoinrecdata_id_sym", URL=<JoinAssoc.html#trijoinrecdata_id_sym>, fillcolor="#F070D1"] ;
+JoinAssoc_join_trianglelaw [label="join_trianglelaw", URL=<JoinAssoc.html#join_trianglelaw>, peripheries=3, fillcolor="#F070D1"] ;
+JoinAssoc_join_trianglelaw_ [label="join_trianglelaw'", URL=<JoinAssoc.html#join_trianglelaw'>, fillcolor="#F070D1"] ;
+JoinAssoc_join_associator [label="join_associator", URL=<JoinAssoc.html#join_associator>, fillcolor="#F070D1"] ;
+JoinAssoc_join_assoc_nat [label="join_assoc_nat", URL=<JoinAssoc.html#join_assoc_nat>, fillcolor="#F070D1"] ;
+JoinAssoc_trijoin_id_sym_nat_ [label="trijoin_id_sym_nat'", URL=<JoinAssoc.html#trijoin_id_sym_nat'>, peripheries=3, fillcolor="#F070D1"] ;
+JoinAssoc_trijoin_id_sym_nat [label="trijoin_id_sym_nat", URL=<JoinAssoc.html#trijoin_id_sym_nat>, fillcolor="#F070D1"] ;
+JoinAssoc_trijoin_twist_nat [label="trijoin_twist_nat", URL=<JoinAssoc.html#trijoin_twist_nat>, fillcolor="#F070D1"] ;
+JoinAssoc_trijoin_twist_nat_ [label="trijoin_twist_nat'", URL=<JoinAssoc.html#trijoin_twist_nat'>, fillcolor="#F070D1"] ;
+JoinAssoc_trijoin_rec_trijoin_twist [label="trijoin_rec_trijoin_twist", URL=<JoinAssoc.html#trijoin_rec_trijoin_twist>, fillcolor="#F070D1"] ;
+JoinAssoc_join_join_power [label="join_join_power", URL=<JoinAssoc.html#join_join_power>, peripheries=3, fillcolor="#F070D1"] ;
+JoinAssoc_join_assoc [label="join_assoc", URL=<JoinAssoc.html#join_assoc>, fillcolor="#F070D1"] ;
+JoinAssoc_trijoin_id_sym [label="trijoin_id_sym", URL=<JoinAssoc.html#trijoin_id_sym>, fillcolor="#F070D1"] ;
+JoinAssoc_equiv_trijoin_twist [label="equiv_trijoin_twist", URL=<JoinAssoc.html#equiv_trijoin_twist>, fillcolor="#F070D1"] ;
+JoinAssoc_trijoin_twist_homotopic [label="trijoin_twist_homotopic", URL=<JoinAssoc.html#trijoin_twist_homotopic>, fillcolor="#F070D1"] ;
+JoinAssoc_trijoin_twist_joinr [label="trijoin_twist_joinr", URL=<JoinAssoc.html#trijoin_twist_joinr>, peripheries=3, fillcolor="#F070D1"] ;
+JoinAssoc_trijoin_twist [label="trijoin_twist", URL=<JoinAssoc.html#trijoin_twist>, fillcolor="#F070D1"] ;
+JoinAssoc_trijoin_twist_recdata [label="trijoin_twist_recdata", URL=<JoinAssoc.html#trijoin_twist_recdata>, fillcolor="#F070D1"] ;
+JoinAssoc_twijoin_twist_check2 [label="twijoin_twist_check2", URL=<JoinAssoc.html#twijoin_twist_check2>, peripheries=3, fillcolor="#F070D1"] ;
+JoinAssoc_trijoin_twist_check1 [label="trijoin_twist_check1", URL=<JoinAssoc.html#trijoin_twist_check1>, peripheries=3, fillcolor="#F070D1"] ;
+JoinAssoc_equiv_trijoin_twist_ [label="equiv_trijoin_twist'", URL=<JoinAssoc.html#equiv_trijoin_twist'>, fillcolor="#F070D1"] ;
+JoinAssoc_trijoinrecdata_fun_twist [label="trijoinrecdata_fun_twist", URL=<JoinAssoc.html#trijoinrecdata_fun_twist>, fillcolor="#F070D1"] ;
+JoinAssoc_trijoinrecdata_twist_natequiv [label="trijoinrecdata_twist_natequiv", URL=<JoinAssoc.html#trijoinrecdata_twist_natequiv>, fillcolor="#F070D1"] ;
+JoinAssoc_trijoinrecdata_twist_inv [label="trijoinrecdata_twist_inv", URL=<JoinAssoc.html#trijoinrecdata_twist_inv>, fillcolor="#F070D1"] ;
+JoinAssoc_trijoinrecdata_twist [label="trijoinrecdata_twist", URL=<JoinAssoc.html#trijoinrecdata_twist>, fillcolor="#F070D1"] ;
+  JoinAssoc_hexagon_join_assoc_sym -> JoinAssoc_square_join_sym_assoc_twist [] ;
+  JoinAssoc_square_join_sym_assoc_twist -> JoinAssoc_hexagon_join_twist_sym [] ;
+  JoinAssoc_square_join_sym_assoc_twist -> JoinAssoc_join_assoc [] ;
+  JoinAssoc_hexagon_join_twist_sym -> JoinAssoc_trijoin_rec_id_sym [] ;
+  JoinAssoc_hexagon_join_twist_sym -> JoinAssoc_trijoin_rec_trijoin_twist [] ;
+  JoinAssoc_trijoin_rec_id_sym -> JoinAssoc_trijoinrecdata_id_sym [] ;
+  JoinAssoc_trijoin_rec_id_sym -> JoinAssoc_trijoin_id_sym [] ;
+  JoinAssoc_join_trianglelaw -> JoinAssoc_join_trianglelaw_ [] ;
+  JoinAssoc_join_trianglelaw -> JoinAssoc_join_associator [] ;
+  JoinAssoc_join_trianglelaw_ -> JoinAssoc_trijoin_rec_trijoin_twist [] ;
+  JoinAssoc_join_associator -> JoinAssoc_join_assoc_nat [] ;
+  JoinAssoc_join_assoc_nat -> JoinAssoc_trijoin_id_sym_nat [] ;
+  JoinAssoc_join_assoc_nat -> JoinAssoc_trijoin_twist_nat [] ;
+  JoinAssoc_join_assoc_nat -> JoinAssoc_join_assoc [] ;
+  JoinAssoc_trijoin_id_sym_nat_ -> JoinAssoc_trijoin_id_sym_nat [] ;
+  JoinAssoc_trijoin_id_sym_nat -> JoinAssoc_trijoin_id_sym [] ;
+  JoinAssoc_trijoin_twist_nat -> JoinAssoc_trijoin_twist_nat_ [] ;
+  JoinAssoc_trijoin_twist_nat_ -> JoinAssoc_trijoin_rec_trijoin_twist [] ;
+  JoinAssoc_trijoin_rec_trijoin_twist -> JoinAssoc_trijoin_twist_homotopic [] ;
+  JoinAssoc_join_join_power -> JoinAssoc_join_assoc [] ;
+  JoinAssoc_join_assoc -> JoinAssoc_trijoin_id_sym [] ;
+  JoinAssoc_join_assoc -> JoinAssoc_equiv_trijoin_twist [] ;
+  JoinAssoc_equiv_trijoin_twist -> JoinAssoc_trijoin_twist_homotopic [] ;
+  JoinAssoc_trijoin_twist_homotopic -> JoinAssoc_trijoin_twist [] ;
+  JoinAssoc_trijoin_twist_homotopic -> JoinAssoc_equiv_trijoin_twist_ [] ;
+  JoinAssoc_trijoin_twist_joinr -> JoinAssoc_trijoin_twist [] ;
+  JoinAssoc_trijoin_twist -> JoinAssoc_trijoin_twist_recdata [] ;
+  JoinAssoc_twijoin_twist_check2 -> JoinAssoc_equiv_trijoin_twist_ [] ;
+  JoinAssoc_trijoin_twist_check1 -> JoinAssoc_equiv_trijoin_twist_ [] ;
+  JoinAssoc_equiv_trijoin_twist_ -> JoinAssoc_trijoinrecdata_fun_twist [] ;
+  JoinAssoc_trijoinrecdata_fun_twist -> JoinAssoc_trijoinrecdata_twist_natequiv [] ;
+  JoinAssoc_trijoinrecdata_twist_natequiv -> JoinAssoc_trijoinrecdata_twist_inv [] ;
+  JoinAssoc_trijoinrecdata_twist_inv -> JoinAssoc_trijoinrecdata_twist [] ;
+subgraph cluster_JoinAssoc { label="JoinAssoc"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+JoinAssoc_trijoinrecdata_twist; JoinAssoc_trijoinrecdata_twist_inv; JoinAssoc_trijoinrecdata_twist_natequiv; JoinAssoc_trijoinrecdata_fun_twist; JoinAssoc_equiv_trijoin_twist_; JoinAssoc_trijoin_twist_check1; JoinAssoc_twijoin_twist_check2; JoinAssoc_trijoin_twist_recdata; JoinAssoc_trijoin_twist; JoinAssoc_trijoin_twist_joinr; JoinAssoc_trijoin_twist_homotopic; JoinAssoc_equiv_trijoin_twist; JoinAssoc_trijoin_id_sym; JoinAssoc_join_assoc; JoinAssoc_join_join_power; JoinAssoc_trijoin_rec_trijoin_twist; JoinAssoc_trijoin_twist_nat_; JoinAssoc_trijoin_twist_nat; JoinAssoc_trijoin_id_sym_nat; JoinAssoc_trijoin_id_sym_nat_; JoinAssoc_join_assoc_nat; JoinAssoc_join_associator; JoinAssoc_join_trianglelaw_; JoinAssoc_join_trianglelaw; JoinAssoc_trijoinrecdata_id_sym; JoinAssoc_trijoin_rec_id_sym; JoinAssoc_hexagon_join_twist_sym; JoinAssoc_square_join_sym_assoc_twist; JoinAssoc_hexagon_join_assoc_sym; };
+} /* END */

@@ -1,0 +1,3247 @@
+<html>
+<head>
+<title>GCHtoAC.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for GCHtoAC.v</h1>
+
+<div class="code" title="File: GCHtoAC.v
+Line: 1
+Time: 0.072s">
+<div class="time" style="width: 100%"></div>
+<pre>From HoTT Require Import TruncType ExcludedMiddle abstract_algebra.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 1
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+From HoTT Require Import Universes.Smallness.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 2
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre>
+From HoTT Require Import Spaces.Nat.Core Spaces.Card.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+From HoTT Require Import Equiv.BiInv.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+From HoTT Require Import HIT.unique_choice.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 5
+Time: 0.002s">
+<div class="time" style="width: 2.7777777777778%"></div>
+<pre>
+
+From HoTT.Sets Require Import Ordinals Hartogs Powers GCH AC.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Open Scope type.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 9
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Close Scope trunc_scope.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* The proof of Sierpinski's results that GCH implies AC given in this file consists of two ingredients:
+   1. Adding powers of infinite sets does not increase the cardinality (path_infinite_power).
+   2. A variant of Cantor's theorem saying that P(X) &lt;= (X + Y) implies P(X) &lt;= Y for large X (Cantor_injects_injects).
+   Those are used to obtain that cardinality-controlled functions are well-behaved in the presence of GCH (Sierpinski), from which we obtain by instantiation with the Hartogs number that every set embeds into an ordinal, which is enough to conclude GCH -&gt; AC (GCH_AC) since the well-ordering theorem implies AC (WO_AC). *)
+
+
+(** * Constructive equivalences *)
+
+(* For the first ingredient, we establish a bunch of paths and conclude the desired result by equational reasoning. *)
+
+</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section Preparation.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Context {UA : Univalence}.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma path_sum_prod X Y Z :
+  (X -&gt; Z) * (Y -&gt; Z) = ((X + Y) -&gt; Z).</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply path_universe_uncurried.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply equiv_sum_distributive.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma path_sum_assoc X Y Z :
+  X + (Y + Z) = X + Y + Z.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  symmetry.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply path_universe_uncurried.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply equiv_sum_assoc.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma path_sum_bool X :
+  X + X = Bool * X.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply path_universe_uncurried.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> srapply equiv_adjointify.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fun x =&gt; match x with inl x =&gt; (true, x) | inr x =&gt; (false, x) end).</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fun x =&gt; match x with (true, x) =&gt; inl x | (false, x) =&gt; inr x end).</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [[]]; reflexivity.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros []; reflexivity.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 44
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma path_unit_nat :
+  Unit + nat = nat.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply path_universe_uncurried.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> srapply equiv_adjointify.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fun x =&gt; match x with inl _ =&gt; O | inr n =&gt; S n end).</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fun n =&gt; match n with O =&gt; inl tt | S n =&gt; inr n end).</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by intros [].</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by intros [[]|n].</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> 
+Qed.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma path_unit_fun X :
+  X = (Unit -&gt; X).</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply path_universe_uncurried.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply equiv_unit_rec.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+
+(** * Equivalences relying on LEM **)
+
+</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Context {EM : ExcludedMiddle}.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma path_bool_prop :
+  HProp = Bool.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply path_universe_uncurried.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> srapply equiv_adjointify.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 71
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre> exact (fun P =&gt; if LEM P _ then true else false).</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fun b : Bool =&gt; if b then merely Unit else merely Empty).</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 73
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre> intros []; destruct LEM as [H|H]; auto.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (H (tr tt)).</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 75
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre> apply (@merely_destruct Empty); try done.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 75
+Time: 0.006s">
+<div class="time" style="width: 8.3333333333333%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros P.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct LEM as [H|H]; apply equiv_path_iff_hprop.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split; auto.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros _.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact tt.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 78
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre> split; try done.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros HE.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 78
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre> apply (@merely_destruct Empty); try done.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 78
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma path_bool_subsingleton :
+  (Unit -&gt; HProp) = Bool.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite &lt;- path_unit_fun.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact path_bool_prop.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma path_pred_sum X (p : X -&gt; HProp) :
+  X = sig p + sig (fun x =&gt; ~ p x).</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply path_universe_uncurried.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> srapply equiv_adjointify.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 91
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre> destruct (LEM (p x) _) as [H|H]; [left | right]; by exists x.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [[x _]|[x _]]; exact x.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 93
+Time: 0.002s">
+<div class="time" style="width: 2.7777777777778%"></div>
+<pre> intros [[x Hx]|[x Hx]]; destruct LEM as [H|H]; try contradiction.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 94
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> enough (H = Hx) as -&gt; by reflexivity.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 94
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply path_ishprop.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 94
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> enough (H = Hx) as -&gt; by reflexivity.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply path_forall.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 95
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre> by intros HP.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by destruct LEM.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 96
+Time: 0.004s">
+<div class="time" style="width: 5.5555555555556%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition ran {X Y : Type} (f : X -&gt; Y) :=
+  fun y =&gt; hexists (fun x =&gt; f x = y).</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma path_ran {X} {Y : HSet} (f : X -&gt; Y) :
+  IsInjective f -&gt; sig (ran f) = X.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros Hf.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply path_universe_uncurried.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> srapply equiv_adjointify.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [y H].</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 106
+Time: 0.004s">
+<div class="time" style="width: 5.5555555555556%"></div>
+<pre> destruct (iota (fun x =&gt; f x = y) _) as [x Hx]; try exact x.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    split; try apply H.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x x'.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros Hy Hy'.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite &lt;- Hy' in Hy.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by apply Hf.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists (f x).</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists x.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct iota as [x' H].</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by apply Hf.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 110
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre> cbn.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 110
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre> intros [y x].</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 110
+Time: 0.002s">
+<div class="time" style="width: 2.7777777777778%"></div>
+<pre> apply path_sigma_hprop.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct iota as [x' Hx].</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact Hx.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 111
+Time: 0.005s">
+<div class="time" style="width: 6.9444444444444%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+
+(** * Equivalences on infinite sets *)
+
+</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma path_infinite_unit (X : HSet) :
+  infinite X -&gt; Unit + X = X.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 118
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [f Hf].</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite (@path_pred_sum X (ran f)).</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite (path_ran _ Hf).</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite path_sum_assoc.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite path_unit_nat.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 121
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 121
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 122
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Fact path_infinite_power (X : HSet) :
+  infinite X -&gt; (X -&gt; HProp) + (X -&gt; HProp) = (X -&gt; HProp).</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 125
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 126
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros H.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite path_sum_bool.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite &lt;- path_bool_subsingleton.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite path_sum_prod.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 128
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by rewrite path_infinite_unit.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 128
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+
+(** * Variants of Cantors's theorem *)
+
+(* For the second ingredient, we give a preliminary version (Cantor_path_inject) to see the idea, as well as a stronger refinement (Cantor_injects_injects) which is then a mere reformulation. *)
+
+</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 135
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Context {PR : PropResizing}.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 135
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma Cantor X (f : X -&gt; X -&gt; Type) :
+  { p | forall x, f x &lt;&gt; p }.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exists (fun x =&gt; ~ f x x).</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x H.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  enough (Hx : f x x &lt;-&gt; ~ f x x).</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply Hx; apply Hx; intros H'; by apply Hx.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> pattern (f x) at 1.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite H.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma hCantor {X} (f : X -&gt; X -&gt; HProp) :
+  { p | forall x, f x &lt;&gt; p }.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 147
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 148
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre>
+  exists (fun x =&gt; Build_HProp (f x x -&gt; Empty)).</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x H.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  enough (Hx : f x x &lt;-&gt; ~ f x x).</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply Hx; apply Hx; intros H'; by apply Hx.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 152
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> pattern (f x) at 1.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 152
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite H.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 152
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 152
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition clean_sum {X Y Z} (f : X -&gt; Y + Z) :
+  (forall x y, f x &lt;&gt; inl y) -&gt; forall x, { z | inr z = f x }.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros Hf.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> enough (H : forall x a, a = f x -&gt; {z : Z &amp; inr z = f x}).</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by apply (H x (f x)).</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x a Hxa.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> specialize (Hf x).</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (f x) as [y|z].</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply Empty_rect.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by apply (Hf y).</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by exists z.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 163
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Fact Cantor_path_injection {X Y} :
+  (X -&gt; HProp) = (X + Y) -&gt; (X + X) = X -&gt; Injection (X -&gt; HProp) Y.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 166
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros H1 H2.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assert (H : X + Y = (X -&gt; HProp) * (X -&gt; HProp)).</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by rewrite &lt;- H1, path_sum_prod, H2.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> 
+  -</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 170
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre> apply equiv_path in H as [f [g Hfg Hgf _]].</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    pose (f' x := fst (f (inl x))).</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (hCantor f') as [p Hp].</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    pose (g' q := g (p, q)).</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assert (H' : forall q x, g' q &lt;&gt; inl x).</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros q x H.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (Hp x).</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> unfold f'.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite &lt;- H.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> unfold g'.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by rewrite Hfg.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 174
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists (fun x =&gt; proj1 (clean_sum _ H' x)).</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 174
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros q q' H.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 174
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assert (Hqq' : g' q = g' q').</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 174
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 175
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre> destruct clean_sum as [z &lt;-].</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 175
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct clean_sum as [z' &lt;-].</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 175
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn in H.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 175
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by rewrite H.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 175
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> unfold g' in Hqq'.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> change (snd (p, q) = snd (p, q')).</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        rewrite &lt;- (Hfg (p, q)), &lt;- (Hfg (p, q')).</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by rewrite Hqq'.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 177
+Time: 0.003s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* Version just requiring propositional injections *)
+
+</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 181
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma Cantor_rel X (R : X -&gt; (X -&gt; HProp) -&gt; HProp) :
+  (forall x p p', R x p -&gt; R x p' -&gt; merely (p = p')) -&gt; { p | forall x, ~ R x p }.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 182
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 183
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros HR.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 184
+Time: 0.015s">
+<div class="time" style="width: 20.833333333333%"></div>
+<pre> pose (pc x := Build_HProp (smalltype (forall p : X -&gt; HProp, R x p -&gt; ~ p x))).</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 184
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exists pc.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x H.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> enough (Hpc : pc x &lt;-&gt; ~ pc x).</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> 2: split.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 186
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply Hpc; apply Hpc; intros H'; by apply Hpc.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 186
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 186
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros Hx.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply equiv_smalltype in Hx.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by apply Hx.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros Hx.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply equiv_smalltype.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros p Hp.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 188
+Time: 0.023s">
+<div class="time" style="width: 31.944444444444%"></div>
+<pre>
+    eapply merely_destruct; try exact (HR _ _ _ Hp H).</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 189
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by intros -&gt;.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 189
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 190
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma InjectsInto_power_morph X Y :
+  InjectsInto X Y -&gt; InjectsInto (X -&gt; HProp) (Y -&gt; HProp).</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 193
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 194
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros HF.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> eapply merely_destruct; try exact HF.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [f Hf].</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply tr.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists (fun p =&gt; fun y =&gt; hexists (fun x =&gt; p x /\ y = f x)).</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros p q H.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply path_forall.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply equiv_path_iff_hprop.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split; intros Hx.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assert (Hp : (fun y : Y =&gt; hexists (fun x : X =&gt; p x * (y = f x))) (f x)).</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> {</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists x.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split; trivial.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    pattern (f x) in Hp.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 199
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite H in Hp.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 199
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre> eapply merely_destruct; try exact Hp.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 199
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by intros [x'[Hq &lt;- % Hf]].</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 199
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assert (Hq : (fun y : Y =&gt; hexists (fun x : X =&gt; q x * (y = f x))) (f x)).</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> {</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists x.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split; trivial.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    pattern (f x) in Hq.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 201
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite &lt;- H in Hq.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 201
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre> eapply merely_destruct; try exact Hq.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 201
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by intros [x'[Hp &lt;- % Hf]].</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 201
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 202
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Fact Cantor_injects_injects {X Y : HSet} :
+  InjectsInto (X -&gt; HProp) (X + Y) -&gt; InjectsInto (X + X) X -&gt; InjectsInto (X -&gt; HProp) Y.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 205
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros H1 H2.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 207
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assert (HF : InjectsInto ((X -&gt; HProp) * (X -&gt; HProp)) (X + Y)).</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 207
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> eapply InjectsInto_trans; try exact H1.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    eapply InjectsInto_trans; try apply InjectsInto_power_morph, H2.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 209
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite path_sum_prod.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 210
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 210
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 210
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 211
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> eapply merely_destruct; try exact HF.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 211
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [f Hf].</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 211
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    pose (R x p := hexists (fun q =&gt; f (p, q) = inl x)).</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 212
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (@Cantor_rel _ R) as [p Hp].</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 212
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 213
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x p p' H3 H4.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 213
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> eapply merely_destruct; try exact H3.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 213
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [q Hq].</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 213
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      eapply merely_destruct; try apply H4.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 214
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [q' Hq'].</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 214
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 214
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      change p with (fst (p, q)).</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 215
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre> rewrite (Hf (p, q) (p', q')); trivial.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 215
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by rewrite Hq, Hq'.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 215
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 215
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    pose (f' q := f (p, q)).</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 216
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assert (H' : forall q x, f' q &lt;&gt; inl x).</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 216
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 217
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros q x H.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 217
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (Hp x).</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 217
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 217
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists q.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 217
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact H.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 217
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 218
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 218
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists (fun x =&gt; proj1 (clean_sum _ H' x)).</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 218
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros q q' H.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 218
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assert (Hqq' : f' q = f' q').</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 218
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 219
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct clean_sum as [z &lt;-].</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 219
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct clean_sum as [z' &lt;-].</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 219
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn in H.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 219
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by rewrite H.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 219
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 220
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply Hf in Hqq'.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 220
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> change q with (snd (p, q)).</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 220
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by rewrite Hqq'.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 220
+Time: 0.004s">
+<div class="time" style="width: 5.5555555555556%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 221
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End Preparation.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 223
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+
+(** * Sierpinski's Theorem *)
+
+</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 227
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section Sierpinski.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 227
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Context {UA : Univalence}.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 229
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Context {EM : ExcludedMiddle}.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 230
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Context {PR : PropResizing}.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 231
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition powfix X :=
+  forall n, (power_iterated X n + power_iterated X n) = (power_iterated X n).</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 234
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Variable HN : HSet -&gt; HSet.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 236
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Hypothesis HN_ninject : forall X, ~ InjectsInto (HN X) X.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 238
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Variable HN_bound : nat.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 240
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Hypothesis HN_inject : forall X, InjectsInto (HN X) (power_iterated X HN_bound).</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 241
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* This section then concludes the intermediate result that abstractly, any function [HN] behaving like the Hartogs number is tamed in the presence of GCH.  Morally we show that [X &lt;= HN X] for all [X], we just ensure that [X] is large enough by considering P(N + X). *)
+
+</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 244
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma InjectsInto_sum X Y X' Y' :
+  InjectsInto X X' -&gt; InjectsInto Y Y' -&gt; InjectsInto (X + Y) (X' + Y').</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 245
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 246
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros H1 H2.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 247
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  eapply merely_destruct; try exact H1.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 248
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [f Hf].</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 248
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  eapply merely_destruct; try exact H2.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 249
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [g Hg].</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 249
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply tr.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 250
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists (fun z =&gt; match z with inl x =&gt; inl (f x) | inr y =&gt; inr (g y) end).</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 250
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [x|y] [x'|y'] H.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 251
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 252
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply ap.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 252
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply Hf.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 252
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply path_sum_inl with Y'.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 252
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact H.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 252
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 253
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre> by apply inl_ne_inr in H.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 253
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 254
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre> by apply inr_ne_inl in H.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 254
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 255
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply ap.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 255
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply Hg.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 255
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply path_sum_inr with X'.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 255
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact H.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 255
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 256
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* The main proof is by induction on the cardinality bound for [HN].  As the Hartogs number is bounded by P^3(X), we'd actually just need finitely many instances of GCH. *)
+
+</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 259
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre>Lemma Sierpinski_step (X : HSet) n :
+  GCH -&gt; infinite X -&gt; powfix X -&gt; InjectsInto (HN X) (power_iterated X n) -&gt; InjectsInto X (HN X).</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 260
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 261
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros gch H1 H2 Hi.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 262
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> induction n.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 262
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 263
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by apply HN_ninject in Hi.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 263
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 264
+Time: 0.006s">
+<div class="time" style="width: 8.3333333333333%"></div>
+<pre> destruct (gch (Build_HSet (power_iterated X n)) (Build_HSet (power_iterated X n + HN X))) as [H|H].</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 264
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 265
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by apply infinite_power_iterated.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 265
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 266
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 266
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists inl.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 266
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x x'.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 266
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply path_sum_inl.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 266
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 267
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> eapply InjectsInto_trans.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 267
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 268
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre> apply InjectsInto_sum; try apply Hi.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 268
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr, Injection_power.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 268
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 268
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 269
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 269
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> specialize (H2 (S n)).</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 269
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn in H2.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 269
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite H2.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 269
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr, Injection_refl.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 269
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 270
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply IHn.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 270
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre> eapply InjectsInto_trans; try apply H.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 270
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 270
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists inr.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 270
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 270
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply path_sum_inr.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 270
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 271
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre> apply InjectsInto_trans with (power_iterated X (S n)); try apply tr, Injection_power_iterated.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 271
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      cbn.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 272
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (Cantor_injects_injects H).</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 272
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite (H2 n).</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 272
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr, Injection_refl.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 272
+Time: 0.011s">
+<div class="time" style="width: 15.277777777778%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 273
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre>
+
+Theorem GCH_injects' (X : HSet) :
+  GCH -&gt; infinite X -&gt; InjectsInto X (HN (Build_HSet (X -&gt; HProp))).</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 276
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 277
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros gch HX.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 278
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre> eapply InjectsInto_trans; try apply tr, Injection_power; try apply X.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 278
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (@Sierpinski_step (Build_HSet (X -&gt; HProp)) HN_bound gch).</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 279
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 280
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply infinite_inject with X; trivial.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 280
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply Injection_power.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 280
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply X.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 280
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 281
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros n.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 281
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 281
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite !power_iterated_shift.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 281
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> eapply path_infinite_power.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 281
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 281
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by apply infinite_power_iterated.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 281
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 282
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply HN_inject.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 282
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 283
+Time: 0.005s">
+<div class="time" style="width: 6.9444444444444%"></div>
+<pre>
+
+Theorem GCH_injects (X : HSet) :
+  GCH -&gt; InjectsInto X (HN (Build_HSet (Build_HSet (nat + X) -&gt; HProp))).</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 286
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 287
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros gch.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 288
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> eapply InjectsInto_trans with (nat + X).</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 288
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 289
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 289
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists inr.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 289
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 289
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply path_sum_inr.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 289
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 290
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply GCH_injects'; trivial.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 290
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists inl.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 290
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 290
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply path_sum_inl.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 290
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 291
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End Sierpinski.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 293
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* Main result: GCH implies AC *)
+
+</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 296
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Theorem GCH_AC {UA : Univalence} {PR : PropResizing} {LEM : ExcludedMiddle} :
+  GCH -&gt; Choice_type.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 297
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 298
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros gch.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 299
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply WO_AC.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 300
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros X.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 300
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 300
+Time: 0.005s">
+<div class="time" style="width: 6.9444444444444%"></div>
+<pre> exists (hartogs_number (Build_HSet (Build_HSet (nat + X) -&gt; HProp))).</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 300
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unshelve eapply (@GCH_injects UA LEM PR hartogs_number _ 3 _ X gch).</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 301
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 302
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros Y.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 302
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros H.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 302
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> eapply merely_destruct; try apply H.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 302
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply hartogs_number_no_injection.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 302
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 303
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros Y.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 303
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 303
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply hartogs_number_injection.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 303
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: GCHtoAC.v
+Line: 305
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* Note that the assumption of LEM is actually not necessary due to GCH_LEM. *)
+
+</pre>
+</div>
+</body>
+</html>
+

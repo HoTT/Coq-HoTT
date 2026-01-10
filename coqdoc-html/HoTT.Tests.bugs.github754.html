@@ -1,0 +1,75 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Tests.bugs.github754</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Tests.bugs.github754</h1>
+
+<div class="code">
+<span class="id" title="keyword">From</span> <span class="id" title="var">HoTT</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.html#"><span class="id" title="library">Basics</span></a> <a class="idref" href="HoTT.Types.html#"><span class="id" title="library">Types</span></a> <a class="idref" href="HoTT.Universes.DProp.html#"><span class="id" title="library">Universes.DProp</span></a> <a class="idref" href="HoTT.Tactics.EquivalenceInduction.html#"><span class="id" title="library">Tactics.EquivalenceInduction</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">nat_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Test 1 from issue 754 
+</div>
+<div class="code">
+<span class="id" title="keyword">Inductive</span> <a id="nat" class="idref" href="#nat"><span class="id" title="definition, inductive"><span id="nat_rect" class="id"><span id="nat_ind" class="id"><span id="nat_rec" class="id"><span id="nat_sind" class="id">nat@</span></span></span></span></span></a>{<span class="id" title="var">i</span> | <span class="id" title="keyword">Set</span> &lt; <span class="id" title="var">i</span>} : <span class="id" title="var">Type@</span>{<span class="id" title="var">i</span>} :=<br/>
+| <a id="O" class="idref" href="#O"><span class="id" title="constructor">O</span></a> : <a class="idref" href="HoTT.Tests.bugs.github754.html#nat:1"><span class="id" title="inductive">nat</span></a><br/>
+| <a id="S" class="idref" href="#S"><span class="id" title="constructor">S</span></a> : <a class="idref" href="HoTT.Tests.bugs.github754.html#nat:1"><span class="id" title="inductive">nat</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Tests.bugs.github754.html#nat:1"><span class="id" title="inductive">nat</span></a>.<br/>
+<span class="id" title="keyword">Fixpoint</span> <a id="code_nat" class="idref" href="#code_nat"><span class="id" title="definition">code_nat</span></a> (<a id="m:3" class="idref" href="#m:3"><span class="id" title="binder">m</span></a> <a id="n:4" class="idref" href="#n:4"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Tests.bugs.github754.html#nat"><span class="id" title="inductive">nat</span></a>) {<span class="id" title="keyword">struct</span> <span class="id" title="var">m</span>} : <a class="idref" href="HoTT.Universes.DProp.html#DHProp"><span class="id" title="record">DProp.DHProp</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Tests.bugs.github754.html#m:3"><span class="id" title="variable">m</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="HoTT.Tests.bugs.github754.html#O"><span class="id" title="constructor">O</span></a> ⇒ <span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Tests.bugs.github754.html#n:4"><span class="id" title="variable">n</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="HoTT.Tests.bugs.github754.html#O"><span class="id" title="constructor">O</span></a> ⇒ <a class="idref" href="HoTT.Universes.DProp.html#True"><span class="id" title="definition">DProp.True</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="HoTT.Tests.bugs.github754.html#S"><span class="id" title="constructor">S</span></a> <span class="id" title="var">_</span> ⇒ <a class="idref" href="HoTT.Universes.DProp.html#False"><span class="id" title="definition">DProp.False</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="HoTT.Tests.bugs.github754.html#S"><span class="id" title="constructor">S</span></a> <span class="id" title="var">m'</span> ⇒ <span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Tests.bugs.github754.html#n:4"><span class="id" title="variable">n</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="HoTT.Tests.bugs.github754.html#O"><span class="id" title="constructor">O</span></a> ⇒ <a class="idref" href="HoTT.Universes.DProp.html#False"><span class="id" title="definition">DProp.False</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="HoTT.Tests.bugs.github754.html#S"><span class="id" title="constructor">S</span></a> <span class="id" title="var">n'</span> ⇒ <a class="idref" href="HoTT.Tests.bugs.github754.html#code_nat:5"><span class="id" title="definition">code_nat</span></a> <span class="id" title="var">m'</span> <span class="id" title="var">n'</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local</span> <span class="id" title="keyword">Set</span> <span class="id" title="var">Warnings</span> "-notation-overridden".<br/>
+<span class="id" title="keyword">Notation</span> <a id="5a22bfc7cb7971bd0c83812d74ff513a" class="idref" href="#5a22bfc7cb7971bd0c83812d74ff513a"><span class="id" title="notation">&quot;</span></a>x =n y" := (<a class="idref" href="HoTT.Tests.bugs.github754.html#code_nat"><span class="id" title="definition">code_nat</span></a> <span class="id" title="var">x</span> <span class="id" title="var">y</span>) : <span class="id" title="var">nat_scope</span>.<br/>
+<span class="id" title="keyword">Local</span> <span class="id" title="keyword">Set</span> <span class="id" title="var">Warnings</span> "notation-overridden".<br/>
+<span class="id" title="keyword">Bind Scope</span> <span class="id" title="var">nat_scope</span> <span class="id" title="keyword">with</span> <span class="id" title="var">nat</span>.<br/>
+<span class="id" title="keyword">Axiom</span> <a id="equiv_path_nat" class="idref" href="#equiv_path_nat"><span class="id" title="axiom">equiv_path_nat</span></a> :<br/>
+&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="n:9" class="idref" href="#n:9"><span class="id" title="binder">n</span></a> <a id="m:10" class="idref" href="#m:10"><span class="id" title="binder">m</span></a> : <a class="idref" href="HoTT.Tests.bugs.github754.html#nat"><span class="id" title="inductive">nat</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Basics.Trunc.html#trunctype_type"><span class="id" title="projection">Trunc.trunctype_type</span></a> (<a class="idref" href="HoTT.Universes.DProp.html#dhprop_hprop"><span class="id" title="projection">DProp.dhprop_hprop</span></a> (<a class="idref" href="HoTT.Tests.bugs.github754.html#n:9"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Tests.bugs.github754.html#5a22bfc7cb7971bd0c83812d74ff513a"><span class="id" title="notation">=</span></a><a class="idref" href="HoTT.Tests.bugs.github754.html#5a22bfc7cb7971bd0c83812d74ff513a"><span class="id" title="notation">n</span></a> <a class="idref" href="HoTT.Tests.bugs.github754.html#m:10"><span class="id" title="variable">m</span></a>)) <a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">&lt;~&gt;</span></a> <a class="idref" href="HoTT.Tests.bugs.github754.html#n:9"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Tests.bugs.github754.html#m:10"><span class="id" title="variable">m</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="nat_discr" class="idref" href="#nat_discr"><span class="id" title="definition">nat_discr</span></a> `{<a id="H:12" class="idref" href="#H:12"><span class="id" title="binder">Funext</span></a>} {<a id="n:13" class="idref" href="#n:13"><span class="id" title="binder">n</span></a>: <a class="idref" href="HoTT.Tests.bugs.github754.html#nat"><span class="id" title="inductive">nat</span></a>}: <a class="idref" href="HoTT.Tests.bugs.github754.html#O"><span class="id" title="constructor">O</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'&lt;&gt;'_x"><span class="id" title="notation">≠</span></a> <a class="idref" href="HoTT.Tests.bugs.github754.html#S"><span class="id" title="constructor">S</span></a> <a class="idref" href="HoTT.Tests.bugs.github754.html#n:13"><span class="id" title="variable">n</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">H'</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">equiv_induction</span> (@<a class="idref" href="HoTT.Tests.bugs.github754.html#equiv_path_nat"><span class="id" title="axiom">equiv_path_nat</span></a> <a class="idref" href="HoTT.Tests.bugs.github754.html#O"><span class="id" title="constructor">O</span></a> (<a class="idref" href="HoTT.Tests.bugs.github754.html#S"><span class="id" title="constructor">S</span></a> <span class="id" title="var">n</span>)).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

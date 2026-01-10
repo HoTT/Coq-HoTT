@@ -1,0 +1,5750 @@
+<html>
+<head>
+<title>Matrix.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Matrix.v</h1>
+
+<div class="code" title="File: Matrix.v
+Line: 1
+Time: 0.026s">
+<div class="time" style="width: 31.325301204819%"></div>
+<pre>Require Import Basics.Overture Basics.Trunc Basics.Tactics Basics.Decidable.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 1
+Time: 0.003s">
+<div class="time" style="width: 3.6144578313253%"></div>
+<pre>
+Require Import Types.Sigma.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 2
+Time: 0.036s">
+<div class="time" style="width: 43.373493975904%"></div>
+<pre>
+Require Import Spaces.List.Core Spaces.List.Theory Spaces.List.Paths.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 3
+Time: 0.082s">
+<div class="time" style="width: 98.795180722892%"></div>
+<pre>
+Require Import Algebra.Rings.Ring Algebra.Rings.Module Algebra.Rings.CRing
+  Algebra.Rings.KroneckerDelta Algebra.Rings.Vector.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 5
+Time: 0.011s">
+<div class="time" style="width: 13.253012048193%"></div>
+<pre>
+Require Import abstract_algebra.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 6
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>
+Require Import WildCat.Core WildCat.Paths.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 7
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>
+Require Import Modalities.ReflectiveSubuniverse.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Set Universe Minimization ToSet.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Matrices *)
+
+(** ** Definition *)
+
+</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Matrix@{i} (R : Type@{i}) (m n : nat) : Type@{i}
+  := Vector (Vector R n) m.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 16
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>
+
+Instance istrunc_matrix (R : Type) k `{IsTrunc k.+2 R} m n
+  : IsTrunc k.+2 (Matrix R m n)
+  := _.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Building a matrix from a function that takes row and column indices. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Build_Matrix (R : Type) (m n : nat)
+  (M_fun : forall (i : nat) (j : nat), (i &lt; m)%nat -&gt; (j &lt; n)%nat -&gt; R)
+  : Matrix R m n.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_Vector.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros i Hi.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_Vector.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros j Hj.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (M_fun i j Hi Hj).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The length conditions here are decidable so can be inferred in proofs. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Build_Matrix' (R : Type) (m n : nat)
+  (l : list (list R))
+  (wf_row : length l = m)
+  (wf_col : for_all (fun row =&gt; length row = n) l)
+  : Matrix R m n.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snrefine (_; _).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> snapply list_sigma.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact l.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact wf_col.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by lhs napply length_list_sigma.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition entries@{i|} {R : Type@{i}} {m n} (M : Matrix R m n)
+  : list (list R)
+  := list_map@{i i} pr1 (pr1 M).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The entry at row [i] and column [j] of a matrix [M]. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition entry {R : Type} {m n} (M : Matrix R m n) (i j : nat)
+  {H1 : (i &lt; m)%nat} {H2 : (j &lt; n)%nat}
+  : R
+  := Vector.entry (Vector.entry M i) j.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Mapping a function on all the entries of a matrix. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition matrix_map {R S : Type} {m n} (f : R -&gt; S)
+  : Matrix R m n -&gt; Matrix S m n
+  := fun M =&gt; Build_Matrix S m n (fun i j _ _ =&gt; f (entry M i j)).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 57
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>
+
+Definition matrix_map2 {R S T : Type} {m n} (f : R -&gt; S -&gt; T)
+  : Matrix R m n -&gt; Matrix S m n -&gt; Matrix T m n
+  := fun M N =&gt; Build_Matrix T m n
+    (fun i j _ _ =&gt; f (entry M i j) (entry N i j)).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The [(i, j)]-entry of [Build_Matrix R m n M_fun] is [M_fun i j]. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 64
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>Definition entry_Build_Matrix {R : Type} {m n}
+  (M_fun : forall i j, (i &lt; m)%nat -&gt; (j &lt; n)%nat -&gt; R)
+  (i j : nat) (H1 : (i &lt; m)%nat) (H2 : (j &lt; n)%nat)
+  : entry (Build_Matrix R m n M_fun) i j = M_fun i j _ _.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold entry.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 69
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>
+  by rewrite 2 entry_Build_Vector.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Two matrices are equal if all their entries are equal. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition path_matrix {R : Type} {m n} (M N : Matrix R m n)
+  (H : forall i j (Hi : (i &lt; m)%nat) (Hj : (j &lt; n)%nat), entry M i j = entry N i j)
+  : M = N.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply path_vector.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros i Hi.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply path_vector.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros j Hj.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 80
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>
+  exact (H i j Hi Hj).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 81
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Addition and module structure *)
+
+(** Here we define the abelian group of (n x m)-matrices over a ring. This follows from the abelian group structure of the underlying vectors. We are also able to derive a left module structure when the entries come from a left module. *)
+
+</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition abgroup_matrix (A : AbGroup) (m n : nat) : AbGroup
+  := abgroup_vector (abgroup_vector A n) m.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 88
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>
+
+Definition matrix_plus {A : AbGroup} {m n}
+  : Matrix A m n -&gt; Matrix A m n -&gt; Matrix A m n
+  := @sg_op (abgroup_matrix A m n) _.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition matrix_zero (A : AbGroup) m n : Matrix A m n
+  := @mon_unit (abgroup_matrix A m n) _.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 95
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>
+
+Definition matrix_negate {A : AbGroup} {m n}
+  : Matrix A m n -&gt; Matrix A m n
+  := @negate (abgroup_matrix A m n) _.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance isleftmodule_isleftmodule_matrix (A : AbGroup) (m n : nat)
+  {R : Ring} `{IsLeftModule R A}
+  : IsLeftModule R (abgroup_matrix A m n).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply isleftmodule_isleftmodule_vector.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply isleftmodule_isleftmodule_vector.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact _.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** As a special case, we get the left module of matrices over a ring. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 110
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>Instance isleftmodule_abgroup_matrix (R : Ring) (m n : nat)
+  : IsLeftModule R (abgroup_matrix R m n)
+  := _.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 112
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>
+
+Definition matrix_lact {R : Ring} {m n : nat} (r : R) (M : Matrix R m n)
+  : Matrix R m n
+  := lact r M.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>  
+
+(** ** Multiplication *)
+
+(** Matrix multiplication is defined such that the entry at row [i] and column [j] of the resulting matrix is the sum of the products of the corresponding entries from the [i]th row of the first matrix and the [j]th column of the second matrix. Matrices correspond to module homomorphisms between free modules of finite rank (think vector spaces), and matrix multiplication represents the composition of these homomorphisms. **)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition matrix_mult {R : Ring@{i}} {m n k : nat} (M : Matrix R m n) (N : Matrix R n k)
+  : Matrix R m k.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 121
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 122
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_Matrix.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros i j Hi Hj.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (ab_sum n (fun k Hk =&gt; entry M i k * entry N k j)).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 125
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 126
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The identity matrix is the matrix with ones on the diagonal and zeros elsewhere. It acts as the multiplicative identity for matrix multiplication. We define it here using the [kronecker_delta] function which will make proving properties about it conceptually easier later. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 128
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition identity_matrix (R : Ring@{i}) (n : nat) : Matrix R n n
+  := Build_Matrix R n n (fun i j _ _ =&gt; kronecker_delta i j).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** This is the most general statement of associativity for matrix multiplication. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 131
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition associative_matrix_mult (R : Ring) (m n p q : nat)
+  : HeteroAssociative
+      (@matrix_mult R m n q) (@matrix_mult R n p q)
+      (@matrix_mult R m p q) (@matrix_mult R m n p).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 135
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros M N P; napply path_matrix; intros i j Hi Hj.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 136
+Time: 0.003s">
+<div class="time" style="width: 3.6144578313253%"></div>
+<pre>
+  rewrite 2 entry_Build_Matrix.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 137
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lhs napply path_ab_sum.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros k Hk.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 139
+Time: 0.002s">
+<div class="time" style="width: 2.4096385542169%"></div>
+<pre>
+    rewrite entry_Build_Matrix.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply rng_sum_dist_l.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 141
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>
+  lhs napply ab_sum_sum.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rhs napply path_ab_sum.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 143
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>
+  2: intros k Hk; by rewrite entry_Build_Matrix.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  napply path_ab_sum.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 145
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros k Hk.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 146
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>
+  rhs napply rng_sum_dist_r.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 147
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  napply path_ab_sum.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 148
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros l Hl.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 149
+Time: 0.005s">
+<div class="time" style="width: 6.0240963855422%"></div>
+<pre>
+  apply associativity.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 150
+Time: 0.005s">
+<div class="time" style="width: 6.0240963855422%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Matrix multiplication distributes over addition of matrices on the left. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition left_distribute_matrix_mult (R : Ring) (m n p : nat)
+  : LeftHeteroDistribute (@matrix_mult R m n p) matrix_plus matrix_plus.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 154
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 155
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros M N P; apply path_matrix; intros i j Hi Hj.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 156
+Time: 0.008s">
+<div class="time" style="width: 9.6385542168675%"></div>
+<pre>
+  rewrite !entry_Build_Matrix, !entry_Build_Vector.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  change (?x = ?y + ?z) with (x = sg_op y z).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite &lt;- ab_sum_plus.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  napply path_ab_sum.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros k Hk.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 161
+Time: 0.003s">
+<div class="time" style="width: 3.6144578313253%"></div>
+<pre>
+  rewrite entry_Build_Matrix.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 162
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>
+  apply rng_dist_l.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 163
+Time: 0.006s">
+<div class="time" style="width: 7.2289156626506%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 164
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Matrix multiplication distributes over addition of matrices on the right. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 166
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition right_distribute_matrix_mult (R : Ring) (m n p : nat)
+  : RightHeteroDistribute (@matrix_mult R m n p) matrix_plus matrix_plus.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros M N P; apply path_matrix; intros i j Hi Hj.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 169
+Time: 0.03s">
+<div class="time" style="width: 36.144578313253%"></div>
+<pre>
+  rewrite !entry_Build_Matrix, !entry_Build_Vector.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  change (?x = ?y + ?z) with (x = sg_op y z).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite &lt;- ab_sum_plus.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  napply path_ab_sum.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros k Hk.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 174
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>
+  rewrite entry_Build_Matrix.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 175
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>
+  apply rng_dist_r.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 176
+Time: 0.005s">
+<div class="time" style="width: 6.0240963855422%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The identity matrix acts as a left identity for matrix multiplication. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 179
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition left_identity_matrix_mult (R : Ring) (m n: nat)
+  : LeftIdentity (@matrix_mult R m m n) (identity_matrix R m).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 180
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 181
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros M; apply path_matrix; intros i j Hi Hj.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 182
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite entry_Build_Matrix.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 183
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lhs napply path_ab_sum.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 184
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>
+  1: intros k Hk; by rewrite entry_Build_Matrix.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  napply rng_sum_kronecker_delta_l.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 186
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The identity matrix acts as a right identity for matrix multiplication. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 189
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition right_identity_matrix_mult (R : Ring) (m n : nat)
+  : RightIdentity (@matrix_mult R m n n) (identity_matrix R n).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 190
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 191
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros M; apply path_matrix; intros i j Hi Hj.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 192
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite entry_Build_Matrix.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 193
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lhs napply path_ab_sum.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 194
+Time: 0.002s">
+<div class="time" style="width: 2.4096385542169%"></div>
+<pre>
+  1: intros k Hk; by rewrite entry_Build_Matrix.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  napply rng_sum_kronecker_delta_r'.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 196
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** TODO: define this as an R-algebra. What is an R-algebra over a non-commutative right however? (Here we have a bimodule which might be important) *)
+(** Matrices over a ring form a (generally) non-commutative ring. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition matrix_ring (R : Ring@{i}) (n : nat) : Ring.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 201
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_Ring.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 202
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 203
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (abgroup_matrix R n n).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 203
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 204
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact matrix_mult.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 204
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 205
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (identity_matrix R n).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 205
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (associative_matrix_mult R n n n n).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 207
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (left_distribute_matrix_mult R n n n).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 207
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (right_distribute_matrix_mult R n n n).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 209
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (left_identity_matrix_mult R n n).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 209
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 210
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (right_identity_matrix_mult R n n).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 210
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 211
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Matrix multiplication on the right preserves scalar multiplication in the sense that [matrix_lact r (matrix_mult M N) = matrix_mult (matrix_lact r M) N] for [r] a ring element and [M] and [N] matrices of compatible sizes. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 213
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition matrix_mult_lact_l {R : Ring} {m n p : nat}
+  : HeteroAssociative (@matrix_lact R m p) (@matrix_mult R m n p)
+      (@matrix_mult R m n p) (@matrix_lact R m n).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 215
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 216
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros r M N.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 217
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply path_matrix.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 218
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros i j Hi Hj.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 219
+Time: 0.004s">
+<div class="time" style="width: 4.8192771084337%"></div>
+<pre>
+  rewrite !entry_Build_Matrix, !entry_Build_Vector.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 220
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> 
+  lhs napply rng_sum_dist_l.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 221
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply path_ab_sum.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 222
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros k Hk; cbn.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 223
+Time: 0.008s">
+<div class="time" style="width: 9.6385542168675%"></div>
+<pre>
+  rewrite !entry_Build_Matrix.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 224
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>
+  snapply rng_mult_assoc.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 225
+Time: 0.003s">
+<div class="time" style="width: 3.6144578313253%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 226
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The same doesn't hold for the right matrix, since the ring is not commutative. However we could say an analogous statement for the right action. We haven't yet stated a definition of right module yet though. *)
+
+(** In a commutative ring, matrix multiplication over the ring and the opposite ring agree. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 230
+Time: 0.012s">
+<div class="time" style="width: 14.457831325301%"></div>
+<pre>Definition matrix_mult_rng_op {R : CRing} {m n p}
+  (M : Matrix R m n) (N : Matrix R n p)
+  : matrix_mult (R:=rng_op R) M N = matrix_mult M N.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 232
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 233
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply path_matrix; intros i j Hi Hj.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 234
+Time: 0.002s">
+<div class="time" style="width: 2.4096385542169%"></div>
+<pre>
+  rewrite 2 entry_Build_Matrix.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 235
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply path_ab_sum; intros k Hk.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 236
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply rng_mult_comm.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 237
+Time: 0.002s">
+<div class="time" style="width: 2.4096385542169%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 238
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Transpose *)
+
+(** The transpose of a matrix is the matrix with the rows and columns swapped. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 242
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition matrix_transpose {R : Type} {m n} : Matrix R m n -&gt; Matrix R n m
+  := fun M =&gt; Build_Matrix R n m (fun i j H1 H2 =&gt; entry M j i).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 243
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Transposing a matrix is involutive. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 245
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition matrix_transpose_transpose {R : Type} {m n} (M : Matrix R m n)
+  : matrix_transpose (matrix_transpose M) = M.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 246
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 247
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply path_matrix.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 248
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros i j Hi Hj.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 249
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lhs napply entry_Build_Matrix.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 250
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  napply entry_Build_Matrix.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 251
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 252
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Transpose distributes over addition. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 254
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition matrix_transpose_plus {R : Ring} {m n} (M N : Matrix R m n)
+  : matrix_transpose (matrix_plus M N)
+    = matrix_plus (matrix_transpose M) (matrix_transpose N).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 256
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 257
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply path_matrix.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 258
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros i j Hi Hj.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 259
+Time: 0.009s">
+<div class="time" style="width: 10.843373493976%"></div>
+<pre>
+  by rewrite !entry_Build_Matrix, !entry_Build_Vector.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 260
+Time: 0.004s">
+<div class="time" style="width: 4.8192771084337%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 261
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Transpose commutes with scalar multiplication. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 263
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition matrix_transpose_lact {R : Ring} {m n} (r : R) (M : Matrix R m n)
+  : matrix_transpose (matrix_lact r M)
+    = matrix_lact r (matrix_transpose M).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 265
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 266
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply path_matrix.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 267
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros i j Hi Hj.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 268
+Time: 0.005s">
+<div class="time" style="width: 6.0240963855422%"></div>
+<pre>
+  by rewrite !entry_Build_Matrix, !entry_Build_Vector.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 269
+Time: 0.002s">
+<div class="time" style="width: 2.4096385542169%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 270
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The negation of a transposed matrix is the same as the transposed matrix of the negation. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 272
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition matrix_transpose_negate {R : Ring} {m n} (M : Matrix R m n)
+  : matrix_transpose (matrix_negate M) = matrix_negate (matrix_transpose M).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 273
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 274
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply path_matrix.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 275
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros i j Hi Hj.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 276
+Time: 0.005s">
+<div class="time" style="width: 6.0240963855422%"></div>
+<pre>
+  by rewrite !entry_Build_Matrix, !entry_Build_Vector.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 277
+Time: 0.002s">
+<div class="time" style="width: 2.4096385542169%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 278
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Transpose distributes over multiplication when you reverse the ring multiplication. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 280
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition matrix_transpose_mult {R : Ring} {m n p}
+  (M : Matrix R m n) (N : Matrix R n p)
+  : matrix_transpose (matrix_mult M N)
+    = matrix_mult (R:=rng_op R) (matrix_transpose N) (matrix_transpose M).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 283
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 284
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply path_matrix.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 285
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros i j Hi Hj.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 286
+Time: 0.002s">
+<div class="time" style="width: 2.4096385542169%"></div>
+<pre>
+  rewrite 3 entry_Build_Matrix.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 287
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply path_ab_sum.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 288
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros k Hk.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 289
+Time: 0.01s">
+<div class="time" style="width: 12.048192771084%"></div>
+<pre>
+  rewrite 2 entry_Build_Matrix.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 290
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>
+  reflexivity.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 291
+Time: 0.003s">
+<div class="time" style="width: 3.6144578313253%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 292
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** When the ring is commutative, there is no need to reverse the multiplication. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 294
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition matrix_transpose_mult_comm {R : CRing} {m n p}
+  (M : Matrix R m n) (N : Matrix R n p)
+  : matrix_transpose (matrix_mult M N)
+    = matrix_mult (matrix_transpose N) (matrix_transpose M).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 297
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 298
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lhs napply matrix_transpose_mult.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 299
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply matrix_mult_rng_op.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 300
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 301
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The transpose of the zero matrix is the zero matrix. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 303
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition matrix_transpose_zero {R : Ring} {m n}
+  : matrix_transpose (matrix_zero R m n) = matrix_zero R n m.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 304
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 305
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply path_matrix.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 306
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros i j Hi Hj.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 307
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>
+  by rewrite !entry_Build_Matrix.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 308
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 309
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The transpose of the identity matrix is the identity matrix. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 311
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition matrix_transpose_identity@{i} {R : Ring@{i}} {n}
+  : matrix_transpose (identity_matrix R n) = identity_matrix R n.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 312
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 313
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply path_matrix.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 314
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros i j Hi Hj.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 315
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>
+  rewrite 3 entry_Build_Matrix.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 316
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply kronecker_delta_symm.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 317
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 318
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Diagonal matrices *)
+
+(** A diagonal matrix is a matrix with zeros everywhere except on the diagonal. Its entries are given by a vector. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 322
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition matrix_diag {R : Ring@{i}} {n : nat} (v : Vector R n)
+  : Matrix R n n.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 323
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 324
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_Matrix.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 325
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros i j H1 H2.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 326
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (kronecker_delta i j * Vector.entry v i).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 327
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 328
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Addition of diagonal matrices is the same as addition of the corresponding vectors. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 330
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition matrix_diag_plus {R : Ring@{i}} {n : nat} (v w : Vector R n)
+  : matrix_plus (matrix_diag v) (matrix_diag w) = matrix_diag (vector_plus v w).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 331
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 332
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  symmetry.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 333
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply path_matrix.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 334
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros i j Hi Hj.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 335
+Time: 0.005s">
+<div class="time" style="width: 6.0240963855422%"></div>
+<pre>
+  rewrite 2 entry_Build_Matrix, 5 entry_Build_Vector.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 336
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  napply rng_dist_l.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 337
+Time: 0.003s">
+<div class="time" style="width: 3.6144578313253%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 338
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Matrix multiplication of diagonal matrices is the same as multiplying the corresponding vectors pointwise. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 340
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition matrix_diag_mult {R : Ring} {n : nat} (v w : Vector R n)
+  : matrix_mult (matrix_diag v) (matrix_diag w)
+    = matrix_diag (vector_map2 (.*.) v w).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 342
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 343
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply path_matrix.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 344
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros i j Hi Hj.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 345
+Time: 0.002s">
+<div class="time" style="width: 2.4096385542169%"></div>
+<pre>
+  rewrite 2 entry_Build_Matrix.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 346
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lhs snapply path_ab_sum.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 347
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 348
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros k Hk.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 348
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite 2 entry_Build_Matrix.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 349
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite rng_mult_assoc.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 350
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite &lt;- (rng_mult_assoc (kronecker_delta _ _)).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 351
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite kronecker_delta_comm.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 352
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite &lt;- 2 rng_mult_assoc.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 353
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    reflexivity.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 354
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 354
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite (rng_sum_kronecker_delta_l _ _ Hi).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 355
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>
+  by rewrite entry_Build_Vector.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 356
+Time: 0.004s">
+<div class="time" style="width: 4.8192771084337%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 357
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The transpose of a diagonal matrix is the same diagonal matrix. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 359
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition matrix_transpose_diag {R : Ring@{i}} {n : nat} (v : Vector R n)
+  : matrix_transpose (matrix_diag v) = matrix_diag v.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 360
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 361
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply path_matrix.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 362
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros i j Hi Hj.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 363
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>
+  rewrite 3 entry_Build_Matrix.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 364
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite kronecker_delta_symm.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 365
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold kronecker_delta.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 366
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>
+  destruct (dec (i = j)) as [p|np].</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 367
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>
+  1: f_ap; symmetry; by apply path_entry_vector.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 368
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by rewrite !rng_mult_zero_l.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 369
+Time: 0.002s">
+<div class="time" style="width: 2.4096385542169%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 370
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The diagonal matrix construction is injective. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 372
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isinj_matrix_diag {R : Ring@{i}} {n : nat}
+  : IsInjective (@matrix_diag R n).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 373
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 374
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros v1 v2 p.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 375
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply path_vector.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 376
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros i Hi.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 377
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (ap (fun M =&gt; entry M i i)) in p.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 378
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite 2 entry_Build_Matrix in p.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 379
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite kronecker_delta_refl in p.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 380
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by rewrite 2 rng_mult_one_l in p.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 381
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 382
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A matrix is diagonal if it is equal to a diagonal matrix. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 384
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>Class IsDiagonal@{i} {R : Ring@{i}} {n : nat} (M : Matrix R n n) : Type@{i} := {
+  isdiagonal_diag_vector : Vector R n;
+  isdiagonal_diag : M = matrix_diag isdiagonal_diag_vector;
+}.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 387
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments isdiagonal_diag_vector {R n} M {_}.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 389
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments isdiagonal_diag {R n} M {_}.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 390
+Time: 0.005s">
+<div class="time" style="width: 6.0240963855422%"></div>
+<pre>
+
+Definition issig_IsDiagonal {R : Ring@{i}} {n : nat} {M : Matrix R n n}
+  : _ &lt;~&gt; IsDiagonal M
+  := ltac:(issig).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 394
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A matrix is diagonal in a unique way. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 396
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance ishprop_isdiagonal {R : Ring@{i}} {n : nat} (M : Matrix R n n)
+  : IsHProp (IsDiagonal M).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 397
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 398
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply hprop_allpath.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 399
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 400
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply ((equiv_ap' issig_IsDiagonal^-1%equiv _ _ )^-1%equiv).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 401
+Time: 0.009s">
+<div class="time" style="width: 10.843373493976%"></div>
+<pre>
+  rapply path_sigma_hprop; cbn.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 402
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply isinj_matrix_diag.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 403
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact ((isdiagonal_diag M)^ @ isdiagonal_diag M).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 404
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 405
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The zero matrix is diagonal. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 407
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isdiagonal_matrix_zero {R : Ring@{i}} {n : nat}
+  : IsDiagonal (matrix_zero R n n).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 408
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 409
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exists (vector_zero R n).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 410
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply path_matrix.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 411
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros i j Hi Hj.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 412
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>
+  rewrite 2 entry_Build_Matrix, entry_Build_Vector.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 413
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by rewrite rng_mult_zero_r.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 414
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 415
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The identity matrix is diagonal. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 417
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isdiagonal_identity_matrix {R : Ring@{i}} {n : nat}
+  : IsDiagonal (identity_matrix R n).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 418
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 419
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exists (Build_Vector R n (fun _ _ =&gt; 1)).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 420
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply path_matrix.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 421
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros i j Hi Hj.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 422
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>
+  rewrite 2 entry_Build_Matrix, entry_Build_Vector.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 423
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by rewrite rng_mult_one_r.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 424
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 425
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The sum of two diagonal matrices is diagonal. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 427
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isdiagonal_matrix_plus {R : Ring@{i}} {n : nat}
+  (M N : Matrix R n n) `{IsDiagonal R n M} `{IsDiagonal R n N}
+  : IsDiagonal (matrix_plus M N).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 429
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 430
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exists (vector_plus (isdiagonal_diag_vector M) (isdiagonal_diag_vector N)).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 431
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite (isdiagonal_diag M), (isdiagonal_diag N).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 432
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply matrix_diag_plus.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 433
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 434
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The negative of a diagonal matrix is diagonal. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 436
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isdiagonal_matrix_negate {R : Ring@{i}} {n : nat}
+  (M : Matrix R n n) `{IsDiagonal R n M}
+  : IsDiagonal (matrix_negate M).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 438
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 439
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exists (vector_neg _ _ (isdiagonal_diag_vector M)).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 440
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite (isdiagonal_diag M).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 441
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply path_matrix.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 442
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros i j Hi Hj.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 443
+Time: 0.004s">
+<div class="time" style="width: 4.8192771084337%"></div>
+<pre>
+  rewrite !entry_Build_Matrix, !entry_Build_Vector.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 444
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by rewrite rng_mult_negate_r.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 445
+Time: 0.002s">
+<div class="time" style="width: 2.4096385542169%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 446
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The product of two diagonal matrices is diagonal. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 448
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isdiagonal_matrix_mult {R : Ring@{i}} {n : nat}
+  (M N : Matrix R n n) `{IsDiagonal R n M} `{IsDiagonal R n N}
+  : IsDiagonal (matrix_mult M N).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 450
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 451
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exists (vector_map2 (.*.) (isdiagonal_diag_vector M) (isdiagonal_diag_vector N)).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 452
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite (isdiagonal_diag M), (isdiagonal_diag N).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 453
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply matrix_diag_mult.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 454
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 455
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The transpose of a diagonal matrix is diagonal. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 457
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isdiagonal_matrix_transpose {R : Ring@{i}} {n : nat}
+  (M : Matrix R n n) `{IsDiagonal R n M}
+  : IsDiagonal (matrix_transpose M).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 459
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 460
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exists (isdiagonal_diag_vector M).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 461
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite (isdiagonal_diag M).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 462
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply matrix_transpose_diag.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 463
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 464
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Given a square matrix, we can extract the diagonal as a vector. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 466
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition matrix_diag_vector {R : Ring} {n : nat} (M : Matrix R n n)
+  : Vector R n
+  := Build_Vector R n (fun i _ =&gt; entry M i i).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 468
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Diagonal matrices form a subring of the ring of square matrices. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 470
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition matrix_diag_ring@{i} (R : Ring@{i}) (n : nat)
+  : Subring@{i i} (matrix_ring R n).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 471
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 472
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>
+  snapply (Build_Subring' (fun M : matrix_ring R n =&gt; IsDiagonal M) _); hnf.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 473
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 474
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros; exact _.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 474
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 475
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y dx dy.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 475
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    napply isdiagonal_matrix_plus; trivial.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 476
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by napply isdiagonal_matrix_negate.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 477
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 478
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> napply isdiagonal_matrix_mult.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 478
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 479
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> napply isdiagonal_identity_matrix.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 479
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 480
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Trace *)
+
+(** The trace of a square matrix is the sum of the diagonal entries. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 484
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition matrix_trace {R : Ring} {n} (M : Matrix R n n) : R
+  := ab_sum n (fun i Hi =&gt; entry M i i).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 485
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The trace of a matrix preserves addition. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 487
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition matrix_trace_plus {R : Ring} {n} (M N : Matrix R n n)
+  : matrix_trace (matrix_plus M N) = (matrix_trace M) + (matrix_trace N).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 488
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 489
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold matrix_trace.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 490
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lhs napply path_ab_sum.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 491
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 492
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros i Hi.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 492
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>
+    by rewrite entry_Build_Matrix.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 493
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 493
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>
+  by rewrite ab_sum_plus.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 494
+Time: 0.002s">
+<div class="time" style="width: 2.4096385542169%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 495
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The trace of a matrix preserves scalar multiplication. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 497
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition matrix_trace_lact {R : Ring} {n} (r : R) (M : Matrix R n n)
+  : matrix_trace (matrix_lact r M) = r * matrix_trace M.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 498
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 499
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold matrix_trace.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 500
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite rng_sum_dist_l.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 501
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply path_ab_sum.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 502
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros i Hi.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 503
+Time: 0.004s">
+<div class="time" style="width: 4.8192771084337%"></div>
+<pre>
+  by rewrite entry_Build_Matrix.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 504
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 505
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The trace of a matrix multiplication is the same as the trace of the reverse multiplication. This holds only in a commutative ring. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 507
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition matrix_trace_mult {R : CRing} {m n : nat}
+  (M : Matrix R m n) (N : Matrix R n m)
+  : matrix_trace (matrix_mult M N) = matrix_trace (matrix_mult N M).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 509
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 510
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lhs napply path_ab_sum.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 511
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 512
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros i Hi.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 512
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    lhs napply entry_Build_Matrix.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 513
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    napply path_ab_sum.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 514
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros j Hj.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 515
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply rng_mult_comm.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 516
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 516
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lhs napply ab_sum_sum.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 517
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply path_ab_sum.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 518
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros i Hi.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 519
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rhs napply entry_Build_Matrix.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 520
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  reflexivity.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 521
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 522
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The trace of the transpose of a matrix is the same as the trace of the matrix. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 524
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition trace_transpose {R : Ring} {n} (M : Matrix R n n)
+  : matrix_trace (matrix_transpose M) = matrix_trace M.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 525
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 526
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply path_ab_sum.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 527
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros i Hi.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 528
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  napply entry_Build_Matrix.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 529
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 530
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Matrix minors *)
+
+</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 533
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition skip (n : nat) : nat -&gt; nat
+  := fun i =&gt; if dec (i &lt; n)%nat then i else i.+1%nat.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 534
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance isinjective_skip n : IsInjective (skip n).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 536
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 537
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  hnf.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 538
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y p.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 539
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold skip in p.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 540
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>
+  destruct (dec (x &lt; n)%nat) as [H|H], (dec (y &lt; n)%nat) as [H'|H'].</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 541
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 542
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact p.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 542
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 543
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> symmetry in p; destruct p.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 543
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>
+    contradiction (H' (leq_trans _ H)).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 544
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 545
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct p.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 545
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>
+    contradiction (H (leq_trans _ H')).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 546
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 547
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by apply path_nat_succ.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 547
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 548
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Instance lt_n1_skip k i n (H : (i &lt; n.+1)%nat) (H' : (k &lt; n)%nat)
+  : (skip i k &lt; n.+1)%nat.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 551
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 552
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold skip.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 553
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct (dec (k &lt; i))%nat as [H''|H'']; exact _.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 554
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 555
+Time: 0.002s">
+<div class="time" style="width: 2.4096385542169%"></div>
+<pre>
+
+Definition matrix_minor {R : Ring@{i}} {n : nat} (i j : nat)
+  {Hi : (i &lt; n.+1)%nat} {Hj : (j &lt; n.+1)%nat} (M : Matrix R n.+1 n.+1)
+  : Matrix R n n
+  := Build_Matrix R n n (fun k l _ _ =&gt; entry M (skip i k) (skip j l)).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 560
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A minor of the zero matrix is again the zero matrix. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 562
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition matrix_minor_zero {R : Ring@{i}} {n : nat} (i j : nat)
+  (Hi : (i &lt; n.+1)%nat) (Hj : (j &lt; n.+1)%nat)
+  : matrix_minor i j (matrix_zero R n.+1 n.+1) = matrix_zero R n n.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 564
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 565
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply path_matrix.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 566
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros k l Hk Hl.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 567
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>
+  by rewrite !entry_Build_Matrix.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 568
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 569
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition matrix_minor_identity {R : Ring@{i}} {n : nat}
+  (i : nat) (Hi : (i &lt; n.+1)%nat)
+  : matrix_minor i i (identity_matrix R n.+1) = identity_matrix R n.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 573
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 574
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply path_matrix.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 575
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros j k Hj Hk.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 576
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>
+  rewrite 3 entry_Build_Matrix.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 577
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rapply kronecker_delta_map_inj.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 578
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 579
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>
+
+Definition matrix_minor_plus {R : Ring@{i}} {n : nat} (i j : nat)
+  (Hi : (i &lt; n.+1)%nat) (Hj : (j &lt; n.+1)%nat) (M N : Matrix R n.+1 n.+1)
+  : matrix_minor i j (matrix_plus M N)
+    = matrix_plus (matrix_minor i j M) (matrix_minor i j N).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 584
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 585
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply path_matrix.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 586
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros k l Hk Hl.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 587
+Time: 0.01s">
+<div class="time" style="width: 12.048192771084%"></div>
+<pre>
+  by rewrite !entry_Build_Matrix, !entry_Build_Vector.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 588
+Time: 0.005s">
+<div class="time" style="width: 6.0240963855422%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 589
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>
+
+Definition matrix_minor_scale {R : Ring@{i}} {n : nat} (i j : nat)
+  (Hi : (i &lt; n.+1)%nat) (Hj : (j &lt; n.+1)%nat) (r : R) (M : Matrix R n.+1 n.+1)
+  : matrix_minor i j (matrix_lact r M) = matrix_lact r (matrix_minor i j M).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 593
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 594
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply path_matrix.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 595
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros k l Hk Hl.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 596
+Time: 0.009s">
+<div class="time" style="width: 10.843373493976%"></div>
+<pre>
+  by rewrite !entry_Build_Matrix, !entry_Build_Vector.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 597
+Time: 0.003s">
+<div class="time" style="width: 3.6144578313253%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 598
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>
+
+Definition matrix_minor_transpose {R : Ring@{i}} {n : nat} (i j : nat)
+  (Hi : (i &lt; n.+1)%nat) (Hj : (j &lt; n.+1)%nat) (M : Matrix R n.+1 n.+1)
+  : matrix_minor j i (matrix_transpose M)
+    = matrix_transpose (matrix_minor i j M).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 603
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 604
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply path_matrix.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 605
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros k l Hk Hl.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 606
+Time: 0.004s">
+<div class="time" style="width: 4.8192771084337%"></div>
+<pre>
+  by rewrite 4 entry_Build_Matrix.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 607
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 608
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Triangular matrices *)
+
+(** A matrix is upper triangular if all the entries below the diagonal are zero. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 612
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>Class IsUpperTriangular@{i} {R : Ring@{i}} {n : nat} (M : Matrix@{i} R n n) : Type@{i}
+  := upper_triangular
+  : merely@{i} (forall i j (Hi : (i &lt; n)%nat) (Hj : (j &lt; n)%nat), (i &lt; j)%nat -&gt; entry M i j = 0).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 614
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance ishprop_isuppertriangular@{i} {R : Ring@{i}} {n : nat} (M : Matrix R n n)
+  : IsHProp (IsUpperTriangular M).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 617
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 618
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply istrunc_truncation@{i}.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 619
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 620
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A matrix is lower triangular if all the entries above the diagonal are zero. We define it as the transpose being upper triangular. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 622
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Class IsLowerTriangular {R : Ring@{i}} {n : nat} (M : Matrix@{i} R n n) : Type@{i}
+  := upper_triangular_transpose :: IsUpperTriangular (matrix_transpose M).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 623
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance ishprop_islowertriangular@{i} {R : Ring@{i}} {n : nat}
+  (M : Matrix R n n)
+  : IsHProp (IsLowerTriangular M).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 627
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 628
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply istrunc_truncation@{i}.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 629
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 630
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The transpose of a matrix is lower triangular if and only if the matrix is upper triangular. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 632
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance lower_triangular_transpose {R : Ring@{i}} {n : nat}
+  (M : Matrix R n n) `{!IsUpperTriangular M}
+  : IsLowerTriangular (matrix_transpose M).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 634
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 635
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold IsLowerTriangular.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 636
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by rewrite matrix_transpose_transpose.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 637
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 638
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The sum of two upper triangular matrices is upper triangular. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 640
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance upper_triangular_plus@{i} {R : Ring@{i}} {n : nat} (M N : Matrix R n n)
+  {H1 : IsUpperTriangular M} {H2 : IsUpperTriangular N}
+  : IsUpperTriangular (matrix_plus M N).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 642
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 643
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold IsUpperTriangular.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 644
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* We use [strip_reflections] rather than [strip_truncations] here and below because it generates fewer universe variables in some versions of Coq. *)
+ </pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 646
+Time: 0.003s">
+<div class="time" style="width: 3.6144578313253%"></div>
+<pre>strip_reflections; apply tr.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 646
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros i j Hi Hj lt_i_j.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 647
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  specialize (H1 i j Hi Hj lt_i_j).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 648
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  specialize (H2 i j Hi Hj lt_i_j).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 649
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite entry_Build_Matrix.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 650
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>
+  change (Vector.entry (Vector.entry ?M ?i) ?j) with (entry M i j).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 651
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite H1, H2.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 652
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by rewrite rng_plus_zero_l.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 653
+Time: 0.003s">
+<div class="time" style="width: 3.6144578313253%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 654
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The sum of two lower triangular matrices is lower triangular. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 656
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance lower_triangular_plus {R : Ring@{i}} {n : nat}
+  (M N : Matrix R n n) `{!IsLowerTriangular M} `{!IsLowerTriangular N}
+  : IsLowerTriangular (matrix_plus M N).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 658
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 659
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold IsLowerTriangular.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 660
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite matrix_transpose_plus.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 661
+Time: 0.002s">
+<div class="time" style="width: 2.4096385542169%"></div>
+<pre>
+  by apply upper_triangular_plus.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 662
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 663
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The negation of an upper triangular matrix is upper triangular. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 665
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance upper_triangular_negate@{i} {R : Ring@{i}} {n : nat} (M : Matrix R n n)
+  {H : IsUpperTriangular M}
+  : IsUpperTriangular (matrix_negate M).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 667
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 668
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold IsUpperTriangular.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 669
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>
+  strip_reflections; apply tr.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 670
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros i j Hi Hj lt_i_j.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 671
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>
+  rewrite entry_Build_Matrix.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 672
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite &lt;- rng_negate_zero; f_ap.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 673
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by napply H.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 674
+Time: 0.002s">
+<div class="time" style="width: 2.4096385542169%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 675
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The negation of a lower triangular matrix is lower triangular. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 677
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance lower_triangular_negate {R : Ring@{i}} {n : nat}
+  (M : Matrix R n n) `{!IsLowerTriangular M}
+  : IsLowerTriangular (matrix_negate M).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 679
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 680
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold IsLowerTriangular.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 681
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite matrix_transpose_negate.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 682
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by apply upper_triangular_negate.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 683
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 684
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The product of two upper triangular matrices is upper triangular. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 686
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance upper_triangular_mult@{i} {R : Ring@{i}} {n : nat}
+  (M N : Matrix R n n) {H1 : IsUpperTriangular M} {H2 : IsUpperTriangular N}
+  : IsUpperTriangular (matrix_mult M N).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 688
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 689
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold IsUpperTriangular.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 690
+Time: 0.003s">
+<div class="time" style="width: 3.6144578313253%"></div>
+<pre>
+  strip_reflections; apply tr.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 691
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros i j Hi Hj lt_i_j.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 692
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite entry_Build_Matrix.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 693
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply ab_sum_zero.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 694
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros k Hk.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 695
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>
+  destruct (dec (k &lt;= i)%nat) as [leq_k_i|gt_k_i].</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 696
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 697
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite H2.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 697
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: by rewrite rng_mult_zero_r.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 698
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rapply lt_leq_lt_trans.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 699
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 699
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply gt_iff_not_leq in gt_k_i.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 700
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite H1.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 701
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: by rewrite rng_mult_zero_l.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 702
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  assumption.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 703
+Time: 0.002s">
+<div class="time" style="width: 2.4096385542169%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 704
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The product of two lower triangular matrices is lower triangular. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 706
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance lower_triangular_mult {R : Ring@{i}} {n : nat}
+  (M N : Matrix R n n) {H1 : IsLowerTriangular M} {H2 : IsLowerTriangular N}
+  : IsLowerTriangular (matrix_mult M N).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 708
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 709
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold IsLowerTriangular.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 710
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite matrix_transpose_mult.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 711
+Time: 0.003s">
+<div class="time" style="width: 3.6144578313253%"></div>
+<pre>
+  napply (upper_triangular_mult (R:=rng_op R)); assumption.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 712
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 713
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The zero matrix is upper triangular. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 715
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance upper_triangular_zero {R : Ring@{i}} {n : nat}
+  : IsUpperTriangular (matrix_zero R n n).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 716
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 717
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply tr.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 718
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by hnf; intros; rewrite entry_Build_Matrix.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 719
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 720
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The zero matrix is lower triangular. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 722
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance lower_triangular_zero {R : Ring@{i}} {n : nat}
+  : IsLowerTriangular (matrix_zero R n n).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 723
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 724
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold IsLowerTriangular.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 725
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite matrix_transpose_zero.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 726
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact _.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 727
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 728
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The identity matrix is upper triangular. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 730
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance upper_triangular_identity@{i} {R : Ring@{i}} {n : nat}
+  : IsUpperTriangular (identity_matrix R n).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 731
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 732
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold IsUpperTriangular.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 733
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply tr@{i}.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 734
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros i j Hi Hj lt_i_j.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 735
+Time: 0.003s">
+<div class="time" style="width: 3.6144578313253%"></div>
+<pre>
+  rewrite entry_Build_Matrix@{i}.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 736
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by apply kronecker_delta_lt.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 737
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 738
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The identity matrix is lower triangular. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 740
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance lower_triangular_identity@{i} {R : Ring@{i}} {n : nat}
+  : IsLowerTriangular (identity_matrix R n).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 741
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 742
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold IsLowerTriangular.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 743
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite matrix_transpose_identity.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 744
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact _.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 745
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 746
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A diagonal matrix is upper triangular. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 748
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance upper_triangular_diag {R : Ring@{i}} {n : nat} (v : Vector R n)
+  : IsUpperTriangular (matrix_diag v).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 749
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 750
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold IsUpperTriangular.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 751
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply tr.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 752
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros i j Hi Hj lt_i_j.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 753
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite entry_Build_Matrix.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 754
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite kronecker_delta_lt.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 755
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: by rewrite rng_mult_zero_l.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 756
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact _.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 757
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 758
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A diagonal matrix is lower triangular. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 760
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance lower_triangular_diag {R : Ring@{i}} {n : nat} (v : Vector R n)
+  : IsLowerTriangular (matrix_diag v).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 761
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 762
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold IsLowerTriangular.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 763
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite matrix_transpose_diag.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 764
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply upper_triangular_diag.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 765
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 766
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Upper triangular matrices are a subring of the ring of matrices. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 768
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition upper_triangular_matrix_ring@{i} (R : Ring@{i}) (n : nat)
+  : Subring@{i i} (matrix_ring@{i} R n).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 769
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 770
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>
+  napply (Build_Subring' (fun M : matrix_ring R n =&gt; IsUpperTriangular M)).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 771
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 772
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 772
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* These can all be found by typeclass search, but being explicit makes this faster. *)
+ </pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 774
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>-</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 774
+Time: 0.007s">
+<div class="time" style="width: 8.433734939759%"></div>
+<pre> intros x y ? ?; exact (upper_triangular_plus x (-y)).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 774
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 775
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact upper_triangular_mult.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 775
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 776
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact upper_triangular_identity.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 776
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 777
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Lower triangular matrices are a subring of the ring of matrices. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 779
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition lower_triangular_matrix_ring@{i} (R : Ring@{i}) (n : nat)
+  : Subring@{i i} (matrix_ring R n).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 780
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 781
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>
+  napply (Build_Subring'@{i i} (fun M : matrix_ring R n =&gt; IsLowerTriangular M)).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 782
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 783
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 783
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* These can all be found by typeclass search, but being explicit makes this faster. *)
+ </pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 785
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>-</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 785
+Time: 0.007s">
+<div class="time" style="width: 8.433734939759%"></div>
+<pre> intros x y ? ?; exact (lower_triangular_plus x (-y)).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 785
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 786
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact lower_triangular_mult.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 786
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 787
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact lower_triangular_identity.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 787
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 788
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Symmetric Matrices *)
+
+(** A matrix is symmetric when it is equal to its transpose. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 792
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Class IsSymmetric {R : Ring@{i}} {n : nat} (M : Matrix@{i} R n n) : Type@{i}
+  := matrix_transpose_issymmetric : matrix_transpose M = M.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 793
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments matrix_transpose_issymmetric {R n} M {_}.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 795
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The zero matrix is symmetric. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 797
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance issymmetric_matrix_zero {R : Ring@{i}} {n : nat}
+  : IsSymmetric (matrix_zero R n n)
+  := matrix_transpose_zero.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 799
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The identity matrix is symmetric. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 801
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance issymmetric_matrix_identity {R : Ring@{i}} {n : nat}
+  : IsSymmetric (identity_matrix R n)
+  := matrix_transpose_identity.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 803
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The sum of two symmetric matrices is symmetric. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 805
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance issymmetric_matrix_plus {R : Ring@{i}} {n : nat}
+  (M N : Matrix R n n) `{!IsSymmetric M} `{!IsSymmetric N}
+  : IsSymmetric (matrix_plus M N).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 807
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 808
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold IsSymmetric.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 809
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite matrix_transpose_plus.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 810
+Time: 0.004s">
+<div class="time" style="width: 4.8192771084337%"></div>
+<pre>
+  f_ap.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 811
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 812
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The negation of a symmetric matrix is symmetric. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 814
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance issymmetric_matrix_negate {R : Ring@{i}} {n : nat}
+  (M : Matrix R n n) `{!IsSymmetric M}
+  : IsSymmetric (matrix_negate M).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 816
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 817
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold IsSymmetric.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 818
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite matrix_transpose_negate.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 819
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  f_ap.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 820
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 821
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A scalar multiple of a symmetric matrix is symmetric. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 823
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance issymmetric_matrix_scale {R : Ring@{i}} {n : nat}
+  (r : R) (M : Matrix R n n) `{!IsSymmetric M}
+  : IsSymmetric (matrix_lact r M).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 825
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 826
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold IsSymmetric.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 827
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite matrix_transpose_lact.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 828
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  f_ap.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 829
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 830
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The transpose of a symmetric matrix is symmetric. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 832
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance issymmetric_matrix_transpose {R : Ring@{i}} {n : nat}
+  (M : Matrix R n n) `{!IsSymmetric M}
+  : IsSymmetric (matrix_transpose M).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 834
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 835
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold IsSymmetric.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 836
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite matrix_transpose_transpose.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 837
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by symmetry.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 838
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 839
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A symmetric upper triangular matrix is diagonal. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 841
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isdiagonal_upper_triangular_issymmetric {R : Ring@{i}} {n : nat}
+  (M : Matrix R n n) `{!IsSymmetric M} {H : IsUpperTriangular M}
+  : IsDiagonal M.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 843
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 844
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exists (matrix_diag_vector M).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 845
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply path_matrix.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 846
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros i j Hi Hj.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 847
+Time: 0.002s">
+<div class="time" style="width: 2.4096385542169%"></div>
+<pre>
+  rewrite entry_Build_Matrix, entry_Build_Vector.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 848
+Time: 0.04s">
+<div class="time" style="width: 48.192771084337%"></div>
+<pre>
+  strip_truncations.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 849
+Time: 0.005s">
+<div class="time" style="width: 6.0240963855422%"></div>
+<pre>
+  destruct (dec (i = j)) as [p|np].</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 850
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 851
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct p.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 851
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite kronecker_delta_refl.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 852
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite rng_mult_one_l.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 853
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>
+    f_ap; apply path_ishprop.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 854
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 854
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply neq_iff_lt_or_gt in np.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 855
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct np as [l | l].</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 856
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 857
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite (kronecker_delta_lt l).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 857
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite rng_mult_zero_l.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 858
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by rewrite H.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 859
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 860
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite (kronecker_delta_gt l).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 860
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite rng_mult_zero_l.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 861
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite &lt;- (matrix_transpose_issymmetric M).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 862
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite entry_Build_Matrix.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 863
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by rewrite H.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 864
+Time: 0.003s">
+<div class="time" style="width: 3.6144578313253%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 865
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A symmetric lower triangular matrix is diagonal. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 867
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isdiagonal_lower_triangular_issymmetric {R : Ring@{i}} {n : nat}
+  (M : Matrix R n n) `{!IsSymmetric M} `{!IsLowerTriangular M}
+  : IsDiagonal M.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 869
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 870
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite &lt;- (matrix_transpose_issymmetric M).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 871
+Time: 0.03s">
+<div class="time" style="width: 36.144578313253%"></div>
+<pre>
+  rapply isdiagonal_upper_triangular_issymmetric.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 872
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 873
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Note that symmetric matrices do not form a subring (or subalgebra) but they do form a submodule of the module of matrices. *)
+
+(** ** Skew-symmetric Matrices *)
+
+(** A matrix is skew-symmetric when it is equal to the negation of its transpose. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 879
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Class IsSkewSymmetric {R : Ring@{i}} {n : nat} (M : Matrix@{i} R n n) : Type@{i}
+  := matrix_transpose_isskewsymmetric : matrix_transpose M = matrix_negate M.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 880
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments matrix_transpose_isskewsymmetric {R n} M {_}.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 882
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The zero matrix is skew-symmetric. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 884
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isskewsymmetric_matrix_zero {R : Ring@{i}} {n : nat}
+  : IsSkewSymmetric (matrix_zero R n n).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 885
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 886
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold IsSkewSymmetric.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 887
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite matrix_transpose_zero.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 888
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  symmetry.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 889
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  napply (rng_negate_zero (A:=matrix_ring R n)).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 890
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 891
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The negation of a skew-symmetric matrix is skew-symmetric. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 893
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isskewsymmetric_matrix_negate {R : Ring@{i}} {n : nat}
+  (M : Matrix R n n) `{!IsSkewSymmetric M}
+  : IsSkewSymmetric (matrix_negate M).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 895
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 896
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold IsSkewSymmetric.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 897
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite matrix_transpose_negate.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 898
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  f_ap.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 899
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 900
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A scalar multiple of a skew-symmetric matrix is skew-symmetric. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 902
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isskewsymmetric_matrix_scale {R : Ring@{i}} {n : nat}
+  (r : R) (M : Matrix R n n) `{!IsSkewSymmetric M}
+  : IsSkewSymmetric (matrix_lact r M).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 904
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 905
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold IsSkewSymmetric.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 906
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite matrix_transpose_lact.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 907
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>
+  rhs_V napply (lm_neg (M:=Build_LeftModule _ (abgroup_matrix R n n) _) r M).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 908
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  f_ap.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 909
+Time: 0.003s">
+<div class="time" style="width: 3.6144578313253%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 910
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The transpose of a skew-symmetric matrix is skew-symmetric. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 912
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isskewsymmetric_matrix_transpose {R : Ring@{i}} {n : nat}
+  (M : Matrix R n n) `{!IsSkewSymmetric M}
+  : IsSkewSymmetric (matrix_transpose M).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 914
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 915
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold IsSkewSymmetric.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 916
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite &lt;- matrix_transpose_negate.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 917
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  f_ap.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 918
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 919
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The sum of two skew-symmetric matrices is skew-symmetric. *)</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 921
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isskewsymmetric_matrix_plus {R : Ring@{i}} {n : nat}
+  (M N : Matrix R n n) `{!IsSkewSymmetric M} `{!IsSkewSymmetric N}
+  : IsSkewSymmetric (matrix_plus M N).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 923
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 924
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold IsSkewSymmetric.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 925
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite matrix_transpose_plus.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 926
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>
+  rhs napply (grp_inv_op (G:=abgroup_matrix R n n)).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 927
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rhs_V rapply AbelianGroup.abgroup_commutative.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 928
+Time: 0.083s">
+<div class="time" style="width: 100%"></div>
+<pre>
+  f_ap.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 929
+Time: 0.002s">
+<div class="time" style="width: 2.4096385542169%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 930
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Skew-symmetric matrices degenerate to symmetric matrices in rings with characteristic 2. In odd characteristic the module of matrices can be decomposed into the direct sum of symmetric and skew-symmetric matrices. *)
+
+</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 933
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section MatrixCat.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 933
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The wild category [MatrixCat R] of [R]-valued matrices. This category has natural numbers as objects and m x n matrices as the arrows between [m] and [n]. *)
+ </pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 936
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition MatrixCat (R : Ring) := nat.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 936
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance isgraph_matrixcat {R : Ring} : IsGraph (MatrixCat R)
+    := {| Hom := Matrix R |}.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 939
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance is01cat_matrixcat {R : Ring} : Is01Cat (MatrixCat R).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 941
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 942
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply Build_Is01Cat.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 943
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 944
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (identity_matrix R).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 944
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 945
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros l m n M N.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 945
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (matrix_mult N M).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 946
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 947
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance is2graph_matrixcat {R : Ring} : Is2Graph (MatrixCat R)
+    := is2graph_paths _.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 950
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** [MatrixCat R] forms a strong 1-category. *)
+ </pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 953
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export] Instance is1catstrong_matrixcat {R : Ring} : Is1Cat_Strong (MatrixCat R).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 953
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 954
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>
+    snapply Build_Is1Cat_Strong.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 955
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (* Most of the structure comes from typeclasses in WildCat.Paths. *)
+   </pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 957
+Time: 0.004s">
+<div class="time" style="width: 4.8192771084337%"></div>
+<pre>1-4: exact _.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 957
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 958
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (associative_matrix_mult R).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 958
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 959
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros k l m n M N P.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 959
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply inverse.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 959
+Time: 0.002s">
+<div class="time" style="width: 2.4096385542169%"></div>
+<pre> apply (associative_matrix_mult R).</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 959
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 960
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply right_identity_matrix_mult.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 960
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 961
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply left_identity_matrix_mult.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 961
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 962
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** TODO: Define [HasEquivs] for [MatrixCat].  *)
+
+</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 965
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>End MatrixCat.</pre>
+</div>
+<div class="code" title="File: Matrix.v
+Line: 966
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

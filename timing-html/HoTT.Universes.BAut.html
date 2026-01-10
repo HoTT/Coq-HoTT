@@ -1,0 +1,1531 @@
+<html>
+<head>
+<title>BAut.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for BAut.v</h1>
+
+<div class="code" title="File: BAut.v
+Line: 1
+Time: 0.037s">
+<div class="time" style="width: 77.083333333333%"></div>
+<pre>From HoTT Require Import Basics Types.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 1
+Time: 0.038s">
+<div class="time" style="width: 79.166666666667%"></div>
+<pre>
+Require Import Truncations.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 2
+Time: 0.03s">
+<div class="time" style="width: 62.5%"></div>
+<pre>
+Require Import ObjectClassifier Homotopy.ExactSequence Pointed.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope type_scope.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope path_scope.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * BAut(X) *)
+
+(** ** Basics *)
+
+(** [BAut X] is the type of types that are merely equal to [X]. It is connected, by [is0connected_component] and any two points are merely equal by [merely_path_component]. *)</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition BAut (X : Type@{u}) := { Z : Type@{u} &amp; merely (Z = X) }.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Coercion BAut_pr1 X : BAut X -&gt; Type := pr1.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance ispointed_baut {X : Type} : IsPointed (BAut X) := (X; tr 1).</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We also define a pointed version [pBAut X], since the coercion [BAut_pr1] doesn't work if [BAut X] is a [pType]. *)</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition pBAut (X : Type) : pType
+  := [BAut X, _].</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 19
+Time: 0.002s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>
+
+Definition path_baut `{Univalence} {X} (Z Z' : BAut X)
+: (Z &lt;~&gt; Z') &lt;~&gt; (Z = Z' :&gt; BAut X)
+  := equiv_path_sigma_hprop _ _ oE equiv_path_universe _ _.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 23
+Time: 0.003s">
+<div class="time" style="width: 6.25%"></div>
+<pre>
+
+Definition ap_pr1_path_baut `{Univalence} {X}
+           {Z Z' : BAut X} (f : Z &lt;~&gt; Z')
+: ap (BAut_pr1 X) (path_baut Z Z' f) = path_universe f.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold path_baut, BAut_pr1; simpl.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply ap_pr1_path_sigma_hprop.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 31
+Time: 0.001s">
+<div class="time" style="width: 2.0833333333333%"></div>
+<pre>
+
+Definition transport_path_baut `{Univalence} {X}
+           {Z Z' : BAut X} (f : Z &lt;~&gt; Z') (z : Z)
+: transport (fun (W:BAut X) =&gt; W) (path_baut Z Z' f) z = f z.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (transport_compose idmap (BAut_pr1 X) _ _ @ _).</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 37
+Time: 0.002s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>
+  refine (_ @ transport_path_universe f z).</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply ap10, ap, ap_pr1_path_baut.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 39
+Time: 0.001s">
+<div class="time" style="width: 2.0833333333333%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The following tactic, which applies when trying to prove an hprop, replaces all assumed elements of [BAut X] by [X] itself. With [Univalence], this would work for any 0-connected type, but using [merely_path_component] we can avoid univalence. *)</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Ltac baut_reduce :=
+  progress repeat
+    match goal with
+      | [ Z : BAut ?X |- _ ]
+        =&gt; let Zispoint := fresh "Zispoint" in
+           assert (Zispoint := merely_path_component (point (BAut X)) Z);
+           revert Zispoint;
+           refine (@Trunc_ind _ _ _ _ _);
+           intro Zispoint;
+           destruct Zispoint
+    end.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Truncation *)
+
+(** If [X] is an [n.+1]-type, then [BAut X] is an [n.+2]-type. *)</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance trunc_baut `{Univalence} {n X} `{IsTrunc n.+1 X}
+: IsTrunc n.+2 (BAut X).</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply istrunc_S.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros Z W.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 60
+Time: 0.003s">
+<div class="time" style="width: 6.25%"></div>
+<pre>
+  baut_reduce.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 61
+Time: 0.001s">
+<div class="time" style="width: 2.0833333333333%"></div>
+<pre>
+  exact (@istrunc_equiv_istrunc _ _ (path_baut _ _) n.+1 _).</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 62
+Time: 0.001s">
+<div class="time" style="width: 2.0833333333333%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** If [X] is truncated, then so is every element of [BAut X]. *)</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 65
+Time: 0.003s">
+<div class="time" style="width: 6.25%"></div>
+<pre>Instance trunc_el_baut {n X} `{Funext} `{IsTrunc n X} (Z : BAut X)
+  : IsTrunc n Z
+  := ltac:(by baut_reduce).</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Operations on [BAut] *)
+
+(** Multiplying by a fixed type *)
+
+</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 72
+Time: 0.001s">
+<div class="time" style="width: 2.0833333333333%"></div>
+<pre>Definition baut_prod_r (X A : Type)
+  : BAut X -&gt; BAut (X * A)
+  := fun Z:BAut X =&gt;
+       (Z * A ; Trunc_functor (-1) (ap (fun W =&gt; W * A)) (pr2 Z))
+       : BAut (X * A).</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 76
+Time: 0.001s">
+<div class="time" style="width: 2.0833333333333%"></div>
+<pre>
+
+Definition ap_baut_prod_r `{Univalence} (X A : Type)
+           {Z W : BAut X} (e : Z &lt;~&gt; W)
+  : ap (baut_prod_r X A) (path_baut Z W e)
+    = path_baut (baut_prod_r X A Z) (baut_prod_r X A W) (equiv_functor_prod_r e).</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  cbn.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 83
+Time: 0.003s">
+<div class="time" style="width: 6.25%"></div>
+<pre>
+  apply moveL_equiv_M; cbn; unfold pr1_path.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 84
+Time: 0.001s">
+<div class="time" style="width: 2.0833333333333%"></div>
+<pre>
+  rewrite &lt;- (ap_compose (baut_prod_r X A) pr1 (path_sigma_hprop Z W _)).</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 85
+Time: 0.001s">
+<div class="time" style="width: 2.0833333333333%"></div>
+<pre>
+  rewrite &lt;- ((ap_compose pr1 (fun Z =&gt; Z * A) (path_sigma_hprop Z W _))^).</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite ap_pr1_path_sigma_hprop.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 87
+Time: 0.007s">
+<div class="time" style="width: 14.583333333333%"></div>
+<pre>
+  apply moveL_equiv_M; cbn.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply ap_prod_r_path_universe.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 89
+Time: 0.005s">
+<div class="time" style="width: 10.416666666667%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Centers *)
+
+(** The following lemma says that to define a section of a family [P] of hsets over [BAut X], it is equivalent to define an element of [P X] which is fixed by all automorphisms of [X]. *)</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 94
+Time: 0.001s">
+<div class="time" style="width: 2.0833333333333%"></div>
+<pre>Lemma baut_ind_hset `{Univalence} X
+      (** It ought to be possible to allow more generally [P : BAut X -&gt; Type], but the proof would get more complicated, and this version suffices for present applications. *)
+      (P : Type -&gt; Type) `{forall (Z : BAut X), IsHSet (P Z)}
+: { e : P (point (BAut X)) &amp;
+    forall g : X &lt;~&gt; X, transport P (path_universe g) e = e }
+  &lt;~&gt; (forall (Z:BAut X), P Z).</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (equiv_sig_ind _ oE _).</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (** We use the fact that maps out of a propositional truncation into an hset are equivalent to weakly constant functions. *)
+ </pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 103
+Time: 0.007s">
+<div class="time" style="width: 14.583333333333%"></div>
+<pre>refine ((equiv_functor_forall'
+             (P := fun Z =&gt; { f : (Z=X) -&gt; P Z &amp; WeaklyConstant f })
+             1
+             (fun Z =&gt; equiv_merely_rec_hset_if_domain _ _)) oE _); simpl.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros p.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> change (IsHSet (P (BAut_pr1 X (Z ; tr p)))).</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold WeaklyConstant.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (** Now we peel away a bunch of contractible types. *)
+ </pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>refine (equiv_sig_coind _ _ oE _).</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply equiv_functor_sigma'.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1:exact (equiv_paths_ind_r X (fun x _ =&gt; P x)).</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros p; cbn.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (equiv_paths_ind_r X _ oE _).</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply equiv_functor_forall'.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1:apply equiv_equiv_path.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros e; cbn.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_ oE equiv_moveL_transport_V _ _ _ _).</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 118
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> 
+  apply equiv_concat_r.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite path_universe_transport_idmap, paths_ind_r_transport.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  reflexivity.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 121
+Time: 0.003s">
+<div class="time" style="width: 6.25%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 122
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** This implies that if [X] is a set, then the center of [BAut X] is the set of automorphisms of [X] that commute with every other automorphism (i.e. the center, in the usual sense, of the group of automorphisms of [X]). *)
+
+</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 125
+Time: 0.001s">
+<div class="time" style="width: 2.0833333333333%"></div>
+<pre>Definition center_baut `{Univalence} X `{IsHSet X}
+: { f : X &lt;~&gt; X &amp; forall g:X&lt;~&gt;X, g o f == f o g }
+  &lt;~&gt; (forall Z:BAut X, Z = Z).</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 128
+Time: 0.001s">
+<div class="time" style="width: 2.0833333333333%"></div>
+<pre>
+  refine (equiv_functor_forall_id
+            (fun Z =&gt; equiv_path_sigma_hprop Z Z) oE _).</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 130
+Time: 0.013s">
+<div class="time" style="width: 27.083333333333%"></div>
+<pre>
+  refine (baut_ind_hset X (fun Z =&gt; Z = Z) oE _).</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 131
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simpl.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (equiv_functor_sigma' (equiv_path_universe X X) _); intros f.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply equiv_functor_forall_id; intros g; simpl.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_ oE equiv_path_arrow _ _).</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 135
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_ oE equiv_path_equiv (g oE f) (f oE g)).</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert g.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 137
+Time: 0.001s">
+<div class="time" style="width: 2.0833333333333%"></div>
+<pre> equiv_intro (equiv_path X X) g.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 137
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert f.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 138
+Time: 0.001s">
+<div class="time" style="width: 2.0833333333333%"></div>
+<pre> equiv_intro (equiv_path X X) f.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_ oE equiv_concat_l (equiv_path_pp _ _) _).</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_ oE equiv_concat_r (equiv_path_pp _ _)^ _).</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 140
+Time: 0.001s">
+<div class="time" style="width: 2.0833333333333%"></div>
+<pre>
+  refine (_ oE (equiv_ap (equiv_path X X) _ _)^-1).</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (equiv_concat_l (transport_paths_lr _ _) _ oE _).</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (equiv_concat_l (concat_pp_p _ _ _) _ oE _).</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (equiv_moveR_Vp _ _ _ oE _).</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (equiv_concat_l _ _ oE equiv_concat_r _ _).</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 145
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply concat2; apply eissect.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 147
+Time: 0.001s">
+<div class="time" style="width: 2.0833333333333%"></div>
+<pre> symmetry; apply concat2; apply eissect.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 147
+Time: 0.006s">
+<div class="time" style="width: 12.5%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 148
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We show that this equivalence takes the identity equivalence to the identity in the center.  We have to be careful in this proof never to [simpl] or [unfold] too many things, or Coq will produce gigantic terms that take it forever to compute with. *)</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 150
+Time: 0.002s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>Definition id_center_baut `{Univalence} X `{IsHSet X}
+: center_baut X (exist
+                   (fun (f:X&lt;~&gt;X) =&gt; forall (g:X&lt;~&gt;X), g o f == f o g)
+                   (equiv_idmap X)
+                   (fun (g:X&lt;~&gt;X) (x:X) =&gt; idpath (g x)))
+  = fun Z =&gt; idpath Z.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 155
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply path_forall; intros Z.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 157
+Time: 0.011s">
+<div class="time" style="width: 22.916666666667%"></div>
+<pre>
+  assert (IsHSet (Z.1 = Z.1)) by exact _.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 158
+Time: 0.023s">
+<div class="time" style="width: 47.916666666667%"></div>
+<pre>
+  baut_reduce.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 159
+Time: 0.014s">
+<div class="time" style="width: 29.166666666667%"></div>
+<pre>
+  exact (ap (path_sigma_hprop _ _) path_universe_1
+            @ path_sigma_hprop_1 _).</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 161
+Time: 0.002s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Similarly, if [X] is a 1-type, we can characterize the 2-center of [BAut X]. *)
+
+(** Coq is too eager about unfolding some things appearing in this proof. *)</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 166
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section Center2BAut.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 166
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Local Arguments equiv_path_equiv : simpl never.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Local Arguments equiv_path2_universe : simpl never.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 168
+Time: 0.001s">
+<div class="time" style="width: 2.0833333333333%"></div>
+<pre>
+
+  Definition center2_baut `{Univalence} X `{IsTrunc 1 X}
+  : { f : forall x:X, x=x &amp; forall (g:X&lt;~&gt;X) (x:X), ap g (f x) = f (g x) }
+      &lt;~&gt; (forall Z:BAut X, (idpath Z) = (idpath Z)).</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 173
+Time: 0.002s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>
+    refine ((equiv_functor_forall_id
+               (fun Z =&gt; (equiv_concat_lr _ _)
+                           oE (equiv_ap (equiv_path_sigma_hprop Z Z) 1%path 1%path))) oE _).</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> symmetry; apply path_sigma_hprop_1.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply path_sigma_hprop_1.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 178
+Time: 0.012s">
+<div class="time" style="width: 25%"></div>
+<pre>
+    assert (forall Z:BAut X, IsHSet (idpath Z.1 = idpath Z.1)) by exact _.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 179
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (baut_ind_hset X (fun Z =&gt; idpath Z = idpath Z) oE _).</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 180
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    simple refine (equiv_functor_sigma' _ _).</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 181
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 182
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> refine (_ oE equiv_path2_universe 1 1).</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 182
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply equiv_concat_lr.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 183
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      -</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 184
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> symmetry; exact path_universe_1.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 184
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      -</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact path_universe_1.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros f.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 186
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply equiv_functor_forall_id; intros g.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (_ oE equiv_path3_universe _ _).</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (dpath_paths2 (path_universe g) _ _ oE _).</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 189
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    cbn.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 190
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    change (equiv_idmap X == equiv_idmap X) in f.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 191
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (equiv_concat_lr _ _).</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 192
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 193
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> refine (_ @ (path2_universe_postcompose_idmap f g)^).</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 193
+Time: 0.048s">
+<div class="time" style="width: 100%"></div>
+<pre>
+      abstract (rewrite !whiskerR_pp, !concat_pp_p; reflexivity).</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 194
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> refine (path2_universe_precompose_idmap f g @ _).</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 195
+Time: 0.036s">
+<div class="time" style="width: 75%"></div>
+<pre>
+      abstract (rewrite !whiskerL_pp, !concat_pp_p; reflexivity).</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 196
+Time: 0.017s">
+<div class="time" style="width: 35.416666666667%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Once again we compute it on the identity.  In this case it seems to be unavoidable to do some [simpl]ing (or at least [cbn]ing), making this proof somewhat slower. *)
+ </pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 200
+Time: 0.001s">
+<div class="time" style="width: 2.0833333333333%"></div>
+<pre>Definition id_center2_baut `{Univalence} X `{IsTrunc 1 X}
+  : center2_baut X (exist
+                      (fun (f:forall x:X, x=x) =&gt;
+                         forall (g:X&lt;~&gt;X) (x:X), ap g (f x) = f (g x))
+                      (fun x =&gt; idpath x)
+                      (fun (g:X&lt;~&gt;X) (x:X) =&gt; idpath (idpath (g x))))
+    = fun Z =&gt; idpath (idpath Z).</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 207
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_forall; intros Z.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 208
+Time: 0.012s">
+<div class="time" style="width: 25%"></div>
+<pre>
+    assert (IsHSet (idpath Z.1 = idpath Z.1)) by exact _.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 209
+Time: 0.01s">
+<div class="time" style="width: 20.833333333333%"></div>
+<pre>
+    baut_reduce.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 210
+Time: 0.038s">
+<div class="time" style="width: 79.166666666667%"></div>
+<pre>
+    cbn.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 211
+Time: 0.001s">
+<div class="time" style="width: 2.0833333333333%"></div>
+<pre>
+    rewrite equiv_path2_universe_1.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 212
+Time: 0.001s">
+<div class="time" style="width: 2.0833333333333%"></div>
+<pre>
+    rewrite concat_p1, concat_Vp.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 213
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    cbn.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 214
+Time: 0.001s">
+<div class="time" style="width: 2.0833333333333%"></div>
+<pre>
+    rewrite concat_p1; apply concat_Vp.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 215
+Time: 0.006s">
+<div class="time" style="width: 12.5%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 216
+Time: 0.006s">
+<div class="time" style="width: 12.5%"></div>
+<pre>
+
+End Center2BAut.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 218
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section ClassifyingMaps.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 220
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** ** Maps into [BAut F] classify bundles with fiber [F] *)
+
+  (** The property of being merely equivalent to a given type [F] defines a subuniverse. *)
+ </pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition subuniverse_merely_equiv (F : Type) : Subuniverse.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 226
+Time: 0.002s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>
+    rapply (Build_Subuniverse (fun E =&gt; merely (E &lt;~&gt; F))).</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 227
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros T U mere_eq f iseq_f.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 228
+Time: 0.007s">
+<div class="time" style="width: 14.583333333333%"></div>
+<pre>
+    strip_truncations.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 229
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    pose (feq:=Build_Equiv _ _ f iseq_f).</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 230
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (tr (mere_eq oE feq^-1)).</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 231
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 232
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The universe of O-local types for [subuniverse_merely_equiv F] is equivalent to [BAut F]. *)
+ </pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 235
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Proposition equiv_baut_typeO `{Univalence} {F : Type}
+    :  BAut F &lt;~&gt; Type_ (subuniverse_merely_equiv F).</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 236
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 237
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply equiv_functor_sigma_id; intro X; cbn.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 238
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rapply Trunc_functor_equiv.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 239
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (equiv_path_universe _ _)^-1%equiv.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 240
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 241
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Consequently, maps into [BAut F] correspond to bundles with fibers merely equivalent to [F]. *)
+ </pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 244
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Corollary equiv_map_baut_fibration `{Univalence} {Y : pType} {F : Type}
+    : (Y -&gt; BAut F) &lt;~&gt; { p : Slice Y &amp; forall y:Y, merely (hfiber p.2 y &lt;~&gt; F) }.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 245
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 246
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (_ oE equiv_postcompose' equiv_baut_typeO).</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 247
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (_ oE equiv_sigma_fibration_O).</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 248
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply equiv_functor_sigma_id; intro p.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 249
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rapply equiv_functor_forall_id; intro y.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 250
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by apply Trunc_functor_equiv.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 251
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 252
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The pointed version of [equiv_baut_typeO] above. *)
+ </pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 255
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Proposition pequiv_pbaut_typeOp@{u v +} `{Univalence} {F : Type@{u}}
+    : pBAut@{u v} F &lt;~&gt;* [Type_ (subuniverse_merely_equiv F), (F; tr equiv_idmap)].</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 256
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 257
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply Build_pEquiv'; cbn.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 258
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: exact equiv_baut_typeO.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 259
+Time: 0.001s">
+<div class="time" style="width: 2.0833333333333%"></div>
+<pre>
+    by apply path_sigma_hprop.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 260
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 261
+Time: 0.003s">
+<div class="time" style="width: 6.25%"></div>
+<pre>
+
+  Definition equiv_pmap_pbaut_pfibration `{Univalence} {Y F : pType@{u}}
+    : (Y -&gt;* pBAut@{u v} F) &lt;~&gt; { p : { q : pSlice Y &amp; forall y:Y, merely (hfiber q.2 y &lt;~&gt; F) } &amp;
+                                      pfiber p.1.2 &lt;~&gt;* F }
+    := (equiv_sigma_pfibration_O (subuniverse_merely_equiv F))
+         oE pequiv_pequiv_postcompose pequiv_pbaut_typeOp.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 267
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** When [Y] is connected, pointed maps into [pBAut F] correspond to maps into the universe sending the base point to [F]. *)
+ </pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 270
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Proposition equiv_pmap_pbaut_type_p `{Univalence}
+              {Y : pType@{u}} {F : Type@{u}} `{IsConnected 0 Y}
+    : (Y -&gt;* pBAut F) &lt;~&gt; (Y -&gt;* [Type@{u}, F]).</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 272
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 273
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (_ oE pequiv_pequiv_postcompose pequiv_pbaut_typeOp).</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 274
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact equiv_pmap_typeO_type_connected.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 275
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 276
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** When [Y] is connected, [pBAut F] classifies fiber sequences over [Y] with fiber [F]. *)
+ </pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 279
+Time: 0.001s">
+<div class="time" style="width: 2.0833333333333%"></div>
+<pre>Definition equiv_pmap_pbaut_pfibration_connected `{Univalence} {Y F : pType} `{IsConnected 0 Y}
+    : (Y -&gt;* pBAut F) &lt;~&gt; { X : pType &amp; FiberSeq F X Y }
+    := classify_fiberseq oE equiv_pmap_pbaut_type_p.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 281
+Time: 0.001s">
+<div class="time" style="width: 2.0833333333333%"></div>
+<pre>
+
+End ClassifyingMaps.</pre>
+</div>
+<div class="code" title="File: BAut.v
+Line: 284
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

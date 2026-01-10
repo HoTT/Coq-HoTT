@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>LawsTactic.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-wsp"><span class="sd">(** * Tactic for proving laws about adjoint composition *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lawstactic-v-chk0" style="display: none" type="checkbox"><label class="alectryon-input" for="lawstactic-v-chk0"><span class="kn">Require Import</span> Category.Core Functor.Core NaturalTransformation.Core.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Functor.Composition.Laws.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Adjoint.UnitCounit Adjoint.Paths.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> PathGroupoids HoTT.Tactics Types.Prod Types.Forall.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Universe Polymorphism</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Implicit Arguments</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Generalizable All Variables</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Asymmetric Patterns</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">law_t</span> :=
+  <span class="nb">rewrite</span> !transport_path_prod&#39;; <span class="nb">simpl</span>;
+  path_adjunction; <span class="nb">simpl</span>;
+  <span class="kp">repeat</span> <span class="kr">match goal with</span>
+           | [ |- <span class="kp">context</span>[unit (transport <span class="nl">?P</span> <span class="nl">?p</span> <span class="nl">?z</span>)] ]
+             =&gt; <span class="nb">simpl</span> <span class="nb">rewrite</span> (@ap_transport _ P _ _ _ p (<span class="kr">fun</span> <span class="nv">_</span> =&gt; @unit _ _ _ _) z)
+           | [ |- <span class="kp">context</span>[counit (transport <span class="nl">?P</span> <span class="nl">?p</span> <span class="nl">?z</span>)] ]
+             =&gt; <span class="nb">simpl</span> <span class="nb">rewrite</span> (@ap_transport _ P _ _ _ p (<span class="kr">fun</span> <span class="nv">_</span> =&gt; @counit _ _ _ _) z)
+           | [ |- <span class="kp">context</span>[components_of (transport <span class="nl">?P</span> <span class="nl">?p</span> <span class="nl">?z</span>)] ]
+             =&gt; <span class="nb">simpl</span> <span class="nb">rewrite</span> (@ap_transport _ P _ _ _ p (<span class="kr">fun</span> <span class="nv">_</span> =&gt; @components_of _ _ _ _) z)
+         <span class="kr">end</span>;
+  <span class="nb">rewrite</span> !transport_forall_constant;
+  <span class="kp">repeat</span>
+    <span class="kr">match goal with</span>
+      | [ |- <span class="kp">context</span>[transport (<span class="kr">fun</span> <span class="nv">y</span> : Functor <span class="nl">?C</span> <span class="nl">?D</span> =&gt; <span class="nl">?f</span> (y _0 <span class="nl">?x</span>)%object)] ]
+        =&gt; <span class="nb">rewrite</span> (<span class="kr">fun</span> <span class="nv">a</span> <span class="nv">b</span> =&gt; @transport_compose _ _ a b (<span class="kr">fun</span> <span class="nv">y&#39;</span> =&gt; f (y&#39; x)) (@object_of C D))
+      | [ |- <span class="kp">context</span>[transport (<span class="kr">fun</span> <span class="nv">y</span> : Functor <span class="nl">?C</span> <span class="nl">?D</span> =&gt; <span class="nl">?f</span> (<span class="nl">?g</span> (y _0 <span class="nl">?x</span>)%object))] ]
+        =&gt; <span class="nb">rewrite</span> (<span class="kr">fun</span> <span class="nv">a</span> <span class="nv">b</span> =&gt; @transport_compose _ _ a b (<span class="kr">fun</span> <span class="nv">y&#39;</span> =&gt; f (g (y&#39; x))) (@object_of C D))
+      | [ |- <span class="kp">context</span>[transport (<span class="kr">fun</span> <span class="nv">y</span> : Functor <span class="nl">?C</span> <span class="nl">?D</span> =&gt; <span class="nl">?f</span> (<span class="nl">?g</span> (<span class="nl">?h</span> (<span class="nl">?i</span> (y _0 <span class="nl">?x</span>)%object))))] ]
+        =&gt; <span class="nb">rewrite</span> (<span class="kr">fun</span> <span class="nv">a</span> <span class="nv">b</span> =&gt; @transport_compose _ _ a b (<span class="kr">fun</span> <span class="nv">y&#39;</span> =&gt; f (g (h (i (y&#39; x))))) (@object_of C D))
+      | [ |- <span class="kp">context</span>[transport (<span class="kr">fun</span> <span class="nv">y</span> : Functor <span class="nl">?C</span> <span class="nl">?D</span> =&gt; <span class="nl">?f</span> (y _0 <span class="nl">?x</span>)%object <span class="nl">?z</span>)] ]
+        =&gt; <span class="nb">rewrite</span> (<span class="kr">fun</span> <span class="nv">a</span> <span class="nv">b</span> =&gt; @transport_compose _ _ a b (<span class="kr">fun</span> <span class="nv">y&#39;</span> =&gt; f (y&#39; x) z) (@object_of C D))
+      | [ |- <span class="kp">context</span>[transport (<span class="kr">fun</span> <span class="nv">y</span> : Functor <span class="nl">?C</span> <span class="nl">?D</span> =&gt; <span class="nl">?f</span> (<span class="nl">?g</span> (y _0 <span class="nl">?x</span>)%object) <span class="nl">?z</span>)] ]
+        =&gt; <span class="nb">rewrite</span> (<span class="kr">fun</span> <span class="nv">a</span> <span class="nv">b</span> =&gt; @transport_compose _ _ a b (<span class="kr">fun</span> <span class="nv">y&#39;</span> =&gt; f (g (y&#39; x)) z) (@object_of C D))
+      | [ |- <span class="kp">context</span>[transport (<span class="kr">fun</span> <span class="nv">y</span> : Functor <span class="nl">?C</span> <span class="nl">?D</span> =&gt; <span class="nl">?f</span> (<span class="nl">?g</span> (<span class="nl">?h</span> (<span class="nl">?i</span> (y _0 <span class="nl">?x</span>)%object))) <span class="nl">?z</span>)] ]
+        =&gt; <span class="nb">rewrite</span> (<span class="kr">fun</span> <span class="nv">a</span> <span class="nv">b</span> =&gt; @transport_compose _ _ a b (<span class="kr">fun</span> <span class="nv">y&#39;</span> =&gt; f (g (h (i (y&#39; x)))) z) (@object_of C D))
+    <span class="kr">end</span>;
+  <span class="nb">unfold</span> <span class="nb">symmetry</span>, symmetric_paths;
+  <span class="nb">rewrite</span> <span class="nl">?ap_V</span>;
+  <span class="nb">rewrite</span> <span class="nl">?left_identity_fst</span>, <span class="nl">?right_identity_fst</span>, <span class="nl">?associativity_fst</span>;
+  <span class="nb">simpl</span>;
+  <span class="kp">repeat</span> (
+      <span class="nb">rewrite</span>
+        <span class="nl">?identity_of</span>,
+      <span class="nl">?composition_of</span>,
+      <span class="nl">?Category</span>.Core.left_identity,
+      <span class="nl">?Category</span>.Core.right_identity,
+      <span class="nl">?Category</span>.Core.associativity
+    );
+  <span class="kp">try</span> <span class="bp">reflexivity</span>.</span></span></pre>
+</div>
+</div></body>
+</html>

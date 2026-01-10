@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>Laws.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-wsp"><span class="sd">(** * Laws about composition of functors *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="laws-v-chk9" style="display: none" type="checkbox"><label class="alectryon-input" for="laws-v-chk9"><span class="kn">Require Import</span> Category.Core Functor.Core Functor.Composition.Core Functor.Identity.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Functor.Paths.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Basics.PathGroupoids Basics.Tactics.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Universe Polymorphism</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Implicit Arguments</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Generalizable All Variables</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Asymmetric Patterns</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> morphism_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">identity_lemmas</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `{Funext}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variables</span> <span class="nv">C</span> <span class="nv">D</span> : PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> functor_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** ** left identity : [1 ∘ F = F] *)</span>
+  <span class="sd">(** If we had that [match (p : a = b) in (_ = y) return (a = y) with idpath =&gt; idpath end ≡ p] (a form of eta for paths), this would be judgemental. *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="laws-v-chka" style="display: none" type="checkbox"><label class="alectryon-input" for="laws-v-chka"><span class="kn">Lemma</span> <span class="nf">left_identity</span> (<span class="nv">F</span> : Functor C D) : <span class="mi">1</span> o F = F.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="mi">1</span> o F = F</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="laws-v-chkb" style="display: none" type="checkbox"><label class="alectryon-input" for="laws-v-chkb"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="mi">1</span> o F = F</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">by</span> path_functor.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** ** right identity : [F ∘ 1 = F] *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="laws-v-chkc" style="display: none" type="checkbox"><label class="alectryon-input" for="laws-v-chkc"><span class="kn">Lemma</span> <span class="nf">right_identity</span> (<span class="nv">F</span> : Functor C D) : F o <span class="mi">1</span> = F.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">F o <span class="mi">1</span> = F</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="laws-v-chkd" style="display: none" type="checkbox"><label class="alectryon-input" for="laws-v-chkd"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">F o <span class="mi">1</span> = F</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">by</span> path_functor.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** ** Action of left and right identity laws on objects *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">left_identity_fst</span> <span class="nv">F</span>
+  : ap object_of (left_identity F) = idpath
+    := @path_functor_uncurried_fst _ _ _ (<span class="mi">1</span> o F) F <span class="mi">1</span> <span class="mi">1</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">right_identity_fst</span> <span class="nv">F</span>
+  : ap object_of (right_identity F) = idpath
+    := @path_functor_uncurried_fst _ _ _ (F o <span class="mi">1</span>) F <span class="mi">1</span> <span class="mi">1</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">identity_lemmas</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input">#[export]
+<span class="kn">Hint Rewrite</span> @left_identity @right_identity : category.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input">#[export]
+<span class="kn">Hint Rewrite</span> @left_identity @right_identity : functor.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input">#[export]
+<span class="kn">Hint Immediate</span> left_identity right_identity : category functor.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">composition_lemmas</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `{fs : Funext}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variables</span> <span class="nv">B</span> <span class="nv">C</span> <span class="nv">D</span> <span class="nv">E</span> : PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> functor_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** ** associativity : [(H ∘ G) ∘ F = H ∘ (G ∘ F)] *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="laws-v-chke" style="display: none" type="checkbox"><label class="alectryon-input" for="laws-v-chke"><span class="kn">Lemma</span> <span class="nf">associativity</span>
+        (<span class="nv">F</span> : Functor B C) (<span class="nv">G</span> : Functor C D) (<span class="nv">H</span> : Functor D E)
+  : (H o G) o F = H o (G o F).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>fs</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>B, C, D, E</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor B C</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Functor D E</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">H o G o F = H o (G o F)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="laws-v-chkf" style="display: none" type="checkbox"><label class="alectryon-input" for="laws-v-chkf"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>fs</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>B, C, D, E</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor B C</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Functor D E</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">H o G o F = H o (G o F)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">by</span> path_functor.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** ** Action of associativity on objects *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">associativity_fst</span> <span class="nv">F</span> <span class="nv">G</span> <span class="nv">H</span>
+  : ap object_of (associativity F G H) = idpath
+    := @path_functor_uncurried_fst _ _ _ ((H o G) o F) (H o (G o F)) <span class="mi">1</span>%path <span class="mi">1</span>%path.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">composition_lemmas</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input">#[export]
+<span class="kn">Hint Resolve</span> associativity : category functor.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">coherence</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `{fs : Funext}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> path_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> functor_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Ltac</span> <span class="nf">coherence_t</span> :=
+    <span class="kp">repeat</span> <span class="kr">match goal with</span>
+             | [ |- _ = _ :&gt; (_ = _ :&gt; Functor _ _) ] =&gt; <span class="nb">apply</span> path_path_functor_uncurried
+             | _ =&gt; <span class="bp">reflexivity</span>
+             | _ =&gt; <span class="kp">progress</span> <span class="nb">rewrite</span> <span class="nl">?ap_pp</span>, <span class="nl">?concat_1p</span>, <span class="nl">?concat_p1</span>
+             | _ =&gt; <span class="kp">progress</span> <span class="nb">rewrite</span> <span class="nl">?associativity_fst</span>, <span class="nl">?left_identity_fst</span>, <span class="nl">?right_identity_fst</span>
+             | _ =&gt; <span class="kp">progress</span> push_ap_object_of
+           <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** ** coherence triangle *)</span>
+  <span class="sd">(** The following triangle is coherent</span>
+<span class="sd">&lt;&lt;</span>
+<span class="sd">      G ∘ (1 ∘ F) === (G ∘ 1) ∘ F</span>
+<span class="sd">            \\           //</span>
+<span class="sd">             \\         //</span>
+<span class="sd">              \\       //</span>
+<span class="sd">               \\     //</span>
+<span class="sd">                \\   //</span>
+<span class="sd">                 \\ //</span>
+<span class="sd">                 G ∘ F</span>
+<span class="sd">&gt;&gt;</span>
+<span class="sd">*)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="laws-v-chk10" style="display: none" type="checkbox"><label class="alectryon-input" for="laws-v-chk10"><span class="kn">Lemma</span> <span class="nf">triangle</span> <span class="nv">C</span> <span class="nv">D</span> <span class="nv">E</span> (<span class="nv">F</span> : Functor C D) (<span class="nv">G</span> : Functor D E)
+  : (associativity F <span class="mi">1</span> G @ ap (compose G) (left_identity F))
+    = (ap (<span class="kr">fun</span> <span class="nv">G&#39;</span> : Functor D E =&gt; G&#39; o F) (right_identity G)).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>fs</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D, E</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Functor D E</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">associativity F <span class="mi">1</span> G @ ap (compose G) (left_identity F) =
+ap (<span class="kr">fun</span> <span class="nv">G&#39;</span> : Functor D E =&gt; G&#39; o F) (right_identity G)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="laws-v-chk11" style="display: none" type="checkbox"><label class="alectryon-input" for="laws-v-chk11"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>fs</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D, E</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Functor D E</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">associativity F <span class="mi">1</span> G @ ap (compose G) (left_identity F) =
+ap (<span class="kr">fun</span> <span class="nv">G&#39;</span> : Functor D E =&gt; G&#39; o F) (right_identity G)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input">coherence_t.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Qed</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** ** coherence pentagon *)</span>
+  <span class="sd">(** The following pentagon is coherent</span>
+<span class="sd">&lt;&lt;</span>
+<span class="sd">                  K ∘ (H ∘ (G ∘ F))</span>
+<span class="sd">                  //             \\</span>
+<span class="sd">                 //               \\</span>
+<span class="sd">                //                 \\</span>
+<span class="sd">               //                   \\</span>
+<span class="sd">              //                     \\</span>
+<span class="sd">      (K ∘ H) ∘ (G ∘ F)        K ∘ ((H ∘ G) ∘ F)</span>
+<span class="sd">              ||                      ||</span>
+<span class="sd">              ||                      ||</span>
+<span class="sd">              ||                      ||</span>
+<span class="sd">              ||                      ||</span>
+<span class="sd">              ||                      ||</span>
+<span class="sd">      ((K ∘ H) ∘ G) ∘ F ====== (K ∘ (H ∘ G)) ∘ F</span>
+<span class="sd">&gt;&gt;</span>
+<span class="sd">*)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="laws-v-chk12" style="display: none" type="checkbox"><label class="alectryon-input" for="laws-v-chk12"><span class="kn">Lemma</span> <span class="nf">pentagon</span> <span class="nv">A</span> <span class="nv">B</span> <span class="nv">C</span> <span class="nv">D</span> <span class="nv">E</span>
+        (<span class="nv">F</span> : Functor A B) (<span class="nv">G</span> : Functor B C) (<span class="nv">H</span> : Functor C D) (<span class="nv">K</span> : Functor D E)
+  : (associativity F G (K o H) @ associativity (G o F) H K)
+    = (ap (<span class="kr">fun</span> <span class="nv">KHG</span> =&gt; KHG o F) (associativity G H K) @ associativity F (H o G) K @ ap (compose K) (associativity F G H)).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>fs</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B, C, D, E</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor A B</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Functor B C</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br><span><var>K</var><span class="hyp-type"><b>: </b><span>Functor D E</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">associativity F G (K o H) @ associativity (G o F) H K =
+(ap (<span class="kr">fun</span> <span class="nv">KHG</span> : Functor B E =&gt; KHG o F)
+   (associativity G H K) @ associativity F (H o G) K) @
+ap (compose K) (associativity F G H)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="laws-v-chk13" style="display: none" type="checkbox"><label class="alectryon-input" for="laws-v-chk13"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>fs</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B, C, D, E</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor A B</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Functor B C</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br><span><var>K</var><span class="hyp-type"><b>: </b><span>Functor D E</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">associativity F G (K o H) @ associativity (G o F) H K =
+(ap (<span class="kr">fun</span> <span class="nv">KHG</span> : Functor B E =&gt; KHG o F)
+   (associativity G H K) @ associativity F (H o G) K) @
+ap (compose K) (associativity F G H)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input">coherence_t.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Qed</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">coherence</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> associativity : <span class="nb">simpl</span> never.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> left_identity : <span class="nb">simpl</span> never.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> right_identity : <span class="nb">simpl</span> never.</span></span></pre>
+</div>
+</div></body>
+</html>

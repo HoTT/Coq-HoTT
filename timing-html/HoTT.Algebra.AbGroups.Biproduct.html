@@ -1,0 +1,1973 @@
+<html>
+<head>
+<title>Biproduct.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Biproduct.v</h1>
+
+<div class="code" title="File: Biproduct.v
+Line: 1
+Time: 0.062s">
+<div class="time" style="width: 100%"></div>
+<pre>From HoTT Require Import Basics Types Truncations.Core.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 1
+Time: 0.005s">
+<div class="time" style="width: 8.0645161290323%"></div>
+<pre>
+From HoTT.WildCat Require Import Core Equiv Bifunctor.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 2
+Time: 0.002s">
+<div class="time" style="width: 3.2258064516129%"></div>
+<pre>
+Require Import HSet.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 3
+Time: 0.042s">
+<div class="time" style="width: 67.741935483871%"></div>
+<pre>
+Require Import AbelianGroup.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 4
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+Require Import Modalities.ReflectiveSubuniverse.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope mc_add_scope.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Biproducts of abelian groups *)
+
+</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ab_biprod@{u} (A B : AbGroup@{u}) : AbGroup@{u}.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 11
+Time: 0.007s">
+<div class="time" style="width: 11.290322580645%"></div>
+<pre>
+  rapply (Build_AbGroup (grp_prod A B)).</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 12
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+  intros [a b] [a' b'].</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 13
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+  apply path_prod; simpl; apply commutativity.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** These inherit [IsEmbedding] instances from their [grp_prod] versions. *)</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ab_biprod_inl {A B : AbGroup} : A $-&gt; ab_biprod A B := grp_prod_inl.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Definition ab_biprod_inr {A B : AbGroup} : B $-&gt; ab_biprod A B := grp_prod_inr.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** These inherit [IsSurjection] instances from their [grp_prod] versions. *)</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ab_biprod_pr1 {A B : AbGroup} : ab_biprod A B $-&gt; A := grp_prod_pr1.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Definition ab_biprod_pr2 {A B : AbGroup} : ab_biprod A B $-&gt; B := grp_prod_pr2.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 21
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+
+Definition ab_biprod_ind {A B : AbGroup}
+  (P : ab_biprod A B -&gt; Type)
+  (Hinl : forall a, P (ab_biprod_inl a))
+  (Hinr : forall b, P (ab_biprod_inr b))
+  (Hop : forall x y, P x -&gt; P y -&gt; P (x + y))
+  : forall x, P x.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [a b].</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply ((grp_prod_decompose a b)^ # _).</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 31
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+  apply Hop.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (Hinl a).</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (Hinr b).</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 34
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 35
+Time: 0.002s">
+<div class="time" style="width: 3.2258064516129%"></div>
+<pre>
+
+Definition ab_biprod_ind_homotopy {A B C : AbGroup}
+  {f g : ab_biprod A B $-&gt; C}
+  (Hinl : f $o ab_biprod_inl $== g $o ab_biprod_inl)
+  (Hinr : f $o ab_biprod_inr $== g $o ab_biprod_inr)
+  : f $== g.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 42
+Time: 0.004s">
+<div class="time" style="width: 6.4516129032258%"></div>
+<pre>
+  rapply ab_biprod_ind.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact Hinl.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact Hinr.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y p q.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 46
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+    lhs napply grp_homo_op.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 47
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+    rhs napply grp_homo_op.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 48
+Time: 0.004s">
+<div class="time" style="width: 6.4516129032258%"></div>
+<pre>
+    f_ap.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 49
+Time: 0.003s">
+<div class="time" style="width: 4.8387096774194%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* Maps out of biproducts are determined on the two inclusions. *)</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 52
+Time: 0.003s">
+<div class="time" style="width: 4.8387096774194%"></div>
+<pre>Definition equiv_ab_biprod_ind_homotopy `{Funext} {A B X : AbGroup} (phi psi : ab_biprod A B $-&gt; X)
+  : (phi $o ab_biprod_inl == psi $o ab_biprod_inl)
+    * (phi $o ab_biprod_inr == psi $o ab_biprod_inr)
+  &lt;~&gt; phi == psi.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 56
+Time: 0.039s">
+<div class="time" style="width: 62.903225806452%"></div>
+<pre>
+  apply equiv_iff_hprop.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (uncurry ab_biprod_ind_homotopy).</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 59
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre> exact (fun h =&gt; (fun a =&gt; h _, fun b =&gt; h _)).</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 59
+Time: 0.002s">
+<div class="time" style="width: 3.2258064516129%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Recursion principle *)</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Proposition ab_biprod_rec {A B Y : AbGroup}
+            (f : A $-&gt; Y) (g : B $-&gt; Y)
+  : (ab_biprod A B) $-&gt; Y.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_GroupHomomorphism.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 67
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre> intros [a b]; exact (f a + g b).</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 68
+Time: 0.025s">
+<div class="time" style="width: 40.322580645161%"></div>
+<pre> intros [a b] [a' b']; simpl.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite (grp_homo_op f).</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite (grp_homo_op g).</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 70
+Time: 0.002s">
+<div class="time" style="width: 3.2258064516129%"></div>
+<pre>
+    rewrite (associativity _ (g b) _).</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 71
+Time: 0.002s">
+<div class="time" style="width: 3.2258064516129%"></div>
+<pre>
+    rewrite &lt;- (associativity _ (f a') _).</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite (commutativity (f a') _).</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 73
+Time: 0.002s">
+<div class="time" style="width: 3.2258064516129%"></div>
+<pre>
+    rewrite (associativity _ (g b) _).</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 74
+Time: 0.002s">
+<div class="time" style="width: 3.2258064516129%"></div>
+<pre>
+    exact (associativity _ (f a') _)^.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 75
+Time: 0.003s">
+<div class="time" style="width: 4.8387096774194%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Corollary ab_biprod_rec_uncurried {A B Y : AbGroup}
+  : (A $-&gt; Y) * (B $-&gt; Y)
+    -&gt; (ab_biprod A B) $-&gt; Y.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [f g].</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (ab_biprod_rec f g).</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 83
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+
+Proposition ab_biprod_rec_eta {A B Y : AbGroup}
+            (u : ab_biprod A B $-&gt; Y)
+  : ab_biprod_rec (u $o ab_biprod_inl) (u $o ab_biprod_inr) == u.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [a b]; simpl.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine ((grp_homo_op u _ _)^ @ ap u _).</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply path_prod.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 92
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre> exact (right_identity a).</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 93
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre> exact (left_identity b).</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 93
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 94
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+
+Proposition ab_biprod_rec_beta_inl {A B Y : AbGroup}
+            (a : A $-&gt; Y) (b : B $-&gt; Y)
+  : (ab_biprod_rec a b) $o ab_biprod_inl == a.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro x; simpl.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite (grp_homo_unit b).</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 101
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+  exact (right_identity (a x)).</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 103
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+
+Proposition ab_biprod_rec_beta_inr {A B Y : AbGroup}
+            (a : A $-&gt; Y) (b : B $-&gt; Y)
+  : (ab_biprod_rec a b) $o ab_biprod_inr == b.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro y; simpl.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite (grp_homo_unit a).</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 110
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+  exact (left_identity (b y)).</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Theorem isequiv_ab_biprod_rec `{Funext} {A B Y : AbGroup}
+  : IsEquiv (@ab_biprod_rec_uncurried A B Y).</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply isequiv_adjointify.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 118
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro phi.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 118
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (phi $o ab_biprod_inl, phi $o ab_biprod_inr).</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro phi.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply equiv_path_grouphomomorphism.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 121
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (ab_biprod_rec_eta phi).</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 122
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [a b].</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_prod.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 125
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply equiv_path_grouphomomorphism.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 125
+Time: 0.022s">
+<div class="time" style="width: 35.483870967742%"></div>
+<pre>
+      apply ab_biprod_rec_beta_inl.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 126
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply equiv_path_grouphomomorphism.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 127
+Time: 0.032s">
+<div class="time" style="width: 51.612903225806%"></div>
+<pre>
+      apply ab_biprod_rec_beta_inr.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 128
+Time: 0.002s">
+<div class="time" style="width: 3.2258064516129%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Corecursion principle, inherited from Groups/Group.v. *)</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 131
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>Definition ab_biprod_corec {A B X : AbGroup} (f : X $-&gt; A) (g : X $-&gt; B)
+  : X $-&gt; ab_biprod A B
+  := grp_prod_corec f g.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Functoriality of [ab_biprod] *)
+
+</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 136
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>Definition functor_ab_biprod {A A' B B' : AbGroup} (f : A $-&gt; A') (g: B $-&gt; B')
+  : ab_biprod A B $-&gt; ab_biprod A' B'
+  := (ab_biprod_corec (f $o ab_biprod_pr1) (g $o ab_biprod_pr2)).</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 138
+Time: 0.002s">
+<div class="time" style="width: 3.2258064516129%"></div>
+<pre>
+
+Definition ab_biprod_functor_beta {Z X Y A B : AbGroup} (f0 : Z $-&gt; X) (f1 : Z $-&gt; Y)
+           (g0 : X $-&gt; A) (g1 : Y $-&gt; B)
+  : functor_ab_biprod g0 g1 $o ab_biprod_corec f0 f1
+                      $== ab_biprod_corec (g0 $o f0) (g1 $o f1)
+  := fun _ =&gt; idpath.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance is0bifunctor_ab_biprod : Is0Bifunctor ab_biprod.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 147
+Time: 0.003s">
+<div class="time" style="width: 4.8387096774194%"></div>
+<pre>
+  srapply Build_Is0Bifunctor'.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 148
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_Is0Functor.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [A B] [A' B'] [f g].</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (functor_ab_biprod f g).</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 152
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+
+Instance is1bifunctor_ab_biprod : Is1Bifunctor ab_biprod.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 154
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 155
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_Is1Bifunctor'.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 156
+Time: 0.002s">
+<div class="time" style="width: 3.2258064516129%"></div>
+<pre>
+  snapply Build_Is1Functor.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 158
+Time: 0.004s">
+<div class="time" style="width: 6.4516129032258%"></div>
+<pre> intros [A B] [A' B'] [f g] [f' g'] [p q] [a b].</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 158
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+    snapply equiv_path_prod.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (p a, q b).</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 161
+Time: 0.002s">
+<div class="time" style="width: 3.2258064516129%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 162
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre> cbn; reflexivity.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 162
+Time: 0.008s">
+<div class="time" style="width: 12.903225806452%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 163
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+
+Definition isequiv_functor_ab_biprod {A A' B B' : AbGroup}
+           (f : A $-&gt; A') (g : B $-&gt; B') `{IsEquiv _ _ f} `{IsEquiv _ _ g}
+  : IsEquiv (functor_ab_biprod f g).</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply isequiv_adjointify.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: {</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 170
+Time: 0.002s">
+<div class="time" style="width: 3.2258064516129%"></div>
+<pre> rapply functor_ab_biprod;
+       apply grp_iso_inverse.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+       +</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (Build_GroupIsomorphism _ _ f _).</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+       +</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (Build_GroupIsomorphism _ _ g _).</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 173
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+  all: intros [a b]; simpl.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 174
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  all: apply path_prod'.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 175
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1,2: apply eisretr.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  all: apply eissect.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 177
+Time: 0.002s">
+<div class="time" style="width: 3.2258064516129%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 178
+Time: 0.005s">
+<div class="time" style="width: 8.0645161290323%"></div>
+<pre>
+
+Definition equiv_functor_ab_biprod {A A' B B' : AbGroup}
+           (f : A $-&gt; A') (g : B $-&gt; B') `{IsEquiv _ _ f} `{IsEquiv _ _ g}
+  : GroupIsomorphism (ab_biprod A B) (ab_biprod A' B')
+  := Build_GroupIsomorphism _ _ _ (isequiv_functor_ab_biprod f g).</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 183
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Biproducts preserve embeddings. *)</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 185
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>Definition functor_ab_biprod_embedding {A A' B B' : AbGroup}
+           (i : A $-&gt; B) (i' : A' $-&gt; B')
+           `{IsEmbedding i} `{IsEmbedding i'}
+  : IsEmbedding (functor_ab_biprod i i').</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 189
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [b b'].</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 190
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply hprop_allpath.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 191
+Time: 0.002s">
+<div class="time" style="width: 3.2258064516129%"></div>
+<pre>
+  intros [[a0 a0'] p] [[a1 a1'] p']; cbn in p, p'.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 192
+Time: 0.025s">
+<div class="time" style="width: 40.322580645161%"></div>
+<pre>
+  rapply path_sigma_hprop; cbn.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 193
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+  pose (q := (equiv_path_prod _ _)^-1 p); cbn in q.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 194
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+  pose (q' := (equiv_path_prod _ _)^-1 p'); cbn in q'.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct q as [q0 q1], q' as [q0' q1'].</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 196
+Time: 0.002s">
+<div class="time" style="width: 3.2258064516129%"></div>
+<pre>
+  apply path_prod; rapply isinj_embedding; cbn.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (q0 @ q0'^).</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 199
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (q1 @ q1'^).</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 199
+Time: 0.002s">
+<div class="time" style="width: 3.2258064516129%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Products preserve surjections. *)</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 202
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>Definition functor_ab_biprod_surjection `{Funext} {A A' B B' : AbGroup}
+           (p : A $-&gt; B) (p' : A' $-&gt; B')
+           `{S : IsSurjection p} `{S' : IsSurjection p'}
+  : IsSurjection (functor_ab_biprod p p').</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 205
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [b b'].</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 207
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  pose proof (a := S b); pose proof (a' := S' b').</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply center in a, a'.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 209
+Time: 0.023s">
+<div class="time" style="width: 37.096774193548%"></div>
+<pre>
+  strip_truncations.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 210
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+  rapply contr_inhabited_hprop.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 211
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply tr.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 212
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+  exists (ab_biprod_inl a.1 + ab_biprod_inr a'.1); cbn.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 213
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+  apply path_prod;
+    refine (grp_homo_op _ _ _ @ _);
+    rewrite (grp_homo_unit _);
+    cbn.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 217
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 218
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre> exact (right_identity _ @ a.2).</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 218
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 219
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre> exact (left_identity _ @ a'.2).</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 219
+Time: 0.003s">
+<div class="time" style="width: 4.8387096774194%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 220
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Lemmas for working with biproducts *)
+
+(** The swap isomorphism of the biproduct of two groups. *)</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 224
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition direct_sum_swap {A B : AbGroup}
+  : ab_biprod A B $&lt;~&gt; ab_biprod B A.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 226
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+  snapply Build_GroupIsomorphism'.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 227
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply equiv_prod_symm.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 229
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro; reflexivity.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 229
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 230
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Addition [+] is a group homomorphism [A+A -&gt; A]. *)</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 232
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ab_codiagonal {A : AbGroup} : ab_biprod A A $-&gt; A
+  := ab_biprod_rec grp_homo_id grp_homo_id.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 233
+Time: 0.002s">
+<div class="time" style="width: 3.2258064516129%"></div>
+<pre>
+
+Definition ab_codiagonal_natural {A B : AbGroup} (f : A $-&gt; B)
+  : f $o ab_codiagonal $== ab_codiagonal $o functor_ab_biprod f f
+  := fun a =&gt; grp_homo_op f _ _.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 237
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition ab_diagonal {A : AbGroup} : A $-&gt; ab_biprod A A
+  := ab_biprod_corec grp_homo_id grp_homo_id.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 240
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Given two abelian group homomorphisms [f] and [g], their pairing [(f, g) : B -&gt; A + A] can be written as a composite. Note that [ab_biprod_corec] is an alias for [grp_prod_corec]. *)</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 242
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma ab_biprod_corec_diagonal `{Funext} {A B : AbGroup} (f g : B $-&gt; A)
+  : ab_biprod_corec f g = (functor_ab_biprod f g) $o ab_diagonal.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 243
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 244
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+  apply equiv_path_grouphomomorphism; reflexivity.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 245
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 246
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Precomposing the codiagonal with the swap map has no effect. *)</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 248
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma ab_codiagonal_swap `{Funext} {A : AbGroup}
+  : (@ab_codiagonal A) $o direct_sum_swap = ab_codiagonal.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 249
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 250
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply equiv_path_grouphomomorphism.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 251
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro a; cbn.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 252
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (abgroup_commutative _ _ _).</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 253
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 254
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The corresponding result for the diagonal is true definitionally, so it isn't strictly necessary to state it, but we record it anyways. *)</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 256
+Time: 0.002s">
+<div class="time" style="width: 3.2258064516129%"></div>
+<pre>Definition ab_diagonal_swap {A : AbGroup}
+  : direct_sum_swap $o (@ab_diagonal A) = ab_diagonal
+  := idpath.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 258
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The biproduct is associative. *)</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 260
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma ab_biprod_assoc {A B C : AbGroup}
+  : ab_biprod A (ab_biprod B C) $&lt;~&gt; ab_biprod (ab_biprod A B) C.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 261
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 262
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+  snapply Build_GroupIsomorphism'.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 263
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 264
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply equiv_prod_assoc.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 264
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 265
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> unfold IsSemiGroupPreserving; reflexivity.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 265
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 266
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The iterated diagonals [(ab_diagonal + id) o ab_diagonal] and [(id + ab_diagonal) o ab_diagonal] agree, after reassociating the direct sum. *)</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 268
+Time: 0.002s">
+<div class="time" style="width: 3.2258064516129%"></div>
+<pre>Definition ab_commute_id_diagonal {A : AbGroup}
+  : (functor_ab_biprod (@ab_diagonal A) grp_homo_id) $o ab_diagonal
+    = ab_biprod_assoc $o (functor_ab_biprod grp_homo_id ab_diagonal) $o ab_diagonal
+  := idpath.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 271
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A similar result for the codiagonal. *)</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 273
+Time: 0.003s">
+<div class="time" style="width: 4.8387096774194%"></div>
+<pre>Lemma ab_commute_id_codiagonal `{Funext} {A : AbGroup}
+  : (@ab_codiagonal A) $o (functor_ab_biprod ab_codiagonal grp_homo_id) $o ab_biprod_assoc
+    = ab_codiagonal $o (functor_ab_biprod grp_homo_id ab_codiagonal).</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 275
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 276
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply equiv_path_grouphomomorphism.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 277
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+  intro a; cbn.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 278
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (grp_assoc _ _ _)^.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 279
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 280
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The next few results are used to prove associativity of the Baer sum. *)
+
+(** A "twist" isomorphism [(A + B) + C &lt;~&gt; (C + B) + A]. *)</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 284
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma ab_biprod_twist {A B C : AbGroup@{u}}
+  : ab_biprod (ab_biprod A B) C $&lt;~&gt; ab_biprod (ab_biprod C B) A.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 285
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 286
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+  snapply Build_GroupIsomorphism.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 287
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 288
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> snapply Build_GroupHomomorphism.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 288
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 289
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [[a b] c].</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 289
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact ((c,b),a).</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 290
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 291
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> unfold IsSemiGroupPreserving.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 291
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 291
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 292
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> snapply isequiv_adjointify.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 292
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 293
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [[c b] a].</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 293
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact ((a,b),c).</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 294
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 295
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 295
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 296
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 296
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 297
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The triagonal and cotriagonal homomorphisms. *)</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 299
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>Definition ab_triagonal {A : AbGroup} : A $-&gt; ab_biprod (ab_biprod A A) A
+  := (functor_ab_biprod ab_diagonal grp_homo_id) $o ab_diagonal.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 300
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition ab_cotriagonal {A : AbGroup} : ab_biprod (ab_biprod A A) A $-&gt; A
+  := ab_codiagonal $o (functor_ab_biprod ab_codiagonal grp_homo_id).</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 303
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** For an abelian group [A], precomposing the triagonal on [A] with the twist map on [A] has no effect. *)</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 305
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>Definition ab_triagonal_twist {A : AbGroup}
+  : ab_biprod_twist $o @ab_triagonal A = ab_triagonal
+  := idpath.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 307
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A similar result for the cotriagonal. *)</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 309
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ab_cotriagonal_twist `{Funext} {A : AbGroup}
+  : @ab_cotriagonal A $o ab_biprod_twist = ab_cotriagonal.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 310
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 311
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply equiv_path_grouphomomorphism.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 312
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro x.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 313
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 313
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine ((grp_assoc _ _ _)^ @ _).</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 314
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (abgroup_commutative _ _ _ @ _).</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 315
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (ap (fun a =&gt;  a + snd x) (abgroup_commutative _ _ _)).</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 316
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Biproduct.v
+Line: 318
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

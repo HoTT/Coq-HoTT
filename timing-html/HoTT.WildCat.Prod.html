@@ -1,0 +1,1594 @@
+<html>
+<head>
+<title>Prod.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Prod.v</h1>
+
+<div class="code" title="File: Prod.v
+Line: 1
+Time: 0.021s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import Basics.Overture Basics.Tactics.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 1
+Time: 0.002s">
+<div class="time" style="width: 9.5238095238095%"></div>
+<pre>
+Require Import WildCat.Core.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 2
+Time: 0.005s">
+<div class="time" style="width: 23.809523809524%"></div>
+<pre>
+Require Import WildCat.Equiv.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 3
+Time: 0.002s">
+<div class="time" style="width: 9.5238095238095%"></div>
+<pre>
+Require Import Types.Prod.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Product categories *)
+
+(** Products preserve (0,1)-categories. *)</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 8
+Time: 0.001s">
+<div class="time" style="width: 4.7619047619048%"></div>
+<pre>Instance isgraph_prod A B `{IsGraph A} `{IsGraph B}
+  : IsGraph (A * B)
+  := Build_IsGraph (A * B) (fun x y =&gt; (fst x $-&gt; fst y) * (snd x $-&gt; snd y)).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance is01cat_prod A B `{Is01Cat A} `{Is01Cat B}
+  : Is01Cat (A * B).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  econstructor.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [a b]; exact (Id a, Id b).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [a1 b1] [a2 b2] [a3 b3] [f1 g1] [f2 g2]; cbn in *.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (f1 $o f2 , g1 $o g2).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance is0gpd_prod A B `{Is0Gpd A} `{Is0Gpd B}
+ : Is0Gpd (A * B).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply Build_Is0Gpd.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [x1 x2] [y1 y2] [f1 f2].</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  cbn in *.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact ( (f1^$, f2^$) ).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance is2graph_prod A B `{Is2Graph A, Is2Graph B}
+  : Is2Graph (A * B).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [x1 x2] [y1 y2].</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 33
+Time: 0.001s">
+<div class="time" style="width: 4.7619047619048%"></div>
+<pre>
+  rapply isgraph_prod.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 35
+Time: 0.001s">
+<div class="time" style="width: 4.7619047619048%"></div>
+<pre>
+
+Instance is1cat_prod A B `{Is1Cat A} `{Is1Cat B}
+  : Is1Cat (A * B).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 39
+Time: 0.009s">
+<div class="time" style="width: 42.857142857143%"></div>
+<pre>
+  srapply Build_Is1Cat.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 41
+Time: 0.001s">
+<div class="time" style="width: 4.7619047619048%"></div>
+<pre> intros [x1 x2] [y1 y2] [z1 z2] [h1 h2].</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply Build_Is0Functor.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 42
+Time: 0.001s">
+<div class="time" style="width: 4.7619047619048%"></div>
+<pre>
+    intros [f1 f2] [g1 g2] [p1 p2]; cbn in *.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact ( h1 $@L p1 , h2 $@L p2 ).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 45
+Time: 0.001s">
+<div class="time" style="width: 4.7619047619048%"></div>
+<pre> intros [x1 x2] [y1 y2] [z1 z2] [h1 h2].</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply Build_Is0Functor.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 46
+Time: 0.001s">
+<div class="time" style="width: 4.7619047619048%"></div>
+<pre>
+    intros [f1 f2] [g1 g2] [p1 p2]; cbn in *.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact ( p1 $@R h1 , p2 $@R h2 ).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 49
+Time: 0.005s">
+<div class="time" style="width: 23.809523809524%"></div>
+<pre> intros [a1 a2] [b1 b2] [c1 c2] [d1 d2] [f1 f2] [g1 g2] [h1 h2].</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    cbn in *.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact(cat_assoc f1 g1 h1, cat_assoc f2 g2 h2).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 52
+Time: 0.005s">
+<div class="time" style="width: 23.809523809524%"></div>
+<pre> intros [a1 a2] [b1 b2] [c1 c2] [d1 d2] [f1 f2] [g1 g2] [h1 h2].</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    cbn in *.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact(cat_assoc_opp f1 g1 h1, cat_assoc_opp f2 g2 h2).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 55
+Time: 0.002s">
+<div class="time" style="width: 9.5238095238095%"></div>
+<pre> intros [a1 a2] [b1 b2] [f1 f2].</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    cbn in *.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (cat_idl _, cat_idl _).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 58
+Time: 0.002s">
+<div class="time" style="width: 9.5238095238095%"></div>
+<pre> intros [a1 a2] [b1 b2] [g1 g2].</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    cbn in *.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (cat_idr _, cat_idr _).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 60
+Time: 0.009s">
+<div class="time" style="width: 42.857142857143%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Product categories inherit equivalences *)
+
+</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 64
+Time: 0.002s">
+<div class="time" style="width: 9.5238095238095%"></div>
+<pre>Instance hasequivs_prod A B `{HasEquivs A} `{HasEquivs B}
+  : HasEquivs (A * B).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 66
+Time: 0.001s">
+<div class="time" style="width: 4.7619047619048%"></div>
+<pre>
+  srefine (Build_HasEquivs (A * B) _ _ _ _
+             (fun a b =&gt; (fst a $&lt;~&gt; fst b) * (snd a $&lt;~&gt; snd b))
+             _ _ _ _ _ _ _ _ _).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1:intros a b f; exact (CatIsEquiv (fst f) * CatIsEquiv (snd f)).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 70
+Time: 0.001s">
+<div class="time" style="width: 4.7619047619048%"></div>
+<pre>
+  all:cbn; intros a b f.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split; [ exact (fst f) | exact (snd f) ].</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 73
+Time: 0.001s">
+<div class="time" style="width: 4.7619047619048%"></div>
+<pre> split; exact _.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [fe1 fe2]; split.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (Build_CatEquiv (fst f)).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (Build_CatEquiv (snd f)).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 77
+Time: 0.001s">
+<div class="time" style="width: 4.7619047619048%"></div>
+<pre> intros [fe1 fe2]; cbn; split; apply cate_buildequiv_fun.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split; [ exact ((fst f)^-1$) | exact ((snd f)^-1$) ].</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 79
+Time: 0.001s">
+<div class="time" style="width: 4.7619047619048%"></div>
+<pre> split; apply cate_issect.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split; apply cate_isretr.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros g r s; split.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (catie_adjointify (fst f) (fst g) (fst r) (fst s)).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (catie_adjointify (snd f) (snd g) (snd r) (snd s)).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 83
+Time: 0.007s">
+<div class="time" style="width: 33.333333333333%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 84
+Time: 0.005s">
+<div class="time" style="width: 23.809523809524%"></div>
+<pre>
+
+Instance isequivs_prod A B `{HasEquivs A} `{HasEquivs B}
+       {a1 a2 : A} {b1 b2 : B} {f : a1 $-&gt; a2} {g : b1 $-&gt; b2}
+       {ef : CatIsEquiv f} {eg : CatIsEquiv g}
+  : @CatIsEquiv (A*B) _ _ _ _ _ (a1,b1) (a2,b2) (f,g) := (ef,eg).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Product functors *)
+
+</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 92
+Time: 0.001s">
+<div class="time" style="width: 4.7619047619048%"></div>
+<pre>Instance is0functor_prod_functor {A B C D : Type}
+  (F : A -&gt; B) (G : C -&gt; D) `{Is0Functor _ _ F, Is0Functor _ _ G}
+  : Is0Functor (functor_prod F G).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 94
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply Build_Is0Functor.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [a1 c1] [a2 c2] [f g].</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (fmap F f , fmap G g).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 98
+Time: 0.001s">
+<div class="time" style="width: 4.7619047619048%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 99
+Time: 0.011s">
+<div class="time" style="width: 52.380952380952%"></div>
+<pre>
+
+Instance is1functor_prod_functor {A B C D : Type}
+  (F : A -&gt; B) (G : C -&gt; D) `{Is1Functor _ _ F, Is1Functor _ _ G}
+  : Is1Functor (functor_prod F G).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply Build_Is1Functor.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 106
+Time: 0.003s">
+<div class="time" style="width: 14.285714285714%"></div>
+<pre> intros [a1 c1] [a2 c2] [f1 g1] [f2 g2] [p q].</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 106
+Time: 0.001s">
+<div class="time" style="width: 4.7619047619048%"></div>
+<pre>
+    exact (fmap2 F p , fmap2 G q).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [a c].</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 108
+Time: 0.001s">
+<div class="time" style="width: 4.7619047619048%"></div>
+<pre>
+    exact (fmap_id F a, fmap_id G c).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 110
+Time: 0.002s">
+<div class="time" style="width: 9.5238095238095%"></div>
+<pre> intros [a1 c1] [a2 c2] [a3 c3] [f1 g1] [f2 g2].</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 110
+Time: 0.001s">
+<div class="time" style="width: 4.7619047619048%"></div>
+<pre>
+    exact (fmap_comp F f1 f2 , fmap_comp G g1 g2).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 111
+Time: 0.004s">
+<div class="time" style="width: 19.047619047619%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance is0functor_fst {A B : Type} `{!IsGraph A, !IsGraph B}
+  : Is0Functor (@fst A B).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply Build_Is0Functor.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros ? ? f; exact (fst f).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 118
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance is0functor_snd {A B : Type} `{!IsGraph A, !IsGraph B}
+  : Is0Functor (@snd A B).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 122
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 123
+Time: 0.013s">
+<div class="time" style="width: 61.904761904762%"></div>
+<pre>
+  apply Build_Is0Functor.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros ? ? f; exact (snd f).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 125
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 126
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Swap functor *)
+
+</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance is0functor_equiv_prod_symm {A B : Type} `{IsGraph A, IsGraph B}
+  : Is0Functor (equiv_prod_symm A B).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 130
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 131
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_Is0Functor.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros a b.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply equiv_prod_symm.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 135
+Time: 0.003s">
+<div class="time" style="width: 14.285714285714%"></div>
+<pre>
+
+Instance is1functor_equiv_prod_symm {A B : Type} `{Is1Cat A, Is1Cat B}
+  : Is1Functor (equiv_prod_symm A B).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 139
+Time: 0.002s">
+<div class="time" style="width: 9.5238095238095%"></div>
+<pre>
+  snapply Build_Is1Functor.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a b f g.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply equiv_prod_symm.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 143
+Time: 0.002s">
+<div class="time" style="width: 9.5238095238095%"></div>
+<pre>
+    reflexivity.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 145
+Time: 0.002s">
+<div class="time" style="width: 9.5238095238095%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 145
+Time: 0.001s">
+<div class="time" style="width: 4.7619047619048%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Inclusions into a product category are functorial. *)
+
+</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance is0functor_prod_include10 {A B : Type} `{IsGraph A, Is01Cat B}
+  (b : B)
+  : Is0Functor (fun a : A =&gt; (a, b)).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 152
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  napply Build_Is0Functor.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros a c f.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 154
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (f, Id b).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 155
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 156
+Time: 0.003s">
+<div class="time" style="width: 14.285714285714%"></div>
+<pre>
+
+Instance is1functor_prod_include10 {A B : Type} `{Is1Cat A, Is1Cat B}
+  (b : B)
+  : Is1Functor (fun a : A =&gt; (a, b)).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 161
+Time: 0.002s">
+<div class="time" style="width: 9.5238095238095%"></div>
+<pre>
+  napply Build_Is1Functor.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 163
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a c f g p.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 163
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (p, Id _).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 164
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 165
+Time: 0.001s">
+<div class="time" style="width: 4.7619047619048%"></div>
+<pre> intros a; reflexivity.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 165
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 166
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a c d f g.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 166
+Time: 0.001s">
+<div class="time" style="width: 4.7619047619048%"></div>
+<pre>
+    exact (Id _, (cat_idl _)^$).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 167
+Time: 0.001s">
+<div class="time" style="width: 4.7619047619048%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance is0functor_prod_include01 {A B : Type} `{Is01Cat A, IsGraph B}
+  (a : A)
+  : Is0Functor (fun b : B =&gt; (a, b)).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  napply Build_Is0Functor.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 174
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros b c f.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 175
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (Id a, f).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 177
+Time: 0.002s">
+<div class="time" style="width: 9.5238095238095%"></div>
+<pre>
+
+Instance is1functor_prod_include01 {A B : Type} `{Is1Cat A, Is1Cat B}
+  (a : A)
+  : Is1Functor (fun b : B =&gt; (a, b)).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 181
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 182
+Time: 0.002s">
+<div class="time" style="width: 9.5238095238095%"></div>
+<pre>
+  napply Build_Is1Functor.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 183
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 184
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros b c f g p.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 184
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (Id _, p).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 186
+Time: 0.001s">
+<div class="time" style="width: 4.7619047619048%"></div>
+<pre> intros b; reflexivity.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 186
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros b c d f g.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 187
+Time: 0.001s">
+<div class="time" style="width: 4.7619047619048%"></div>
+<pre>
+    exact ((cat_idl _)^$, Id _).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 188
+Time: 0.001s">
+<div class="time" style="width: 4.7619047619048%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 189
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Functors from a product category are functorial in each argument *)
+
+</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 192
+Time: 0.002s">
+<div class="time" style="width: 9.5238095238095%"></div>
+<pre>Instance is0functor_functor_uncurried01 {A B C : Type}
+  `{Is01Cat A, IsGraph B, IsGraph C}
+  (F : A * B -&gt; C) `{!Is0Functor F} (a : A)
+  : Is0Functor (fun b =&gt; F (a, b))
+  := is0functor_compose (fun b =&gt; (a, b)) F.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 196
+Time: 0.007s">
+<div class="time" style="width: 33.333333333333%"></div>
+<pre>
+
+Instance is1functor_functor_uncurried01 {A B C : Type}
+  `{Is1Cat A, Is1Cat B, Is1Cat C}
+  (F : A * B -&gt; C) `{!Is0Functor F, !Is1Functor F} (a : A)
+  : Is1Functor (fun b =&gt; F (a, b))
+  := is1functor_compose (fun b =&gt; (a, b)) F.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 202
+Time: 0.002s">
+<div class="time" style="width: 9.5238095238095%"></div>
+<pre>
+
+Instance is0functor_functor_uncurried10 {A B C : Type}
+  `{IsGraph A, Is01Cat B, IsGraph C}
+  (F : A * B -&gt; C) `{!Is0Functor F} (b : B)
+  : Is0Functor (fun a =&gt; F (a, b))
+  := is0functor_compose (fun a =&gt; (a, b)) F.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 208
+Time: 0.011s">
+<div class="time" style="width: 52.380952380952%"></div>
+<pre>
+
+Instance is1functor_functor_uncurried10 {A B C : Type}
+  `{Is1Cat A, Is1Cat B, Is1Cat C}
+  (F : A * B -&gt; C) `{!Is0Functor F, !Is1Functor F} (b : B)
+  : Is1Functor (fun a =&gt; F (a, b))
+  := is1functor_compose (fun a =&gt; (a, b)) F.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 214
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Conversely, if [F : A * B -&gt; C] is a 0-functor in each variable, then it is a 0-functor. *)</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 216
+Time: 0.001s">
+<div class="time" style="width: 4.7619047619048%"></div>
+<pre>Definition is0functor_prod_is0functor {A B C : Type}
+  `{IsGraph A, IsGraph B, Is01Cat C} (F : A * B -&gt; C)
+  `{!forall a, Is0Functor (fun b =&gt; F (a,b)), !forall b, Is0Functor (fun a =&gt; F (a,b))}
+  : Is0Functor F.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 219
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 220
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_Is0Functor.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 221
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [a b] [a' b'] [f g].</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 222
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (fmap (fun a0 =&gt; F (a0,b')) f $o fmap (fun b0 =&gt; F (a,b0)) g).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 223
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 224
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+(** TODO: If we make this an instance, will it cause typeclass search to spin? *)</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Hint Immediate is0functor_prod_is0functor : typeclass_instances.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** And if [F : A * B -&gt; C] is a 1-functor in each variable and satisfies a coherence, then it is a 1-functor. *)</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 227
+Time: 0.009s">
+<div class="time" style="width: 42.857142857143%"></div>
+<pre>Definition is1functor_prod_is1functor {A B C : Type}
+  `{Is1Cat A, Is1Cat B, Is1Cat C} (F : A * B -&gt; C)
+  `{!forall a, Is0Functor (fun b =&gt; F (a,b)), !forall b, Is0Functor (fun a =&gt; F (a,b))}
+  `{!forall a, Is1Functor (fun b =&gt; F (a,b)), !forall b, Is1Functor (fun a =&gt; F (a,b))}
+  (bifunctor_coh : forall a0 a1 (f : a0 $-&gt; a1) b0 b1 (g : b0 $-&gt; b1),
+    fmap (fun b =&gt; F (a1,b)) g $o fmap (fun a =&gt; F (a,b0)) f
+      $== fmap (fun a =&gt; F(a,b1)) f $o fmap (fun b =&gt; F (a0,b)) g)
+  : Is1Functor F.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 234
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 235
+Time: 0.002s">
+<div class="time" style="width: 9.5238095238095%"></div>
+<pre>
+  snapply Build_Is1Functor.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 236
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 237
+Time: 0.002s">
+<div class="time" style="width: 9.5238095238095%"></div>
+<pre> intros [a b] [a' b'] [f g] [f' g'] [p p']; unfold fst, snd in * |- .</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 237
+Time: 0.001s">
+<div class="time" style="width: 4.7619047619048%"></div>
+<pre>
+    exact (fmap2 (fun b0 =&gt; F (a,b0)) p' $@@ fmap2 (fun a0 =&gt; F (a0,b')) p).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 238
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 239
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [a b].</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 239
+Time: 0.002s">
+<div class="time" style="width: 9.5238095238095%"></div>
+<pre>
+    exact ((fmap_id (fun b0 =&gt; F (a,b0)) b $@@ fmap_id (fun a0 =&gt; F (a0,b)) _) $@ cat_idr _).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 240
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 241
+Time: 0.001s">
+<div class="time" style="width: 4.7619047619048%"></div>
+<pre> intros [a b] [a' b'] [a'' b''] [f g] [f' g']; unfold fst, snd in * |- .</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 241
+Time: 0.002s">
+<div class="time" style="width: 9.5238095238095%"></div>
+<pre>
+    refine ((fmap_comp (fun b0 =&gt; F (a,b0)) g g' $@@ fmap_comp (fun a0 =&gt; F (a0,b'')) f f') $@ _).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 242
+Time: 0.001s">
+<div class="time" style="width: 4.7619047619048%"></div>
+<pre>
+    nrefine (cat_assoc_opp _ _ _ $@ (_ $@R _) $@ cat_assoc _ _ _).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 243
+Time: 0.002s">
+<div class="time" style="width: 9.5238095238095%"></div>
+<pre>
+    refine (cat_assoc _ _ _ $@ (_ $@L _^$) $@ cat_assoc_opp _ _ _).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 244
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    napply bifunctor_coh.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 245
+Time: 0.007s">
+<div class="time" style="width: 33.333333333333%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 246
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Hint Immediate is1functor_prod_is1functor : typeclass_instances.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 247
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Applies a two variable functor via uncurrying. Note that the precondition on [C] is slightly weaker than that of [Bifunctor.fmap11]. *)</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 249
+Time: 0.002s">
+<div class="time" style="width: 9.5238095238095%"></div>
+<pre>Definition fmap11_uncurry {A B C : Type} `{IsGraph A, IsGraph B, IsGraph C}
+  (F : A -&gt; B -&gt; C) {H2 : Is0Functor (uncurry F)}
+  {a0 a1 : A} (f : a0 $-&gt; a1) {b0 b1 : B} (g : b0 $-&gt; b1)
+  : F a0 b0 $-&gt; F a1 b1
+  := @fmap _ _ _ _ (uncurry F) H2 (a0, b0) (a1, b1) (f, g).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 253
+Time: 0.001s">
+<div class="time" style="width: 4.7619047619048%"></div>
+<pre>
+
+Definition fmap_pair {A B C : Type}  
+  `{IsGraph A, IsGraph B, IsGraph C}  
+  (F : A * B -&gt; C) `{!Is0Functor F}  
+  {a0 a1 : A} (f : a0 $-&gt; a1) {b0 b1 : B} (g : b0 $-&gt; b1)  
+  : F (a0, b0) $-&gt; F (a1, b1)  
+  := fmap (a := (a0, b0)) (b := (a1, b1)) F (f, g).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 260
+Time: 0.009s">
+<div class="time" style="width: 42.857142857143%"></div>
+<pre>  
+
+Definition fmap_pair_comp {A B C : Type}  
+  `{Is1Cat A, Is1Cat B, Is1Cat C}  
+  (F : A * B -&gt; C) `{!Is0Functor F, !Is1Functor F}  
+  {a0 a1 a2 : A} {b0 b1 b2 : B}
+  (f : a0 $-&gt; a1) (h : b0 $-&gt; b1) (g : a1 $-&gt; a2) (i : b1 $-&gt; b2)  
+  : fmap_pair F (g $o f) (i $o h)
+    $== fmap_pair F g i $o fmap_pair F f h
+  := fmap_comp (a := (a0, b0)) (b := (a1, b1)) (c := (a2, b2)) F (f, h) (g, i).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 269
+Time: 0.01s">
+<div class="time" style="width: 47.619047619048%"></div>
+<pre>
+
+Definition fmap2_pair {A B C : Type}
+  `{Is1Cat A, Is1Cat B, Is1Cat C}
+  (F : A * B -&gt; C) `{!Is0Functor F, !Is1Functor F}
+  {a0 a1 : A} {f f' : a0 $-&gt; a1} (p : f $== f')
+  {b0 b1 : B} {g g' : b0 $-&gt; b1} (q : g $== g')
+  : fmap_pair F f g $== fmap_pair F f' g'
+  := fmap2 F (a := (a0, b0)) (b := (a1, b1)) (f := (f, g)) (g := (f' ,g')) (p, q).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 278
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

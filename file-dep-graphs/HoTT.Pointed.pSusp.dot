@@ -1,0 +1,54 @@
+digraph HoTT_Pointed_pSusp {
+  graph [ratio=0.5]
+  node [style=filled]
+pSusp_Book_Loop_Susp_Adjunction_loop_susp_adjoint [label="loop_susp_adjoint", URL=<pSusp.html#Book_Loop_Susp_Adjunction.loop_susp_adjoint>, peripheries=3, fillcolor="#F070D1"] ;
+pSusp_natequiv_loop_susp_adjoint_r [label="natequiv_loop_susp_adjoint_r", URL=<pSusp.html#natequiv_loop_susp_adjoint_r>, peripheries=3, fillcolor="#F070D1"] ;
+pSusp_is1natural_loop_susp_adjoint_r [label="is1natural_loop_susp_adjoint_r", URL=<pSusp.html#is1natural_loop_susp_adjoint_r>, fillcolor="#F070D1"] ;
+pSusp_loop_susp_adjoint_nat_l [label="loop_susp_adjoint_nat_l", URL=<pSusp.html#loop_susp_adjoint_nat_l>, peripheries=3, fillcolor="#F070D1"] ;
+pSusp_loop_susp_adjoint_nat_r [label="loop_susp_adjoint_nat_r", URL=<pSusp.html#loop_susp_adjoint_nat_r>, peripheries=3, fillcolor="#F070D1"] ;
+pSusp_loop_susp_adjoint [label="loop_susp_adjoint", URL=<pSusp.html#loop_susp_adjoint>, fillcolor="#F070D1"] ;
+pSusp_loop_susp_triangle2 [label="loop_susp_triangle2", URL=<pSusp.html#loop_susp_triangle2>, fillcolor="#F070D1"] ;
+pSusp_loop_susp_triangle1 [label="loop_susp_triangle1", URL=<pSusp.html#loop_susp_triangle1>, fillcolor="#F070D1"] ;
+pSusp_loop_susp_counit_natural [label="loop_susp_counit_natural", URL=<pSusp.html#loop_susp_counit_natural>, fillcolor="#F070D1"] ;
+pSusp_loop_susp_counit [label="loop_susp_counit", URL=<pSusp.html#loop_susp_counit>, fillcolor="#F070D1"] ;
+pSusp_loop_susp_unit_natural [label="loop_susp_unit_natural", URL=<pSusp.html#loop_susp_unit_natural>, fillcolor="#F070D1"] ;
+pSusp_pequiv_ptr_loop_psusp [label="pequiv_ptr_loop_psusp", URL=<pSusp.html#pequiv_ptr_loop_psusp>, peripheries=3, fillcolor="#F070D1"] ;
+pSusp_conn_map_loop_susp_unit [label="conn_map_loop_susp_unit", URL=<pSusp.html#conn_map_loop_susp_unit>, fillcolor="#F070D1"] ;
+pSusp_loop_susp_unit [label="loop_susp_unit", URL=<pSusp.html#loop_susp_unit>, fillcolor="#F070D1"] ;
+pSusp_is1functor_psusp [label="is1functor_psusp", URL=<pSusp.html#is1functor_psusp>, fillcolor="#F070D1"] ;
+pSusp_is0functor_psusp [label="is0functor_psusp", URL=<pSusp.html#is0functor_psusp>, fillcolor="#F070D1"] ;
+pSusp_psusp [label="psusp", URL=<pSusp.html#psusp>, fillcolor="#F070D1"] ;
+pSusp_ispointed_path_susp_ [label="ispointed_path_susp'", URL=<pSusp.html#ispointed_path_susp'>, peripheries=3, fillcolor="#F070D1"] ;
+pSusp_ispointed_path_susp [label="ispointed_path_susp", URL=<pSusp.html#ispointed_path_susp>, peripheries=3, fillcolor="#F070D1"] ;
+pSusp_ispointed_susp [label="ispointed_susp", URL=<pSusp.html#ispointed_susp>, fillcolor="#F070D1"] ;
+  pSusp_Book_Loop_Susp_Adjunction_loop_susp_adjoint -> pSusp_psusp [] ;
+  pSusp_natequiv_loop_susp_adjoint_r -> pSusp_is1natural_loop_susp_adjoint_r [] ;
+  pSusp_is1natural_loop_susp_adjoint_r -> pSusp_loop_susp_adjoint [] ;
+  pSusp_loop_susp_adjoint_nat_l -> pSusp_loop_susp_adjoint [] ;
+  pSusp_loop_susp_adjoint_nat_r -> pSusp_loop_susp_adjoint [] ;
+  pSusp_loop_susp_adjoint -> pSusp_loop_susp_triangle2 [] ;
+  pSusp_loop_susp_adjoint -> pSusp_loop_susp_triangle1 [] ;
+  pSusp_loop_susp_adjoint -> pSusp_loop_susp_counit_natural [] ;
+  pSusp_loop_susp_adjoint -> pSusp_loop_susp_unit_natural [] ;
+  pSusp_loop_susp_adjoint -> pSusp_is1functor_psusp [] ;
+  pSusp_loop_susp_triangle2 -> pSusp_loop_susp_counit [] ;
+  pSusp_loop_susp_triangle2 -> pSusp_loop_susp_unit [] ;
+  pSusp_loop_susp_triangle2 -> pSusp_is0functor_psusp [] ;
+  pSusp_loop_susp_triangle1 -> pSusp_loop_susp_counit [] ;
+  pSusp_loop_susp_triangle1 -> pSusp_loop_susp_unit [] ;
+  pSusp_loop_susp_counit_natural -> pSusp_loop_susp_counit [] ;
+  pSusp_loop_susp_counit_natural -> pSusp_is0functor_psusp [] ;
+  pSusp_loop_susp_counit -> pSusp_psusp [] ;
+  pSusp_loop_susp_unit_natural -> pSusp_loop_susp_unit [] ;
+  pSusp_loop_susp_unit_natural -> pSusp_is0functor_psusp [] ;
+  pSusp_pequiv_ptr_loop_psusp -> pSusp_conn_map_loop_susp_unit [] ;
+  pSusp_conn_map_loop_susp_unit -> pSusp_loop_susp_unit [] ;
+  pSusp_loop_susp_unit -> pSusp_psusp [] ;
+  pSusp_is1functor_psusp -> pSusp_is0functor_psusp [] ;
+  pSusp_is0functor_psusp -> pSusp_psusp [] ;
+  pSusp_psusp -> pSusp_ispointed_susp [] ;
+subgraph cluster_pSusp { label="pSusp"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+subgraph cluster_pSusp_Book_Loop_Susp_Adjunction { label="Book_Loop_Susp_Adjunction"; fillcolor="#FFFFA3"; labeljust=l; style=filled 
+pSusp_Book_Loop_Susp_Adjunction_loop_susp_adjoint; };
+pSusp_ispointed_susp; pSusp_ispointed_path_susp; pSusp_ispointed_path_susp_; pSusp_psusp; pSusp_is0functor_psusp; pSusp_is1functor_psusp; pSusp_loop_susp_unit; pSusp_conn_map_loop_susp_unit; pSusp_pequiv_ptr_loop_psusp; pSusp_loop_susp_unit_natural; pSusp_loop_susp_counit; pSusp_loop_susp_counit_natural; pSusp_loop_susp_triangle1; pSusp_loop_susp_triangle2; pSusp_loop_susp_adjoint; pSusp_loop_susp_adjoint_nat_r; pSusp_loop_susp_adjoint_nat_l; pSusp_is1natural_loop_susp_adjoint_r; pSusp_natequiv_loop_susp_adjoint_r; };
+} /* END */

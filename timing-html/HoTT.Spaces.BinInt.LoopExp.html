@@ -1,0 +1,1252 @@
+<html>
+<head>
+<title>LoopExp.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for LoopExp.v</h1>
+
+<div class="code" title="File: LoopExp.v
+Line: 1
+Time: 0.027s">
+<div class="time" style="width: 100%"></div>
+<pre>From HoTT Require Import Basics.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 1
+Time: 0.005s">
+<div class="time" style="width: 18.518518518519%"></div>
+<pre>
+Require Import Types.Universe.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 2
+Time: 0.003s">
+<div class="time" style="width: 11.111111111111%"></div>
+<pre>
+Require Import Spaces.Pos.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Spaces.BinInt.Core.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Spaces.BinInt.Spec.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Spaces.BinInt.Equiv.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope positive_scope.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope binint_scope.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 9
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Exponentiation of loops *)
+
+</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition loopexp_pos {A : Type} {x : A} (p : x = x) (n : Pos) : (x = x).</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert n.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply pos_peano_ind.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact p.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros n q.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (q @ p).</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 19
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+
+Definition loopexp {A : Type} {x : A} (p : x = x) (z : BinInt) : (x = x)
+  := match z with
+       | neg n =&gt; loopexp_pos p^ n
+       | zero =&gt; 1
+       | pos n =&gt; loopexp_pos p n
+     end.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** TODO: One can also define [loopexp] as [int_iter (equiv_concat_r p x) z idpath].  This has slightly different computational behaviour, e.g., it sends [1 : int] to [1 @ p] rather than [p].  But with this definition, some of the results below become special cases of results in BinInt.Equiv, and others could be generalized to results belonging in BinInt.Equiv.  It's probably worth investigating this. *)
+
+</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma loopexp_pos_inv {A : Type} {x : A} (p : x = x) (n : Pos)
+  : loopexp_pos p^ n = (loopexp_pos p n)^.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert n.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply pos_peano_ind; cbn; trivial.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold loopexp_pos.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros n q.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite 2 pos_peano_ind_beta_pos_succ, q.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine ((inv_pp _ _)^ @ _).</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply ap.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  clear q.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert n.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply pos_peano_ind; cbn; trivial.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros n q.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 42
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+  by rewrite pos_peano_ind_beta_pos_succ, concat_p_pp, q.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 43
+Time: 0.002s">
+<div class="time" style="width: 7.4074074074074%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition ap_loopexp_pos {A B} (f : A -&gt; B) {x : A} (p : x = x) (n : Pos)
+  : ap f (loopexp_pos p n) = loopexp_pos (ap f p) n.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert n.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply pos_peano_ind; cbn; trivial.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold loopexp_pos.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros n q.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite 2 pos_peano_ind_beta_pos_succ.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by rewrite ap_pp, q.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 54
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition ap_loopexp {A B} (f : A -&gt; B) {x : A} (p : x = x) (z : BinInt)
+: ap f (loopexp p z) = loopexp (ap f p) z.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct z as [n| |n]; trivial.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 61
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+    rewrite loopexp_pos_inv, ap_V, loopexp_pos_inv.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply ap.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply ap_loopexp_pos.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply ap_loopexp_pos.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma loopexp_pos_concat {A : Type} {x : A} (p : x = x) (a : Pos)
+  : loopexp_pos p a @ p = p @ loopexp_pos p a.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction a as [|a aH] using pos_peano_ind; trivial.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold loopexp_pos.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite pos_peano_ind_beta_pos_succ.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  change ((loopexp_pos p a @ p) @ p = p @ (loopexp_pos p a @ p)).</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by rewrite concat_p_pp, aH.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma loopexp_pos_add {A : Type} {x : A} (p : x = x) (a b : Pos)
+  : loopexp_pos p (a + b)%pos = loopexp_pos p a @ loopexp_pos p b.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert a b.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 81
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+  induction a as [|a aH] using pos_peano_ind;
+  induction b as [|b bH] using pos_peano_ind;
+  trivial.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite pos_add_1_l in *.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unfold loopexp_pos.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite pos_peano_ind_beta_pos_succ.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    change (loopexp_pos p (pos_succ b) @ p
+      = p @ loopexp_pos p (pos_succ b)).</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite bH; cbn.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by rewrite concat_pp_p, loopexp_pos_concat.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite pos_add_1_r in *.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unfold loopexp_pos.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by rewrite pos_peano_ind_beta_pos_succ.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 94
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite pos_add_succ_l.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unfold loopexp_pos.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite 2 pos_peano_ind_beta_pos_succ.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    change (loopexp_pos p (a + pos_succ b)%pos @ p
+      = (loopexp_pos p a @ p) @ loopexp_pos p (pos_succ b)).</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 99
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+    by rewrite aH, 2 concat_pp_p, loopexp_pos_concat.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 100
+Time: 0.003s">
+<div class="time" style="width: 11.111111111111%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+
+Lemma loopexp_binint_pos_sub_l {A : Type} {x : A} (p : x = x) (a b : Pos)
+  : loopexp p (binint_pos_sub a b) = loopexp_pos p^ b @ loopexp_pos p a.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  symmetry.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert a b.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction a as [|a aH] using pos_peano_ind;
+  induction b as [|b bH] using pos_peano_ind.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply concat_Vp.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn; rewrite binint_pos_sub_succ_r.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unfold loopexp_pos.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite pos_peano_ind_beta_pos_succ.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 114
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+    by rewrite concat_pp_p, concat_Vp, concat_p1.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite binint_pos_sub_succ_l; cbn.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unfold loopexp_pos.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite pos_peano_ind_beta_pos_succ.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 118
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite loopexp_pos_concat.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 119
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+    by rewrite concat_p_pp, concat_Vp, concat_1p.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 121
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite binint_pos_sub_succ_succ.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 121
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unfold loopexp_pos.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 122
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite 2 pos_peano_ind_beta_pos_succ.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    change ((loopexp_pos p^ b @ p^) @ (loopexp_pos p a @ p)
+      = loopexp p (binint_pos_sub a b)).</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 125
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite (loopexp_pos_concat p).</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 126
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite concat_pp_p, (concat_p_pp p^ p).</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite concat_Vp, concat_1p.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 128
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply aH.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 129
+Time: 0.003s">
+<div class="time" style="width: 11.111111111111%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 130
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma loopexp_binint_pos_sub_r {A : Type} {x : A} (p : x = x) (a b : Pos)
+  : loopexp p (binint_pos_sub a b) = loopexp_pos p a @ loopexp_pos p^ b.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  symmetry.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 135
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert a b.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction a as [|a aH] using pos_peano_ind;
+  induction b as [|b bH] using pos_peano_ind.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply concat_pV.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn; rewrite binint_pos_sub_succ_r.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unfold loopexp_pos.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite pos_peano_ind_beta_pos_succ.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    change (p @ (loopexp_pos p^ b @ p^) = loopexp p (neg b)).</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite loopexp_pos_concat.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 144
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+    by rewrite concat_p_pp, concat_pV, concat_1p.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 145
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite binint_pos_sub_succ_l; cbn.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unfold loopexp_pos.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 147
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite pos_peano_ind_beta_pos_succ.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 148
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    change ((loopexp_pos p a @ p) @ p^ = loopexp_pos p a).</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 149
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+    by rewrite concat_pp_p, concat_pV, concat_p1.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite binint_pos_sub_succ_succ.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unfold loopexp_pos.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 152
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite 2 pos_peano_ind_beta_pos_succ.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    change ((loopexp_pos p a @ p) @ (loopexp_pos p^ b @ p^)
+      = loopexp p (binint_pos_sub a b)).</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 155
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite (loopexp_pos_concat p^).</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite concat_pp_p, (concat_p_pp p p^).</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite concat_pV, concat_1p.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply aH.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 159
+Time: 0.003s">
+<div class="time" style="width: 11.111111111111%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma loopexp_add {A : Type} {x : A} (p : x = x) a b
+  : loopexp p (a + b) = loopexp p a @ loopexp p b.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 163
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 164
+Time: 0.003s">
+<div class="time" style="width: 11.111111111111%"></div>
+<pre>
+  destruct a as [a| |a], b as [b| |b]; trivial;
+  try apply loopexp_pos_add; cbn.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 166
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1,6: symmetry; apply concat_p1.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  2,3: symmetry; apply concat_1p.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: apply loopexp_binint_pos_sub_l.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply loopexp_binint_pos_sub_r.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 170
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Under univalence, exponentiation of loops corresponds to iteration of auto-equivalences. *)
+
+</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 174
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>Definition equiv_path_loopexp
+           {A : Type} (p : A = A) (z : BinInt) (a : A)
+  : equiv_path A A (loopexp p z) a = binint_iter (equiv_path A A p) z a.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct z as [n| |n]; trivial.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 178
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+  all: induction n as [|n IH]
+    using pos_peano_ind; try reflexivity; cbn in *.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 180
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  all: unfold loopexp_pos; rewrite pos_peano_ind_beta_pos_succ.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 181
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  all: unfold pos_iter; rewrite pos_peano_rec_beta_pos_succ.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 182
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+  all: refine (transport_pp _ _ _ _ @ _); cbn; apply ap, IH.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 183
+Time: 0.003s">
+<div class="time" style="width: 11.111111111111%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 184
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+
+Definition loopexp_path_universe `{Univalence}
+           {A : Type} (f : A &lt;~&gt; A) (z : BinInt) (a : A)
+  : transport idmap (loopexp (path_universe f) z) a
+  = binint_iter f z a.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 189
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 190
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert f.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 191
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> equiv_intro (equiv_path A A) p.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 191
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_ @ equiv_path_loopexp p z a).</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 192
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (ap (fun q =&gt; equiv_path A A (loopexp q z) a) _).</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 193
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply eissect.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 194
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: LoopExp.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

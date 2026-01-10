@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>ZeroObjects.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-wsp"><span class="sd">(** * Zero objects in categories</span>
+
+<span class="sd">    Zero objects (both initial and terminal) and zero morphisms, foundational</span>
+<span class="sd">    concepts for additive and stable category theory.</span>
+<span class="sd">*)</span>
+
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zeroobjects-v-chk0" style="display: none" type="checkbox"><label class="alectryon-input" for="zeroobjects-v-chk0"><span class="kn">From</span> HoTT <span class="kn">Require Import</span> Basics Types.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">From</span> HoTT.Categories <span class="kn">Require Import</span> Category Functor NaturalTransformation.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">From</span> HoTT.Categories <span class="kn">Require Import</span> InitialTerminalCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** * Zero objects</span>
+
+<span class="sd">    A zero object in a category is an object that is both initial and terminal.</span>
+<span class="sd">    Such objects play a fundamental role in additive and abelian categories,</span>
+<span class="sd">    where they enable the definition of zero morphisms and kernels.</span>
+<span class="sd">*)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Class</span> <span class="nf">ZeroObject</span> (<span class="nv">C</span> : PreCategory) := {
+  zero : object C;
+  is_initial :: IsInitialObject C zero;
+  is_terminal :: IsTerminalObject C zero
+}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Coercion</span> <span class="nf">zero</span> : ZeroObject &gt;-&gt; object.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> zero {C} z : <span class="nb">rename</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> is_initial {C} z : <span class="nb">rename</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> is_terminal {C} z : <span class="nb">rename</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Instance</span> <span class="nf">initialobject_zeroobject</span> {<span class="nv">C</span> : PreCategory} (<span class="nv">Z</span> : ZeroObject C)
+  : InitialObject C
+  := {| object_initial := zero Z; isinitial_object_initial := _ |}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Instance</span> <span class="nf">terminalobject_zeroobject</span> {<span class="nv">C</span> : PreCategory} (<span class="nv">Z</span> : ZeroObject C)
+  : TerminalObject C
+  := {| object_terminal := zero Z; isterminal_object_terminal := _ |}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** The zero morphism between any two objects is the unique morphism</span>
+<span class="sd">    that factors through the zero object. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">zero_morphism</span> {<span class="nv">C</span> : PreCategory} {<span class="nv">Z</span> : ZeroObject C} (<span class="nv">X</span> <span class="nv">Y</span> : object C)
+  : morphism C X Y
+  := morphism_from_initial Y o morphism_to_terminal X.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> zero_morphism {C Z} X Y : <span class="nb">simpl</span> never.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** * Basic properties of zero objects *)</span>
+
+<span class="sd">(** ** Properties of zero morphisms *)</span>
+
+<span class="sd">(** Any morphism that factors through a zero object is the zero morphism. *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zeroobjects-v-chk1" style="display: none" type="checkbox"><label class="alectryon-input" for="zeroobjects-v-chk1"><span class="kn">Lemma</span> <span class="nf">morphism_through_zero_is_zero</span> {<span class="nv">C</span> : PreCategory} 
+  {<span class="nv">Z</span> : ZeroObject C} {<span class="nv">X</span> <span class="nv">Y</span> : object C}
+  (<span class="nv">f</span> : morphism C X Z)
+  (<span class="nv">g</span> : morphism C Z Y)
+  : (g o f)%morphism = zero_morphism X Y.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>Z</var><span class="hyp-type"><b>: </b><span>ZeroObject C</span></span></span><br><span><var>X, Y</var><span class="hyp-type"><b>: </b><span>C</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>morphism C X Z</span></span></span><br><span><var>g</var><span class="hyp-type"><b>: </b><span>morphism C Z Y</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(g o f)%morphism = zero_morphism X Y</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zeroobjects-v-chk2" style="display: none" type="checkbox"><label class="alectryon-input" for="zeroobjects-v-chk2"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>Z</var><span class="hyp-type"><b>: </b><span>ZeroObject C</span></span></span><br><span><var>X, Y</var><span class="hyp-type"><b>: </b><span>C</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>morphism C X Z</span></span></span><br><span><var>g</var><span class="hyp-type"><b>: </b><span>morphism C Z Y</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(g o f)%morphism = zero_morphism X Y</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zeroobjects-v-chk3" style="display: none" type="checkbox"><label class="alectryon-input" for="zeroobjects-v-chk3"><span class="nb">unfold</span> zero_morphism.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>Z</var><span class="hyp-type"><b>: </b><span>ZeroObject C</span></span></span><br><span><var>X, Y</var><span class="hyp-type"><b>: </b><span>C</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>morphism C X Z</span></span></span><br><span><var>g</var><span class="hyp-type"><b>: </b><span>morphism C Z Y</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(g o f)%morphism =
+(morphism_from_initial Y o morphism_to_terminal X)%morphism</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zeroobjects-v-chk4" style="display: none" type="checkbox"><label class="alectryon-input" for="zeroobjects-v-chk4"><span class="nb">apply</span> ap011.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>Z</var><span class="hyp-type"><b>: </b><span>ZeroObject C</span></span></span><br><span><var>X, Y</var><span class="hyp-type"><b>: </b><span>C</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>morphism C X Z</span></span></span><br><span><var>g</var><span class="hyp-type"><b>: </b><span>morphism C Z Y</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">g = morphism_from_initial Y</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="zeroobjects-v-chk5" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>Z</var><span class="hyp-type"><b>: </b><span>ZeroObject C</span></span></span><br><span><var>X, Y</var><span class="hyp-type"><b>: </b><span>C</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>morphism C X Z</span></span></span><br><span><var>g</var><span class="hyp-type"><b>: </b><span>morphism C Z Y</span></span></span><br></div><label class="goal-separator" for="zeroobjects-v-chk5"><hr></label><div class="goal-conclusion">f = morphism_to_terminal X</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zeroobjects-v-chk6" style="display: none" type="checkbox"><label class="alectryon-input" for="zeroobjects-v-chk6">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>Z</var><span class="hyp-type"><b>: </b><span>ZeroObject C</span></span></span><br><span><var>X, Y</var><span class="hyp-type"><b>: </b><span>C</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>morphism C X Z</span></span></span><br><span><var>g</var><span class="hyp-type"><b>: </b><span>morphism C Z Y</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">g = morphism_from_initial Y</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input">rapply initial_morphism_unique.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zeroobjects-v-chk7" style="display: none" type="checkbox"><label class="alectryon-input" for="zeroobjects-v-chk7">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>Z</var><span class="hyp-type"><b>: </b><span>ZeroObject C</span></span></span><br><span><var>X, Y</var><span class="hyp-type"><b>: </b><span>C</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>morphism C X Z</span></span></span><br><span><var>g</var><span class="hyp-type"><b>: </b><span>morphism C Z Y</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">f = morphism_to_terminal X</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input">rapply terminal_morphism_unique.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Qed</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Composition properties of zero morphisms *)</span>
+
+<span class="sd">(** Composition with zero morphism on the right. *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zeroobjects-v-chk8" style="display: none" type="checkbox"><label class="alectryon-input" for="zeroobjects-v-chk8"><span class="kn">Lemma</span> <span class="nf">zero_morphism_right</span> {<span class="nv">C</span> : PreCategory} {<span class="nv">Z</span> : ZeroObject C}
+  {<span class="nv">X</span> <span class="nv">Y</span> <span class="nv">W</span> : object C}
+  (<span class="nv">g</span> : morphism C Y W)
+  : (g o zero_morphism X Y)%morphism = zero_morphism X W.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>Z</var><span class="hyp-type"><b>: </b><span>ZeroObject C</span></span></span><br><span><var>X, Y, W</var><span class="hyp-type"><b>: </b><span>C</span></span></span><br><span><var>g</var><span class="hyp-type"><b>: </b><span>morphism C Y W</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(g o zero_morphism X Y)%morphism = zero_morphism X W</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zeroobjects-v-chk9" style="display: none" type="checkbox"><label class="alectryon-input" for="zeroobjects-v-chk9"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>Z</var><span class="hyp-type"><b>: </b><span>ZeroObject C</span></span></span><br><span><var>X, Y, W</var><span class="hyp-type"><b>: </b><span>C</span></span></span><br><span><var>g</var><span class="hyp-type"><b>: </b><span>morphism C Y W</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(g o zero_morphism X Y)%morphism = zero_morphism X W</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zeroobjects-v-chka" style="display: none" type="checkbox"><label class="alectryon-input" for="zeroobjects-v-chka"><span class="nb">rewrite</span> &lt;- Category.Core.associativity.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>Z</var><span class="hyp-type"><b>: </b><span>ZeroObject C</span></span></span><br><span><var>X, Y, W</var><span class="hyp-type"><b>: </b><span>C</span></span></span><br><span><var>g</var><span class="hyp-type"><b>: </b><span>morphism C Y W</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(g o morphism_from_initial Y o morphism_to_terminal X)%morphism =
+zero_morphism X W</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">apply</span> morphism_through_zero_is_zero.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Qed</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Composition with zero morphism on the left. *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zeroobjects-v-chkb" style="display: none" type="checkbox"><label class="alectryon-input" for="zeroobjects-v-chkb"><span class="kn">Lemma</span> <span class="nf">zero_morphism_left</span> {<span class="nv">C</span> : PreCategory} {<span class="nv">Z</span> : ZeroObject C}
+  {<span class="nv">X</span> <span class="nv">Y</span> <span class="nv">W</span> : object C}
+  (<span class="nv">f</span> : morphism C X Y)
+  : (zero_morphism Y W o f)%morphism = zero_morphism X W.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>Z</var><span class="hyp-type"><b>: </b><span>ZeroObject C</span></span></span><br><span><var>X, Y, W</var><span class="hyp-type"><b>: </b><span>C</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>morphism C X Y</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(zero_morphism Y W o f)%morphism = zero_morphism X W</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zeroobjects-v-chkc" style="display: none" type="checkbox"><label class="alectryon-input" for="zeroobjects-v-chkc"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>Z</var><span class="hyp-type"><b>: </b><span>ZeroObject C</span></span></span><br><span><var>X, Y, W</var><span class="hyp-type"><b>: </b><span>C</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>morphism C X Y</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(zero_morphism Y W o f)%morphism = zero_morphism X W</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="zeroobjects-v-chkd" style="display: none" type="checkbox"><label class="alectryon-input" for="zeroobjects-v-chkd"><span class="nb">rewrite</span> Category.Core.associativity.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>Z</var><span class="hyp-type"><b>: </b><span>ZeroObject C</span></span></span><br><span><var>X, Y, W</var><span class="hyp-type"><b>: </b><span>C</span></span></span><br><span><var>f</var><span class="hyp-type"><b>: </b><span>morphism C X Y</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(morphism_from_initial W
+ o (morphism_to_terminal Y o f))%morphism =
+zero_morphism X W</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">apply</span> morphism_through_zero_is_zero.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Qed</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Export hints *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Hint Rewrite</span> @zero_morphism_left @zero_morphism_right : zero_morphism.</span></span></pre>
+</div>
+</div></body>
+</html>

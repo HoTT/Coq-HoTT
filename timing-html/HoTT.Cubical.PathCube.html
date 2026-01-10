@@ -1,0 +1,2595 @@
+<html>
+<head>
+<title>PathCube.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for PathCube.v</h1>
+
+<div class="code" title="File: PathCube.v
+Line: 1
+Time: 0.028s">
+<div class="time" style="width: 3.804347826087%"></div>
+<pre>From HoTT Require Import Basics.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 1
+Time: 0.003s">
+<div class="time" style="width: 0.40760869565217%"></div>
+<pre>
+Require Import Cubical.DPath.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 2
+Time: 0.002s">
+<div class="time" style="width: 0.27173913043478%"></div>
+<pre>
+Require Import Cubical.PathSquare.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Cubical.DPathSquare.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Types.Paths Types.Prod.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Declare Scope cube_scope.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Delimit Scope cube_scope with cube.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Unset Elimination Schemes.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 9
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Generalizable All Variables.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope square_scope.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(*
+x001----pi01----x101              x001----pi01----x101
+ |  \               \              |               |  \
+ |  p00i  ==si0i=&gt;  p10i           |               |  p10i
+p0i1  \               \           p0i1 ==sii1=&gt;   p1i1  \
+ |    x000----pi00----x100         |               |    x100
+ |s0ii |               |    ===&gt;   |               | s1ii|
+x011   |               |          x011----pi11----x111   |
+  \   p0i0  ==sii0=&gt;  p1i0          \               \   p1i0
+ p01i  |               |           p01i  ==si1i=&gt;  p11i  |
+     \ |               |               \               \ |
+      x010----pi10----x110              x010----pi10----x110
+ *)
+
+(** Contents:
+  * Definition of [PathCube]
+  * [PathCube] reflexivity
+  * [PathCube] face rewriting
+  * [PathCube]s from paths between squares
+  * [PathCube]s from squares
+  * [PathCube] flipping
+  * Kan fillers
+  * [PathCube] concatenation
+  * natural cubes from [ap]
+*)
+
+
+(** Homogeneous cubes *)
+(** PathCube left right top bottom front back *)</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 42
+Time: 0.004s">
+<div class="time" style="width: 0.54347826086957%"></div>
+<pre>Cumulative Inductive PathCube {A}
+  : forall x000 {x010 x100 x110 x001 x011 x101 x111 : A}
+  {p0i0 : x000 = x010} {p1i0 : x100 = x110} {pi00 : x000 = x100}
+  {pi10 : x010 = x110} {p0i1 : x001 = x011} {p1i1 : x101 = x111}
+  {pi01 : x001 = x101} {pi11 : x011 = x111} {p00i : x000 = x001}
+  {p01i : x010 = x011} {p10i : x100 = x101} {p11i : x110 = x111}
+  (s0ii : PathSquare p0i0 p0i1 p00i p01i) (s1ii : PathSquare p1i0 p1i1 p10i p11i)
+  (sii0 : PathSquare p0i0 p1i0 pi00 pi10) (sii1 : PathSquare p0i1 p1i1 pi01 pi11)
+  (si0i : PathSquare p00i p10i pi00 pi01) (si1i : PathSquare p01i p11i pi10 pi11), Type
+  := idcube : forall x, PathCube x 1 1 1 1 1 1.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments PathCube {_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _}.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* TODO: ": rename" is needed because the default names changed in Rocq 9.2.0.  When the minimum supported version is &gt;= 9.2.0, the ": rename" can be removed. *)</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 55
+Time: 0.001s">
+<div class="time" style="width: 0.13586956521739%"></div>
+<pre>Scheme PathCube_ind := Induction for PathCube Sort Type.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments PathCube_ind {A} P f
+  {_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _} : rename.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* TODO: ": rename" is needed because the default names changed in Rocq 9.2.0.  When the minimum supported version is &gt;= 9.2.0, the ": rename" can be removed. *)</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Scheme PathCube_rec := Minimality for PathCube Sort Type.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments PathCube_rec {A} P f
+  {_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _} : rename.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* These notations make it easier to write our lemmas *)</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Notation hr := (sq_refl_h _).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Notation vr := (sq_refl_v _).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Notation tr := sq_tr.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Notation fv := sq_flip_v.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [PathCube]s form a path of squares up to retyping *)</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 68
+Time: 0.015s">
+<div class="time" style="width: 2.0380434782609%"></div>
+<pre>Definition equiv_cu_path {A} {x000 x010 x100 x110 x001 x011 x101 x111 : A}
+  {p0i0 : x000 = x010} {p1i0 : x100 = x110} {pi00 : x000 = x100}
+  {pi10 : x010 = x110} {p0i1 : x001 = x011} {p1i1 : x101 = x111}
+  {pi01 : x001 = x101} {pi11 : x011 = x111} {p00i : x000 = x001}
+  {p01i : x010 = x011} {p10i : x100 = x101} {p11i : x110 = x111}
+  {s0ii : PathSquare p0i0 p0i1 p00i p01i} {s1ii : PathSquare p1i0 p1i1 p10i p11i}
+  {sii0 : PathSquare p0i0 p1i0 pi00 pi10} {sii1 : PathSquare p0i1 p1i1 pi01 pi11}
+  {si0i : PathSquare p00i p10i pi00 pi01} {si1i : PathSquare p01i p11i pi10 pi11}
+  : sq_concat_h (tr (fv s0ii)) (sq_concat_h si0i (tr s1ii)) =
+      sq_ccGG
+        (moveL_Vp _ _ _ (sq_path^-1 sii0))
+        (moveL_Vp _ _ _ (sq_path^-1 sii1)) si1i
+      &lt;~&gt; PathCube s0ii s1ii sii0 sii1 si0i si1i.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 81
+Time: 0.001s">
+<div class="time" style="width: 0.13586956521739%"></div>
+<pre>
+  srapply equiv_adjointify.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 83
+Time: 0.007s">
+<div class="time" style="width: 0.95108695652174%"></div>
+<pre> destruct sii0, sii1; cbn.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 83
+Time: 0.006s">
+<div class="time" style="width: 0.81521739130435%"></div>
+<pre>
+    rewrite (eisretr sq_G1 si0i)^,
+      (eisretr sq_1G s0ii)^,
+      (eisretr sq_1G s1ii)^.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro X.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 87
+Time: 0.022s">
+<div class="time" style="width: 2.9891304347826%"></div>
+<pre>
+    by destruct (sq_G1^-1 si0i), (sq_1G^-1 s0ii),
+      (sq_1G^-1 s1ii), X, p00i.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 89
+Time: 0.08s">
+<div class="time" style="width: 10.869565217391%"></div>
+<pre>
+  1,2: by intros [].</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 90
+Time: 0.066s">
+<div class="time" style="width: 8.9673913043478%"></div>
+<pre>
+  destruct sii0, sii1.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 91
+Time: 0.161s">
+<div class="time" style="width: 21.875%"></div>
+<pre>
+  cbn.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 92
+Time: 0.077s">
+<div class="time" style="width: 10.461956521739%"></div>
+<pre>
+  rewrite &lt;- (eisretr sq_G1 si0i).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 93
+Time: 0.074s">
+<div class="time" style="width: 10.054347826087%"></div>
+<pre>
+  rewrite &lt;- (eisretr sq_1G s0ii).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 94
+Time: 0.087s">
+<div class="time" style="width: 11.820652173913%"></div>
+<pre>
+  rewrite &lt;- (eisretr sq_1G s1ii).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 95
+Time: 0.289s">
+<div class="time" style="width: 39.266304347826%"></div>
+<pre>
+  destruct (@equiv_inv _ _ sq_G1 _ si0i).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 96
+Time: 0.308s">
+<div class="time" style="width: 41.847826086957%"></div>
+<pre>
+  destruct (@equiv_inv _ _ sq_1G _ s0ii).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 97
+Time: 0.288s">
+<div class="time" style="width: 39.130434782609%"></div>
+<pre>
+  destruct (@equiv_inv _ _ sq_1G _ s1ii).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 98
+Time: 0.1s">
+<div class="time" style="width: 13.586956521739%"></div>
+<pre>
+  destruct p00i.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 99
+Time: 0.005s">
+<div class="time" style="width: 0.67934782608696%"></div>
+<pre>
+  intro X.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 100
+Time: 0.104s">
+<div class="time" style="width: 14.130434782609%"></div>
+<pre>
+  by destruct X.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 101
+Time: 0.736s">
+<div class="time" style="width: 100%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation cu_path := equiv_cu_path.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section Reflexivity.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** [PathCube] reflexivity *)
+
+ </pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Context {A} {a00 a10 a01 a11 : A}
+    {px0 : a00 = a10} {px1 : a01 = a11}
+    {p0x : a00 = a01} {p1x : a10 = a11}.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (* Left right reflexivity *)
+ </pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition cu_refl_lr (s : PathSquare px0 px1 p0x p1x) : PathCube s s hr hr hr hr.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 116
+Time: 0.001s">
+<div class="time" style="width: 0.13586956521739%"></div>
+<pre>
+    by destruct s.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 118
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (* Top bottom reflexivity *)
+ </pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 121
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition cu_refl_tb (s : PathSquare px0 px1 p0x p1x) : PathCube hr hr s s vr vr.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 121
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 122
+Time: 0.001s">
+<div class="time" style="width: 0.13586956521739%"></div>
+<pre>
+    by destruct s.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (* Front back reflexivity *)
+ </pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition cu_refl_fb (s : PathSquare px0 px1 p0x p1x) : PathCube vr vr vr vr s s.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 128
+Time: 0.001s">
+<div class="time" style="width: 0.13586956521739%"></div>
+<pre>
+    by destruct s.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 130
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End Reflexivity.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* Lemmas for rewriting faces of cubes *)</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section PathCubeRewriting.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 134
+Time: 0.001s">
+<div class="time" style="width: 0.13586956521739%"></div>
+<pre>
+
+  Context {A} {x000 x010 x100 x110 x001 x011 x101 x111 : A}
+    {p0i0 : x000 = x010} {p1i0 : x100 = x110} {pi00 : x000 = x100}
+    {pi10 : x010 = x110} {p0i1 : x001 = x011} {p1i1 : x101 = x111}
+    {pi01 : x001 = x101} {pi11 : x011 = x111} {p00i : x000 = x001}
+    {p01i : x010 = x011} {p10i : x100 = x101} {p11i : x110 = x111}
+    {s0ii : PathSquare p0i0 p0i1 p00i p01i} {s1ii : PathSquare p1i0 p1i1 p10i p11i}
+    {sii0 : PathSquare p0i0 p1i0 pi00 pi10} {sii1 : PathSquare p0i1 p1i1 pi01 pi11}
+    {si0i : PathSquare p00i p10i pi00 pi01} {si1i : PathSquare p01i p11i pi10 pi11}.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (* We write the most general version and derive special cases from this *)
+ </pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 146
+Time: 0.001s">
+<div class="time" style="width: 0.13586956521739%"></div>
+<pre>Definition equiv_cu_GGGGGG {s0ii' s1ii' sii0' sii1' si0i' si1i'}
+    (t0ii : s0ii = s0ii') (t1ii : s1ii = s1ii') (tii0 : sii0 = sii0')
+    (tii1 : sii1 = sii1') (ti0i : si0i = si0i') (ti1i : si1i = si1i')
+    : PathCube s0ii s1ii sii0 sii1 si0i si1i
+    &lt;~&gt; PathCube s0ii' s1ii' sii0' sii1' si0i' si1i'.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 151
+Time: 0.001s">
+<div class="time" style="width: 0.13586956521739%"></div>
+<pre>
+    by destruct t0ii, t1ii, tii0, tii1, ti0i, ti1i.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 152
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {s0ii' s1ii' sii0' sii1' si0i' si1i'}
+    (t0ii : s0ii = s0ii') (t1ii : s1ii = s1ii') (tii0 : sii0 = sii0')
+    (tii1 : sii1 = sii1') (ti0i : si0i = si0i') (ti1i : si1i = si1i').</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition equiv_cu_Gccccc := equiv_cu_GGGGGG t0ii 1 1 1 1 1.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition equiv_cu_cGcccc := equiv_cu_GGGGGG 1 t1ii 1 1 1 1.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition equiv_cu_ccGccc := equiv_cu_GGGGGG 1 1 tii0 1 1 1.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition equiv_cu_cccGcc := equiv_cu_GGGGGG 1 1 1 tii1 1 1.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition equiv_cu_ccccGc := equiv_cu_GGGGGG 1 1 1 1 ti0i 1.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 163
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition equiv_cu_cccccG := equiv_cu_GGGGGG 1 1 1 1 1 ti1i.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 164
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition equiv_cu_ccGGGG := equiv_cu_GGGGGG 1 1 tii0 tii1 ti0i ti1i.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 165
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition equiv_cu_GGGGcc := equiv_cu_GGGGGG t0ii t1ii tii0 tii1 1 1.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 166
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition equiv_cu_GGcccc := equiv_cu_GGGGGG t0ii t1ii 1 1 1 1.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition equiv_cu_ccGGcc := equiv_cu_GGGGGG 1 1 tii0 tii1 1 1.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition equiv_cu_ccccGG := equiv_cu_GGGGGG 1 1 1 1 ti0i ti1i.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 169
+Time: 0.002s">
+<div class="time" style="width: 0.27173913043478%"></div>
+<pre>
+
+End PathCubeRewriting.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation cu_GGGGGG := equiv_cu_GGGGGG.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Notation cu_Gccccc := equiv_cu_Gccccc.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 174
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Notation cu_cGcccc := equiv_cu_cGcccc.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 175
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Notation cu_ccGccc := equiv_cu_ccGccc.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Notation cu_cccGcc := equiv_cu_cccGcc.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Notation cu_ccccGc := equiv_cu_ccccGc.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Notation cu_cccccG := equiv_cu_cccccG.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 179
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Notation cu_ccGGGG := equiv_cu_ccGGGG.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 180
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Notation cu_GGGGcc := equiv_cu_GGGGcc.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 181
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Notation cu_GGcccc := equiv_cu_GGcccc.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 182
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Notation cu_ccGGcc := equiv_cu_ccGGcc.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 183
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Notation cu_ccccGG := equiv_cu_ccccGG.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 184
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* Rotating top and bottom to front and back *)</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 186
+Time: 0.005s">
+<div class="time" style="width: 0.67934782608696%"></div>
+<pre>Definition equiv_cu_rot_tb_fb {A} {x000 x010 x100 x110 x001 x011 x101 x111 : A}
+  {p0i0 : x000 = x010} {p1i0 : x100 = x110} {pi00 : x000 = x100}
+  {pi10 : x010 = x110} {p0i1 : x001 = x011} {p1i1 : x101 = x111}
+  {pi01 : x001 = x101} {pi11 : x011 = x111} {p00i : x000 = x001}
+  {p01i : x010 = x011} {p10i : x100 = x101} {p11i : x110 = x111}
+  {s0ii : PathSquare p0i0 p0i1 p00i p01i} {s1ii : PathSquare p1i0 p1i1 p10i p11i}
+  {sii0 : PathSquare p0i0 p1i0 pi00 pi10} {sii1 : PathSquare p0i1 p1i1 pi01 pi11}
+  {si0i : PathSquare p00i p10i pi00 pi01} {si1i : PathSquare p01i p11i pi10 pi11}
+  : PathCube si0i si1i (sq_tr s0ii) (sq_tr s1ii) (sq_tr sii0) (sq_tr sii1)
+    &lt;~&gt; PathCube s0ii s1ii sii0 sii1 si0i si1i.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply equiv_adjointify.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro cube.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (cu_GGGGcc _ _ _ _ _).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 199
+Time: 0.002s">
+<div class="time" style="width: 0.27173913043478%"></div>
+<pre>
+    1,2,3,4: exact (eissect tr _).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    revert cube.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 201
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    set (a := tr s0ii).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 202
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    set (b := tr s1ii).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 203
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    set (c := tr sii0).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 204
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    set (d := tr sii1).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 205
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    clearbody a b c d; clear s0ii s1ii sii0 sii1.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro cube.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 207
+Time: 0.002s">
+<div class="time" style="width: 0.27173913043478%"></div>
+<pre>
+    by destruct cube.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 208
+Time: 0.007s">
+<div class="time" style="width: 0.95108695652174%"></div>
+<pre>
+  1,2 : by intros [].</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 209
+Time: 0.003s">
+<div class="time" style="width: 0.40760869565217%"></div>
+<pre>
+  rewrite &lt;- (eissect tr s0ii).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 210
+Time: 0.002s">
+<div class="time" style="width: 0.27173913043478%"></div>
+<pre>
+  rewrite &lt;- (eissect tr s1ii).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 211
+Time: 0.002s">
+<div class="time" style="width: 0.27173913043478%"></div>
+<pre>
+  rewrite &lt;- (eissect tr sii0).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 212
+Time: 0.003s">
+<div class="time" style="width: 0.40760869565217%"></div>
+<pre>
+  rewrite &lt;- (eissect tr sii1).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 213
+Time: 0.003s">
+<div class="time" style="width: 0.40760869565217%"></div>
+<pre>
+  set (a := tr s0ii).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 214
+Time: 0.007s">
+<div class="time" style="width: 0.95108695652174%"></div>
+<pre>
+  set (b := tr s1ii).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 215
+Time: 0.003s">
+<div class="time" style="width: 0.40760869565217%"></div>
+<pre>
+  set (c := tr sii0).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 216
+Time: 0.002s">
+<div class="time" style="width: 0.27173913043478%"></div>
+<pre>
+  set (d := tr sii1).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 217
+Time: 0.001s">
+<div class="time" style="width: 0.13586956521739%"></div>
+<pre>
+  clearbody a b c d; clear s0ii s1ii sii0 sii1.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 218
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro X.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 219
+Time: 0.007s">
+<div class="time" style="width: 0.95108695652174%"></div>
+<pre>
+  rewrite &lt;- (eissect (cu_ccGGGG (eisretr tr _)
+    (eisretr tr _) (eisretr tr _) (eisretr tr _)) X).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 221
+Time: 0.004s">
+<div class="time" style="width: 0.54347826086957%"></div>
+<pre>
+  set (e := cu_ccGGGG (eisretr tr _) (eisretr tr _)
+    (eisretr tr _) (eisretr tr _) X).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 223
+Time: 0.001s">
+<div class="time" style="width: 0.13586956521739%"></div>
+<pre>
+  clearbody e; clear X.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 224
+Time: 0.009s">
+<div class="time" style="width: 1.2228260869565%"></div>
+<pre>
+  by destruct e.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 225
+Time: 0.055s">
+<div class="time" style="width: 7.4728260869565%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 226
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation cu_rot_tb_fb := equiv_cu_rot_tb_fb.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Degenerate cubes formed from paths between squares *)
+
+(** The first case is easiest to prove and can be written as equivalences *)</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 232
+Time: 0.001s">
+<div class="time" style="width: 0.13586956521739%"></div>
+<pre>Definition equiv_cu_G11 {A} {a00 a10 a01 a11 : A}
+  {px0 : a00 = a10} {px1 : a01 = a11}
+  {p0x : a00 = a01} {p1x : a10 = a11}
+  {s s' : PathSquare px0 px1 p0x p1x}
+  : s = s' &lt;~&gt; PathCube s s' hr hr hr hr.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 236
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 237
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct s.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 238
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (cu_path oE _).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 239
+Time: 0.001s">
+<div class="time" style="width: 0.13586956521739%"></div>
+<pre>
+  refine (equiv_concat_l (sq_concat_h_1s (sq_concat_h 1%square (tr s'))
+    (p0y:=1) (p1y:=1)) _ oE _).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 241
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (equiv_concat_l (sq_concat_h_1s (tr s')
+    (p0y:=1) (p1y:=1)) _ oE _).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 243
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (equiv_moveR_equiv_M (f:=tr) _ _ oE _).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 244
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply equiv_path_inverse.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 245
+Time: 0.005s">
+<div class="time" style="width: 0.67934782608696%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 246
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** This case can be reduced to the first by rotating the cube
+    and rewriting some faces *)</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 249
+Time: 0.001s">
+<div class="time" style="width: 0.13586956521739%"></div>
+<pre>Definition equiv_cu_1G1 {A} {a00 a10 a01 a11 : A}
+  {px0 : a00 = a10} {px1 : a01 = a11}
+  {p0x : a00 = a01} {p1x : a10 = a11}
+  {s s' : PathSquare px0 px1 p0x p1x}
+: s = s' &lt;~&gt; PathCube hr hr s s' vr vr.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 253
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 254
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (cu_rot_tb_fb oE _).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 255
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (cu_rot_tb_fb oE _).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 256
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (cu_ccGGGG _ _ _ _ oE _).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 257
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1,2: exact sq_tr_refl_v^.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 258
+Time: 0.005s">
+<div class="time" style="width: 0.67934782608696%"></div>
+<pre>
+  1,2: exact (eisretr tr _)^.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 259
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_ oE equiv_ap' tr _ _).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 260
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact equiv_cu_G11.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 261
+Time: 0.002s">
+<div class="time" style="width: 0.27173913043478%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 262
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Finally this is an even simpler rotation *)</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 264
+Time: 0.001s">
+<div class="time" style="width: 0.13586956521739%"></div>
+<pre>Definition equiv_cu_11G {A} {a00 a10 a01 a11 : A}
+  {px0 : a00 = a10} {px1 : a01 = a11}
+  {p0x : a00 = a01} {p1x : a10 = a11}
+  {s s' : PathSquare px0 px1 p0x p1x}
+  : s = s' &lt;~&gt; PathCube vr vr vr vr s s'.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 268
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 269
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (cu_rot_tb_fb oE _).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 270
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (cu_ccGGGG _ _ _ _ oE _).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 271
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1-4: exact sq_tr_refl_v^.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 272
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by exact equiv_cu_G11.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 273
+Time: 0.001s">
+<div class="time" style="width: 0.13586956521739%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 274
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation cu_G11 := equiv_cu_G11.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 276
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Notation cu_1G1 := equiv_cu_1G1.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 277
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Notation cu_11G := equiv_cu_11G.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 278
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Degenerate cubes given by squares *)</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 280
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section PathPathSquares.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 280
+Time: 0.001s">
+<div class="time" style="width: 0.13586956521739%"></div>
+<pre>
+
+  Context {A} {x y : A} {a00 a10 a01 a11 : x = y}
+    (px0 : a00 = a10) (px1 : a01 = a11)
+    (p0x : a00 = a01) (p1x : a10 = a11).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 284
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition equiv_cu_GG1
+    : PathSquare px0 px1 p0x p1x
+      &lt;~&gt; PathCube (sq_G1 px0) (sq_G1 px1) (sq_G1 p0x) (sq_G1 p1x) 1 1.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 288
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 289
+Time: 0.001s">
+<div class="time" style="width: 0.13586956521739%"></div>
+<pre>
+    destruct p0x, p1x, a00.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 290
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (_ oE sq_G1^-1).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 291
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (_ oE equiv_ap' sq_G1 _ _).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 292
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact cu_G11.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 293
+Time: 0.001s">
+<div class="time" style="width: 0.13586956521739%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 294
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition equiv_cu_1GG
+    : PathSquare px0 px1 p0x p1x
+    &lt;~&gt; PathCube 1 1 (sq_1G px0) (sq_1G px1) (sq_1G p0x) (sq_1G p1x).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 298
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 299
+Time: 0.001s">
+<div class="time" style="width: 0.13586956521739%"></div>
+<pre>
+    destruct px0, px1, a01.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 300
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine(_ oE sq_1G^-1).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 301
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (_ oE equiv_ap' sq_1G _ _).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 302
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact cu_11G.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 303
+Time: 0.001s">
+<div class="time" style="width: 0.13586956521739%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 304
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition equiv_cu_G1G : PathSquare px0 px1 p0x p1x
+    &lt;~&gt; PathCube (sq_1G px0) (sq_1G px1) 1 1 (sq_G1 p0x) (sq_G1 p1x).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 307
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 308
+Time: 0.001s">
+<div class="time" style="width: 0.13586956521739%"></div>
+<pre>
+    destruct p0x, p1x, a10.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 309
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine(_ oE sq_G1^-1).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 310
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (_ oE equiv_ap' sq_1G _ _).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 311
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact cu_G11.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 312
+Time: 0.001s">
+<div class="time" style="width: 0.13586956521739%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 313
+Time: 0.001s">
+<div class="time" style="width: 0.13586956521739%"></div>
+<pre>
+
+End PathPathSquares.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 315
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation cu_GG1 := equiv_cu_GG1.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 317
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Notation cu_G1G := equiv_cu_G1G.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 318
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Notation cu_1GG := equiv_cu_1GG.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 319
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments cu_GG1 {_ _ _ _ _ _ _ _ _ _ _}.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 320
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments cu_G1G {_ _ _ _ _ _ _ _ _ _ _}.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 321
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments cu_1GG {_ _ _ _ _ _ _ _ _ _ _}.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 322
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [PathCube]s can be given by [DPathSquare]s over paths *)</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 324
+Time: 0.007s">
+<div class="time" style="width: 0.95108695652174%"></div>
+<pre>Definition equiv_cu_ds
+  {A B} {f g : A -&gt; B} {a00 a10 a01 a11 : A}
+  {px0 : a00 = a10} {px1 : a01 = a11}
+  {p0x : a00 = a01} {p1x : a10 = a11}
+  {s : PathSquare px0 px1 p0x p1x}
+  {b00 : f a00 = g a00} {b01 : f a01 = g a01}
+  {b10 : f a10 = g a10} {b11 : f a11 = g a11}
+  {qx0 : DPath (fun x =&gt; f x = g x) px0 b00 b10}
+  {qx1 : DPath (fun x =&gt; f x = g x) px1 b01 b11}
+  {q0x : DPath (fun x =&gt; f x = g x) p0x b00 b01}
+  {q1x : DPath (fun x =&gt; f x = g x) p1x b10 b11}
+  : DPathSquare (fun x =&gt; f x = g x) s qx0 qx1 q0x q1x
+    &lt;~&gt; PathCube (sq_dp qx0) (sq_dp qx1) (sq_dp q0x) (sq_dp q1x)
+      (sq_ap f s) (sq_ap g s).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 337
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 338
+Time: 0.001s">
+<div class="time" style="width: 0.13586956521739%"></div>
+<pre>
+  destruct s.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 339
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact cu_GG1.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 340
+Time: 0.001s">
+<div class="time" style="width: 0.13586956521739%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 341
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation cu_ds := equiv_cu_ds.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 343
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [PathCube]s can be given by [DPath]s over [PathSquare]s *)</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 345
+Time: 0.005s">
+<div class="time" style="width: 0.67934782608696%"></div>
+<pre>Definition equiv_dp_cu {A B : Type} {x1 x2 : A} {a00 a01 a10 a11 : A -&gt; B}
+  {px0 : a00 == a10} {px1 : a01 == a11} {p0x : a00 == a01} {p1x : a10 == a11}
+  {f1 : PathSquare (px0 x1) (px1 x1) (p0x x1) (p1x x1)}
+  {f2 : PathSquare (px0 x2) (px1 x2) (p0x x2) (p1x x2)}
+  {p : x1 = x2}
+  : PathCube f1 f2 (sq_dp (apD px0 p)) (sq_dp (apD px1 p))
+     (sq_dp (apD p0x p)) (sq_dp (apD p1x p))
+  &lt;~&gt; DPath (fun x =&gt; PathSquare (px0 x) (px1 x) (p0x x) (p1x x)) p f1 f2.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 352
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 353
+Time: 0.002s">
+<div class="time" style="width: 0.27173913043478%"></div>
+<pre>
+  destruct p; symmetry; exact cu_G11.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 354
+Time: 0.002s">
+<div class="time" style="width: 0.27173913043478%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 355
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation dp_cu := equiv_dp_cu.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 357
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Flipping a cube along the left right direction *)</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 359
+Time: 0.008s">
+<div class="time" style="width: 1.0869565217391%"></div>
+<pre>Definition equiv_cu_flip_lr {A} {x000 x010 x100 x110 x001 x011 x101 x111 : A}
+  {p0i0 : x000 = x010} {p1i0 : x100 = x110} {pi00 : x000 = x100}
+  {pi10 : x010 = x110} {p0i1 : x001 = x011} {p1i1 : x101 = x111}
+  {pi01 : x001 = x101} {pi11 : x011 = x111} {p00i : x000 = x001}
+  {p01i : x010 = x011} {p10i : x100 = x101} {p11i : x110 = x111}
+  {s0ii : PathSquare p0i0 p0i1 p00i p01i} {s1ii : PathSquare p1i0 p1i1 p10i p11i}
+  {sii0 : PathSquare p0i0 p1i0 pi00 pi10} {sii1 : PathSquare p0i1 p1i1 pi01 pi11}
+  {si0i : PathSquare p00i p10i pi00 pi01} {si1i : PathSquare p01i p11i pi10 pi11}
+  : PathCube s0ii s1ii sii0 sii1 si0i si1i
+    &lt;~&gt; PathCube s1ii s0ii (sq_flip_h sii0) (sq_flip_h sii1)
+        (sq_flip_h si0i) (sq_flip_h si1i).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 369
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 370
+Time: 0.001s">
+<div class="time" style="width: 0.13586956521739%"></div>
+<pre>
+  destruct si1i, si0i.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 371
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (cu_GGcccc _ _ oE _).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 372
+Time: 0.001s">
+<div class="time" style="width: 0.13586956521739%"></div>
+<pre>
+  1,2: exact (eisretr sq_G1 _).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 373
+Time: 0.002s">
+<div class="time" style="width: 0.27173913043478%"></div>
+<pre>
+  refine (cu_GG1 oE _).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 374
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (sq_flip_h oE _).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 375
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (cu_GG1^-1 oE _).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 376
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (cu_GGGGcc _ _ _ _).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 377
+Time: 0.001s">
+<div class="time" style="width: 0.13586956521739%"></div>
+<pre>
+  all: exact (eisretr sq_G1 _)^.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 378
+Time: 0.004s">
+<div class="time" style="width: 0.54347826086957%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 379
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation cu_flip_lr := equiv_cu_flip_lr.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 381
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [PathCube] Kan fillers ~ Every open crate has a lid *)
+
+</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 384
+Time: 0.002s">
+<div class="time" style="width: 0.27173913043478%"></div>
+<pre>Definition cu_fill_left {A} {x000 x010 x100 x110 x001 x011 x101 x111 : A}
+  {p0i0 : x000 = x010} {p1i0 : x100 = x110} {pi00 : x000 = x100}
+  {pi10 : x010 = x110} {p0i1 : x001 = x011} {p1i1 : x101 = x111}
+  {pi01 : x001 = x101} {pi11 : x011 = x111} {p00i : x000 = x001}
+  {p01i : x010 = x011} {p10i : x100 = x101} {p11i : x110 = x111}
+                                          (s1ii : PathSquare p1i0 p1i1 p10i p11i)
+  (sii0 : PathSquare p0i0 p1i0 pi00 pi10) (sii1 : PathSquare p0i1 p1i1 pi01 pi11)
+  (si0i : PathSquare p00i p10i pi00 pi01) (si1i : PathSquare p01i p11i pi10 pi11)
+  : {s0ii : PathSquare p0i0 p0i1 p00i p01i &amp; PathCube s0ii s1ii sii0 sii1 si0i si1i}.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 392
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 393
+Time: 0.001s">
+<div class="time" style="width: 0.13586956521739%"></div>
+<pre>
+  destruct si0i, si1i.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 394
+Time: 0.001s">
+<div class="time" style="width: 0.13586956521739%"></div>
+<pre>
+  set (a := sq_G1^-1 s1ii).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 395
+Time: 0.001s">
+<div class="time" style="width: 0.13586956521739%"></div>
+<pre>
+  set (b := sq_G1^-1 sii0).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 396
+Time: 0.001s">
+<div class="time" style="width: 0.13586956521739%"></div>
+<pre>
+  set (c := sq_G1^-1 sii1).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 397
+Time: 0.001s">
+<div class="time" style="width: 0.13586956521739%"></div>
+<pre>
+  rewrite &lt;- (eisretr sq_G1 s1ii).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 398
+Time: 0.001s">
+<div class="time" style="width: 0.13586956521739%"></div>
+<pre>
+  rewrite &lt;- (eisretr sq_G1 sii0).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 399
+Time: 0.001s">
+<div class="time" style="width: 0.13586956521739%"></div>
+<pre>
+  rewrite &lt;- (eisretr sq_G1 sii1).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 400
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  change (sq_G1^-1 s1ii) with a.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 401
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  change (sq_G1^-1 sii0) with b.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 402
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  change (sq_G1^-1 sii1) with c.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 403
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  clearbody a b c.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 404
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  clear s1ii sii0 sii1.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 405
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (sq_G1 (b @ a @ c^); _).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 406
+Time: 0.002s">
+<div class="time" style="width: 0.27173913043478%"></div>
+<pre>
+  by destruct a, b, c, p0i1.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 407
+Time: 0.003s">
+<div class="time" style="width: 0.40760869565217%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 408
+Time: 0.002s">
+<div class="time" style="width: 0.27173913043478%"></div>
+<pre>
+
+Definition cu_fill_right {A} {x000 x010 x100 x110 x001 x011 x101 x111 : A}
+  {p0i0 : x000 = x010} {p1i0 : x100 = x110} {pi00 : x000 = x100}
+  {pi10 : x010 = x110} {p0i1 : x001 = x011} {p1i1 : x101 = x111}
+  {pi01 : x001 = x101} {pi11 : x011 = x111} {p00i : x000 = x001}
+  {p01i : x010 = x011} {p10i : x100 = x101} {p11i : x110 = x111}
+  (s0ii : PathSquare p0i0 p0i1 p00i p01i)
+  (sii0 : PathSquare p0i0 p1i0 pi00 pi10) (sii1 : PathSquare p0i1 p1i1 pi01 pi11)
+  (si0i : PathSquare p00i p10i pi00 pi01) (si1i : PathSquare p01i p11i pi10 pi11)
+  : {s1ii : PathSquare p1i0 p1i1 p10i p11i &amp; PathCube s0ii s1ii sii0 sii1 si0i si1i}.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 418
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 419
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_;_).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 420
+Time: 0.001s">
+<div class="time" style="width: 0.13586956521739%"></div>
+<pre>
+  apply cu_flip_lr^-1.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 421
+Time: 0.001s">
+<div class="time" style="width: 0.13586956521739%"></div>
+<pre>
+  apply cu_fill_left.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 422
+Time: 0.001s">
+<div class="time" style="width: 0.13586956521739%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 423
+Time: 0.006s">
+<div class="time" style="width: 0.81521739130435%"></div>
+<pre>
+
+Definition cu_fill_top {A} {x000 x010 x100 x110 x001 x011 x101 x111 : A}
+  {p0i0 : x000 = x010} {p1i0 : x100 = x110} {pi00 : x000 = x100}
+  {pi10 : x010 = x110} {p0i1 : x001 = x011} {p1i1 : x101 = x111}
+  {pi01 : x001 = x101} {pi11 : x011 = x111} {p00i : x000 = x001}
+  {p01i : x010 = x011} {p10i : x100 = x101} {p11i : x110 = x111}
+  (s0ii : PathSquare p0i0 p0i1 p00i p01i) (s1ii : PathSquare p1i0 p1i1 p10i p11i)
+                                          (sii1 : PathSquare p0i1 p1i1 pi01 pi11)
+  (si0i : PathSquare p00i p10i pi00 pi01) (si1i : PathSquare p01i p11i pi10 pi11)
+  : {sii0 : PathSquare p0i0 p1i0 pi00 pi10 &amp; PathCube s0ii s1ii sii0 sii1 si0i si1i}.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 433
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 434
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_;_).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 435
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply cu_rot_tb_fb.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 436
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply cu_rot_tb_fb.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 437
+Time: 0.001s">
+<div class="time" style="width: 0.13586956521739%"></div>
+<pre>
+  refine (cu_Gccccc (eisretr tr _)^ _).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 438
+Time: 0.001s">
+<div class="time" style="width: 0.13586956521739%"></div>
+<pre>
+  apply cu_fill_left.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 439
+Time: 0.004s">
+<div class="time" style="width: 0.54347826086957%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 440
+Time: 0.002s">
+<div class="time" style="width: 0.27173913043478%"></div>
+<pre>
+
+Definition cu_fill_bottom {A} {x000 x010 x100 x110 x001 x011 x101 x111 : A}
+  {p0i0 : x000 = x010} {p1i0 : x100 = x110} {pi00 : x000 = x100}
+  {pi10 : x010 = x110} {p0i1 : x001 = x011} {p1i1 : x101 = x111}
+  {pi01 : x001 = x101} {pi11 : x011 = x111} {p00i : x000 = x001}
+  {p01i : x010 = x011} {p10i : x100 = x101} {p11i : x110 = x111}
+  (s0ii : PathSquare p0i0 p0i1 p00i p01i) (s1ii : PathSquare p1i0 p1i1 p10i p11i)
+  (sii0 : PathSquare p0i0 p1i0 pi00 pi10)
+  (si0i : PathSquare p00i p10i pi00 pi01) (si1i : PathSquare p01i p11i pi10 pi11)
+  : {sii1 : PathSquare p0i1 p1i1 pi01 pi11 &amp; PathCube s0ii s1ii sii0 sii1 si0i si1i}.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 450
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 451
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_;_).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 452
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply cu_rot_tb_fb.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 453
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply cu_rot_tb_fb.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 454
+Time: 0.001s">
+<div class="time" style="width: 0.13586956521739%"></div>
+<pre>
+  refine (cu_cGcccc (eisretr tr _)^ _).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 455
+Time: 0.001s">
+<div class="time" style="width: 0.13586956521739%"></div>
+<pre>
+  apply cu_fill_right.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 456
+Time: 0.004s">
+<div class="time" style="width: 0.54347826086957%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 457
+Time: 0.002s">
+<div class="time" style="width: 0.27173913043478%"></div>
+<pre>
+
+Definition cu_fill_front {A} {x000 x010 x100 x110 x001 x011 x101 x111 : A}
+  {p0i0 : x000 = x010} {p1i0 : x100 = x110} {pi00 : x000 = x100}
+  {pi10 : x010 = x110} {p0i1 : x001 = x011} {p1i1 : x101 = x111}
+  {pi01 : x001 = x101} {pi11 : x011 = x111} {p00i : x000 = x001}
+  {p01i : x010 = x011} {p10i : x100 = x101} {p11i : x110 = x111}
+  (s0ii : PathSquare p0i0 p0i1 p00i p01i) (s1ii : PathSquare p1i0 p1i1 p10i p11i)
+  (sii0 : PathSquare p0i0 p1i0 pi00 pi10) (sii1 : PathSquare p0i1 p1i1 pi01 pi11)
+                                          (si1i : PathSquare p01i p11i pi10 pi11)
+  : {si0i : PathSquare p00i p10i pi00 pi01 &amp; PathCube s0ii s1ii sii0 sii1 si0i si1i}.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 467
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 468
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_;_).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 469
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply cu_rot_tb_fb.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 470
+Time: 0.001s">
+<div class="time" style="width: 0.13586956521739%"></div>
+<pre>
+  apply cu_fill_left.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 471
+Time: 0.001s">
+<div class="time" style="width: 0.13586956521739%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 472
+Time: 0.002s">
+<div class="time" style="width: 0.27173913043478%"></div>
+<pre>
+
+Definition cu_fill_back {A} {x000 x010 x100 x110 x001 x011 x101 x111 : A}
+  {p0i0 : x000 = x010} {p1i0 : x100 = x110} {pi00 : x000 = x100}
+  {pi10 : x010 = x110} {p0i1 : x001 = x011} {p1i1 : x101 = x111}
+  {pi01 : x001 = x101} {pi11 : x011 = x111} {p00i : x000 = x001}
+  {p01i : x010 = x011} {p10i : x100 = x101} {p11i : x110 = x111}
+  (s0ii : PathSquare p0i0 p0i1 p00i p01i) (s1ii : PathSquare p1i0 p1i1 p10i p11i)
+  (sii0 : PathSquare p0i0 p1i0 pi00 pi10) (sii1 : PathSquare p0i1 p1i1 pi01 pi11)
+  (si0i : PathSquare p00i p10i pi00 pi01)
+  : {si1i : PathSquare p01i p11i pi10 pi11 &amp; PathCube s0ii s1ii sii0 sii1 si0i si1i}.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 482
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 483
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_;_).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 484
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply cu_rot_tb_fb.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 485
+Time: 0.001s">
+<div class="time" style="width: 0.13586956521739%"></div>
+<pre>
+  apply cu_fill_right.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 486
+Time: 0.001s">
+<div class="time" style="width: 0.13586956521739%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 487
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [PathCube] concatenation *)
+
+</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 490
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section Concat.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 490
+Time: 0.002s">
+<div class="time" style="width: 0.27173913043478%"></div>
+<pre>
+
+  Context {A : Type}
+    (* Main Cube *)
+    {x000 x010 x100 x110 x001 x011 x101 x111 : A}
+    {p0i0 : x000 = x010} {p1i0 : x100 = x110} {pi00 : x000 = x100}
+    {pi10 : x010 = x110} {p0i1 : x001 = x011} {p1i1 : x101 = x111}
+    {pi01 : x001 = x101} {pi11 : x011 = x111} {p00i : x000 = x001}
+    {p01i : x010 = x011} {p10i : x100 = x101} {p11i : x110 = x111}
+    {s0ii : PathSquare p0i0 p0i1 p00i p01i} {s1ii : PathSquare p1i0 p1i1 p10i p11i}
+    {sii0 : PathSquare p0i0 p1i0 pi00 pi10} {sii1 : PathSquare p0i1 p1i1 pi01 pi11}
+    {si0i : PathSquare p00i p10i pi00 pi01} {si1i : PathSquare p01i p11i pi10 pi11}
+    (ciii : PathCube s0ii s1ii sii0 sii1 si0i si1i).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 502
+Time: 0.005s">
+<div class="time" style="width: 0.67934782608696%"></div>
+<pre>
+
+  Definition cu_concat_lr
+    {x201 x200 x210 x211 : A}
+    {pj01 : x101 = x201} {pj11 : x111 = x211} {pj10 : x110 = x210}
+    {pj00 : x100 = x200} {p2i1 : x201 = x211} {p2i0 : x200 = x210}
+    {p20i : x200 = x201} {p21i : x210 = x211}
+    {sji0 : PathSquare p1i0 p2i0 pj00 pj10} {sji1 : PathSquare p1i1 p2i1 pj01 pj11}
+    {sj0i : PathSquare p10i p20i pj00 pj01} {sj1i : PathSquare p11i p21i pj10 pj11}
+    {s2ii : PathSquare p2i0 p2i1 p20i p21i}
+    (cjii : PathCube s1ii s2ii sji0 sji1 sj0i sj1i)
+    : PathCube s0ii s2ii (sq_concat_h sii0 sji0) (sq_concat_h sii1 sji1)
+        (sq_concat_h si0i sj0i) (sq_concat_h si1i sj1i).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 514
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 515
+Time: 0.008s">
+<div class="time" style="width: 1.0869565217391%"></div>
+<pre>
+    destruct cjii, pi00, pi01, pi10, pi11.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 516
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact ciii.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 517
+Time: 0.002s">
+<div class="time" style="width: 0.27173913043478%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 518
+Time: 0.004s">
+<div class="time" style="width: 0.54347826086957%"></div>
+<pre>
+
+  Definition cu_concat_tb
+    {x020 x021 x120 x121 : A}
+    {p0j0 : x010 = x020} {p1j0 : x110 = x120} {p0j1 : x011 = x021}
+    {p1j1 : x111 = x121} {p02i : x020 = x021} {p12i : x120 = x121}
+    {pi20 : x020 = x120} {pi21 : x021 = x121}
+    {s0ji : PathSquare p0j0 p0j1 p01i p02i} {s1ji : PathSquare p1j0 p1j1 p11i p12i}
+    {sij0 : PathSquare p0j0 p1j0 pi10 pi20} {sij1 : PathSquare p0j1 p1j1 pi11 pi21}
+    {si2i : PathSquare p02i p12i pi20 pi21}
+    (ciji : PathCube s0ji s1ji sij0 sij1 si1i si2i)
+    : PathCube (sq_concat_v s0ii s0ji) (sq_concat_v s1ii s1ji)
+        (sq_concat_v sii0 sij0) (sq_concat_v sii1 sij1) si0i si2i.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 530
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 531
+Time: 0.008s">
+<div class="time" style="width: 1.0869565217391%"></div>
+<pre>
+    destruct ciji, p0i0, p1i0, p0i1, p1i1.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 532
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact ciii.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 533
+Time: 0.003s">
+<div class="time" style="width: 0.40760869565217%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 534
+Time: 0.004s">
+<div class="time" style="width: 0.54347826086957%"></div>
+<pre>
+
+  Definition cu_concat_fb
+    {x002 x012 x102 x112 : A}
+    {p0i2 : x002 = x012} {p00j : x001 = x002} {p01j : x011 = x012}
+    {p1i2 : x102 = x112} {p10j : x101 = x102} {p11j : x111 = x112}
+    {pi02 : x002 = x102} {pi12 : x012 = x112}
+    {s0ij : PathSquare p0i1 p0i2 p00j p01j} {s1ij : PathSquare p1i1 p1i2 p10j p11j}
+    {si0j : PathSquare p00j p10j pi01 pi02} {si1j : PathSquare p01j p11j pi11 pi12}
+    {sii2 : PathSquare p0i2 p1i2 pi02 pi12}
+    (ciij : PathCube s0ij s1ij sii1 sii2 si0j si1j)
+    : PathCube (sq_concat_h s0ii s0ij) (sq_concat_h s1ii s1ij)
+        sii0 sii2 (sq_concat_v si0i si0j) (sq_concat_v si1i si1j).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 546
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 547
+Time: 0.012s">
+<div class="time" style="width: 1.6304347826087%"></div>
+<pre>
+    destruct ciij, p00i, p10i, p11i, p01i.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 548
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact ciii.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 549
+Time: 0.003s">
+<div class="time" style="width: 0.40760869565217%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 550
+Time: 0.004s">
+<div class="time" style="width: 0.54347826086957%"></div>
+<pre>
+
+End Concat.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 552
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* Notation for left right concatenation *)</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 554
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Notation "x '@lr' y" := (cu_concat_lr x y) : cube_scope.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 554
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Notation apc := (ap_compose_sq _ _ _).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 556
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [sq_ap] analogue for [ap_compose] *)</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 558
+Time: 0.002s">
+<div class="time" style="width: 0.27173913043478%"></div>
+<pre>Definition sq_ap_compose {A B C : Type} {a00 a10 a01 a11 : A}
+  {px0 : a00 = a10} {px1 : a01 = a11} {p0x : a00 = a01} {p1x : a10 = a11}
+  (f : A -&gt; B) (g : B -&gt; C) (s : PathSquare px0 px1 p0x p1x)
+  : PathCube (sq_ap (g o f) s) (sq_ap g (sq_ap f s)) apc apc apc apc.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 561
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 562
+Time: 0.002s">
+<div class="time" style="width: 0.27173913043478%"></div>
+<pre>
+  by destruct s.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 563
+Time: 0.001s">
+<div class="time" style="width: 0.13586956521739%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 564
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Notation api := (ap_idmap_sq _).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 566
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [sq_ap] analogue for [ap_idmap] *)</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 568
+Time: 0.001s">
+<div class="time" style="width: 0.13586956521739%"></div>
+<pre>Definition sq_ap_idmap {A : Type} {a00 a10 a01 a11 : A}
+  {px0 : a00 = a10} {px1 : a01 = a11} {p0x : a00 = a01} {p1x : a10 = a11}
+  (s : PathSquare px0 px1 p0x p1x)
+  : PathCube (sq_ap idmap s) s api api api api.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 571
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 572
+Time: 0.001s">
+<div class="time" style="width: 0.13586956521739%"></div>
+<pre>
+  by destruct s.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 573
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 574
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Notation apn := (ap_nat _ _).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 576
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [sq_ap] analogue for [ap_nat] *)</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 578
+Time: 0.001s">
+<div class="time" style="width: 0.13586956521739%"></div>
+<pre>Definition sq_ap_nat
+  {A B : Type} {a00 a10 a01 a11 : A} (f f' : A -&gt; B) (h : f == f')
+  {px0 : a00 = a10} {px1 : a01 = a11} {p0x : a00 = a01} {p1x : a10 = a11}
+  (s : PathSquare px0 px1 p0x p1x)
+  : PathCube (sq_ap f s) (sq_ap f' s) (ap_nat h _) apn apn apn.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 582
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 583
+Time: 0.01s">
+<div class="time" style="width: 1.3586956521739%"></div>
+<pre>
+  destruct s as [x]; cbn; by destruct (h x).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 584
+Time: 0.003s">
+<div class="time" style="width: 0.40760869565217%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 585
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Uncurry a function in [sq_ap2] *)</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 587
+Time: 0.01s">
+<div class="time" style="width: 1.3586956521739%"></div>
+<pre>Definition sq_ap_uncurry {A B C} (f : A -&gt; B -&gt; C)
+  {a a' : A} (p : a = a') {b b' : B} (q : b = b')
+  : PathCube (sq_ap (uncurry f) (sq_prod (hr, vr))) (sq_ap011 f p q)
+    (sq_G1 (ap_uncurry _ _ _)) (sq_G1 (ap_uncurry _ _ _))
+    (sq_G1 (ap_uncurry _ _ _)) (sq_G1 (ap_uncurry _ _ _)).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 591
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 592
+Time: 0.004s">
+<div class="time" style="width: 0.54347826086957%"></div>
+<pre>
+  by destruct p, q.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 593
+Time: 0.003s">
+<div class="time" style="width: 0.40760869565217%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 594
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [ap] for cubes *)</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 596
+Time: 0.004s">
+<div class="time" style="width: 0.54347826086957%"></div>
+<pre>Definition cu_ap {A B} {x000 x010 x100 x110 x001 x011 x101 x111 : A}
+  {p0i0 : x000 = x010} {p1i0 : x100 = x110} {pi00 : x000 = x100}
+  {pi10 : x010 = x110} {p0i1 : x001 = x011} {p1i1 : x101 = x111}
+  {pi01 : x001 = x101} {pi11 : x011 = x111} {p00i : x000 = x001}
+  {p01i : x010 = x011} {p10i : x100 = x101} {p11i : x110 = x111}
+  {s0ii : PathSquare p0i0 p0i1 p00i p01i} {s1ii : PathSquare p1i0 p1i1 p10i p11i}
+  {sii0 : PathSquare p0i0 p1i0 pi00 pi10} {sii1 : PathSquare p0i1 p1i1 pi01 pi11}
+  {si0i : PathSquare p00i p10i pi00 pi01} {si1i : PathSquare p01i p11i pi10 pi11}
+  (f : A -&gt; B) (c : PathCube s0ii s1ii sii0 sii1 si0i si1i)
+  : PathCube (sq_ap f s0ii) (sq_ap f s1ii) (sq_ap f sii0)
+     (sq_ap f sii1) (sq_ap f si0i) (sq_ap f si1i).</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 606
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 607
+Time: 0.003s">
+<div class="time" style="width: 0.40760869565217%"></div>
+<pre>
+  by destruct c.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 608
+Time: 0.001s">
+<div class="time" style="width: 0.13586956521739%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: PathCube.v
+Line: 610
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

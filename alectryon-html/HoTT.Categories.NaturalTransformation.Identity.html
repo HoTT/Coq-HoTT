@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>Identity.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-wsp"><span class="sd">(** * Identity natural transformation *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="identity-v-chk14" style="display: none" type="checkbox"><label class="alectryon-input" for="identity-v-chk14"><span class="kn">Require Import</span> Category.Core Functor.Core NaturalTransformation.Core.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Universe Polymorphism</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Implicit Arguments</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Generalizable All Variables</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Asymmetric Patterns</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> morphism_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> path_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> natural_transformation_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">identity</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variables</span> <span class="nv">C</span> <span class="nv">D</span> : PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** There is an identity natural transformation.  We create a number</span>
+<span class="sd">      of variants, for various uses. *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">generalized</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variables</span> <span class="nv">F</span> <span class="nv">G</span> : Functor C D.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Hypothesis</span> <span class="nv">HO</span> : object_of F = object_of G.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Hypothesis</span> <span class="nv">HM</span> : transport (<span class="kr">fun</span> <span class="nv">GO</span> =&gt; <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span>,
+                                           morphism C s d
+                                           -&gt; morphism D (GO s) (GO d))
+                              HO
+                              (morphism_of F)
+                    = morphism_of G.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Notation</span> <span class="nf">CO</span> c := (transport (<span class="kr">fun</span> <span class="nv">GO</span> =&gt; morphism D (F c) (GO c))
+                                      HO
+                                      (identity (F c))).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="identity-v-chk15" style="display: none" type="checkbox"><label class="alectryon-input" for="identity-v-chk15"><span class="kn">Definition</span> <span class="nf">generalized_identity_commutes</span> <span class="nv">s</span> <span class="nv">d</span> (<span class="nv">m</span> : morphism C s d)
+    : CO d o F _1 m = G _1 m o CO s.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F, G</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br><span><var>HO</var><span class="hyp-type"><b>: </b><span>F = G</span></span></span><br><span><var>HM</var><span class="hyp-type"><b>: </b><span>transport
+  (<span class="kr">fun</span> <span class="nv">GO</span> : C -&gt; D =&gt;
+   <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : C,
+   morphism C s d -&gt; morphism D (GO s) (GO d)) HO
+  (morphism_of F) = morphism_of G</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>C</span></span></span><br><span><var>m</var><span class="hyp-type"><b>: </b><span>morphism C s d</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport
+  (<span class="kr">fun</span> <span class="nv">GO</span> : C -&gt; D =&gt;
+   morphism D (F _0 d)%object (GO d)) HO <span class="mi">1</span>%morphism
+o F _1 m =
+G _1 m
+o transport
+    (<span class="kr">fun</span> <span class="nv">GO</span> : C -&gt; D =&gt;
+     morphism D (F _0 s)%object (GO s)) HO <span class="mi">1</span>%morphism</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="identity-v-chk16" style="display: none" type="checkbox"><label class="alectryon-input" for="identity-v-chk16"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F, G</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br><span><var>HO</var><span class="hyp-type"><b>: </b><span>F = G</span></span></span><br><span><var>HM</var><span class="hyp-type"><b>: </b><span>transport
+  (<span class="kr">fun</span> <span class="nv">GO</span> : C -&gt; D =&gt;
+   <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : C,
+   morphism C s d -&gt; morphism D (GO s) (GO d)) HO
+  (morphism_of F) = morphism_of G</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>C</span></span></span><br><span><var>m</var><span class="hyp-type"><b>: </b><span>morphism C s d</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport
+  (<span class="kr">fun</span> <span class="nv">GO</span> : C -&gt; D =&gt;
+   morphism D (F _0 d)%object (GO d)) HO <span class="mi">1</span>%morphism
+o F _1 m =
+G _1 m
+o transport
+    (<span class="kr">fun</span> <span class="nv">GO</span> : C -&gt; D =&gt;
+     morphism D (F _0 s)%object (GO s)) HO <span class="mi">1</span>%morphism</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="identity-v-chk17" style="display: none" type="checkbox"><label class="alectryon-input" for="identity-v-chk17"><span class="nb">case</span> HM.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F, G</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br><span><var>HO</var><span class="hyp-type"><b>: </b><span>F = G</span></span></span><br><span><var>HM</var><span class="hyp-type"><b>: </b><span>transport
+  (<span class="kr">fun</span> <span class="nv">GO</span> : C -&gt; D =&gt;
+   <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : C,
+   morphism C s d -&gt; morphism D (GO s) (GO d)) HO
+  (morphism_of F) = morphism_of G</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>C</span></span></span><br><span><var>m</var><span class="hyp-type"><b>: </b><span>morphism C s d</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport
+  (<span class="kr">fun</span> <span class="nv">GO</span> : C -&gt; D =&gt;
+   morphism D (F _0 d)%object (GO d)) HO <span class="mi">1</span>%morphism
+o F _1 m =
+transport
+  (<span class="kr">fun</span> <span class="nv">GO</span> : C -&gt; D =&gt;
+   <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : C,
+   morphism C s d -&gt; morphism D (GO s) (GO d)) HO
+  (morphism_of F) s d m
+o transport
+    (<span class="kr">fun</span> <span class="nv">GO</span> : C -&gt; D =&gt;
+     morphism D (F _0 s)%object (GO s)) HO <span class="mi">1</span>%morphism</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="identity-v-chk18" style="display: none" type="checkbox"><label class="alectryon-input" for="identity-v-chk18"><span class="nb">case</span> HO.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F, G</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br><span><var>HO</var><span class="hyp-type"><b>: </b><span>F = G</span></span></span><br><span><var>HM</var><span class="hyp-type"><b>: </b><span>transport
+  (<span class="kr">fun</span> <span class="nv">GO</span> : C -&gt; D =&gt;
+   <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : C,
+   morphism C s d -&gt; morphism D (GO s) (GO d)) HO
+  (morphism_of F) = morphism_of G</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>C</span></span></span><br><span><var>m</var><span class="hyp-type"><b>: </b><span>morphism C s d</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport
+  (<span class="kr">fun</span> <span class="nv">GO</span> : C -&gt; D =&gt;
+   morphism D (F _0 d)%object (GO d)) <span class="mi">1</span> <span class="mi">1</span>%morphism
+o F _1 m =
+transport
+  (<span class="kr">fun</span> <span class="nv">GO</span> : C -&gt; D =&gt;
+   <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : C,
+   morphism C s d -&gt; morphism D (GO s) (GO d)) <span class="mi">1</span>
+  (morphism_of F) s d m
+o transport
+    (<span class="kr">fun</span> <span class="nv">GO</span> : C -&gt; D =&gt;
+     morphism D (F _0 s)%object (GO s)) <span class="mi">1</span> <span class="mi">1</span>%morphism</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (left_identity _ _ _ _ @ (right_identity _ _ _ _)^).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="identity-v-chk19" style="display: none" type="checkbox"><label class="alectryon-input" for="identity-v-chk19"><span class="kn">Definition</span> <span class="nf">generalized_identity_commutes_sym</span> <span class="nv">s</span> <span class="nv">d</span> (<span class="nv">m</span> : morphism C s d)
+    : G _1 m o CO s = CO d o F _1 m.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F, G</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br><span><var>HO</var><span class="hyp-type"><b>: </b><span>F = G</span></span></span><br><span><var>HM</var><span class="hyp-type"><b>: </b><span>transport
+  (<span class="kr">fun</span> <span class="nv">GO</span> : C -&gt; D =&gt;
+   <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : C,
+   morphism C s d -&gt; morphism D (GO s) (GO d)) HO
+  (morphism_of F) = morphism_of G</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>C</span></span></span><br><span><var>m</var><span class="hyp-type"><b>: </b><span>morphism C s d</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">G _1 m
+o transport
+    (<span class="kr">fun</span> <span class="nv">GO</span> : C -&gt; D =&gt;
+     morphism D (F _0 s)%object (GO s)) HO <span class="mi">1</span>%morphism =
+transport
+  (<span class="kr">fun</span> <span class="nv">GO</span> : C -&gt; D =&gt;
+   morphism D (F _0 d)%object (GO d)) HO <span class="mi">1</span>%morphism
+o F _1 m</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="identity-v-chk1a" style="display: none" type="checkbox"><label class="alectryon-input" for="identity-v-chk1a"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F, G</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br><span><var>HO</var><span class="hyp-type"><b>: </b><span>F = G</span></span></span><br><span><var>HM</var><span class="hyp-type"><b>: </b><span>transport
+  (<span class="kr">fun</span> <span class="nv">GO</span> : C -&gt; D =&gt;
+   <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : C,
+   morphism C s d -&gt; morphism D (GO s) (GO d)) HO
+  (morphism_of F) = morphism_of G</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>C</span></span></span><br><span><var>m</var><span class="hyp-type"><b>: </b><span>morphism C s d</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">G _1 m
+o transport
+    (<span class="kr">fun</span> <span class="nv">GO</span> : C -&gt; D =&gt;
+     morphism D (F _0 s)%object (GO s)) HO <span class="mi">1</span>%morphism =
+transport
+  (<span class="kr">fun</span> <span class="nv">GO</span> : C -&gt; D =&gt;
+   morphism D (F _0 d)%object (GO d)) HO <span class="mi">1</span>%morphism
+o F _1 m</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="identity-v-chk1b" style="display: none" type="checkbox"><label class="alectryon-input" for="identity-v-chk1b"><span class="nb">case</span> HM.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F, G</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br><span><var>HO</var><span class="hyp-type"><b>: </b><span>F = G</span></span></span><br><span><var>HM</var><span class="hyp-type"><b>: </b><span>transport
+  (<span class="kr">fun</span> <span class="nv">GO</span> : C -&gt; D =&gt;
+   <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : C,
+   morphism C s d -&gt; morphism D (GO s) (GO d)) HO
+  (morphism_of F) = morphism_of G</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>C</span></span></span><br><span><var>m</var><span class="hyp-type"><b>: </b><span>morphism C s d</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport
+  (<span class="kr">fun</span> <span class="nv">GO</span> : C -&gt; D =&gt;
+   <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : C,
+   morphism C s d -&gt; morphism D (GO s) (GO d)) HO
+  (morphism_of F) s d m
+o transport
+    (<span class="kr">fun</span> <span class="nv">GO</span> : C -&gt; D =&gt;
+     morphism D (F _0 s)%object (GO s)) HO <span class="mi">1</span>%morphism =
+transport
+  (<span class="kr">fun</span> <span class="nv">GO</span> : C -&gt; D =&gt;
+   morphism D (F _0 d)%object (GO d)) HO <span class="mi">1</span>%morphism
+o F _1 m</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="identity-v-chk1c" style="display: none" type="checkbox"><label class="alectryon-input" for="identity-v-chk1c"><span class="nb">case</span> HO.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F, G</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br><span><var>HO</var><span class="hyp-type"><b>: </b><span>F = G</span></span></span><br><span><var>HM</var><span class="hyp-type"><b>: </b><span>transport
+  (<span class="kr">fun</span> <span class="nv">GO</span> : C -&gt; D =&gt;
+   <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : C,
+   morphism C s d -&gt; morphism D (GO s) (GO d)) HO
+  (morphism_of F) = morphism_of G</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>C</span></span></span><br><span><var>m</var><span class="hyp-type"><b>: </b><span>morphism C s d</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport
+  (<span class="kr">fun</span> <span class="nv">GO</span> : C -&gt; D =&gt;
+   <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : C,
+   morphism C s d -&gt; morphism D (GO s) (GO d)) <span class="mi">1</span>
+  (morphism_of F) s d m
+o transport
+    (<span class="kr">fun</span> <span class="nv">GO</span> : C -&gt; D =&gt;
+     morphism D (F _0 s)%object (GO s)) <span class="mi">1</span> <span class="mi">1</span>%morphism =
+transport
+  (<span class="kr">fun</span> <span class="nv">GO</span> : C -&gt; D =&gt;
+   morphism D (F _0 d)%object (GO d)) <span class="mi">1</span> <span class="mi">1</span>%morphism
+o F _1 m</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (right_identity _ _ _ _ @ (left_identity _ _ _ _)^).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">generalized_identity</span>
+    : NaturalTransformation F G
+      := Build_NaturalTransformation&#39;
+           F G
+           (<span class="kr">fun</span> <span class="nv">c</span> =&gt; CO c)
+           generalized_identity_commutes
+           generalized_identity_commutes_sym.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">generalized</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> generalized_identity_commutes / .</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> generalized_identity_commutes_sym / .</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> generalized_identity F G !HO !HM / .</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">generalized&#39;</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variables</span> <span class="nv">F</span> <span class="nv">G</span> : Functor C D.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Hypothesis</span> <span class="nv">H</span> : F = G.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="identity-v-chk1d" style="display: none" type="checkbox"><label class="alectryon-input" for="identity-v-chk1d"><span class="kn">Definition</span> <span class="nf">generalized_identity&#39;</span>
+    : NaturalTransformation F G.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F, G</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>F = G</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">NaturalTransformation F G</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="identity-v-chk1e" style="display: none" type="checkbox"><label class="alectryon-input" for="identity-v-chk1e"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F, G</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>F = G</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">NaturalTransformation F G</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="identity-v-chk1f" style="display: none" type="checkbox"><label class="alectryon-input" for="identity-v-chk1f"><span class="nb">apply</span> (generalized_identity
+               F G
+               (ap (@object_of C D) H)).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F, G</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>F = G</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport
+  (<span class="kr">fun</span> <span class="nv">GO</span> : C -&gt; D =&gt;
+   <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : C,
+   morphism C s d -&gt; morphism D (GO s) (GO d))
+  (ap object_of H) (morphism_of F) = morphism_of G</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="identity-v-chk20" style="display: none" type="checkbox"><label class="alectryon-input" for="identity-v-chk20"><span class="nb">case</span> H.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F, G</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>F = G</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport
+  (<span class="kr">fun</span> <span class="nv">GO</span> : C -&gt; D =&gt;
+   <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : C,
+   morphism C s d -&gt; morphism D (GO s) (GO d))
+  (ap object_of <span class="mi">1</span>) (morphism_of F) = morphism_of F</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">reflexivity</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">generalized&#39;</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">identity</span> (<span class="nv">F</span> : Functor C D)
+  : NaturalTransformation F F
+    := <span class="kn">Eval</span> <span class="nb">simpl</span> <span class="kr">in</span> @generalized_identity F F <span class="mi">1</span> <span class="mi">1</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> generalized_identity&#39; F G !H / .</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">identity</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> generalized_identity_commutes : <span class="nb">simpl</span> never.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> generalized_identity_commutes_sym : <span class="nb">simpl</span> never.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Module</span> <span class="nf">Export</span> NaturalTransformationIdentityNotations.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;1&quot;</span> := (identity _) : natural_transformation_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">NaturalTransformationIdentityNotations</span>.</span></span></pre>
+</div>
+</div></body>
+</html>

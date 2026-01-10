@@ -1,0 +1,367 @@
+<html>
+<head>
+<title>pSect.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for pSect.v</h1>
+
+<div class="code" title="File: pSect.v
+Line: 1
+Time: 0.076s">
+<div class="time" style="width: 100%"></div>
+<pre>From HoTT Require Import Basics Types Pointed.Core Pointed.pEquiv.</pre>
+</div>
+<div class="code" title="File: pSect.v
+Line: 1
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Pointed sections of pointed maps *)
+
+</pre>
+</div>
+<div class="code" title="File: pSect.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Open Scope pointed_scope.</pre>
+</div>
+<div class="code" title="File: pSect.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* The type of pointed sections of a pointed map. *)</pre>
+</div>
+<div class="code" title="File: pSect.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition pSect {A B : pType} (f : A -&gt;* B)
+  := { s : B -&gt;* A &amp; f o* s ==* pmap_idmap }.</pre>
+</div>
+<div class="code" title="File: pSect.v
+Line: 7
+Time: 0.002s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+
+Definition issig_psect { A B : pType } (f : A -&gt;* B)
+  : { s : B -&gt; A &amp; { p : s pt = pt
+                        &amp; { H : f o s == idmap
+                                &amp; H pt = ap f p @ (point_eq f) } } }
+  &lt;~&gt; pSect f.</pre>
+</div>
+<div class="code" title="File: pSect.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: pSect.v
+Line: 14
+Time: 0.002s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+  transitivity
+    {s : B -&gt; A &amp; {p : s pt = pt
+                      &amp; {H : f o s == idmap
+                             &amp; H pt = ap f p @ (point_eq f) @ 1 }}}.</pre>
+</div>
+<div class="code" title="File: pSect.v
+Line: 18
+Time: 0.015s">
+<div class="time" style="width: 19.736842105263%"></div>
+<pre>
+  2: make_equiv.</pre>
+</div>
+<div class="code" title="File: pSect.v
+Line: 19
+Time: 0.002s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+  do 3 (napply equiv_functor_sigma_id; intro).</pre>
+</div>
+<div class="code" title="File: pSect.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rapply equiv_concat_r.</pre>
+</div>
+<div class="code" title="File: pSect.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (concat_p1 _)^.</pre>
+</div>
+<div class="code" title="File: pSect.v
+Line: 22
+Time: 0.023s">
+<div class="time" style="width: 30.263157894737%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: pSect.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Any pointed equivalence over [A] induces an equivalence between pointed sections. *)</pre>
+</div>
+<div class="code" title="File: pSect.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition equiv_pequiv_pslice_psect `{Funext} {A B C : pType}
+  (f : B -&gt;* A) (g : C -&gt;* A) (t : B &lt;~&gt;* C) (h : f ==* g o* t)
+  : pSect f &lt;~&gt; pSect g.</pre>
+</div>
+<div class="code" title="File: pSect.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: pSect.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply equiv_functor_sigma'.</pre>
+</div>
+<div class="code" title="File: pSect.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact (pequiv_pequiv_postcompose t).</pre>
+</div>
+<div class="code" title="File: pSect.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro s; cbn.</pre>
+</div>
+<div class="code" title="File: pSect.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply equiv_phomotopy_concat_l.</pre>
+</div>
+<div class="code" title="File: pSect.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine ((pmap_compose_assoc _ _ _)^* @* _).</pre>
+</div>
+<div class="code" title="File: pSect.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply pmap_prewhisker.</pre>
+</div>
+<div class="code" title="File: pSect.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact h^*.</pre>
+</div>
+<div class="code" title="File: pSect.v
+Line: 35
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: pSect.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Pointed sections of [psnd : A * B -&gt;* B] correspond to pointed maps [B -&gt;* A]. *)</pre>
+</div>
+<div class="code" title="File: pSect.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition equiv_psect_psnd `{Funext} {A B : pType}
+  : pSect (@psnd A B) &lt;~&gt; (B -&gt;* A).</pre>
+</div>
+<div class="code" title="File: pSect.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: pSect.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold pSect.</pre>
+</div>
+<div class="code" title="File: pSect.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  transitivity {s : (B -&gt;* A) * (B -&gt;* B) &amp; snd s ==* pmap_idmap}.</pre>
+</div>
+<div class="code" title="File: pSect.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: pSect.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> snrefine (equiv_functor_sigma'
+                (equiv_pprod_coind (pfam_const A) (pfam_const B))^-1%equiv _).</pre>
+</div>
+<div class="code" title="File: pSect.v
+Line: 44
+Time: 0.004s">
+<div class="time" style="width: 5.2631578947368%"></div>
+<pre>
+    cbn.</pre>
+</div>
+<div class="code" title="File: pSect.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro s.</pre>
+</div>
+<div class="code" title="File: pSect.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply equiv_phomotopy_concat_l.</pre>
+</div>
+<div class="code" title="File: pSect.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply Build_pHomotopy.</pre>
+</div>
+<div class="code" title="File: pSect.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: reflexivity.</pre>
+</div>
+<div class="code" title="File: pSect.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    cbn.</pre>
+</div>
+<div class="code" title="File: pSect.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply moveL_pV.</pre>
+</div>
+<div class="code" title="File: pSect.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (concat_1p _ @ concat_p1 _).</pre>
+</div>
+<div class="code" title="File: pSect.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: pSect.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snrefine (_ oE equiv_functor_sigma_id (fun s =&gt; equiv_path_pforall _ _)).</pre>
+</div>
+<div class="code" title="File: pSect.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snrefine (_ oE (equiv_functor_sigma_pb (equiv_sigma_prod0 _ _))^-1%equiv); cbn.</pre>
+</div>
+<div class="code" title="File: pSect.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_ oE (equiv_sigma_assoc _ _)^-1%equiv).</pre>
+</div>
+<div class="code" title="File: pSect.v
+Line: 54
+Time: 0.002s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+  rapply equiv_sigma_contr.</pre>
+</div>
+<div class="code" title="File: pSect.v
+Line: 55
+Time: 0.006s">
+<div class="time" style="width: 7.8947368421053%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: pSect.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

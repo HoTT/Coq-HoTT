@@ -1,0 +1,5039 @@
+<html>
+<head>
+<title>lattices.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for lattices.v</h1>
+
+<div class="code" title="File: lattices.v
+Line: 1
+Time: 0.075s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import
+  HoTT.Classes.interfaces.abstract_algebra
+  HoTT.Classes.interfaces.orders
+  HoTT.Classes.orders.semirings
+  HoTT.Classes.theory.lattices.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Generalizable Variables K L f.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(*
+We prove that the algebraic definition of a lattice corresponds to the
+order theoretic one. Note that we do not make any of these instances global,
+because that would cause loops.
+*)</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section join_semilattice_order.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{JoinSemiLatticeOrder L}.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma join_ub_3_r x y z : z ≤ x ⊔ y ⊔ z.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply join_ub_r.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma join_ub_3_m x y z : y ≤ x ⊔ y ⊔ z.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 22
+Time: 0.003s">
+<div class="time" style="width: 4%"></div>
+<pre>
+  transitivity (x ⊔ y).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply join_ub_r.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply join_ub_l.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma join_ub_3_l x y z : x ≤ x ⊔ y ⊔ z.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 29
+Time: 0.004s">
+<div class="time" style="width: 5.3333333333333%"></div>
+<pre>
+  transitivity (x ⊔ y); apply join_ub_l.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma join_ub_3_assoc_l x y z : x ≤ x ⊔ (y ⊔ z).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply join_ub_l.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma join_ub_3_assoc_m x y z : y ≤ x ⊔ (y ⊔ z).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 39
+Time: 0.004s">
+<div class="time" style="width: 5.3333333333333%"></div>
+<pre>
+  transitivity (y ⊔ z).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply join_ub_l.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply join_ub_r.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma join_ub_3_assoc_r x y z : z ≤ x ⊔ (y ⊔ z).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 46
+Time: 0.004s">
+<div class="time" style="width: 5.3333333333333%"></div>
+<pre>
+  transitivity (y ⊔ z); apply join_ub_r.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Instance join_sl_order_join_sl: IsJoinSemiLattice L.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  repeat split.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 53
+Time: 0.002s">
+<div class="time" style="width: 2.6666666666667%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y z.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (antisymmetry (≤)).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply join_lub.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply join_ub_3_l.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply join_lub.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        **</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply join_ub_3_m.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        **</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply join_ub_3_r.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply join_lub.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply join_lub.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        **</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply join_ub_3_assoc_l.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        **</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply join_ub_3_assoc_m.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply join_ub_3_assoc_r.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 65
+Time: 0.002s">
+<div class="time" style="width: 2.6666666666667%"></div>
+<pre> apply (antisymmetry (≤)); apply join_lub;
+    first [apply join_ub_l | apply join_ub_r].</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> red.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (antisymmetry (≤)).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 68
+Time: 0.002s">
+<div class="time" style="width: 2.6666666666667%"></div>
+<pre> apply join_lub; apply reflexivity.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply join_ub_l.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 69
+Time: 0.001s">
+<div class="time" style="width: 1.3333333333333%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma join_le_compat_r x y z : z ≤ x -&gt; z ≤ x ⊔ y.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros E.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 74
+Time: 0.003s">
+<div class="time" style="width: 4%"></div>
+<pre> transitivity x.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> trivial.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply join_ub_l.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma join_le_compat_l x y z : z ≤ y -&gt; z ≤ x ⊔ y.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros E.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 81
+Time: 0.001s">
+<div class="time" style="width: 1.3333333333333%"></div>
+<pre> rewrite (commutativity (f:=join)).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply join_le_compat_r.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  trivial.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma join_l x y : y ≤ x -&gt; x ⊔ y = x.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros E.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (antisymmetry (≤)).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply join_lub;trivial.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply reflexivity.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply join_ub_l.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma join_r x y : x ≤ y -&gt; x ⊔ y = y.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 94
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros E.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 95
+Time: 0.001s">
+<div class="time" style="width: 1.3333333333333%"></div>
+<pre> rewrite (commutativity (f:=join)).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply join_l.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  trivial.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma join_sl_le_spec x y : x ≤ y &lt;-&gt; x ⊔ y = y.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  split; intros E.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply join_r.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> trivial.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite &lt;-E.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply join_ub_l.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance join_le_preserving_l : forall z, OrderPreserving (z ⊔).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  red;intros.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply join_lub.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply join_ub_l.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply join_le_compat_l.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> trivial.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance join_le_preserving_r : forall z, OrderPreserving (⊔ z).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact maps.order_preserving_flip.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 118
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma join_le_compat x₁ x₂ y₁ y₂ : x₁ ≤ x₂ -&gt; y₁ ≤ y₂ -&gt; x₁ ⊔ y₁ ≤ x₂ ⊔ y₂.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 121
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros E1 E2.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 122
+Time: 0.004s">
+<div class="time" style="width: 5.3333333333333%"></div>
+<pre> transitivity (x₁ ⊔ y₂).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 122
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (order_preserving (x₁ ⊔)).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> trivial.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (order_preserving (⊔ y₂));trivial.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 125
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma join_le x y z : x ≤ z -&gt; y ≤ z -&gt; x ⊔ y ≤ z.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 128
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply join_lub.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 130
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Section total_join.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{!TotalRelation le}.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma total_join_either `{!TotalRelation le} x y : join x y = x |_| join x y = y.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 135
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct (total le x y) as [E|E].</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 137
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> right.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply join_r,E.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> left.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply join_l,E.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition max x y :=
+    match total le x y with
+    | inl _ =&gt; y
+    | inr _ =&gt; x
+    end.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma total_join_max x y : join x y = max x y.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 148
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold max;destruct (total le x y) as [E|E].</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply join_r,E.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 152
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply join_l,E.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 152
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  End total_join.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 154
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma join_idempotent x : x ⊔ x = x.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    assert (le1 : x ⊔ x ≤ x).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 159
+Time: 0.002s">
+<div class="time" style="width: 2.6666666666667%"></div>
+<pre>
+      refine (join_lub _ _ _ _ _); apply reflexivity.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    }</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    assert (le2 : x ≤ x ⊔ x).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 163
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (join_ub_l _ _).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 164
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    }</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 165
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (antisymmetry _ _ _ le1 le2).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 166
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+End join_semilattice_order.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section bounded_join_semilattice.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{JoinSemiLatticeOrder L} `{Bottom L} `{!IsBoundedJoinSemiLattice L}.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma above_bottom x : ⊥ ≤ x.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 174
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply join_sl_le_spec.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 175
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite left_identity.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  reflexivity.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma below_bottom x : x ≤ ⊥ -&gt; x = ⊥.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 180
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 181
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros E.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 182
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply join_sl_le_spec in E.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 183
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite right_identity in E.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 183
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  trivial.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 184
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+End bounded_join_semilattice.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 186
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section meet_semilattice_order.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{MeetSemiLatticeOrder L}.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 189
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma meet_lb_3_r x y z : x ⊓ y ⊓ z ≤ z.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 191
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 192
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply meet_lb_r.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 193
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 194
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma meet_lb_3_m x y z : x ⊓ y ⊓ z ≤ y.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 197
+Time: 0.004s">
+<div class="time" style="width: 5.3333333333333%"></div>
+<pre>
+  transitivity (x ⊓ y).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 199
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply meet_lb_l.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 199
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply meet_lb_r.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 201
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma meet_lb_3_l x y z : x ⊓ y ⊓ z ≤ x.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 203
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 204
+Time: 0.004s">
+<div class="time" style="width: 5.3333333333333%"></div>
+<pre>
+  transitivity (x ⊓ y); apply meet_lb_l.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 205
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma meet_lb_3_assoc_l x y z : x ⊓ (y ⊓ z) ≤ x.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 209
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply meet_lb_l.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 210
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 211
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma meet_lb_3_assoc_m x y z : x ⊓ (y ⊓ z) ≤ y.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 213
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 214
+Time: 0.004s">
+<div class="time" style="width: 5.3333333333333%"></div>
+<pre>
+  transitivity (y ⊓ z).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 215
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 216
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply meet_lb_r.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 216
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 217
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply meet_lb_l.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 217
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 218
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma meet_lb_3_assoc_r x y z : x ⊓ (y ⊓ z) ≤ z.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 220
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 221
+Time: 0.004s">
+<div class="time" style="width: 5.3333333333333%"></div>
+<pre>
+  transitivity (y ⊓ z); apply meet_lb_r.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 222
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 223
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Instance meet_sl_order_meet_sl: IsMeetSemiLattice L.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 226
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  repeat split.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 227
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 228
+Time: 0.002s">
+<div class="time" style="width: 2.6666666666667%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 229
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y z.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 229
+Time: 0.001s">
+<div class="time" style="width: 1.3333333333333%"></div>
+<pre> apply (antisymmetry (≤)).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 229
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 230
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply meet_glb.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 230
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 231
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply meet_glb.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 231
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        **</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 232
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply meet_lb_3_assoc_l.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 232
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        **</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 233
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply meet_lb_3_assoc_m.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 233
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 234
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply meet_lb_3_assoc_r.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 234
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 235
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply meet_glb.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 235
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      **</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 236
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply meet_lb_3_l.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 236
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      **</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 237
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply meet_glb.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 237
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+         ***</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 238
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply meet_lb_3_m.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 238
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+         ***</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 239
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply meet_lb_3_r.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 239
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 240
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 240
+Time: 0.002s">
+<div class="time" style="width: 2.6666666666667%"></div>
+<pre> apply (antisymmetry (≤)); apply meet_glb;
+    first [apply meet_lb_l | try apply meet_lb_r].</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 241
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 242
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 242
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> red.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 242
+Time: 0.001s">
+<div class="time" style="width: 1.3333333333333%"></div>
+<pre> apply (antisymmetry (≤)).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 242
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 243
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply meet_lb_l.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 243
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 244
+Time: 0.002s">
+<div class="time" style="width: 2.6666666666667%"></div>
+<pre> apply meet_glb;apply reflexivity.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 244
+Time: 0.001s">
+<div class="time" style="width: 1.3333333333333%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 245
+Time: 0.021s">
+<div class="time" style="width: 28%"></div>
+<pre>
+
+  Lemma meet_le_compat_r x y z : x ≤ z -&gt; x ⊓ y ≤ z.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 247
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 248
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros E.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 249
+Time: 0.003s">
+<div class="time" style="width: 4%"></div>
+<pre> transitivity x.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 249
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 250
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply meet_lb_l.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 250
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 251
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> trivial.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 251
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 252
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma meet_le_compat_l x y z : y ≤ z -&gt; x ⊓ y ≤ z.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 254
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 255
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros E.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 256
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite (commutativity (f:=meet)).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 256
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply meet_le_compat_r.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 257
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  trivial.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 258
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 259
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma meet_l x y : x ≤ y -&gt; x ⊓ y = x.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 261
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 262
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros E.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 263
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (antisymmetry (≤)).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 263
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 264
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply meet_lb_l.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 264
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 265
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply meet_glb; trivial.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 265
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply reflexivity.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 265
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 266
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma meet_r x y : y ≤ x -&gt; x ⊓ y = y.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 268
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 269
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros E.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 270
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite (commutativity (f:=meet)).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 270
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply meet_l.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 270
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  trivial.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 271
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 272
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma meet_sl_le_spec x y : x ≤ y &lt;-&gt; x ⊓ y = x.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 274
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 275
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  split; intros E.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 276
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 277
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply meet_l;trivial.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 277
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 278
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite &lt;-E.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 278
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply meet_lb_r.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 278
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 279
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance orderpreserving_left_meet : forall z, OrderPreserving (z ⊓).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 281
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 282
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  red;intros.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 283
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply meet_glb.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 284
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 285
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply meet_lb_l.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 285
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 286
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply  meet_le_compat_l.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 286
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> trivial.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 286
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 287
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance orderpreserving_right_meet: forall z, OrderPreserving (⊓ z).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 289
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 290
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 291
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact maps.order_preserving_flip.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 291
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 292
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma meet_le_compat x₁ x₂ y₁ y₂ : x₁ ≤ x₂ -&gt; y₁ ≤ y₂ -&gt; x₁ ⊓ y₁ ≤ x₂ ⊓ y₂.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 294
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 295
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros E1 E2.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 296
+Time: 0.003s">
+<div class="time" style="width: 4%"></div>
+<pre> transitivity (x₁ ⊓ y₂).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 296
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 297
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (order_preserving (x₁ ⊓)).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 297
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> trivial.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 297
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 298
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (order_preserving (⊓ y₂)).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 298
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> trivial.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 298
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 299
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma meet_le x y z : z ≤ x -&gt; z ≤ y -&gt; z ≤ x ⊓ y.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 301
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 302
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply meet_glb.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 303
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 304
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Section total_meet.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 306
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{!TotalRelation le}.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 307
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma total_meet_either x y : meet x y = x |_| meet x y = y.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 309
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 310
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct (total le x y) as [E|E].</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 311
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 312
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> left.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 312
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply meet_l,E.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 312
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 313
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> right.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 313
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply meet_r,E.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 313
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 314
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition min x y :=
+    match total le x y with
+    | inr _ =&gt; y
+    | inl _ =&gt; x
+    end.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 320
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma total_meet_min x y : meet x y = min x y.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 322
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 323
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold min.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 324
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (total le x y) as [E|E].</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 324
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 325
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply meet_l,E.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 325
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 326
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply meet_r,E.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 326
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 327
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  End total_meet.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 328
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma meet_idempotent x : x ⊓ x = x.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 330
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 331
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    assert (le1 : x ⊓ x ≤ x).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 332
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 333
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (meet_lb_l _ _).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 334
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    }</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 335
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    assert (le2 : x ≤ x ⊓ x).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 336
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 337
+Time: 0.001s">
+<div class="time" style="width: 1.3333333333333%"></div>
+<pre>
+      refine (meet_glb _ _ _ _ _); apply reflexivity.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 338
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    }</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 339
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (antisymmetry _ _ _ le1 le2).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 340
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 341
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End meet_semilattice_order.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 343
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section lattice_order.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 345
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{LatticeOrder L}.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 346
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Instance isjoinsemilattice_latticeorder : IsJoinSemiLattice L := join_sl_order_join_sl.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 348
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Instance ismeetsemilattice_latticeorder : IsMeetSemiLattice L := meet_sl_order_meet_sl.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 349
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Instance absorption_join_meet : Absorption (⊓) (⊔).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 351
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 352
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 353
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (antisymmetry (≤)).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 353
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 354
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply meet_lb_l.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 354
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 355
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply meet_le.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 355
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+   +</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 356
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply reflexivity.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 356
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+   +</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 357
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply join_ub_l.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 357
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 358
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Instance absorption_meet_join : Absorption (⊔) (⊓).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 360
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 361
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 362
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (antisymmetry (≤)).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 362
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 363
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply join_le.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 363
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 364
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply reflexivity.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 364
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 365
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply meet_lb_l.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 365
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 366
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply join_ub_l.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 366
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 367
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Instance lattice_order_lattice: IsLattice L := {}.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 369
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma meet_join_distr_l_le x y z : (x ⊓ y) ⊔ (x ⊓ z) ≤ x ⊓ (y ⊔ z).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 371
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 372
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply meet_le.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 373
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 374
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply join_le; apply meet_lb_l.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 374
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 375
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply join_le.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 375
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 376
+Time: 0.003s">
+<div class="time" style="width: 4%"></div>
+<pre> transitivity y.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 376
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 377
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply meet_lb_r.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 377
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 378
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply join_ub_l.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 378
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 379
+Time: 0.003s">
+<div class="time" style="width: 4%"></div>
+<pre> transitivity z.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 379
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 380
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply meet_lb_r.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 380
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 381
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply join_ub_r.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 381
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 382
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma join_meet_distr_l_le x y z : x ⊔ (y ⊓ z) ≤ (x ⊔ y) ⊓ (x ⊔ z).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 384
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 385
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply meet_le.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 386
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 387
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply join_le.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 387
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 388
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply join_ub_l.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 388
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 389
+Time: 0.003s">
+<div class="time" style="width: 4%"></div>
+<pre> transitivity y.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 389
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 390
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply meet_lb_l.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 390
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 391
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply join_ub_r.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 391
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 392
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply join_le.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 392
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 393
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply join_ub_l.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 393
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 394
+Time: 0.003s">
+<div class="time" style="width: 4%"></div>
+<pre> transitivity z.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 394
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 395
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply meet_lb_r.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 395
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 396
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply join_ub_r.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 396
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 397
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+End lattice_order.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 398
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition default_join_sl_le `{IsJoinSemiLattice L} : Le L :=  fun x y =&gt; x ⊔ y = y.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 400
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section join_sl_order_alt.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 402
+Time: 0.001s">
+<div class="time" style="width: 1.3333333333333%"></div>
+<pre>
+  Context `{IsJoinSemiLattice L} `{Le L} `{is_mere_relation L le}
+    (le_correct : forall x y, x ≤ y &lt;-&gt; x ⊔ y = y).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 404
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma alt_Build_JoinSemiLatticeOrder : JoinSemiLatticeOrder (≤).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 406
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 407
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  repeat split.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 408
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 409
+Time: 0.015s">
+<div class="time" style="width: 20%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 409
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 410
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 410
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 411
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 411
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply le_correct.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 412
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply binary_idempotent.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 412
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 413
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y z E1 E2.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 413
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply le_correct in E1;apply le_correct in E2;apply le_correct.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 414
+Time: 0.001s">
+<div class="time" style="width: 1.3333333333333%"></div>
+<pre>
+    rewrite &lt;-E2, simple_associativity, E1.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 415
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 415
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 416
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y E1 E2.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 416
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply le_correct in E1;apply le_correct in E2.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 417
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite &lt;-E1, (commutativity (f:=join)).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 418
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply symmetry;trivial.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 419
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 420
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 420
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply le_correct.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 420
+Time: 0.003s">
+<div class="time" style="width: 4%"></div>
+<pre>
+    rewrite simple_associativity,binary_idempotent.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 421
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    reflexivity.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 422
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 423
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros;apply le_correct.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 423
+Time: 0.001s">
+<div class="time" style="width: 1.3333333333333%"></div>
+<pre>
+    rewrite (commutativity (f:=join)).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 424
+Time: 0.001s">
+<div class="time" style="width: 1.3333333333333%"></div>
+<pre>
+    rewrite &lt;-simple_associativity.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 425
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite (idempotency _ _).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 426
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    reflexivity.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 427
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 428
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y z E1 E2.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 428
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply le_correct in E1;apply le_correct in E2;apply le_correct.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 429
+Time: 0.001s">
+<div class="time" style="width: 1.3333333333333%"></div>
+<pre>
+    rewrite &lt;-simple_associativity, E2.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 430
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> trivial.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 430
+Time: 0.001s">
+<div class="time" style="width: 1.3333333333333%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 431
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+End join_sl_order_alt.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 432
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition default_meet_sl_le `{IsMeetSemiLattice L} : Le L :=  fun x y =&gt; x ⊓ y = x.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 434
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section meet_sl_order_alt.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 436
+Time: 0.001s">
+<div class="time" style="width: 1.3333333333333%"></div>
+<pre>
+  Context `{IsMeetSemiLattice L} `{Le L} `{is_mere_relation L le}
+    (le_correct : forall x y, x ≤ y &lt;-&gt; x ⊓ y = x).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 438
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma alt_Build_MeetSemiLatticeOrder : MeetSemiLatticeOrder (≤).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 440
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 441
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  repeat split.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 442
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 443
+Time: 0.002s">
+<div class="time" style="width: 2.6666666666667%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 443
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 444
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 444
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 445
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros ?.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 445
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply le_correct.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 445
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (idempotency _ _).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 445
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 446
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros ? ? ? E1 E2.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 446
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply le_correct in E1;apply le_correct in E2;apply le_correct.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 447
+Time: 0.001s">
+<div class="time" style="width: 1.3333333333333%"></div>
+<pre>
+    rewrite &lt;-E1, &lt;-simple_associativity, E2.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 448
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    reflexivity.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 449
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 450
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros ? ? E1 E2.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 450
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply le_correct in E1;apply le_correct in E2.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 451
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite &lt;-E2, (commutativity (f:=meet)).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 452
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply symmetry,E1.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 453
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 454
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros ? ?.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 454
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply le_correct.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 454
+Time: 0.001s">
+<div class="time" style="width: 1.3333333333333%"></div>
+<pre>
+    rewrite (commutativity (f:=meet)), simple_associativity, (idempotency _ _).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 455
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    reflexivity.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 456
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 457
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros ? ?.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 457
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply le_correct.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 457
+Time: 0.001s">
+<div class="time" style="width: 1.3333333333333%"></div>
+<pre>
+    rewrite &lt;-simple_associativity, (idempotency _ _).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 458
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    reflexivity.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 459
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 460
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros ? ? ? E1 E2.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 460
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply le_correct in E1;apply le_correct in E2;apply le_correct.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 461
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite associativity, E1.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 462
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    trivial.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 463
+Time: 0.001s">
+<div class="time" style="width: 1.3333333333333%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 464
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+End meet_sl_order_alt.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 465
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section join_order_preserving.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 467
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{JoinSemiLatticeOrder L} `{JoinSemiLatticeOrder K} (f : L -&gt; K)
+    `{!IsJoinPreserving f}.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 469
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma join_sl_mor_preserving: OrderPreserving f.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 471
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 472
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y E.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 473
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply join_sl_le_spec in E.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 474
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply join_sl_le_spec.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 474
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite &lt;-preserves_join.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 475
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply ap, E.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 476
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 477
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma join_sl_mor_reflecting `{!IsInjective f}: OrderReflecting f.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 479
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 480
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y E.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 481
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply join_sl_le_spec in E.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 482
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply join_sl_le_spec.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 482
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite &lt;-preserves_join in E.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 483
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (injective f).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 484
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assumption.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 484
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 485
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+End join_order_preserving.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 486
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section meet_order_preserving.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 488
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{MeetSemiLatticeOrder L} `{MeetSemiLatticeOrder K} (f : L -&gt; K)
+    `{!IsMeetPreserving f}.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 490
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma meet_sl_mor_preserving: OrderPreserving f.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 492
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 493
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y E.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 494
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply meet_sl_le_spec in E.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 495
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply meet_sl_le_spec.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 495
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite &lt;-preserves_meet.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 496
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply ap, E.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 497
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 498
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma meet_sl_mor_reflecting `{!IsInjective f}: OrderReflecting f.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 500
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 501
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y E.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 502
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply meet_sl_le_spec in E.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 503
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply meet_sl_le_spec.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 503
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite &lt;-preserves_meet in E.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 504
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (injective f).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 505
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assumption.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 505
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 506
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+End meet_order_preserving.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 507
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section order_preserving_join_sl_mor.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 509
+Time: 0.001s">
+<div class="time" style="width: 1.3333333333333%"></div>
+<pre>
+  Context `{JoinSemiLatticeOrder L} `{JoinSemiLatticeOrder K}
+    `{!TotalOrder (_ : Le L)} `{!TotalOrder (_ : Le K)}
+    `{!OrderPreserving (f : L -&gt; K)}.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 512
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma order_preserving_join_sl_mor: IsJoinPreserving f.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 514
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 515
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 516
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> case (total (≤) x y); intros E.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 516
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 517
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> change (f (join x y) = join (f x) (f y)).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 517
+Time: 0.001s">
+<div class="time" style="width: 1.3333333333333%"></div>
+<pre>
+    rewrite (join_r _ _ E),join_r;trivial.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 518
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (order_preserving _).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 519
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> trivial.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 519
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 520
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> change (f (join x y) = join (f x) (f y)).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 520
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite 2!join_l; trivial.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 521
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (order_preserving _).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 521
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> trivial.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 521
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 522
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+End order_preserving_join_sl_mor.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 523
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section order_preserving_meet_sl_mor.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 525
+Time: 0.001s">
+<div class="time" style="width: 1.3333333333333%"></div>
+<pre>
+  Context `{MeetSemiLatticeOrder L} `{MeetSemiLatticeOrder K}
+    `{!TotalOrder (_ : Le L)} `{!TotalOrder (_ : Le K)}
+    `{!OrderPreserving (f : L -&gt; K)}.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 528
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma order_preserving_meet_sl_mor: IsSemiGroupPreserving f.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 530
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 531
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 532
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> case (total (≤) x y); intros E.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 532
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 533
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> change (f (meet x y) = meet (f x) (f y)).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 533
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite 2!meet_l;trivial.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 534
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (order_preserving _).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 535
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> trivial.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 535
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 536
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> change (f (meet x y) = meet (f x) (f y)).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 536
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite 2!meet_r; trivial.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 537
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (order_preserving _).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 538
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> trivial.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 538
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 539
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+End order_preserving_meet_sl_mor.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 540
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section strict_ordered_field.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 542
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Generalizable Variables Lle Llt Lmeet Ljoin Lapart.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 544
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{@LatticeOrder L Lle Lmeet Ljoin}.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 545
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{@FullPseudoOrder L Lapart Lle Llt}.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 546
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma join_lt_l_l x y z : z &lt; x -&gt; z &lt; x ⊔ y.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 548
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 549
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros ltzx.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 550
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (lt_le_trans z x _ _ _); try assumption.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 551
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply join_ub_l.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 552
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 553
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma join_lt_l_r x y z : z &lt; y -&gt; z &lt; x ⊔ y.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 555
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 556
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros ltzy.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 557
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (lt_le_trans z y _ _ _); try assumption.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 558
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply join_ub_r.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 559
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 560
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma join_lt_r x y z : x &lt; z -&gt; y &lt; z -&gt; x ⊔ y &lt; z.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 562
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 563
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros ltxz ltyz.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 564
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    set (disj := cotransitive ltxz (x ⊔ y)).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 565
+Time: 0.001s">
+<div class="time" style="width: 1.3333333333333%"></div>
+<pre>
+    refine (Trunc_rec _ disj); intros [ltxxy|ltxyz].</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 566
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 567
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> set (disj' := cotransitive ltyz (x ⊔ y)).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 567
+Time: 0.006s">
+<div class="time" style="width: 8%"></div>
+<pre>
+      refine (Trunc_rec _ disj'); intros [ltyxy|ltxyz].</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 568
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 569
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assert (ineqx : x ⊔ y &lt;&gt; x).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 569
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        {</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 570
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          apply lt_ne_flip; assumption.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 571
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        }</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 572
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        assert (nleyx : ~ (y ≤ x))
+          by exact (not_contrapositive (join_l x y) ineqx).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 574
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        assert (lexy : x ≤ y).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 575
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        {</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 576
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          apply le_iff_not_lt_flip.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 577
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          intros ltyx.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 578
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          exact (nleyx (lt_le _ _ _)).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 579
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        }</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 580
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        assert (ineqy : x ⊔ y &lt;&gt; y).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 581
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        {</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 582
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          apply lt_ne_flip; assumption.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 583
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        }</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 584
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        assert (nlexy : ~ (x ≤ y))
+          by exact (not_contrapositive (join_r x y) ineqy).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 586
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        assert (leyx : y ≤ x).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 587
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        {</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 588
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          apply le_iff_not_lt_flip.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 589
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          intros ltxy.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 590
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          exact (nlexy (lt_le _ _ _)).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 591
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        }</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 592
+Time: 0.001s">
+<div class="time" style="width: 1.3333333333333%"></div>
+<pre>
+        assert (eqxy : x = y)
+          by exact (antisymmetry _ _ _ lexy leyx).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 594
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        rewrite &lt;- eqxy in ineqx.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 595
+Time: 0.001s">
+<div class="time" style="width: 1.3333333333333%"></div>
+<pre>
+        destruct (ineqx (join_idempotent x)).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 596
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 597
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assumption.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 597
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 598
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assumption.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 598
+Time: 0.001s">
+<div class="time" style="width: 1.3333333333333%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 599
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma meet_lt_r_l x y z : x &lt; z -&gt; x  ⊓ y &lt; z.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 601
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 602
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros ltxz.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 603
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (le_lt_trans _ x _ _ _); try assumption.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 604
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply meet_lb_l.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 605
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 606
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma meet_lt_r_r x y z : y &lt; z -&gt; x  ⊓ y &lt; z.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 608
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 609
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros ltyz.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 610
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (le_lt_trans _ y _ _ _); try assumption.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 611
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply meet_lb_r.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 612
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 613
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma meet_lt_l x y z : x &lt; y -&gt; x &lt; z -&gt; x &lt; y ⊓ z.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 615
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 616
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros ltxy ltxz.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 617
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    set (disj := cotransitive ltxy (y ⊓ z)).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 618
+Time: 0.001s">
+<div class="time" style="width: 1.3333333333333%"></div>
+<pre>
+    refine (Trunc_rec _ disj); intros [ltxyy|ltyzy].</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 619
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 620
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assumption.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 620
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 621
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> set (disj' := cotransitive ltxz (y ⊓ z)).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 621
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      refine (Trunc_rec _ disj'); intros [ltxyz|ltyzz].</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 622
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 623
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assumption.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 623
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 624
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assert (ineqy : y ⊓ z &lt;&gt; y).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 624
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        {</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 625
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          apply lt_ne; assumption.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 626
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        }</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 627
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        assert (nleyz : ~ (y ≤ z))
+          by exact (not_contrapositive (meet_l y z) ineqy).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 629
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        assert (lezy : z ≤ y).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 630
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        {</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 631
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          apply le_iff_not_lt_flip.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 632
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          intros ltzy.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 633
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          exact (nleyz (lt_le _ _ _)).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 634
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        }</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 635
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        assert (ineqz : y ⊓ z &lt;&gt; z).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 636
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        {</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 637
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          apply lt_ne; assumption.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 638
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        }</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 639
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        assert (nlezy : ~ (z ≤ y))
+          by exact (not_contrapositive (meet_r y z) ineqz).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 641
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        assert (leyz : y ≤ z).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 642
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        {</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 643
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          apply le_iff_not_lt_flip.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 644
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          intros ltzy.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 645
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          exact (nlezy (lt_le _ _ _)).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 646
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        }</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 647
+Time: 0.001s">
+<div class="time" style="width: 1.3333333333333%"></div>
+<pre>
+        assert (eqyz : y = z)
+          by exact (antisymmetry _ _ _ leyz lezy).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 649
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        rewrite &lt;- eqyz in ineqy.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 650
+Time: 0.001s">
+<div class="time" style="width: 1.3333333333333%"></div>
+<pre>
+        destruct (ineqy (meet_idempotent y)).</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 651
+Time: 0.001s">
+<div class="time" style="width: 1.3333333333333%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 652
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+
+End strict_ordered_field.</pre>
+</div>
+<div class="code" title="File: lattices.v
+Line: 656
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

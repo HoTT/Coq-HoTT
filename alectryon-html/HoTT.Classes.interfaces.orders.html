@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>orders.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="orders-v-chk0" style="display: none" type="checkbox"><label class="alectryon-input" for="orders-v-chk0"><span class="kn">Require Import</span> HoTT.Classes.interfaces.abstract_algebra.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Generalizable Variables</span> <span class="nf">A</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(**</span>
+<span class="sd">In this file we describe interfaces for ordered structures. Since we are in a</span>
+<span class="sd">constructive setting we use a pseudo order instead of a total order. Therefore</span>
+<span class="sd">we also have to include an apartness relation.</span>
+
+<span class="sd">Obviously, in case we consider decidable structures these interfaces are quite</span>
+<span class="sd">inconvenient. Hence we will, later on, provide means to go back and forth</span>
+<span class="sd">between the usual classical notions and these constructive notions.</span>
+
+<span class="sd">On the one hand, if we have an ordinary (total) partial order (≤) with a</span>
+<span class="sd">corresponding strict order (&lt;), we will prove that we can construct a</span>
+<span class="sd">[FullPartialOrder] and [PseudoPartialOrder], respectively.</span>
+
+<span class="sd">On the other hand, if equality is decidable, we will prove that we have the</span>
+<span class="sd">usual properties like [Trichotomy (&lt;)] and [TotalRelation (≤)].</span>
+<span class="sd">*)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Class</span> <span class="nf">PartialOrder</span> `(Ale : Le A) :=
+  { po_hset :: IsHSet A
+  ; po_hprop :: is_mere_relation A Ale
+  ; po_preorder :: PreOrder (≤)
+  ; po_antisym :: AntiSymmetric (≤) }.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Class</span> <span class="nf">TotalOrder</span> `(Ale : Le A) :=
+  { total_order_po :: PartialOrder (≤)
+  ; total_order_total :: TotalRelation (≤) }.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(*</span>
+<span class="c">We define a variant of the order theoretic definition of meet and join</span>
+<span class="c">semilattices. Notice that we include a meet operation instead of the</span>
+<span class="c">more common:</span>
+<span class="c">  forall x y, exists m, m ≤ x /\ m ≤ y /\ forall z, z ≤ x -&gt; z ≤ y -&gt; m ≤ z</span>
+<span class="c">Our definition is both stronger and more convenient than the above.</span>
+<span class="c">This is needed to prove equivalence with the algebraic definition. We</span>
+<span class="c">do this in orders.lattices.</span>
+<span class="c">*)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Class</span> <span class="nf">MeetSemiLatticeOrder</span> `(Ale : Le A) `{Meet A} :=
+  { meet_sl_order :: PartialOrder (≤)
+  ; meet_lb_l : <span class="kr">forall</span> <span class="nv">x</span> <span class="nv">y</span>, x ⊓ y ≤ x
+  ; meet_lb_r : <span class="kr">forall</span> <span class="nv">x</span> <span class="nv">y</span>, x ⊓ y ≤ y
+  ; meet_glb : <span class="kr">forall</span> <span class="nv">x</span> <span class="nv">y</span> <span class="nv">z</span>, z ≤ x -&gt; z ≤ y -&gt; z ≤ x ⊓ y }.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Class</span> <span class="nf">JoinSemiLatticeOrder</span> `(Ale : Le A) `{Join A} :=
+  { join_sl_order :: PartialOrder (≤)
+  ; join_ub_l : <span class="kr">forall</span> <span class="nv">x</span> <span class="nv">y</span>, x ≤ x ⊔ y
+  ; join_ub_r : <span class="kr">forall</span> <span class="nv">x</span> <span class="nv">y</span>, y ≤ x ⊔ y
+  ; join_lub : <span class="kr">forall</span> <span class="nv">x</span> <span class="nv">y</span> <span class="nv">z</span>, x ≤ z -&gt; y ≤ z -&gt; x ⊔ y ≤ z }.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Class</span> <span class="nf">LatticeOrder</span> `(Ale : Le A) `{Meet A} `{Join A} :=
+  { lattice_order_meet :: MeetSemiLatticeOrder (≤)
+  ; lattice_order_join :: JoinSemiLatticeOrder (≤) }.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Class</span> <span class="nf">StrictOrder</span> `(Alt : Lt A) :=
+  { strict_order_mere :: is_mere_relation A lt
+  ; strictorder_irrefl :: Irreflexive (&lt;)
+  ; strictorder_trans :: Transitive (&lt;) }.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** The constructive notion of a total strict total order.</span>
+<span class="sd">   We will prove that [(&lt;)] is in fact a [StrictOrder]. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Class</span> <span class="nf">PseudoOrder</span> `{Aap : Apart A} (Alt : Lt A) :=
+{ pseudo_order_apart : IsApart A
+  ; pseudo_order_mere_lt :: is_mere_relation A lt
+  ; pseudo_order_antisym : <span class="kr">forall</span> <span class="nv">x</span> <span class="nv">y</span>, ~(x &lt; y /\ y &lt; x)
+  ; pseudo_order_cotrans :: CoTransitive (&lt;)
+  ; apart_iff_total_lt : <span class="kr">forall</span> <span class="nv">x</span> <span class="nv">y</span>, x ≶ y &lt;-&gt; x &lt; y |_| y &lt; x }.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** A partial order [(≤)] with a corresponding [(&lt;)]. We will prove that [(&lt;)] is in fact</span>
+<span class="sd">  a [StrictOrder] *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Class</span> <span class="nf">FullPartialOrder</span> `{Aap : Apart A} (Ale : Le A) (Alt : Lt A) :=
+  { strict_po_apart : IsApart A
+  ; strict_po_mere_lt : is_mere_relation A lt
+  ; strict_po_po :: PartialOrder (≤)
+  ; strict_po_trans :: Transitive (&lt;)
+  ; lt_iff_le_apart : <span class="kr">forall</span> <span class="nv">x</span> <span class="nv">y</span>, x &lt; y &lt;-&gt; x ≤ y /\ x ≶ y }.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** A pseudo order [(&lt;)] with a corresponding [(≤)]. We will prove that [(≤)] is in fact</span>
+<span class="sd">  a [PartialOrder]. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Class</span> <span class="nf">FullPseudoOrder</span> `{Aap : Apart A} (Ale : Le A) (Alt : Lt A) :=
+  { fullpseudo_le_hprop :: is_mere_relation A Ale
+  ; full_pseudo_order_pseudo :: PseudoOrder Alt
+  ; le_iff_not_lt_flip : <span class="kr">forall</span> <span class="nv">x</span> <span class="nv">y</span>, x ≤ y &lt;-&gt; ~(y &lt; x) }.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">order_maps</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> {<span class="nv">A</span> <span class="nv">B</span> : <span class="kt">Type</span>} {<span class="nv">Ale</span>: Le A} {<span class="nv">Ble</span>: Le B}(<span class="nv">f</span> : A -&gt; B).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Class</span> <span class="nf">OrderPreserving</span> := order_preserving : <span class="kr">forall</span> <span class="nv">x</span> <span class="nv">y</span>, (x ≤ y -&gt; f x ≤ f y).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Class</span> <span class="nf">OrderReflecting</span> := order_reflecting : <span class="kr">forall</span> <span class="nv">x</span> <span class="nv">y</span>, (f x ≤ f y -&gt; x ≤ y).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Class</span> <span class="nf">OrderEmbedding</span> :=
+    { order_embedding_preserving :: OrderPreserving
+    ; order_embedding_reflecting :: OrderReflecting }.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">order_maps</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">srorder_maps</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> {<span class="nv">A</span> <span class="nv">B</span> : <span class="kt">Type</span>} {<span class="nv">Alt</span>: Lt A} {<span class="nv">Blt</span>: Lt B} (<span class="nv">f</span> : A -&gt; B).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Class</span> <span class="nf">StrictlyOrderPreserving</span> := strictly_order_preserving
+    : <span class="kr">forall</span> <span class="nv">x</span> <span class="nv">y</span>, (x &lt; y -&gt; f x &lt; f y).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Class</span> <span class="nf">StrictlyOrderReflecting</span> := strictly_order_reflecting
+    : <span class="kr">forall</span> <span class="nv">x</span> <span class="nv">y</span>, (f x &lt; f y -&gt; x &lt; y).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Class</span> <span class="nf">StrictOrderEmbedding</span> :=
+    { strict_order_embedding_preserving :: StrictlyOrderPreserving
+    ; strict_order_embedding_reflecting :: StrictlyOrderReflecting }.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">srorder_maps</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input">#[export]
+<span class="kn">Hint Extern</span> <span class="mi">4</span> (<span class="nl">?f</span> _ ≤ <span class="nl">?f</span> _) =&gt; <span class="nb">apply</span> (order_preserving f) : core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input">#[export]
+<span class="kn">Hint Extern</span> <span class="mi">4</span> (<span class="nl">?f</span> _ &lt; <span class="nl">?f</span> _) =&gt; <span class="nb">apply</span> (strictly_order_preserving f) : core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(**</span>
+<span class="sd">We define various classes to describe the order on the lower part of the</span>
+<span class="sd">algebraic hierarchy. This results in the notion of a [PseudoSemiRingOrder], which</span>
+<span class="sd">specifies the order on the naturals, integers, rationals and reals. This notion</span>
+<span class="sd">is quite similar to a strictly linearly ordered unital commutative protoring in</span>
+<span class="sd">Davorin Lešnik&#39;s PhD thesis.</span>
+<span class="sd">*)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Class</span> <span class="nf">SemiRingOrder</span> `{Plus A} `{Mult A}
+    `{Zero A} `{One A} (Ale : Le A) :=
+  { srorder_po :: PartialOrder Ale
+  ; srorder_partial_minus : <span class="kr">forall</span> <span class="nv">x</span> <span class="nv">y</span>, x ≤ y -&gt; <span class="kr">exists</span> <span class="nv">z</span>, y = x + z
+  ; srorder_plus :: <span class="kr">forall</span> <span class="nv">z</span>, OrderEmbedding (z +)
+  ; nonneg_mult_compat : <span class="kr">forall</span> <span class="nv">x</span> <span class="nv">y</span>, PropHolds (<span class="mi">0</span> ≤ x) -&gt; PropHolds (<span class="mi">0</span> ≤ y) -&gt;
+                                PropHolds (<span class="mi">0</span> ≤ x * y) }.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Class</span> <span class="nf">StrictSemiRingOrder</span> `{Plus A} `{Mult A}
+    `{Zero A} `{One A} (Alt : Lt A) :=
+  { strict_srorder_so :: StrictOrder Alt
+  ; strict_srorder_partial_minus : <span class="kr">forall</span> <span class="nv">x</span> <span class="nv">y</span>, x &lt; y -&gt; <span class="kr">exists</span> <span class="nv">z</span>, y = x + z
+  ; strict_srorder_plus :: <span class="kr">forall</span> <span class="nv">z</span>, StrictOrderEmbedding (z +)
+  ; pos_mult_compat : <span class="kr">forall</span> <span class="nv">x</span> <span class="nv">y</span>, PropHolds (<span class="mi">0</span> &lt; x) -&gt; PropHolds (<span class="mi">0</span> &lt; y) -&gt;
+                             PropHolds (<span class="mi">0</span> &lt; x * y) }.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Class</span> <span class="nf">PseudoSemiRingOrder</span> `{Apart A} `{Plus A}
+    `{Mult A} `{Zero A} `{One A} (Alt : Lt A) :=
+  { pseudo_srorder_strict :: PseudoOrder Alt
+  ; pseudo_srorder_partial_minus : <span class="kr">forall</span> <span class="nv">x</span> <span class="nv">y</span>, ~(y &lt; x) -&gt; <span class="kr">exists</span> <span class="nv">z</span>, y = x + z
+  ; pseudo_srorder_plus :: <span class="kr">forall</span> <span class="nv">z</span>, StrictOrderEmbedding (z +)
+  ; pseudo_srorder_mult_ext :: StrongBinaryExtensionality (.*.)
+  ; pseudo_srorder_pos_mult_compat : <span class="kr">forall</span> <span class="nv">x</span> <span class="nv">y</span>, PropHolds (<span class="mi">0</span> &lt; x) -&gt; PropHolds (<span class="mi">0</span> &lt; y) -&gt;
+                                            PropHolds (<span class="mi">0</span> &lt; x * y) }.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Class</span> <span class="nf">FullPseudoSemiRingOrder</span> `{Apart A} `{Plus A}
+    `{Mult A} `{Zero A} `{One A} (Ale : Le A) (Alt : Lt A) :=
+  { full_pseudo_srorder_le_hprop :: is_mere_relation A Ale
+  ; full_pseudo_srorder_pso :: PseudoSemiRingOrder Alt
+  ; full_pseudo_srorder_le_iff_not_lt_flip : <span class="kr">forall</span> <span class="nv">x</span> <span class="nv">y</span>, x ≤ y &lt;-&gt; ~(y &lt; x) }.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(* Due to bug #2528 *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input">#[export]
+<span class="kn">Hint Extern</span> <span class="mi">7</span> (PropHolds (<span class="mi">0</span> &lt; _ * _)) =&gt;
+  <span class="nb">eapply</span> @pos_mult_compat : typeclass_instances.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input">#[export]
+<span class="kn">Hint Extern</span> <span class="mi">7</span> (PropHolds (<span class="mi">0</span> ≤ _ * _)) =&gt;
+  <span class="nb">eapply</span> @nonneg_mult_compat : typeclass_instances.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="c">(*</span>
+<span class="c">Alternatively, we could have defined the standard notion of a RingOrder:</span>
+
+<span class="c">Class RingOrder `{Equiv A} `{Plus A} `{Mult A} `{Zero A} (Ale : Le A) :=</span>
+<span class="c">  { ringorder_po :&gt; PartialOrder Ale</span>
+<span class="c">  ; ringorder_plus :&gt; forall z, OrderPreserving (z +)</span>
+<span class="c">  ; ringorder_mult : forall x y, 0 ≤ x -&gt; 0 ≤ y -&gt; 0 ≤ x * y }.</span>
+
+<span class="c">Unfortunately, this notion is too weak when we consider semirings (e.g. the</span>
+<span class="c">naturals). Moreover, in case of rings, we prove that this notion is equivalent</span>
+<span class="c">to our SemiRingOrder class (see orders.rings.from_ring_order). Hence we omit</span>
+<span class="c">defining such a class.</span>
+
+<span class="c">Similarly we prove that a FullSemiRingOrder</span>
+<span class="c">and a FullPseudoRingOrder are equivalent.</span>
+
+<span class="c">Class FullPseudoRingOrder `{Apart A} `{Plus A}</span>
+<span class="c">    `{Mult A} `{Zero A} (Ale : Le A) (Alt : Lt A) :=</span>
+<span class="c">  { pseudo_ringorder_spo :&gt; FullPseudoOrder Ale Alt</span>
+<span class="c">  ; pseudo_ringorder_mult_ext :&gt; StrongSetoid_BinaryMorphism (.*.)</span>
+<span class="c">  ; pseudo_ringorder_plus :&gt; forall z, StrictlyOrderPreserving (z +)</span>
+<span class="c">  ; pseudo_ringorder_mult : forall x y, 0 &lt; x -&gt; 0 &lt; y -&gt; 0 &lt; x * y }.</span>
+<span class="c">*)</span>
+
+<span class="c">(* Next, a constructive definition of fields - the ordered fields from</span>
+<span class="c">HoTT book chapter 11. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Class</span> <span class="nf">OrderedField</span> (<span class="nv">A</span> : <span class="kt">Type</span>) {<span class="nv">Alt</span> : Lt A} {<span class="nv">Ale</span> : Le A} {<span class="nv">Aap</span> : Apart A} {<span class="nv">Azero</span> : Zero A}
+      {<span class="nv">Aone</span> : One A} {<span class="nv">Aplus</span> : Plus A} {<span class="nv">Anegate</span> : Negate A} {<span class="nv">Amult</span> : Mult A}
+      {<span class="nv">Arecip</span> : Recip A} {<span class="nv">Ajoin</span> : Join A} {<span class="nv">Ameet</span> : Meet A} :=
+  { ordered_field_field :: @IsField A Aplus Amult Azero Aone Anegate Aap Arecip
+  ; ordered_field_lattice :: LatticeOrder Ale
+  ; ordered_field_fssro :: @FullPseudoSemiRingOrder A _ _ _ Azero _ _ _
+  }.</span></span></pre>
+</div>
+</div></body>
+</html>

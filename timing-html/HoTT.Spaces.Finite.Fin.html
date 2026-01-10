@@ -1,0 +1,2847 @@
+<html>
+<head>
+<title>Fin.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Fin.v</h1>
+
+<div class="code" title="File: Fin.v
+Line: 1
+Time: 0.027s">
+<div class="time" style="width: 49.090909090909%"></div>
+<pre>From HoTT Require Import Basics.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 1
+Time: 0.012s">
+<div class="time" style="width: 21.818181818182%"></div>
+<pre>
+Require Import Types.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 2
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import HSet.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 3
+Time: 0.001s">
+<div class="time" style="width: 1.8181818181818%"></div>
+<pre>
+Require Import Spaces.Nat.Core.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Equiv.PathSplit.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** By setting this, using [simple_induction] instead of [induction], and specifying universe variables in a couple of places, we can avoid all universe variables in this file.  Several results are confirmed to use no universe variables with an @{} annotation. *)</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Set Universe Minimization ToSet.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope path_scope.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 9
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope nat_scope.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Finite sets *)
+
+(** ** Canonical finite sets *)
+
+(** A *finite set* is a type that is merely equivalent to the canonical finite set determined by some natural number.  There are many equivalent ways to define the canonical finite sets, such as [{ k : nat &amp; k &lt; n}]; we instead choose a recursive one. *)
+
+</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 17
+Time: 0.001s">
+<div class="time" style="width: 1.8181818181818%"></div>
+<pre>Fixpoint Fin (n : nat) : Type0
+  := match n with
+       | 0 =&gt; Empty
+       | S n =&gt; Fin n + Unit
+     end.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Fixpoint fin_to_nat {n} : Fin n -&gt; nat
+  := match n with
+     | 0 =&gt; Empty_rec
+     | S n' =&gt;
+       fun k =&gt;
+         match k with
+         | inl k' =&gt; fin_to_nat k'
+         | inr tt =&gt; n'
+         end
+     end.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance decidable_fin (n : nat)
+: Decidable (Fin n).</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 36
+Time: 0.002s">
+<div class="time" style="width: 3.6363636363636%"></div>
+<pre>
+  destruct n as [|n]; try exact _.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (inl (inr tt)).</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance decidablepaths_fin@{} (n : nat)
+: DecidablePaths (Fin n).</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 43
+Time: 0.005s">
+<div class="time" style="width: 9.0909090909091%"></div>
+<pre>
+  simple_induction n n IHn; simpl; exact _.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance contr_fin1 : Contr (Fin 1).</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (contr_equiv' Unit (sum_empty_l Unit)^-1).</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition fin_empty (n : nat) (f : Fin n -&gt; Empty) : n = 0.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct n; [ reflexivity | ].</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  elim (f (inr tt)).</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The zeroth element of a non-empty finite set is the left most element. It also happens to be the biggest by term size. *)</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Fixpoint fin_zero {n : nat} : Fin n.+1 :=
+  match n with
+  | O =&gt; inr tt
+  | S _ =&gt; inl fin_zero
+  end.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Where `fin_zero` computes the first element of Fin (S n), `fin_last` computes the last. *)</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition fin_last {n : nat} : Fin (S n) := inr tt.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Injection Fin n -&gt; Fin n.+1 mapping the kth element to the kth element. *)</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition fin_incl {n : nat} (k : Fin n) : Fin (S n) := inl k.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** There is an injection from Fin n -&gt; Fin n.+1 that maps the kth element to the (k+1)th element. *)</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 68
+Time: 0.001s">
+<div class="time" style="width: 1.8181818181818%"></div>
+<pre>Fixpoint fsucc {n : nat} : Fin n -&gt; Fin n.+1 :=
+  match n with
+  | O =&gt; Empty_rec
+  | S n' =&gt;
+    fun i : Fin (S n') =&gt;
+      match i with
+      | inl i' =&gt; inl (fsucc i')
+      | inr tt =&gt; inr tt
+      end
+  end.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** This injection is an injection/embedding *)</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma isembedding_fsucc@{} {n : nat} : IsEmbedding (@fsucc n).</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 80
+Time: 0.004s">
+<div class="time" style="width: 7.2727272727273%"></div>
+<pre>
+  apply isembedding_isinj_hset.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simple_induction n n IHn.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro i.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> elim i.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [] []; intro p.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> f_ap.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply IHn.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> eapply path_sum_inl.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact p.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct u.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> elim (inl_ne_inr _ _ p).</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct u.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> elim (inr_ne_inl _ _ p).</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct u, u0; reflexivity.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 88
+Time: 0.002s">
+<div class="time" style="width: 3.6363636363636%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma path_fin_fsucc_incl {n : nat} : forall k : Fin n, fsucc (fin_incl k) = fin_incl (fsucc k).</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  trivial.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 94
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition path_nat_fin_incl {n : nat} (k : Fin n)
+  : fin_to_nat (fin_incl k) = fin_to_nat k
+  := 1.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma path_nat_fsucc@{} {n : nat} : forall k : Fin n, fin_to_nat (fsucc k) = S (fin_to_nat k).</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simple_induction n n IHn.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [].</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [k'|[]].</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite path_fin_fsucc_incl, path_nat_fin_incl.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply IHn.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma path_nat_fin_zero@{} {n} : fin_to_nat (@fin_zero n) = 0.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simple_induction n n IHn.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> trivial.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition path_nat_fin_last {n} : fin_to_nat (@fin_last n) = n
+  := 1.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 118
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Transposition equivalences *)
+
+(** To prove some basic facts about canonical finite sets, we need some standard automorphisms of them.  Here we define some transpositions and prove that they in fact do the desired things. *)
+
+(** *** Swap the last two elements. *)
+
+</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 125
+Time: 0.001s">
+<div class="time" style="width: 1.8181818181818%"></div>
+<pre>Definition fin_transpose_last_two (n : nat)
+  : Fin n.+2 &lt;~&gt; Fin n.+2
+  := ((equiv_sum_assoc _ _ _)^-1)
+       oE (1 +E (equiv_sum_symm _ _))
+       oE (equiv_sum_assoc _ _ _).</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments fin_transpose_last_two : simpl nomatch.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 131
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition fin_transpose_last_two_last (n : nat)
+  : fin_transpose_last_two n (inr tt) = (inl (inr tt))
+  := 1.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 135
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition fin_transpose_last_two_nextlast (n : nat)
+  : fin_transpose_last_two n (inl (inr tt)) = (inr tt)
+  := 1.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition fin_transpose_last_two_rest (n : nat) (k : Fin n)
+  : fin_transpose_last_two n (inl (inl k)) = (inl (inl k))
+  := 1.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Swap the last element with [k]. *)
+
+</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Fixpoint fin_transpose_last_with (n : nat) (k : Fin n.+1)
+  : Fin n.+1 &lt;~&gt; Fin n.+1.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 147
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 148
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct k as [k|].</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct n as [|n].</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> elim k.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 152
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct k as [k|].</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 152
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> refine ((fin_transpose_last_two n)
+                  oE _
+                  oE (fin_transpose_last_two n)).</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 155
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        exact ((fin_transpose_last_with n (inl k)) +E 1).</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply fin_transpose_last_two.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (equiv_idmap _).</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments fin_transpose_last_with : simpl nomatch.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition fin_transpose_last_with_last@{} (n : nat) (k : Fin n.+1)
+  : fin_transpose_last_with n k (inr tt) = k.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 164
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 165
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct k as [k|].</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 166
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simple_induction n n IHn; intro k; simpl.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> elim k.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct k as [k|].</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 170
+Time: 0.002s">
+<div class="time" style="width: 3.6363636363636%"></div>
+<pre> simpl.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 170
+Time: 0.001s">
+<div class="time" style="width: 1.8181818181818%"></div>
+<pre> rewrite IHn; reflexivity.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply ap, ap, path_contr.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> (** We have to destruct [n] since fixpoints don't reduce unless their argument is a constructor. *)
+   </pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>destruct n; simpl.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    all:apply ap, path_contr.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 174
+Time: 0.002s">
+<div class="time" style="width: 3.6363636363636%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 175
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition fin_transpose_last_with_with@{} (n : nat) (k : Fin n.+1)
+  : fin_transpose_last_with n k k = inr tt.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 179
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct k as [k|].</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 180
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 181
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simple_induction n n IHn; intro k; simpl.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 181
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 182
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> elim k.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 182
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 183
+Time: 0.003s">
+<div class="time" style="width: 5.4545454545455%"></div>
+<pre> destruct k as [|k]; simpl.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 183
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 184
+Time: 0.001s">
+<div class="time" style="width: 1.8181818181818%"></div>
+<pre> rewrite IHn; reflexivity.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 184
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply ap, path_contr.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 186
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct n; simpl.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 186
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    all:apply ap, path_contr.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 187
+Time: 0.002s">
+<div class="time" style="width: 3.6363636363636%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition fin_transpose_last_with_rest@{} (n : nat)
+  (k : Fin n.+1) (l : Fin n)
+  (notk : k &lt;&gt; inl l)
+  : fin_transpose_last_with n k (inl l) = (inl l).</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 193
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 194
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct k as [k|].</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simple_induction n n IHn; intros k l notk; simpl.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: elim k.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 197
+Time: 0.006s">
+<div class="time" style="width: 10.909090909091%"></div>
+<pre>
+    destruct k as [k|]; simpl.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 199
+Time: 0.001s">
+<div class="time" style="width: 1.8181818181818%"></div>
+<pre> destruct l as [l|]; simpl.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 199
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      -</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite IHn.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        +</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 201
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 201
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        +</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 202
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fun p =&gt; notk (ap inl p)).</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 202
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      -</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 203
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 203
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 203
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 204
+Time: 0.001s">
+<div class="time" style="width: 1.8181818181818%"></div>
+<pre> destruct l as [l|]; simpl.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 204
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      -</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 205
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 205
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      -</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> elim (notk (ap inl (ap inr (path_unit _ _)))).</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 207
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct n; reflexivity.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 207
+Time: 0.008s">
+<div class="time" style="width: 14.545454545455%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition fin_transpose_last_with_last_other (n : nat) (k : Fin n.+1)
+  : fin_transpose_last_with n (inr tt) k = k.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 211
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 212
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct n; reflexivity.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 213
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 214
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition fin_transpose_last_with_invol (n : nat) (k : Fin n.+1)
+  : fin_transpose_last_with n k o fin_transpose_last_with n k == idmap.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 217
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 218
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros l.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 219
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct l as [l|[]].</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 220
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 221
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct k as [k|[]].</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 221
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 222
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (dec_paths k l) as [p|p].</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 222
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      -</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 223
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite p.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 223
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        rewrite fin_transpose_last_with_with.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 224
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply fin_transpose_last_with_last.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      -</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 226
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite fin_transpose_last_with_rest;
+          try apply fin_transpose_last_with_rest;
+          exact (fun q =&gt; p (path_sum_inl _ q)).</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 229
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite fin_transpose_last_with_last_other.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 229
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply fin_transpose_last_with_last_other.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 230
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 231
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite fin_transpose_last_with_last.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 231
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply fin_transpose_last_with_with.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 232
+Time: 0.001s">
+<div class="time" style="width: 1.8181818181818%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 233
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Equivalences between canonical finite sets *)
+
+(** To give an equivalence [Fin n.+1 &lt;~&gt; Fin m.+1] is equivalent to giving an element of [Fin m.+1] (the image of the last element) together with an equivalence [Fin n &lt;~&gt; Fin m].  More specifically, any such equivalence can be decomposed uniquely as a last-element transposition followed by an equivalence fixing the last element.  *)
+
+(** Here is the uncurried map that constructs an equivalence [Fin n.+1 &lt;~&gt; Fin m.+1]. *)</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 239
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition fin_equiv (n m : nat)
+  (k : Fin m.+1) (e : Fin n &lt;~&gt; Fin m)
+  : Fin n.+1 &lt;~&gt; Fin m.+1
+  := (fin_transpose_last_with m k) oE (e +E 1).</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 242
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Here is the curried version that we will prove to be an equivalence. *)</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 244
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition fin_equiv' (n m : nat)
+  : ((Fin m.+1) * (Fin n &lt;~&gt; Fin m)) -&gt; (Fin n.+1 &lt;~&gt; Fin m.+1)
+  := fun ke =&gt; fin_equiv n m (fst ke) (snd ke).</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 246
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We construct its inverse and the two homotopies first as versions using homotopies without funext (similar to [ExtendableAlong]), then apply funext at the end. *)</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 248
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition fin_equiv_hfiber@{} (n m : nat) (e : Fin n.+1 &lt;~&gt; Fin m.+1)
+  : { kf : (Fin m.+1) * (Fin n &lt;~&gt; Fin m) &amp; fin_equiv' n m kf == e }.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 249
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 250
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simpl in e.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 251
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (equiv_sigma_prod _ _).</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 252
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  recall (e (inr tt)) as y eqn:p.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 253
+Time: 0.001s">
+<div class="time" style="width: 1.8181818181818%"></div>
+<pre>
+  assert (p' := (moveL_equiv_V _ _ p)^).</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 254
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exists y.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 255
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct y as [y|[]].</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 256
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 257
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simple refine (equiv_unfunctor_sum_l@{Set Set Set Set Set Set}
+              (fin_transpose_last_with m (inl y) oE e)
+              _ _ ; _).</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 259
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 260
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 260
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> ev_equiv.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 260
+Time: 0.001s">
+<div class="time" style="width: 1.8181818181818%"></div>
+<pre>
+      assert (q : inl y &lt;&gt; e (inl a))
+        by exact (fun z =&gt; inl_ne_inr _ _ (equiv_inj e (z^ @ p^))).</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 262
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      set (z := e (inl a)) in *.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 263
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      destruct z as [z|[]].</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 264
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      -</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 265
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite fin_transpose_last_with_rest;
+        try exact tt; try assumption.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 266
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      -</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 267
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite fin_transpose_last_with_last; exact tt.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 267
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 267
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 268
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [].</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 268
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> ev_equiv.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 268
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite p.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 269
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite fin_transpose_last_with_with; exact tt.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 270
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 270
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros x.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 271
+Time: 0.004s">
+<div class="time" style="width: 7.2727272727273%"></div>
+<pre> unfold fst, snd; ev_equiv.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 271
+Time: 0.002s">
+<div class="time" style="width: 3.6363636363636%"></div>
+<pre> simpl.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 271
+Time: 0.006s">
+<div class="time" style="width: 10.909090909091%"></div>
+<pre>
+    destruct x as [x|[]]; simpl.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 272
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    *</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 273
+Time: 0.004s">
+<div class="time" style="width: 7.2727272727273%"></div>
+<pre> rewrite unfunctor_sum_l_beta.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 273
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply fin_transpose_last_with_invol.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 274
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    *</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 275
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fin_transpose_last_with_last _ _ @ p^).</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 275
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 276
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simple refine (equiv_unfunctor_sum_l@{Set Set Set Set Set Set} e _ _ ; _).</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 276
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 277
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 277
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      destruct (is_inl_or_is_inr (e (inl a))) as [l|r].</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 278
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      -</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 279
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact l.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 279
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      -</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 280
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assert (q := inr_un_inr (e (inl a)) r).</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 280
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply moveR_equiv_V in q.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 281
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        assert (s := q^ @ ap (e^-1 o inr) (path_unit _ _) @ p').</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 282
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        elim (inl_ne_inr _ _ s).</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 283
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 283
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 284
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros []; exact (p^ # tt).</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 284
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 284
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros x.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 285
+Time: 0.001s">
+<div class="time" style="width: 1.8181818181818%"></div>
+<pre> unfold fst, snd; ev_equiv.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 285
+Time: 0.002s">
+<div class="time" style="width: 3.6363636363636%"></div>
+<pre> simpl.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 285
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct x as [a|[]].</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 286
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    *</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 287
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite fin_transpose_last_with_last_other.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 287
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply unfunctor_sum_l_beta.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 288
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    *</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 289
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 289
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite fin_transpose_last_with_last.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 290
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      symmetry; exact p.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 291
+Time: 0.055s">
+<div class="time" style="width: 100%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 292
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition fin_equiv_inv (n m : nat) (e : Fin n.+1 &lt;~&gt; Fin m.+1)
+  : (Fin m.+1) * (Fin n &lt;~&gt; Fin m)
+  := (fin_equiv_hfiber n m e).1.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 296
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition fin_equiv_issect (n m : nat) (e : Fin n.+1 &lt;~&gt; Fin m.+1)
+  : fin_equiv' n m (fin_equiv_inv n m e) == e
+  := (fin_equiv_hfiber n m e).2.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 300
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition fin_equiv_inj_fst (n m : nat)
+           (k l : Fin m.+1) (e f : Fin n &lt;~&gt; Fin m)
+  : (fin_equiv n m k e == fin_equiv n m l f) -&gt; (k = l).</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 304
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 305
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros p.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 306
+Time: 0.001s">
+<div class="time" style="width: 1.8181818181818%"></div>
+<pre>
+  refine (_ @ p (inr tt) @ _); simpl;
+  rewrite fin_transpose_last_with_last; reflexivity.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 308
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 309
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition fin_equiv_inj_snd (n m : nat)
+           (k l : Fin m.+1) (e f : Fin n &lt;~&gt; Fin m)
+  : (fin_equiv n m k e == fin_equiv n m l f) -&gt; (e == f).</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 313
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 314
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros p.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 315
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 316
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assert (q := p (inr tt)); simpl in q.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 316
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite !fin_transpose_last_with_last in q.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 317
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite &lt;- q in p; clear q l.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 318
+Time: 0.001s">
+<div class="time" style="width: 1.8181818181818%"></div>
+<pre>
+  exact (path_sum_inl _
+           (equiv_inj (fin_transpose_last_with m k) (p (inl x)))).</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 320
+Time: 0.001s">
+<div class="time" style="width: 1.8181818181818%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 321
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Now it's time for funext. *)</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 323
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isequiv_fin_equiv `{Funext} (n m : nat)
+  : IsEquiv (fin_equiv' n m).</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 324
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 325
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (isequiv_pathsplit 0 _); split.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 326
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 327
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros e; exists (fin_equiv_inv n m e).</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 327
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_equiv, path_arrow, fin_equiv_issect.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 328
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 329
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [k e] [l f]; simpl.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 329
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (_ , fun _ _ =&gt; tt).</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 330
+Time: 0.005s">
+<div class="time" style="width: 9.0909090909091%"></div>
+<pre>
+    intros p; refine (_ ; path_ishprop _ _).</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 331
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (ap equiv_fun) in p.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 332
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply ap10 in p.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 333
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_prod'.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 334
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 335
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fin_equiv_inj_fst n m k l e f p).</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 335
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 336
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply path_equiv, path_arrow.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 336
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (fin_equiv_inj_snd n m k l e f p).</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 337
+Time: 0.003s">
+<div class="time" style="width: 5.4545454545455%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 338
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition equiv_fin_equiv `{Funext} (n m : nat)
+  : ((Fin m.+1) * (Fin n &lt;~&gt; Fin m)) &lt;~&gt; (Fin n.+1 &lt;~&gt; Fin m.+1)
+  := Build_Equiv _ _ (fin_equiv' n m) _.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 342
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** In particular, this implies that if two canonical finite sets are equivalent, then their cardinalities are equal. *)</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 344
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition nat_eq_fin_equiv (n m : nat)
+: (Fin n &lt;~&gt; Fin m) -&gt; (n = m).</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 345
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 346
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert m; simple_induction n n IHn; intro m; simple_induction m m IHm; intros e.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 347
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 348
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact idpath.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 348
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 349
+Time: 0.001s">
+<div class="time" style="width: 1.8181818181818%"></div>
+<pre> elim (e^-1 (inr tt)).</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 349
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 350
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> elim (e (inr tt)).</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 350
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 351
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> refine (ap S (IHn m _)).</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 351
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (snd (fin_equiv_inv n m e)).</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 352
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 353
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Initial segments of [nat] *)
+
+</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 356
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition nat_fin (n : nat) (k : Fin n) : nat.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 356
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 357
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simple_induction n n nf; intro k.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 358
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 359
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> contradiction.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 359
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 360
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct k as [k|_].</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 360
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 361
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (nf k).</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 361
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 362
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact n.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 362
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 363
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition nat_fin_inl (n : nat) (k : Fin n)
+  : nat_fin n.+1 (inl k) = nat_fin n k
+  := 1.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 367
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition nat_fin_compl (n : nat) (k : Fin n) : nat.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 369
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 370
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simple_induction n n nfc; intro k.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 371
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 372
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> contradiction.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 372
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 373
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct k as [k|_].</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 373
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 374
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (nfc k).+1.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 374
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 375
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact 0.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 375
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 376
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition nat_fin_compl_compl n k
+  : (nat_fin n k + nat_fin_compl n k).+1 = n.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 379
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 380
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simple_induction n n IHn; intro k.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 381
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 382
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> contradiction.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 382
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 383
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct k as [k|?]; simpl.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 383
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 384
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite nat_add_comm.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 384
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      specialize (IHn k).</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 385
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite nat_add_comm in IHn.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 386
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (ap S IHn).</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 387
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 388
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite nat_add_comm; reflexivity.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 388
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 389
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [fsucc_mod] is the successor function mod n *)</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 391
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition fsucc_mod@{} {n : nat} : Fin n -&gt; Fin n.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 391
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 392
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct n.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 393
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact idmap.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 394
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [x|].</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 395
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 396
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fsucc x).</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 396
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 397
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact fin_zero.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 397
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 398
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [fsucc] allows us to convert a natural number into an element of a finite set. This can be thought of as the modulo map. *)</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 400
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Fixpoint fin_nat {n : nat} (m : nat) : Fin n.+1
+  := match m with
+      | 0 =&gt; fin_zero
+      | S m =&gt; fsucc_mod (fin_nat m)
+     end.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 404
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The 1-dimensional version of Sperner's lemma says that given any finite sequence of decidable hProps, where the sequence starts with true and ends with false, we can find a point in the sequence where the sequence changes from true to false. This is like a discrete intermediate value theorem. *)</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 406
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Fixpoint sperners_lemma_1d {n} :
+  forall (f : Fin (n.+2) -&gt; Type)
+         {dprop : forall i, Decidable (f i)}
+         (left_true : f fin_zero)
+         (right_false : ~ f fin_last),
+    {k : Fin n.+1 &amp; f (fin_incl k) /\ ~ f (fsucc k)}.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 411
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 412
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros ???.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 413
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct n as [|n].</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 414
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 415
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists fin_zero.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 415
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split; assumption.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 415
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 416
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (dec (f (fin_incl fin_last))) as [prev_true|prev_false].</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 416
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 417
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists fin_last.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 417
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split; assumption.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 417
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 418
+Time: 0.001s">
+<div class="time" style="width: 1.8181818181818%"></div>
+<pre> destruct (sperners_lemma_1d _ (f o fin_incl) _ left_true prev_false) as [k' [fleft fright]].</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 418
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exists (fin_incl k').</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 419
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      split; assumption.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 420
+Time: 0.001s">
+<div class="time" style="width: 1.8181818181818%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Fin.v
+Line: 422
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

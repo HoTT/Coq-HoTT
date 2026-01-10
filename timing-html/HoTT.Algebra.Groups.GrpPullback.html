@@ -1,0 +1,1578 @@
+<html>
+<head>
+<title>GrpPullback.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for GrpPullback.v</h1>
+
+<div class="code" title="File: GrpPullback.v
+Line: 1
+Time: 0.043s">
+<div class="time" style="width: 81.132075471698%"></div>
+<pre>From HoTT Require Import Basics Types Limits.Pullback Cubical.PathSquare.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 1
+Time: 0.053s">
+<div class="time" style="width: 100%"></div>
+<pre>
+Require Import Algebra.Groups.Group.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 2
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+Require Import WildCat.Core.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Pullbacks of groups are formalized by equipping the set-pullback with the desired group structure. The universal property in the category of groups is proved by saying that the corecursion principle [grp_pullback_corec] is an equivalence. *) 
+
+</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Open Scope mc_scope.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope mc_mult_scope.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section GrpPullback.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 9
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (* Variables are named to correspond with Limits.Pullback. *)
+ </pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Context {A B C : Group} (f : B $-&gt; A) (g : C $-&gt; A).</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Instance grp_pullback_sgop : SgOp (Pullback f g).</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros [b [c p]] [d [e q]].</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (b * d; c * e; _).</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (grp_homo_op_agree _ _ p q).</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Instance grp_pullback_sgop_associative
+    : Associative grp_pullback_sgop.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 23
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+    intros [x1 [x2 p]] [y1 [y2 q]] [z1 [z2 u]].</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 24
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+    apply equiv_path_pullback; simpl.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 25
+Time: 0.004s">
+<div class="time" style="width: 7.5471698113208%"></div>
+<pre>
+    refine (associativity _ _ _; associativity _ _ _; _).</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply equiv_sq_path.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 27
+Time: 0.006s">
+<div class="time" style="width: 11.320754716981%"></div>
+<pre>
+    apply path_ishprop.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 28
+Time: 0.005s">
+<div class="time" style="width: 9.4339622641509%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 29
+Time: 0.034s">
+<div class="time" style="width: 64.150943396226%"></div>
+<pre>
+
+  Local Instance grp_pullback_issemigroup : IsSemiGroup (Pullback f g) := {}.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 31
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+  
+  Local Instance grp_pullback_mon_unit : MonUnit (Pullback f g)
+    := (1; 1; grp_homo_unit f @ (grp_homo_unit g)^).</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Instance grp_pullback_leftidentity
+    : LeftIdentity grp_pullback_sgop grp_pullback_mon_unit.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros [b [c p]]; simpl.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 39
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+    apply equiv_path_pullback; simpl.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 40
+Time: 0.002s">
+<div class="time" style="width: 3.7735849056604%"></div>
+<pre>
+    refine (left_identity _; left_identity _; _).</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply equiv_sq_path.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 42
+Time: 0.006s">
+<div class="time" style="width: 11.320754716981%"></div>
+<pre>
+    apply path_ishprop.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 43
+Time: 0.003s">
+<div class="time" style="width: 5.6603773584906%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Instance grp_pullback_rightidentity
+    : RightIdentity grp_pullback_sgop grp_pullback_mon_unit.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros [b [c p]]; simpl.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 49
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+    apply equiv_path_pullback; simpl.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 50
+Time: 0.002s">
+<div class="time" style="width: 3.7735849056604%"></div>
+<pre>
+    refine (right_identity _; right_identity _; _).</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply equiv_sq_path.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 52
+Time: 0.006s">
+<div class="time" style="width: 11.320754716981%"></div>
+<pre>
+    apply path_ishprop.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 53
+Time: 0.003s">
+<div class="time" style="width: 5.6603773584906%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Instance ismonoid_grp_pullback : IsMonoid (Pullback f g) := {}.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Instance grp_pullback_inverse : Inverse (Pullback f g).</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros [b [c p]].</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (b^; c^; grp_homo_inv f b @ _ @ (grp_homo_inv g c)^).</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (ap (^) p).</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Instance grp_pullback_leftinverse : LeftInverse (.*.) (^) mon_unit.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unfold LeftInverse.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros [b [c p]].</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 68
+Time: 0.016s">
+<div class="time" style="width: 30.188679245283%"></div>
+<pre>
+    unfold grp_pullback_sgop; simpl.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 69
+Time: 0.002s">
+<div class="time" style="width: 3.7735849056604%"></div>
+<pre>
+    apply equiv_path_pullback; simpl.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (left_inverse _; left_inverse _; _).</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply equiv_sq_path.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 72
+Time: 0.004s">
+<div class="time" style="width: 7.5471698113208%"></div>
+<pre>
+    apply path_ishprop.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 73
+Time: 0.004s">
+<div class="time" style="width: 7.5471698113208%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Instance grp_pullback_rightinverse : RightInverse (.*.) (^) mon_unit.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros [b [c p]].</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unfold grp_pullback_sgop; simpl.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 79
+Time: 0.002s">
+<div class="time" style="width: 3.7735849056604%"></div>
+<pre>
+    apply equiv_path_pullback; simpl.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (right_inverse _; right_inverse _; _).</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply equiv_sq_path.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 82
+Time: 0.004s">
+<div class="time" style="width: 7.5471698113208%"></div>
+<pre>
+    apply path_ishprop.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 83
+Time: 0.004s">
+<div class="time" style="width: 7.5471698113208%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance isgroup_grp_pullback : IsGroup (Pullback f g) := {}.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition grp_pullback : Group
+    := Build_Group (Pullback f g) _ _ _ _.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition grp_pullback_pr1 : grp_pullback $-&gt; B.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply Build_GroupHomomorphism.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 94
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact pullback_pr1.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 94
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition grp_pullback_pr2 : grp_pullback $-&gt; C.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply Build_GroupHomomorphism.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact pullback_pr2.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 103
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+
+  Proposition grp_pullback_corec {X : Group}
+              (b : X $-&gt; B) (c : X $-&gt; C)
+              (p : f o b == g o c)
+    : X $-&gt; grp_pullback.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply Build_GroupHomomorphism.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fun x =&gt; (b x; c x; p x)).</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      srapply path_sigma.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply (grp_homo_op b).</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> unfold pr2.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        refine (transport_sigma' _ _ @ _).</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> unfold pr1.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 117
+Time: 0.006s">
+<div class="time" style="width: 11.320754716981%"></div>
+<pre>
+        apply path_sigma_hprop.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 118
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        simpl.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply (grp_homo_op c).</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 120
+Time: 0.004s">
+<div class="time" style="width: 7.5471698113208%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 121
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+
+  Corollary grp_pullback_corec' (X : Group)
+    : {b : X $-&gt; B &amp; { c : X $-&gt; C &amp; f o b == g o c}}
+      -&gt; (X $-&gt; grp_pullback).</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 125
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 126
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros [b [c p]]; exact (grp_pullback_corec b c p).</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 128
+Time: 0.028s">
+<div class="time" style="width: 52.830188679245%"></div>
+<pre>
+
+End GrpPullback.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 130
+Time: 0.003s">
+<div class="time" style="width: 5.6603773584906%"></div>
+<pre>
+
+Definition functor_grp_pullback {A A' B B' C C' : Group}
+           (f : B $-&gt; A) (f' : B' $-&gt; A')
+           (g : C $-&gt; A) (g' : C' $-&gt; A')
+           (alpha : A $-&gt; A') (beta : B $-&gt; B') (gamma : C $-&gt; C')
+           (h : f' o beta == alpha o f)
+           (k : alpha o g == g' o gamma)
+  : grp_pullback f g $-&gt; grp_pullback f' g'.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply grp_pullback_corec.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (beta $o grp_pullback_pr1 f g).</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (gamma $o grp_pullback_pr2 f g).</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro x; cbn.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (h _ @ ap alpha _ @ k _).</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply pullback_commsq.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 145
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 146
+Time: 0.003s">
+<div class="time" style="width: 5.6603773584906%"></div>
+<pre>
+
+Definition equiv_functor_grp_pullback {A A' B B' C C' : Group}
+           (f : B $-&gt; A) (f' : B' $-&gt; A')
+           (g : C $-&gt; A) (g' : C' $-&gt; A')
+           (alpha : GroupIsomorphism A A')
+           (beta : GroupIsomorphism B B')
+           (gamma : GroupIsomorphism C C')
+           (h : f' o beta == alpha o f)
+           (k : alpha o g == g' o gamma)
+  : GroupIsomorphism (grp_pullback f g) (grp_pullback f' g').</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 157
+Time: 0.008s">
+<div class="time" style="width: 15.094339622642%"></div>
+<pre>
+  srapply Build_GroupIsomorphism.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact (functor_grp_pullback f f' g g' _ _ _ h k).</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply isequiv_adjointify.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 161
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre> srapply (functor_grp_pullback f' f g' g).</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 161
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+    1-3: rapply grp_iso_inverse; assumption.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 163
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre> rapply (equiv_ind beta); intro b.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 163
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      refine (ap f (eissect _ _) @ _).</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 164
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+      apply (equiv_ap' alpha _ _)^-1.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 165
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact ((h b)^ @ (eisretr _ _)^).</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 166
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 167
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre> rapply (equiv_ind gamma); intro c.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      refine (_ @ ap g (eissect _ _)^).</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 168
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+      apply (equiv_ap' alpha _ _)^-1.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (eisretr _ _ @ (k c)^).</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 170
+Time: 0.013s">
+<div class="time" style="width: 24.528301886792%"></div>
+<pre>
+  all: intro x;
+    apply equiv_path_pullback_hset; split; cbn.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1-2: apply eisretr.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1-2: apply eissect.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 174
+Time: 0.017s">
+<div class="time" style="width: 32.075471698113%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 175
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Pulling back along some [g : Y $-&gt; Z] and then [g' : Y' $-&gt; Y] is the same as pulling back along [g $o g']. *)</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 177
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>Definition equiv_grp_pullback_compose_r {X Z Y Y' : Group} (f : X $-&gt; Z) (g' : Y' $-&gt; Y) (g : Y $-&gt; Z)
+  : GroupIsomorphism (grp_pullback (grp_pullback_pr2 f g) g') (grp_pullback f (g $o g')).</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 179
+Time: 0.008s">
+<div class="time" style="width: 15.094339622642%"></div>
+<pre>
+  srapply Build_GroupIsomorphism.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 180
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 181
+Time: 0.002s">
+<div class="time" style="width: 3.7735849056604%"></div>
+<pre> srapply grp_pullback_corec.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 181
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 182
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (grp_pullback_pr1 _ _ $o grp_pullback_pr1 _ _).</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 182
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 183
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply grp_pullback_pr2.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 183
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 184
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro x; cbn.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 184
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (pullback_commsq _ _ _ @ ap g (pullback_commsq _ _ _)).</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 186
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre> srapply isequiv_adjointify.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 186
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 187
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre> srapply grp_pullback_corec.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 188
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre> srapply functor_grp_pullback.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        1,2: exact grp_homo_id.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 189
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        1: exact g'.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 190
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        all: reflexivity.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 191
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 192
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply grp_pullback_pr2.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 192
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 193
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 193
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 194
+Time: 0.003s">
+<div class="time" style="width: 5.6603773584906%"></div>
+<pre> intro x; cbn.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 194
+Time: 0.007s">
+<div class="time" style="width: 13.207547169811%"></div>
+<pre>
+      by srapply equiv_path_pullback_hset.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 196
+Time: 0.015s">
+<div class="time" style="width: 28.301886792453%"></div>
+<pre> intros [[x [y z0]] [y' z1]]; srapply equiv_path_pullback_hset; split; cbn.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      2: reflexivity.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 197
+Time: 0.005s">
+<div class="time" style="width: 9.4339622641509%"></div>
+<pre>
+      srapply equiv_path_pullback_hset; split; cbn.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      1: reflexivity.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 199
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      symmetry; exact z1.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 200
+Time: 0.018s">
+<div class="time" style="width: 33.962264150943%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 201
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section IsEquivGrpPullbackCorec.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 203
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (* New section with Funext at the start of the Context. *)
+ </pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Context `{Funext} {A B C : Group} (f : B $-&gt; A) (g : C $-&gt; A).</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 206
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+
+  Lemma grp_pullback_corec_pr1 {X : Group}
+        (b : X $-&gt; B) (c : X $-&gt; C)
+        (p : f o b == g o c)
+    : grp_pullback_pr1 f g $o grp_pullback_corec f g b c p = b.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 211
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 212
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply equiv_path_grouphomomorphism; reflexivity.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 213
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 214
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+
+  Lemma grp_pullback_corec_pr2 {X : Group}
+        (b : X $-&gt; B) (c : X $-&gt; C)
+        (p : f o b == g o c)
+    : grp_pullback_pr2 f g $o grp_pullback_corec f g b c p = c.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 219
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 220
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply equiv_path_grouphomomorphism; reflexivity.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 221
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 222
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Theorem isequiv_grp_pullback_corec (X : Group)
+    : IsEquiv (grp_pullback_corec' f g X).</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 226
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply isequiv_adjointify.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 227
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro phi.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      refine (grp_pullback_pr1 f g $o phi; grp_pullback_pr2 f g $o phi; _).</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 229
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      intro x; exact (pullback_commsq f g (phi x)).</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 230
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 231
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro phi.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 231
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply equiv_path_grouphomomorphism; reflexivity.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 232
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 233
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro bcp; simpl.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 233
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      srapply path_sigma.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 234
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 235
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 235
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply grp_pullback_corec_pr1.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 235
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 236
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> refine (transport_sigma' _ _ @ _).</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 236
+Time: 0.01s">
+<div class="time" style="width: 18.867924528302%"></div>
+<pre>
+        apply path_sigma_hprop; simpl pr1.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 237
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        simpl.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 238
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply grp_pullback_corec_pr2.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 238
+Time: 0.01s">
+<div class="time" style="width: 18.867924528302%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 239
+Time: 0.003s">
+<div class="time" style="width: 5.6603773584906%"></div>
+<pre>
+
+End IsEquivGrpPullbackCorec.</pre>
+</div>
+<div class="code" title="File: GrpPullback.v
+Line: 242
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

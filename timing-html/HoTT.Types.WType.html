@@ -1,0 +1,274 @@
+<html>
+<head>
+<title>WType.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for WType.v</h1>
+
+<div class="code" title="File: WType.v
+Line: 1
+Time: 0.029s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import HoTT.Basics.</pre>
+</div>
+<div class="code" title="File: WType.v
+Line: 1
+Time: 0.003s">
+<div class="time" style="width: 10.344827586207%"></div>
+<pre>
+Require Import Types.Forall Types.Sigma.</pre>
+</div>
+<div class="code" title="File: WType.v
+Line: 2
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Theorems about W-types (well-founded trees) *)
+
+</pre>
+</div>
+<div class="code" title="File: WType.v
+Line: 5
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>Inductive W (A : Type) (B : A -&gt; Type) : Type :=
+  w_sup (x : A) : (B x -&gt; W A B) -&gt; W A B.</pre>
+</div>
+<div class="code" title="File: WType.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition w_label {A B} (w : W A B) : A :=
+  match w with
+  | w_sup x y =&gt; x
+  end.</pre>
+</div>
+<div class="code" title="File: WType.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition w_arg {A B} (w : W A B) : B (w_label w) -&gt; W A B :=
+  match w with
+  | w_sup x y =&gt; y
+  end.</pre>
+</div>
+<div class="code" title="File: WType.v
+Line: 16
+Time: 0.005s">
+<div class="time" style="width: 17.241379310345%"></div>
+<pre>
+
+Definition issig_W (A : Type) (B : A -&gt; Type)
+  : _ &lt;~&gt; W A B := ltac:(issig).</pre>
+</div>
+<div class="code" title="File: WType.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Paths *)
+
+</pre>
+</div>
+<div class="code" title="File: WType.v
+Line: 22
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>Definition equiv_path_wtype {A B} (z z' : W A B)
+  : (w_label z;w_arg z) = (w_label z';w_arg z') :&gt; {a : _ &amp; B a -&gt; W A B} &lt;~&gt; z = z'
+  := (equiv_ap' (issig_W A B)^-1%equiv z z')^-1%equiv.</pre>
+</div>
+<div class="code" title="File: WType.v
+Line: 24
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+
+Definition equiv_path_wtype' {A B} (z z' : W A B)
+  : {p : w_label z = w_label z' &amp; w_arg z = w_arg z' o transport B p}
+    &lt;~&gt; z = z'.</pre>
+</div>
+<div class="code" title="File: WType.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: WType.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (equiv_path_wtype _ _ oE equiv_path_sigma _ _ _ oE _).</pre>
+</div>
+<div class="code" title="File: WType.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply equiv_functor_sigma_id.</pre>
+</div>
+<div class="code" title="File: WType.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct z as [z1 z2], z' as [z1' z2'].</pre>
+</div>
+<div class="code" title="File: WType.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  cbn; intros p.</pre>
+</div>
+<div class="code" title="File: WType.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct p.</pre>
+</div>
+<div class="code" title="File: WType.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  reflexivity.</pre>
+</div>
+<div class="code" title="File: WType.v
+Line: 35
+Time: 0.002s">
+<div class="time" style="width: 6.8965517241379%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: WType.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** W-types preserve truncation *)
+
+</pre>
+</div>
+<div class="code" title="File: WType.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance istrunc_wtype `{Funext}
+  {A B} {n : trunc_index} `{IsTrunc n.+1 A}
+: IsTrunc n.+1 (W A B) | 100.</pre>
+</div>
+<div class="code" title="File: WType.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: WType.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply istrunc_S.</pre>
+</div>
+<div class="code" title="File: WType.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros z; induction z as [a w].</pre>
+</div>
+<div class="code" title="File: WType.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro y; destruct y as [a0 w0].</pre>
+</div>
+<div class="code" title="File: WType.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  nrefine (istrunc_equiv_istrunc _ (equiv_path_wtype' _ _)).</pre>
+</div>
+<div class="code" title="File: WType.v
+Line: 46
+Time: 0.002s">
+<div class="time" style="width: 6.8965517241379%"></div>
+<pre>
+  rapply istrunc_sigma.</pre>
+</div>
+<div class="code" title="File: WType.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  cbn; intro p.</pre>
+</div>
+<div class="code" title="File: WType.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct p.</pre>
+</div>
+<div class="code" title="File: WType.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (istrunc_equiv_istrunc _ (equiv_path_forall _ _)).</pre>
+</div>
+<div class="code" title="File: WType.v
+Line: 50
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: WType.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

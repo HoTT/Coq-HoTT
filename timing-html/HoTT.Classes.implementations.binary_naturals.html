@@ -1,0 +1,5013 @@
+<html>
+<head>
+<title>binary_naturals.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for binary_naturals.v</h1>
+
+<div class="code" title="File: binary_naturals.v
+Line: 1
+Time: 0.028s">
+<div class="time" style="width: 52.830188679245%"></div>
+<pre>Require Import
+        HoTT.Spaces.Nat.Core.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 2
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+Require Import
+        HoTT.Tactics.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 4
+Time: 0.053s">
+<div class="time" style="width: 100%"></div>
+<pre>
+Require Import
+        HoTT.Classes.interfaces.abstract_algebra
+        HoTT.Classes.interfaces.naturals
+        HoTT.Classes.interfaces.orders
+        HoTT.Classes.implementations.peano_naturals
+        HoTT.Classes.theory.rings
+        HoTT.Classes.orders.semirings
+        HoTT.Classes.theory.apartness.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section basics.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (* This definition of binary naturals is due to Martín Escardó and
+     Cory Knapp *)
+
+ </pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 19
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>Inductive binnat : Type0 :=
+  | bzero   :           binnat  (* zero *)
+  | double1 : binnat -&gt; binnat  (* 2n+1 *)
+  | double2 : binnat -&gt; binnat.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> (* 2n+2 *)
+
+ </pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Fixpoint Succ (n : binnat) : binnat :=
+    match n with
+    | bzero      =&gt; double1 bzero
+    | double1 n' =&gt; double2 n'
+    | double2 n' =&gt; double1 (Succ n')
+    end.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Fixpoint double (n : binnat) : binnat :=
+    match n with
+    | bzero      =&gt; bzero
+    | double1 n' =&gt; double2 (double n')
+    | double2 n' =&gt; double2 (Succ (double n'))
+    end.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Fixpoint Double (n : nat) : nat :=
+    match n with
+    | O    =&gt; O
+    | S n' =&gt; S (S (Double n'))
+    end.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition Double1 (n : nat) : nat := S (Double n).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition Double2 (n : nat) : nat := S (S (Double n)).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Fixpoint binary (n : nat) : binnat :=
+    match n with
+    | O    =&gt; bzero
+    | S n' =&gt; Succ (binary n')
+    end.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End basics.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section binary_equiv.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Fixpoint unary' (n : binnat) : nat :=
+    match n with
+    | bzero      =&gt; O
+    | double1 n' =&gt; Double1 (unary' n')
+    | double2 n' =&gt; Double2 (unary' n')
+    end.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Definition succunary (n : binnat) : unary' (Succ n) = S (unary' n).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    induction n.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite IHn.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Definition unarybinary : unary' o binary == idmap.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros n; induction n as [|n IHn].</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite succunary.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply ap.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact IHn.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition double1binary (n : nat) : binary (Double1 n) = double1 (binary n).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    induction n.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> change (binary (Double1 n.+1)) with (Succ (Succ (binary (Double n).+1))).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite IHn.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition double2binary (n : nat) : binary (Double2 n) = double2 (binary n).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    induction n.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> change (binary (Double2 n.+1)) with (Succ (Succ (binary (Double n).+2))).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite IHn.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 94
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Definition binaryunary : binary o unary' == idmap.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros n; induction n.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite double1binary.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply ap.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact IHn.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite double2binary.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply ap.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact IHn.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance isequiv_binary : IsEquiv binary :=
+    isequiv_adjointify binary unary' binaryunary unarybinary.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition equiv_binary : nat &lt;~&gt; binnat :=
+    Build_Equiv _ _  binary isequiv_binary.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End binary_equiv.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation equiv_unary  := equiv_binary ^-1.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Notation unary := equiv_unary.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section semiring_struct.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance binnat_0 : Zero binnat := bzero.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  #[export] Instance binnat_1 : One binnat := double1 bzero.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 118
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+
+  Local Fixpoint binnat_plus' (m n : binnat) : binnat :=
+    match m, n with
+    | bzero      , n'         =&gt; n'
+    | double1 m' , bzero      =&gt; double1 m'
+    (* compute m + n as 2m'+1 + 2n'+1 = 2(m'+n') + 2 *)
+    | double1 m' , double1 n' =&gt; double2 (binnat_plus' m' n')
+    (* compute m + n as 2m'+1 + 2n'+2 = 2(m'+n')+2 + 1 = 2(m' + n' + 1) + 1 *)
+    | double1 m' , double2 n' =&gt; double1 (Succ (binnat_plus' m' n'))
+    | double2 m' , bzero      =&gt; double2 m'
+    (* compute m + n as 2m'+2 + 2n'+1 = 2(m'+n')+2 + 1 = 2(m' + n' + 1) + 1 *)
+    | double2 m' , double1 n' =&gt; double1 (Succ (binnat_plus' m' n'))
+    (* compute m + n as 2m'+2 + 2n'+2 = 2(m'+n')+2 + 2 = 2(m' + n' + 1) + 2*)
+    | double2 m' , double2 n' =&gt; double2 (Succ (binnat_plus' m' n'))
+    end.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  #[export] Instance binnat_plus : Plus binnat := binnat_plus'.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 134
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+
+  Local Fixpoint binnat_mult' (m n : binnat) : binnat :=
+    match m with
+    | bzero      =&gt; bzero
+    (* compute (2m'+1)*n as 2m'n+n *)
+    | double1 m' =&gt; (binnat_mult' m' n) + (binnat_mult' m' n) + n
+    | double2 m' =&gt; (binnat_mult' m' n) + (binnat_mult' m' n) + n + n
+    end.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  #[export] Instance binnat_mult : Mult binnat := binnat_mult'.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End semiring_struct.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 145
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section semiring_laws.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 147
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition binarysucc (n : nat) : binary n.+1 = Succ (binary n).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    reflexivity.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 152
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+
+  Definition unarysucc : forall m, unary (Succ m) = S (unary m).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 154
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 155
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    equiv_intros binary n.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite &lt;- binarysucc.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite eissect, eissect.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    reflexivity.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition binnatplussucc : forall (m n : binnat), (Succ m) + n = Succ (m + n).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 163
+Time: 0.002s">
+<div class="time" style="width: 3.7735849056604%"></div>
+<pre>
+    induction m; induction n; try reflexivity; simpl; rewrite &lt;- IHm; done.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 164
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 165
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition binaryplus (m n : nat) : binary m + binary n = binary (m + n).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 168
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+    induction m; induction n; try reflexivity.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite binnatplussucc.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply ap.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> done.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite &lt;- IHm.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite binnatplussucc.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> done.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 171
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition unaryplus (m n : binnat) : unary m + unary n = unary (m + n).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 174
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 175
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    etransitivity (unary (binary (_^-1 m + _^-1 n))).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply ((eissect binary (unary m + unary n)) ^).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite &lt;- binaryplus.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite (eisretr binary m), (eisretr binary n).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 179
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      reflexivity.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 180
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 181
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Instance binnat_add_assoc : Associative binnat_plus.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 183
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 184
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    hnf; equiv_intros binary x y z.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    change binnat_plus with plus.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 186
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite binaryplus, binaryplus, binaryplus, binaryplus.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply ap.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 188
+Time: 0.003s">
+<div class="time" style="width: 5.6603773584906%"></div>
+<pre>
+    apply associativity.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 189
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 190
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Instance binnat_add_comm : Commutative binnat_plus.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 192
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 193
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    hnf; equiv_intros binary x y.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 194
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    change binnat_plus with plus.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite binaryplus, binaryplus.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply ap.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 197
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+    apply plus_comm.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 199
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition binnatmultsucc : forall (m n : binnat), (Succ m) * n = n + (m * n).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 201
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 202
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    induction m.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 203
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 204
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros n.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 204
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> change (bzero + n = n + bzero).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 204
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply commutativity.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 205
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros n.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      change (double2 m * n) with ((m * n) + (m * n) + n + n).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 207
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply commutativity.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 209
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros n.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 209
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 209
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      change (double1 (Succ m) * n) with ((Succ m) * n + (Succ m) * n + n).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 210
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite IHm.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 211
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite (commutativity n (double2 m * n)).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 212
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite (commutativity n (m * n)).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 213
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+      rewrite &lt;- (associativity (m * n) n (m * n + n)).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 214
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite (commutativity n (m * n + n)).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 215
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite (associativity (m * n) _ _).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 216
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+      rewrite (associativity (m * n) (m * n) n).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 217
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      done.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 218
+Time: 0.002s">
+<div class="time" style="width: 3.7735849056604%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 219
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition binarymult (m n : nat) : binary m * binary n = binary (m * n).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 221
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 222
+Time: 0.002s">
+<div class="time" style="width: 3.7735849056604%"></div>
+<pre>
+    induction m; induction n; try reflexivity; rewrite binnatmultsucc, IHm, binaryplus; done.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 223
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 224
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition unarymult (m n : binnat) : unary m * unary n = unary (m * n).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 226
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 227
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    etransitivity (unary (binary (_^-1 m * _^-1 n))).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 229
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply ((eissect binary (unary m * unary n)) ^).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 229
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 230
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite &lt;- binarymult.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 230
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite (eisretr binary m), (eisretr binary n).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 231
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      reflexivity.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 232
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 233
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Instance binnat_mult_assoc : Associative binnat_mult.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 235
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 236
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    hnf; equiv_intros binary x y z.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 237
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    change binnat_mult with mult.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 238
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+    rewrite binarymult, binarymult, binarymult, binarymult.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 239
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply ap.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 240
+Time: 0.002s">
+<div class="time" style="width: 3.7735849056604%"></div>
+<pre>
+    apply associativity.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 241
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 242
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Instance binnat_mult_comm : Commutative binnat_mult.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 244
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 245
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    hnf; equiv_intros binary x y.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 246
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    change binnat_mult with mult.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 247
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite binarymult, binarymult.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 248
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply ap.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 249
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+    apply commutativity.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 250
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 251
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Instance binnat_distr_l : LeftDistribute binnat_mult binnat_plus.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 253
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 254
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    hnf; equiv_intros binary x y z.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 255
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    change binnat_plus with plus.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 256
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    change binnat_mult with mult.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 257
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+    rewrite binaryplus, binarymult, binarymult, binarymult, binaryplus.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 258
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply ap.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 259
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+    apply plus_mult_distr_l.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 260
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 261
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Instance binnat_distr_r : RightDistribute binnat_mult binnat_plus.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 263
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 264
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    hnf; equiv_intros binary x y z.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 265
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    change binnat_plus with plus.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 266
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    change binnat_mult with mult.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 267
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+    rewrite binaryplus, binarymult, binarymult, binarymult, binaryplus.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 268
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply ap.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 269
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+    apply plus_mult_distr_r.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 270
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 271
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance binnat_set : IsHSet binnat.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 273
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 274
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (istrunc_isequiv_istrunc nat binary).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 275
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 276
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance binnat_semiring : IsSemiCRing binnat.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 278
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 279
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+    split; try split; try split; try split; hnf; intros.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 280
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1, 5: apply istrunc_S; intros x y; exact (binnat_set x y).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 281
+Time: 0.002s">
+<div class="time" style="width: 3.7735849056604%"></div>
+<pre>
+    all: apply (equiv_inj unary).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 282
+Time: 0.004s">
+<div class="time" style="width: 7.5471698113208%"></div>
+<pre>
+    1, 2, 3, 7: repeat rewrite &lt;- unaryplus.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 283
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+    4, 5, 6, 7: rewrite &lt;- unarymult.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 284
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+    4, 5, 7: rewrite &lt;- unarymult.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 285
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    4, 5: rewrite &lt;- unarymult.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 286
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    4: rewrite &lt;- unaryplus.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 287
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    5: rewrite &lt;- unarymult.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 288
+Time: 0.011s">
+<div class="time" style="width: 20.754716981132%"></div>
+<pre>
+    all: apply nat_semiring.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 289
+Time: 0.006s">
+<div class="time" style="width: 11.320754716981%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 290
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End semiring_laws.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 292
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section naturals.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 294
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Instance binary_preserving : IsSemiRingPreserving binary.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 296
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 297
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    split; split.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 298
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1, 3: hnf; intros x y; [&gt; apply (binaryplus x y) ^ | apply (binarymult x y) ^ ].</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 299
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    all: reflexivity.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 300
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 301
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance binnat_le : Le binnat := fun m n =&gt; unary m &lt;= unary n.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 303
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  #[export] Instance binnat_lt : Lt binnat := fun m n =&gt; unary m &lt; unary n.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 304
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  #[export] Instance binnat_apart : Apart binnat := fun m n =&gt; unary m ≶ unary n.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 305
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Local Instance binnart_apart_symmetric : IsApart binnat.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 306
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 307
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    split.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 308
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 309
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply _.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 309
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 310
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 310
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply nat_full.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 310
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 311
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 311
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply nat_full.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 311
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 312
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y z w.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 312
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply nat_full.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 312
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assumption.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 312
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 313
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros m n.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 313
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 313
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 314
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros E.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 314
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (equiv_inj unary).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 314
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply nat_full.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 314
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assumption.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 314
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 315
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros p.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 315
+Time: 0.019s">
+<div class="time" style="width: 35.849056603774%"></div>
+<pre> apply nat_full.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 315
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (ap unary p).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 315
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 316
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Instance binnat_full : FullPseudoSemiRingOrder binnat_le binnat_lt.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 318
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 319
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    split.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 320
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 321
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros m n; apply nat_le_hprop.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 321
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 322
+Time: 0.009s">
+<div class="time" style="width: 16.981132075472%"></div>
+<pre> split; try intros m n; try apply nat_full.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 322
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 323
+Time: 0.006s">
+<div class="time" style="width: 11.320754716981%"></div>
+<pre> split; try intros m n; try apply nat_full.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 323
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        *</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 324
+Time: 0.006s">
+<div class="time" style="width: 11.320754716981%"></div>
+<pre> split; try intros m n; try apply nat_full.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 324
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          --</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 325
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply _.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 325
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          --</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 326
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply cotransitive.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 326
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          --</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 327
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split; intros E.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 327
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+             ++</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 328
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assert (X : unary m = unary n) by by apply tight_apart.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 328
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+                apply (((equiv_ap unary m n) ^-1) X).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 329
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+             ++</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 330
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite E.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 330
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply nat_full.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 330
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 330
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        *</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 331
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros E k.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 331
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre> apply nat_full.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 331
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact E.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 331
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 332
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros E.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 332
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+        assert (H : exists w, (unary n) = (unary m) + w) by by apply nat_full.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 333
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        destruct H as [w L].</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 334
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        exists (binary w).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 335
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        rewrite &lt;- (eisretr unary w), unaryplus in L.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 336
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply (equiv_inj unary).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 337
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact L.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 337
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 338
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros m.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 338
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split; intros k l E; unfold lt, binnat_lt in *.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 338
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        *</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 339
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite &lt;- unaryplus, &lt;- unaryplus.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 339
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre> apply nat_full.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 339
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact E.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 339
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        *</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 340
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite &lt;- unaryplus, &lt;- unaryplus in E.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 340
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+          apply (strictly_order_reflecting (plus (unary m))).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 341
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact E.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 341
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 342
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros k l E.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 342
+Time: 0.003s">
+<div class="time" style="width: 5.6603773584906%"></div>
+<pre> apply nat_full.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 342
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        unfold apart, binnat_apart in E.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 343
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        rewrite &lt;- (unarymult m n), &lt;- (unarymult k l) in E.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 344
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact E.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 344
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 345
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros E F.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 345
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> unfold lt, binnat_lt.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 345
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite &lt;- (unarymult m n).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 345
+Time: 0.004s">
+<div class="time" style="width: 7.5471698113208%"></div>
+<pre>
+        apply nat_full; assumption.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 346
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 347
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros m n.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 347
+Time: 0.002s">
+<div class="time" style="width: 3.7735849056604%"></div>
+<pre> apply nat_full.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 347
+Time: 0.017s">
+<div class="time" style="width: 32.075471698113%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 348
+Time: 0.002s">
+<div class="time" style="width: 3.7735849056604%"></div>
+<pre>
+
+  #[export] Instance binnat_naturals_to_semiring : NaturalsToSemiRing binnat:=
+    fun _ _ _ _ _ _ =&gt; fix f (n: binnat) :=
+      match n with
+      | bzero =&gt; 0
+      | double1 n' =&gt; 2 * (f n') + 1
+      | double2 n' =&gt; 2 * (f n') + 2 end.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 355
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition nat_to_semiring_helper : NaturalsToSemiRing nat :=
+    fun _ _ _ _ _ _ =&gt; fix f (n: nat) :=
+      match n with
+      | 0%nat =&gt; 0
+      | S n' =&gt; 1 + f n'
+      end.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 362
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Section for_another_semiring.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 364
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    Universe U.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 365
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    Context {R:Type} `{IsSemiCRing R}.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 366
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+    Notation toR := (naturals_to_semiring binnat R).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 368
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    Notation toR_fromnat := (naturals_to_semiring nat R).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 369
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    Notation toR_vianat := (toR_fromnat ∘ unary).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 370
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+    Definition f_suc (m : binnat) : toR (Succ m) = (toR m)+1.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 372
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    Proof.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 373
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      induction m.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 374
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 375
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> change (2 * 0 + 1 = 0 + 1).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 375
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        rewrite mult_comm.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 376
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        rewrite mult_0_l.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 377
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        done.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 378
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 379
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre> change (2 * (toR m) + 2 = 2 * (toR m) + 1 + 1).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 379
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply plus_assoc.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 380
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 381
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> induction m as [|m _|m _].</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 381
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        +</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 382
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre> change (2 * (2 * 0 + 1) + 1 = 2 * 0 + 2 + 1).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 382
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          rewrite plus_mult_distr_l.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 383
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          rewrite (@mult_1_r _ Aplus Amult Azero Aone H _).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 384
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+          rewrite mult_0_r, mult_0_r.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 385
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          reflexivity.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 386
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        +</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 387
+Time: 0.002s">
+<div class="time" style="width: 3.7735849056604%"></div>
+<pre> change (2 * (2 * (toR m) + 2) + 1 = 2 * (2 * (toR m) + 1 ) + 2 + 1).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 387
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          apply (ap (fun z =&gt; z + 1)).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 388
+Time: 0.002s">
+<div class="time" style="width: 3.7735849056604%"></div>
+<pre>
+          assert (L : 2 * toR m + 2 = 2 * toR m + 1 + 1) by by rewrite plus_assoc.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 389
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          rewrite L; clear L.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 390
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          rewrite plus_mult_distr_l.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 391
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          rewrite mult_1_r.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 392
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          reflexivity.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 393
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        +</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 394
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl in IHm.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 394
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+          change ((2 * (toR (double1 (Succ m))) + 1 = 2 * (toR (double2 m)) + 2 + 1)).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 395
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          rewrite IHm; clear IHm.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 396
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          rewrite plus_mult_distr_l.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 397
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          rewrite mult_1_r.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 398
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          reflexivity.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 399
+Time: 0.005s">
+<div class="time" style="width: 9.4339622641509%"></div>
+<pre>
+    Qed.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 400
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+    Definition f_nat : forall m : binnat, toR m = toR_vianat m.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 402
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    Proof.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 403
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      equiv_intro binary n.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 404
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      induction n as [|n IHn].</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 405
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 406
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 406
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 407
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> induction n as [|n _].</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 407
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        +</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 408
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> change ((1 + 1) * 0 + 1 = 1).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 408
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          rewrite mult_0_r.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 409
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply plus_0_l.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 409
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        +</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 410
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite f_suc.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 410
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite IHn.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 410
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+          assert (L : (toR_fromnat ∘ binary^-1) (binary n.+1) + 1
+                      = toR_fromnat ((binary^-1 (binary n.+1)).+1)%nat).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 412
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          {</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 413
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+            simpl rewrite (plus_comm _ 1).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 414
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+            simpl rewrite unarysucc.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 415
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+            reflexivity.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 416
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          }</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 417
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          rewrite L; clear L.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 418
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          rewrite &lt;- unarysucc.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 419
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          rewrite &lt;- binarysucc.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 420
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          reflexivity.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 421
+Time: 0.002s">
+<div class="time" style="width: 3.7735849056604%"></div>
+<pre>
+    Qed.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 422
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+    Local Definition f_preserves_plus (a a' : binnat) : toR (a + a') = toR a + toR a'.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 424
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    Proof.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 425
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite f_nat, f_nat, f_nat.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 426
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      unfold Compose.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 427
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite &lt;- (unaryplus a a').</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 428
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply nat_to_sr_morphism.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 429
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+    Qed.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 430
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+    Local Definition f_preserves_mult (a a' : binnat) : toR (a * a') = toR a * toR a'.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 432
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    Proof.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 433
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite f_nat, f_nat, f_nat.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 434
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      unfold Compose.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 435
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite &lt;- (unarymult a a').</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 436
+Time: 0.002s">
+<div class="time" style="width: 3.7735849056604%"></div>
+<pre>
+      apply nat_to_sr_morphism.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 437
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+    Qed.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 438
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+    #[export] Instance binnat_to_sr_morphism
+      : IsSemiRingPreserving toR.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 441
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    Proof.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 442
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      split; split.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 443
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 444
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rapply f_preserves_plus.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 444
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 445
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 445
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 446
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rapply f_preserves_mult.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 446
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 447
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> unfold IsUnitPreserving.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 447
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply f_nat.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 448
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    Defined.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 449
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+    Lemma binnat_toR_unique (h : binnat -&gt; R) `{!IsSemiRingPreserving h} : forall x,
+        toR x = h x.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 452
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    Proof.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 453
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      equiv_intro binary n.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 454
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite f_nat; unfold Compose.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 455
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite eissect.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 456
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      refine (toR_unique (h ∘ binary) n).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 457
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    Qed.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 458
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  End for_another_semiring.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 459
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance binnat_naturals : Naturals binnat.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 461
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 462
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    split.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 463
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 464
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact binnat_semiring.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 464
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 465
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact binnat_full.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 465
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 466
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 466
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply binnat_to_sr_morphism.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 466
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 467
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 467
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply binnat_toR_unique.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 467
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assumption.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 467
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 468
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+
+End naturals.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 470
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section decidable.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 472
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Definition ineq_bzero_double1 n : bzero &lt;&gt; double1 n.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 474
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 475
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros p.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 476
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    change ((fun x =&gt; match x with | double1 y =&gt; Unit | _ =&gt; Empty end) bzero).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 477
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rapply (@transport binnat).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 478
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 479
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact p^.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 479
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 480
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact tt.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 480
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 481
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Definition ineq_bzero_double2 n : bzero &lt;&gt; double2 n.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 483
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 484
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros p.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 485
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    change ((fun x =&gt; match x with | double2 y =&gt; Unit | _ =&gt; Empty end) bzero).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 486
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rapply (@transport binnat).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 487
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 488
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact p^.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 488
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 489
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact tt.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 489
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 490
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Definition ineq_double1_double2 m n : double1 m &lt;&gt; double2 n.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 492
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 493
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros p.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 494
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    change ((fun x =&gt; match x with | double2 y =&gt; Unit | _ =&gt; Empty end) (double1 m)).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 495
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rapply (@transport binnat).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 496
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 497
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact p^.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 497
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 498
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact tt.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 498
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 499
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Definition undouble (m : binnat) : binnat :=
+    match m with
+    | bzero =&gt; bzero
+    | double1 k =&gt; k
+    | double2 k =&gt; k
+    end.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 506
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Instance double1_inj : IsInjective double1
+  := { injective := fun a b E =&gt; ap undouble E }.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 509
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Instance double2_inj : IsInjective double2
+  := { injective := fun a b E =&gt; ap undouble E }.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 512
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance binnat_dec : DecidablePaths binnat.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 514
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 515
+Time: 0.004s">
+<div class="time" style="width: 7.5471698113208%"></div>
+<pre>
+    intros m; induction m as [|m IHm|m IHm]; intros n; induction n as [|n IHn|n IHn].</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 516
+Time: 0.006s">
+<div class="time" style="width: 11.320754716981%"></div>
+<pre>
+    all:
+      first
+        [ left ; reflexivity
+        | right ; (idtac + apply symmetric_neq);
+          first
+               [ apply ineq_bzero_double1
+               | apply ineq_bzero_double2
+               | apply ineq_double1_double2
+               ]
+        | destruct (IHm n) as [eq | ineq];
+          [ left; apply ap; exact eq
+          | right; intros E;
+            first
+              [ apply (injective double1) in E
+              | apply (injective double2) in E
+              ]; auto
+          ]
+        ].</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 534
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 535
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End decidable.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 537
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section other_laws.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 539
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance binnat_plus_cancel_l (z:binnat) : LeftCancellation plus z.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 541
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 542
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y p.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 543
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (equiv_inj unary).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 544
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (ap unary) in p.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 545
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite &lt;- unaryplus, &lt;- unaryplus in p.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 546
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+  exact (left_cancellation _ _ _ _ p).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 547
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 548
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance binnat_mult_cancel_l (z : binnat): PropHolds (z &lt;&gt; 0) -&gt; LeftCancellation (.*.) z.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 550
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 551
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros E.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 552
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> hnf in E.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 552
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  assert (H : unary z &lt;&gt; unary 0).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 553
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 554
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros q.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 555
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (equiv_inj unary) in q.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 556
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (E q).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 557
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  }</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 558
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y p.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 559
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (ap unary) in p.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 560
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite &lt;- unarymult, &lt;- unarymult in p.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 561
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (equiv_inj unary (nat_mult_cancel_l (unary z) H _ _ p)).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 562
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 563
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Instance binnat_le_total : TotalRelation (_:Le binnat).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 565
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 566
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 567
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply nat_le_total.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 567
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 568
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Instance binnat_lt_irrefl : Irreflexive (_:Lt binnat).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 569
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 570
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 571
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply nat_lt_irrefl.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 571
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 572
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End other_laws.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 574
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section trichotomy.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 576
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (* TODO this is an inefficient implementation. Instead, write this
+  without going via the unary naturals. *)
+ </pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 580
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance binnat_trichotomy : Trichotomy (lt:Lt binnat).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 580
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 581
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros x y.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 582
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    pose (T := nat_trichotomy (unary x) (unary y)).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 583
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct T as [l|[c|r]].</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 584
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 585
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> left; assumption.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 585
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 586
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> right; left.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 586
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (equiv_inj unary); assumption.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 586
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 587
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> right; right; assumption.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 587
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 588
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End trichotomy.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 590
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section minus.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 592
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Definition Pred (m : binnat) : binnat :=
+    match m with
+    | bzero      =&gt; bzero
+    | double1 m' =&gt; double m'
+    | double2 m' =&gt; double1 m'
+    end.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 599
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Definition succ_double (m : binnat) : Succ (double m) = double1 m.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 601
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 602
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    induction m.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 603
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 604
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 604
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 605
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> change (double1 (Succ (double m)) = double1 (double1 m)).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 605
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite IHm; reflexivity.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 606
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 607
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> change (double1 (Succ (Succ (double m))) = double1 (double2 m)).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 607
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite IHm; reflexivity.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 608
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 609
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Definition double_succ (m : binnat) : double (Succ m) = double2 m.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 611
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 612
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    induction m.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 613
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 614
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 614
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 615
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> change (double2 (Succ (double m)) = double2 (double1 m)).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 615
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite succ_double; reflexivity.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 616
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 617
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> change (double2 (double (Succ m)) = double2 (double2 m)).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 617
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite IHm; reflexivity.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 618
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 619
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Definition pred_succ (m : binnat) : Pred (Succ m) = m.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 621
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 622
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    induction m; try reflexivity.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 623
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 624
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (double_succ m).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 624
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 625
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Definition double_pred (m : binnat) : double (Pred m) = Pred (Pred (double m)).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 627
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 628
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    induction m; try reflexivity.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 629
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 630
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (double_succ (double m))^.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 630
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 631
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Definition pred_double2 (m : binnat) : Pred (double2 m) = double1 m.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 633
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 634
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    induction m; reflexivity.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 635
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 636
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Definition pred_double1 (m : binnat) : Pred (double1 m) = double m.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 638
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 639
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    induction m; reflexivity.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 640
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 641
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (*     2*(m-1)+1 = 2*m - 1 *)
+
+ </pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 645
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>Local Fixpoint binnat_cut_minus' (m n : binnat) : binnat :=
+    match m, n with
+    | bzero      , n'         =&gt; bzero
+    | m'         , bzero      =&gt; m'
+    (* compute m - n as 2m'+1 - 2n'+1 = 2(m'-n') *)
+    | double1 m' , double1 n' =&gt; double (binnat_cut_minus' m' n')
+    (* compute m - n as 2m'+1 - 2n'+2 = 2(m'-n') - 1 = Pred (double (m' - n')) *)
+    | double1 m' , double2 n' =&gt; Pred (double (binnat_cut_minus' m' n'))
+    (* compute m - n as 2m'+2 - 2n'+1 *)
+    | double2 m' , double1 n' =&gt; Pred (double (binnat_cut_minus' (Succ m') n'))
+    (* compute m - n as 2m'+2 - 2n'+2 = 2(m'-n') = double (m' - n') *)
+    | double2 m' , double2 n' =&gt; double (binnat_cut_minus' m' n')
+    end.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 657
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance binnat_cut_minus: CutMinus binnat := binnat_cut_minus'.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 659
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Definition binnat_minus_zero (m : binnat) : m ∸ bzero = m.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 661
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 662
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    induction m; reflexivity.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 663
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 664
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Definition binnat_zero_minus (m : binnat) : bzero ∸ m = bzero.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 666
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 667
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    induction m; reflexivity.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 668
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 669
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Definition pred_succ_minus (m n : binnat) : Pred (Succ m ∸ n) = m ∸ n.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 671
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 672
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+    revert n; induction m; intros n; induction n; try reflexivity.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 673
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 674
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> change (Pred (double (bzero ∸ n)) = bzero).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 674
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite binnat_zero_minus; reflexivity.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 675
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 676
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> change (Pred (Pred (double (bzero ∸ n))) = bzero ∸ double2 n).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 676
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite binnat_zero_minus, binnat_zero_minus; reflexivity.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 677
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 678
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> change (Pred (Pred (double (Succ m ∸ n))) = double (m ∸ n)).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 678
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite &lt;- double_pred.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 679
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply ap.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 680
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (IHm n).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 681
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 682
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> change (double (Succ m) = double2 m ∸ bzero).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 682
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite binnat_minus_zero.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 683
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (double_succ m).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 684
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 685
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> change (Pred (Pred (double (Succ m ∸ n))) = double (m ∸ n)).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 685
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite &lt;- double_pred.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 686
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply ap.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 687
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (IHm n).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 688
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 689
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Definition double_cases (m : binnat) : (bzero = double m) + hfiber double2 (double m).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 691
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 692
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    induction m.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 693
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 694
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> left; reflexivity.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 694
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 695
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> right; exists (double m); reflexivity.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 695
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 696
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> right; exists (Succ (double m)); reflexivity.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 696
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 697
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Definition binnat_minus_succ (m n : binnat) : Succ m ∸ Succ n = m ∸ n.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 699
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 700
+Time: 0.002s">
+<div class="time" style="width: 3.7735849056604%"></div>
+<pre>
+    revert n; induction m; intros n; induction n; try reflexivity.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 701
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 702
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> change (Pred (double (bzero ∸ n)) = bzero ∸ double1 n).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 702
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite binnat_zero_minus, binnat_zero_minus.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 703
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 703
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 704
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> change (double (bzero ∸ (Succ n)) = bzero ∸ double2 n).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 704
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite binnat_zero_minus, binnat_zero_minus.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 705
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 705
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 706
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> change (Pred (double (Succ m ∸ bzero)) = double1 m ∸ bzero).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 706
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite binnat_minus_zero, binnat_minus_zero.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 707
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite double_succ, pred_double2.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 708
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 708
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 709
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> change (Pred (double (Succ m ∸ Succ n)) = Pred (double (m ∸ n))).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 709
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite IHm.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 710
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 710
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 711
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> change (double (Succ m ∸ bzero) = double2 m ∸ bzero).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 711
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite binnat_minus_zero, binnat_minus_zero, double_succ.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 712
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      reflexivity.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 713
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 714
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> change (double (Succ m ∸ Succ n) = double (m ∸ n)).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 714
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite IHm.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 715
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 715
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 716
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Definition binaryminus (x y : nat) : binary x ∸ binary y = binary (x ∸ y).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 718
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 719
+Time: 0.001s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+    revert y; induction x; intros y; induction y; try reflexivity.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 720
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 721
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply binnat_zero_minus.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 721
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 722
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply binnat_minus_zero.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 722
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 723
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl in *.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 723
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite binnat_minus_succ.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 723
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite IHx.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 724
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 724
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 725
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Definition unaryminus (m n : binnat) : unary m ∸ unary n = unary (m ∸ n).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 727
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 728
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    etransitivity (unary (binary (_^-1 m ∸ _^-1 n))).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 729
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 730
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply ((eissect binary (unary m ∸ unary n)) ^).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 730
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 731
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite &lt;- binaryminus.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 731
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite (eisretr binary m), (eisretr binary n).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 732
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      reflexivity.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 733
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 734
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance binnat_cut_minus_spec : CutMinusSpec binnat binnat_cut_minus.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 736
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 737
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    split.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 738
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 739
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros m n E.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 739
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (equiv_inj unary).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 739
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite &lt;- unaryplus, &lt;- unaryminus.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 740
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply nat_cut_minus_spec.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 741
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      assumption.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 742
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 743
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros m n E.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 743
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (equiv_inj unary).</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 743
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite &lt;- unaryminus.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 744
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply nat_cut_minus_spec.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 745
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      assumption.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 746
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 747
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End minus.</pre>
+</div>
+<div class="code" title="File: binary_naturals.v
+Line: 750
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

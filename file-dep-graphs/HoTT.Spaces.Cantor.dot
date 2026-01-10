@@ -1,0 +1,18 @@
+digraph HoTT_Spaces_Cantor {
+  graph [ratio=0.5]
+  node [style=filled]
+Cantor_equiv_cantor_unfold [label="equiv_cantor_unfold", URL=<Cantor.html#equiv_cantor_unfold>, peripheries=3, fillcolor="#F070D1"] ;
+Cantor_equiv_cantor_fold [label="equiv_cantor_fold", URL=<Cantor.html#equiv_cantor_fold>, fillcolor="#F070D1"] ;
+Cantor_isequiv_cantor_fold [label="isequiv_cantor_fold", URL=<Cantor.html#isequiv_cantor_fold>, fillcolor="#F070D1"] ;
+Cantor_cantor_unfold [label="cantor_unfold", URL=<Cantor.html#cantor_unfold>, fillcolor="#F070D1"] ;
+Cantor_cantor_fold [label="cantor_fold", URL=<Cantor.html#cantor_fold>, fillcolor="#F070D1"] ;
+Cantor_Cantor [label="Cantor", URL=<Cantor.html#Cantor>, fillcolor="#F070D1"] ;
+  Cantor_equiv_cantor_unfold -> Cantor_equiv_cantor_fold [] ;
+  Cantor_equiv_cantor_fold -> Cantor_isequiv_cantor_fold [] ;
+  Cantor_isequiv_cantor_fold -> Cantor_cantor_unfold [] ;
+  Cantor_isequiv_cantor_fold -> Cantor_cantor_fold [] ;
+  Cantor_cantor_unfold -> Cantor_Cantor [] ;
+  Cantor_cantor_fold -> Cantor_Cantor [] ;
+subgraph cluster_Cantor { label="Cantor"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Cantor_Cantor; Cantor_cantor_fold; Cantor_cantor_unfold; Cantor_isequiv_cantor_fold; Cantor_equiv_cantor_fold; Cantor_equiv_cantor_unfold; };
+} /* END */

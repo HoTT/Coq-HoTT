@@ -1,0 +1,1457 @@
+<html>
+<head>
+<title>SuccessorStructure.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for SuccessorStructure.v</h1>
+
+<div class="code" title="File: SuccessorStructure.v
+Line: 1
+Time: 0.027s">
+<div class="time" style="width: 100%"></div>
+<pre>From HoTT Require Import Basics.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 1
+Time: 0.007s">
+<div class="time" style="width: 25.925925925926%"></div>
+<pre>
+Require Import Nat.Core.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 2
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+Require Import Spaces.Int.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 3
+Time: 0.008s">
+<div class="time" style="width: 29.62962962963%"></div>
+<pre>
+Require Import Spaces.Finite.Fin.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 4
+Time: 0.002s">
+<div class="time" style="width: 7.4074074074074%"></div>
+<pre>
+Require Import WildCat.Core.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Set Universe Minimization ToSet.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Successor Structures. *)
+
+(** A successor structure is just a type with a endofunctor on it, called 'successor'. Typical examples include either the integers or natural numbers with the successor (or predecessor) operation. *)
+
+</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Record SuccStr : Type := {
+   ss_carrier :&gt; Type ;
+   ss_succ : ss_carrier -&gt; ss_carrier ;
+}.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Declare Scope succ_scope.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope nat_scope.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope type_scope.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope succ_scope.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Delimit Scope succ_scope with succ.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments ss_succ {_} _.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation "x .+1" := (ss_succ x) : succ_scope.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Successor structure of naturals *)</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition NatSucc : SuccStr := Build_SuccStr nat nat_succ.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Successor structure of integers *)</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition BinIntSucc : SuccStr := Build_SuccStr Int int_succ.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation "'+N'" := NatSucc : succ_scope.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Notation "'+Z'" := BinIntSucc : succ_scope.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Stratified successor structures *)
+
+(** If [N] has a successor structure, then so does the product [N * Fin n].  The successor operation increases the second factor, and if it wraps around, it also increases the first factor. *)
+
+</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition StratifiedType (N : SuccStr) (n : nat) := N * Fin n.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition stratified_succ (N : SuccStr) (n : nat) (x : StratifiedType N n)
+  : StratifiedType N n.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  constructor.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct n.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (Empty_rec _ (snd x)).</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 46
+Time: 0.002s">
+<div class="time" style="width: 7.4074074074074%"></div>
+<pre> destruct (dec (snd x = inr tt)).</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (ss_succ (fst x)).</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fst x).</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fsucc_mod (snd x)).</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition Stratified (N : SuccStr) (n : nat) : SuccStr
+  := Build_SuccStr (StratifiedType N n) (stratified_succ N n).</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Addition in successor structures *)</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ss_add {N : SuccStr} (n : N) (k : nat) : N := nat_iter k ss_succ n.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Infix "+" := ss_add : succ_scope.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition ss_add_succ {N : SuccStr} (n : N) (k : nat)
+  : n + k.+1 = n.+1 + k
+  := nat_iter_succ_r k ss_succ n.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition ss_add_sum {N : SuccStr} (n : N) (k l : nat)
+  : n + (k + l) = (n + l) + k
+  := nat_iter_add k l ss_succ n.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Nat and Int segmented by triples *)</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Notation "'N3'" := (Stratified (+N) 3) : succ_scope.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Notation "'Z3'" := (Stratified (+Z) 3) : succ_scope.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Category of successor structures *)
+
+(** Inspired by the construction of the wildcat structure on [pType], we can give [SuccStr] a wildcat structure in a similar manner (all the way up). *)
+
+</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Record ssFam (A : SuccStr) := {
+  ss_fam :&gt; A -&gt; Type;
+  dss_succ {x} : ss_fam x -&gt; ss_fam (x.+1);
+}.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  
+Arguments ss_fam {_ _} _.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments dss_succ {_ _ _}.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 79
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+
+Record ssForall {A : SuccStr} (B : ssFam A) := {
+  ss_fun :&gt; forall x, B x;
+  ss_fun_succ : forall x, ss_fun x.+1 = dss_succ (ss_fun x); 
+}.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments ss_fun {_ _} _ _.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments ss_fun_succ {_ _} _ _.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition ssfam_const {A : SuccStr} (B : SuccStr) : ssFam A
+  := Build_ssFam A (fun _ =&gt; B) (fun _ =&gt; ss_succ).</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition ssfam_sshomotopy {A : SuccStr} {P : ssFam A} (f g : ssForall P)
+  : ssFam A.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 94
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_ssFam.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact (fun x =&gt; f x = g x).</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  cbn; intros x p.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (ss_fun_succ f x @ ap dss_succ p @ (ss_fun_succ g x)^).</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition ssHomotopy {A : SuccStr} {P : ssFam A} (f g : ssForall P)
+  := ssForall (ssfam_sshomotopy f g).</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance isgraph_ss : IsGraph SuccStr.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_IsGraph.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros X Y.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (@ssForall X (ssfam_const Y)).</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance isgraph_ssforall {A : SuccStr} (P : ssFam A)
+  : IsGraph (ssForall P).</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_IsGraph.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact ssHomotopy.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance is2graph_ssforall {A : SuccStr} (P : ssFam A)
+  : Is2Graph (ssForall P)
+  := {}.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance is2graph_ss : Is2Graph SuccStr := {}.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 122
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Instance is3graph_ss : Is3Graph SuccStr := {}.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Ltac sselim_elim eq x :=
+  match type of (eq x) with
+  | ?lhs = _ =&gt;
+    generalize dependent (eq x);
+    generalize dependent lhs
+  | _ =&gt; fail "sselim: no lhs found"
+  end.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 131
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Ltac sselim f :=
+  let eq := fresh "eq" in
+  destruct f as [f eq];
+  cbn in *;
+  match type of eq with
+  | forall x : ?X, _ = _ =&gt;
+    multimatch goal with
+    | x : X |- _ =&gt; sselim_elim eq x
+    | f : ?Y -&gt; X |- _ =&gt;
+      match goal with
+      | y : Y |- _ =&gt; sselim_elim eq (f y)
+      | g : ?Z -&gt; Y |- _ =&gt;
+        match goal with
+        | z : Z |- _ =&gt; sselim_elim eq (f (g z))
+        end
+      end
+    | _ =&gt; fail "sselim: no hyp found"
+    end
+  | _ =&gt; fail "sselim: no eq found"
+  end;  
+  napply paths_ind_r;
+  try clear eq;
+  try clear f.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 155
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Tactic Notation "sselim" constr(x0) := sselim x0.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Tactic Notation "sselim" constr(x0) constr(x1) := sselim x0; sselim x1.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Tactic Notation "sselim" constr(x0) constr(x1) constr(x2) := sselim x0; sselim x1 x2.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Tactic Notation "sselim" constr(x0) constr(x1) constr(x2) constr(x3) := sselim x0; sselim x1 x2 x3.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Tactic Notation "sselim" constr(x0) constr(x1) constr(x2) constr(x3) constr(x4) := sselim x0; sselim x1 x2 x3 x4.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Tactic Notation "sselim" constr(x0) constr(x1) constr(x2) constr(x3) constr(x4) constr(x5) := sselim x0; sselim x1 x2 x3 x4 x5.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Tactic Notation "sselim" constr(x0) constr(x1) constr(x2) constr(x3) constr(x4) constr(x5) constr(x6) := sselim x0; sselim x1 x2 x3 x4 x5 x6.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 163
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance is01cat_ss : Is01Cat SuccStr.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 165
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 166
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_Is01Cat.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro X.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply Build_ssForall.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fun x =&gt; x).</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros X Y Z f g.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply Build_ssForall.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 174
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro x.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 174
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (f (g x)).</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 175
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro x.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (ap f (ss_fun_succ g x) @ ss_fun_succ f (g x)).</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance is01cat_ssforall {A : SuccStr} (P : ssFam A)
+  : Is01Cat (ssForall P).</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 181
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 182
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_Is01Cat.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 183
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 184
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro f.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 184
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply Build_ssForall.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 186
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 186
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro x; simpl.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      by destruct (ss_fun_succ f x).</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 189
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros f g h p q.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 189
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply Build_ssForall.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 190
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 191
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro x.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 191
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (q x @ p x).</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 192
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 193
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro x; cbn.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 193
+Time: 0.014s">
+<div class="time" style="width: 51.851851851852%"></div>
+<pre>
+      sselim p q f g h.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 194
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 194
+Time: 0.003s">
+<div class="time" style="width: 11.111111111111%"></div>
+<pre>
+      by destruct (p x), (q x).</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 195
+Time: 0.009s">
+<div class="time" style="width: 33.333333333333%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance is0gpd_ssforall {A : SuccStr} (P : ssFam A)
+  : Is0Gpd (ssForall P).</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 199
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_Is0Gpd.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 201
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros f g p.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 202
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_ssForall.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 203
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 204
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro x.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 204
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (p x)^.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 205
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro x; cbn.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 206
+Time: 0.006s">
+<div class="time" style="width: 22.222222222222%"></div>
+<pre>
+    sselim p f g.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 207
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+    by destruct (p x).</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 208
+Time: 0.003s">
+<div class="time" style="width: 11.111111111111%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 209
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance is1cat_ss : Is1Cat SuccStr.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 211
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 212
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+  snapply Build_Is1Cat'.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 213
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1,2: exact _.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 214
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 215
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros X Y Z g.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 215
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply Build_Is0Functor.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 216
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros f h p.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 217
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply Build_ssForall.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 218
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 219
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro x.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 219
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (ap g (p x)).</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 220
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 221
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro x; cbn.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 221
+Time: 0.008s">
+<div class="time" style="width: 29.62962962963%"></div>
+<pre>
+      sselim p f h.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 222
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+      destruct (p x); clear p; simpl.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 223
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+      sselim g.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 224
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+      by destruct (eq (f x)).</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 226
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros X Y Z g.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 226
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply Build_Is0Functor.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 227
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros f h q.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply Build_ssForall.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 229
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 230
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 230
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply q.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 231
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 232
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x; cbn.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 232
+Time: 0.009s">
+<div class="time" style="width: 33.333333333333%"></div>
+<pre>
+      by sselim g q f h.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 233
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 234
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros X Y Z W f g h.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 234
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+    srapply Build_ssForall.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 235
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 236
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro x.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 236
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      reflexivity.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 237
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 238
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro x; cbn.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 238
+Time: 0.009s">
+<div class="time" style="width: 33.333333333333%"></div>
+<pre>
+      by sselim f g h.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 239
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 240
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros X Y f.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 240
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+    srapply Build_ssForall.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 241
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: reflexivity.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 242
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros x.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 243
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+    by sselim f.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 244
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 245
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros X Y f.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 245
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+    srapply Build_ssForall.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 246
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: reflexivity.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 247
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros x.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 248
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+    by sselim f.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 249
+Time: 0.027s">
+<div class="time" style="width: 100%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: SuccessorStructure.v
+Line: 251
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

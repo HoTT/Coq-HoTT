@@ -1,0 +1,661 @@
+<html>
+<head>
+<title>Idempotent.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Idempotent.v</h1>
+
+<div class="code" title="File: Idempotent.v
+Line: 1
+Time: 0.023s">
+<div class="time" style="width: 28.75%"></div>
+<pre>Require Import Basics.Overture Basics.Tactics Basics.PathGroupoids.</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 1
+Time: 0.009s">
+<div class="time" style="width: 11.25%"></div>
+<pre>
+Require Import Basics.Equivalences Basics.Trunc Types.Sigma WildCat.Core.</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 2
+Time: 0.08s">
+<div class="time" style="width: 100%"></div>
+<pre>
+Require Import Nat.Core Rings.Ring.</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope mc_scope.</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Idempotent elements of rings *)
+
+(** ** Definition *)
+
+</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Class IsIdempotent (R : Ring) (e : R)
+  := rng_idem : e * e = e.</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance ishprop_isidempotent R e : IsHProp (IsIdempotent R e).</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 14
+Time: 0.007s">
+<div class="time" style="width: 8.75%"></div>
+<pre>
+  unfold IsIdempotent; exact _.</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Examples *)
+
+(** Zero is idempotent. *)</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isidempotent_zero (R : Ring) : IsIdempotent R 0
+  := rng_mult_zero_r 0.</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** One is idempotent. *)</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isidempotent_one (R : Ring) : IsIdempotent R 1
+  := rng_mult_one_r 1.</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** If [e] is idempotent, then [1 - e] is idempotent. *)</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isidempotent_complement (R : Ring) (e : R) `{IsIdempotent R e}
+  : IsIdempotent R (1 - e).</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold IsIdempotent.</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite rng_dist_l_negate.</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 30
+Time: 0.001s">
+<div class="time" style="width: 1.25%"></div>
+<pre>
+  rewrite 2 rng_dist_r_negate.</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite 2 rng_mult_one_l.</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite rng_mult_one_r.</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite rng_idem.</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite rng_plus_negate_r.</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite rng_negate_zero.</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  napply rng_plus_zero_r.</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 37
+Time: 0.002s">
+<div class="time" style="width: 2.5%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** If [e] is idempotent, then it is also an idempotent element of the opposite ring. *)</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isidempotent_op (R : Ring) (e : R) `{i : IsIdempotent R e}
+  : IsIdempotent (rng_op R) e
+  := i.</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Any positive power of an idempotent element [e] is [e]. *)</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition rng_power_idem {R : Ring} (e : R) `{IsIdempotent R e} (n : nat)
+  : (1 &lt;= n)%nat -&gt; rng_power e n = e.</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros L; induction L.</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> snapply rng_mult_one_r.</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rhs_V rapply rng_idem.</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (ap (e *.) IHL).</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Ring homomorphisms preserve idempotent elements. *)</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isidempotent_rng_homo {R S : Ring} (f : R $-&gt; S) (e : R)
+  : IsIdempotent R e -&gt; IsIdempotent S (f e).</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros p.</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lhs_V napply rng_homo_mult.</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (ap f p).</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Orthogonal idempotent elements *)
+
+(** Two idempotent elements [e] and [f] are orthogonal if both [e * f = 0] and [f * e = 0]. *)</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 63
+Time: 0.002s">
+<div class="time" style="width: 2.5%"></div>
+<pre>Class IsOrthogonal (R : Ring) (e f : R)
+  `{!IsIdempotent R e, !IsIdempotent R f} := {
+  rng_idem_orth : e * f = 0 ;
+  rng_idem_orth' : f * e = 0 ;
+}.</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 67
+Time: 0.008s">
+<div class="time" style="width: 10%"></div>
+<pre>
+
+Definition issig_IsOrthogonal {R : Ring} {e f : R}
+  `{IsIdempotent R e, IsIdempotent R f}
+  : _ &lt;~&gt; IsOrthogonal R e f
+  := ltac:(issig).</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance ishprop_isorthogonal R e f
+  `{IsIdempotent R e, IsIdempotent R f}
+  : IsHProp (IsOrthogonal R e f).</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 77
+Time: 0.016s">
+<div class="time" style="width: 20%"></div>
+<pre>
+  exact (istrunc_equiv_istrunc _ issig_IsOrthogonal).</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> 
+Defined.</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Properties *)
+
+(** Two idempotents being orthogonal is a symmetric relation. *)</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 83
+Time: 0.001s">
+<div class="time" style="width: 1.25%"></div>
+<pre>Definition isorthogonal_swap (R : Ring) (e f : R) `{IsOrthogonal R e f}
+  : IsOrthogonal R f e
+  := {| rng_idem_orth := rng_idem_orth' ; rng_idem_orth' := rng_idem_orth |}.</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Hint Immediate isorthogonal_swap : typeclass_instances.</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** If [e] and [f] are orthogonal idempotents, then they are also orthogonal idempotents in the opposite ring. *)</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isorthogonal_op {R : Ring} (e f : R) `{r : IsOrthogonal R e f}
+  : IsOrthogonal (rng_op R) e f.</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_IsOrthogonal.</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (rng_idem_orth' (R:=R)).</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (rng_idem_orth (R:=R)).</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 94
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** If [e] and [f] are orthogonal idempotents, then [e + f] is idempotent. *)</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isidempotent_plus_orthogonal {R : Ring} (e f : R)
+  `{IsOrthogonal R e f}
+  : IsIdempotent R (e + f).</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold IsIdempotent.</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite rng_dist_l.</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite 2 rng_dist_r.</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite 2 rng_idem.</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 103
+Time: 0.001s">
+<div class="time" style="width: 1.25%"></div>
+<pre>
+  rewrite 2 rng_idem_orth.</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by rewrite rng_plus_zero_r, rng_plus_zero_l.</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 105
+Time: 0.001s">
+<div class="time" style="width: 1.25%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** An idempotent element [e] is orthogonal to its complement [1 - e]. *)</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 108
+Time: 0.001s">
+<div class="time" style="width: 1.25%"></div>
+<pre>Instance isorthogonal_complement {R : Ring} (e : R) `{IsIdempotent R e}
+  : IsOrthogonal R e (1 - e).</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_IsOrthogonal.</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: rewrite rng_dist_l_negate,rng_mult_one_r.</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  2: rewrite rng_dist_r_negate, rng_mult_one_l.</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1,2: rewrite rng_idem.</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1,2: apply rng_plus_negate_r.</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 115
+Time: 0.001s">
+<div class="time" style="width: 1.25%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Idempotent.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

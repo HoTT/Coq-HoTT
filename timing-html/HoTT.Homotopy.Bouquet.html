@@ -1,0 +1,513 @@
+<html>
+<head>
+<title>Bouquet.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Bouquet.v</h1>
+
+<div class="code" title="File: Bouquet.v
+Line: 1
+Time: 0.037s">
+<div class="time" style="width: 82.222222222222%"></div>
+<pre>From HoTT Require Import Basics Types.</pre>
+</div>
+<div class="code" title="File: Bouquet.v
+Line: 1
+Time: 0.021s">
+<div class="time" style="width: 46.666666666667%"></div>
+<pre>
+From HoTT.WildCat Require Import Core Universe Equiv NatTrans Yoneda.</pre>
+</div>
+<div class="code" title="File: Bouquet.v
+Line: 2
+Time: 0.045s">
+<div class="time" style="width: 100%"></div>
+<pre>
+Require Import Pointed.</pre>
+</div>
+<div class="code" title="File: Bouquet.v
+Line: 3
+Time: 0.019s">
+<div class="time" style="width: 42.222222222222%"></div>
+<pre>
+From HoTT.Algebra.Groups Require Import Group FreeGroup.</pre>
+</div>
+<div class="code" title="File: Bouquet.v
+Line: 4
+Time: 0.002s">
+<div class="time" style="width: 4.4444444444444%"></div>
+<pre>
+Require Import Modalities.ReflectiveSubuniverse Truncations.Core.</pre>
+</div>
+<div class="code" title="File: Bouquet.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Homotopy.Suspension.</pre>
+</div>
+<div class="code" title="File: Bouquet.v
+Line: 6
+Time: 0.007s">
+<div class="time" style="width: 15.555555555556%"></div>
+<pre>
+Require Import Homotopy.ClassifyingSpace.</pre>
+</div>
+<div class="code" title="File: Bouquet.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Homotopy.HomotopyGroup.</pre>
+</div>
+<div class="code" title="File: Bouquet.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope trunc_scope.</pre>
+</div>
+<div class="code" title="File: Bouquet.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope pointed_scope.</pre>
+</div>
+<div class="code" title="File: Bouquet.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Import ClassifyingSpaceNotation.</pre>
+</div>
+<div class="code" title="File: Bouquet.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** In this file we show that the fundamental group of a bouquet of circles indexed by a type S is the free group on that type S. We begin by defining S-indexed wedges of circles as the suspension of the pointification of S. *)
+
+</pre>
+</div>
+<div class="code" title="File: Bouquet.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section AssumeUnivalence.</pre>
+</div>
+<div class="code" title="File: Bouquet.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context `{Univalence}.</pre>
+</div>
+<div class="code" title="File: Bouquet.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** An S-indexed wedge of circles a.k.a a bouquet can be defined as the suspension of the pointification of S. *)
+ </pre>
+</div>
+<div class="code" title="File: Bouquet.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Bouquet (S : Type) : pType := psusp (pointify S).</pre>
+</div>
+<div class="code" title="File: Bouquet.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance isconnected_bouquet (S : Type)
+    : IsConnected 0 (Bouquet S).</pre>
+</div>
+<div class="code" title="File: Bouquet.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Bouquet.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact isconnected_susp.</pre>
+</div>
+<div class="code" title="File: Bouquet.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Bouquet.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** We can directly prove that it satisfies the desired equivalence together with naturality in the second argument. *)
+ </pre>
+</div>
+<div class="code" title="File: Bouquet.v
+Line: 29
+Time: 0.005s">
+<div class="time" style="width: 11.111111111111%"></div>
+<pre>Lemma natequiv_pi1bouquet_rec (S : Type)
+    : NatEquiv
+        (opyon (Pi 1 (Bouquet S)))
+        (opyon S o group_type).</pre>
+</div>
+<div class="code" title="File: Bouquet.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Bouquet.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (** Pointify *)
+   </pre>
+</div>
+<div class="code" title="File: Bouquet.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>nrefine (natequiv_compose _ _).</pre>
+</div>
+<div class="code" title="File: Bouquet.v
+Line: 35
+Time: 0.002s">
+<div class="time" style="width: 4.4444444444444%"></div>
+<pre>
+    1: exact (natequiv_prewhisker (natequiv_pointify_r S) ptype_group).</pre>
+</div>
+<div class="code" title="File: Bouquet.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (** Post-compose with [pequiv_loops_bg_g] *)
+   </pre>
+</div>
+<div class="code" title="File: Bouquet.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>nrefine (natequiv_compose _ _).</pre>
+</div>
+<div class="code" title="File: Bouquet.v
+Line: 38
+Time: 0.001s">
+<div class="time" style="width: 2.2222222222222%"></div>
+<pre>
+    1: exact (natequiv_postwhisker _ (natequiv_inverse natequiv_g_loops_bg)).</pre>
+</div>
+<div class="code" title="File: Bouquet.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (** Loop space-suspension adjunction *)
+   </pre>
+</div>
+<div class="code" title="File: Bouquet.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>nrefine (natequiv_compose _ _).</pre>
+</div>
+<div class="code" title="File: Bouquet.v
+Line: 41
+Time: 0.001s">
+<div class="time" style="width: 2.2222222222222%"></div>
+<pre>
+    1: exact (natequiv_prewhisker
+      (natequiv_loop_susp_adjoint_r (pointify S)) B).</pre>
+</div>
+<div class="code" title="File: Bouquet.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (** Pi1-BG adjunction *)
+   </pre>
+</div>
+<div class="code" title="File: Bouquet.v
+Line: 45
+Time: 0.003s">
+<div class="time" style="width: 6.6666666666667%"></div>
+<pre>rapply natequiv_bg_pi1_adjoint.</pre>
+</div>
+<div class="code" title="File: Bouquet.v
+Line: 45
+Time: 0.002s">
+<div class="time" style="width: 4.4444444444444%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Bouquet.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** For the rest of this file, we don't need to unfold this. *)
+ </pre>
+</div>
+<div class="code" title="File: Bouquet.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Opaque natequiv_pi1bouquet_rec.</pre>
+</div>
+<div class="code" title="File: Bouquet.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Theorem equiv_pi1bouquet_rec (S : Type) (G : Group)
+    : (Pi 1 (Bouquet S) $-&gt; G) &lt;~&gt; (S -&gt; G).</pre>
+</div>
+<div class="code" title="File: Bouquet.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Bouquet.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply natequiv_pi1bouquet_rec.</pre>
+</div>
+<div class="code" title="File: Bouquet.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Bouquet.v
+Line: 55
+Time: 0.005s">
+<div class="time" style="width: 11.111111111111%"></div>
+<pre>
+
+  #[export] Instance is1natural_equiv_pi1bouquet_rec (S : Type)
+    : Is1Natural
+        (opyon (Pi 1 (Bouquet S)))
+        (opyon S o group_type)
+        (fun G =&gt; equiv_pi1bouquet_rec S G).</pre>
+</div>
+<div class="code" title="File: Bouquet.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Bouquet.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (is1natural_natequiv (natequiv_pi1bouquet_rec _)).</pre>
+</div>
+<div class="code" title="File: Bouquet.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Bouquet.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** We can define the inclusion map by using the previous equivalence on the identity group homomorphism. *)
+ </pre>
+</div>
+<div class="code" title="File: Bouquet.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition pi1bouquet_incl (S : Type)
+    : S -&gt; Pi 1 (Bouquet S).</pre>
+</div>
+<div class="code" title="File: Bouquet.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Bouquet.v
+Line: 69
+Time: 0.001s">
+<div class="time" style="width: 2.2222222222222%"></div>
+<pre>
+    rapply equiv_pi1bouquet_rec.</pre>
+</div>
+<div class="code" title="File: Bouquet.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact grp_homo_id.</pre>
+</div>
+<div class="code" title="File: Bouquet.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Bouquet.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The fundamental group of an S-bouquet is the free group on S. *)
+ </pre>
+</div>
+<div class="code" title="File: Bouquet.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export] Instance isfreegroupon_pi1bouquet (S : Type)
+    : IsFreeGroupOn S (Pi 1 (Bouquet S)) (pi1bouquet_incl S).</pre>
+</div>
+<div class="code" title="File: Bouquet.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Bouquet.v
+Line: 77
+Time: 0.001s">
+<div class="time" style="width: 2.2222222222222%"></div>
+<pre>
+    apply equiv_isfreegroupon_isequiv_precomp.</pre>
+</div>
+<div class="code" title="File: Bouquet.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro G.</pre>
+</div>
+<div class="code" title="File: Bouquet.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply isequiv_homotopic'.</pre>
+</div>
+<div class="code" title="File: Bouquet.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: apply equiv_pi1bouquet_rec.</pre>
+</div>
+<div class="code" title="File: Bouquet.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros f.</pre>
+</div>
+<div class="code" title="File: Bouquet.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (_ @ @is1natural_equiv_pi1bouquet_rec S _ _ f grp_homo_id).</pre>
+</div>
+<div class="code" title="File: Bouquet.v
+Line: 83
+Time: 0.022s">
+<div class="time" style="width: 48.888888888889%"></div>
+<pre>
+    simpl; f_ap; symmetry.</pre>
+</div>
+<div class="code" title="File: Bouquet.v
+Line: 84
+Time: 0.041s">
+<div class="time" style="width: 91.111111111111%"></div>
+<pre>
+    exact (cat_idr_strong f).</pre>
+</div>
+<div class="code" title="File: Bouquet.v
+Line: 85
+Time: 0.041s">
+<div class="time" style="width: 91.111111111111%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Bouquet.v
+Line: 86
+Time: 0.002s">
+<div class="time" style="width: 4.4444444444444%"></div>
+<pre>
+
+End AssumeUnivalence.</pre>
+</div>
+<div class="code" title="File: Bouquet.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

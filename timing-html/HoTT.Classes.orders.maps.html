@@ -1,0 +1,1901 @@
+<html>
+<head>
+<title>maps.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for maps.v</h1>
+
+<div class="code" title="File: maps.v
+Line: 1
+Time: 0.074s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import
+  HoTT.Classes.interfaces.abstract_algebra
+  HoTT.Classes.interfaces.orders
+  HoTT.Classes.orders.orders
+  HoTT.Classes.theory.apartness.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Generalizable Variables A B C R S f g z.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* If a function between strict partial orders is order preserving (back), we can
+  derive that it is strictly order preserving (back) *)</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section strictly_order_preserving.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{FullPartialOrder A} `{FullPartialOrder B}.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 11
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+
+  #[export] Instance strictly_order_preserving_inj  `{!OrderPreserving (f : A -&gt; B)}
+    `{!IsStrongInjective f} :
+    StrictlyOrderPreserving f | 20.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y E.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply lt_iff_le_apart in E.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 18
+Time: 0.002s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre> apply lt_iff_le_apart.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct E as [E1 E2].</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (order_preserving f);trivial.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (strong_injective f);trivial.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance strictly_order_reflecting_mor `{!OrderReflecting (f : A -&gt; B)}
+    `{!StrongExtensionality f} :
+    StrictlyOrderReflecting f | 20.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y E.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply lt_iff_le_apart in E.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 29
+Time: 0.002s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre> apply lt_iff_le_apart.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct E as [E1 E2].</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (order_reflecting f);trivial.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (strong_extensionality f);trivial.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+End strictly_order_preserving.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* For structures with a trivial apartness relation
+   we have a stronger result of the above *)</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section strictly_order_preserving_dec.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 37
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+  Context `{FullPartialOrder A} `{!TrivialApart A}
+          `{FullPartialOrder B} `{!TrivialApart B}.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Existing Instance strict_po_apart.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance dec_strictly_order_preserving_inj
+    `{!OrderPreserving (f : A -&gt; B)}
+    `{!IsInjective f} :
+    StrictlyOrderPreserving f | 19.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 47
+Time: 0.003s">
+<div class="time" style="width: 4.0540540540541%"></div>
+<pre>
+  pose proof (dec_strong_injective f).</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact _.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance dec_strictly_order_reflecting_mor
+    `{!OrderReflecting (f : A -&gt; B)}
+    : StrictlyOrderReflecting f | 19.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 55
+Time: 0.002s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+  pose proof (dec_strong_morphism f).</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+End strictly_order_preserving_dec.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section pseudo_injective.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{PseudoOrder A} `{PseudoOrder B}.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Existing Instance pseudo_order_apart.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Instance pseudo_order_embedding_ext `{!StrictOrderEmbedding (f : A -&gt; B)} :
+    StrongExtensionality f.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y E.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply apart_iff_total_lt;apply apart_iff_total_lt in E.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 69
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+  destruct E; [left | right]; apply (strictly_order_reflecting f);trivial.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma pseudo_order_embedding_inj `{!StrictOrderEmbedding (f : A -&gt; B)} :
+    IsStrongInjective f.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  split;try exact _.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y E.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply apart_iff_total_lt;apply apart_iff_total_lt in E.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 78
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+  destruct E; [left | right]; apply (strictly_order_preserving f);trivial.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+End pseudo_injective.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* If a function between pseudo partial orders is strictly order preserving (back),
+   we can derive that it is order preserving (back) *)</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section full_pseudo_strictly_preserving.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{FullPseudoOrder A} `{FullPseudoOrder B}.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Existing Instance pseudo_order_apart.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma full_pseudo_order_preserving `{!StrictlyOrderReflecting (f : A -&gt; B)}
+    : OrderPreserving f.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y E1.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 92
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+  apply le_iff_not_lt_flip;apply le_iff_not_lt_flip in E1.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros E2.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 94
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply E1.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 94
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (strictly_order_reflecting f).</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  trivial.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma full_pseudo_order_reflecting `{!StrictlyOrderPreserving (f : A -&gt; B)}
+    : OrderReflecting f.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y E1.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 102
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+  apply le_iff_not_lt_flip;apply le_iff_not_lt_flip in E1.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros E2.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply E1.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (strictly_order_preserving f).</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  trivial.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+End full_pseudo_strictly_preserving.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* Some helper lemmas to easily transform order preserving instances. *)</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section order_preserving_ops.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{Le R}.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma order_preserving_flip {op} `{!Commutative op} `{!OrderPreserving (op z)}
+    : OrderPreserving (fun y =&gt; op y z).</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y E.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite 2!(commutativity _ z).</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply order_preserving;trivial.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 118
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma order_reflecting_flip {op} `{!Commutative op}
+    `{!OrderReflecting (op z) }
+    : OrderReflecting (fun y =&gt; op y z).</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y E.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 125
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (order_reflecting (op z)).</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 126
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite 2!(commutativity (f:=op) z).</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  trivial.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 128
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 129
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+
+  Lemma order_preserving_nonneg (op : R -&gt; R -&gt; R) `{!Zero R}
+    `{forall z, PropHolds (0 ≤ z) -&gt; OrderPreserving (op z)} z
+    : 0 ≤ z -&gt; forall x y, x ≤ y -&gt; op z x ≤ op z y.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 134
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+  auto.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 135
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 136
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+
+  Lemma order_preserving_flip_nonneg (op : R -&gt; R -&gt; R) `{!Zero R}
+    {E:forall z, PropHolds (0 ≤ z) -&gt; OrderPreserving (fun y =&gt; op y z)} z
+    : 0 ≤ z -&gt; forall x y, x ≤ y -&gt; op x z ≤ op y z.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply E.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context `{Lt R}.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 145
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+
+  Lemma order_reflecting_pos (op : R -&gt; R -&gt; R) `{!Zero R}
+    {E:forall z, PropHolds (0 &lt; z) -&gt; OrderReflecting (op z)} z
+    : 0 &lt; z -&gt; forall x y, op z x ≤ op z y -&gt; x ≤ y.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply E.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 152
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+
+  Lemma order_reflecting_flip_pos (op : R -&gt; R -&gt; R) `{!Zero R}
+    {E:forall z, PropHolds (0 &lt; z) -&gt; OrderReflecting (fun y =&gt; op y z)} z
+    : 0 &lt; z -&gt; forall x y, op x z ≤ op y z -&gt; x ≤ y.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply E.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End order_preserving_ops.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section strict_order_preserving_ops.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 163
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{Lt R}.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 164
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma strictly_order_preserving_flip {op} `{!Commutative op}
+    `{!StrictlyOrderPreserving (op z)}
+    : StrictlyOrderPreserving (fun y =&gt; op y z).</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y E.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite 2!(commutativity _ z).</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply strictly_order_preserving;trivial.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma strictly_order_reflecting_flip {op} `{!Commutative op}
+    `{!StrictlyOrderReflecting (op z) }
+    : StrictlyOrderReflecting (fun y =&gt; op y z).</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y E.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 179
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (strictly_order_reflecting (op z)).</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 180
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite 2!(commutativity (f:=op) z).</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 181
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  trivial.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 182
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 183
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+
+  Lemma strictly_order_preserving_pos (op : R -&gt; R -&gt; R) `{!Zero R}
+    {E:forall z, PropHolds (0 &lt; z) -&gt; StrictlyOrderPreserving (op z)} z
+    : 0 &lt; z -&gt; forall x y, x &lt; y -&gt; op z x &lt; op z y.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply E.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 189
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 190
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+
+  Lemma strictly_order_preserving_flip_pos (op : R -&gt; R -&gt; R) `{!Zero R}
+    {E:forall z, PropHolds (0 &lt; z) -&gt; StrictlyOrderPreserving (fun y =&gt; op y z)} z
+    : 0 &lt; z -&gt; forall x y, x &lt; y -&gt; op x z &lt; op y z.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 194
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply E.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End strict_order_preserving_ops.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 199
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+
+Lemma projected_partial_order `{IsHSet A} {Ale : Le A}
+  `{is_mere_relation A Ale} `{Ble : Le B}
+  (f : A -&gt; B) `{!IsInjective f} `{!PartialOrder Ble}
+  : (forall x y, x ≤ y &lt;-&gt; f x ≤ f y) -&gt; PartialOrder Ale.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 204
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 205
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+intros P.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> repeat split.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+-</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 207
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 207
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+-</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+-</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 209
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 209
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply P.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 209
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply reflexivity.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 209
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+-</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 210
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y z E1 E2.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 210
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply P.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 210
+Time: 0.002s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+  transitivity (f y); apply P;trivial.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 211
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+-</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 212
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y E1 E2.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 212
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (injective f).</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 212
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (antisymmetry (≤)); apply P;trivial.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 213
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 214
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma projected_total_order `{Ale : Le A} `{Ble : Le B}
+  (f : A -&gt; B) `{!TotalRelation Ble}
+  : (forall x y, x ≤ y &lt;-&gt; f x ≤ f y) -&gt; TotalRelation Ale.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 218
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 219
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+intros P x y.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 220
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+destruct (total (≤) (f x) (f y)); [left | right]; apply P;trivial.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 221
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 222
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+
+Lemma projected_strict_order `{Alt : Lt A} `{is_mere_relation A lt} `{Blt : Lt B}
+  (f : A -&gt; B) `{!StrictOrder Blt}
+  : (forall x y, x &lt; y &lt;-&gt; f x &lt; f y) -&gt; StrictOrder Alt.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 226
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 227
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+intros P.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+-</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 229
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 229
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+-</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 230
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x E.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 230
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (irreflexivity (&lt;) (f x)).</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 230
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply P.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 230
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> trivial.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 230
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+-</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 231
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y z E1 E2.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 231
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply P.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 231
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> transitivity (f y); apply P;trivial.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 231
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 232
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+
+Lemma projected_pseudo_order `{IsApart A} `{Alt : Lt A} `{is_mere_relation A lt}
+  `{Apart B} `{Blt : Lt B}
+  (f : A -&gt; B) `{!IsStrongInjective f} `{!PseudoOrder Blt}
+  : (forall x y, x &lt; y &lt;-&gt; f x &lt; f y) -&gt; PseudoOrder Alt.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 237
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 238
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+pose proof (strong_injective_mor f).</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 239
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+intros P.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 240
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre> split; try exact _.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 240
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+-</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 241
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y E.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 241
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (pseudo_order_antisym (f x) (f y)).</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 241
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  split; apply P,E.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 242
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+-</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 243
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y E z.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 243
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply P in E.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 243
+Time: 0.002s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+  apply (merely_destruct (cotransitive E (f z)));
+  intros [?|?];apply tr; [left | right]; apply P;trivial.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 245
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+-</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 246
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y; split; intros E.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 246
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 247
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (strong_injective f) in E.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 247
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply apart_iff_total_lt in E.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 248
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+    destruct E; [left | right]; apply P;trivial.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 249
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 250
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (strong_extensionality f).</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 250
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply apart_iff_total_lt.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 251
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct E; [left | right]; apply P;trivial.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 252
+Time: 0.002s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 253
+Time: 0.003s">
+<div class="time" style="width: 4.0540540540541%"></div>
+<pre>
+
+Lemma projected_full_pseudo_order `{IsApart A} `{Ale : Le A} `{Alt : Lt A}
+  `{is_mere_relation A le} `{is_mere_relation A lt}
+  `{Apart B} `{Ble : Le B} `{Blt : Lt B}
+  (f : A -&gt; B) `{!IsStrongInjective f} `{!FullPseudoOrder Ble Blt}
+  : (forall x y, x ≤ y &lt;-&gt; f x ≤ f y) -&gt; (forall x y, x &lt; y &lt;-&gt; f x &lt; f y) -&gt;
+    FullPseudoOrder Ale Alt.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 260
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 261
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+intros P1 P2.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 262
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 262
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+-</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 263
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 263
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+-</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 264
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (projected_pseudo_order f);assumption.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 264
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+-</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 265
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y; split; intros E.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 265
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 266
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros F.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 266
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre> destruct (le_not_lt_flip (f y) (f x));[apply P1|apply P2];trivial.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 266
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 267
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply P1.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 267
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply not_lt_le_flip.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 267
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros F.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 268
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply E,P2.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 268
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> trivial.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 268
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 269
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance id_order_preserving `{PartialOrder A} : OrderPreserving (@id A).</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 271
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 272
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+red;trivial.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 273
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 274
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance id_order_reflecting `{PartialOrder A} : OrderReflecting (@id A).</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 276
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 277
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+red;trivial.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 278
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 279
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section composition.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 281
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {A B C} `{Le A} `{Le B} `{Le C} (f : A -&gt; B) (g : B -&gt; C).</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 282
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Instance compose_order_preserving:
+    OrderPreserving f -&gt; OrderPreserving g -&gt; OrderPreserving (g ∘ f).</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 285
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 286
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  red;intros.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 287
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> unfold Compose.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 287
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  do 2 apply (order_preserving _).</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 288
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  trivial.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 289
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 290
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+
+  Instance compose_order_reflecting:
+    OrderReflecting f -&gt; OrderReflecting g -&gt; OrderReflecting (g ∘ f).</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 293
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 294
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros ?? x y E.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 295
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> unfold Compose in E.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 295
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  do 2 apply (order_reflecting _) in E.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 296
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  trivial.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 297
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 298
+Time: 0.002s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+
+  Instance compose_order_embedding:
+    OrderEmbedding f -&gt; OrderEmbedding g -&gt; OrderEmbedding (g ∘ f) := {}.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 301
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+End composition.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 302
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+#[export]
+Hint Extern 4 (OrderPreserving (_ ∘ _)) =&gt;
+  class_apply @compose_order_preserving : typeclass_instances.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 306
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+#[export]
+Hint Extern 4 (OrderReflecting (_ ∘ _)) =&gt;
+  class_apply @compose_order_reflecting : typeclass_instances.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 309
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+#[export]
+Hint Extern 4 (OrderEmbedding (_ ∘ _)) =&gt;
+  class_apply @compose_order_embedding : typeclass_instances.</pre>
+</div>
+<div class="code" title="File: maps.v
+Line: 313
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+
+</pre>
+</div>
+</body>
+</html>
+

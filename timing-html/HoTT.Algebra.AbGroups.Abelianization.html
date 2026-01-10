@@ -1,0 +1,2360 @@
+<html>
+<head>
+<title>Abelianization.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Abelianization.v</h1>
+
+<div class="code" title="File: Abelianization.v
+Line: 1
+Time: 0.06s">
+<div class="time" style="width: 100%"></div>
+<pre>From HoTT Require Import Basics Types Truncations.Core.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 1
+Time: 0.002s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+From HoTT.WildCat Require Import Core Equiv EquivGpd.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 2
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Cubical.DPath.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Colimits.Coeq.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 4
+Time: 0.044s">
+<div class="time" style="width: 73.333333333333%"></div>
+<pre>
+Require Import Algebra.AbGroups.AbelianGroup.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 5
+Time: 0.001s">
+<div class="time" style="width: 1.6666666666667%"></div>
+<pre>
+Require Import Modalities.ReflectiveSubuniverse.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Abelianization *)
+
+(** In this file we define what it means for a group homomorphism [G -&gt; H] into an abelian group [H] to be an abelianization. We then construct an example of an abelianization. *)
+
+</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Open Scope mc_scope.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope mc_mult_scope.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope wc_iso_scope.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Definition of abelianization.
+
+  A "unit" homomorphism [eta : G -&gt; G_ab], with [G_ab] abelian, is considered an abelianization if and only if for all homomorphisms [G -&gt; A], where [A] is abelian, there exists a unique [g : G_ab -&gt; A] such that [h == g o eta X].   We express this in funext-free form by saying that precomposition with [eta] in the wild 1-category [Group] induces an equivalence of hom 0-groupoids, in the sense of WildCat/EquivGpd.
+
+  Unfortunately, if [eta : GroupHomomorphism G G_ab] and we write [cat_precomp A eta] then Coq is unable to guess that the relevant 1-category is [Group].  Even writing [cat_precomp (A := Group) A eta] isn't good enough, I guess because the typeclass inference that finds the instance [is01cat_group] doesn't happen until after the type of [eta] would have to be resolved to a [Hom] in some wild category.  However, with the following auxiliary definition we can force the typeclass inference to happen first.  (It would be worth thinking about whether the design of the wild categories library could be improved to avoid this.)  *)</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition group_precomp {a b} := @cat_precomp Group _ _ a b.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 19
+Time: 0.002s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+
+Class IsAbelianization {G : Group} (G_ab : AbGroup)
+      (eta : GroupHomomorphism G G_ab)
+  := issurjinj_isabel :: forall (A : AbGroup),
+      IsSurjInj (group_precomp A eta).</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition isequiv_group_precomp_isabelianization `{Funext}
+  {G : Group} {G_ab : AbGroup} (eta : GroupHomomorphism G G_ab)
+  `{!IsAbelianization G_ab eta} (A : AbGroup)
+  : IsEquiv (group_precomp A eta).</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 30
+Time: 0.001s">
+<div class="time" style="width: 1.6666666666667%"></div>
+<pre>
+  snapply isequiv_adjointify.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros g.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 32
+Time: 0.001s">
+<div class="time" style="width: 1.6666666666667%"></div>
+<pre>
+    exact (surjinj_inv (group_precomp A eta) g).</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros f.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply equiv_path_grouphomomorphism.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 35
+Time: 0.001s">
+<div class="time" style="width: 1.6666666666667%"></div>
+<pre>
+    exact (eisretr0gpd_inv (group_precomp A eta) f).</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros f.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply equiv_path_grouphomomorphism.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 38
+Time: 0.001s">
+<div class="time" style="width: 1.6666666666667%"></div>
+<pre>
+    exact (eissect0gpd_inv (group_precomp A eta) f).</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 39
+Time: 0.002s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 40
+Time: 0.001s">
+<div class="time" style="width: 1.6666666666667%"></div>
+<pre>
+
+Definition equiv_group_precomp_isabelianization `{Funext}
+  {G : Group} {G_ab : AbGroup} (eta : GroupHomomorphism G G_ab)
+  `{!IsAbelianization G_ab eta} (A : AbGroup)
+  : (G_ab $-&gt; A) &lt;~&gt; (G $-&gt; A)
+  := Build_Equiv _ _ _ (isequiv_group_precomp_isabelianization eta A).</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Here we define abelianization as a HIT. Specifically as a set-coequalizer of the following two maps [fun '(a, b, c) =&gt; a * (b * c)] and [fun '(a, b, c) =&gt; a * (c * b)].
+
+From this we can show that Abel G is an abelian group.
+
+In fact this models the following HIT:
+
+&lt;&lt;
+HIT Abel (G : Group) := 
+ | abel_in : G -&gt; Abel G
+ | abel_in_comm : forall x y z, abel_in (x * (y * z)) = abel_in (x * (z * y)).
+&gt;&gt;
+
+We also derive [abel_in] and [abel_in_comm] from our coequalizer definition, and even prove the induction and computation rules for this HIT.
+
+This HIT was suggested by Dan Christensen. *)
+
+</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section Abel.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Let G be a group. *)
+ </pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Context (G : Group).</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** We locally define a map uncurry2 that lets us uncurry [A * B * C -&gt; D] twice. *)
+ </pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Definition uncurry2 {A B C D : Type}
+    : (A -&gt; B -&gt; C -&gt; D) -&gt; A * B * C -&gt; D
+    := fun f '(a, b, c) =&gt; f a b c.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The type [Abel] is defined to be the set coequalizer of the following maps [G^3 -&gt; G]. *)
+ </pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 74
+Time: 0.001s">
+<div class="time" style="width: 1.6666666666667%"></div>
+<pre>Definition Abel
+    := Tr 0 (Coeq
+      (uncurry2 (fun a b c : G =&gt; a * (b * c)))
+      (uncurry2 (fun a b c : G =&gt; a * (c * b)))).</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** We have a natural map from [G] to [Abel G]. *)
+ </pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition abel_in : G -&gt; Abel := tr o coeq.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** This map satisfies the condition [ab_comm]. It's a form of commutativity in a right factor. *)
+ </pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 83
+Time: 0.002s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>Definition abel_in_comm a b c
+    : abel_in (a * (b * c)) = abel_in (a * (c * b))
+    := ap tr (cglue (a, b, c)).</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** It is clear that Abel is a set. *)
+ </pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition istrunc_abel : IsHSet Abel := _.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** We can derive the induction principle from the ones for truncation and the coequalizer. *)
+ </pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Abel_ind (P : Abel -&gt; Type) `{forall x, IsHSet (P x)} 
+    (a : forall x, P (abel_in x))
+    (c : forall x y z, abel_in_comm x y z # a (x * (y * z)) = a (x * (z * y)))
+    : forall (x : Abel), P x.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 94
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 95
+Time: 0.001s">
+<div class="time" style="width: 1.6666666666667%"></div>
+<pre>
+    rapply Trunc_ind.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 96
+Time: 0.001s">
+<div class="time" style="width: 1.6666666666667%"></div>
+<pre>
+    snapply Coeq_ind.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: exact a.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 98
+Time: 0.001s">
+<div class="time" style="width: 1.6666666666667%"></div>
+<pre>
+    intros [[x y] z].</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 99
+Time: 0.001s">
+<div class="time" style="width: 1.6666666666667%"></div>
+<pre>
+    nrefine (transport_compose _ _ _ _ @ _).</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply c.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 101
+Time: 0.002s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The computation rule on point constructors holds definitionally. *)
+ </pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 105
+Time: 0.001s">
+<div class="time" style="width: 1.6666666666667%"></div>
+<pre>Definition Abel_ind_beta_abel_in (P : Abel -&gt; Type) `{forall x, IsHSet (P x)}
+    (a : forall x, P (abel_in x))
+    (c : forall x y z, DPath P (abel_in_comm x y z) (a (x * (y * z))) (a (x * (z * y))))
+    (x : G)
+    : Abel_ind P a c (abel_in x) = a x
+    := idpath.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The computation rule on paths. *)
+ </pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 113
+Time: 0.002s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>Definition Abel_ind_beta_abel_in_comm (P : Abel -&gt; Type) `{forall x, IsHSet (P x)}
+    (a : forall x, P (abel_in x))
+    (c : forall x y z, abel_in_comm x y z # a (x * (y * z)) = a (x * (z * y)))
+    (x y z : G)
+    : apD (Abel_ind P a c) (abel_in_comm x y z) = c x y z.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 118
+Time: 0.004s">
+<div class="time" style="width: 6.6666666666667%"></div>
+<pre>
+    nrefine (apD_compose' tr _ _ @ ap _ _ @ concat_V_pp _ _).</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 119
+Time: 0.009s">
+<div class="time" style="width: 15%"></div>
+<pre>
+    rapply Coeq_ind_beta_cglue.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 120
+Time: 0.03s">
+<div class="time" style="width: 50%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 121
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** We also have a recursion principle. *)
+ </pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 124
+Time: 0.001s">
+<div class="time" style="width: 1.6666666666667%"></div>
+<pre>Definition Abel_rec (P : Type) `{IsHSet P} (a : G -&gt; P)
+    (c : forall x y z, a (x * (y * z)) = a (x * (z * y)))
+    : Abel -&gt; P.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 126
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 127
+Time: 0.001s">
+<div class="time" style="width: 1.6666666666667%"></div>
+<pre>
+    apply (Abel_ind _ a).</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 128
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros; apply dp_const, c.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 130
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Here is a simpler version of [Abel_ind] when our target is an [HProp]. This lets us discard all the higher paths. *)
+ </pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Abel_ind_hprop (P : Abel -&gt; Type) `{forall x, IsHProp (P x)} 
+    (a : forall x, P (abel_in x))
+    : forall (x : Abel), P x.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 135
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 136
+Time: 0.001s">
+<div class="time" style="width: 1.6666666666667%"></div>
+<pre>
+    srapply Trunc_ind.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 137
+Time: 0.002s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+    srapply Coeq_ind_hprop.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact a.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 140
+Time: 0.057s">
+<div class="time" style="width: 95%"></div>
+<pre>
+
+End Abel.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The [IsHProp] argument of [Abel_ind_hprop] can usually be found by typeclass resolution, but [srapply] is slow, so we use this tactic instead. *)</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Ltac Abel_ind_hprop x := snapply Abel_ind_hprop; [exact _ | intro x].</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We make sure that [G] is implicit in the arguments of [abel_in]
+ and [abel_in_comm]. *)</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 147
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Arguments abel_in {_} g%_mc_mult_scope.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 147
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments abel_in_comm {_} (a b c)%_mc_mult_scope.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 148
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Now we can show that [Abel G] is in fact an abelian group. We will denote the operation in [Abel G] by the multiplicative [*] notation even though it is later shown to be commutative. *)
+
+</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section AbelGroup.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context (G : Group).</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Firstly we define the operation on [Abel G]. This is defined as follows:
+&lt;&lt;
+        abel_in x * abel_in y := abel_in (x * y)
+&gt;&gt;
+      But we need to also check that it preserves [ab_comm] in the appropriate way. *)
+ </pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export] Instance sgop_abel : SgOp (Abel G).</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro a.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 162
+Time: 0.001s">
+<div class="time" style="width: 1.6666666666667%"></div>
+<pre>
+    srapply Abel_rec.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 163
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 164
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro b.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 164
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      revert a.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 165
+Time: 0.002s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+      srapply Abel_rec.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 166
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      {</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro a.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        exact (abel_in (a * b)).</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      intros a c d; hnf.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      (* The pattern seems to be to alternate [associativity] and [ab_comm]. *)
+     </pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 171
+Time: 0.002s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>refine (ap _ (associativity _ _ _)^ @ _).</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      refine (abel_in_comm _ _ _ @ _).</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 172
+Time: 0.001s">
+<div class="time" style="width: 1.6666666666667%"></div>
+<pre>
+      refine (ap _ (associativity _ _ _) @ _).</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      refine (abel_in_comm _ _ _ @ _).</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 174
+Time: 0.002s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+      refine (ap _ (associativity _ _ _)^ @ _).</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 175
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      refine (abel_in_comm _ _ _ @ _).</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 176
+Time: 0.001s">
+<div class="time" style="width: 1.6666666666667%"></div>
+<pre>
+      exact (ap _ (associativity _ _ _)).</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros b c d.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    revert a.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 179
+Time: 0.015s">
+<div class="time" style="width: 25%"></div>
+<pre>
+    Abel_ind_hprop a; simpl.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 180
+Time: 0.001s">
+<div class="time" style="width: 1.6666666666667%"></div>
+<pre>
+    refine (ap _ (associativity _ _ _) @ _).</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 181
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (abel_in_comm _ _ _ @ _).</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 182
+Time: 0.001s">
+<div class="time" style="width: 1.6666666666667%"></div>
+<pre>
+    exact (ap _ (associativity _ _ _)^).</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 183
+Time: 0.015s">
+<div class="time" style="width: 25%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 184
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** We can now easily show that this operation is associative by [associativity] in [G] and the fact that being associative is a proposition. *)
+ </pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export] Instance associative_abel_sgop : Associative (.*.).</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros x y.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 189
+Time: 0.005s">
+<div class="time" style="width: 8.3333333333333%"></div>
+<pre>
+    Abel_ind_hprop z; revert y.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 190
+Time: 0.005s">
+<div class="time" style="width: 8.3333333333333%"></div>
+<pre>
+    Abel_ind_hprop y; revert x.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 191
+Time: 0.008s">
+<div class="time" style="width: 13.333333333333%"></div>
+<pre>
+    Abel_ind_hprop x; simpl.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 192
+Time: 0.007s">
+<div class="time" style="width: 11.666666666667%"></div>
+<pre>
+    napply (ap abel_in); apply associativity.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 193
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 194
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** From this we know that [Abel G] is a semigroup. *)
+ </pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export] Instance issemigroup_abel : IsSemiGroup (Abel G) := {}.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** We define the group unit as [abel_in] of the unit of [G] *)
+ </pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export] Instance monunit_abel_zero : MonUnit (Abel G) := abel_in mon_unit.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** By using Abel_ind_hprop we can prove the left and right identity laws. *)
+ </pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 203
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export] Instance leftidentity_abel : LeftIdentity (.*.) 1.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 203
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 204
+Time: 0.005s">
+<div class="time" style="width: 8.3333333333333%"></div>
+<pre>
+    Abel_ind_hprop x; cbn beta.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 205
+Time: 0.003s">
+<div class="time" style="width: 5%"></div>
+<pre>
+    napply (ap abel_in); apply left_identity.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 207
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance rightidentity_abel : RightIdentity (.*.) 1.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 209
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 210
+Time: 0.007s">
+<div class="time" style="width: 11.666666666667%"></div>
+<pre>
+    Abel_ind_hprop x; cbn beta.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 211
+Time: 0.003s">
+<div class="time" style="width: 5%"></div>
+<pre>
+    napply (ap abel_in); apply right_identity.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 212
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 213
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Hence [Abel G] is a monoid *)
+ </pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 216
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export] Instance ismonoid_abel : IsMonoid (Abel G) := {}.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 216
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** We can also prove that the operation is commutative! This will come in handy later. *)
+ </pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 219
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export] Instance commutative_abel : Commutative (.*.).</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 219
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 220
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro x.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 221
+Time: 0.005s">
+<div class="time" style="width: 8.3333333333333%"></div>
+<pre>
+    Abel_ind_hprop y.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 222
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    revert x.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 223
+Time: 0.008s">
+<div class="time" style="width: 13.333333333333%"></div>
+<pre>
+    Abel_ind_hprop x; cbn beta.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 224
+Time: 0.004s">
+<div class="time" style="width: 6.6666666666667%"></div>
+<pre>
+    refine ((ap abel_in (left_identity _))^ @ _).</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 225
+Time: 0.003s">
+<div class="time" style="width: 5%"></div>
+<pre>
+    refine (_ @ (ap abel_in (left_identity _))).</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 226
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply abel_in_comm.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 227
+Time: 0.001s">
+<div class="time" style="width: 1.6666666666667%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Now we can define the inverse operation. This is just
+&lt;&lt;
+        (abel_in g)^ := abel_in g^
+&gt;&gt;
+      However when checking that it respects [ab_comm] we have to show the following:
+&lt;&lt;
+        abel_in (z^ * y^ * x^) = abel_in (y^ * z^ * x^)
+&gt;&gt;
+      there is no obvious way to do this, but we note that [abel_in (x * y)] is exactly the definition of [abel_in x * abel_in y]! Hence by [commutativity] we can show this. *)
+ </pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 239
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export] Instance inverse_abel : Inverse (Abel G).</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 239
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 240
+Time: 0.001s">
+<div class="time" style="width: 1.6666666666667%"></div>
+<pre>
+    srapply (Abel_rec _ _ (abel_in o inv)).</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 241
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros x y z; cbn beta.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 242
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    lhs napply ap.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 243
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    2: rhs napply ap.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 244
+Time: 0.006s">
+<div class="time" style="width: 10%"></div>
+<pre>
+    1,3: lhs rapply inverse_sg_op; napply (ap (.* _)); rapply inverse_sg_op.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 245
+Time: 0.001s">
+<div class="time" style="width: 1.6666666666667%"></div>
+<pre>
+    change (abel_in z^ * abel_in y^ * abel_in x^
+      = abel_in y^ * abel_in z^ * abel_in x^).</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 247
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (ap (.* _)).</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 248
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (commutativity (abel_in z^) (abel_in y^)).</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 249
+Time: 0.001s">
+<div class="time" style="width: 1.6666666666667%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 250
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Again by [Abel_ind_hprop] and the corresponding laws for [G] we can prove the left and right inverse laws. *)
+ </pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 253
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export] Instance leftinverse_abel : LeftInverse (.*.) (^) 1.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 253
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 254
+Time: 0.005s">
+<div class="time" style="width: 8.3333333333333%"></div>
+<pre>
+    Abel_ind_hprop x; simpl.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 255
+Time: 0.003s">
+<div class="time" style="width: 5%"></div>
+<pre>
+    napply (ap abel_in); apply left_inverse.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 256
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 257
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Instance rightinverse_abel : RightInverse (.*.) (^) 1.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 259
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 260
+Time: 0.005s">
+<div class="time" style="width: 8.3333333333333%"></div>
+<pre>
+    Abel_ind_hprop x; simpl.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 261
+Time: 0.003s">
+<div class="time" style="width: 5%"></div>
+<pre>
+    napply (ap abel_in); apply right_inverse.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 262
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 263
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Thus [Abel G] is a group *)
+ </pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 266
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export] Instance isgroup_abel : IsGroup (Abel G) := {}.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 266
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** And furthermore, since the operation is commutative, it is an abelian group. *)
+ </pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 269
+Time: 0.006s">
+<div class="time" style="width: 10%"></div>
+<pre>#[export] Instance isabgroup_abel : IsAbGroup (Abel G) := {}.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 269
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** By definition, the map [abel_in] is also a group homomorphism. *)
+ </pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 272
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export] Instance issemigrouppreserving_abel_in : IsSemiGroupPreserving abel_in.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 272
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 273
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by unfold IsSemiGroupPreserving.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 274
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 275
+Time: 0.009s">
+<div class="time" style="width: 15%"></div>
+<pre>
+
+End AbelGroup.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 277
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We can easily prove that [abel_in] is a surjection. *)</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 279
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance issurj_abel_in {G : Group} : IsSurjection (@abel_in G).</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 279
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 280
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply BuildIsSurjection.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 281
+Time: 0.003s">
+<div class="time" style="width: 5%"></div>
+<pre>
+  Abel_ind_hprop x; cbn beta.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 282
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply tr.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 283
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exists x.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 284
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  reflexivity.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 285
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 286
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Now we finally check that our definition of abelianization satisfies the universal property of being an abelianization. *)
+
+(** We define [abel] to be the abelianization of a group. This is a map from [Group] to [AbGroup]. *)</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 290
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition abel : Group -&gt; AbGroup.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 290
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 291
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro G.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 292
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_AbGroup.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 293
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 294
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> srapply (Build_Group (Abel G)).</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 294
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 295
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 295
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 296
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We don't wish for [abel G] to be unfolded when using [simpl] or [cbn]. *)</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 298
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Arguments abel G : simpl never.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 298
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The unit of this map is the map [abel_in] which typeclasses can pick up to be a homomorphism. We write it out explicitly here. *)</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 300
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition abel_unit {G : Group} : G $-&gt; abel G
+  := @Build_GroupHomomorphism G (abel G) abel_in _.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 301
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition grp_homo_abel_rec {G : Group} {A : AbGroup} (f : G $-&gt; A)
+  : abel G $-&gt; A.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 304
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 305
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_GroupHomomorphism.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 306
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 307
+Time: 0.004s">
+<div class="time" style="width: 6.6666666666667%"></div>
+<pre> srapply (Abel_rec _ _ f).</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 307
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros x y z.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 308
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    napply grp_homo_op_agree; trivial.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 309
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (grp_homo_op _ _ _ @ _ @ (grp_homo_op _ _ _)^).</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 310
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply commutativity.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 311
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 311
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros y.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 312
+Time: 0.011s">
+<div class="time" style="width: 18.333333333333%"></div>
+<pre>
+  Abel_ind_hprop x; revert y.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 313
+Time: 0.011s">
+<div class="time" style="width: 18.333333333333%"></div>
+<pre>
+  Abel_ind_hprop y.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 314
+Time: 0.002s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+  apply grp_homo_op.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 315
+Time: 0.004s">
+<div class="time" style="width: 6.6666666666667%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 316
+Time: 0.002s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+
+Definition abel_ind_homotopy {G H : Group} {f g : Hom (A:=Group) (abel G) H}
+  (p : f $o abel_unit $== g $o abel_unit)
+  : f $== g.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 320
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 321
+Time: 0.009s">
+<div class="time" style="width: 15%"></div>
+<pre>
+  rapply Abel_ind_hprop.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 322
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact p.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 323
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 324
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Finally we can prove that our construction abel is an abelianization. *)</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 326
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isabelianization_abel {G : Group}
+  : IsAbelianization (abel G) abel_unit.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 327
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 328
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros A.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 329
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> constructor.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 329
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 330
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros h.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 330
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snrefine (grp_homo_abel_rec h; _).</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 331
+Time: 0.002s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+    cbn.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 332
+Time: 0.001s">
+<div class="time" style="width: 1.6666666666667%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 332
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 332
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros g h p.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 333
+Time: 0.009s">
+<div class="time" style="width: 15%"></div>
+<pre>
+  Abel_ind_hprop x.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 334
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (p x).</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 335
+Time: 0.008s">
+<div class="time" style="width: 13.333333333333%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 336
+Time: 0.001s">
+<div class="time" style="width: 1.6666666666667%"></div>
+<pre>
+
+Theorem groupiso_isabelianization {G : Group}
+  (A B : AbGroup)
+  (eta1 : GroupHomomorphism G A)
+  (eta2 : GroupHomomorphism G B)
+  {isab1 : IsAbelianization A eta1}
+  {isab2 : IsAbelianization B eta2}
+  : A ≅ B.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 344
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 345
+Time: 0.002s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+  destruct (esssurj (group_precomp B eta1) eta2) as [a ac].</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 346
+Time: 0.002s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+  destruct (esssurj (group_precomp A eta2) eta1) as [b bc].</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 347
+Time: 0.004s">
+<div class="time" style="width: 6.6666666666667%"></div>
+<pre>
+  srapply (Build_GroupIsomorphism _ _ a).</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 348
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply (isequiv_adjointify _ b).</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 349
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 350
+Time: 0.002s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre> refine (essinj (group_precomp B eta2)
+                   (x := a $o b) (y := Id (A := Group) B) _).</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 351
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros x; cbn in *.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 352
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (_ @ ac x).</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 353
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply ap, bc.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 354
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 354
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 355
+Time: 0.002s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre> refine (essinj (group_precomp A eta1)
+                   (x := b $o a) (y := Id (A := Group) A) _).</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 356
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros x; cbn in *.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 357
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (_ @ bc x).</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 358
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply ap, ac.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 359
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 359
+Time: 0.002s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 360
+Time: 0.001s">
+<div class="time" style="width: 1.6666666666667%"></div>
+<pre>
+
+Theorem homotopic_isabelianization {G : Group} (A B : AbGroup)
+  (eta1 : GroupHomomorphism G A) (eta2 : GroupHomomorphism G B)
+  {isab1 : IsAbelianization A eta1} {isab2 : IsAbelianization B eta2}
+  : eta2 == grp_homo_compose (groupiso_isabelianization A B eta1 eta2) eta1.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 365
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 366
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 367
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  symmetry.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 368
+Time: 0.001s">
+<div class="time" style="width: 1.6666666666667%"></div>
+<pre>
+  exact ((esssurj (group_precomp B eta1) eta2).2 x).</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 369
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 370
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Hence any abelianization is surjective. *)</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 372
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance issurj_isabelianization {G : Group}
+  (A : AbGroup) (eta : GroupHomomorphism G A)
+  : IsAbelianization A eta -&gt; IsSurjection eta.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 374
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 375
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros k.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 376
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  pose (homotopic_isabelianization A (abel G) eta abel_unit) as p.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 377
+Time: 0.001s">
+<div class="time" style="width: 1.6666666666667%"></div>
+<pre>
+  exact (@cancelL_isequiv_conn_map _ _ _ _ _ _ _
+    (conn_map_homotopic _ _ _ p _)).</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 379
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 380
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance isabelianization_identity (A : AbGroup) : IsAbelianization A grp_homo_id.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 382
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 383
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros B.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 384
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> constructor.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 384
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 385
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros h; exact (h ; fun _ =&gt; idpath).</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 385
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 386
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros g h p; exact p.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 386
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 387
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance isequiv_abgroup_abelianization
+  (A B : AbGroup) (eta : GroupHomomorphism A B) {isab : IsAbelianization B eta}
+  : IsEquiv eta.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 391
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 392
+Time: 0.003s">
+<div class="time" style="width: 5%"></div>
+<pre>
+  srapply isequiv_homotopic.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 393
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 394
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (groupiso_isabelianization A B grp_homo_id eta).</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 394
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 395
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 395
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 396
+Time: 0.001s">
+<div class="time" style="width: 1.6666666666667%"></div>
+<pre> symmetry; apply homotopic_isabelianization.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 396
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 397
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Functoriality *)
+
+</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 400
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance is0functor_abel : Is0Functor abel.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 400
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 401
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_Is0Functor.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 402
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros A B f.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 403
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply grp_homo_abel_rec.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 404
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (abel_unit $o f).</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 405
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 406
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance is1functor_abel : Is1Functor abel.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 408
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 409
+Time: 0.001s">
+<div class="time" style="width: 1.6666666666667%"></div>
+<pre>
+  snapply Build_Is1Functor.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 410
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 411
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros A B f g p.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 411
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unfold abel.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 412
+Time: 0.007s">
+<div class="time" style="width: 11.666666666667%"></div>
+<pre>
+    rapply Abel_ind_hprop.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 413
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros x.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 414
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (ap abel_in (p x)).</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 415
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 416
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros A.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 416
+Time: 0.008s">
+<div class="time" style="width: 13.333333333333%"></div>
+<pre>
+    by rapply Abel_ind_hprop.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 417
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 418
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros A B C f g.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 418
+Time: 0.007s">
+<div class="time" style="width: 11.666666666667%"></div>
+<pre>
+    by rapply Abel_ind_hprop.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 419
+Time: 0.002s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Abelianization.v
+Line: 421
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

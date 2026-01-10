@@ -1,0 +1,12 @@
+N: 4 "is01cat_empty" [body=yes, kind=cnst, prop=no, path="EmptyCat", ];
+N: 3 "is0gpd_empty" [body=yes, kind=cnst, prop=no, path="EmptyCat", ];
+N: 1 "is1cat_empty" [body=yes, kind=cnst, prop=no, path="EmptyCat", ];
+N: 2 "is2graph_empty" [body=yes, kind=cnst, prop=no, path="EmptyCat", ];
+N: 5 "isgraph_empty" [body=yes, kind=cnst, prop=no, path="EmptyCat", ];
+E: 1 2 [weight=25, ];
+E: 1 4 [weight=16, ];
+E: 1 5 [weight=60, ];
+E: 2 5 [weight=5, ];
+E: 3 4 [weight=2, ];
+E: 3 5 [weight=4, ];
+E: 4 5 [weight=6, ];

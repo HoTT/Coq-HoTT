@@ -1,0 +1,24 @@
+digraph HoTT_Pointed_pEquiv {
+  graph [ratio=0.5]
+  node [style=filled]
+pEquiv_equiv_pequiv_inverse [label="equiv_pequiv_inverse", URL=<pEquiv.html#equiv_pequiv_inverse>, peripheries=3, fillcolor="#F070D1"] ;
+pEquiv_pequiv_pequiv_postcompose [label="pequiv_pequiv_postcompose", URL=<pEquiv.html#pequiv_pequiv_postcompose>, peripheries=3, fillcolor="#F070D1"] ;
+pEquiv_pequiv_pequiv_precompose [label="pequiv_pequiv_precompose", URL=<pEquiv.html#pequiv_pequiv_precompose>, peripheries=3, fillcolor="#F070D1"] ;
+pEquiv_moveR_pequiv_fV [label="moveR_pequiv_fV", URL=<pEquiv.html#moveR_pequiv_fV>, peripheries=3, fillcolor="#F070D1"] ;
+pEquiv_moveR_pequiv_Vf [label="moveR_pequiv_Vf", URL=<pEquiv.html#moveR_pequiv_Vf>, peripheries=3, fillcolor="#F070D1"] ;
+pEquiv_moveL_pequiv_Vf [label="moveL_pequiv_Vf", URL=<pEquiv.html#moveL_pequiv_Vf>, peripheries=3, fillcolor="#F070D1"] ;
+pEquiv_moveL_pequiv_Mf [label="moveL_pequiv_Mf", URL=<pEquiv.html#moveL_pequiv_Mf>, peripheries=3, fillcolor="#F070D1"] ;
+pEquiv_moveR_pequiv_Mf [label="moveR_pequiv_Mf", URL=<pEquiv.html#moveR_pequiv_Mf>, peripheries=3, fillcolor="#F070D1"] ;
+pEquiv_pequiv_adjointify_ [label="pequiv_adjointify'", URL=<pEquiv.html#pequiv_adjointify'>, peripheries=3, fillcolor="#F070D1"] ;
+pEquiv_pequiv_adjointify [label="pequiv_adjointify", URL=<pEquiv.html#pequiv_adjointify>, peripheries=3, fillcolor="#F070D1"] ;
+pEquiv_Build_pEquiv_ [label="Build_pEquiv'", URL=<pEquiv.html#Build_pEquiv'>, fillcolor="#F070D1"] ;
+pEquiv_pequiv_transitive [label="pequiv_transitive", URL=<pEquiv.html#pequiv_transitive>, peripheries=3, fillcolor="#F070D1"] ;
+pEquiv_pequiv_compose [label="pequiv_compose", URL=<pEquiv.html#pequiv_compose>, fillcolor="#F070D1"] ;
+pEquiv_pequiv_symmetric [label="pequiv_symmetric", URL=<pEquiv.html#pequiv_symmetric>, peripheries=3, fillcolor="#F070D1"] ;
+pEquiv_pequiv_reflexive [label="pequiv_reflexive", URL=<pEquiv.html#pequiv_reflexive>, peripheries=3, fillcolor="#F070D1"] ;
+  pEquiv_pequiv_pequiv_postcompose -> pEquiv_Build_pEquiv_ [] ;
+  pEquiv_pequiv_pequiv_precompose -> pEquiv_Build_pEquiv_ [] ;
+  pEquiv_pequiv_transitive -> pEquiv_pequiv_compose [] ;
+subgraph cluster_pEquiv { label="pEquiv"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+pEquiv_pequiv_reflexive; pEquiv_pequiv_symmetric; pEquiv_pequiv_compose; pEquiv_pequiv_transitive; pEquiv_Build_pEquiv_; pEquiv_pequiv_adjointify; pEquiv_pequiv_adjointify_; pEquiv_moveR_pequiv_Mf; pEquiv_moveL_pequiv_Mf; pEquiv_moveL_pequiv_Vf; pEquiv_moveR_pequiv_Vf; pEquiv_moveR_pequiv_fV; pEquiv_pequiv_pequiv_precompose; pEquiv_pequiv_pequiv_postcompose; pEquiv_equiv_pequiv_inverse; };
+} /* END */

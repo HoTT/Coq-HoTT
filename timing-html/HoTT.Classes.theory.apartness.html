@@ -1,0 +1,1725 @@
+<html>
+<head>
+<title>apartness.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for apartness.v</h1>
+
+<div class="code" title="File: apartness.v
+Line: 1
+Time: 0.082s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import HoTT.Classes.interfaces.abstract_algebra.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 1
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Generalizable Variables A B C f g.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section contents.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Context `{IsApart A}.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma apart_ne x y : PropHolds (x ≶ y) -&gt; PropHolds (x &lt;&gt; y).</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 9
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+unfold PropHolds.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+intros ap e;revert ap.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+apply tight_apart.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assumption.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+#[export] Instance stable_eq_apartness: forall x y : A, Stable (x = y).</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> unfold Stable.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros dn.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tight_apart.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros ap.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply dn.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply apart_ne.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assumption.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+End contents.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* Due to bug #2528 *)</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export]
+Hint Extern 3 (PropHolds (_ &lt;&gt; _)) =&gt; eapply @apart_ne : typeclass_instances.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 25
+Time: 0.002s">
+<div class="time" style="width: 2.4390243902439%"></div>
+<pre>
+
+Lemma projected_strong_setoid `{IsApart B} `{Apart A} `{IsHSet A}
+  `{is_mere_relation A apart}
+  (f: A -&gt; B)
+  (eq_correct : forall x y, x = y &lt;-&gt; f x = f y)
+  (apart_correct : forall x y, x ≶ y &lt;-&gt; f x ≶ f y)
+    : IsApart A.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+split.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+-</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+-</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+-</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y ap.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 37
+Time: 0.001s">
+<div class="time" style="width: 1.219512195122%"></div>
+<pre> apply apart_correct, symmetry, apart_correct.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  assumption.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+-</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y ap z.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply apart_correct in ap.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 40
+Time: 0.001s">
+<div class="time" style="width: 1.219512195122%"></div>
+<pre>
+  apply (merely_destruct (cotransitive ap (f z))).</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 41
+Time: 0.001s">
+<div class="time" style="width: 1.219512195122%"></div>
+<pre>
+  intros [?|?];apply tr;[left|right];apply apart_correct;assumption.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+-</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y;split.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros nap.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply eq_correct.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tight_apart.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros ap.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply nap.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply apart_correct;assumption.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros e ap.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply apart_correct in ap;revert ap.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply tight_apart.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply eq_correct;assumption.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 47
+Time: 0.002s">
+<div class="time" style="width: 2.4390243902439%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 48
+Time: 0.001s">
+<div class="time" style="width: 1.219512195122%"></div>
+<pre>
+
+Instance sg_apart_mere `{IsApart A} (P : A -&gt; Type)
+  : is_mere_relation (sig P) apart.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+intros.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> unfold apart,sig_apart.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance sig_strong_setoid `{IsApart A} (P: A -&gt; Type) `{forall x, IsHProp (P x)}
+  : IsApart (sig P).</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 58
+Time: 0.016s">
+<div class="time" style="width: 19.512195121951%"></div>
+<pre>
+apply (projected_strong_setoid (@proj1 _ P)).</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+-</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 60
+Time: 0.001s">
+<div class="time" style="width: 1.219512195122%"></div>
+<pre> split;apply Sigma.equiv_path_sigma_hprop.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+-</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros;apply reflexivity.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 61
+Time: 0.001s">
+<div class="time" style="width: 1.219512195122%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section morphisms.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{IsApart A} `{IsApart B} `{IsApart C}.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance strong_injective_injective `{!IsStrongInjective (f : A -&gt; B)} :
+    IsInjective f.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  pose proof (strong_injective_mor f).</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros ? ? e.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply tight_apart.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros ap.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply tight_apart in e.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply e.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply strong_injective;auto.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (* If a morphism satisfies the binary strong extensionality property, it is
+    strongly extensional in both coordinates. *)
+ </pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 79
+Time: 0.001s">
+<div class="time" style="width: 1.219512195122%"></div>
+<pre>#[export] Instance strong_setoid_morphism_1
+    `{!StrongBinaryExtensionality (f : A -&gt; B -&gt; C)} :
+    forall z, StrongExtensionality (f z).</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros z x y E.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 83
+Time: 0.001s">
+<div class="time" style="width: 1.219512195122%"></div>
+<pre>
+  apply (merely_destruct (strong_binary_extensionality f z x z y E)).</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [?|?];trivial.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct (irreflexivity (≶) z).</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assumption.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 87
+Time: 0.001s">
+<div class="time" style="width: 1.219512195122%"></div>
+<pre>
+
+  #[export] Instance strong_setoid_morphism_unary_2
+    `{!StrongBinaryExtensionality (f : A -&gt; B -&gt; C)} :
+    forall z, StrongExtensionality (fun x =&gt; f x z).</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros z x y E.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 93
+Time: 0.001s">
+<div class="time" style="width: 1.219512195122%"></div>
+<pre>
+  apply (merely_destruct (strong_binary_extensionality f x z y z E)).</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 94
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [?|?];trivial.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct (irreflexivity (≶) z);assumption.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (* Conversely, if a morphism is strongly extensional in both coordinates, it
+    satisfies the binary strong extensionality property. We don't make this an
+    instance in order to avoid loops. *)
+ </pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 102
+Time: 0.002s">
+<div class="time" style="width: 2.4390243902439%"></div>
+<pre>Lemma strong_binary_setoid_morphism_both_coordinates
+    `{!IsApart A} `{!IsApart B} `{!IsApart C} {f : A -&gt; B -&gt; C}
+    `{forall z, StrongExtensionality (f z)} `{forall z, StrongExtensionality (fun x =&gt; f x z)}
+     : StrongBinaryExtensionality f.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x₁ y₁ x₂ y₂ E.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (merely_destruct (cotransitive E (f x₂ y₁))).</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [?|?];apply tr.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> left.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (strong_extensionality (fun x =&gt; f x y₁));trivial.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> right.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (strong_extensionality (f x₂));trivial.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 111
+Time: 0.001s">
+<div class="time" style="width: 1.219512195122%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 112
+Time: 0.001s">
+<div class="time" style="width: 1.219512195122%"></div>
+<pre>
+
+End morphisms.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section more_morphisms.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{IsApart A} `{IsApart B}.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma strong_binary_setoid_morphism_commutative {f : A -&gt; A -&gt; B} `{!Commutative f}
+    `{forall z, StrongExtensionality (f z)} : StrongBinaryExtensionality f.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 121
+Time: 0.002s">
+<div class="time" style="width: 2.4390243902439%"></div>
+<pre>
+  apply @strong_binary_setoid_morphism_both_coordinates;try exact _.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 122
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros z x y.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 123
+Time: 0.001s">
+<div class="time" style="width: 1.219512195122%"></div>
+<pre>
+  rewrite !(commutativity _ z).</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (strong_extensionality (f z)).</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 125
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 126
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+End more_morphisms.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section default_apart.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{DecidablePaths A}.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 130
+Time: 0.005s">
+<div class="time" style="width: 6.0975609756098%"></div>
+<pre>
+
+  Instance default_apart : Apart A | 20
+    := fun x y =&gt;
+      match dec (x = y) with
+      | inl _ =&gt; false
+      | inr _ =&gt; true
+      end = true.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 137
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Typeclasses Opaque default_apart.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Instance default_apart_trivial : TrivialApart A (Aap:=default_apart).</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  split.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> unfold apart,default_apart.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 143
+Time: 0.007s">
+<div class="time" style="width: 8.5365853658537%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y;unfold apart,default_apart;split.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 145
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros E.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 145
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (dec (x=y)).</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 145
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (false_ne_true E).</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 147
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> trivial.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 147
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 148
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros E;destruct (dec (x=y)) as [e|_].</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 148
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (E e).</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 150
+Time: 0.001s">
+<div class="time" style="width: 1.219512195122%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End default_apart.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* In case we have a decidable setoid, we can construct a strong setoid. Again
+  we do not make this an instance as it will cause loops *)</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section dec_setoid.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{TrivialApart A} `{DecidablePaths A}.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (* Not Global in order to avoid loops *)
+ </pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance ne_apart x y : PropHolds (x &lt;&gt; y) -&gt; PropHolds (x ≶ y).</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros ap.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply trivial_apart.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  assumption.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 163
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 164
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance dec_strong_setoid: IsApart A.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 166
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  split.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 169
+Time: 0.006s">
+<div class="time" style="width: 7.3170731707317%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 170
+Time: 0.003s">
+<div class="time" style="width: 3.6585365853659%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y ne.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply trivial_apart.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply trivial_apart in ne.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros e;apply ne,symmetry,e.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 174
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> hnf.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 174
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y ne z.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 174
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply trivial_apart in ne.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 175
+Time: 0.01s">
+<div class="time" style="width: 12.19512195122%"></div>
+<pre>
+    destruct (dec (x=z)) as [e|ne'];[destruct (dec (z=y)) as [e'|ne']|].</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct ne.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> path_via z.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr;right.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply trivial_apart.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assumption.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 179
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr;left.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 179
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>  apply trivial_apart.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 179
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assumption.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 179
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 180
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y;split.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 180
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 181
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros nap.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 181
+Time: 0.005s">
+<div class="time" style="width: 6.0975609756098%"></div>
+<pre>
+      destruct (dec (x=y));auto.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 182
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      destruct nap.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 183
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply trivial_apart;trivial.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 183
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 184
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros e.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 184
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      intros nap.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply trivial_apart in nap.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> auto.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 185
+Time: 0.002s">
+<div class="time" style="width: 2.4390243902439%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 186
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+End dec_setoid.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* And a similar result for morphisms *)</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 189
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section dec_setoid_morphisms.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 189
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{IsApart A} `{!TrivialApart A} `{IsApart B}.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 190
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Instance dec_strong_morphism (f : A -&gt; B) :
+    StrongExtensionality f.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 193
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 194
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y E.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply trivial_apart.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros e.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 196
+Time: 0.001s">
+<div class="time" style="width: 1.219512195122%"></div>
+<pre>
+  apply tight_apart in E;auto.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context `{!TrivialApart B}.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Instance dec_strong_injective (f : A -&gt; B) `{!IsInjective f} :
+    IsStrongInjective f.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 203
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 204
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  split; try exact _.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 205
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros ap.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 207
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply trivial_apart in ap.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply trivial_apart.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros e.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply ap.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 209
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (injective f).</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 209
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assumption.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 209
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 210
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context `{IsApart C}.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 212
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Instance dec_strong_binary_morphism (f : A -&gt; B -&gt; C) :
+    StrongBinaryExtensionality f.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 215
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 216
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x1 y1 x2 y2 hap.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 217
+Time: 0.001s">
+<div class="time" style="width: 1.219512195122%"></div>
+<pre>
+  apply (merely_destruct (cotransitive hap (f x2 y1)));intros [h|h];apply tr.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 218
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 219
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> left.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 219
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply trivial_apart.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 219
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros e.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 220
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply tight_apart in h;auto.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 221
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (ap (fun x =&gt; f x y1) e).</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 222
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 223
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> right.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 223
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply trivial_apart.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 223
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros e.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 224
+Time: 0.001s">
+<div class="time" style="width: 1.219512195122%"></div>
+<pre>
+    apply tight_apart in h;auto.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 225
+Time: 0.001s">
+<div class="time" style="width: 1.219512195122%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 226
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+End dec_setoid_morphisms.</pre>
+</div>
+<div class="code" title="File: apartness.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

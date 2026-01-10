@@ -1,0 +1,1125 @@
+<html>
+<head>
+<title>Bool.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Bool.v</h1>
+
+<div class="code" title="File: Bool.v
+Line: 1
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>(** * Theorems about the booleans *)
+
+</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 2
+Time: 0.027s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import HoTT.Basics.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 2
+Time: 0.003s">
+<div class="time" style="width: 11.111111111111%"></div>
+<pre>
+Require Import Types.Equiv.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope path_scope.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* Coq calls it "bool", we call it "Bool" *)</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Unset Elimination Schemes.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Inductive Bool : Type0 :=
+  | true : Bool
+  | false : Bool.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Scheme Bool_ind := Induction for Bool Sort Type.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Scheme Bool_rec := Minimality for Bool Sort Type.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+(* For compatibility with Coq's [induction] *)</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Bool_rect := Bool_ind.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Add Printing If Bool.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Declare Scope bool_scope.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Delimit Scope bool_scope with Bool.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Bind Scope bool_scope with Bool.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition andb (b1 b2 : Bool) : Bool := if b1 then b2 else false.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition orb (b1 b2 : Bool) : Bool := if b1 then true else b2.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition negb (b : Bool) := if b then false else true.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition implb (b1 b2 : Bool) : Bool := if b1 then b2 else true.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Infix "||" := orb : bool_scope.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Infix "&amp;&amp;" := andb : bool_scope.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Infix "-&gt;" := implb : bool_scope.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition implb_true {b} : implb b true = true
+  := if b as b return implb b true = true then idpath else idpath.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition implb_impl {a b} : (a -&gt; b)%Bool = true &lt;-&gt; (a = true -&gt; b = true).</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 39
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+  destruct a; simpl; split; trivial using idpath with nocore;
+  destruct b; simpl; auto using idpath with nocore.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 42
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+
+Instance trunc_if n A B `{IsTrunc n A, IsTrunc n B} (b : Bool)
+: IsTrunc n (if b then A else B) | 100
+  := if b as b return (IsTrunc n (if b then A else B)) then _ else _.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Decidability *)
+
+</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section BoolDecidable.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition false_ne_true : ~ (false = true)
+    := fun H =&gt; match H in (_ = y) return (if y return Set then Empty else Bool) with
+                  | 1%path =&gt; true
+                end.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition true_ne_false : ~ (true = false)
+    := fun H =&gt; false_ne_true (symmetry _ _ H).</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 56
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+
+  #[export] Instance decidable_paths_bool : DecidablePaths Bool
+    := fun x y =&gt; match x as x, y as y return ((x = y) + ~(x = y)) with
+                    | true, true =&gt; inl idpath
+                    | false, false =&gt; inl idpath
+                    | true, false =&gt; inr true_ne_false
+                    | false, true =&gt; inr false_ne_true
+                  end.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition hset_bool : IsHSet Bool := _.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+End BoolDecidable.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** In particular, [negb] has no fixed points *)</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition not_fixed_negb (b : Bool) : negb b &lt;&gt; b
+  := match b return negb b &lt;&gt; b with
+       | true =&gt; false_ne_true
+       | false =&gt; true_ne_false
+     end.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** And conversely, if two elements of [Bool] are unequal, they must be related by [negb]. *)</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition negb_ne {b1 b2 : Bool}
+: (b1 &lt;&gt; b2) -&gt; (b1 = negb b2).</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct b1, b2.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros oops; case (oops idpath).</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros oops; case (oops idpath).</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** This version of [negb_ne] is more convenient to [destruct] against. *)</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition negb_ne' {b1 b2 : Bool}
+  : (b1 &lt;&gt; b2) -&gt; (negb b1 = b2).</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros oops.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  symmetry.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply negb_ne.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (symmetric_neq oops).</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Products as [forall] over [Bool] *)
+
+</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section BoolForall.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Variable P : Bool -&gt; Type.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Let f (s : forall b, P b) := (s false, s true).</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Let g (u : P false * P true) (b : Bool) : P b :=
+    match b with
+      | false =&gt; fst u
+      | true =&gt; snd u
+    end.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition equiv_bool_forall_prod `{Funext} :
+    (forall b, P b) &lt;~&gt; P false * P true.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 108
+Time: 0.002s">
+<div class="time" style="width: 7.4074074074074%"></div>
+<pre>
+    apply (equiv_adjointify f g);
+    repeat (reflexivity
+              || intros []
+              || intro
+              || apply path_forall).</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    
+  Defined.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+End BoolForall.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition equiv_bool_rec_uncurried `{Funext} (P : Type) : P * P &lt;~&gt; (Bool -&gt; P)
+  := (equiv_bool_forall_prod (fun _ =&gt; P))^-1%equiv.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** The type [Bool &lt;~&gt; Bool] is equivalent to [Bool]. *)
+
+(** The non-identity equivalence is negation (the flip). *)</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isequiv_negb : IsEquiv negb.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (@Build_IsEquiv
+            _ _
+            negb negb
+            (fun b =&gt; if b as b return negb (negb b) = b then idpath else idpath)
+            (fun b =&gt; if b as b return negb (negb b) = b then idpath else idpath)
+            _).</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 130
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros []; simpl; exact idpath.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 131
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition equiv_negb : Bool &lt;~&gt; Bool
+  := Build_Equiv Bool Bool negb _.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 135
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Any equivalence [Bool &lt;~&gt; Bool] sends [true] and [false] to different things. *)</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 137
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma eval_bool_isequiv (f : Bool -&gt; Bool) `{IsEquiv Bool Bool f}
+: f false = negb (f true).</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  pose proof (eissect f true).</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  pose proof (eissect f false).</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simpl in *.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct (f true), (f false).</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> etransitivity; try (eassumption || (symmetry; eassumption)).</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 145
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 145
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 145
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 147
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> etransitivity; try (eassumption || (symmetry; eassumption)).</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 147
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 148
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section EquivBoolEquiv.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** We will identify the constant equivalence with [true] and the flip equivalence with [false], and do this by evaluating the equivalence function on [true]. *)
+ </pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Let f : (Bool &lt;~&gt; Bool) -&gt; Bool := fun e =&gt; e true.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Let g : Bool -&gt; (Bool &lt;~&gt; Bool) := fun b =&gt; if b
+                                              then (equiv_idmap Bool)
+                                              else equiv_negb.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition aut_bool_canonical (e : Bool &lt;~&gt; Bool)
+  : e == g (f e).</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unfold f, g; clear f g; intros []; simpl.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (e true); reflexivity.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 163
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> refine (eval_bool_isequiv e @ _).</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 163
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      destruct (e true); reflexivity.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 164
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 165
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma equiv_bool_aut_bool `{Funext} : Bool &lt;~&gt; (Bool &lt;~&gt; Bool).</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (equiv_adjointify g f _ _).</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro e.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply path_equiv, path_forall.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      intros b; symmetry; apply aut_bool_canonical.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros []; reflexivity.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 174
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** It follows that every automorphism of [Bool] is either [idmap] or [negb]. *)
+ </pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition aut_bool_idmap_or_negb `{Funext} (e : Bool &lt;~&gt; Bool)
+  : (e = equiv_idmap Bool) + (e = equiv_negb).</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 179
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    revert e.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 180
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> equiv_intro equiv_bool_aut_bool e.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 180
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct e; simpl.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 181
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 182
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (inl idpath).</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 182
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 183
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (inr idpath).</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 183
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 184
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** But, obviously, not both. *)
+ </pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition idmap_bool_ne_negb : equiv_idmap Bool &lt;&gt; equiv_negb.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros oops.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 189
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (true_ne_false (ap10_equiv oops true)).</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 190
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 191
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** In particular, every pair of automorphisms of [Bool] commute with each other. *)
+ </pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 194
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition abelian_aut_bool (e1 e2 : Bool &lt;~&gt; Bool)
+  : e1 o e2 == e2 o e1.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro b.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (ap e1 (aut_bool_canonical e2 b) @ _).</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (aut_bool_canonical e1 _ @ _).</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 199
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (_ @ ap e2 (aut_bool_canonical e1 b)^).</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (_ @ (aut_bool_canonical e2 _)^).</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 201
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unfold f, g.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 202
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+    destruct (e1 true), (e2 true), b; reflexivity.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 203
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 204
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+
+End EquivBoolEquiv.</pre>
+</div>
+<div class="code" title="File: Bool.v
+Line: 207
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

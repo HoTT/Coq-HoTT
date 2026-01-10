@@ -1,0 +1,1577 @@
+<html>
+<head>
+<title>Choice.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Choice.v</h1>
+
+<div class="code" title="File: Choice.v
+Line: 1
+Time: 0.064s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import
+  HoTT.Basics
+  HoTT.Types
+  HoTT.Universes.HSet
+  HoTT.Truncations.Core
+  HoTT.Colimits.Quotient
+  HoTT.Projective.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The following is an alternative (0,-1)-projectivity predicate on [A]. Given a family of quotient equivalence classes [f : forall x : A, B x / R x], for [R : forall x : A, Relation (B x)], we merely have a choice function [g : forall x, B x], factoring [f] as [f x = class_of (g x)]. *)
+
+</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 10
+Time: 0.002s">
+<div class="time" style="width: 3.125%"></div>
+<pre>Definition HasQuotientChoice (A : Type) :=
+  forall (B : A -&gt; Type), (forall x, IsHSet (B x)) -&gt;
+  forall (R : forall x, Relation (B x))
+         (pR : forall x, is_mere_relation (B x) (R x)),
+         (forall x, Reflexive (R x)) -&gt;
+         (forall x, Symmetric (R x)) -&gt;
+         (forall x, Transitive (R x)) -&gt;
+  forall (f : forall x : A, B x / R x),
+  hexists (fun g : (forall x : A, B x) =&gt;
+                   forall x, class_of (R x) (g x) = f x).</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section choose_has_quotient_choice.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{Univalence}
+    {A : Type} {B : A -&gt; Type} `{!forall x, IsHSet (B x)}
+    (P : forall x, B x -&gt; Type) `{!forall x (a : B x), IsHProp (P x a)}.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Definition RelClassEquiv (x : A) (a : B x) (b : B x) : Type
+    := P x a &lt;~&gt; P x b.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Instance reflexive_relclass
+    : forall x, Reflexive (RelClassEquiv x).</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros a b.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact equiv_idmap.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Instance symmetric_relclass
+    : forall x, Symmetric (RelClassEquiv x).</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros a b1 b2 p.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (equiv_inverse p).</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Instance transitive_relclass
+    : forall x, Transitive (RelClassEquiv x).</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros a b1 b2 b3 p q.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 44
+Time: 0.001s">
+<div class="time" style="width: 1.5625%"></div>
+<pre> exact (equiv_compose q p).</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 45
+Time: 0.004s">
+<div class="time" style="width: 6.25%"></div>
+<pre>
+
+  Local Instance hprop_choose_cod (a : A)
+    : IsHProp {c : B a / RelClassEquiv a
+                 | forall b, in_class (RelClassEquiv a) c b &lt;~&gt; P a b}.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 50
+Time: 0.003s">
+<div class="time" style="width: 4.6875%"></div>
+<pre>
+    apply ishprop_sigma_disjoint.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 51
+Time: 0.006s">
+<div class="time" style="width: 9.375%"></div>
+<pre>
+    refine (Quotient_ind_hprop _ _ _).</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro b1.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 53
+Time: 0.005s">
+<div class="time" style="width: 7.8125%"></div>
+<pre>
+    refine (Quotient_ind_hprop _ _ _).</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros b2 f g.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply qglue.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (f b2)^-1.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply g.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply reflexive_relclass.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 59
+Time: 0.002s">
+<div class="time" style="width: 3.125%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 60
+Time: 0.004s">
+<div class="time" style="width: 6.25%"></div>
+<pre>
+
+  Local Definition prechoose (i : forall x, hexists (P x)) (a : A)
+    : {c : B a / RelClassEquiv a
+         | forall b : B a, in_class (RelClassEquiv a) c b &lt;~&gt; P a b}.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    specialize (i a).</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 66
+Time: 0.011s">
+<div class="time" style="width: 17.1875%"></div>
+<pre>
+    strip_truncations.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct i as [b1 h].</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists (class_of _ b1).</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro b2.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 70
+Time: 0.001s">
+<div class="time" style="width: 1.5625%"></div>
+<pre>
+    apply equiv_iff_hprop.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro f.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (f h).</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro p.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by apply equiv_iff_hprop.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 73
+Time: 0.001s">
+<div class="time" style="width: 1.5625%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Definition choose (i : forall x, hexists (P x)) (a : A)
+    : B a / RelClassEquiv a
+    := (prechoose i a).1.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End choose_has_quotient_choice.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The following section derives [HasTrChoice 0 A] from [HasQuotientChoice A]. *)
+
+</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section has_tr0_choice_quotientchoice.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{Funext} (A : Type) (qch : HasQuotientChoice A).</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Definition RelUnit (B : A -&gt; Type) (a : A) (b1 b2 : B a) : HProp
+    := Build_HProp Unit.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Instance reflexive_relunit (B : A -&gt; Type) (a : A)
+    : Reflexive (RelUnit B a).</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    done.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Instance symmetric_relunit (B : A -&gt; Type) (a : A)
+    : Symmetric (RelUnit B a).</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    done.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Instance transitive_relunit (B : A -&gt; Type) (a : A)
+    : Transitive (RelUnit B a).</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    done.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Instance ishprop_quotient_relunit (B : A -&gt; Type) (a : A)
+    : IsHProp (B a / RelUnit B a).</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply hprop_allpath.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 110
+Time: 0.003s">
+<div class="time" style="width: 4.6875%"></div>
+<pre>
+    refine (Quotient_ind_hprop _ _ _).</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro r.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 112
+Time: 0.001s">
+<div class="time" style="width: 1.5625%"></div>
+<pre>
+    refine (Quotient_ind_hprop _ _ _).</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro s.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by apply qglue.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma has_tr0_choice_quotientchoice : HasTrChoice 0 A.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 118
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros B sB f.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    transparent assert (g : (forall a, B a / RelUnit B a)).</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 121
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 122
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro a.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 122
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      specialize (f a).</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 123
+Time: 0.012s">
+<div class="time" style="width: 18.75%"></div>
+<pre>
+      strip_truncations.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (class_of _ f).</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 125
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 126
+Time: 0.005s">
+<div class="time" style="width: 7.8125%"></div>
+<pre> specialize (qch B _ (RelUnit B) _ _ _ _ g).</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 126
+Time: 0.009s">
+<div class="time" style="width: 14.0625%"></div>
+<pre>
+      strip_truncations.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply tr.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 128
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply qch.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 129
+Time: 0.001s">
+<div class="time" style="width: 1.5625%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 130
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End has_tr0_choice_quotientchoice.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma has_quotient_choice_tr0choice (A : Type)
+  : HasTrChoice 0 A -&gt; HasQuotientChoice A.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 135
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros ch B sB R pR rR sR tR f.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 137
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  set (P := fun a b =&gt; class_of (R a) b = f a).</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  assert (forall a, merely ((fun x =&gt; {b | P x b}) a)) as g.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro a.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 140
+Time: 0.001s">
+<div class="time" style="width: 1.5625%"></div>
+<pre>
+    refine (Quotient_ind_hprop _
+              (fun c =&gt; merely {b | class_of (R a) b = c}) _ (f a)).</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro b.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply tr.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by exists b.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 145
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 146
+Time: 0.007s">
+<div class="time" style="width: 10.9375%"></div>
+<pre> pose proof (ch (fun a =&gt; {b | P a b}) _ g) as h.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 146
+Time: 0.033s">
+<div class="time" style="width: 51.5625%"></div>
+<pre>
+    strip_truncations.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 147
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply tr.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 148
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists (fun x =&gt; (h x).1).</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro a.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply h.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 151
+Time: 0.001s">
+<div class="time" style="width: 1.5625%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 152
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance isequiv_has_tr0_choice_to_has_quotient_choice
+  `{Funext} (A : Type)
+  : IsEquiv (has_quotient_choice_tr0choice A).</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 157
+Time: 0.01s">
+<div class="time" style="width: 15.625%"></div>
+<pre>
+  srapply isequiv_iff_hprop.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 159
+Time: 0.002s">
+<div class="time" style="width: 3.125%"></div>
+<pre> exact istrunc_forall.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply has_tr0_choice_quotientchoice.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 160
+Time: 0.001s">
+<div class="time" style="width: 1.5625%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 161
+Time: 0.001s">
+<div class="time" style="width: 1.5625%"></div>
+<pre>
+
+Definition equiv_has_tr0_choice_has_quotient_choice
+  `{Funext} (A : Type)
+  : HasTrChoice 0 A &lt;~&gt; HasQuotientChoice A
+  := Build_Equiv _ _ (has_quotient_choice_tr0choice A) _.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 166
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The next section uses [has_quotient_choice_tr0choice] to generalize [quotient_rec2], see [choose_quotient_ind] below. *)
+
+</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section choose_quotient_ind.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 169
+Time: 0.001s">
+<div class="time" style="width: 1.5625%"></div>
+<pre>
+  Context `{Univalence}
+    {I : Type} `{!HasTrChoice 0 I}
+    {A : I -&gt; Type} `{!forall i, IsHSet (A i)}
+    (R : forall i, Relation (A i))
+    `{!forall i, is_mere_relation (A i) (R i)}
+    {rR : forall i, Reflexive (R i)}
+    {sR : forall i, Symmetric (R i)}
+    {tR : forall i, Transitive (R i)}.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** First generalize the [qglue] constructor. *)
+
+ </pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 181
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma qglue_forall
+    (f g : forall i, A i) (r : forall i, R i (f i) (g i))
+    : (fun i =&gt; class_of (R i) (f i)) = (fun i =&gt; class_of (R i) (g i)).</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 183
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 184
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    funext s.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by apply qglue.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 186
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Given suitable preconditions, we will show that [ChooseProp P a g] is inhabited, rather than directly giving an inhabitant of [P g]. This turns out to be beneficial because [ChooseProp P a g] is a proposition. *)
+
+ </pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 191
+Time: 0.002s">
+<div class="time" style="width: 3.125%"></div>
+<pre>Local Definition ChooseProp
+    (P : (forall i, A i / R i) -&gt; Type) `{!forall g, IsHSet (P g)}
+    (a : forall (f : forall i, A i), P (fun i =&gt; class_of (R i) (f i)))
+    (g : forall i, A i / R i)
+    : Type
+    := {b : P g
+       | merely (exists (f : forall i, A i)
+                        (q : g = fun i =&gt; class_of (R i) (f i)),
+                 forall (f' : forall i, A i)
+                        (r : forall i, R i (f i) (f' i)),
+                 qglue_forall f f' r # q # b = a f')}.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 201
+Time: 0.001s">
+<div class="time" style="width: 1.5625%"></div>
+<pre>
+
+  Local Instance ishprop_choose_quotient_ind_chooseprop
+    (P : (forall i, A i / R i) -&gt; Type) `{!forall g, IsHSet (P g)}
+    (a : forall (f : forall i, A i), P (fun i =&gt; class_of (R i) (f i)))
+    (g : forall i, A i / R i)
+    : IsHProp (ChooseProp P a g).</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 207
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 208
+Time: 0.001s">
+<div class="time" style="width: 1.5625%"></div>
+<pre>
+    apply ishprop_sigma_disjoint.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 209
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros x y h1 h2.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 210
+Time: 0.033s">
+<div class="time" style="width: 51.5625%"></div>
+<pre>
+    strip_truncations.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 211
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct h1 as [f1 [q1 p1]].</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 212
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct h2 as [f2 [q2 p2]].</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 213
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    specialize (p1 f1 (fun i =&gt; rR i (f1 i))).</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 214
+Time: 0.001s">
+<div class="time" style="width: 1.5625%"></div>
+<pre>
+    set (pR := fun i =&gt;
+                related_quotient_paths (R i) _ _ (ap (fun h =&gt; h i) q2^
+                @ ap (fun h =&gt; h i) q1)).</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 217
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    specialize (p2 f1 pR).</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 218
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    do 2 apply moveL_transport_V in p1.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 219
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    do 2 apply moveL_transport_V in p2.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 220
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (p1 @ _ @ p2^).</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 221
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply moveR_transport_p.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 222
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite inv_V.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 223
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite &lt;- transport_pp.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 224
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply moveR_transport_p.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite inv_V.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 226
+Time: 0.001s">
+<div class="time" style="width: 1.5625%"></div>
+<pre>
+    do 2 rewrite &lt;- transport_pp.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 227
+Time: 0.001s">
+<div class="time" style="width: 1.5625%"></div>
+<pre>
+    set (pa := (qglue_forall f2 f1 pR)^
+               @ (q2^ @ q1 @ qglue_forall f1 f1 _)).</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 229
+Time: 0.005s">
+<div class="time" style="width: 7.8125%"></div>
+<pre>
+    by induction (hset_path2 idpath pa).</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 230
+Time: 0.008s">
+<div class="time" style="width: 12.5%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 231
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* Since [ChooseProp P a g] is a proposition, we can apply [has_quotient_choice_tr0choice] and strip its truncation in order to derive [ChooseProp P a g]. *)
+
+ </pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 235
+Time: 0.001s">
+<div class="time" style="width: 1.5625%"></div>
+<pre>Lemma chooseprop_quotient_ind
+    (P : (forall i, A i / R i) -&gt; Type) `{!forall g, IsHSet (P g)}
+    (a : forall (f : forall i, A i), P (fun i =&gt; class_of (R i) (f i)))
+    (E : forall (f f' : forall i, A i) (r : forall i, R i (f i) (f' i)),
+         qglue_forall f f' r # a f = a f')
+    (g : forall i, A i / R i)
+    : ChooseProp P a g.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 241
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 242
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    pose proof
+      (has_quotient_choice_tr0choice I _ A _ R _ _ _ _ g) as h.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 244
+Time: 0.022s">
+<div class="time" style="width: 34.375%"></div>
+<pre>
+    strip_truncations.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 245
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct h as [h p].</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 246
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_forall in p.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 247
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (transport _ p _).</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 248
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists (a h).</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 249
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply tr.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 250
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists h.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 251
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists 1.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 252
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply E.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 253
+Time: 0.001s">
+<div class="time" style="width: 1.5625%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 254
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** By projecting out of [chooseprop_quotient_ind] we obtain a generalization of [quotient_rec2]. *)
+
+ </pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 258
+Time: 0.001s">
+<div class="time" style="width: 1.5625%"></div>
+<pre>Lemma choose_quotient_ind
+    (P : (forall i, A i / R i) -&gt; Type) `{!forall g, IsHSet (P g)}
+    (a : forall (f : forall i, A i), P (fun i =&gt; class_of (R i) (f i)))
+    (E : forall (f f' : forall i, A i) (r : forall i, R i (f i) (f' i)),
+         qglue_forall f f' r # a f = a f')
+    (g : forall i, A i / R i)
+    : P g.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 264
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 265
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (chooseprop_quotient_ind P a E g).1.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 266
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 267
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A specialization of [choose_quotient_ind] to the case where [P g] is a proposition. *)
+
+ </pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 271
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma choose_quotient_ind_prop
+    (P : (forall i, A i / R i) -&gt; Type) `{!forall g, IsHProp (P g)}
+    (a : forall (f : forall i, A i), P (fun i =&gt; class_of (R i) (f i)))
+    (g : forall i, A i / R i)
+    : P g.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 275
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 276
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (choose_quotient_ind P a _ g).</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 277
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 277
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply path_ishprop.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 277
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 278
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The recursion principle derived from [choose_quotient_ind]. *)
+
+ </pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 282
+Time: 0.002s">
+<div class="time" style="width: 3.125%"></div>
+<pre>Definition choose_quotient_rec
+    {B : Type} `{!IsHSet B} (a : (forall i, A i) -&gt; B)
+    (E : forall (f f' : forall i, A i),
+         (forall i, R i (f i) (f' i)) -&gt; a f = a f')
+    (g : forall i, A i / R i)
+    : B
+    := choose_quotient_ind (fun _ =&gt; B) a
+        (fun f f' r =&gt; transport_const _ _ @ E f f' r) g.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 289
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The "beta-rule" of [choose_quotient_ind]. *)
+
+ </pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 293
+Time: 0.001s">
+<div class="time" style="width: 1.5625%"></div>
+<pre>Lemma choose_quotient_ind_compute
+    (P : (forall i, A i / R i) -&gt; Type) `{!forall g, IsHSet (P g)}
+    (a : forall (f : forall i, A i), P (fun i =&gt; class_of (R i) (f i)))
+    (E : forall (f f' : forall i, A i) (r : forall i, R i (f i) (f' i)),
+         qglue_forall f f' r # a f = a f')
+    (f : forall i, A i)
+    : choose_quotient_ind P a E (fun i =&gt; class_of (R i) (f i)) = a f.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 299
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 300
+Time: 0.015s">
+<div class="time" style="width: 23.4375%"></div>
+<pre>
+    refine (Trunc_ind (fun a =&gt; (_ a).1 = _) _ _).</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 301
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 301
+Time: 0.001s">
+<div class="time" style="width: 1.5625%"></div>
+<pre>
+    intros [f' p].</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 302
+Time: 0.002s">
+<div class="time" style="width: 3.125%"></div>
+<pre>
+    rewrite transport_sigma.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 303
+Time: 0.006s">
+<div class="time" style="width: 9.375%"></div>
+<pre>
+    set (p' := fun x =&gt; related_quotient_paths (R x) _ _ (p x)).</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 304
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    assert (p = (fun i =&gt; qglue (p' i))) as pE.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 305
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 306
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> funext x.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 306
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply hset_path2.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 306
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 307
+Time: 0.001s">
+<div class="time" style="width: 1.5625%"></div>
+<pre> rewrite pE.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 307
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply E.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 307
+Time: 0.013s">
+<div class="time" style="width: 20.3125%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 308
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The "beta-rule" of [choose_quotient_rec]. *)
+
+ </pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 312
+Time: 0.001s">
+<div class="time" style="width: 1.5625%"></div>
+<pre>Lemma choose_quotient_rec_compute
+    {B : Type} `{!IsHSet B} (a : (forall i, A i) -&gt; B)
+    (E : forall (f f' : forall i, A i),
+         (forall i, R i (f i) (f' i)) -&gt; a f = a f')
+    (f : forall i, A i)
+    : choose_quotient_rec a E (fun i =&gt; class_of (R i) (f i)) = a f.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 317
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 318
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (choose_quotient_ind_compute (fun _ =&gt; B)).</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 319
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 320
+Time: 0.001s">
+<div class="time" style="width: 1.5625%"></div>
+<pre>
+End choose_quotient_ind.</pre>
+</div>
+<div class="code" title="File: Choice.v
+Line: 322
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+
+</pre>
+</div>
+</body>
+</html>
+

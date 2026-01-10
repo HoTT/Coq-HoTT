@@ -1,0 +1,298 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Tests.Algebra.Groups.Expressions</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Tests.Algebra.Groups.Expressions</h1>
+
+<div class="code">
+<span class="id" title="keyword">From</span> <span class="id" title="var">HoTT</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.Overture.html#"><span class="id" title="library">Basics.Overture</span></a>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">HoTT</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Algebra.Groups.Group.html#"><span class="id" title="library">Algebra.Groups.Group</span></a>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">HoTT</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Algebra.AbGroups.AbelianGroup.html#"><span class="id" title="library">Algebra.AbGroups.AbelianGroup</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Universe</span> <span class="id" title="var">Minimization</span> <span class="id" title="var">ToSet</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+In this file, we test various aspects of writing group expressions. These kinds of expressions appear throughout the library, but since mathclasses is quite sensitive to subtle changes, we keep this file to document and enforce certain behaviours.
+
+<div class="paragraph"> </div>
+
+We use the <span class="inlinecode"><span class="id" title="keyword">Type</span></span> vernacular command which is like <span class="inlinecode"><span class="id" title="keyword">Check</span></span> but doesn't allow for evars. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="Groups" class="idref" href="#Groups"><span class="id" title="section">Groups</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+We used a fixed universe of groups since the <span class="inlinecode"><span class="id" title="keyword">Type</span></span> command doesn't work with polymorphic universes. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> {<a id="G:1" class="idref" href="#G:1"><span class="id" title="binder">G</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Group.html#Group"><span class="id" title="record">Group@</span></a><a class="idref" href="HoTT.Algebra.Groups.Group.html#Group"><span class="id" title="record">{</span></a><a class="idref" href="HoTT.Algebra.Groups.Group.html#Group"><span class="id" title="record">Set</span></a><a class="idref" href="HoTT.Algebra.Groups.Group.html#Group"><span class="id" title="record">}</span></a>} (<a id="x:2" class="idref" href="#x:2"><span class="id" title="binder">x</span></a> <a id="y:3" class="idref" href="#y:3"><span class="id" title="binder">y</span></a> : <a class="idref" href="HoTT.Tests.Algebra.Groups.Expressions.html#G:1"><span class="id" title="variable">G</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Without opening any scopes, the notation <span class="inlinecode"><a class="idref" href="HoTT.Categories.Grothendieck.ToSet.Core.html#x"><span class="id" title="projection">x</span></a></span> <span class="inlinecode">×</span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Functor.Attributes.html#fully_faithful_helpers.y"><span class="id" title="variable">y</span></a></span> will default to the one in <span class="inlinecode"><span class="id" title="var">type_scope</span></span> which is the product type. In this case it will fail since Coq is expecting a type argument rather than <span class="inlinecode"><a class="idref" href="HoTT.Categories.Grothendieck.ToSet.Core.html#x"><span class="id" title="projection">x</span></a></span> <span class="inlinecode">:</span> <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#G"><span class="id" title="definition">G</span></a></span>. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="var">Fail</span> <span class="id" title="keyword">Type</span> (<a class="idref" href="HoTT.Tests.Algebra.Groups.Expressions.html#Groups.x"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Basics.Overture.html#11c698c8685bb8ab1cf725545c085ac4"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Tests.Algebra.Groups.Expressions.html#Groups.y"><span class="id" title="variable">y</span></a> : <a class="idref" href="HoTT.Tests.Algebra.Groups.Expressions.html#Groups.G"><span class="id" title="variable">G</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<span class="inlinecode"><a class="idref" href="HoTT.Categories.Grothendieck.ToSet.Core.html#x"><span class="id" title="projection">x</span></a>^</span> will be interpreted as path inversion, therefore Coq will complain about its type. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="var">Fail</span> <span class="id" title="keyword">Type</span> (<a class="idref" href="HoTT.Tests.Algebra.Groups.Expressions.html#Groups.x"><span class="id" title="variable">x</span></a><a class="idref" href="HoTT.Basics.Overture.html#6bc2e8b4a6e295632a90f5f35132db8d"><span class="id" title="notation">^</span></a> : <a class="idref" href="HoTT.Tests.Algebra.Groups.Expressions.html#Groups.G"><span class="id" title="variable">G</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+In <span class="inlinecode"><span class="id" title="var">mc_scope</span></span>, <span class="inlinecode"><span class="id" title="var">_</span></span> <span class="inlinecode">×</span> <span class="inlinecode"><span class="id" title="var">_</span></span> denotes an instance of <span class="inlinecode"><a class="idref" href="HoTT.Classes.tactics.ring_quote.html#Quoting.Mult"><span class="id" title="constructor">Mult</span></a></span>, which groups do not have. It is useful for rings, see below. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">mc_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+We fail saying that no <span class="inlinecode"><a class="idref" href="HoTT.Classes.tactics.ring_quote.html#Quoting.Mult"><span class="id" title="constructor">Mult</span></a></span> instance was found for <span class="inlinecode"><a class="idref" href="HoTT.Colimits.Sequential.html#G"><span class="id" title="definition">G</span></a></span> as expected. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="var">Fail</span> <span class="id" title="keyword">Type</span> (<a class="idref" href="HoTT.Tests.Algebra.Groups.Expressions.html#Groups.x"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6e6b564acea72cb37306d61ea269e8c3"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Tests.Algebra.Groups.Expressions.html#Groups.y"><span class="id" title="variable">y</span></a> : <a class="idref" href="HoTT.Tests.Algebra.Groups.Expressions.html#Groups.G"><span class="id" title="variable">G</span></a>).<br/>
+</div>
+
+<div class="doc">
+Here <span class="inlinecode">^</span> is still interpreted as path inversion. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="var">Fail</span> <span class="id" title="keyword">Type</span> (<a class="idref" href="HoTT.Tests.Algebra.Groups.Expressions.html#Groups.x"><span class="id" title="variable">x</span></a><a class="idref" href="HoTT.Basics.Overture.html#6bc2e8b4a6e295632a90f5f35132db8d"><span class="id" title="notation">^</span></a> : <a class="idref" href="HoTT.Tests.Algebra.Groups.Expressions.html#Groups.G"><span class="id" title="variable">G</span></a>).<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Local Close</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">mc_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The correct scope for a general group is <span class="inlinecode"><span class="id" title="var">mc_mult_scope</span></span>, where <span class="inlinecode"><a class="idref" href="HoTT.Categories.Grothendieck.ToSet.Core.html#x"><span class="id" title="projection">x</span></a></span> <span class="inlinecode">×</span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Functor.Attributes.html#fully_faithful_helpers.y"><span class="id" title="variable">y</span></a></span> is <span class="inlinecode"><a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#sg_op"><span class="id" title="projection">sg_op</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Grothendieck.ToSet.Core.html#x"><span class="id" title="projection">x</span></a></span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Functor.Attributes.html#fully_faithful_helpers.y"><span class="id" title="variable">y</span></a></span> and <span class="inlinecode">^</span> is <span class="inlinecode"><a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#inv"><span class="id" title="projection">inv</span></a></span>. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">mc_mult_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+This gets correctly interpreted as the group operation. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="var">Succeed</span> <span class="id" title="keyword">Type</span> (<a class="idref" href="HoTT.Tests.Algebra.Groups.Expressions.html#Groups.x"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6696ee26e9de0a399e7cbbed255ce697"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Tests.Algebra.Groups.Expressions.html#Groups.y"><span class="id" title="variable">y</span></a> : <a class="idref" href="HoTT.Tests.Algebra.Groups.Expressions.html#Groups.G"><span class="id" title="variable">G</span></a>).<br/>
+</div>
+
+<div class="doc">
+So does the group inverse. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="var">Succeed</span> <span class="id" title="keyword">Type</span> (<a class="idref" href="HoTT.Tests.Algebra.Groups.Expressions.html#Groups.x"><span class="id" title="variable">x</span></a><a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#b7ccad841aae0c18b155f661cdf7fec0"><span class="id" title="notation">^</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6696ee26e9de0a399e7cbbed255ce697"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Tests.Algebra.Groups.Expressions.html#Groups.y"><span class="id" title="variable">y</span></a> : <a class="idref" href="HoTT.Tests.Algebra.Groups.Expressions.html#Groups.G"><span class="id" title="variable">G</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Tests.Algebra.Groups.Expressions.html#Groups"><span class="id" title="section">Groups</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="AbGroups" class="idref" href="#AbGroups"><span class="id" title="section">AbGroups</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> {<a id="A:4" class="idref" href="#A:4"><span class="id" title="binder">A</span></a> : <a class="idref" href="HoTT.Algebra.AbGroups.AbelianGroup.html#AbGroup"><span class="id" title="record">AbGroup@</span></a><a class="idref" href="HoTT.Algebra.AbGroups.AbelianGroup.html#AbGroup"><span class="id" title="record">{</span></a><a class="idref" href="HoTT.Algebra.AbGroups.AbelianGroup.html#AbGroup"><span class="id" title="record">Set</span></a><a class="idref" href="HoTT.Algebra.AbGroups.AbelianGroup.html#AbGroup"><span class="id" title="record">}</span></a>} (<a id="x:5" class="idref" href="#x:5"><span class="id" title="binder">x</span></a> <a id="y:6" class="idref" href="#y:6"><span class="id" title="binder">y</span></a> : <a class="idref" href="HoTT.Tests.Algebra.Groups.Expressions.html#A:4"><span class="id" title="variable">A</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Working with abelian groups can be confusing if the correct scopes are not open. We document the correct usage here. 
+<div class="paragraph"> </div>
+
+ Similar to <span class="inlinecode">×</span>, without any scopes open, the following expression fails since Coq interprets it as the sum type. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="var">Fail</span> <span class="id" title="keyword">Type</span> (<a class="idref" href="HoTT.Tests.Algebra.Groups.Expressions.html#AbGroups.x"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Basics.Overture.html#e03f39daf98516fa530d3f6f5a1b4d92"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Tests.Algebra.Groups.Expressions.html#AbGroups.y"><span class="id" title="variable">y</span></a> : <a class="idref" href="HoTT.Tests.Algebra.Groups.Expressions.html#AbGroups.A"><span class="id" title="variable">A</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The <span class="inlinecode">-</span> <span class="inlinecode"><span class="id" title="var">_</span></span> notation doesn't have any meaning when the correct scope is not open. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="var">Fail</span> <span class="id" title="keyword">Type</span> (-<span class="id" title="var">x</span> : <a class="idref" href="HoTT.Tests.Algebra.Groups.Expressions.html#AbGroups.A"><span class="id" title="variable">A</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Nor does the subtraction notation. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="var">Fail</span> <span class="id" title="keyword">Type</span> (<span class="id" title="var">x</span> - <span class="id" title="var">y</span> : <a class="idref" href="HoTT.Tests.Algebra.Groups.Expressions.html#AbGroups.A"><span class="id" title="variable">A</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Opening <span class="inlinecode"><span class="id" title="var">mc_scope</span></span> will mean that:
+<ul class="doclist">
+<li> <span class="inlinecode">+</span> becomes the operation of a <span class="inlinecode"><a class="idref" href="HoTT.Modalities.Meet.html#Plus"><span class="id" title="definition">Plus</span></a></span>.
+
+</li>
+<li> <span class="inlinecode">-</span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Grothendieck.ToSet.Core.html#x"><span class="id" title="projection">x</span></a></span> becomes a <span class="inlinecode"><a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Negate"><span class="id" title="record">Negate</span></a></span> operation.
+
+</li>
+<li> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Grothendieck.ToSet.Core.html#x"><span class="id" title="projection">x</span></a></span> <span class="inlinecode">-</span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Functor.Attributes.html#fully_faithful_helpers.y"><span class="id" title="variable">y</span></a></span> is interpreted as <span class="inlinecode"><a class="idref" href="HoTT.Categories.Grothendieck.ToSet.Core.html#x"><span class="id" title="projection">x</span></a></span> <span class="inlinecode">+</span> <span class="inlinecode">(-</span> <span class="inlinecode"><a class="idref" href="HoTT.Categories.Functor.Attributes.html#fully_faithful_helpers.y"><span class="id" title="variable">y</span></a>)</span> for a <span class="inlinecode"><a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Negate"><span class="id" title="record">Negate</span></a></span> and <span class="inlinecode"><a class="idref" href="HoTT.Modalities.Meet.html#Plus"><span class="id" title="definition">Plus</span></a></span>. 
+
+</li>
+</ul>
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">mc_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Notably, even though these instances exist for <span class="inlinecode"><a class="idref" href="HoTT.Algebra.Rings.Ring.html#Ring"><span class="id" title="record">Ring</span></a></span>s, they do not in general for abelian groups as we treat those as groups with a commutative <span class="inlinecode"><a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#sg_op"><span class="id" title="projection">sg_op</span></a></span> rather than a <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Addition.html#plus"><span class="id" title="definition">plus</span></a></span> operation. This allows us to use group lemmas without deforming abelian group expressions. 
+<div class="paragraph"> </div>
+
+ These fail due to a lack of <span class="inlinecode"><a class="idref" href="HoTT.Modalities.Meet.html#Plus"><span class="id" title="definition">Plus</span></a></span>. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="var">Fail</span> <span class="id" title="keyword">Type</span> (<a class="idref" href="HoTT.Tests.Algebra.Groups.Expressions.html#AbGroups.x"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#d572d2488ab9ee1088e693a6d2198372"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Tests.Algebra.Groups.Expressions.html#AbGroups.y"><span class="id" title="variable">y</span></a> : <a class="idref" href="HoTT.Tests.Algebra.Groups.Expressions.html#AbGroups.A"><span class="id" title="variable">A</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="var">Fail</span> <span class="id" title="keyword">Type</span> (<a class="idref" href="HoTT.Tests.Algebra.Groups.Expressions.html#AbGroups.x"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#BinOpNotations.::mc_scope:x_'-'_x"><span class="id" title="notation">-</span></a> <a class="idref" href="HoTT.Tests.Algebra.Groups.Expressions.html#AbGroups.y"><span class="id" title="variable">y</span></a> : <a class="idref" href="HoTT.Tests.Algebra.Groups.Expressions.html#AbGroups.A"><span class="id" title="variable">A</span></a>).<br/>
+</div>
+
+<div class="doc">
+This fails due to a lack of <span class="inlinecode"><a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Negate"><span class="id" title="record">Negate</span></a></span>. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="var">Fail</span> <span class="id" title="keyword">Type</span> (<a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#BinOpNotations.::mc_scope:'-'_x"><span class="id" title="notation">-</span></a><a class="idref" href="HoTT.Tests.Algebra.Groups.Expressions.html#AbGroups.x"><span class="id" title="variable">x</span></a> : <a class="idref" href="HoTT.Tests.Algebra.Groups.Expressions.html#AbGroups.A"><span class="id" title="variable">A</span></a>).<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Local Close</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">mc_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Opening <span class="inlinecode"><span class="id" title="var">mc_add_scope</span></span> will make writing expressions of abelian groups possible. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">mc_add_scope</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="var">Succeed</span> <span class="id" title="keyword">Type</span> (<a class="idref" href="HoTT.Tests.Algebra.Groups.Expressions.html#AbGroups.x"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#bf5a294baaba05398b1e9b95e91f2799"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Tests.Algebra.Groups.Expressions.html#AbGroups.y"><span class="id" title="variable">y</span></a> : <a class="idref" href="HoTT.Tests.Algebra.Groups.Expressions.html#AbGroups.A"><span class="id" title="variable">A</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="var">Succeed</span> <span class="id" title="keyword">Type</span> (<a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#AdditiveNotations.::mc_add_scope:'-'_x"><span class="id" title="notation">-</span></a><a class="idref" href="HoTT.Tests.Algebra.Groups.Expressions.html#AbGroups.x"><span class="id" title="variable">x</span></a> : <a class="idref" href="HoTT.Tests.Algebra.Groups.Expressions.html#AbGroups.A"><span class="id" title="variable">A</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="var">Succeed</span> <span class="id" title="keyword">Type</span> (<a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#AdditiveNotations.::mc_add_scope:'-'_x"><span class="id" title="notation">-</span></a><a class="idref" href="HoTT.Tests.Algebra.Groups.Expressions.html#AbGroups.x"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#bf5a294baaba05398b1e9b95e91f2799"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Tests.Algebra.Groups.Expressions.html#AbGroups.y"><span class="id" title="variable">y</span></a> : <a class="idref" href="HoTT.Tests.Algebra.Groups.Expressions.html#AbGroups.A"><span class="id" title="variable">A</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="var">Succeed</span> <span class="id" title="keyword">Type</span> (<a class="idref" href="HoTT.Tests.Algebra.Groups.Expressions.html#AbGroups.x"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#AdditiveNotations.::mc_add_scope:x_'-'_x"><span class="id" title="notation">-</span></a> <a class="idref" href="HoTT.Tests.Algebra.Groups.Expressions.html#AbGroups.y"><span class="id" title="variable">y</span></a> : <a class="idref" href="HoTT.Tests.Algebra.Groups.Expressions.html#AbGroups.A"><span class="id" title="variable">A</span></a>).<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Local Close</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">mc_add_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+We can also work with the abelian group with a multiplicative notation, as we would for any group. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">mc_mult_scope</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="var">Succeed</span> <span class="id" title="keyword">Type</span> (<a class="idref" href="HoTT.Tests.Algebra.Groups.Expressions.html#AbGroups.x"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6696ee26e9de0a399e7cbbed255ce697"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Tests.Algebra.Groups.Expressions.html#AbGroups.y"><span class="id" title="variable">y</span></a> : <a class="idref" href="HoTT.Tests.Algebra.Groups.Expressions.html#AbGroups.A"><span class="id" title="variable">A</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="var">Succeed</span> <span class="id" title="keyword">Type</span> (<a class="idref" href="HoTT.Tests.Algebra.Groups.Expressions.html#AbGroups.x"><span class="id" title="variable">x</span></a><a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#b7ccad841aae0c18b155f661cdf7fec0"><span class="id" title="notation">^</span></a> : <a class="idref" href="HoTT.Tests.Algebra.Groups.Expressions.html#AbGroups.A"><span class="id" title="variable">A</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="var">Succeed</span> <span class="id" title="keyword">Type</span> (<a class="idref" href="HoTT.Tests.Algebra.Groups.Expressions.html#AbGroups.x"><span class="id" title="variable">x</span></a><a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#b7ccad841aae0c18b155f661cdf7fec0"><span class="id" title="notation">^</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6696ee26e9de0a399e7cbbed255ce697"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Tests.Algebra.Groups.Expressions.html#AbGroups.y"><span class="id" title="variable">y</span></a> : <a class="idref" href="HoTT.Tests.Algebra.Groups.Expressions.html#AbGroups.A"><span class="id" title="variable">A</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+This can get confusing if we further allow for additive notations to also be shown, so only one of <span class="inlinecode"><span class="id" title="var">mc_add_scope</span></span> and <span class="inlinecode"><span class="id" title="var">mc_mult_scope</span></span> should be used. 
+</div>
+<div class="code">
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">mc_add_scope</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="var">Succeed</span> <span class="id" title="keyword">Type</span> (<a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#AdditiveNotations.::mc_add_scope:'-'_x"><span class="id" title="notation">-</span></a><a class="idref" href="HoTT.Tests.Algebra.Groups.Expressions.html#AbGroups.x"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6696ee26e9de0a399e7cbbed255ce697"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Tests.Algebra.Groups.Expressions.html#AbGroups.y"><span class="id" title="variable">y</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#bf5a294baaba05398b1e9b95e91f2799"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Tests.Algebra.Groups.Expressions.html#AbGroups.x"><span class="id" title="variable">x</span></a><a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#b7ccad841aae0c18b155f661cdf7fec0"><span class="id" title="notation">^</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="var">Succeed</span> <span class="id" title="keyword">Type</span> (<a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#AdditiveNotations.::mc_add_scope:'-'_x"><span class="id" title="notation">-</span></a><a class="idref" href="HoTT.Tests.Algebra.Groups.Expressions.html#AbGroups.x"><span class="id" title="variable">x</span></a><a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#b7ccad841aae0c18b155f661cdf7fec0"><span class="id" title="notation">^</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#bf5a294baaba05398b1e9b95e91f2799"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#AdditiveNotations.::mc_add_scope:'-'_x"><span class="id" title="notation">--</span></a><a class="idref" href="HoTT.Tests.Algebra.Groups.Expressions.html#AbGroups.x"><span class="id" title="variable">x</span></a><a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#b7ccad841aae0c18b155f661cdf7fec0"><span class="id" title="notation">^</span></a>).<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Local Close</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">mc_add_scope</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Local Close</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">mc_mult_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Sometimes, as when working with rings, we want <span class="inlinecode">+</span> to denote <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Addition.html#plus"><span class="id" title="definition">plus</span></a></span> rather than <span class="inlinecode"><a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#sg_op"><span class="id" title="projection">sg_op</span></a></span>. In this case, we include a module with hints which can be imported. 
+</div>
+<div class="code">
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Algebra.AbGroups.AbelianGroup.html#AdditiveInstances"><span class="id" title="module">AbelianGroup.AdditiveInstances</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">mc_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+This allows us to write additive notations even though we don't have <span class="inlinecode"><span class="id" title="var">mc_add_scope</span></span> or <span class="inlinecode"><span class="id" title="var">mc_mult_scope</span></span> open. The disadvantage of working like this however, is that any group lemmas applied to abelian groups will have their <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Addition.html#plus"><span class="id" title="definition">plus</span></a></span>, <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Core.html#zero"><span class="id" title="definition">zero</span></a></span> and <span class="inlinecode"><a class="idref" href="HoTT.Spaces.No.Negation.html#negate"><span class="id" title="definition">negate</span></a></span> unfolded to the underlying group operations. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="var">Succeed</span> <span class="id" title="keyword">Type</span> (<a class="idref" href="HoTT.Tests.Algebra.Groups.Expressions.html#AbGroups.x"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#d572d2488ab9ee1088e693a6d2198372"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Tests.Algebra.Groups.Expressions.html#AbGroups.y"><span class="id" title="variable">y</span></a> : <a class="idref" href="HoTT.Tests.Algebra.Groups.Expressions.html#AbGroups.A"><span class="id" title="variable">A</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="var">Succeed</span> <span class="id" title="keyword">Type</span> (<a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#BinOpNotations.::mc_scope:'-'_x"><span class="id" title="notation">-</span></a><a class="idref" href="HoTT.Tests.Algebra.Groups.Expressions.html#AbGroups.x"><span class="id" title="variable">x</span></a> : <a class="idref" href="HoTT.Tests.Algebra.Groups.Expressions.html#AbGroups.A"><span class="id" title="variable">A</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="var">Succeed</span> <span class="id" title="keyword">Type</span> (<a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#BinOpNotations.::mc_scope:'-'_x"><span class="id" title="notation">-</span></a><a class="idref" href="HoTT.Tests.Algebra.Groups.Expressions.html#AbGroups.x"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#d572d2488ab9ee1088e693a6d2198372"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Tests.Algebra.Groups.Expressions.html#AbGroups.y"><span class="id" title="variable">y</span></a> : <a class="idref" href="HoTT.Tests.Algebra.Groups.Expressions.html#AbGroups.A"><span class="id" title="variable">A</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="var">Succeed</span> <span class="id" title="keyword">Type</span> (<a class="idref" href="HoTT.Tests.Algebra.Groups.Expressions.html#AbGroups.x"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#BinOpNotations.::mc_scope:x_'-'_x"><span class="id" title="notation">-</span></a> <a class="idref" href="HoTT.Tests.Algebra.Groups.Expressions.html#AbGroups.y"><span class="id" title="variable">y</span></a> : <a class="idref" href="HoTT.Tests.Algebra.Groups.Expressions.html#AbGroups.A"><span class="id" title="variable">A</span></a>).<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Local Close</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">mc_scope</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Tests.Algebra.Groups.Expressions.html#AbGroups"><span class="id" title="section">AbGroups</span></a>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

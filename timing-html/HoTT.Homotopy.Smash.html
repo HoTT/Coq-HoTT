@@ -1,0 +1,2583 @@
+<html>
+<head>
+<title>Smash.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Smash.v</h1>
+
+<div class="code" title="File: Smash.v
+Line: 1
+Time: 0.025s">
+<div class="time" style="width: 14.367816091954%"></div>
+<pre>Require Import Basics.Overture Basics.PathGroupoids Basics.Tactics Basics.Equivalences.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 1
+Time: 0.009s">
+<div class="time" style="width: 5.1724137931034%"></div>
+<pre>
+Require Import Types.Sum Types.Bool Types.Paths Types.Forall.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 2
+Time: 0.01s">
+<div class="time" style="width: 5.7471264367816%"></div>
+<pre>
+Require Import WildCat.Core WildCat.Bifunctor WildCat.Equiv.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 3
+Time: 0.01s">
+<div class="time" style="width: 5.7471264367816%"></div>
+<pre>
+Require Import Colimits.Pushout.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Cubical.DPath.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 5
+Time: 0.034s">
+<div class="time" style="width: 19.540229885057%"></div>
+<pre>
+Require Import Pointed.Core.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope pointed_scope.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope dpath_scope.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 9
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope path_scope.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* Definition of smash product *)
+
+</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 13
+Time: 0.001s">
+<div class="time" style="width: 0.57471264367816%"></div>
+<pre>Definition sum_to_prod (X Y : pType) : X + Y -&gt; X * Y
+  := sum_ind _ (fun x =&gt; (x, point Y)) (fun y =&gt; (point X, y)).</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition sum_to_bool X Y : X + Y -&gt; Bool
+  := sum_ind _ (fun _ =&gt; false) (fun _ =&gt; true).</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 17
+Time: 0.001s">
+<div class="time" style="width: 0.57471264367816%"></div>
+<pre>
+
+Definition Smash@{u v w | u &lt;= w, v &lt;= w} (X : pType@{u}) (Y : pType@{v}) : pType@{w}
+  := [Pushout@{w w w w} (sum_to_prod@{w w w} X Y) (sum_to_bool@{u v w} X Y), pushl (point X, point Y)].</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section Smash.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {X Y : pType}.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition sm (x : X) (y : Y) : Smash X Y := pushl (x, y).</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition auxl : Smash X Y := pushr false.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition auxr : Smash X Y := pushr true.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition gluel (x : X) : sm x pt = auxl
+    := pglue (f:=sum_to_prod X Y) (g:=sum_to_bool X Y) (inl x).</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition gluer (y : Y) : sm pt y = auxr
+    := pglue (f:=sum_to_prod X Y) (g:=sum_to_bool X Y) (inr y).</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition gluel' (x x' : X) : sm x pt = sm x' pt
+    := gluel x @ (gluel x')^.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition gluer' (y y' : Y) : sm pt y = sm pt y'
+    := gluer y @ (gluer y')^.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition glue (x : X) (y : Y) : sm x pt = sm pt y
+    := gluel' x pt @ gluer' pt y.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition glue_pt_left (y : Y) : glue pt y = gluer' pt y.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (_ @ concat_1p _).</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply whiskerR, concat_pV.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition glue_pt_right (x : X) : glue x pt = gluel' x pt.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (_ @ concat_p1 _).</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply whiskerL, concat_pV.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition ap_sm_left {x x' : X} (p : x = x')
+    : ap (fun t =&gt; sm t pt) p = gluel' x x'.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct p.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    symmetry.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply concat_pV.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition ap_sm_right {y y' : Y} (p : y = y')
+    : ap (sm pt) p = gluer' y y'.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct p.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    symmetry.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply concat_pV.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 73
+Time: 0.001s">
+<div class="time" style="width: 0.57471264367816%"></div>
+<pre>
+
+  Definition Smash_ind {P : Smash X Y -&gt; Type}
+    (Psm : forall a b, P (sm a b)) (Pl : P auxl) (Pr : P auxr)
+    (Pgl : forall a, DPath P (gluel a) (Psm a pt) Pl)
+    (Pgr : forall b, DPath P (gluer b) (Psm pt b) Pr)
+    : forall x : Smash X Y, P x.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 80
+Time: 0.001s">
+<div class="time" style="width: 0.57471264367816%"></div>
+<pre>
+    srapply Pushout_ind.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [a b].</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply Psm.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (Bool_ind _ Pr Pl).</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> srapply sum_ind.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      -</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact Pgl.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      -</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact Pgr.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 87
+Time: 0.001s">
+<div class="time" style="width: 0.57471264367816%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 88
+Time: 0.005s">
+<div class="time" style="width: 2.8735632183908%"></div>
+<pre>
+
+  Definition Smash_ind_beta_gluel {P : Smash X Y -&gt; Type}
+    {Psm : forall a b, P (sm a b)} {Pl : P auxl} {Pr : P auxr}
+    (Pgl : forall a, DPath P (gluel a) (Psm a pt) Pl)
+    (Pgr : forall b, DPath P (gluer b) (Psm pt b) Pr) (a : X)
+    : apD (Smash_ind Psm Pl Pr Pgl Pgr) (gluel a) = Pgl a
+    := Pushout_ind_beta_pglue P _ _ _ (inl a).</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 95
+Time: 0.005s">
+<div class="time" style="width: 2.8735632183908%"></div>
+<pre>
+
+  Definition Smash_ind_beta_gluer {P : Smash X Y -&gt; Type}
+    {Psm : forall a b, P (sm a b)} {Pl : P auxl} {Pr : P auxr}
+    (Pgl : forall a, DPath P (gluel a) (Psm a pt) Pl)
+    (Pgr : forall b, DPath P (gluer b) (Psm pt b) Pr) (b : Y)
+    : apD (Smash_ind Psm Pl Pr Pgl Pgr) (gluer b) = Pgr b
+    := Pushout_ind_beta_pglue P _ _ _ (inr b).</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 102
+Time: 0.002s">
+<div class="time" style="width: 1.1494252873563%"></div>
+<pre>
+
+  Definition Smash_ind_beta_gluel' {P : Smash X Y -&gt; Type}
+    {Psm : forall a b, P (sm a b)} {Pl : P auxl} {Pr : P auxr}
+    (Pgl : forall a, DPath P (gluel a) (Psm a pt) Pl)
+    (Pgr : forall b, DPath P (gluer b) (Psm pt b) Pr) (a b : X)
+    : apD (Smash_ind Psm Pl Pr Pgl Pgr) (gluel' a b)
+    = (Pgl a) @Dp ((Pgl b)^D).</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 110
+Time: 0.002s">
+<div class="time" style="width: 1.1494252873563%"></div>
+<pre>
+    lhs napply dp_apD_pp.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply ap011.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: apply Smash_ind_beta_gluel.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 113
+Time: 0.001s">
+<div class="time" style="width: 0.57471264367816%"></div>
+<pre>
+    lhs napply dp_apD_V.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply ap.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply Smash_ind_beta_gluel.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 116
+Time: 0.002s">
+<div class="time" style="width: 1.1494252873563%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 117
+Time: 0.002s">
+<div class="time" style="width: 1.1494252873563%"></div>
+<pre>
+
+  Definition Smash_ind_beta_gluer' {P : Smash X Y -&gt; Type}
+    {Psm : forall a b, P (sm a b)} {Pl : P auxl} {Pr : P auxr}
+    (Pgl : forall a, DPath P (gluel a) (Psm a pt) Pl)
+    (Pgr : forall b, DPath P (gluer b) (Psm pt b) Pr) (a b : Y)
+    : apD (Smash_ind Psm Pl Pr Pgl Pgr) (gluer' a b)
+    = (Pgr a) @Dp ((Pgr b)^D).</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 125
+Time: 0.001s">
+<div class="time" style="width: 0.57471264367816%"></div>
+<pre>
+    lhs napply dp_apD_pp.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 126
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply ap011.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: apply Smash_ind_beta_gluer.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 128
+Time: 0.001s">
+<div class="time" style="width: 0.57471264367816%"></div>
+<pre>
+    lhs napply dp_apD_V.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply ap.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 130
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply Smash_ind_beta_gluer.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 131
+Time: 0.002s">
+<div class="time" style="width: 1.1494252873563%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 132
+Time: 0.003s">
+<div class="time" style="width: 1.7241379310345%"></div>
+<pre>
+
+  Definition Smash_ind_beta_glue {P : Smash X Y -&gt; Type}
+    {Psm : forall a b, P (sm a b)} {Pl : P auxl} {Pr : P auxr}
+    (Pgl : forall a, DPath P (gluel a) (Psm a pt) Pl)
+    (Pgr : forall b, DPath P (gluer b) (Psm pt b) Pr) (a : X) (b : Y)
+    : apD (Smash_ind Psm Pl Pr Pgl Pgr) (glue a b)
+    = ((Pgl a) @Dp ((Pgl pt)^D)) @Dp ((Pgr pt) @Dp ((Pgr b)^D)).</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 140
+Time: 0.002s">
+<div class="time" style="width: 1.1494252873563%"></div>
+<pre>
+    lhs napply dp_apD_pp.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 141
+Time: 0.001s">
+<div class="time" style="width: 0.57471264367816%"></div>
+<pre>
+    apply ap011.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply Smash_ind_beta_gluel'.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply Smash_ind_beta_gluer'.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 144
+Time: 0.003s">
+<div class="time" style="width: 1.7241379310345%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 145
+Time: 0.002s">
+<div class="time" style="width: 1.1494252873563%"></div>
+<pre>
+
+  Definition Smash_rec {P : Type} (Psm : X -&gt; Y -&gt; P) (Pl Pr : P)
+    (Pgl : forall a, Psm a pt = Pl) (Pgr : forall b, Psm pt b = Pr)
+    : Smash X Y -&gt; P
+    := Smash_ind Psm Pl Pr (fun x =&gt; dp_const (Pgl x)) (fun x =&gt; dp_const (Pgr x)).</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (* Version of smash_rec that forces (Pgl pt) and (Pgr pt) to be idpath *)
+ </pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 153
+Time: 0.002s">
+<div class="time" style="width: 1.1494252873563%"></div>
+<pre>Definition Smash_rec' {P : Type} {Psm : X -&gt; Y -&gt; P}
+    (Pgl : forall a, Psm a pt = Psm pt pt) (Pgr : forall b, Psm pt b = Psm pt pt)
+    (ql : Pgl pt = 1) (qr : Pgr pt = 1)
+    : Smash X Y -&gt; P
+    := Smash_rec Psm (Psm pt pt) (Psm pt pt) Pgl Pgr.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 157
+Time: 0.001s">
+<div class="time" style="width: 0.57471264367816%"></div>
+<pre>
+
+  Definition Smash_rec_beta_gluel {P : Type} {Psm : X -&gt; Y -&gt; P} {Pl Pr : P}
+    (Pgl : forall a, Psm a pt = Pl) (Pgr : forall b, Psm pt b = Pr) (a : X)
+    : ap (Smash_rec Psm Pl Pr Pgl Pgr) (gluel a) = Pgl a.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 162
+Time: 0.001s">
+<div class="time" style="width: 0.57471264367816%"></div>
+<pre>
+    rhs_V napply (eissect dp_const).</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 163
+Time: 0.004s">
+<div class="time" style="width: 2.2988505747126%"></div>
+<pre>
+    apply moveL_equiv_V.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 164
+Time: 0.001s">
+<div class="time" style="width: 0.57471264367816%"></div>
+<pre>
+    lhs_V napply dp_apD_const.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 165
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    napply Smash_ind_beta_gluel.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 166
+Time: 0.001s">
+<div class="time" style="width: 0.57471264367816%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 167
+Time: 0.001s">
+<div class="time" style="width: 0.57471264367816%"></div>
+<pre>
+
+  Definition Smash_rec_beta_gluer {P : Type} {Psm : X -&gt; Y -&gt; P} {Pl Pr : P}
+    (Pgl : forall a, Psm a pt = Pl) (Pgr : forall b, Psm pt b = Pr) (b : Y)
+    : ap (Smash_rec Psm Pl Pr Pgl Pgr) (gluer b) = Pgr b.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 172
+Time: 0.001s">
+<div class="time" style="width: 0.57471264367816%"></div>
+<pre>
+    rhs_V napply (eissect dp_const).</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 173
+Time: 0.003s">
+<div class="time" style="width: 1.7241379310345%"></div>
+<pre>
+    apply moveL_equiv_V.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 174
+Time: 0.001s">
+<div class="time" style="width: 0.57471264367816%"></div>
+<pre>
+    lhs_V napply dp_apD_const.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 175
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    napply Smash_ind_beta_gluer.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 176
+Time: 0.001s">
+<div class="time" style="width: 0.57471264367816%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 177
+Time: 0.001s">
+<div class="time" style="width: 0.57471264367816%"></div>
+<pre>
+
+  Definition Smash_rec_beta_gluel' {P : Type} {Psm : X -&gt; Y -&gt; P} {Pl Pr : P}
+    (Pgl : forall a, Psm a pt = Pl) (Pgr : forall b, Psm pt b = Pr) (a b : X)
+    : ap (Smash_rec Psm Pl Pr Pgl Pgr) (gluel' a b) = Pgl a @ (Pgl b)^.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 181
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 182
+Time: 0.001s">
+<div class="time" style="width: 0.57471264367816%"></div>
+<pre>
+    lhs napply ap_pV.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 183
+Time: 0.003s">
+<div class="time" style="width: 1.7241379310345%"></div>
+<pre>
+    f_ap.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 184
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: apply Smash_rec_beta_gluel.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply inverse2.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 186
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply Smash_rec_beta_gluel.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 187
+Time: 0.001s">
+<div class="time" style="width: 0.57471264367816%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 188
+Time: 0.001s">
+<div class="time" style="width: 0.57471264367816%"></div>
+<pre>
+
+  Definition Smash_rec_beta_gluer' {P : Type} {Psm : X -&gt; Y -&gt; P} {Pl Pr : P}
+    (Pgl : forall a, Psm a pt = Pl) (Pgr : forall b, Psm pt b = Pr) (a b : Y)
+    : ap (Smash_rec Psm Pl Pr Pgl Pgr) (gluer' a b) = Pgr a @ (Pgr b)^.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 192
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 193
+Time: 0.001s">
+<div class="time" style="width: 0.57471264367816%"></div>
+<pre>
+    lhs napply ap_pV.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 194
+Time: 0.003s">
+<div class="time" style="width: 1.7241379310345%"></div>
+<pre>
+    f_ap.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: apply Smash_rec_beta_gluer.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply inverse2.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply Smash_rec_beta_gluer.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 198
+Time: 0.001s">
+<div class="time" style="width: 0.57471264367816%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 199
+Time: 0.001s">
+<div class="time" style="width: 0.57471264367816%"></div>
+<pre>
+
+  Definition Smash_rec_beta_glue {P : Type} {Psm : X -&gt; Y -&gt; P} {Pl Pr : P}
+    (Pgl : forall a, Psm a pt = Pl) (Pgr : forall b, Psm pt b = Pr) (a : X)
+    (b : Y) : ap (Smash_rec Psm Pl Pr Pgl Pgr) (glue a b)
+    = ((Pgl a) @ (Pgl pt)^) @ (Pgr pt @ (Pgr b)^).</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 204
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 205
+Time: 0.001s">
+<div class="time" style="width: 0.57471264367816%"></div>
+<pre>
+    lhs napply ap_pp.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 206
+Time: 0.004s">
+<div class="time" style="width: 2.2988505747126%"></div>
+<pre>
+    f_ap.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 207
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply Smash_rec_beta_gluel'.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 209
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply Smash_rec_beta_gluer'.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 209
+Time: 0.002s">
+<div class="time" style="width: 1.1494252873563%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 210
+Time: 0.012s">
+<div class="time" style="width: 6.8965517241379%"></div>
+<pre>
+
+End Smash.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 212
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments sm : simpl never.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 214
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments auxl : simpl never.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 215
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments gluel : simpl never.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 216
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments gluer : simpl never.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 217
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Miscellaneous lemmas about Smash *)
+
+(** A version of [Smash_ind] specifically for proving that two functions from a [Smash] are homotopic. *)</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 221
+Time: 0.003s">
+<div class="time" style="width: 1.7241379310345%"></div>
+<pre>Definition Smash_ind_FlFr {A B : pType} {P : Type} (f g : Smash A B -&gt; P)
+  (Hsm : forall a b, f (sm a b) = g (sm a b))
+  (Hl : f auxl = g auxl) (Hr : f auxr = g auxr)
+  (Hgluel : forall a, ap f (gluel a) @ Hl = Hsm a pt @ ap g (gluel a))
+  (Hgluer : forall b, ap f (gluer b) @ Hr = Hsm pt b @ ap g (gluer b))
+  : f == g.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 226
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 227
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply (Smash_ind Hsm Hl Hr).</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 229
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 229
+Time: 0.01s">
+<div class="time" style="width: 5.7471264367816%"></div>
+<pre>
+    transport_paths FlFr.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 230
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (Hgluel a).</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 231
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 232
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros b.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 232
+Time: 0.001s">
+<div class="time" style="width: 0.57471264367816%"></div>
+<pre>
+    transport_paths FlFr.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 233
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (Hgluer b).</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 234
+Time: 0.001s">
+<div class="time" style="width: 0.57471264367816%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 235
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A version of [Smash_ind]j specifically for proving that the composition of two functions is the identity map. *)</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 237
+Time: 0.003s">
+<div class="time" style="width: 1.7241379310345%"></div>
+<pre>Definition Smash_ind_FFlr {A B : pType} {P : Type}
+  (f : Smash A B -&gt; P) (g : P -&gt; Smash A B)
+  (Hsm : forall a b, g (f (sm a b)) = sm a b)
+  (Hl : g (f auxl) = auxl) (Hr : g (f auxr) = auxr)
+  (Hgluel : forall a, ap g (ap f (gluel a)) @ Hl = Hsm a pt @ gluel a)
+  (Hgluer : forall b, ap g (ap f (gluer b)) @ Hr = Hsm pt b @ gluer b)
+  : g o f == idmap.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 243
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 244
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply (Smash_ind Hsm Hl Hr).</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 245
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 246
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a; cbn beta.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 246
+Time: 0.001s">
+<div class="time" style="width: 0.57471264367816%"></div>
+<pre>
+    transport_paths FFlr.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 247
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (Hgluel a).</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 248
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 249
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros b; cbn beta.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 249
+Time: 0.001s">
+<div class="time" style="width: 0.57471264367816%"></div>
+<pre>
+    transport_paths FFlr.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 250
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (Hgluer b).</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 251
+Time: 0.002s">
+<div class="time" style="width: 1.1494252873563%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 252
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Functoriality of the smash product *)
+
+</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 255
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition functor_smash {A B X Y : pType} (f : A $-&gt; X) (g : B $-&gt; Y)
+  : Smash A B $-&gt; Smash X Y.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 256
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 257
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply Build_pMap.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 258
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 259
+Time: 0.001s">
+<div class="time" style="width: 0.57471264367816%"></div>
+<pre> snapply (Smash_rec (fun a b =&gt; sm (f a) (g b)) auxl auxr).</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 259
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 260
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro a; cbn beta.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 260
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rhs_V napply (gluel (f a)).</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 261
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (ap011 _ 1 (point_eq g)).</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 262
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 263
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro b; cbn beta.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 263
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rhs_V napply (gluer (g b)).</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 264
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (ap011 _ (point_eq f) 1).</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 265
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 266
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (ap011 _ (point_eq f) (point_eq g)).</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 266
+Time: 0.001s">
+<div class="time" style="width: 0.57471264367816%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 267
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition functor_smash_idmap (X Y : pType)
+  : functor_smash (@pmap_idmap X) (@pmap_idmap Y) $== pmap_idmap.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 270
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 271
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_pHomotopy.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 272
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 273
+Time: 0.001s">
+<div class="time" style="width: 0.57471264367816%"></div>
+<pre> snapply Smash_ind_FlFr.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 273
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1-3: reflexivity.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 274
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 275
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 275
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply equiv_p1_1q.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 276
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rhs napply ap_idmap.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 277
+Time: 0.002s">
+<div class="time" style="width: 1.1494252873563%"></div>
+<pre>
+      lhs napply Smash_rec_beta_gluel.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 278
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply concat_1p.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 279
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 280
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros y.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 280
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply equiv_p1_1q.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 281
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rhs napply ap_idmap.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 282
+Time: 0.001s">
+<div class="time" style="width: 0.57471264367816%"></div>
+<pre>
+      lhs napply Smash_rec_beta_gluer.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 283
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply concat_1p.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 284
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 284
+Time: 0.001s">
+<div class="time" style="width: 0.57471264367816%"></div>
+<pre>
+  reflexivity.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 285
+Time: 0.014s">
+<div class="time" style="width: 8.0459770114943%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 286
+Time: 0.001s">
+<div class="time" style="width: 0.57471264367816%"></div>
+<pre>
+
+Definition functor_smash_compose {X Y A B C D : pType}
+  (f : X $-&gt; A) (g : Y $-&gt; B) (h : A $-&gt; C) (k : B $-&gt; D)
+  : functor_smash (h $o f) (k $o g) $== functor_smash h k $o functor_smash f g.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 290
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 291
+Time: 0.023s">
+<div class="time" style="width: 13.218390804598%"></div>
+<pre>
+  pointed_reduce.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 292
+Time: 0.001s">
+<div class="time" style="width: 0.57471264367816%"></div>
+<pre>
+  snapply Build_pHomotopy.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 293
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 294
+Time: 0.003s">
+<div class="time" style="width: 1.7241379310345%"></div>
+<pre> snapply Smash_ind_FlFr.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 294
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1-3: reflexivity.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 295
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 296
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 296
+Time: 0.001s">
+<div class="time" style="width: 0.57471264367816%"></div>
+<pre>
+      apply equiv_p1_1q.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 297
+Time: 0.005s">
+<div class="time" style="width: 2.8735632183908%"></div>
+<pre>
+      lhs napply Smash_rec_beta_gluel.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 298
+Time: 0.007s">
+<div class="time" style="width: 4.0229885057471%"></div>
+<pre>
+      symmetry.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 299
+Time: 0.012s">
+<div class="time" style="width: 6.8965517241379%"></div>
+<pre>
+      lhs napply (ap_compose (functor_smash _ _) _ (gluel x)).</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 300
+Time: 0.001s">
+<div class="time" style="width: 0.57471264367816%"></div>
+<pre>
+      lhs napply ap.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 301
+Time: 0.002s">
+<div class="time" style="width: 1.1494252873563%"></div>
+<pre>
+      2: napply Smash_rec_beta_gluel.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 302
+Time: 0.004s">
+<div class="time" style="width: 2.2988505747126%"></div>
+<pre>
+      lhs napply Smash_rec_beta_gluel.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 303
+Time: 0.001s">
+<div class="time" style="width: 0.57471264367816%"></div>
+<pre>
+      apply concat_1p.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 304
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 305
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros y.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 305
+Time: 0.001s">
+<div class="time" style="width: 0.57471264367816%"></div>
+<pre>
+      apply equiv_p1_1q.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 306
+Time: 0.004s">
+<div class="time" style="width: 2.2988505747126%"></div>
+<pre>
+      lhs napply Smash_rec_beta_gluer.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 307
+Time: 0.011s">
+<div class="time" style="width: 6.3218390804598%"></div>
+<pre>
+      symmetry.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 308
+Time: 0.012s">
+<div class="time" style="width: 6.8965517241379%"></div>
+<pre>
+      lhs napply (ap_compose (functor_smash _ _) _ (gluer y)).</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 309
+Time: 0.001s">
+<div class="time" style="width: 0.57471264367816%"></div>
+<pre>
+      lhs napply ap.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 310
+Time: 0.002s">
+<div class="time" style="width: 1.1494252873563%"></div>
+<pre>
+      2: napply Smash_rec_beta_gluer.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 311
+Time: 0.003s">
+<div class="time" style="width: 1.7241379310345%"></div>
+<pre>
+      lhs napply Smash_rec_beta_gluer.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 312
+Time: 0.001s">
+<div class="time" style="width: 0.57471264367816%"></div>
+<pre>
+      apply concat_1p.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 313
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 313
+Time: 0.009s">
+<div class="time" style="width: 5.1724137931034%"></div>
+<pre>
+  reflexivity.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 314
+Time: 0.133s">
+<div class="time" style="width: 76.436781609195%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 315
+Time: 0.002s">
+<div class="time" style="width: 1.1494252873563%"></div>
+<pre>
+
+Definition functor_smash_homotopic {X Y A B : pType}
+  {f h : X $-&gt; A} {g k : Y $-&gt; B}
+  (p : f $== h) (q : g $== k)
+  : functor_smash f g $== functor_smash h k.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 320
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 321
+Time: 0.006s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+  pointed_reduce.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 322
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_pHomotopy.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 323
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 324
+Time: 0.003s">
+<div class="time" style="width: 1.7241379310345%"></div>
+<pre> snapply Smash_ind_FlFr.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 324
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: exact (fun x y =&gt; ap011 _ (p x) (q y)).</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 325
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1,2: reflexivity.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 326
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 327
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 327
+Time: 0.001s">
+<div class="time" style="width: 0.57471264367816%"></div>
+<pre>
+      lhs napply concat_p1.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 328
+Time: 0.004s">
+<div class="time" style="width: 2.2988505747126%"></div>
+<pre>
+      lhs napply Smash_rec_beta_gluel.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 329
+Time: 0.006s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+      rhs napply whiskerL.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 330
+Time: 0.002s">
+<div class="time" style="width: 1.1494252873563%"></div>
+<pre>
+      2: napply Smash_rec_beta_gluel.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 331
+Time: 0.003s">
+<div class="time" style="width: 1.7241379310345%"></div>
+<pre>
+      simpl; induction (p x); simpl.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 332
+Time: 0.001s">
+<div class="time" style="width: 0.57471264367816%"></div>
+<pre>
+      rhs_V napply concat_pp_p.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 333
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply whiskerR.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 334
+Time: 0.001s">
+<div class="time" style="width: 0.57471264367816%"></div>
+<pre>
+      napply ap_pp.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 335
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 336
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros y.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 336
+Time: 0.001s">
+<div class="time" style="width: 0.57471264367816%"></div>
+<pre>
+      lhs napply concat_p1.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 337
+Time: 0.003s">
+<div class="time" style="width: 1.7241379310345%"></div>
+<pre>
+      lhs napply Smash_rec_beta_gluer.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 338
+Time: 0.004s">
+<div class="time" style="width: 2.2988505747126%"></div>
+<pre>
+      rhs napply whiskerL.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 339
+Time: 0.002s">
+<div class="time" style="width: 1.1494252873563%"></div>
+<pre>
+      2: napply Smash_rec_beta_gluer.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 340
+Time: 0.003s">
+<div class="time" style="width: 1.7241379310345%"></div>
+<pre>
+      simpl; induction (q y); simpl.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 341
+Time: 0.001s">
+<div class="time" style="width: 0.57471264367816%"></div>
+<pre>
+      rhs_V napply concat_pp_p.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 342
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply whiskerR.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 343
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (ap011_pp _ _ _ 1 1).</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 344
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 344
+Time: 0.007s">
+<div class="time" style="width: 4.0229885057471%"></div>
+<pre>
+  exact (ap022 _ (concat_p1 (p pt))^ (concat_p1 (q pt))^ @ (concat_p1 _)^).</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 345
+Time: 0.174s">
+<div class="time" style="width: 100%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 346
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+#[export] Instance is0bifunctor_smash : Is0Bifunctor Smash.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 348
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 349
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_Is0Bifunctor'.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 350
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1,2: exact _.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 351
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  napply Build_Is0Functor.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 352
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [X Y] [A B] [f g].</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 353
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (functor_smash f g).</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 354
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 355
+Time: 0.001s">
+<div class="time" style="width: 0.57471264367816%"></div>
+<pre>
+
+#[export] Instance is1bifunctor_smash : Is1Bifunctor Smash.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 357
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 358
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_Is1Bifunctor'.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 359
+Time: 0.002s">
+<div class="time" style="width: 1.1494252873563%"></div>
+<pre>
+  snapply Build_Is1Functor.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 360
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 361
+Time: 0.003s">
+<div class="time" style="width: 1.7241379310345%"></div>
+<pre> intros [X Y] [A B] [f g] [h i] [p q].</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 361
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (functor_smash_homotopic p q).</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 362
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 363
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [X Y].</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 363
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (functor_smash_idmap X Y).</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 364
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 365
+Time: 0.003s">
+<div class="time" style="width: 1.7241379310345%"></div>
+<pre> intros [X Y] [A B] [C D] [f g] [h i].</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 365
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (functor_smash_compose f g h i).</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 366
+Time: 0.002s">
+<div class="time" style="width: 1.1494252873563%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 367
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Symmetry of the smash product *)
+
+</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 370
+Time: 0.002s">
+<div class="time" style="width: 1.1494252873563%"></div>
+<pre>Definition pswap (X Y : pType) : Smash X Y $-&gt; Smash Y X
+  := Build_pMap (Smash_rec (flip sm) auxr auxl gluer gluel) 1.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 371
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition pswap_pswap {X Y : pType}
+  : pswap X Y $o pswap Y X $== pmap_idmap.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 374
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 375
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_pHomotopy.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 376
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 377
+Time: 0.002s">
+<div class="time" style="width: 1.1494252873563%"></div>
+<pre> snapply Smash_ind_FFlr.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 377
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1-3: reflexivity.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 378
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 379
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros y.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 379
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply equiv_p1_1q.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 380
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      lhs napply ap.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 381
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      1: apply Smash_rec_beta_gluel.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 382
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      napply Smash_rec_beta_gluer.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 383
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 384
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 384
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply equiv_p1_1q.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 385
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      lhs napply ap.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 386
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      1: apply Smash_rec_beta_gluer.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 387
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      napply Smash_rec_beta_gluel.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 388
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 389
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 389
+Time: 0.006s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 390
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition pequiv_pswap {X Y : pType} : Smash X Y $&lt;~&gt; Smash Y X.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 392
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 393
+Time: 0.001s">
+<div class="time" style="width: 0.57471264367816%"></div>
+<pre>
+  snapply cate_adjointify.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 394
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1,2: exact (pswap _ _).</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 395
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1,2: exact pswap_pswap.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 396
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 397
+Time: 0.001s">
+<div class="time" style="width: 0.57471264367816%"></div>
+<pre>
+
+Definition pswap_natural {A B X Y : pType} (f : A $-&gt; X) (g : B $-&gt; Y)
+  : pswap X Y $o functor_smash f g $== functor_smash g f $o pswap A B.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 400
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 401
+Time: 0.004s">
+<div class="time" style="width: 2.2988505747126%"></div>
+<pre>
+  pointed_reduce.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 402
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_pHomotopy.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 403
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 404
+Time: 0.002s">
+<div class="time" style="width: 1.1494252873563%"></div>
+<pre> snapply Smash_ind_FlFr.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 404
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1-3: reflexivity.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 405
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 406
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 406
+Time: 0.001s">
+<div class="time" style="width: 0.57471264367816%"></div>
+<pre>
+      apply equiv_p1_1q.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 407
+Time: 0.007s">
+<div class="time" style="width: 4.0229885057471%"></div>
+<pre>
+      rhs napply (ap_compose (pswap _ _) _ (gluel a)).</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 408
+Time: 0.001s">
+<div class="time" style="width: 0.57471264367816%"></div>
+<pre>
+      rhs napply ap.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 409
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      2: apply Smash_rec_beta_gluel.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 410
+Time: 0.004s">
+<div class="time" style="width: 2.2988505747126%"></div>
+<pre>
+      rhs napply Smash_rec_beta_gluer.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 411
+Time: 0.003s">
+<div class="time" style="width: 1.7241379310345%"></div>
+<pre>
+      lhs napply (ap_compose (functor_smash _ _) (pswap _ _) (gluel a)).</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 412
+Time: 0.001s">
+<div class="time" style="width: 0.57471264367816%"></div>
+<pre>
+      lhs napply ap.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 413
+Time: 0.001s">
+<div class="time" style="width: 0.57471264367816%"></div>
+<pre>
+      1: apply Smash_rec_beta_gluel.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 414
+Time: 0.001s">
+<div class="time" style="width: 0.57471264367816%"></div>
+<pre>
+      simpl.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 415
+Time: 0.001s">
+<div class="time" style="width: 0.57471264367816%"></div>
+<pre>
+      lhs napply ap.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 416
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      1: apply concat_1p.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 417
+Time: 0.001s">
+<div class="time" style="width: 0.57471264367816%"></div>
+<pre>
+      rhs napply concat_1p.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 418
+Time: 0.001s">
+<div class="time" style="width: 0.57471264367816%"></div>
+<pre>
+      napply Smash_rec_beta_gluel.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 419
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 420
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros b.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 420
+Time: 0.001s">
+<div class="time" style="width: 0.57471264367816%"></div>
+<pre>
+      apply equiv_p1_1q.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 421
+Time: 0.003s">
+<div class="time" style="width: 1.7241379310345%"></div>
+<pre>
+      rhs napply (ap_compose (pswap _ _) (functor_smash _ _) (gluer b)).</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 422
+Time: 0.001s">
+<div class="time" style="width: 0.57471264367816%"></div>
+<pre>
+      rhs napply ap.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 423
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      2: apply Smash_rec_beta_gluer.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 424
+Time: 0.006s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+      rhs napply Smash_rec_beta_gluel.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 425
+Time: 0.003s">
+<div class="time" style="width: 1.7241379310345%"></div>
+<pre>
+      lhs napply (ap_compose (functor_smash _ _) (pswap _ _) (gluer b)).</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 426
+Time: 0.001s">
+<div class="time" style="width: 0.57471264367816%"></div>
+<pre>
+      lhs napply ap.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 427
+Time: 0.016s">
+<div class="time" style="width: 9.1954022988506%"></div>
+<pre>
+      1: apply Smash_rec_beta_gluer.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 428
+Time: 0.001s">
+<div class="time" style="width: 0.57471264367816%"></div>
+<pre>
+      lhs napply ap.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 429
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      1: apply concat_1p.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 430
+Time: 0.001s">
+<div class="time" style="width: 0.57471264367816%"></div>
+<pre>
+      rhs napply concat_1p.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 431
+Time: 0.001s">
+<div class="time" style="width: 0.57471264367816%"></div>
+<pre>
+      napply Smash_rec_beta_gluer.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 432
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 433
+Time: 0.009s">
+<div class="time" style="width: 5.1724137931034%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 433
+Time: 0.128s">
+<div class="time" style="width: 73.563218390805%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Smash.v
+Line: 435
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

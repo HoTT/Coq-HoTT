@@ -1,0 +1,766 @@
+<html>
+<head>
+<title>HSpaceS1.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for HSpaceS1.v</h1>
+
+<div class="code" title="File: HSpaceS1.v
+Line: 1
+Time: 0.066s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import Classes.interfaces.canonical_names.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 1
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Cubical.DPath Cubical.PathSquare.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 2
+Time: 0.001s">
+<div class="time" style="width: 1.5151515151515%"></div>
+<pre>
+Require Import Homotopy.Suspension.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 3
+Time: 0.027s">
+<div class="time" style="width: 40.909090909091%"></div>
+<pre>
+Require Import Homotopy.HSpace.Core.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Homotopy.HSpace.Coherent.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 5
+Time: 0.004s">
+<div class="time" style="width: 6.0606060606061%"></div>
+<pre>
+Require Import Spaces.Spheres.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** H-space structure on circle. *)
+
+</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 9
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section HSpace_S1.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 9
+Time: 0.001s">
+<div class="time" style="width: 1.5151515151515%"></div>
+<pre>
+
+  Definition Sph1_ind (P : Sphere 1 -&gt; Type) (b : P North)
+    (p : DPath P (merid North @ (merid South)^) b b)
+    : forall x : Sphere 1, P x.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 14
+Time: 0.001s">
+<div class="time" style="width: 1.5151515151515%"></div>
+<pre>
+    srapply Susp_ind.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: exact b.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: exact (merid South # b).</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 17
+Time: 0.001s">
+<div class="time" style="width: 1.5151515151515%"></div>
+<pre>
+    srapply Susp_ind; hnf.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply moveL_transport_p.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      refine ((transport_pp _ _ _ _)^ @ _).</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact p.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: reflexivity.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply Empty_ind.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 23
+Time: 0.004s">
+<div class="time" style="width: 6.0606060606061%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition Sph1_rec (P : Type) (b : P) (p : b = b)
+    : Sphere 1 -&gt; P.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply Susp_rec.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1,2: exact b.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    simpl.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply Susp_rec.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: exact p.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: reflexivity.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact Empty_rec.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 36
+Time: 0.001s">
+<div class="time" style="width: 1.5151515151515%"></div>
+<pre>
+
+  Definition Sph1_rec_beta_loop (P : Type) (b : P) (p : b = b)
+    : ap (Sph1_rec P b p) (merid North @ (merid South)^) = p.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite ap_pp.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite ap_V.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 42
+Time: 0.002s">
+<div class="time" style="width: 3.030303030303%"></div>
+<pre>
+    rewrite 2 Susp_rec_beta_merid.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply concat_p1.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 44
+Time: 0.002s">
+<div class="time" style="width: 3.030303030303%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition s1_turn : forall x : Sphere 1, x = x.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply Sph1_ind.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (merid North @ (merid South)^).</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply dp_paths_lr.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 51
+Time: 0.001s">
+<div class="time" style="width: 1.5151515151515%"></div>
+<pre>
+      by rewrite concat_Vp, concat_1p.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 52
+Time: 0.001s">
+<div class="time" style="width: 1.5151515151515%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance sgop_s1 : SgOp (psphere 1)
+    := fun x y =&gt; Sph1_rec _ y (s1_turn y) x.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance leftidentity_s1
+    : LeftIdentity sgop_s1 (point (psphere 1)).</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply Sph1_ind.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: reflexivity.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply dp_paths_lr.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite concat_p1.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply concat_Vp.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 65
+Time: 0.001s">
+<div class="time" style="width: 1.5151515151515%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance rightidentity_s1
+    : RightIdentity sgop_s1 (point (psphere 1)).</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply Sph1_ind.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: reflexivity.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply dp_paths_FlFr.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 73
+Time: 0.001s">
+<div class="time" style="width: 1.5151515151515%"></div>
+<pre>
+    rewrite concat_p1.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite ap_idmap.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 75
+Time: 0.01s">
+<div class="time" style="width: 15.151515151515%"></div>
+<pre>
+    rewrite Sph1_rec_beta_loop.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply concat_Vp.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 77
+Time: 0.005s">
+<div class="time" style="width: 7.5757575757576%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance hspace_s1 : IsHSpace (psphere 1) := {}.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 80
+Time: 0.001s">
+<div class="time" style="width: 1.5151515151515%"></div>
+<pre>
+
+  #[export] Instance iscoherent_s1 : IsCoherent (psphere 1) := idpath.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition iscohhspace_s1 : IsCohHSpace (psphere 1)
+    := Build_IsCohHSpace _ _ _.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (* [Univalence] implies that S^1 is 1-truncated, which means that any two parallel 2-paths are equal.  This lets us trivialize some path algebra in the following results.  Is it possible to prove these results without [Univalence]? *)
+
+ </pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export] Instance associative_sgop_s1 `{Univalence}
+    : Associative sgop_s1.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros x y z.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    revert x.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply Sph1_ind.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 94
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: reflexivity.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 95
+Time: 0.003s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>
+    apply sq_dp^-1.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    revert y.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 97
+Time: 0.001s">
+<div class="time" style="width: 1.5151515151515%"></div>
+<pre>
+    srapply Sph1_ind.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 99
+Time: 0.001s">
+<div class="time" style="width: 1.5151515151515%"></div>
+<pre> apply (sq_flip_v (px0:=1) (px1:=1)).</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 99
+Time: 0.002s">
+<div class="time" style="width: 3.030303030303%"></div>
+<pre>
+      exact (ap_nat' (fun a =&gt; ap (fun b =&gt; sgop_s1 b z)
+        (rightidentity_s1 a)) (merid North @ (merid South)^)).</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 101
+Time: 0.003s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>
+    apply path_ishprop.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> (* Uses Univalence. *)
+ </pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 103
+Time: 0.014s">
+<div class="time" style="width: 21.212121212121%"></div>
+<pre>Defined.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance commutative_sgop_s1 `{Univalence}
+    : Commutative sgop_s1.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros x y.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    revert x.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply Sph1_ind.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 110
+Time: 0.001s">
+<div class="time" style="width: 1.5151515151515%"></div>
+<pre>
+    1: cbn; symmetry; apply right_identity.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 111
+Time: 0.001s">
+<div class="time" style="width: 1.5151515151515%"></div>
+<pre>
+    apply sq_dp^-1.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    revert y.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 113
+Time: 0.001s">
+<div class="time" style="width: 1.5151515151515%"></div>
+<pre>
+    srapply Sph1_ind.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 114
+Time: 0.001s">
+<div class="time" style="width: 1.5151515151515%"></div>
+<pre>
+    1: exact (ap_nat' rightidentity_s1 _).</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 115
+Time: 0.025s">
+<div class="time" style="width: 37.878787878788%"></div>
+<pre>
+    srapply dp_ishprop.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> (* Uses Univalence. *)
+ </pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 117
+Time: 0.005s">
+<div class="time" style="width: 7.5757575757576%"></div>
+<pre>Defined.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 117
+Time: 0.01s">
+<div class="time" style="width: 15.151515151515%"></div>
+<pre>
+
+End HSpace_S1.</pre>
+</div>
+<div class="code" title="File: HSpaceS1.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

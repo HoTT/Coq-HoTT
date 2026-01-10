@@ -1,0 +1,17 @@
+N: 6 "Cantor" [body=yes, kind=cnst, prop=no, path="Cantor", ];
+N: 5 "cantor_fold" [body=yes, kind=cnst, prop=no, path="Cantor", ];
+N: 4 "cantor_unfold" [body=yes, kind=cnst, prop=no, path="Cantor", ];
+N: 2 "equiv_cantor_fold" [body=yes, kind=cnst, prop=no, path="Cantor", ];
+N: 1 "equiv_cantor_unfold" [body=yes, kind=cnst, prop=no, path="Cantor", ];
+N: 3 "isequiv_cantor_fold" [body=yes, kind=cnst, prop=no, path="Cantor", ];
+E: 1 2 [weight=2, ];
+E: 1 4 [weight=1, ];
+E: 1 6 [weight=9, ];
+E: 2 3 [weight=1, ];
+E: 2 5 [weight=1, ];
+E: 2 6 [weight=6, ];
+E: 3 4 [weight=12, ];
+E: 3 5 [weight=17, ];
+E: 3 6 [weight=56, ];
+E: 4 6 [weight=8, ];
+E: 5 6 [weight=12, ];

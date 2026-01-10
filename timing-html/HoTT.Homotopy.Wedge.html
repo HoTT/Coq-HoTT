@@ -1,0 +1,2674 @@
+<html>
+<head>
+<title>Wedge.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Wedge.v</h1>
+
+<div class="code" title="File: Wedge.v
+Line: 1
+Time: 0.038s">
+<div class="time" style="width: 35.849056603774%"></div>
+<pre>From HoTT Require Import Basics Types.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 1
+Time: 0.056s">
+<div class="time" style="width: 52.830188679245%"></div>
+<pre>
+Require Import Pointed.Core Pointed.pSusp.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 2
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Colimits.Pushout.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 3
+Time: 0.001s">
+<div class="time" style="width: 0.94339622641509%"></div>
+<pre>
+Require Import WildCat.Coproducts WildCat.Products.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Homotopy.Suspension.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 5
+Time: 0.002s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+Require Import Truncations.Core Truncations.Connectedness.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 6
+Time: 0.003s">
+<div class="time" style="width: 2.8301886792453%"></div>
+<pre>
+Require Import Extensions Modalities.ReflectiveSubuniverse.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Wedge sums *)
+
+</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Open Scope pointed_scope.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 10
+Time: 0.001s">
+<div class="time" style="width: 0.94339622641509%"></div>
+<pre>
+
+Definition Wedge@{i j k | i &lt;= k, j &lt;= k} (X : pType@{i}) (Y : pType@{j}) : pType@{k}
+  := [Pushout@{Set i j k} (fun _ : Unit =&gt; point X) (fun _ =&gt; point Y), pushl (point X)].</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation "X \/ Y" := (Wedge X Y) : pointed_scope.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 15
+Time: 0.001s">
+<div class="time" style="width: 0.94339622641509%"></div>
+<pre>
+
+Definition wglue {X Y : pType}
+  : pushl (point X) = (pushr (point Y)) :&gt; (X \/ Y) := pglue tt.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition wedge_inl {X Y : pType} : X -&gt;* X \/ Y
+  := Build_pMap pushl 1.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 21
+Time: 0.001s">
+<div class="time" style="width: 0.94339622641509%"></div>
+<pre>
+
+Definition wedge_inr {X Y : pType} : Y -&gt;* X \/ Y
+  := Build_pMap pushr wglue^.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Wedge recursion into an unpointed type. *)</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 26
+Time: 0.001s">
+<div class="time" style="width: 0.94339622641509%"></div>
+<pre>Definition wedge_rec' {X Y : pType} {Z : Type}
+  (f : X -&gt; Z) (g : Y -&gt; Z) (w : f pt = g pt)
+  : Wedge X Y -&gt; Z
+  := Pushout_rec Z f g (fun _ =&gt; w).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 29
+Time: 0.001s">
+<div class="time" style="width: 0.94339622641509%"></div>
+<pre>
+
+Definition wedge_rec {X Y : pType} {Z : pType} (f : X -&gt;* Z) (g : Y -&gt;* Z)
+  : X \/ Y -&gt;* Z
+  := Build_pMap (wedge_rec' f g (point_eq f @ (point_eq g)^)) (point_eq f).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 33
+Time: 0.003s">
+<div class="time" style="width: 2.8301886792453%"></div>
+<pre>
+
+Definition wedge_rec_beta_wglue {X Y Z : pType} (f : X -&gt;* Z) (g : Y -&gt;* Z)
+  : ap (wedge_rec f g) wglue = point_eq f @ (point_eq g)^
+  := Pushout_rec_beta_pglue _ f g _ tt.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition wedge_rec_beta_inl {X Y : pType} {Z : pType} (f : X -&gt;* Z) (g : Y -&gt;* Z)
+  : wedge_rec f g o* wedge_inl ==* f.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_pHomotopy.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  cbn beta; symmetry.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (concat_pp_V 1 (point_eq f)).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 45
+Time: 0.001s">
+<div class="time" style="width: 0.94339622641509%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition wedge_rec_beta_inr {X Y : pType} {Z : pType} (f : X -&gt;* Z) (g : Y -&gt;* Z)
+  : wedge_rec f g o* wedge_inr ==* g.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_pHomotopy.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  cbn -[wedge_rec].</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 53
+Time: 0.001s">
+<div class="time" style="width: 0.94339622641509%"></div>
+<pre>
+  rhs napply concat_pp_p.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 54
+Time: 0.001s">
+<div class="time" style="width: 0.94339622641509%"></div>
+<pre>
+  rhs napply (ap_V _ _ @@ 1).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply moveL_Vp.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lhs napply concat_p1.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  napply wedge_rec_beta_wglue.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 58
+Time: 0.009s">
+<div class="time" style="width: 8.4905660377358%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition wedge_pr1 {X Y : pType} : X \/ Y -&gt;* X
+  := wedge_rec pmap_idmap pconst.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition wedge_pr2 {X Y : pType} : X \/ Y -&gt;* Y
+  := wedge_rec pconst pmap_idmap.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 65
+Time: 0.001s">
+<div class="time" style="width: 0.94339622641509%"></div>
+<pre>
+
+Definition wedge_incl (X Y : pType) : X \/ Y -&gt;* X * Y
+  := pprod_corec _ wedge_pr1 wedge_pr2.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 68
+Time: 0.001s">
+<div class="time" style="width: 0.94339622641509%"></div>
+<pre>
+
+Definition wedge_incl_beta_wglue {X Y : pType}
+  : ap (@wedge_incl X Y) wglue = 1.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 72
+Time: 0.001s">
+<div class="time" style="width: 0.94339622641509%"></div>
+<pre>
+  lhs_V napply eta_path_prod.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 73
+Time: 0.001s">
+<div class="time" style="width: 0.94339622641509%"></div>
+<pre>
+  napply (ap011 _ (x':=1) (y':=1)).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 75
+Time: 0.001s">
+<div class="time" style="width: 0.94339622641509%"></div>
+<pre> lhs_V napply (ap_compose (wedge_incl X Y) _ wglue).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    napply wedge_rec_beta_wglue.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 77
+Time: 0.001s">
+<div class="time" style="width: 0.94339622641509%"></div>
+<pre> lhs_V napply (ap_compose (wedge_incl X Y) _ wglue).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    napply wedge_rec_beta_wglue.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 78
+Time: 0.009s">
+<div class="time" style="width: 8.4905660377358%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 79
+Time: 0.002s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+
+Definition wedge_ind {X Y : pType} (P : X \/ Y -&gt; Type)
+  (f : forall x, P (wedge_inl x)) (g : forall y, P (wedge_inr y))
+  (w : wglue # f pt = g pt)
+  : forall xy, P xy.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 85
+Time: 0.001s">
+<div class="time" style="width: 0.94339622641509%"></div>
+<pre>
+  napply (Pushout_ind P f g).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [].</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact w.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 88
+Time: 0.001s">
+<div class="time" style="width: 0.94339622641509%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 89
+Time: 0.006s">
+<div class="time" style="width: 5.6603773584906%"></div>
+<pre>
+
+Definition wedge_ind_beta_wglue {X Y : pType} (P : X \/ Y -&gt; Type)
+  (f : forall x, P (wedge_inl x)) (g : forall y, P (wedge_inr y))
+  (w : wglue # f pt = g pt)
+  : apD (wedge_ind P f g w) wglue = w
+  := Pushout_ind_beta_pglue P _ _ _ _.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 95
+Time: 0.004s">
+<div class="time" style="width: 3.7735849056604%"></div>
+<pre>
+
+Definition wedge_ind_FlFr {X Y Z : pType} {f g : X \/ Y -&gt; Z}
+  (l : f o wedge_inl == g o wedge_inl)
+  (r : f o wedge_inr == g o wedge_inr)
+  (w : ap f wglue @ r pt = l pt @ ap g wglue)
+  : f == g.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  napply (wedge_ind _ l r).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 103
+Time: 0.002s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+  transport_paths FlFr.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact w.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 105
+Time: 0.004s">
+<div class="time" style="width: 3.7735849056604%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 106
+Time: 0.002s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+
+Definition wedge_ind_FFl {X Y Z W : pType} (f : X \/ Y -&gt; Z) (g : Z -&gt; W)
+  {y : W}
+  (l : forall x, g (f (wedge_inl x)) = y)
+  (r : forall x, g (f (wedge_inr x)) = y)
+  (w : l pt = ap g (ap f wglue) @ r pt)
+  : forall x, g (f x) = y.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  napply (wedge_ind _ l r); simpl.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 115
+Time: 0.002s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+  transport_paths FFl.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact w.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 117
+Time: 0.003s">
+<div class="time" style="width: 2.8301886792453%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 118
+Time: 0.005s">
+<div class="time" style="width: 4.7169811320755%"></div>
+<pre>
+
+Definition wedge_ind_FFlr {X Y Z : pType} (f : X \/ Y -&gt; Z) (g : Z -&gt; X \/ Y)
+  (l : g o f o wedge_inl == wedge_inl)
+  (r : g o f o wedge_inr == wedge_inr)
+  (w : ap g (ap f wglue) @ r pt = l pt @ wglue)
+  : g o f == idmap.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 125
+Time: 0.001s">
+<div class="time" style="width: 0.94339622641509%"></div>
+<pre>
+  napply (wedge_ind _ l r); simpl.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 126
+Time: 0.003s">
+<div class="time" style="width: 2.8301886792453%"></div>
+<pre>
+  transport_paths FFlr.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact w.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 128
+Time: 0.006s">
+<div class="time" style="width: 5.6603773584906%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** 1-universal property of wedge. *)</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 131
+Time: 0.001s">
+<div class="time" style="width: 0.94339622641509%"></div>
+<pre>Lemma wedge_up X Y Z (f g : X \/ Y -&gt;* Z)
+  (p : f o* wedge_inl ==* g o* wedge_inl)
+  (q : f o* wedge_inr ==* g o* wedge_inr)
+  : f ==* g.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 135
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_pHomotopy.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 137
+Time: 0.001s">
+<div class="time" style="width: 0.94339622641509%"></div>
+<pre> napply (wedge_ind_FlFr p q).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 137
+Time: 0.001s">
+<div class="time" style="width: 0.94339622641509%"></div>
+<pre>
+    lhs napply (1 @@ dpoint_eq q).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 138
+Time: 0.001s">
+<div class="time" style="width: 0.94339622641509%"></div>
+<pre>
+    rhs napply (dpoint_eq p @@ 1).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 139
+Time: 0.001s">
+<div class="time" style="width: 0.94339622641509%"></div>
+<pre>
+    clear p q; simpl.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 140
+Time: 0.002s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+    rhs napply (((concat_1p _) @@ ap inverse (concat_1p _)) @@ 1).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 141
+Time: 0.001s">
+<div class="time" style="width: 0.94339622641509%"></div>
+<pre>
+    lhs napply concat_p_pp.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply moveR_pV.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 143
+Time: 0.002s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+    lhs napply (1 @@ (ap_V _ _ @@ 1)).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 144
+Time: 0.001s">
+<div class="time" style="width: 0.94339622641509%"></div>
+<pre>
+    lhs napply concat_p_Vp.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 145
+Time: 0.014s">
+<div class="time" style="width: 13.207547169811%"></div>
+<pre>
+    rhs napply concat_p_pp.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 146
+Time: 0.002s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+    rhs napply ((1 @@ ap_V _ _) @@ 1).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 147
+Time: 0.001s">
+<div class="time" style="width: 0.94339622641509%"></div>
+<pre>
+    rhs napply (concat_pp_V _ _ @@ 1).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 148
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by apply moveL_pM.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 150
+Time: 0.001s">
+<div class="time" style="width: 0.94339622641509%"></div>
+<pre>
+    lhs exact (dpoint_eq p); simpl.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (concat_1p _ @@ ap inverse (concat_1p _)).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 152
+Time: 0.106s">
+<div class="time" style="width: 100%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance hasbinarycoproducts : HasBinaryCoproducts pType.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 155
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros X Y.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 157
+Time: 0.001s">
+<div class="time" style="width: 0.94339622641509%"></div>
+<pre>
+  snapply Build_BinaryCoproduct.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (X \/ Y).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact wedge_inl.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact wedge_inr.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (@wedge_rec X Y).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 163
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (@wedge_rec_beta_inl X Y).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 163
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 164
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (@wedge_rec_beta_inr X Y).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 164
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 165
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (wedge_up X Y).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 165
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 166
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Lemmas about wedge functions *)
+
+</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma wedge_pr1_inl {X Y} : wedge_pr1 o* (@wedge_inl X Y) ==* pmap_idmap.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  reflexivity.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma wedge_pr1_inr {X Y} : wedge_pr1 o* (@wedge_inr X Y) ==* pconst.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 174
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 175
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_pHomotopy.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 177
+Time: 0.001s">
+<div class="time" style="width: 0.94339622641509%"></div>
+<pre>
+  symmetry; simpl.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 178
+Time: 0.001s">
+<div class="time" style="width: 0.94339622641509%"></div>
+<pre>
+  do 2 lhs napply concat_p1.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 179
+Time: 0.001s">
+<div class="time" style="width: 0.94339622641509%"></div>
+<pre>
+  lhs napply (ap_V _ wglue).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 180
+Time: 0.002s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+  exact (inverse2 (wedge_rec_beta_wglue pmap_idmap pconst)).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 181
+Time: 0.005s">
+<div class="time" style="width: 4.7169811320755%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 182
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma wedge_pr2_inl {X Y} : wedge_pr2 o* (@wedge_inl X Y) ==* pconst.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 184
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  reflexivity.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 186
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma wedge_pr2_inr {X Y} : wedge_pr2 o* (@wedge_inr X Y) ==* pmap_idmap.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 189
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 190
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_pHomotopy.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 191
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 192
+Time: 0.001s">
+<div class="time" style="width: 0.94339622641509%"></div>
+<pre>
+  symmetry; simpl.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 193
+Time: 0.001s">
+<div class="time" style="width: 0.94339622641509%"></div>
+<pre>
+  do 2 lhs napply concat_p1.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 194
+Time: 0.001s">
+<div class="time" style="width: 0.94339622641509%"></div>
+<pre>
+  lhs napply (ap_V _ wglue).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 195
+Time: 0.002s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+  exact (inverse2 (wedge_rec_beta_wglue pconst pmap_idmap)).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 196
+Time: 0.005s">
+<div class="time" style="width: 4.7169811320755%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Wedge of an indexed family of pointed types *)
+
+(** Note that the index type is not necessarily pointed. An empty wedge is the unit type which is the zero object in the category of pointed types. *)</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 201
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition FamilyWedge (I : Type) (X : I -&gt; pType) : pType.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 201
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 202
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_pType.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 203
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 204
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> srefine (Pushout (A := I) (B := sig X) (C := pUnit) _ _).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 204
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 205
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fun i =&gt; (i; pt)).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 205
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fun _ =&gt; pt).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 207
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply pushr.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 207
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact pt.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 209
+Time: 0.001s">
+<div class="time" style="width: 0.94339622641509%"></div>
+<pre>
+
+Definition fwedge_in' (I : Type) (X : I -&gt; pType)
+  : forall i, X i -&gt;* FamilyWedge I X
+  := fun i =&gt; Build_pMap (fun x =&gt; pushl (i; x)) (pglue i).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 213
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We have an inclusion map [pushl : sig X -&gt; FamilyWedge X].  When [I] is pointed, so is [sig X], and then this inclusion map is pointed. *)</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 215
+Time: 0.001s">
+<div class="time" style="width: 0.94339622641509%"></div>
+<pre>Definition fwedge_in (I : pType) (X : I -&gt; pType)
+  : psigma (pointed_fam X) -&gt;* FamilyWedge I X
+  := Build_pMap pushl (pglue pt).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 217
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Recursion principle for the wedge of an indexed family of pointed types. *)</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 219
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition fwedge_rec (I : Type) (X : I -&gt; pType) (Z : pType)
+  (f : forall i, X i -&gt;* Z)
+  : FamilyWedge I X -&gt;* Z.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 221
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 222
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_pMap.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 223
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 224
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> snapply Pushout_rec.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 224
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (sig_rec f).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 226
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact pconst.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 226
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 227
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros i.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 227
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (point_eq (f i)).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 229
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact idpath.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 229
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 230
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance hasallcoproducts_ptype : HasAllCoproducts pType.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 232
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 233
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros I X.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 234
+Time: 0.001s">
+<div class="time" style="width: 0.94339622641509%"></div>
+<pre>
+  snapply Build_Coproduct.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 235
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 236
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (FamilyWedge I X).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 236
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 237
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fwedge_in' I X).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 237
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 238
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fwedge_rec I X).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 238
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 239
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros Z f i.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 239
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply Build_pHomotopy.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 240
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 241
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    simpl.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 242
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply moveL_pV.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 243
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply equiv_1p_q1.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 244
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    symmetry.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 245
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (Pushout_rec_beta_pglue Z _ (unit_name pt) (fun i =&gt; point_eq (f i)) _).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 246
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 247
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros Z f g h.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 247
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply Build_pHomotopy.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 248
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 249
+Time: 0.001s">
+<div class="time" style="width: 0.94339622641509%"></div>
+<pre> snapply Pushout_ind.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 249
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 250
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [i x].</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 250
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        napply h.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 251
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 252
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [].</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 252
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        exact (point_eq _ @ (point_eq _)^).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 253
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 254
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros i; cbn.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 254
+Time: 0.002s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+        transport_paths FlFr.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 255
+Time: 0.001s">
+<div class="time" style="width: 0.94339622641509%"></div>
+<pre>
+        lhs napply concat_p_pp.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 256
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply moveR_pV.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 257
+Time: 0.001s">
+<div class="time" style="width: 0.94339622641509%"></div>
+<pre>
+        rhs napply concat_pp_p.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 258
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply moveL_pM.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 259
+Time: 0.001s">
+<div class="time" style="width: 0.94339622641509%"></div>
+<pre>
+        symmetry.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 260
+Time: 0.001s">
+<div class="time" style="width: 0.94339622641509%"></div>
+<pre>
+        exact (dpoint_eq (h i)).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 261
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 262
+Time: 0.001s">
+<div class="time" style="width: 0.94339622641509%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 262
+Time: 0.019s">
+<div class="time" style="width: 17.924528301887%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 263
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Wedge inclusions into the product can be defined if the indexing type has decidable paths. This is because we need to choose which factor a given wedge summand should land in. *)</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 265
+Time: 0.002s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>Definition fwedge_incl `{Funext} (I : Type) `(DecidablePaths I) (X : I -&gt; pType)
+  : FamilyWedge I X -&gt;* pproduct X
+  := cat_coprod_prod X.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 267
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** The pinch map on the suspension *)
+
+(** Given a suspension, there is a natural map from the suspension to the wedge of the suspension with itself. This is known as the pinch map.
+
+This is the image to keep in mind:
+&lt;&lt;
+                                    *
+                                   /|\
+                                  / | \
+    Susp X                       /  |  \
+                                /   |   \
+       *                       * merid(x)*
+      /|\                       \   |   /
+     / | \                       \  |  /
+    /  |  \                       \ | /
+   /   |   \      Pinch            \|/
+  * merid(x)*   ----------&gt;         *
+   \   |   /                       /|\
+    \  |  /                       / | \
+     \ | /                       /  |  \
+      \|/                       /   |   \
+       *                       * merid(x)*
+                                \   |   /
+                                 \  |  /
+                                  \ | /
+                                   \|/
+                                    *
+&gt;&gt;
+
+Note that this is only a conceptual picture as we aren't working with "reduced suspensions". This means we have to track back along [merid pt] making this map a little trickier to imagine. *)
+
+(** The pinch map for a suspension. *)</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 300
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition psusp_pinch (X : pType) : psusp X -&gt;* psusp X \/ psusp X.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 300
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 301
+Time: 0.001s">
+<div class="time" style="width: 0.94339622641509%"></div>
+<pre>
+  refine (Build_pMap (Susp_rec pt pt _) idpath).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 302
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 303
+Time: 0.001s">
+<div class="time" style="width: 0.94339622641509%"></div>
+<pre>
+  refine (ap wedge_inl _ @ wglue @ ap wedge_inr _ @ wglue^).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 304
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1,2: exact (loop_susp_unit X x).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 305
+Time: 0.002s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 306
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** It should compute when [ap]ed on a merid. *)</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 308
+Time: 0.002s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>Definition psusp_pinch_beta_merid {X : pType} (x : X)
+  : ap (psusp_pinch X) (merid x)
+    = ap wedge_inl (loop_susp_unit X x) @ wglue
+    @ ap wedge_inr (loop_susp_unit X x) @ wglue^.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 311
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 312
+Time: 0.001s">
+<div class="time" style="width: 0.94339622641509%"></div>
+<pre>
+  rapply Susp_rec_beta_merid.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 313
+Time: 0.003s">
+<div class="time" style="width: 2.8301886792453%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 314
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Doing wedge projections on the pinch map gives the identity. *)</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 316
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition wedge_pr1_psusp_pinch {X}
+  : wedge_pr1 o* psusp_pinch X ==* @pmap_idmap (psusp X).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 317
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 318
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_pHomotopy.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 319
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 320
+Time: 0.001s">
+<div class="time" style="width: 0.94339622641509%"></div>
+<pre> snapply Susp_ind_FlFr.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 320
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 321
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 321
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 322
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (merid pt).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 322
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 323
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 323
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rhs napply concat_1p.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 324
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rhs napply ap_idmap.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 325
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply moveR_pM.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 326
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      change (?t = _) with (t = loop_susp_unit X x).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 327
+Time: 0.002s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+      lhs napply (ap_compose (psusp_pinch X)).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 328
+Time: 0.001s">
+<div class="time" style="width: 0.94339622641509%"></div>
+<pre>
+      lhs napply (ap _ (psusp_pinch_beta_merid x)).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 329
+Time: 0.001s">
+<div class="time" style="width: 0.94339622641509%"></div>
+<pre>
+      lhs napply ap_pV.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 330
+Time: 0.003s">
+<div class="time" style="width: 2.8301886792453%"></div>
+<pre>
+      apply moveR_pV.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 331
+Time: 0.003s">
+<div class="time" style="width: 2.8301886792453%"></div>
+<pre>
+      rhs napply (whiskerL _ (wedge_rec_beta_wglue _ _)).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 332
+Time: 0.001s">
+<div class="time" style="width: 0.94339622641509%"></div>
+<pre>
+      lhs napply ap_pp.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 333
+Time: 0.005s">
+<div class="time" style="width: 4.7169811320755%"></div>
+<pre>
+      lhs napply (ap (fun x =&gt; _ @ x)).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 334
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      {</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 335
+Time: 0.001s">
+<div class="time" style="width: 0.94339622641509%"></div>
+<pre> lhs_V napply ap_compose.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 335
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply ap_const.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 336
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 336
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      lhs napply concat_p1.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 337
+Time: 0.001s">
+<div class="time" style="width: 0.94339622641509%"></div>
+<pre>
+      lhs napply ap_pp.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 338
+Time: 0.003s">
+<div class="time" style="width: 2.8301886792453%"></div>
+<pre>
+      lhs napply (ap (fun x =&gt; _ @ x) (wedge_rec_beta_wglue _ _)).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 339
+Time: 0.009s">
+<div class="time" style="width: 8.4905660377358%"></div>
+<pre>
+      f_ap.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 340
+Time: 0.002s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+      lhs_V napply (ap_compose wedge_inl).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 341
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply ap_idmap.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 342
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 343
+Time: 0.003s">
+<div class="time" style="width: 2.8301886792453%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 343
+Time: 0.047s">
+<div class="time" style="width: 44.339622641509%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 344
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition wedge_pr2_psusp_pinch {X}
+  : wedge_pr2 o* psusp_pinch X ==* @pmap_idmap (psusp X).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 347
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 348
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_pHomotopy.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 349
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 350
+Time: 0.001s">
+<div class="time" style="width: 0.94339622641509%"></div>
+<pre> snapply Susp_ind_FlFr.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 350
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 351
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 351
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 352
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (merid pt).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 352
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 353
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 353
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rhs napply concat_1p.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 354
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rhs napply ap_idmap.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 355
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply moveR_pM.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 356
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      change (?t = _) with (t = loop_susp_unit X x).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 357
+Time: 0.003s">
+<div class="time" style="width: 2.8301886792453%"></div>
+<pre>
+      lhs napply (ap_compose (psusp_pinch X)).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 358
+Time: 0.001s">
+<div class="time" style="width: 0.94339622641509%"></div>
+<pre>
+      lhs napply (ap _ (psusp_pinch_beta_merid x)).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 359
+Time: 0.001s">
+<div class="time" style="width: 0.94339622641509%"></div>
+<pre>
+      lhs napply ap_pV.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 360
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply moveR_pV.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 361
+Time: 0.003s">
+<div class="time" style="width: 2.8301886792453%"></div>
+<pre>
+      rhs napply (whiskerL _ (wedge_rec_beta_wglue _ _)).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 362
+Time: 0.001s">
+<div class="time" style="width: 0.94339622641509%"></div>
+<pre>
+      lhs napply ap_pp.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 363
+Time: 0.006s">
+<div class="time" style="width: 5.6603773584906%"></div>
+<pre>
+      lhs napply (ap (fun x =&gt; _ @ x) _).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 364
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      {</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 365
+Time: 0.001s">
+<div class="time" style="width: 0.94339622641509%"></div>
+<pre> lhs_V napply ap_compose.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 365
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply ap_idmap.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 366
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 366
+Time: 0.001s">
+<div class="time" style="width: 0.94339622641509%"></div>
+<pre>
+      rhs napply concat_p1.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 367
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply moveR_pM.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 368
+Time: 0.001s">
+<div class="time" style="width: 0.94339622641509%"></div>
+<pre>
+      lhs napply ap_pp.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 369
+Time: 0.001s">
+<div class="time" style="width: 0.94339622641509%"></div>
+<pre>
+      rhs napply concat_pV.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 370
+Time: 0.002s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+      lhs napply (ap _ (wedge_rec_beta_wglue _ _)).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 371
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply moveR_pM.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 372
+Time: 0.002s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+      lhs_V napply (ap_compose wedge_inl).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 373
+Time: 0.001s">
+<div class="time" style="width: 0.94339622641509%"></div>
+<pre>
+      rapply ap_const.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 374
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 375
+Time: 0.003s">
+<div class="time" style="width: 2.8301886792453%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 375
+Time: 0.048s">
+<div class="time" style="width: 45.283018867925%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 376
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Connectivity of wedge inclusion *)
+
+</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 379
+Time: 0.006s">
+<div class="time" style="width: 5.6603773584906%"></div>
+<pre>Definition extension_wedge_incl {X Y : pType} (P : X * Y -&gt; Type)
+  (d : forall a : X \/ Y, P (wedge_incl X Y a))
+  (f : forall (x : X) (y : Y), P (x, y))
+  (p : forall (x : X), f x pt = d (wedge_inl x))
+  (q : forall (y : Y), f pt y = d (wedge_inr y))
+  (pq : p pt
+        = q pt
+            @ ((apD d wglue)^
+                 @ transport_compose_path_ap P (wedge_incl X Y) (wedge_incl_beta_wglue) _))
+  : ExtensionAlong (wedge_incl X Y) P d.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 388
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 389
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exists (prod_ind _ f).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 390
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  napply (wedge_ind _ p q).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 391
+Time: 0.003s">
+<div class="time" style="width: 2.8301886792453%"></div>
+<pre>
+  lhs napply (transport_paths_FlFr_D wglue).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 392
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply moveR_pM.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 393
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply moveR_Vp.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 394
+Time: 0.002s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+  unshelve lhs napply ap_homotopic_id.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 395
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact (transport_compose_path_ap P (wedge_incl X Y) wedge_incl_beta_wglue).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 396
+Time: 0.004s">
+<div class="time" style="width: 3.7735849056604%"></div>
+<pre>
+  change (prod_ind P f (wedge_incl X Y (pushl pt))) with (f pt pt).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 397
+Time: 0.001s">
+<div class="time" style="width: 0.94339622641509%"></div>
+<pre>
+  apply moveR_pV.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 398
+Time: 0.002s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+  rhs napply concat_pp_p.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 399
+Time: 0.002s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+  rhs napply (1 @@ concat_pp_p _ _ _).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 400
+Time: 0.001s">
+<div class="time" style="width: 0.94339622641509%"></div>
+<pre>
+  nrefine (_ @@ pq).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 401
+Time: 0.004s">
+<div class="time" style="width: 3.7735849056604%"></div>
+<pre>
+  symmetry.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 402
+Time: 0.002s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre>
+  lhs napply apD_compose.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 403
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold transport_compose_path_ap.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 404
+Time: 0.001s">
+<div class="time" style="width: 0.94339622641509%"></div>
+<pre>
+  apply whiskerL.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 405
+Time: 0.007s">
+<div class="time" style="width: 6.6037735849057%"></div>
+<pre>
+  lhs napply (apD02 _ wedge_incl_beta_wglue).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 406
+Time: 0.001s">
+<div class="time" style="width: 0.94339622641509%"></div>
+<pre>
+  apply concat_p1.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 407
+Time: 0.069s">
+<div class="time" style="width: 65.094339622642%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 408
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition conn_map_wedge_incl `{Univalence} {m n : trunc_index} (X Y : pType)
+  `{!IsConnected m.+1 X, !IsConnected n.+1 Y}
+  : IsConnMap (m +2+ n) (wedge_incl X Y).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 412
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 413
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply conn_map_from_extension_elim.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 414
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros P h d.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 415
+Time: 0.003s">
+<div class="time" style="width: 2.8301886792453%"></div>
+<pre>
+  snapply extension_wedge_incl.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 416
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 417
+Time: 0.011s">
+<div class="time" style="width: 10.377358490566%"></div>
+<pre> rapply (wedge_incl_elim _ _ (fun x y =&gt; P (x, y)) (d o wedge_inr) (d o wedge_inl)).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 417
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    lhs_V exact (apD d wglue).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 418
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (transport_compose_path_ap P (wedge_incl X Y) wedge_incl_beta_wglue _).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 419
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 420
+Time: 0.018s">
+<div class="time" style="width: 16.981132075472%"></div>
+<pre> napply wedge_incl_comp2.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 420
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 421
+Time: 0.003s">
+<div class="time" style="width: 2.8301886792453%"></div>
+<pre> napply wedge_incl_comp1.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 421
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 422
+Time: 0.009s">
+<div class="time" style="width: 8.4905660377358%"></div>
+<pre> napply wedge_incl_comp3.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 422
+Time: 0.006s">
+<div class="time" style="width: 5.6603773584906%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 423
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A more elementary fact is that a wedge of [n]-connected types is [n]-connected. *)</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 425
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition isconnected_wedge `{Univalence} (n : trunc_index) (X Y : pType)
+  `{IsConnected n X} `{IsConnected n Y}
+  : IsConnected n (Wedge X Y).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 427
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 428
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct n.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 429
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact _.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 430
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply isconnected_from_elim.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 431
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros C H' f.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 432
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>  exists (f pt).</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 432
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro x; symmetry; revert x.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 433
+Time: 0.001s">
+<div class="time" style="width: 0.94339622641509%"></div>
+<pre>
+  snapply wedge_ind; cbn.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 434
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 435
+Time: 0.002s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre> by rapply conn_point_elim.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 435
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 436
+Time: 0.002s">
+<div class="time" style="width: 1.8867924528302%"></div>
+<pre> rapply conn_point_elim.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 436
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply ap, wglue.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 437
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 438
+Time: 0.001s">
+<div class="time" style="width: 0.94339622641509%"></div>
+<pre> transport_paths Fr.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 438
+Time: 0.001s">
+<div class="time" style="width: 0.94339622641509%"></div>
+<pre>
+    rewrite 2 conn_point_elim_comp.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 439
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply concat_1p.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 440
+Time: 0.006s">
+<div class="time" style="width: 5.6603773584906%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Wedge.v
+Line: 442
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

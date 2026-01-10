@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>Square.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="square-v-chk0" style="display: none" type="checkbox"><label class="alectryon-input" for="square-v-chk0"><span class="kn">Require Import</span> Basics.Overture.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> WildCat.Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> WildCat.Equiv.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** * Squares of morphisms in a Wild Category.  *)</span>
+
+<span class="sd">(** These come up a lot as naturality squares. In this file we define basic operations on squares, to conveniently work with them. *)</span>
+
+<span class="sd">(** A Square is a cubical 2-cell in a 1-category. The order of the arguments is left-right-top-bottom: [Square l r t b].  It is defined to be [r $o t $== b $o l]. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Square</span>@{u v w} {A : <span class="kt">Type</span>@{u}} `{Is1Cat@{u w v} A} {x00 x20 x02 x22 : A}
+  (f01 : x00 $-&gt; x02) (f21 : x20 $-&gt; x22) (f10 : x00 $-&gt; x20) (f12 : x02 $-&gt; x22) 
+  : <span class="kt">Type</span>@{w}
+  := f21 $o f10 $== f12 $o f01.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">Squares</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  <span class="c">(* We declare a context with a lot of variables: the first component is horizontal, the second vertical.</span>
+<span class="c">    x00 f10 x20 f30 x40</span>
+<span class="c">    f01     f21     f41</span>
+<span class="c">    x02 f12 x22 f32 x42</span>
+<span class="c">    f03     f23     f43</span>
+<span class="c">    x04 f14 x24 f34 x44 </span>
+<span class="c">  All morphisms are pointed to the right or down. *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> {<span class="nv">A</span> : <span class="kt">Type</span>} `{Is1Cat A} {x x&#39; x00 x20 x40 x02 x22 x42 x04 x24 x44 : A}
+    {f10 f10&#39; : x00 $-&gt; x20} {f30 : x20 $-&gt; x40} 
+    {f12 f12&#39; : x02 $-&gt; x22} {f32 : x22 $-&gt; x42} 
+    {f14 : x04 $-&gt; x24} {f34 : x24 $-&gt; x44}
+    {f01 f01&#39; : x00 $-&gt; x02} {f21 f21&#39; : x20 $-&gt; x22} {f41 f41&#39; : x40 $-&gt; x42}
+    {f03 : x02 $-&gt; x04} {f23 : x22 $-&gt; x24} {f43 : x42 $-&gt; x44}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** We give a &quot;constructor&quot; and &quot;destructor&quot; for squares. *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">Build_Square</span> (<span class="nv">p</span> : f21 $o f10 $== f12 $o f01) : Square f01 f21 f10 f12 := p.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">gpdhom_square</span> (<span class="nv">s</span> : Square f01 f21 f10 f12) : f21 $o f10 $== f12 $o f01 := s.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** Squares degenerate in two sides given by a single 2-morphism. *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">hdeg_square</span> {<span class="nv">f</span> <span class="nv">f&#39;</span> : x $-&gt; x&#39;} (<span class="nv">p</span> : f $== f&#39;) : Square f f&#39; (Id x) (Id x&#39;)
+    := cat_idr f&#39; $@ p^$ $@ (cat_idl f)^$.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">vdeg_square</span> {<span class="nv">f</span> <span class="nv">f&#39;</span> : x $-&gt; x&#39;} (<span class="nv">p</span> : f $== f&#39;) : Square (Id x) (Id x&#39;) f f&#39;
+    := cat_idl f $@ p $@ (cat_idr f&#39;)^$.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** Squares degenerate in two sides given by the identity 2-morphism at some morphism. *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">hrefl</span> (<span class="nv">f</span> : x $-&gt; x&#39;) : Square f f (Id x) (Id x&#39;) := hdeg_square (Id f).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">vrefl</span> (<span class="nv">f</span> : x $-&gt; x&#39;) : Square (Id x) (Id x&#39;) f f := vdeg_square (Id f).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** The transpose of a square *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">transpose</span> (<span class="nv">s</span> : Square f01 f21 f10 f12) : Square f10 f12 f01 f21 := s^$.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** Horizontal and vertical concatenation of squares *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">hconcat</span> (<span class="nv">s</span> : Square f01 f21 f10 f12) (<span class="nv">t</span> : Square f21 f41 f30 f32)
+    : Square f01 f41 (f30 $o f10) (f32 $o f12)
+    := (cat_assoc _ _ _)^$ $@ (t $@R f10) $@ cat_assoc _ _ _ $@ (f32 $@L s) $@ (cat_assoc _ _ _)^$.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">vconcat</span> (<span class="nv">s</span> : Square f01 f21 f10 f12) (<span class="nv">t</span> : Square f03 f23 f12 f14)
+    : Square (f03 $o f01) (f23 $o f21) f10 f14
+  := cat_assoc _ _ _ $@ (f23 $@L s) $@ (cat_assoc _ _ _)^$ $@ (t $@R f01) $@ cat_assoc _ _ _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** If the horizontal morphisms in a square are equivalences then we can flip the square by inverting them. *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">hinverse</span> {<span class="nv">HE</span> : HasEquivs A} (<span class="nv">f10</span> : x00 $&lt;~&gt; x20) (<span class="nv">f12</span> : x02 $&lt;~&gt; x22) (<span class="nv">s</span> : Square f01 f21 f10 f12)
+    : Square f21 f01 f10^-<span class="mi">1</span>$ f12^-<span class="mi">1</span>$
+    := (cat_idl _)^$ $@ ((cate_issect f12)^$ $@R _) $@ cat_assoc _ _ _
+      $@ (_ $@L ((cat_assoc _ _ _)^$ $@ (s^$ $@R _) $@ cat_assoc _ _ _
+      $@ (_ $@L cate_isretr f10) $@ cat_idr _)).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** The following four declarations modify one side of a Square using a 2-cell. The L or R indicate the side of the 2-cell. This can be thought of as rewriting the sides of a square using a homotopy. *)</span>
+
+  <span class="sd">(** Rewriting the left edge. *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">hconcatL</span> (<span class="nv">p</span> : f01&#39; $== f01) (<span class="nv">s</span> : Square f01 f21 f10 f12)
+    : Square f01&#39; f21 f10 f12
+    := s $@ (f12 $@L p^$).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** Rewriting the right edge. *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">hconcatR</span> (<span class="nv">s</span> : Square f01 f21 f10 f12) (<span class="nv">p</span> : f21&#39; $== f21)
+    : Square f01 f21&#39; f10 f12
+    := (p $@R f10) $@ s.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** Rewriting the top edge. *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">vconcatL</span> (<span class="nv">p</span> : f10&#39; $== f10) (<span class="nv">s</span> : Square f01 f21 f10 f12)
+    : Square f01 f21 f10&#39; f12
+    := (f21 $@L p) $@ s.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** Rewriting the bottom edge. *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">vconcatR</span> (<span class="nv">s</span> : Square f01 f21 f10 f12) (<span class="nv">p</span> : f12&#39; $== f12)
+    : Square f01 f21 f10 f12&#39;
+    := s $@ (p^$ $@R f01).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">Squares</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">Squares2</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** We declare the context again, now that we can reuse some declarations where the variables have been inserted. This would not need to be done if Coq could generalize variables within sections. Currently this is possible in Lean and Agda. *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> {<span class="nv">A</span> : <span class="kt">Type</span>} `{HasEquivs A}
+    {x x&#39; x00 x20 x40 x02 x22 x42 x04 x24 x44 : A}
+    {f10 f10&#39; : x00 $-&gt; x20} {f30 : x20 $-&gt; x40} 
+    {f12 f12&#39; : x02 $-&gt; x22} {f32 : x22 $-&gt; x42} 
+    {f14 : x04 $-&gt; x24} {f34 : x24 $-&gt; x44}
+    {f01 f01&#39; : x00 $-&gt; x02} {f21 f21&#39; : x20 $-&gt; x22} {f41 f41&#39; : x40 $-&gt; x42}
+    {f03 : x02 $-&gt; x04} {f23 : x22 $-&gt; x24} {f43 : x42 $-&gt; x44}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** If the vertical morphisms in a square are equivalences then we can flip the square by inverting them. *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">vinverse</span> (<span class="nv">f01</span> : x00 $&lt;~&gt; x02) (<span class="nv">f21</span> : x20 $&lt;~&gt; x22) (<span class="nv">s</span> : Square f01 f21 f10 f12)
+    : Square (f01^-<span class="mi">1</span>$) (f21^-<span class="mi">1</span>$) f12 f10
+    := transpose (hinverse _ _ (transpose s)).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** Whisker a map in one of the corners. For the bottom-left and top-right we have two choices. *)</span>
+
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">whiskerTL</span> {<span class="nv">f</span> : x $-&gt; x00} (<span class="nv">s</span> : Square f01 f21 f10 f12)
+    : Square (f01 $o f) f21 (f10 $o f) f12
+    := (cat_assoc _ _ _)^$ $@ (s $@R f) $@ cat_assoc _ _ _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">whiskerBR</span> {<span class="nv">f</span> : x22 $-&gt; x} (<span class="nv">s</span> : Square f01 f21 f10 f12)
+    : Square f01 (f $o f21) f10 (f $o f12)
+    := cat_assoc _ _ _ $@ (f $@L s) $@ (cat_assoc _ _ _)^$.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">whiskerBL</span> {<span class="nv">f</span> : x $&lt;~&gt; x02} (<span class="nv">s</span> : Square f01 f21 f10 f12)
+    : Square (f^-<span class="mi">1</span>$ $o f01) f21 f10 (f12 $o f)
+    := s $@ ((compose_hh_V _ _)^$ $@R f01) $@ cat_assoc _ _ _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">whiskerLB</span> {<span class="nv">f</span> : x02 $&lt;~&gt; x} (<span class="nv">s</span> : Square f01 f21 f10 f12)
+    : Square (f $o f01) f21 f10 (f12 $o f^-<span class="mi">1</span>$)
+    := s $@ ((compose_hV_h _ _)^$ $@R f01) $@ cat_assoc _ _ _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">whiskerTR</span> {<span class="nv">f</span> : x20 $&lt;~&gt; x} (<span class="nv">s</span> : Square f01 f21 f10 f12)
+    : Square f01 (f21 $o f^-<span class="mi">1</span>$) (f $o f10) f12
+    := cat_assoc _ _ _ $@ (f21 $@L compose_V_hh _ _) $@ s.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">whiskerRT</span> {<span class="nv">f</span> : x $&lt;~&gt; x20} (<span class="nv">s</span> : Square f01 f21 f10 f12)
+    : Square f01 (f21 $o f) (f^-<span class="mi">1</span>$ $o f10) f12
+    := cat_assoc _ _ _ $@ (f21 $@L compose_h_Vh _ _) $@ s.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** Moving around maps in a square. Associativity laws. *)</span>
+
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">move_bottom_left</span> {<span class="nv">f01</span> : x00 $-&gt; x} {<span class="nv">f01&#39;</span> : x $-&gt; x02}
+    (<span class="nv">s</span> : Square (f01&#39; $o f01) f21 f10 f12) 
+    : Square f01 f21 f10 (f12 $o f01&#39;)
+    := s $@ (cat_assoc _ _ _)^$.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">move_left_bottom</span> {<span class="nv">f12</span> : x02 $-&gt; x} {<span class="nv">f12&#39;</span> : x $-&gt; x22}
+    (<span class="nv">s</span> : Square f01 f21 f10 (f12&#39; $o f12)) 
+    : Square (f12 $o f01) f21 f10 f12&#39;
+    := s $@ cat_assoc _ _ _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">move_right_top</span> {<span class="nv">f10</span> : x00 $-&gt; x} {<span class="nv">f10&#39;</span> : x $-&gt; x20}
+    (<span class="nv">s</span> : Square f01 f21 (f10&#39; $o f10) f12) 
+    : Square f01 (f21 $o f10&#39;) f10 f12
+    := cat_assoc _ _ _ $@ s.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">move_top_right</span> {<span class="nv">f21</span> : x20 $-&gt; x} {<span class="nv">f21&#39;</span> : x $-&gt; x22}
+    (<span class="nv">s</span> : Square f01 (f21&#39; $o f21) f10 f12) 
+    : Square f01 f21&#39; (f21 $o f10) f12
+    := (cat_assoc _ _ _)^$ $@ s.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">fmap_square</span> {<span class="nv">B</span> : <span class="kt">Type</span>} `{Is1Cat B} (f : A -&gt; B) `{!Is0Functor f} `{!Is1Functor f}
+    (s : Square f01 f21 f10 f12)
+    : Square (fmap f f01) (fmap f f21) (fmap f f10) (fmap f f12)
+    := (fmap_comp f _ _)^$ $@ fmap2 f s $@ fmap_comp f _ _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">Squares2</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;s $@h t&quot;</span> := (hconcat s t).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;s $@v t&quot;</span> := (vconcat s t).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;s $@hR p&quot;</span> := (hconcatR s p).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;s $@hL p&quot;</span> := (hconcatL p s).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;s $@vR p&quot;</span> := (vconcatR s p).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;s $@vL p&quot;</span> := (vconcatL p s).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;s ^h$&quot;</span> := (hinverse _ _ s).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;s ^v$&quot;</span> := (vinverse _ _ s).</span></span></pre>
+</div>
+</div></body>
+</html>

@@ -1,0 +1,1437 @@
+<html>
+<head>
+<title>ua_quotient_algebra.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for ua_quotient_algebra.v</h1>
+
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 1
+Time: 0.002s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>Require Import Basics.Notations.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 1
+Time: 0.058s">
+<div class="time" style="width: 100%"></div>
+<pre>
+Require Export HoTT.Classes.interfaces.ua_congruence.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 2
+Time: 0.02s">
+<div class="time" style="width: 34.48275862069%"></div>
+<pre>
+
+Require Import
+  HSet
+  Colimits.Quotient
+  Spaces.List.Core
+  Classes.interfaces.canonical_names
+  Classes.theory.ua_homomorphism.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 9
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope list_scope.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Import algebra_notations ne_list.notations.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section quotient_algebra.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context
+    `{Funext} {σ : Signature} (A : Algebra σ)
+    (Φ : ∀ s, Relation (A s)) `{!IsCongruence A Φ}.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The quotient algebra carriers is the family of set-quotients
+    induced by [Φ]. *)
+
+ </pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition carriers_quotient_algebra : Carriers σ
+    := λ s, Quotient (Φ s).</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Specialization of [quotient_ind_prop]. Suppose
+    [P : FamilyProd carriers_quotient_algebra w → Type] and
+    [∀ a, IsHProp (P a)]. To show that [P a] holds for all [a :
+    FamilyProd carriers_quotient_algebra w], it is sufficient to show
+    that [P (class_of _ x1, ..., class_of _ xn, tt)] holds for all
+    [(x1, ..., xn, tt) : FamilyProd A w]. *)
+
+ </pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 32
+Time: 0.012s">
+<div class="time" style="width: 20.689655172414%"></div>
+<pre>Fixpoint quotient_ind_prop_family_prod {w : list (Sort σ)}
+    : ∀ (P : FamilyProd carriers_quotient_algebra w → Type)
+        `{!∀ a, IsHProp (P a)}
+        (dclass : ∀ x, P (map_family_prod (λ s, class_of (Φ s)) x))
+        (a : FamilyProd carriers_quotient_algebra w), P a
+    := match w with
+       | nil =&gt; λ P _ dclass 'tt, dclass tt
+       | s :: w' =&gt; λ P _ dclass a,
+         Quotient_ind_hprop (Φ s) (λ a, ∀ b, P (a,b))
+           (λ a, quotient_ind_prop_family_prod
+                  (λ c, P (class_of (Φ s) a, c)) (λ c, dclass (a, c)))
+           (fst a) (snd a)
+       end.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Let [f : Operation A w], [g : Operation carriers_quotient_algebra w].
+    If [g] is the quotient algebra operation induced by [f], then we want
+    [ComputeOpQuotient f g] to hold, since then
+
+&lt;&lt;
+      β (class_of _ a1, class_of _ a2, ..., class_of _ an)
+      = class_of _ (α (a1, a2, ..., an)),
+&gt;&gt;
+
+    where [α] is the uncurried [f] operation and [β] is the uncurried
+    [g] operation. *)
+
+ </pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 58
+Time: 0.002s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>Definition ComputeOpQuotient {w : SymbolType σ}
+    (f : Operation A w) (g : Operation carriers_quotient_algebra w)
+    := ∀ (a : FamilyProd A (dom_symboltype w)),
+         ap_operation g (map_family_prod (λ s, class_of (Φ s)) a)
+         = class_of (Φ (cod_symboltype w)) (ap_operation f a).</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Notation QuotOp w :=
+    (∀ (f : Operation A w),
+     OpCompatible A Φ f →
+     ∃ g : Operation carriers_quotient_algebra w,
+     ComputeOpQuotient f g) (only parsing).</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Notation op_qalg_cons q f P x :=
+    (q _ (f x) (op_compatible_cons Φ _ _ f x P)).1 (only parsing).</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 71
+Time: 0.002s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+
+  Lemma op_quotient_algebra_well_def
+    (q : ∀ (w : SymbolType σ), QuotOp w)
+    (s : Sort σ) (w : SymbolType σ) (f : Operation A (s ::: w))
+    (P : OpCompatible A Φ f) (x y : A s) (C : Φ s x y)
+    : op_qalg_cons q f P x = op_qalg_cons q f P y.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (@path_forall_ap_operation _ σ).</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 79
+Time: 0.002s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+    apply quotient_ind_prop_family_prod; try exact _.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro a.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 81
+Time: 0.001s">
+<div class="time" style="width: 1.7241379310345%"></div>
+<pre>
+    destruct (q _ _ (op_compatible_cons Φ s w f x P)) as [g1 P1].</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 82
+Time: 0.001s">
+<div class="time" style="width: 1.7241379310345%"></div>
+<pre>
+    destruct (q _ _ (op_compatible_cons Φ s w f y P)) as [g2 P2].</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine ((P1 a) @ _ @ (P2 a)^).</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply qglue.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 85
+Time: 0.001s">
+<div class="time" style="width: 1.7241379310345%"></div>
+<pre>
+    exact (P (x,a) (y,a) (C, reflexive_for_all_2_family_prod A Φ a)).</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 86
+Time: 0.002s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* Given an operation [f : A s1 → A s2 → ... A sn → A t] and a witness
+   [C : OpCompatible A Φ f], then [op_quotient_algebra f C] is a
+   dependent pair with first component an operation [g : Q s1 → Q s2
+   → ... Q sn → Q t], where [Q := carriers_quotient_algebra], and
+   second component a proof of [ComputeOpQuotient f g]. The first
+   component [g] is the quotient algebra operation corresponding to [f].
+   The second component proof of [ComputeOpQuotient f g] is passed to
+   the [op_quotient_algebra_well_def] lemma, which is used to show that
+   the quotient algebra operation [g] is well defined, i.e. that
+
+&lt;&lt;
+    Φ s1 x1 y1 ∧ Φ s2 x2 y2 ∧ ... ∧ Φ sn xn yn
+&gt;&gt;
+
+   implies
+
+&lt;&lt;
+    g (class_of _ x1) (class_of _ x2) ... (class_of _ xn)
+    = g (class_of _ y1) (class_of _ y2) ... (class_of _ yn).
+&gt;&gt;
+*)
+
+ </pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Fixpoint op_quotient_algebra {w : SymbolType σ} : QuotOp w.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 112
+Time: 0.009s">
+<div class="time" style="width: 15.51724137931%"></div>
+<pre> refine (
+      match w return QuotOp w with
+      | [:s:] =&gt; λ (f : A s) P, (class_of (Φ s) f; λ a, idpath)
+      | s ::: w' =&gt; λ (f : A s → Operation A w') P,
+        (Quotient_rec (Φ s) _
+          (λ (x : A s), op_qalg_cons op_quotient_algebra f P x)
+          (op_quotient_algebra_well_def op_quotient_algebra s w' f P)
+        ; _)
+      end
+    ).</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 121
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros [x a].</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 122
+Time: 0.001s">
+<div class="time" style="width: 1.7241379310345%"></div>
+<pre>
+    apply (op_quotient_algebra w' (f x) (op_compatible_cons Φ s w' f x P)).</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 123
+Time: 0.002s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 124
+Time: 0.001s">
+<div class="time" style="width: 1.7241379310345%"></div>
+<pre>
+
+  Definition ops_quotient_algebra (u : Symbol σ)
+    : Operation carriers_quotient_algebra (σ u)
+    := (op_quotient_algebra u.#A (ops_compatible_cong A Φ u)).1.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 128
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Definition of quotient algebra. See Lemma [compute_op_quotient]
+    below for the computation rule of quotient algebra operations. *)
+
+ </pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition QuotientAlgebra : Algebra σ
+    := BuildAlgebra carriers_quotient_algebra ops_quotient_algebra.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The quotient algebra carriers are always sets. *)
+
+ </pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export] Instance hset_quotient_algebra
+    : IsHSetAlgebra QuotientAlgebra.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro s.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The following lemma gives the computation rule for the quotient
+    algebra operations. It says that for
+    [(a1, a2, ..., an) : A s1 * A s2 * ... * A sn],
+
+&lt;&lt;
+      β (class_of _ a1, class_of _ a2, ..., class_of _ an)
+      = class_of _ (α (a1, a2, ..., an))
+&gt;&gt;
+
+    where [α] is the uncurried [u.#A] operation and [β] is the
+    uncurried [u.#QuotientAlgebra] operation. *)
+
+ </pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma compute_op_quotient (u : Symbol σ)
+    : ComputeOpQuotient u.#A u.#QuotientAlgebra.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply op_quotient_algebra.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 160
+Time: 0.002s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+End quotient_algebra.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Module quotient_algebra_notations.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 163
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Global Notation "A / Φ" := (QuotientAlgebra A Φ) : Algebra_scope.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 164
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+End quotient_algebra_notations.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 165
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Import quotient_algebra_notations.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The next section shows that A/Φ = A/Ψ whenever
+    [Φ s x y &lt;-&gt; Ψ s x y] for all [s], [x], [y]. *)
+
+</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section path_quotient_algebra.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context
+    {σ : Signature} (A : Algebra σ)
+    (Φ : ∀ s, Relation (A s)) {CΦ : IsCongruence A Φ}
+    (Ψ : ∀ s, Relation (A s)) {CΨ : IsCongruence A Ψ}.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 175
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma path_quotient_algebra `{Funext} (p : Φ = Ψ) : A/Φ = A/Ψ.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 178
+Time: 0.002s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+    by destruct p, (path_ishprop CΦ CΨ).</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 179
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 180
+Time: 0.001s">
+<div class="time" style="width: 1.7241379310345%"></div>
+<pre>
+
+  Lemma path_quotient_algebra_iff `{Univalence}
+    (R : ∀ s x y, Φ s x y &lt;-&gt; Ψ s x y)
+    : A/Φ = A/Ψ.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 184
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_quotient_algebra.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 186
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    funext s x y.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (path_universe_uncurried _).</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 188
+Time: 0.003s">
+<div class="time" style="width: 5.1724137931034%"></div>
+<pre>
+    apply equiv_iff_hprop; apply R.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 189
+Time: 0.001s">
+<div class="time" style="width: 1.7241379310345%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 190
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+End path_quotient_algebra.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 191
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The following section defines the quotient homomorphism
+    [hom_quotient : Homomorphism A (A/Φ)]. *)
+
+</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section hom_quotient.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 195
+Time: 0.001s">
+<div class="time" style="width: 1.7241379310345%"></div>
+<pre>
+  Context
+    `{Funext} {σ} {A : Algebra σ}
+    (Φ : ∀ s, Relation (A s)) `{!IsCongruence A Φ}.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 198
+Time: 0.001s">
+<div class="time" style="width: 1.7241379310345%"></div>
+<pre>
+
+  Definition def_hom_quotient : ∀ (s : Sort σ), A s → (A/Φ) s :=
+    λ s x, class_of (Φ s) x.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 201
+Time: 0.001s">
+<div class="time" style="width: 1.7241379310345%"></div>
+<pre>
+
+  Lemma oppreserving_quotient `{Funext} (w : SymbolType σ)
+      (g : Operation (A/Φ) w) (α : Operation A w)
+      (G : ComputeOpQuotient A Φ α g)
+      : OpPreserving def_hom_quotient α g.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 207
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unfold ComputeOpQuotient in G.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 208
+Time: 0.003s">
+<div class="time" style="width: 5.1724137931034%"></div>
+<pre>
+    induction w; cbn in *.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 209
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 210
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by destruct (G tt)^.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 210
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 211
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro x.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 211
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply IHw.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 211
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro a.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 211
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (G (x,a)).</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 211
+Time: 0.002s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 212
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance is_homomorphism_quotient `{Funext}
+    : IsHomomorphism def_hom_quotient.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 215
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 216
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro u.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 217
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply oppreserving_quotient, compute_op_quotient.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 217
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 218
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition hom_quotient : Homomorphism A (A/Φ)
+    := BuildHomomorphism def_hom_quotient.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 221
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance surjection_quotient
+    : ∀ s, IsSurjection (hom_quotient s).</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 224
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro s.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 226
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply issurj_class_of.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 226
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 227
+Time: 0.001s">
+<div class="time" style="width: 1.7241379310345%"></div>
+<pre>
+End hom_quotient.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** If [Φ s x y] implies [x = y], then homomorphism [hom_quotient Φ]
+    is an isomorphism. *)
+
+</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 232
+Time: 0.001s">
+<div class="time" style="width: 1.7241379310345%"></div>
+<pre>#[export] Instance is_isomorphism_quotient `{Univalence}
+  {σ : Signature} {A : Algebra σ} (Φ : ∀ s, Relation (A s))
+  `{!IsCongruence A Φ} (P : ∀ s x y, Φ s x y → x = y)
+  : IsIsomorphism (hom_quotient Φ).</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 235
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 236
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro s.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 237
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply isequiv_surj_emb; [exact _ |].</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 238
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply isembedding_isinj_hset.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 239
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y p.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 240
+Time: 0.003s">
+<div class="time" style="width: 5.1724137931034%"></div>
+<pre>
+  by apply P, (related_quotient_paths (Φ s)).</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 241
+Time: 0.001s">
+<div class="time" style="width: 1.7241379310345%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 242
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** This section develops the universal mapping property
+    [ump_quotient_algebra] of the quotient algebra. *)
+
+</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 246
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section ump_quotient_algebra.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 246
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context
+    `{Univalence} {σ} {A B : Algebra σ} `{!IsHSetAlgebra B}
+    (Φ : ∀ s, Relation (A s)) `{!IsCongruence A Φ}.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 249
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** In the nested section below we show that if [f : Homomorphism A B]
+    maps elements related by [Φ] to equal elements, there is a
+    [Homomorphism (A/Φ) B] out of the quotient algebra satisfying
+    [compute_quotient_algebra_mapout] below. *)
+
+ </pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 256
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section quotient_algebra_mapout.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 256
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    Context
+      (f : Homomorphism A B)
+      (R : ∀ s (x y : A s), Φ s x y → f s x = f s y).</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 259
+Time: 0.004s">
+<div class="time" style="width: 6.8965517241379%"></div>
+<pre>
+
+    Definition def_hom_quotient_algebra_mapout
+      : ∀ (s : Sort σ), (A/Φ) s → B s
+      := λ s, (equiv_quotient_ump (Φ s) (Build_HSet (B s)))^-1 (f s; R s).</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 263
+Time: 0.001s">
+<div class="time" style="width: 1.7241379310345%"></div>
+<pre>
+
+    Lemma oppreserving_quotient_algebra_mapout {w : SymbolType σ}
+      (g : Operation (A/Φ) w) (α : Operation A w) (β : Operation B w)
+      (G : ComputeOpQuotient A Φ α g) (P : OpPreserving f α β)
+      : OpPreserving def_hom_quotient_algebra_mapout g β.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 268
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    Proof.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 269
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      unfold ComputeOpQuotient in G.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 270
+Time: 0.003s">
+<div class="time" style="width: 5.1724137931034%"></div>
+<pre>
+      induction w; cbn in *.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 271
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      -</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 272
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (G tt)^.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 272
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply P.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 272
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      -</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 273
+Time: 0.006s">
+<div class="time" style="width: 10.344827586207%"></div>
+<pre> refine (Quotient_ind_hprop (Φ t) _ _).</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 273
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro x.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 273
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply (IHw (g (class_of (Φ t) x)) (α x) (β (f t x))).</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 274
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        +</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 275
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro a.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 275
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (G (x,a)).</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 275
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        +</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 276
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply P.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 276
+Time: 0.003s">
+<div class="time" style="width: 5.1724137931034%"></div>
+<pre>
+    Defined.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 277
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+    #[export] Instance is_homomorphism_quotient_algebra_mapout
+      : IsHomomorphism def_hom_quotient_algebra_mapout.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 280
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    Proof.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 281
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      intro u.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 282
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      eapply oppreserving_quotient_algebra_mapout.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 283
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      -</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 284
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply compute_op_quotient.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 284
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      -</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 285
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply f.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 285
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    Defined.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 286
+Time: 0.001s">
+<div class="time" style="width: 1.7241379310345%"></div>
+<pre>
+
+    Definition hom_quotient_algebra_mapout
+      : Homomorphism (A/Φ) B
+      := BuildHomomorphism def_hom_quotient_algebra_mapout.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 290
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The computation rule for [hom_quotient_algebra_mapout] is
+
+&lt;&lt;
+      hom_quotient_algebra_mapout s (class_of (Φ s) x) = f s x.
+&gt;&gt;
+*)
+
+   </pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 299
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma compute_quotient_algebra_mapout
+      : ∀ (s : Sort σ) (x : A s),
+        hom_quotient_algebra_mapout s (class_of (Φ s) x) = f s x.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 301
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    Proof.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 302
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      reflexivity.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 303
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    Defined.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 304
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  End quotient_algebra_mapout.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 306
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition hom_quotient_algebra_mapin (g : Homomorphism (A/Φ) B)
+    : Homomorphism A B
+    := hom_compose g (hom_quotient Φ).</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 310
+Time: 0.001s">
+<div class="time" style="width: 1.7241379310345%"></div>
+<pre>
+
+  Lemma ump_quotient_algebra_lr :
+    {f : Homomorphism A B | ∀ s (x y : A s), Φ s x y → f s x = f s y}
+    → Homomorphism (A/Φ) B.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 314
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 315
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros [f P].</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 316
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists (hom_quotient_algebra_mapout f P).</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 316
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 316
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 317
+Time: 0.001s">
+<div class="time" style="width: 1.7241379310345%"></div>
+<pre>
+
+  Lemma ump_quotient_algebra_rl :
+    Homomorphism (A/Φ) B →
+    {f : Homomorphism A B | ∀ s (x y : A s), Φ s x y → f s x = f s y}.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 321
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 322
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro g.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 323
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists (hom_quotient_algebra_mapin g).</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 324
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros s x y E.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 325
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (transport (λ z, g s (class_of (Φ s) x) = g s z)
+            (qglue E) idpath).</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 327
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 328
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The universal mapping property of the quotient algebra. For each
+    homomorphism [f : Homomorphism A B], mapping elements related by
+    [Φ] to equal elements, there is a unique homomorphism
+    [g : Homomorphism (A/Φ) B] satisfying
+
+&lt;&lt;
+      f = hom_compose g (hom_quotient Φ).
+&gt;&gt;
+*)
+
+ </pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 340
+Time: 0.001s">
+<div class="time" style="width: 1.7241379310345%"></div>
+<pre>Lemma ump_quotient_algebra
+    : {f : Homomorphism A B | ∀ s (x y : A s), Φ s x y → f s x = f s y}
+     &lt;~&gt;
+      Homomorphism (A/Φ) B.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 343
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 344
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (equiv_adjointify
+             ump_quotient_algebra_lr ump_quotient_algebra_rl).</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 346
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 347
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro G.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 347
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply path_hset_homomorphism.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 348
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      funext s.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 349
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (eissect (equiv_quotient_ump (Φ s) _) (G s)).</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 350
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 351
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro F.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 351
+Time: 0.029s">
+<div class="time" style="width: 50%"></div>
+<pre>
+      apply path_sigma_hprop.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 352
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      by apply path_hset_homomorphism.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 353
+Time: 0.002s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 354
+Time: 0.002s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+End ump_quotient_algebra.</pre>
+</div>
+<div class="code" title="File: ua_quotient_algebra.v
+Line: 356
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

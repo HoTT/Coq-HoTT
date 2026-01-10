@@ -1,0 +1,5150 @@
+<html>
+<head>
+<title>Ring.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Ring.v</h1>
+
+<div class="code" title="File: Ring.v
+Line: 1
+Time: 0.045s">
+<div class="time" style="width: 78.947368421053%"></div>
+<pre>From HoTT.WildCat Require Import Core Universe Equiv Induced Products.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 1
+Time: 0.003s">
+<div class="time" style="width: 5.2631578947368%"></div>
+<pre>
+Require Import Spaces.Nat.Core Spaces.Nat.Arithmetic.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 2
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+(* Some of the material in abstract_algebra and canonical names could be selectively exported to the user, as is done in Groups/Group.v. *)</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 3
+Time: 0.039s">
+<div class="time" style="width: 68.421052631579%"></div>
+<pre>Require Import Classes.interfaces.abstract_algebra.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 3
+Time: 0.021s">
+<div class="time" style="width: 36.842105263158%"></div>
+<pre>
+Require Import Algebra.Groups.Group Algebra.Groups.Subgroup.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 4
+Time: 0.018s">
+<div class="time" style="width: 31.578947368421%"></div>
+<pre>
+Require Export Algebra.AbGroups.AbelianGroup Algebra.AbGroups.Biproduct Algebra.AbGroups.FiniteSum.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 5
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>
+
+Require Export Classes.theory.rings.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 7
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>
+Require Import Modalities.ReflectiveSubuniverse.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We make sure to treat [AbGroup] as if it has a [Plus], [Zero], and [Negate] operation from now on. *)</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Export AbelianGroup.AdditiveInstances.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Rings *)
+
+</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Declare Scope ring_scope.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope ring_scope.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+(** We want to print equivalences as [≅]. *)</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Open Scope wc_iso_scope.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A ring consists of the following data: *)</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 18
+Time: 0.003s">
+<div class="time" style="width: 5.2631578947368%"></div>
+<pre>Record Ring := Build_Ring' {
+  (** An underlying abelian group. *)
+  ring_abgroup :&gt; AbGroup;
+  (** A multiplication operation. *)
+  ring_mult :: Mult ring_abgroup;
+  (** A multiplicative identity called [one]. *)
+  ring_one :: One ring_abgroup;
+  (** Such that all they all satisfy the axioms of a ring. *)
+  ring_isring :: IsRing ring_abgroup;
+  (** This field only exists so that opposite rings are definitionally involutive and can safely be ignored. *)
+  ring_mult_assoc_opp : forall z y x, (x * y) * z = x * (y * z);
+}.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments ring_mult {R} : rename.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments ring_one {R} : rename.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments ring_isring {R} : rename.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 33
+Time: 0.057s">
+<div class="time" style="width: 100%"></div>
+<pre>
+
+Definition issig_Ring : _ &lt;~&gt; Ring := ltac:(issig).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance ring_plus {R : Ring} : Plus R := plus_abgroup (ring_abgroup R).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Instance ring_zero {R : Ring} : Zero R := zero_abgroup (ring_abgroup R).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Instance ring_negate {R : Ring} : Negate R := negate_abgroup (ring_abgroup R).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A ring homomorphism between rings is a map of the underlying type and a proof that this map is a ring homomorphism. *)</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 41
+Time: 0.002s">
+<div class="time" style="width: 3.5087719298246%"></div>
+<pre>Record RingHomomorphism (A B : Ring) := {
+  rng_homo_map :&gt; A -&gt; B;
+  rng_homo_ishomo :: IsSemiRingPreserving rng_homo_map;
+}.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments Build_RingHomomorphism {_ _} _ _.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 46
+Time: 0.006s">
+<div class="time" style="width: 10.526315789474%"></div>
+<pre>
+
+Definition issig_RingHomomorphism (A B : Ring)
+  : _ &lt;~&gt; RingHomomorphism A B
+  := ltac:(issig).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition equiv_path_ringhomomorphism `{Funext} {A B : Ring}
+  {f g : RingHomomorphism A B} : f == g &lt;~&gt; f = g.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 54
+Time: 0.002s">
+<div class="time" style="width: 3.5087719298246%"></div>
+<pre>
+  refine ((equiv_ap (issig_RingHomomorphism A B)^-1 _ _)^-1 oE _).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 55
+Time: 0.01s">
+<div class="time" style="width: 17.543859649123%"></div>
+<pre>
+  refine (equiv_path_sigma_hprop _ _ oE _).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply equiv_path_forall.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 57
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 58
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>
+
+Definition rng_homo_id (A : Ring) : RingHomomorphism A A
+  := Build_RingHomomorphism idmap (Build_IsSemiRingPreserving _ _ _).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition rng_homo_compose {A B C : Ring}
+  (f : RingHomomorphism B C) (g : RingHomomorphism A B)
+  : RingHomomorphism A C.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_RingHomomorphism.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact (f o g).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 68
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>
+  rapply compose_sr_morphism.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Ring laws *)
+
+</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section RingLaws.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Many of these ring laws have already been proven. But we give them names here so that they are easy to find and use. *)
+
+ </pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Context {A : Ring} (x y z : A).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 77
+Time: 0.016s">
+<div class="time" style="width: 28.070175438596%"></div>
+<pre>
+
+  Definition rng_dist_l : x * (y + z) = x * y + x * z := simple_distribute_l _ _ _.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 79
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>
+  Definition rng_dist_r : (x + y) * z = x * z + y * z := simple_distribute_r _ _ _.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 80
+Time: 0.002s">
+<div class="time" style="width: 3.5087719298246%"></div>
+<pre>
+  Definition rng_plus_zero_l : 0 + x = x := left_identity _.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 81
+Time: 0.002s">
+<div class="time" style="width: 3.5087719298246%"></div>
+<pre>
+  Definition rng_plus_zero_r : x + 0 = x := right_identity _.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition rng_plus_negate_l : (- x) + x = 0 := left_inverse _.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition rng_plus_negate_r : x + (- x) = 0 := right_inverse _.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition rng_plus_comm : x + y = y + x := commutativity x y.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 86
+Time: 0.002s">
+<div class="time" style="width: 3.5087719298246%"></div>
+<pre>
+  Definition rng_plus_assoc : x + (y + z) = (x + y) + z := simple_associativity x y z.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 87
+Time: 0.003s">
+<div class="time" style="width: 5.2631578947368%"></div>
+<pre>
+  Definition rng_mult_assoc : x * (y * z) = (x * y) * z := simple_associativity x y z.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition rng_negate_negate : - (- x) = x := groups.inverse_involutive _.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition rng_negate_zero : - (0 : A) = 0 := groups.inverse_mon_unit.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition rng_negate_plus : - (x + y) = - x - y := negate_plus_distr _ _.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 92
+Time: 0.003s">
+<div class="time" style="width: 5.2631578947368%"></div>
+<pre>
+
+  Definition rng_mult_one_l : 1 * x = x := left_identity _.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 94
+Time: 0.003s">
+<div class="time" style="width: 5.2631578947368%"></div>
+<pre>
+  Definition rng_mult_one_r : x * 1 = x := right_identity _.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 95
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>
+  Definition rng_mult_zero_l : 0 * x = 0 := left_absorb _.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 96
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>
+  Definition rng_mult_zero_r : x * 0 = 0 := right_absorb _.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition rng_mult_negate : -1 * x = - x := (negate_mult_l _)^.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition rng_mult_negate_negate : -x * -y = x * y := negate_mult_negate _ _.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition rng_mult_negate_l : -x * y = -(x * y) := inverse (negate_mult_distr_l _ _).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition rng_mult_negate_r : x * -y = -(x * y) := inverse (negate_mult_distr_r _ _).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 101
+Time: 0.002s">
+<div class="time" style="width: 3.5087719298246%"></div>
+<pre>
+
+End RingLaws.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition rng_dist_l_negate {A : Ring} (x y z : A)
+  : x * (y - z) = x * y - x * z.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lhs napply rng_dist_l.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  napply ap.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  napply rng_mult_negate_r.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition rng_dist_r_negate {A : Ring} (x y z : A)
+  : (x - y) * z = x * z - y * z.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lhs napply rng_dist_r.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  napply ap.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  napply rng_mult_negate_l.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 118
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section RingHomoLaws.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 121
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {A B : Ring} (f : RingHomomorphism A B) (x y : A).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition rng_homo_plus : f (x + y) = f x + f y := preserves_plus x y.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 125
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition rng_homo_mult : f (x * y) = f x * f y := preserves_mult x y.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 126
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition rng_homo_zero : f 0 = 0 := preserves_0.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition rng_homo_one  : f 1 = 1 := preserves_1.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 128
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>
+  Definition rng_homo_negate : f (-x) = -(f x) := preserves_negate x.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 129
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>
+
+  Definition rng_homo_minus_one : f (-1) = -1
+    := preserves_negate _ @ ap negate preserves_1.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End RingHomoLaws.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Isomorphisms of commutative rings *)</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 136
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>Record RingIsomorphism (A B : Ring) := {
+  rng_iso_homo : RingHomomorphism A B ;
+  isequiv_rng_iso_homo :: IsEquiv rng_iso_homo ;
+}.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments rng_iso_homo {_ _ }.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Coercion rng_iso_homo : RingIsomorphism &gt;-&gt; RingHomomorphism.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 142
+Time: 0.004s">
+<div class="time" style="width: 7.0175438596491%"></div>
+<pre>
+
+Definition issig_RingIsomorphism {A B : Ring}
+  : _ &lt;~&gt; RingIsomorphism A B := ltac:(issig).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 145
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We can construct a ring isomorphism from an equivalence that preserves addition and multiplication. *)</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 147
+Time: 0.002s">
+<div class="time" style="width: 3.5087719298246%"></div>
+<pre>Definition Build_RingIsomorphism' (A B : Ring) (e : A &lt;~&gt; B)
+  `{!IsSemiRingPreserving e}
+  : RingIsomorphism A B
+  := Build_RingIsomorphism A B (Build_RingHomomorphism e _) _.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The inverse of a Ring isomorphism *)</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 152
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition rng_iso_inverse {A B : Ring}
+  : RingIsomorphism A B -&gt; RingIsomorphism B A.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 154
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [f e].</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 155
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_RingIsomorphism.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> snapply Build_RingHomomorphism.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: exact f^-1.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact _.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 159
+Time: 0.003s">
+<div class="time" style="width: 5.2631578947368%"></div>
+<pre>
+  exact _.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Ring isomorphisms are a reflexive relation *)</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 163
+Time: 0.022s">
+<div class="time" style="width: 38.59649122807%"></div>
+<pre>Instance reflexive_ringisomorphism : Reflexive RingIsomorphism
+  := fun x =&gt; Build_RingIsomorphism _ _ (rng_homo_id x) _.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 164
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Ring isomorphisms are a symmetric relation *)</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 166
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance symmetry_ringisomorphism : Symmetric RingIsomorphism
+  := fun x y =&gt; rng_iso_inverse.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Ring isomorphisms are a transitive relation *)</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 169
+Time: 0.004s">
+<div class="time" style="width: 7.0175438596491%"></div>
+<pre>Instance transitive_ringisomorphism : Transitive RingIsomorphism
+  := fun x y z f g =&gt; Build_RingIsomorphism _ _ (rng_homo_compose g f) _.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Underlying group homomorphism of a ring homomorphism *)</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 172
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>Definition grp_homo_rng_homo {R S : Ring}
+  : RingHomomorphism R S -&gt; GroupHomomorphism R S
+  := fun f =&gt; @Build_GroupHomomorphism R S f _.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 174
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Coercion grp_homo_rng_homo : RingHomomorphism &gt;-&gt; GroupHomomorphism.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We can construct a ring homomorphism from a group homomorphism that preserves multiplication *)</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 178
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>Definition Build_RingHomomorphism' (A B : Ring) (map : GroupHomomorphism A B)
+  {H : IsMonoidPreserving (Aop:=ring_mult) (Bop:=ring_mult)
+    (Aunit:=one) (Bunit:=one) map}
+  : RingHomomorphism A B
+  := Build_RingHomomorphism map
+      (Build_IsSemiRingPreserving _ (ismonoidpreserving_grp_homo map) H).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 183
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We can construct a ring isomorphism from a group isomorphism that preserves multiplication *)</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 185
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>Definition Build_RingIsomorphism'' (A B : Ring) (e : GroupIsomorphism A B)
+  {H : IsMonoidPreserving (Aop:=ring_mult) (Bop:=ring_mult) (Aunit:=one) (Bunit:=one) e}
+  : RingIsomorphism A B
+  := @Build_RingIsomorphism' A B e (Build_IsSemiRingPreserving e _ H).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Here is an alternative way to build a ring using the underlying abelian group. *)</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 190
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>Definition Build_Ring (R : AbGroup)
+  `(Mult R, One R, !Associative (.*.),
+    !LeftDistribute (.*.) (+), !RightDistribute (.*.) (+),
+    !LeftIdentity (.*.) 1, !RightIdentity (.*.) 1)
+  : Ring.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 194
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 195
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>
+  rapply (Build_Ring' R).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  2: exact (fun z y x =&gt; (associativity x y z)^).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  split; only 1,3,4: exact _.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 198
+Time: 0.006s">
+<div class="time" style="width: 10.526315789474%"></div>
+<pre>
+  repeat split; exact _.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 199
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Scalar multiplication on the left is a group homomorphism. *)</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 202
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition grp_homo_rng_left_mult {R : Ring} (r : R)
+  : GroupHomomorphism R R
+  := @Build_GroupHomomorphism R R (fun s =&gt; r * s) (rng_dist_l r).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 204
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Scalar multiplication on the right is a group homomorphism. *)</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition grp_homo_rng_right_mult {R : Ring} (r : R)
+  : GroupHomomorphism R R
+  := @Build_GroupHomomorphism R R (fun s =&gt; s * r) (fun x y =&gt; rng_dist_r x y r).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Ring movement lemmas *)
+
+</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 211
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section RingMovement.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 211
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** We adopt a similar naming convention to the [moveR_equiv] style lemmas that can be found in Types.Paths. *)
+
+ </pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 215
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Context {R : Ring} {x y z : R}.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 215
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition rng_moveL_Mr : - y + x = z &lt;~&gt; x = y + z := @grp_moveL_Mg R x y z.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 217
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition rng_moveL_rM : x + - z = y &lt;~&gt; x = y + z := @grp_moveL_gM R x y z.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 218
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition rng_moveR_Mr : y = - x + z &lt;~&gt; x + y = z := @grp_moveR_Mg R x y z.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 219
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition rng_moveR_rM : x = z + - y &lt;~&gt; x + y = z := @grp_moveR_gM R x y z.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 220
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition rng_moveL_Vr : x + y = z &lt;~&gt; y = - x + z := @grp_moveL_Vg R x y z.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 222
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition rng_moveL_rV : x + y = z &lt;~&gt; x = z + - y := @grp_moveL_gV R x y z.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 223
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition rng_moveR_Vr : x = y + z &lt;~&gt; - y + x = z := @grp_moveR_Vg R x y z.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 224
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition rng_moveR_rV : x = y + z &lt;~&gt; x + - z = y := @grp_moveR_gV R x y z.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition rng_moveL_M0 : - y + x = 0 &lt;~&gt; x = y := @grp_moveL_M1 R x y.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 227
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition rng_moveL_0M :	x + - y = 0 &lt;~&gt; x = y := @grp_moveL_1M R x y.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition rng_moveR_M0 : 0 = - x + y &lt;~&gt; x = y := @grp_moveR_M1 R x y.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 229
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition rng_moveR_0M : 0 = y + - x &lt;~&gt; x = y := @grp_moveR_1M R x y.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 230
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** TODO: Movement laws about [mult] *)
+
+</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 233
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>End RingMovement.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 233
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Wild category of rings *)
+
+</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 236
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isgraph_ring : IsGraph Ring
+  := Build_IsGraph _ RingHomomorphism.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 237
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance is01cat_ring : Is01Cat Ring
+  := Build_Is01Cat _ _ rng_homo_id (@rng_homo_compose).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 240
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>
+
+Instance is2graph_ring : Is2Graph Ring
+  := fun A B =&gt; isgraph_induced (@rng_homo_map A B : _ -&gt; (group_type _ $-&gt; _)).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 243
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>
+
+Instance is01cat_ringhomomorphism {A B : Ring} : Is01Cat (A $-&gt; B)
+  := is01cat_induced (@rng_homo_map A B).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 246
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>
+
+Instance is0gpd_ringhomomorphism {A B : Ring} : Is0Gpd (A $-&gt; B)
+  := is0gpd_induced (@rng_homo_map A B).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 249
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>
+
+Instance is0functor_postcomp_ringhomomorphism {A B C : Ring} (h : B $-&gt; C)
+  : Is0Functor (@cat_postcomp Ring _ _ A B C h).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 252
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 253
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply Build_Is0Functor.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 254
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [f ?] [g ?] p a ; exact (ap h (p a)).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 255
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 256
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>
+
+Instance is0functor_precomp_ringhomomorphism
+       {A B C : Ring} (h : A $-&gt; B)
+  : Is0Functor (@cat_precomp Ring _ _ A B C h).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 260
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 261
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply Build_Is0Functor.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 262
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [f ?] [g ?] p a ; exact (p (h a)).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 263
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 264
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Ring forms a 1-category. *)</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 266
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance is1cat_ring : Is1Cat Ring.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 266
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 267
+Time: 0.016s">
+<div class="time" style="width: 28.070175438596%"></div>
+<pre>
+  by rapply Build_Is1Cat.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 268
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 269
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance hasmorext_ring `{Funext} : HasMorExt Ring.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 271
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 272
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros A B f g; cbn in *.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 273
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply @isequiv_homotopic.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 274
+Time: 0.004s">
+<div class="time" style="width: 7.0175438596491%"></div>
+<pre>
+  1: exact (equiv_path_ringhomomorphism^-1%equiv).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 275
+Time: 0.003s">
+<div class="time" style="width: 5.2631578947368%"></div>
+<pre>
+  1: exact _.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 276
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros []; reflexivity.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 277
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre> 
+Defined.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 278
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance hasequivs_ring : HasEquivs Ring.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 280
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 281
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unshelve econstructor.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 282
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 283
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact RingIsomorphism.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 283
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 284
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fun G H f =&gt; IsEquiv f).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 284
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 285
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros G H f; exact f.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 285
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 286
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact Build_RingIsomorphism.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 286
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 287
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros G H; exact rng_iso_inverse.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 287
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 288
+Time: 0.005s">
+<div class="time" style="width: 8.7719298245614%"></div>
+<pre> cbn; exact _.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 288
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 289
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 289
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 290
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros ????; apply eissect.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 290
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 291
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros ????; apply eisretr.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 291
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 292
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros G H f g p q.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 292
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (isequiv_adjointify f g p q).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 293
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 294
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Subrings *)
+
+(** TODO: factor out this definition as a submonoid *)
+(** A subring is a subgroup of the underlying abelian group of a ring that is closed under multiplication and contains [1]. *)</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 299
+Time: 0.002s">
+<div class="time" style="width: 3.5087719298246%"></div>
+<pre>Class IsSubring {R : Ring} (S : R -&gt; Type) := {
+  issubring_issubgroup :: IsSubgroup S;
+  issubring_mult {x y} : S x -&gt; S y -&gt; S (x * y);
+  issubring_one : S 1;
+}.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 303
+Time: 0.009s">
+<div class="time" style="width: 15.789473684211%"></div>
+<pre>
+
+Definition issig_IsSubring {R : Ring} (S : R -&gt; Type)
+  : _ &lt;~&gt; IsSubring S
+  := ltac:(issig).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 307
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance ishprop_issubring `{Funext} {R : Ring} (S : R -&gt; Type)
+  : IsHProp (IsSubring S).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 310
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 311
+Time: 0.008s">
+<div class="time" style="width: 14.035087719298%"></div>
+<pre>
+  exact (istrunc_equiv_istrunc _ (issig_IsSubring S)).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 312
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 313
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Subring criterion. *)</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 315
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>Definition Build_IsSubring' {R : Ring} (S : R -&gt; Type)
+  (H : forall x, IsHProp (S x))
+  (H1 : forall x y, S x -&gt; S y -&gt; S (x - y))
+  (H2 : forall x y, S x -&gt; S y -&gt; S (x * y))
+  (H3 : S 1)
+  : IsSubring S.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 320
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 321
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_IsSubring.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 322
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 323
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> snapply Build_IsSubgroup'.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 323
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 324
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 324
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 325
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> pose (p := H1 1 1 H3 H3).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 325
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite rng_plus_negate_r in p.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 326
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact p.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 327
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 328
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact H1.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 328
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 329
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact H2.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 329
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 330
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact H3.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 330
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 331
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>
+
+Record Subring (R : Ring) := {
+  #[reversible=no]
+  subring_pred :&gt; R -&gt; Type;
+  subring_issubring :: IsSubring subring_pred;
+}.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 337
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition Build_Subring'' {R : Ring} (S : Subgroup R)
+  (H1 : forall x y, S x -&gt; S y -&gt; S (x * y))
+  (H2 : S 1)
+  : Subring R.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 342
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 343
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply (Build_Subring _ S).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 344
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_IsSubring.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 345
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 346
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 346
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 347
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact H1.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 347
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 348
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact H2.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 348
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 349
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>
+
+Definition Build_Subring' {R : Ring} (S : R -&gt; Type)
+  (H : forall x, IsHProp (S x))
+  (H1 : forall x y, S x -&gt; S y -&gt; S (x - y))
+  (H2 : forall x y, S x -&gt; S y -&gt; S (x * y))
+  (H3 : S 1)
+  : Subring R
+  := Build_Subring R S (Build_IsSubring' S H H1 H2 H3).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 357
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The underlying subgroup of a subring. *)</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 359
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Coercion subgroup_subring {R} : Subring R -&gt; Subgroup R
+  := fun S =&gt; Build_Subgroup R S _.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 360
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The ring given by a subring. *)</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 362
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Coercion ring_subring {R : Ring} (S : Subring R) : Ring.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 362
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 363
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>
+  snapply (Build_Ring (subgroup_subring S)).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 364
+Time: 0.012s">
+<div class="time" style="width: 21.052631578947%"></div>
+<pre>
+  3-7: hnf; intros; srapply path_sigma_hprop.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 365
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 366
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre> intros [r ?] [s ?]; exists (r * s).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 366
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by apply issubring_mult.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 367
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 368
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists 1.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 368
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact issubring_one.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 369
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 370
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre> napply rng_mult_assoc.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 370
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 371
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre> napply rng_dist_l.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 371
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 372
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre> napply rng_dist_r.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 372
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 373
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> napply rng_mult_one_l.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 373
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 374
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> napply rng_mult_one_r.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 374
+Time: 0.004s">
+<div class="time" style="width: 7.0175438596491%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 375
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Product ring *)
+
+</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 378
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ring_product : Ring -&gt; Ring -&gt; Ring.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 378
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 379
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros R S.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 380
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_Ring.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 381
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 382
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (ab_biprod R S).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 382
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 383
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre> exact (fun '(r1 , s1) '(r2 , s2) =&gt; (r1 * r2 , s1 * s2)).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 383
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 384
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (ring_one , ring_one).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 384
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 385
+Time: 0.002s">
+<div class="time" style="width: 3.5087719298246%"></div>
+<pre> intros [r1 s1] [r2 s2] [r3 s3].</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 385
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>
+    apply path_prod; cbn; apply rng_mult_assoc.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 386
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 387
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre> intros [r1 s1] [r2 s2] [r3 s3].</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 387
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>
+    apply path_prod; cbn; apply rng_dist_l.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 388
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 389
+Time: 0.002s">
+<div class="time" style="width: 3.5087719298246%"></div>
+<pre> intros [r1 s1] [r2 s2] [r3 s3].</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 389
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>
+    apply path_prod; cbn; apply rng_dist_r.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 390
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 391
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre> intros [r1 s1]; apply path_prod; cbn; apply rng_mult_one_l.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 391
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 392
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre> intros [r1 s1]; apply path_prod; cbn; apply rng_mult_one_r.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 392
+Time: 0.008s">
+<div class="time" style="width: 14.035087719298%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 393
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Infix "×" := ring_product : ring_scope.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 395
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition ring_product_fst {R S : Ring} : R × S $-&gt; R.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 397
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 398
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_RingHomomorphism.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 399
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact fst.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 400
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  repeat split.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 401
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 402
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition ring_product_snd {R S : Ring} : R × S $-&gt; S.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 404
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 405
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_RingHomomorphism.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 406
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact snd.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 407
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  repeat split.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 408
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 409
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition ring_product_corec (R S T : Ring)
+  : (R $-&gt; S) -&gt; (R $-&gt; T) -&gt; (R $-&gt; S × T).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 412
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 413
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros f g.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 414
+Time: 0.002s">
+<div class="time" style="width: 3.5087719298246%"></div>
+<pre>
+  srapply Build_RingHomomorphism'.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 415
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>
+  1: exact (ab_biprod_corec f g).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 416
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  repeat split.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 417
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>
+  1: cbn; intros x y; apply path_prod; apply rng_homo_mult.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 418
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>
+  cbn; apply path_prod; apply rng_homo_one.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 419
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 420
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition equiv_ring_product_corec `{Funext} (R S T : Ring)
+  : (R $-&gt; S) * (R $-&gt; T) &lt;~&gt; (R $-&gt; S × T).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 423
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 424
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply equiv_adjointify.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 425
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact (uncurry (ring_product_corec _ _ _)).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 426
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 427
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros f.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 427
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (ring_product_fst $o f, ring_product_snd $o f).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 428
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 428
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 429
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> hnf; intros f.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 429
+Time: 0.007s">
+<div class="time" style="width: 12.280701754386%"></div>
+<pre>
+    by apply path_hom.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 430
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 430
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [f g].</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 431
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply path_prod.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 432
+Time: 0.005s">
+<div class="time" style="width: 8.7719298245614%"></div>
+<pre>
+  1,2: by apply path_hom.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 433
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 434
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance hasbinaryproducts_ring : HasBinaryProducts Ring.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 436
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 437
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros R S.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 438
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>
+  snapply Build_BinaryProduct.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 439
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 440
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (R × S).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 440
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 441
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact ring_product_fst.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 441
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 442
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact ring_product_snd.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 442
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 443
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fun T =&gt; ring_product_corec T R S).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 443
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 444
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn; reflexivity.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 444
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 445
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn; reflexivity.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 445
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 446
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros T f g p q x.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 446
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (path_prod' (p x) (q x)).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 447
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 448
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Image ring *)
+
+(** The image of a ring homomorphism *)</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 452
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition rng_image {R S : Ring} (f : R $-&gt; S) : Subring S.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 452
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 453
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply (Build_Subring'' (grp_image f)).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 454
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 455
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 455
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros x y p q.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 456
+Time: 0.013s">
+<div class="time" style="width: 22.80701754386%"></div>
+<pre>
+    strip_truncations; apply tr.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 457
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct p as [a p'], q as [b q'].</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 458
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists (a * b).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 459
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (rng_homo_mult _ _ _ @ _).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 460
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>
+    f_ap.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 461
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 462
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 462
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists 1.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 463
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (rng_homo_one f).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 464
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 465
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma rng_homo_image_incl {R S} (f : RingHomomorphism R S)
+  : (rng_image f : Ring) $-&gt; S.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 468
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 469
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_RingHomomorphism.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 470
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact pr1.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 471
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>
+  repeat split.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 472
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 473
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Image of a surjective ring homomorphism *)</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 475
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma rng_image_issurj {R S} (f : RingHomomorphism R S) {issurj : IsSurjection f}
+  : (rng_image f : Ring) ≅ S.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 476
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 477
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_RingIsomorphism.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 478
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact (rng_homo_image_incl f).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 479
+Time: 0.015s">
+<div class="time" style="width: 26.315789473684%"></div>
+<pre>
+  exact _.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 480
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 481
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> 
+
+(** ** Opposite Ring *)
+
+(** Given a ring [R] we can reverse the order of the multiplication to get another ring [R^op]. *)</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 485
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition rng_op : Ring -&gt; Ring.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 485
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 486
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (** Let's carefully pull apart the ring structure and put it back together. Unfortunately, our definition of ring has some redundant data such as multiple hset assumptions, due to the mixing of algebraic structures. This isn't a problem in practice, but it does mean using typeclass inference here will pick up the wrong instance, therefore we carefully put it back together. See test/Algebra/Rings/Ring.v for a test checking this operation is definitionally involutive. *)
+ </pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 488
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>intros [R mult one
+    [is_abgroup [[monoid_ishset mult_assoc] li ri] ld rd]
+    mult_assoc_opp].</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 490
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_Ring'.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 491
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  4: split.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 492
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  5: split.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 493
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  5: split.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 494
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 495
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact R.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 495
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 496
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fun x y =&gt; mult y x).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 496
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 497
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact one.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 497
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 498
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact is_abgroup.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 498
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 499
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact monoid_ishset.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 499
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 500
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact mult_assoc_opp.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 500
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 501
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact ri.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 501
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 502
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact li.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 502
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 503
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fun x y z =&gt; rd y z x).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 503
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 504
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fun x y z =&gt; ld z x y).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 504
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 505
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact mult_assoc.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 505
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 506
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The opposite ring is a functor. *)</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 508
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance is0functor_rng_op : Is0Functor rng_op.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 508
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 509
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_Is0Functor.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 510
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros R S f.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 511
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_RingHomomorphism'.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 512
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 513
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact f.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 513
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 514
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 514
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 515
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fun x y =&gt; rng_homo_mult f y x).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 515
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 516
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (rng_homo_one f).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 516
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 517
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance is1functor_rng_op : Is1Functor rng_op.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 519
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 520
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>
+  snapply Build_Is1Functor.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 521
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 522
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros R S f g p.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 522
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact p.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 523
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 524
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros R; cbn; reflexivity.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 524
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 525
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros R S T f g; cbn; reflexivity.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 525
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 526
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Powers *)
+
+(** Powers of ring elements *)</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 530
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition rng_power {R : Ring} (x : R) (n : nat) : R := nat_iter n (x *.) ring_one.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 530
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Power laws *)</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 532
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma rng_power_mult_law {R : Ring} (x : R) (n m : nat)
+  : (rng_power x n) * (rng_power x m) = rng_power x (n + m).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 533
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 534
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction n as [|n IHn].</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 535
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: apply rng_mult_one_l.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 536
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine ((rng_mult_assoc _ _ _)^ @ _).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 537
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (ap (x *.) IHn).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 538
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 539
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Finite Sums *)
+
+(** Ring multiplication distributes over finite sums on the left. *)</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 543
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition rng_sum_dist_l {R : Ring} (n : nat) (f : forall k, (k &lt; n)%nat -&gt; R) (r : R)
+  : r * ab_sum n f = ab_sum n (fun k Hk =&gt; r * f k Hk).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 544
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 545
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction n as [|n IHn].</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 546
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: apply rng_mult_zero_r.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 547
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>
+  lhs napply rng_dist_l; simpl; f_ap.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 548
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 549
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Ring multiplication distributes over finite sums on the right. *)</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 551
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition rng_sum_dist_r {R : Ring} (n : nat) (f : forall k, (k &lt; n)%nat -&gt; R) (r : R)
+  : ab_sum n f * r = ab_sum n (fun k Hk =&gt; f k Hk * r).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 552
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 553
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction n as [|n IHn].</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 554
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: apply rng_mult_zero_l.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 555
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>
+  lhs napply rng_dist_r; simpl; f_ap.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 556
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 557
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Invertible elements *)
+
+(** An element [x] of a ring [R] is left invertible if there exists an element [y] such that [y * x = 1]. *)</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 561
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>Class IsLeftInvertible (R : Ring) (x : R) := {
+  left_inverse_elem : R;
+  left_inverse_eq : left_inverse_elem * x = 1;
+}.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 564
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments left_inverse_elem {R} x {_}.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 566
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments left_inverse_eq {R} x {_}.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 567
+Time: 0.004s">
+<div class="time" style="width: 7.0175438596491%"></div>
+<pre>
+
+Definition issig_IsLeftInvertible {R : Ring} (x : R)
+  : _ &lt;~&gt; IsLeftInvertible R x
+  := ltac:(issig).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 571
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** An element [x] of a ring [R] is right invertible if there exists an element [y] such that [x * y = 1]. We state this as a left invertible element of the opposite ring. *)</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 573
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Class IsRightInvertible (R : Ring) (x : R)
+  := isleftinvertible_rng_op :: IsLeftInvertible (rng_op R) x.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 574
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition right_inverse_elem {R} x `{!IsRightInvertible R x} : R
+  := left_inverse_elem (R:=rng_op R) x.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 577
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition right_inverse_eq {R} x `{!IsRightInvertible R x}
+  : x * right_inverse_elem x = 1
+  := left_inverse_eq (R:=rng_op R) x.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 581
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** An element [x] of a ring [R] is invertible if it is both left and right invertible. *)</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 583
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>Class IsInvertible (R : Ring) (x : R) := Build_IsInvertible' {
+  isleftinvertible_isinvertible :: IsLeftInvertible R x;
+  isrightinvertible_isinvertible :: IsRightInvertible R x;
+}.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 586
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We can show an element is invertible by providing an inverse element which is a left and right inverse simultaneously. We will later show that the two inverses of an invertible element must be equal anyway. *)</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 588
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Build_IsInvertible {R : Ring} (x : R)
+  (inv : R) (inv_l : inv * x = 1) (inv_r : x * inv = 1)
+  : IsInvertible R x.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 590
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 591
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  split.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 592
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 593
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by exists inv.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 593
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 594
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> unfold IsRightInvertible.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 594
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by exists (inv : rng_op R).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 595
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 596
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The invertible elements in [R] and [rng_op R] agree, by swapping the proofs of left and right invertibility. *)</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 598
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition isinvertible_rng_op (R : Ring) (x : R) `{!IsInvertible R x}
+  : IsInvertible (rng_op R) x.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 599
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 600
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  split.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 601
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 602
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (isrightinvertible_isinvertible).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 602
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 603
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (isleftinvertible_isinvertible).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 603
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 604
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Uniqueness of inverses *)
+
+(** This general lemma will be used for uniqueness results. *)</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 608
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>Definition path_left_right_inverse {R : Ring} (x x' x'' : R)
+  (p : x' * x = 1) (q : x * x'' = 1)
+  : x' = x''.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 610
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 611
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rhs_V napply rng_mult_one_l.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 612
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite &lt;- p.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 613
+Time: 0.007s">
+<div class="time" style="width: 12.280701754386%"></div>
+<pre> 
+  rewrite &lt;- simple_associativity.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 614
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite q.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 615
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  symmetry.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 616
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply rng_mult_one_r.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 617
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 618
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The left and right inverse of an invertible element are necessarily equal. *)</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 620
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition path_left_inverse_elem_right_inverse_elem
+  {R : Ring} x `{!IsInvertible R x}
+  : left_inverse_elem x = right_inverse_elem x.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 622
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 623
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  napply (path_left_right_inverse x).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 624
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 625
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply left_inverse_eq.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 625
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 626
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply right_inverse_eq.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 626
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 627
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** It is therefore well-defined to talk about the inverse of an invertible element. *)</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 629
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition inverse_elem {R : Ring} (x : R) `{IsInvertible R x} : R
+  := left_inverse_elem x.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 630
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Left cancellation for an invertible element. *)</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 632
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition rng_inv_l {R : Ring} (x : R) `{IsInvertible R x}
+  : inverse_elem x * x = 1.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 633
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 634
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply left_inverse_eq.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 635
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 636
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Right cancellation for an invertible element. *)</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 638
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition rng_inv_r {R : Ring} (x : R) `{IsInvertible R x}
+  : x * inverse_elem x = 1.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 639
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 640
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rhs_V exact (right_inverse_eq x).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 641
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  f_ap.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 642
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply path_left_inverse_elem_right_inverse_elem.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 643
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 644
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Equal elements have equal inverses.  Note that we don't require that the proofs of invertibility are equal (over [p]).  It follows that the inverse of an invertible element [x] depends only on [x]. *)</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 646
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition isinvertible_unique {R : Ring} (x y : R) `{IsInvertible R x} `{IsInvertible R y} (p : x = y)
+  : inverse_elem x = inverse_elem y.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 647
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 648
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct p.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 649
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply (path_left_right_inverse x).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 650
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 651
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply rng_inv_l.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 651
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 652
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply rng_inv_r.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 652
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 653
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We can show that being invertible is equivalent to having an inverse element that is simultaneously a left and right inverse. *)</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 655
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition equiv_isinvertible_left_right_inverse {R : Ring} (x : R)
+  : {inv : R &amp; prod (inv * x = 1) (x * inv = 1)} &lt;~&gt; IsInvertible R x.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 656
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 657
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  equiv_via { i : IsInvertible R x &amp; right_inverse_elem x = left_inverse_elem x }.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 658
+Time: 0.024s">
+<div class="time" style="width: 42.105263157895%"></div>
+<pre>
+  1: make_equiv_contr_basedpaths.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 659
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply equiv_sigma_contr; intro i.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 660
+Time: 0.007s">
+<div class="time" style="width: 12.280701754386%"></div>
+<pre>
+  rapply contr_inhabited_hprop.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 661
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  symmetry; apply path_left_inverse_elem_right_inverse_elem.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 662
+Time: 0.011s">
+<div class="time" style="width: 19.298245614035%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 663
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Being invertible is a proposition. *)</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 665
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance ishprop_isinvertible {R x} : IsHProp (IsInvertible R x).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 665
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 666
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  napply (istrunc_equiv_istrunc _ (equiv_isinvertible_left_right_inverse x)).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 667
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>
+  snapply hprop_allpath; intros [y [p1 p2]] [z [q1 q2]].</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 668
+Time: 0.02s">
+<div class="time" style="width: 35.087719298246%"></div>
+<pre>
+  rapply path_sigma_hprop; cbn.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 669
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (path_left_right_inverse x y z p1 q2).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 670
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 671
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Closure of invertible elements under multiplication *)
+
+(** Left invertible elements are closed under multiplication. *)</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 675
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isleftinvertible_mult {R : Ring} (x y : R)
+  : IsLeftInvertible R x -&gt; IsLeftInvertible R y -&gt; IsLeftInvertible R (x * y).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 676
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 677
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [x' p] [y' q].</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 678
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exists (y' * x').</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 679
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rhs_V exact q.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 680
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lhs napply rng_mult_assoc.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 681
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>
+  f_ap.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 682
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rhs_V napply rng_mult_one_r.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 683
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lhs_V napply rng_mult_assoc.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 684
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  f_ap.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 685
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 686
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Right invertible elements are closed under multiplication. *)</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 688
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isrightinvertible_mult {R : Ring} (x y : R)
+  : IsRightInvertible R x -&gt; IsRightInvertible R y -&gt; IsRightInvertible R (x * y).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 689
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 690
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  change (x * y) with (ring_mult (R:=rng_op R) y x).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 691
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold IsRightInvertible.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 692
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact _.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 693
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 694
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Invertible elements are closed under multiplication. *)</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 696
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>Instance isinvertible_mult {R : Ring} (x y : R)
+  : IsInvertible R x -&gt; IsInvertible R y -&gt; IsInvertible R (x * y)
+  := {}.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 698
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Left invertible elements are closed under negation. *)</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 700
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isleftinvertible_neg {R : Ring} (x : R)
+  : IsLeftInvertible R x -&gt; IsLeftInvertible R (-x).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 701
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 702
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros H.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 703
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exists (- left_inverse_elem x).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 704
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lhs napply rng_mult_negate_negate.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 705
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply left_inverse_eq.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 706
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 707
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Right invertible elements are closed under negation. *)</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 709
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isrightinvertible_neg {R : Ring} (x : R)
+  : IsRightInvertible R x -&gt; IsRightInvertible R (-x).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 710
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 711
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros H.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 712
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rapply isleftinvertible_neg.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 713
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 714
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Invertible elements are closed under negation. *)</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 716
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isinvertible_neg {R : Ring} (x : R)
+  : IsInvertible R x -&gt; IsInvertible R (-x)
+  := {}.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 718
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Inverses of left invertible elements are themselves right invertible. *)</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 720
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isrightinvertible_left_inverse_elem {R : Ring} (x : R)
+  `{IsLeftInvertible R x}
+  : IsRightInvertible R (left_inverse_elem x).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 722
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 723
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exists (x : rng_op R).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 724
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (left_inverse_eq x).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 725
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 726
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Inverses of right invertible elements are themselves left invertible. *)</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 728
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isleftinvertible_right_inverse_elem {R : Ring} (x : R)
+  `{IsRightInvertible R x}
+  : IsLeftInvertible R (right_inverse_elem x).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 730
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 731
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exists x.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 732
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (right_inverse_eq x).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 733
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 734
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Inverses of invertible elements are themselves invertible.  We take both inverses of [inverse_elem x] to be [x]. *)</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 736
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isinvertible_inverse_elem {R : Ring} (x : R)
+  `{IsInvertible R x}
+  : IsInvertible R (inverse_elem x).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 738
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 739
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  split.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 740
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 741
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists x; apply rng_inv_r.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 741
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 742
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply isrightinvertible_left_inverse_elem.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 742
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 743
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Since [inverse_elem (inverse_elem x) = x], we get the following equivalence. *)</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 745
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition equiv_path_inverse_elem {R : Ring} {x y : R}
+  `{IsInvertible R x, IsInvertible R y}
+  : x = y &lt;~&gt; inverse_elem x = inverse_elem y.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 747
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 748
+Time: 0.012s">
+<div class="time" style="width: 21.052631578947%"></div>
+<pre>
+  srapply equiv_iff_hprop.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 749
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 750
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (isinvertible_unique x y).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 750
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 751
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (isinvertible_unique (inverse_elem x) (inverse_elem y)).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 751
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 752
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [1] is always invertible, and by the above [-1]. *)</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 754
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isinvertible_one {R} : IsInvertible R 1.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 754
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 755
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_IsInvertible.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 756
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 757
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact one.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 757
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 758
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply rng_mult_one_l.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 758
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 759
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply rng_mult_one_l.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 759
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 760
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Ring homomorphisms preserve invertible elements. *)</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 762
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isinvertible_rng_homo {R S} (f : R $-&gt; S)
+  : forall x, IsInvertible R x -&gt; IsInvertible S (f x).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 763
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 764
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x H.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 765
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_IsInvertible.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 766
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact (f (inverse_elem x)).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 767
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>
+  1,2: lhs_V napply rng_homo_mult.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 768
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1,2: rhs_V napply (rng_homo_one f).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 769
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1,2: napply (ap f).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 770
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 771
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (rng_inv_l x).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 771
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 772
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (rng_inv_r x).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 772
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 773
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Group of units *)
+
+(** Invertible elements are typically called "units" in ring theory and the collection of units forms a group under the ring multiplication. *)</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 777
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition rng_unit_group (R : Ring) : Group.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 777
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 778
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (** TODO: Use a generalised version of [Build_Subgroup] that works for subgroups of monoids. *)
+ </pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 780
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>snapply Build_Group.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 780
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 781
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact {x : R &amp; IsInvertible R x}.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 781
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 782
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [x p] [y q].</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 782
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists (x * y).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 783
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact _.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 784
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 785
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists 1.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 785
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact _.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 786
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 787
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [x p].</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 787
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists (inverse_elem x).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 788
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact _.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 789
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 790
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre> repeat split.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 790
+Time: 0.01s">
+<div class="time" style="width: 17.543859649123%"></div>
+<pre>
+    1: exact _.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 791
+Time: 0.006s">
+<div class="time" style="width: 10.526315789474%"></div>
+<pre>
+    1-5: hnf; intros; apply path_sigma_hprop.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 792
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 793
+Time: 0.004s">
+<div class="time" style="width: 7.0175438596491%"></div>
+<pre> rapply simple_associativity.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 793
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 794
+Time: 0.003s">
+<div class="time" style="width: 5.2631578947368%"></div>
+<pre> rapply left_identity.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 794
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 795
+Time: 0.003s">
+<div class="time" style="width: 5.2631578947368%"></div>
+<pre> rapply right_identity.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 795
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 796
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply rng_inv_l.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 796
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 797
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply rng_inv_r.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 797
+Time: 0.005s">
+<div class="time" style="width: 8.7719298245614%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 798
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Multiplication by an invertible element is an equivalence *)
+
+</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 801
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isequiv_rng_inv_mult_l {R : Ring} {x : R}
+  `{IsInvertible R x}
+  : IsEquiv (x *.).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 803
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 804
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply isequiv_adjointify.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 805
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact (inverse_elem x *.).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 806
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1,2: intros y.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 807
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>
+  1,2: lhs napply rng_mult_assoc.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 808
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1,2: rhs_V napply rng_mult_one_l.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 809
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1,2: snapply (ap (.* y)).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 810
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 811
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> napply rng_inv_r.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 811
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 812
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> napply rng_inv_l.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 812
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 813
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** This can be proved by combining [isequiv_rng_inv_mult_l (R:=rng_op R)] with [isinvertible_rng_op], but then the inverse map is given by multiplying by [right_inverse_elem x] not [inverse_elem x], which complicates calculations. *)</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 815
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isequiv_rng_inv_mult_r {R : Ring} {x : R}
+  `{IsInvertible R x}
+  : IsEquiv (.* x).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 817
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 818
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply isequiv_adjointify.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 819
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact (.* inverse_elem x).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 820
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1,2: intros y.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 821
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>
+  1,2: lhs_V napply rng_mult_assoc.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 822
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1,2: rhs_V napply rng_mult_one_r.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 823
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1,2: snapply (ap (y *.)).</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 824
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 825
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> napply rng_inv_l.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 825
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 826
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> napply rng_inv_r.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 826
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 827
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Invertible element movement lemmas *)
+
+(** These cannot be proven using the corresponding group laws in the group of units since not all elements involved are invertible. *)
+
+</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 832
+Time: 0.003s">
+<div class="time" style="width: 5.2631578947368%"></div>
+<pre>Definition rng_inv_moveL_Vr {R : Ring} {x y z : R} `{IsInvertible R y}
+  : y * x = z &lt;~&gt; x = inverse_elem y * z
+  := equiv_moveL_equiv_V (f := (y *.)) z x.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 834
+Time: 0.002s">
+<div class="time" style="width: 3.5087719298246%"></div>
+<pre>
+
+Definition rng_inv_moveL_rV {R : Ring} {x y z : R} `{IsInvertible R y}
+  : x * y = z &lt;~&gt; x = z * inverse_elem y
+  := equiv_moveL_equiv_V (f := (.* y)) z x.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 838
+Time: 0.002s">
+<div class="time" style="width: 3.5087719298246%"></div>
+<pre>
+
+Definition rng_inv_moveR_Vr {R : Ring} {x y z : R} `{IsInvertible R y}
+  : x = y * z &lt;~&gt; inverse_elem y * x = z
+  := equiv_moveR_equiv_V (f := (y *.)) x z.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 842
+Time: 0.002s">
+<div class="time" style="width: 3.5087719298246%"></div>
+<pre>
+
+Definition rng_inv_moveR_rV {R : Ring} {x y z : R} `{IsInvertible R y}
+  : x = z * y &lt;~&gt; x * inverse_elem y = z
+  := equiv_moveR_equiv_V (f := (.* y)) x z.</pre>
+</div>
+<div class="code" title="File: Ring.v
+Line: 847
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** TODO: The group of units construction is a functor from [Ring -&gt; Group] and is right adjoint to the group ring construction. *)
+
+</pre>
+</div>
+</body>
+</html>
+

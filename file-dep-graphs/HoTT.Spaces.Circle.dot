@@ -1,0 +1,62 @@
+digraph HoTT_Spaces_Circle {
+  graph [ratio=0.5]
+  node [style=filled]
+Circle_pmap_from_circle_loops [label="pmap_from_circle_loops", URL=<Circle.html#pmap_from_circle_loops>, peripheries=3, fillcolor="#F070D1"] ;
+Circle_equiv_Circle_rec [label="equiv_Circle_rec", URL=<Circle.html#equiv_Circle_rec>, fillcolor="#F070D1"] ;
+Circle_isequiv_Circle_rec_uncurried [label="isequiv_Circle_rec_uncurried", URL=<Circle.html#isequiv_Circle_rec_uncurried>, fillcolor="#F070D1"] ;
+Circle_Circle_rec_uncurried [label="Circle_rec_uncurried", URL=<Circle.html#Circle_rec_uncurried>, fillcolor="#F070D1"] ;
+Circle_Circle_action_is_iter [label="Circle_action_is_iter", URL=<Circle.html#Circle_action_is_iter>, peripheries=3, fillcolor="#F070D1"] ;
+Circle_istrunc_Circle [label="istrunc_Circle", URL=<Circle.html#istrunc_Circle>, peripheries=3, fillcolor="#F070D1"] ;
+Circle_isconnected_Circle [label="isconnected_Circle", URL=<Circle.html#isconnected_Circle>, fillcolor="#F070D1"] ;
+Circle_equiv_loopCircle_int [label="equiv_loopCircle_int", URL=<Circle.html#equiv_loopCircle_int>, fillcolor="#F070D1"] ;
+Circle_Circle_encode_isequiv [label="Circle_encode_isequiv", URL=<Circle.html#Circle_encode_isequiv>, fillcolor="#F070D1"] ;
+Circle_Circle_encode_loopexp [label="Circle_encode_loopexp", URL=<Circle.html#Circle_encode_loopexp>, fillcolor="#F070D1"] ;
+Circle_Circle_decode [label="Circle_decode", URL=<Circle.html#Circle_decode>, fillcolor="#F070D1"] ;
+Circle_Circle_encode [label="Circle_encode", URL=<Circle.html#Circle_encode>, fillcolor="#F070D1"] ;
+Circle_transport_Circle_code_loopV [label="transport_Circle_code_loopV", URL=<Circle.html#transport_Circle_code_loopV>, fillcolor="#F070D1"] ;
+Circle_transport_Circle_code_loop [label="transport_Circle_code_loop", URL=<Circle.html#transport_Circle_code_loop>, fillcolor="#F070D1"] ;
+Circle_Circle_code [label="Circle_code", URL=<Circle.html#Circle_code>, fillcolor="#F070D1"] ;
+Circle_pCircle [label="pCircle", URL=<Circle.html#pCircle>, fillcolor="#F070D1"] ;
+Circle_ispointed_Circle [label="ispointed_Circle", URL=<Circle.html#ispointed_Circle>, peripheries=3, fillcolor="#F070D1"] ;
+Circle_Circle_rec_beta_loop [label="Circle_rec_beta_loop", URL=<Circle.html#Circle_rec_beta_loop>, fillcolor="#F070D1"] ;
+Circle_Circle_rec [label="Circle_rec", URL=<Circle.html#Circle_rec>, fillcolor="#F070D1"] ;
+Circle_Circle_ind_beta_loop [label="Circle_ind_beta_loop", URL=<Circle.html#Circle_ind_beta_loop>, fillcolor="#F070D1"] ;
+Circle_Circle_ind [label="Circle_ind", URL=<Circle.html#Circle_ind>, fillcolor="#F070D1"] ;
+Circle_loop [label="loop", URL=<Circle.html#loop>, fillcolor="#F070D1"] ;
+Circle_base [label="base", URL=<Circle.html#base>, fillcolor="#F070D1"] ;
+Circle_Circle [label="Circle", URL=<Circle.html#Circle>, fillcolor="#F070D1"] ;
+  Circle_pmap_from_circle_loops -> Circle_equiv_Circle_rec [] ;
+  Circle_pmap_from_circle_loops -> Circle_pCircle [] ;
+  Circle_equiv_Circle_rec -> Circle_isequiv_Circle_rec_uncurried [] ;
+  Circle_isequiv_Circle_rec_uncurried -> Circle_Circle_rec_uncurried [] ;
+  Circle_isequiv_Circle_rec_uncurried -> Circle_Circle_rec_beta_loop [] ;
+  Circle_Circle_rec_uncurried -> Circle_Circle_rec [] ;
+  Circle_Circle_action_is_iter -> Circle_equiv_loopCircle_int [] ;
+  Circle_istrunc_Circle -> Circle_isconnected_Circle [] ;
+  Circle_istrunc_Circle -> Circle_equiv_loopCircle_int [] ;
+  Circle_isconnected_Circle -> Circle_Circle_ind [] ;
+  Circle_equiv_loopCircle_int -> Circle_Circle_encode_isequiv [] ;
+  Circle_Circle_encode_isequiv -> Circle_Circle_encode_loopexp [] ;
+  Circle_Circle_encode_isequiv -> Circle_Circle_decode [] ;
+  Circle_Circle_encode_loopexp -> Circle_Circle_encode [] ;
+  Circle_Circle_encode_loopexp -> Circle_transport_Circle_code_loopV [] ;
+  Circle_Circle_encode_loopexp -> Circle_transport_Circle_code_loop [] ;
+  Circle_Circle_decode -> Circle_transport_Circle_code_loopV [] ;
+  Circle_Circle_encode -> Circle_Circle_code [] ;
+  Circle_transport_Circle_code_loopV -> Circle_Circle_code [] ;
+  Circle_transport_Circle_code_loopV -> Circle_Circle_rec_beta_loop [] ;
+  Circle_transport_Circle_code_loop -> Circle_Circle_code [] ;
+  Circle_transport_Circle_code_loop -> Circle_Circle_rec_beta_loop [] ;
+  Circle_Circle_code -> Circle_Circle_rec [] ;
+  Circle_pCircle -> Circle_base [] ;
+  Circle_ispointed_Circle -> Circle_base [] ;
+  Circle_Circle_rec_beta_loop -> Circle_Circle_rec [] ;
+  Circle_Circle_rec_beta_loop -> Circle_Circle_ind_beta_loop [] ;
+  Circle_Circle_rec -> Circle_Circle_ind [] ;
+  Circle_Circle_ind_beta_loop -> Circle_Circle_ind [] ;
+  Circle_Circle_ind -> Circle_loop [] ;
+  Circle_loop -> Circle_base [] ;
+  Circle_base -> Circle_Circle [] ;
+subgraph cluster_Circle { label="Circle"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Circle_Circle; Circle_base; Circle_loop; Circle_Circle_ind; Circle_Circle_ind_beta_loop; Circle_Circle_rec; Circle_Circle_rec_beta_loop; Circle_ispointed_Circle; Circle_pCircle; Circle_Circle_code; Circle_transport_Circle_code_loop; Circle_transport_Circle_code_loopV; Circle_Circle_encode; Circle_Circle_decode; Circle_Circle_encode_loopexp; Circle_Circle_encode_isequiv; Circle_equiv_loopCircle_int; Circle_isconnected_Circle; Circle_istrunc_Circle; Circle_Circle_action_is_iter; Circle_Circle_rec_uncurried; Circle_isequiv_Circle_rec_uncurried; Circle_equiv_Circle_rec; Circle_pmap_from_circle_loops; };
+} /* END */

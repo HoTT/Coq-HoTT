@@ -1,0 +1,2508 @@
+<html>
+<head>
+<title>DisplayedEquiv.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for DisplayedEquiv.v</h1>
+
+<div class="code" title="File: DisplayedEquiv.v
+Line: 1
+Time: 0.02s">
+<div class="time" style="width: 37.037037037037%"></div>
+<pre>Require Import Basics.Overture.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 1
+Time: 0.001s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+Require Import Basics.Tactics.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 2
+Time: 0.003s">
+<div class="time" style="width: 5.5555555555556%"></div>
+<pre>
+Require Import Basics.Equivalences.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 3
+Time: 0.004s">
+<div class="time" style="width: 7.4074074074074%"></div>
+<pre>
+Require Import Types.Sigma.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 4
+Time: 0.002s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+Require Import WildCat.Core.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 5
+Time: 0.006s">
+<div class="time" style="width: 11.111111111111%"></div>
+<pre>
+Require Import WildCat.Displayed.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import WildCat.Equiv.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Equivalences in displayed wild categories *)</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 9
+Time: 0.054s">
+<div class="time" style="width: 100%"></div>
+<pre>Class DHasEquivs {A : Type} `{HasEquivs A}
+  (D : A -&gt; Type) `{!IsDGraph D, !IsD2Graph D, !IsD01Cat D, !IsD1Cat D} :=
+{
+  DCatEquiv : forall {a b : A}, (a $&lt;~&gt; b) -&gt; D a -&gt; D b -&gt; Type;
+  DCatIsEquiv : forall {a b : A} {f : a $-&gt; b} {fe : CatIsEquiv f} {a'} {b'},
+    DHom f a' b' -&gt; Type;
+  dcate_fun : forall {a b : A} {f : a $&lt;~&gt; b} {a'} {b'},
+    DCatEquiv f a' b' -&gt; DHom f a' b';
+  dcate_isequiv : forall {a b : A} {f : a $&lt;~&gt; b} {a'} {b'}
+    (f' : DCatEquiv f a' b'), DCatIsEquiv (dcate_fun f');
+  dcate_buildequiv : forall {a b : A} {f : a $-&gt; b} `{!CatIsEquiv f} {a'} {b'}
+    (f' : DHom f a' b') {fe' : DCatIsEquiv f'},
+    DCatEquiv (Build_CatEquiv f) a' b';
+  dcate_buildequiv_fun : forall {a b : A} {f : a $-&gt; b} `{!CatIsEquiv f}
+    {a'} {b'} (f' : DHom f a' b') {fe' : DCatIsEquiv f'},
+    DGpdHom (cate_buildequiv_fun f)
+    (dcate_fun (dcate_buildequiv f' (fe':=fe'))) f';
+  dcate_inv' : forall {a b : A} {f : a $&lt;~&gt; b} {a'} {b'} (f' : DCatEquiv f a' b'),
+    DHom (cate_inv' _ _ f) b' a';
+  dcate_issect' : forall {a b : A} {f : a $&lt;~&gt; b} {a'} {b'} (f' : DCatEquiv f a' b'),
+    DGpdHom (cate_issect' _ _ f) (dcate_inv' f' $o' dcate_fun f') (DId a');
+  dcate_isretr' : forall {a b : A} {f : a $&lt;~&gt; b} {a'} {b'} (f' : DCatEquiv f a' b'),
+    DGpdHom (cate_isretr' _ _ f) (dcate_fun f' $o' dcate_inv' f') (DId b');
+  dcatie_adjointify : forall {a b : A} {f : a $-&gt; b} {g : b $-&gt; a}
+    {r : f $o g $== Id b} {s : g $o f $== Id a} {a'} {b'} (f' : DHom f a' b')
+    (g' : DHom g b' a') (r' : DGpdHom r (f' $o' g') (DId b'))
+    (s' : DGpdHom s (g' $o' f') (DId a')),
+    @DCatIsEquiv _ _ _ (catie_adjointify f g r s) _ _ f';
+}.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Being an equivalence is a typeclass. *)</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Existing Class DCatIsEquiv.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Existing Instance dcate_isequiv.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Coercion dcate_fun : DCatEquiv &gt;-&gt; DHom.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 42
+Time: 0.004s">
+<div class="time" style="width: 7.4074074074074%"></div>
+<pre>
+
+Definition Build_DCatEquiv {A} {D : A -&gt; Type} `{DHasEquivs A D}
+  {a b : A} {f : a $-&gt; b} `{!CatIsEquiv f} {a' : D a} {b' : D b}
+  (f' : DHom f a' b') {fe' : DCatIsEquiv f'}
+  : DCatEquiv (Build_CatEquiv f) a' b'
+  := dcate_buildequiv f' (fe':=fe').</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Construct [DCatEquiv] via adjointify. *)</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 50
+Time: 0.012s">
+<div class="time" style="width: 22.222222222222%"></div>
+<pre>Definition dcate_adjointify {A} {D : A -&gt; Type} `{DHasEquivs A D}
+  {a b : A} {f : a $-&gt; b} {g : b $-&gt; a}
+  {r : f $o g $== Id b} {s : g $o f $== Id a} {a'} {b'}
+  (f' : DHom f a' b') (g' : DHom g b' a') (r' : DHom r (f' $o' g') (DId b'))
+  (s' : DHom s (g' $o' f') (DId a'))
+  : DCatEquiv (cate_adjointify f g r s) a' b'
+  := Build_DCatEquiv f' (fe':=dcatie_adjointify f' g' r' s').</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Construct the entire inverse equivalence *)</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 58
+Time: 0.002s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>Definition dcate_inv {A} {D : A -&gt; Type} `{DHasEquivs A D}
+  {a b : A} {f : a $&lt;~&gt; b} {a' : D a} {b' : D b} (f' : DCatEquiv f a' b')
+  : DCatEquiv (f^-1$) b' a'.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 61
+Time: 0.002s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+  snapply dcate_adjointify.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (dcate_inv' f').</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact f'.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (dcate_issect' f').</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (dcate_isretr' f').</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 66
+Time: 0.001s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation "f ^-1$'" := (dcate_inv f).</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Witness that [f'] is a section of [dcate_inv f'] in addition to [dcate_inv' f']. *)</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 71
+Time: 0.006s">
+<div class="time" style="width: 11.111111111111%"></div>
+<pre>Definition dcate_issect {A} {D : A -&gt; Type} `{DHasEquivs A D}
+  {a b : A} {f : a $&lt;~&gt; b} {a' : D a} {b' : D b} (f' : DCatEquiv f a' b')
+  : DGpdHom (cate_issect f) (dcate_fun f'^-1$' $o' f') (DId a').</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_ $@' dcate_issect' f').</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_ $@R' (dcate_fun f')).</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 76
+Time: 0.001s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+  apply dcate_buildequiv_fun.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 77
+Time: 0.002s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Witness that [f'] is a retraction of [dcate_inv f'] in addition to [dcate_inv' f']. *)</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 80
+Time: 0.006s">
+<div class="time" style="width: 11.111111111111%"></div>
+<pre>Definition dcate_isretr {A} {D : A -&gt; Type} `{DHasEquivs A D}
+  {a b : A} {f : a $&lt;~&gt; b} {a' : D a} {b' : D b} (f' : DCatEquiv f a' b')
+  : DGpdHom (cate_isretr f) (dcate_fun f' $o' f'^-1$') (DId b').</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 83
+Time: 0.001s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+  refine (_ $@' dcate_isretr' f').</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 84
+Time: 0.001s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+  refine (dcate_fun f' $@L' _).</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 85
+Time: 0.002s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+  apply dcate_buildequiv_fun.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 86
+Time: 0.003s">
+<div class="time" style="width: 5.5555555555556%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** If [g'] is a section of an equivalence, then it is the inverse. *)</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 89
+Time: 0.024s">
+<div class="time" style="width: 44.444444444444%"></div>
+<pre>Definition dcate_inverse_sect {A} {D : A -&gt; Type} `{DHasEquivs A D}
+  {a b : A} {f : a $&lt;~&gt; b} {g : b $-&gt; a} {p : f $o g $== Id b}
+  {a' : D a} {b' : D b} (f' : DCatEquiv f a' b') (g' : DHom g b' a')
+  (p' : DGpdHom p (dcate_fun f' $o' g') (DId b'))
+  : DGpdHom (cate_inverse_sect f g p) (dcate_fun f'^-1$') g'.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 94
+Time: 0.002s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+  refine ((dcat_idr _)^$' $@' _).</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 95
+Time: 0.002s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+  refine ((_ $@L' p'^$') $@' _).</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact isd0gpd_hom.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 97
+Time: 0.001s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+  refine (dcat_assoc_opp _ _ _ $@' _).</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 98
+Time: 0.001s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+  refine (dcate_issect f' $@R' _ $@' _).</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply dcat_idl.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 100
+Time: 0.005s">
+<div class="time" style="width: 9.2592592592593%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** If [g'] is a retraction of an equivalence, then it is the inverse. *)</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 103
+Time: 0.009s">
+<div class="time" style="width: 16.666666666667%"></div>
+<pre>Definition dcate_inverse_retr {A} {D : A -&gt; Type} `{DHasEquivs A D}
+  {a b : A} {f : a $&lt;~&gt; b} {g : b $-&gt; a} {p : g $o f $== Id a}
+  {a' : D a} {b' : D b} (f' : DCatEquiv f a' b') (g' : DHom g b' a')
+  (p' : DGpdHom p (g' $o' f') (DId a'))
+  : DGpdHom (cate_inverse_retr f g p) (dcate_fun f'^-1$') g'.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 108
+Time: 0.003s">
+<div class="time" style="width: 5.5555555555556%"></div>
+<pre>
+  refine ((dcat_idl _)^$' $@' _).</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 109
+Time: 0.002s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+  refine ((p'^$' $@R' _) $@' _).</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact isd0gpd_hom.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 111
+Time: 0.001s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+  refine (dcat_assoc _ _ _ $@' _).</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 112
+Time: 0.001s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+  refine (_ $@L' dcate_isretr f' $@' _).</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply dcat_idr.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 114
+Time: 0.014s">
+<div class="time" style="width: 25.925925925926%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** It follows that the inverse of the equivalence you get by adjointification is homotopic to the inverse [g'] provided. *)</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 117
+Time: 0.013s">
+<div class="time" style="width: 24.074074074074%"></div>
+<pre>Definition dcate_inv_adjointify {A} {D : A -&gt; Type} `{DHasEquivs A D}
+  {a b : A} {f : a $-&gt; b} {g : b $-&gt; a} {r : f $o g $== Id b}
+  {s : g $o f $== Id a} {a' : D a} {b' : D b} (f' : DHom f a' b')
+  (g' : DHom g b' a') (r' : DGpdHom r (f' $o' g') (DId b'))
+  (s' : DGpdHom s (g' $o' f') (DId a'))
+  : DGpdHom (cate_inv_adjointify f g r s)
+    (dcate_fun (dcate_adjointify f' g' r' s')^-1$') g'.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 124
+Time: 0.001s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+  apply dcate_inverse_sect.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 125
+Time: 0.002s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+  exact ((dcate_buildequiv_fun f' $@R' _) $@' r').</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 126
+Time: 0.003s">
+<div class="time" style="width: 5.5555555555556%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** If the base category has equivalences and the displayed category has displayed equivalences, then the total category has equivalences. *)</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 129
+Time: 0.002s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>Instance hasequivs_total {A} (D : A -&gt; Type) `{DHasEquivs A D}
+  : HasEquivs (sig D).</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 130
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 131
+Time: 0.002s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+  snapply Build_HasEquivs.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1:{</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [a a'] [b b'].</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact {f : a $&lt;~&gt; b &amp; DCatEquiv f a' b'}.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 133
+Time: 0.003s">
+<div class="time" style="width: 5.5555555555556%"></div>
+<pre>
+  all: intros aa' bb' [f f'].</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 135
+Time: 0.001s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre> exact {fe : CatIsEquiv f &amp; DCatIsEquiv f'}.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 135
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists f.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact f'.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 137
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (cate_isequiv f; dcate_isequiv f').</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 137
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [fe fe'].</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (Build_CatEquiv f (fe:=fe); Build_DCatEquiv f' (fe':=fe')).</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros ?; exists (cate_buildequiv_fun f).</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (dcate_buildequiv_fun f').</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists (f^-1$).</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (f'^-1$').</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (cate_issect f; dcate_issect f').</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (cate_isretr f; dcate_isretr f').</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 145
+Time: 0.002s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre> intros [g g'] [r r'] [s s'].</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 145
+Time: 0.001s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+    exact (catie_adjointify f g r s; dcatie_adjointify f' g' r' s').</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 146
+Time: 0.008s">
+<div class="time" style="width: 14.814814814815%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 147
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The identity morphism is an equivalence *)</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 149
+Time: 0.006s">
+<div class="time" style="width: 11.111111111111%"></div>
+<pre>Instance dcatie_id {A} {D : A -&gt; Type} `{DHasEquivs A D}
+  {a : A} (a' : D a)
+  : DCatIsEquiv (DId a')
+  := dcatie_adjointify (DId a') (DId a') (dcat_idl (DId a')) (dcat_idr (DId a')).</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 152
+Time: 0.002s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+
+Definition did_cate {A} {D : A -&gt; Type} `{DHasEquivs A D}
+  {a : A} (a' : D a)
+  : DCatEquiv (id_cate a) a' a'
+  := Build_DCatEquiv (DId a').</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 157
+Time: 0.002s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+
+Instance reflexive_dcate {A} {D : A -&gt; Type} `{DHasEquivs A D} {a : A}
+  : Reflexive (DCatEquiv (id_cate a))
+  := did_cate.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Anything homotopic to an equivalence is an equivalence. This should not be an instance. *)</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 163
+Time: 0.006s">
+<div class="time" style="width: 11.111111111111%"></div>
+<pre>Definition dcatie_homotopic {A} {D : A -&gt; Type} `{DHasEquivs A D} {a b : A}
+  {f : a $-&gt; b} `{!CatIsEquiv f} {g : a $-&gt; b} {p : f $== g} {a' : D a}
+  {b' : D b} (f' : DHom f a' b') `{fe' : !DCatIsEquiv f'} {g' : DHom g a' b'}
+  (p' : DGpdHom p f' g')
+  : DCatIsEquiv (fe:=catie_homotopic f p) g'.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 168
+Time: 0.002s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+  snapply dcatie_adjointify.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (Build_DCatEquiv (fe':=fe') f')^-1$'.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 171
+Time: 0.002s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre> refine (p'^$' $@R' _ $@' _).</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: exact isd0gpd_hom.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 172
+Time: 0.003s">
+<div class="time" style="width: 5.5555555555556%"></div>
+<pre>
+    refine ((dcate_buildequiv_fun f')^$' $@R' _ $@' _).</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: exact isd0gpd_hom.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 174
+Time: 0.001s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+    apply dcate_isretr.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 175
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 176
+Time: 0.002s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre> refine (_ $@L' p'^$' $@' _).</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: exact isd0gpd_hom.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 177
+Time: 0.003s">
+<div class="time" style="width: 5.5555555555556%"></div>
+<pre>
+    refine (_ $@L' (dcate_buildequiv_fun f')^$' $@' _).</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: exact isd0gpd_hom.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 179
+Time: 0.001s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+    apply dcate_issect.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 180
+Time: 0.012s">
+<div class="time" style="width: 22.222222222222%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 181
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Equivalences can be composed. *)</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 183
+Time: 0.007s">
+<div class="time" style="width: 12.962962962963%"></div>
+<pre>Instance dcompose_catie {A} {D : A -&gt; Type} `{DHasEquivs A D}
+  {a b c : A} {g : b $&lt;~&gt; c} {f : a $&lt;~&gt; b} {a' : D a} {b' : D b} {c' : D c}
+  (g' : DCatEquiv g b' c') (f' : DCatEquiv f a' b')
+  : DCatIsEquiv (dcate_fun g' $o' f').</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 186
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 187
+Time: 0.002s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+  snapply dcatie_adjointify.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 189
+Time: 0.001s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre> exact (dcate_fun f'^-1$' $o' g'^-1$').</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 189
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 190
+Time: 0.001s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre> refine (dcat_assoc _ _ _ $@' _).</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 190
+Time: 0.002s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+    refine (_ $@L' dcat_assoc_opp _ _ _ $@' _).</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 191
+Time: 0.004s">
+<div class="time" style="width: 7.4074074074074%"></div>
+<pre>
+    refine (_ $@L' (dcate_isretr _ $@R' _) $@' _).</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 192
+Time: 0.002s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+    refine (_ $@L' dcat_idl _ $@' _).</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 193
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply dcate_isretr.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 194
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 195
+Time: 0.002s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre> refine (dcat_assoc_opp _ _ _ $@' _).</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 195
+Time: 0.003s">
+<div class="time" style="width: 5.5555555555556%"></div>
+<pre>
+    refine (dcat_assoc _ _ _ $@R' _ $@' _).</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 196
+Time: 0.005s">
+<div class="time" style="width: 9.2592592592593%"></div>
+<pre>
+    refine (((_ $@L' dcate_issect _) $@R' _) $@' _).</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 197
+Time: 0.013s">
+<div class="time" style="width: 24.074074074074%"></div>
+<pre>
+    refine ((dcat_idr _ $@R' _) $@' _).</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 198
+Time: 0.001s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+    apply dcate_issect.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 199
+Time: 0.031s">
+<div class="time" style="width: 57.407407407407%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 200
+Time: 0.011s">
+<div class="time" style="width: 20.37037037037%"></div>
+<pre>
+
+Instance dcompose_catie' {A} {D : A -&gt; Type} `{DHasEquivs A D}
+  {a b c : A} {g : b $-&gt; c} `{!CatIsEquiv g} {f : a $-&gt; b} `{!CatIsEquiv f}
+  {a' : D a} {b' : D b} {c' : D c}
+  (g' : DHom g b' c') `{ge' : !DCatIsEquiv g'}
+  (f' : DHom f a' b') `{fe' : !DCatIsEquiv f'}
+  : DCatIsEquiv (fe:=compose_catie' g f) (g' $o' f').</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 207
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  pose (ff:=Build_DCatEquiv (fe':=fe') f').</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 209
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  pose (gg:=Build_DCatEquiv (fe':=ge') g').</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 210
+Time: 0.001s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+  nrefine (dcatie_homotopic (fe':=dcompose_catie gg ff) _ _).</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 211
+Time: 0.002s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+  exact (dcate_buildequiv_fun _ $@@' dcate_buildequiv_fun _).</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 212
+Time: 0.002s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 213
+Time: 0.006s">
+<div class="time" style="width: 11.111111111111%"></div>
+<pre>
+
+Definition dcompose_cate {A} {D : A -&gt; Type} `{DHasEquivs A D}
+  {a b c : A} {g : b $&lt;~&gt; c} {f : a $&lt;~&gt; b} {a' : D a} {b' : D b} {c' : D c}
+  (g' : DCatEquiv g b' c') (f' : DCatEquiv f a' b')
+  : DCatEquiv (compose_cate g f) a' c'
+  := Build_DCatEquiv (dcate_fun g' $o' f').</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 219
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation "g $oE' f" := (dcompose_cate g f).</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 221
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Composing equivalences commutes with composing the underlying maps. *)</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 223
+Time: 0.008s">
+<div class="time" style="width: 14.814814814815%"></div>
+<pre>Definition dcompose_cate_fun {A} {D : A -&gt; Type} `{DHasEquivs A D}
+  {a b c : A} {g : b $&lt;~&gt; c} {f : a $&lt;~&gt; b} {a' : D a} {b' : D b} {c' : D c}
+  (g' : DCatEquiv g b' c') (f' : DCatEquiv f a' b')
+  : DGpdHom (compose_cate_fun g f)
+    (dcate_fun (g' $oE' f')) (dcate_fun g' $o' f')
+  := dcate_buildequiv_fun _.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 228
+Time: 0.006s">
+<div class="time" style="width: 11.111111111111%"></div>
+<pre>
+
+Definition dcompose_cate_funinv {A} {D : A -&gt; Type} `{DHasEquivs A D}
+  {a b c : A} {g : b $&lt;~&gt; c} {f : a $&lt;~&gt; b} {a' : D a} {b' : D b} {c' : D c}
+  (g' : DCatEquiv g b' c') (f' : DCatEquiv f a' b')
+  : DGpdHom (compose_cate_funinv g f)
+    (dcate_fun g' $o' f') (dcate_fun (g' $oE' f')).</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 234
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 235
+Time: 0.001s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+  apply dgpd_rev.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 236
+Time: 0.001s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+  apply dcate_buildequiv_fun.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 237
+Time: 0.001s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 238
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The underlying map of the identity equivalence is homotopic to the identity. *)</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 240
+Time: 0.005s">
+<div class="time" style="width: 9.2592592592593%"></div>
+<pre>Definition did_cate_fun {A} {D : A -&gt; Type} `{DHasEquivs A D} {a : A} (a' : D a)
+  : DGpdHom (id_cate_fun a) (dcate_fun (did_cate a')) (DId a')
+  := dcate_buildequiv_fun _.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 242
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Composition of equivalences is associative. *)</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 244
+Time: 0.013s">
+<div class="time" style="width: 24.074074074074%"></div>
+<pre>Definition dcompose_cate_assoc {A} {D : A -&gt; Type} `{DHasEquivs A D}
+  {a b c d : A} {f : a $&lt;~&gt; b} {g : b $&lt;~&gt; c} {h : c $&lt;~&gt; d} {a'} {b'} {c'} {d'}
+  (f' : DCatEquiv f a' b') (g' : DCatEquiv g b' c') (h' : DCatEquiv h c' d')
+  : DGpdHom (compose_cate_assoc f g h) (dcate_fun ((h' $oE' g') $oE' f'))
+    (dcate_fun (h' $oE' (g' $oE' f'))).</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 248
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 249
+Time: 0.004s">
+<div class="time" style="width: 7.4074074074074%"></div>
+<pre>
+  refine (dcompose_cate_fun _ f' $@' _ $@' dcat_assoc (dcate_fun f') g' h'
+          $@' _ $@' dcompose_cate_funinv h' _).</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 251
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 252
+Time: 0.001s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre> exact (dcompose_cate_fun h' g' $@R' _).</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 252
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 253
+Time: 0.001s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre> exact (_ $@L' dcompose_cate_funinv g' f').</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 253
+Time: 0.006s">
+<div class="time" style="width: 11.111111111111%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 254
+Time: 0.005s">
+<div class="time" style="width: 9.2592592592593%"></div>
+<pre>
+
+Definition dcompose_cate_idl {A} {D : A -&gt; Type} `{DHasEquivs A D}
+  {a b : A} {f : a $&lt;~&gt; b}  {a' : D a} {b' : D b} (f' : DCatEquiv f a' b')
+  : DGpdHom (compose_cate_idl f) (dcate_fun (did_cate b' $oE' f'))
+    (dcate_fun f').</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 259
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 260
+Time: 0.002s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+  refine (dcompose_cate_fun _ f' $@' _ $@' dcat_idl (dcate_fun f')).</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 261
+Time: 0.001s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+  exact (dcate_buildequiv_fun _ $@R' _).</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 262
+Time: 0.002s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 263
+Time: 0.005s">
+<div class="time" style="width: 9.2592592592593%"></div>
+<pre>
+
+Definition dcompose_cate_idr {A} {D : A -&gt; Type} `{DHasEquivs A D}
+  {a b : A} {f : a $&lt;~&gt; b} {a' : D a} {b' : D b} (f' : DCatEquiv f a' b')
+  : DGpdHom (compose_cate_idr f) (dcate_fun (f' $oE' did_cate a'))
+    (dcate_fun f').</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 268
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 269
+Time: 0.044s">
+<div class="time" style="width: 81.481481481481%"></div>
+<pre>
+  refine (dcompose_cate_fun f' _ $@' _ $@' dcat_idr (dcate_fun f')).</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 270
+Time: 0.001s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+  exact (_ $@L' dcate_buildequiv_fun _).</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 271
+Time: 0.034s">
+<div class="time" style="width: 62.962962962963%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 272
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Some more convenient equalities for equivalences. The naming scheme is similar to [PathGroupoids.v].*)
+
+</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 275
+Time: 0.018s">
+<div class="time" style="width: 33.333333333333%"></div>
+<pre>Definition dcompose_V_hh {A} {D : A -&gt; Type} `{DHasEquivs A D}
+  {a b c : A} {f : b $&lt;~&gt; c} {g : a $-&gt; b} {a' : D a} {b' : D b} {c' : D c}
+  (f' : DCatEquiv f b' c') (g' : DHom g a' b')
+  : DGpdHom (compose_V_hh f g) (dcate_fun f'^-1$' $o' (dcate_fun f' $o' g')) g'
+  := (dcat_assoc_opp _ _ _) $@' (dcate_issect f' $@R' g') $@' dcat_idl g'.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 279
+Time: 0.02s">
+<div class="time" style="width: 37.037037037037%"></div>
+<pre>
+
+Definition dcompose_h_Vh {A} {D : A -&gt; Type} `{DHasEquivs A D}
+  {a b c : A} {f : c $&lt;~&gt; b} {g : a $-&gt; b} {a' : D a} {b' : D b} {c' : D c}
+  (f' : DCatEquiv f c' b') (g' : DHom g a' b')
+  : DGpdHom (compose_h_Vh f g) (dcate_fun f' $o' (dcate_fun f'^-1$' $o' g')) g'
+  := (dcat_assoc_opp _ _ _) $@' (dcate_isretr f' $@R' g') $@' dcat_idl g'.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 285
+Time: 0.022s">
+<div class="time" style="width: 40.740740740741%"></div>
+<pre>
+
+Definition dcompose_hh_V {A} {D : A -&gt; Type} `{DHasEquivs A D}
+  {a b c : A} {f : b $-&gt; c} {g : a $&lt;~&gt; b} {a' : D a} {b' : D b} {c' : D c}
+  (f' : DHom f b' c') (g' : DCatEquiv g a' b')
+  : DGpdHom (compose_hh_V f g) ((f' $o' g') $o' g'^-1$') f'
+  := dcat_assoc _ _ _ $@' (f' $@L' dcate_isretr g') $@' dcat_idr f'.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 291
+Time: 0.021s">
+<div class="time" style="width: 38.888888888889%"></div>
+<pre>
+
+Definition dcompose_hV_h {A} {D : A -&gt; Type} `{DHasEquivs A D}
+  {a b c : A} {f : b $-&gt; c} {g : b $&lt;~&gt; a} {a' : D a} {b' : D b} {c' : D c}
+  (f' : DHom f b' c') (g' : DCatEquiv g b' a')
+  : DGpdHom (compose_hV_h f g) ((f' $o' g'^-1$') $o' g') f'
+  := dcat_assoc _ _ _ $@' (f' $@L' dcate_issect g') $@' dcat_idr f'.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 297
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Equivalences are both monomorphisms and epimorphisms (but not the converse). *)
+
+</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 300
+Time: 0.002s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>Definition dcate_monic_equiv {A} {D : A -&gt; Type} `{DHasEquivs A D}
+  {a b : A} {e : a $&lt;~&gt; b} {a' : D a} {b' : D b} (e' : DCatEquiv e a' b')
+  : DMonic (mon:=cate_monic_equiv e) (dcate_fun e').</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 302
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 303
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros c f g p c' f' g' p'.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 304
+Time: 0.003s">
+<div class="time" style="width: 5.5555555555556%"></div>
+<pre>
+  refine ((dcompose_V_hh e' _)^$' $@' _ $@' dcompose_V_hh e' _).</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 305
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact isd0gpd_hom.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 306
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (_ $@L' p').</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 307
+Time: 0.003s">
+<div class="time" style="width: 5.5555555555556%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 308
+Time: 0.002s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+
+Definition dcate_epic_equiv {A} {D : A -&gt; Type} `{DHasEquivs A D}
+  {a b : A} {e : a $&lt;~&gt; b} {a' : D a} {b' : D b} (e' : DCatEquiv e a' b')
+  : DEpic (epi:=cate_epic_equiv e) (dcate_fun e').</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 312
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 313
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros c f g p c' f' g' p'.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 314
+Time: 0.005s">
+<div class="time" style="width: 9.2592592592593%"></div>
+<pre>
+  refine ((dcompose_hh_V _ e')^$' $@' _ $@' dcompose_hh_V _ e').</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 315
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact isd0gpd_hom.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 316
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (p' $@R' _).</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 317
+Time: 0.006s">
+<div class="time" style="width: 11.111111111111%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 318
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Some lemmas for moving equivalences around.  Naming based on EquivGroupoids.v. *)
+
+</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 321
+Time: 0.014s">
+<div class="time" style="width: 25.925925925926%"></div>
+<pre>Definition dcate_moveR_eM {A} {D : A -&gt; Type} `{DHasEquivs A D}
+  {a b c : A} {e : b $&lt;~&gt; a} {f : a $-&gt; c} {g : b $-&gt; c}
+  {p : f $== g $o e^-1$} {a' : D a} {b' : D b} {c' : D c}
+  (e' : DCatEquiv e b' a') (f' : DHom f a' c') (g' : DHom g b' c')
+  (p' : DGpdHom p f' (g' $o' e'^-1$'))
+  : DGpdHom (cate_moveR_eM e f g p) (f' $o' e') g'.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 326
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 327
+Time: 0.001s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+  apply (dcate_epic_equiv e'^-1$').</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 328
+Time: 0.001s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+  exact (dcompose_hh_V _ _ $@' p').</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 329
+Time: 0.002s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 330
+Time: 0.009s">
+<div class="time" style="width: 16.666666666667%"></div>
+<pre>
+
+Definition dcate_moveR_Ve {A} {D : A -&gt; Type} `{DHasEquivs A D}
+  {a b c : A} {e : b $&lt;~&gt; c} {f : a $-&gt; c} {g : a $-&gt; b}
+  {p : f $== e $o g} {a' : D a} {b' : D b} {c' : D c}
+  (e' : DCatEquiv e b' c') (f' : DHom f a' c') (g' : DHom g a' b')
+  (p' : DGpdHom p f' (dcate_fun e' $o' g'))
+  : DGpdHom (cate_moveR_Ve e f g p) (dcate_fun e'^-1$' $o' f') g'.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 337
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 338
+Time: 0.001s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+  apply (dcate_monic_equiv e').</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 339
+Time: 0.002s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+  exact (dcompose_h_Vh _ _ $@' p').</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 340
+Time: 0.003s">
+<div class="time" style="width: 5.5555555555556%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 341
+Time: 0.009s">
+<div class="time" style="width: 16.666666666667%"></div>
+<pre>
+
+Definition dcate_moveL_V1 {A} {D : A -&gt; Type} `{DHasEquivs A D}
+  {a b : A} {e : a $&lt;~&gt; b} {f : b $-&gt; a} {p : e $o f $== Id b}
+  {a' : D a} {b' : D b} {e' : DCatEquiv e a' b'}
+  (f' : DHom f b' a') (p' : DGpdHom p (dcate_fun e' $o' f') (DId b'))
+  : DGpdHom (cate_moveL_V1 f p) f' (dcate_fun e'^-1$').</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 347
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 348
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (dcate_monic_equiv e').</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 349
+Time: 0.001s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+  napply (p' $@' (dcate_isretr e')^$').</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 350
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact isd0gpd_hom.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 351
+Time: 0.002s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 352
+Time: 0.009s">
+<div class="time" style="width: 16.666666666667%"></div>
+<pre>
+
+Definition dcate_moveL_1V {A} {D : A -&gt; Type} `{DHasEquivs A D}
+  {a b : A} {e : a $&lt;~&gt; b} {f : b $-&gt; a} {p : f $o e $== Id a}
+  {a' : D a} {b' : D b} {e' : DCatEquiv e a' b'}
+  (f' : DHom f b' a') (p' : DGpdHom p (f' $o' e') (DId a'))
+  : DGpdHom (cate_moveL_1V f p) f' (dcate_fun e'^-1$').</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 358
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 359
+Time: 0.001s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+  apply (dcate_epic_equiv e').</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 360
+Time: 0.001s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+  napply (p' $@' (dcate_issect e')^$').</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 361
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact isd0gpd_hom.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 362
+Time: 0.004s">
+<div class="time" style="width: 7.4074074074074%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 363
+Time: 0.009s">
+<div class="time" style="width: 16.666666666667%"></div>
+<pre>
+
+Definition dcate_moveR_V1 {A} {D : A -&gt; Type} `{DHasEquivs A D}
+  {a b : A} {e : a $&lt;~&gt; b} {f : b $-&gt; a} {p : Id b $== e $o f}
+  {a' : D a} {b' : D b} {e' : DCatEquiv e a' b'}
+  (f' : DHom f b' a') (p' : DGpdHom p (DId b') (dcate_fun e' $o' f'))
+  : DGpdHom (cate_moveR_V1 f p) (dcate_fun e'^-1$') f'.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 369
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 370
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (dcate_monic_equiv e').</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 371
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (dcate_isretr e' $@' p').</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 372
+Time: 0.002s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 373
+Time: 0.01s">
+<div class="time" style="width: 18.518518518519%"></div>
+<pre>
+
+Definition dcate_moveR_1V {A} {D : A -&gt; Type} `{DHasEquivs A D}
+  {a b : A} {e : a $&lt;~&gt; b} {f : b $-&gt; a} {p : Id a $== f $o e}
+  {a' : D a} {b' : D b} {e' : DCatEquiv e a' b'}
+  (f' : DHom f b' a') (p' : DGpdHom p (DId a') (f' $o' e'))
+  : DGpdHom (cate_moveR_1V f p) (dcate_fun e'^-1$') f'.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 379
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 380
+Time: 0.001s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+  apply (dcate_epic_equiv e').</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 381
+Time: 0.001s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+  exact (dcate_issect e' $@' p').</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 382
+Time: 0.003s">
+<div class="time" style="width: 5.5555555555556%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 383
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Lemmas about the underlying map of an equivalence. *)
+
+</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 386
+Time: 0.009s">
+<div class="time" style="width: 16.666666666667%"></div>
+<pre>Definition dcate_inv2 {A} {D : A -&gt; Type} `{DHasEquivs A D}
+  {a b : A} {e f : a $&lt;~&gt; b} {p : cate_fun e $== cate_fun f}
+  {a' : D a} {b' : D b} {e' : DCatEquiv e a' b'} {f' : DCatEquiv f a' b'}
+  (p' : DGpdHom p (dcate_fun e') (dcate_fun f'))
+  : DGpdHom (cate_inv2 p) (dcate_fun e'^-1$') (dcate_fun f'^-1$').</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 390
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 391
+Time: 0.008s">
+<div class="time" style="width: 14.814814814815%"></div>
+<pre>
+  apply dcate_moveL_V1.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 392
+Time: 0.004s">
+<div class="time" style="width: 7.4074074074074%"></div>
+<pre>
+  rapply ((p'^$' $@R' _) $@' dcate_isretr _).</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 393
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact isd0gpd_hom.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 394
+Time: 0.003s">
+<div class="time" style="width: 5.5555555555556%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 395
+Time: 0.007s">
+<div class="time" style="width: 12.962962962963%"></div>
+<pre>
+
+Definition dcate_inv_compose {A} {D : A -&gt; Type} `{DHasEquivs A D}
+  {a b c : A} {e : a $&lt;~&gt; b} {f : b $&lt;~&gt; c} {a' : D a} {b' : D b} {c' : D c}
+  (e' : DCatEquiv e a' b') (f' : DCatEquiv f b' c')
+  : DGpdHom (cate_inv_compose e f)
+    (dcate_fun (f' $oE' e')^-1$') (dcate_fun (e'^-1$' $oE' f'^-1$')).</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 401
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 402
+Time: 0.002s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+  refine (_ $@' (dcompose_cate_fun e'^-1$' f'^-1$')^$').</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 403
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 404
+Time: 0.013s">
+<div class="time" style="width: 24.074074074074%"></div>
+<pre> snapply dcate_inv_adjointify.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 404
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 405
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact isd0gpd_hom.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 405
+Time: 0.048s">
+<div class="time" style="width: 88.888888888889%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 406
+Time: 0.005s">
+<div class="time" style="width: 9.2592592592593%"></div>
+<pre>
+
+Definition dcate_inv_V {A} {D : A -&gt; Type} `{DHasEquivs A D}
+  {a b : A} {e : a $&lt;~&gt; b} {a' : D a} {b' : D b}
+  (e' : DCatEquiv e a' b')
+  : DGpdHom (cate_inv_V e) (dcate_fun (e'^-1$')^-1$') (dcate_fun e').</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 411
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 412
+Time: 0.001s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+  apply dcate_moveR_V1.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 413
+Time: 0.001s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+  apply dgpd_rev.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 414
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply dcate_issect.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 415
+Time: 0.001s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 416
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Any sufficiently coherent displayed functor preserves displayed equivalences. *)</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 418
+Time: 0.017s">
+<div class="time" style="width: 31.481481481481%"></div>
+<pre>Instance diemap {A B : Type}
+  {DA : A -&gt; Type} `{DHasEquivs A DA} {DB : B -&gt; Type} `{DHasEquivs B DB}
+  (F : A -&gt; B) `{!Is0Functor F, !Is1Functor F}
+  (F' : forall (a : A), DA a -&gt; DB (F a)) `{!IsD0Functor F F', !IsD1Functor F F'}
+  {a b : A} {f : a $&lt;~&gt; b} {a' : DA a} {b' : DA b} (f' : DCatEquiv f a' b')
+  : DCatIsEquiv (fe:=iemap F f) (dfmap F F' (dcate_fun f')).</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 423
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 424
+Time: 0.002s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+  refine (dcatie_adjointify
+           (dfmap F F' (dcate_fun f')) (dfmap F F' (dcate_fun f'^-1$')) _ _).</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 426
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 427
+Time: 0.005s">
+<div class="time" style="width: 9.2592592592593%"></div>
+<pre> refine ((dfmap_comp F F' (dcate_fun f'^-1$') f')^$' $@' _ $@' _).</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 427
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 428
+Time: 0.002s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre> exact (dfmap2 F F' (dcate_isretr _)).</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 428
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 429
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (dfmap_id F F' _).</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 429
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 430
+Time: 0.005s">
+<div class="time" style="width: 9.2592592592593%"></div>
+<pre> refine ((dfmap_comp F F' (dcate_fun f') f'^-1$')^$' $@' _ $@' _).</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 430
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 431
+Time: 0.002s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre> exact (dfmap2 F F' (dcate_issect _)).</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 431
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 432
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (dfmap_id F F' _).</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 432
+Time: 0.009s">
+<div class="time" style="width: 16.666666666667%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 433
+Time: 0.017s">
+<div class="time" style="width: 31.481481481481%"></div>
+<pre>
+
+Definition demap {A B : Type}
+  {DA : A -&gt; Type} `{DHasEquivs A DA} {DB : B -&gt; Type} `{DHasEquivs B DB}
+  (F : A -&gt; B) `{!Is0Functor F, !Is1Functor F}
+  (F' : forall (a : A), DA a -&gt; DB (F a)) `{!IsD0Functor F F', !IsD1Functor F F'}
+  {a b : A} {f : a $&lt;~&gt; b} {a' : DA a} {b' : DA b} (f' : DCatEquiv f a' b')
+  : DCatEquiv (emap F f) (F' a a') (F' b b')
+  := Build_DCatEquiv (dfmap F F' (dcate_fun f')).</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 441
+Time: 0.016s">
+<div class="time" style="width: 29.62962962963%"></div>
+<pre>
+
+Definition demap_id {A B : Type}
+  {DA : A -&gt; Type} `{DHasEquivs A DA} {DB : B -&gt; Type} `{DHasEquivs B DB}
+  (F : A -&gt; B) `{!Is0Functor F, !Is1Functor F}
+  (F' : forall (a : A), DA a -&gt; DB (F a)) `{!IsD0Functor F F', !IsD1Functor F F'}
+  {a : A} {a' : DA a}
+  : DGpdHom (emap_id F)
+    (dcate_fun (demap F F' (did_cate a'))) (dcate_fun (did_cate (F' a a'))).</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 449
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 450
+Time: 0.002s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+  refine (dcate_buildequiv_fun _ $@' _).</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 451
+Time: 0.003s">
+<div class="time" style="width: 5.5555555555556%"></div>
+<pre>
+  refine (dfmap2 F F' (did_cate_fun a') $@' _ $@' _).</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 452
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 453
+Time: 0.004s">
+<div class="time" style="width: 7.4074074074074%"></div>
+<pre> rapply dfmap_id.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 453
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 454
+Time: 0.001s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre> apply dgpd_rev.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 454
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (did_cate_fun (F' a a')).</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 455
+Time: 0.004s">
+<div class="time" style="width: 7.4074074074074%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 456
+Time: 0.024s">
+<div class="time" style="width: 44.444444444444%"></div>
+<pre>
+
+Definition demap_compose {A B : Type}
+  {DA : A -&gt; Type} `{DHasEquivs A DA} {DB : B -&gt; Type} `{DHasEquivs B DB}
+  (F : A -&gt; B) `{!Is0Functor F, !Is1Functor F}
+  (F' : forall (a : A), DA a -&gt; DB (F a)) `{!IsD0Functor F F', isd1f : !IsD1Functor F F'}
+  {a b c : A} {f : a $&lt;~&gt; b} {g : b $&lt;~&gt; c} {a' : DA a} {b' : DA b} {c' : DA c}
+  (f' : DCatEquiv f a' b') (g' : DCatEquiv g b' c')
+  : DGpdHom (emap_compose F f g) (dcate_fun (demap F F' (g' $oE' f')))
+    (dfmap F F' (dcate_fun g') $o' dfmap F F' (dcate_fun f')).</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 465
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 466
+Time: 0.002s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+  refine (dcate_buildequiv_fun _ $@' _).</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 467
+Time: 0.004s">
+<div class="time" style="width: 7.4074074074074%"></div>
+<pre>
+  refine (dfmap2 F F' (dcompose_cate_fun _ _) $@' _).</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 468
+Time: 0.01s">
+<div class="time" style="width: 18.518518518519%"></div>
+<pre>
+  napply dfmap_comp; exact isd1f.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 469
+Time: 0.005s">
+<div class="time" style="width: 9.2592592592593%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 470
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A variant. *)</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 472
+Time: 0.023s">
+<div class="time" style="width: 42.592592592593%"></div>
+<pre>Definition demap_compose' {A B : Type}
+  {DA : A -&gt; Type} `{DHasEquivs A DA} {DB : B -&gt; Type} `{DHasEquivs B DB}
+  (F : A -&gt; B) `{!Is0Functor F, !Is1Functor F}
+  (F' : forall (a : A), DA a -&gt; DB (F a)) `{!IsD0Functor F F', !IsD1Functor F F'}
+  {a b c : A} {f : a $&lt;~&gt; b} {g : b $&lt;~&gt; c} {a' : DA a} {b' : DA b} {c' : DA c}
+  (f' : DCatEquiv f a' b') (g' : DCatEquiv g b' c')
+  : DGpdHom (emap_compose' F f g) (dcate_fun (demap F F' (g' $oE' f')))
+    (dcate_fun ((demap F F' g') $oE' (demap F F' f'))).</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 479
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 480
+Time: 0.002s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+  refine (demap_compose F F' f' g' $@' _).</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 481
+Time: 0.001s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+  apply dgpd_rev.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 482
+Time: 0.002s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+  refine (dcompose_cate_fun _ _ $@' _).</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 483
+Time: 0.003s">
+<div class="time" style="width: 5.5555555555556%"></div>
+<pre>
+  exact (dcate_buildequiv_fun _ $@@' dcate_buildequiv_fun _).</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 484
+Time: 0.011s">
+<div class="time" style="width: 20.37037037037%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 485
+Time: 0.017s">
+<div class="time" style="width: 31.481481481481%"></div>
+<pre>
+
+Definition demap_inv {A B : Type}
+  {DA : A -&gt; Type} `{DHasEquivs A DA} {DB : B -&gt; Type} `{DHasEquivs B DB}
+  (F : A -&gt; B) `{!Is0Functor F, !Is1Functor F}
+  (F' : forall (a : A), DA a -&gt; DB (F a)) `{!IsD0Functor F F', !IsD1Functor F F'}
+  {a b : A} {e : a $&lt;~&gt; b} {a' : DA a} {b' : DA b} (e' : DCatEquiv e a' b')
+  : DGpdHom (emap_inv F e)
+    (dcate_fun (demap F F' e')^-1$') (dcate_fun (demap F F' e'^-1$')).</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 493
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 494
+Time: 0.005s">
+<div class="time" style="width: 9.2592592592593%"></div>
+<pre>
+  refine (dcate_inv_adjointify _ _ _ _ $@' _).</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 495
+Time: 0.001s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+  apply dgpd_rev.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 496
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (dcate_buildequiv_fun _).</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 497
+Time: 0.023s">
+<div class="time" style="width: 42.592592592593%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 498
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** When we have equivalences, we can define what it means for a displayed category to be univalent. *)</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 500
+Time: 0.001s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>Definition dcat_equiv_path {A} {D : A -&gt; Type} `{DHasEquivs A D}
+  {a b : A} (p : a = b) (a' : D a) (b' : D b)
+  : transport D p a' = b' -&gt; DCatEquiv (cat_equiv_path a b p) a' b'.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 502
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 503
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro p'.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 504
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct p, p'.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 504
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 504
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 505
+Time: 0.004s">
+<div class="time" style="width: 7.4074074074074%"></div>
+<pre>
+
+Class IsDUnivalent1Cat {A} (D : A -&gt; Type) `{DHasEquivs A D} :=
+{
+  isequiv_dcat_equiv_path :: forall {a b : A} (p : a = b) a' b',
+    IsEquiv (dcat_equiv_path p a' b')
+}.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 511
+Time: 0.003s">
+<div class="time" style="width: 5.5555555555556%"></div>
+<pre>
+
+Definition dcat_path_equiv {A} {D : A -&gt; Type} `{IsDUnivalent1Cat A D}
+  {a b : A} (p : a = b) (a' : D a) (b' : D b)
+  : DCatEquiv (cat_equiv_path a b p) a' b' -&gt; transport D p a' = b'
+  := (dcat_equiv_path p a' b')^-1.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 516
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** If [IsUnivalent1Cat A] and [IsDUnivalent1Cat D], then this is an equivalence by [isequiv_functor_sigma]. *)</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 518
+Time: 0.003s">
+<div class="time" style="width: 5.5555555555556%"></div>
+<pre>Definition dcat_equiv_path_total {A} {D : A -&gt; Type} `{DHasEquivs A D}
+  {a b : A} (a' : D a) (b' : D b)
+  : {p : a = b &amp; p # a' = b'} -&gt; {e : a $&lt;~&gt; b &amp; DCatEquiv e a' b'}
+  := functor_sigma (cat_equiv_path a b) (fun p =&gt; dcat_equiv_path p a' b').</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 521
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** If the base category and the displayed category are both univalent, then the total category is univalent. *)</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 523
+Time: 0.004s">
+<div class="time" style="width: 7.4074074074074%"></div>
+<pre>Instance isunivalent1cat_total {A} `{IsUnivalent1Cat A} (D : A -&gt; Type)
+  `{!IsDGraph D, !IsD2Graph D, !IsD01Cat D, !IsD1Cat D, !DHasEquivs D}
+  `{!IsDUnivalent1Cat D}
+  : IsUnivalent1Cat (sig D).</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 526
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 527
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros aa' bb'.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 528
+Time: 0.004s">
+<div class="time" style="width: 7.4074074074074%"></div>
+<pre>
+  apply (isequiv_homotopic
+          (dcat_equiv_path_total _ _ o (path_sigma_uncurried D aa' bb')^-1)).</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 530
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros []; reflexivity.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 531
+Time: 0.002s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: DisplayedEquiv.v
+Line: 533
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

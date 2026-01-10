@@ -1,0 +1,959 @@
+<html>
+<head>
+<title>Core.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Core.v</h1>
+
+<div class="code" title="File: Core.v
+Line: 1
+Time: 0.054s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Export Classes.interfaces.canonical_names (SgOp, sg_op,
+    MonUnit, mon_unit, LeftIdentity, left_identity, RightIdentity, right_identity,
+    Negate, negate, Associative, simple_associativity, associativity,
+    LeftInverse, left_inverse, RightInverse, right_inverse, Commutative, commutativity).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Export canonical_names.BinOpNotations.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 5
+Time: 0.041s">
+<div class="time" style="width: 75.925925925926%"></div>
+<pre>
+From HoTT Require Import Basics Types Pointed WildCat.Core.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 6
+Time: 0.002s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+Require Import Truncations.Core Truncations.Connectedness.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope pointed_scope.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 9
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope trunc_scope.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope mc_mult_scope.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope path_scope.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * H-spaces *)
+
+(** A (non-coherent) H-space [X] is a pointed type with a binary operation for which the base point is a both a left and a right identity. (See Coherent.v for the notion of a coherent H-space.) We say [X] is left-invertible if left multiplication by any element is an equivalence, and dually for right-invertible. *)
+
+</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 17
+Time: 0.002s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>Class IsHSpace (X : pType) := {
+  hspace_op :: SgOp X;
+  hspace_left_identity :: LeftIdentity hspace_op pt;
+  hspace_right_identity :: RightIdentity hspace_op pt;
+}.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+#[export] Instance hspace_mon_unit {X : pType} `{IsHSpace X} : MonUnit X := pt.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 23
+Time: 0.008s">
+<div class="time" style="width: 14.814814814815%"></div>
+<pre>
+
+Definition issig_ishspace {X : pType}
+  : { mu : X -&gt; X -&gt; X &amp; prod (forall x, mu pt x = x) (forall x, mu x pt = x) }
+      &lt;~&gt; IsHSpace X := ltac:(make_equiv).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Left and right multiplication by the base point is always an equivalence. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isequiv_hspace_left_op_pt {X : pType} `{IsHSpace X}
+  : IsEquiv (pt *.).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 31
+Time: 0.002s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+  apply (isequiv_homotopic idmap); intro x.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (left_identity x)^.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance isequiv_hspace_right_op_pt {X : pType} `{IsHSpace X}
+  : IsEquiv (.* pt).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 38
+Time: 0.001s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+  apply (isequiv_homotopic idmap); intro x.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (right_identity x)^.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition equiv_hspace_left_op {X : pType} `{IsHSpace X}
+  (x : X) `{IsEquiv _ _ (x *.)} : X &lt;~&gt; X
+  := Build_Equiv _ _ (x *.) _.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 45
+Time: 0.001s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+
+Definition equiv_hspace_right_op {X : pType} `{IsHSpace X}
+  (x : X) `{IsEquiv _ _ (.* x)} : X &lt;~&gt; X
+  := Build_Equiv _ _ (.* x) _.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Any element of an H-space defines a pointed self-map by left multiplication, in the following sense. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 51
+Time: 0.001s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>Definition pmap_hspace_left_op {X : pType} `{IsHSpace X} (x : X)
+  : X -&gt;* [X, x] := Build_pMap (x *.) (right_identity x).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We make [(x *.)] into a pointed equivalence (when possible). In particular, this makes [(pt *.)] into a pointed self-equivalence. We could have also used the left identity to make [(pt *.)] into a pointed self-equivalence, and then we would get a map that's equal to the identity as a pointed map; but without coherence (see Coherent.v) this is not necessarily the case for this map. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 54
+Time: 0.001s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>Definition pequiv_hspace_left_op {X : pType} `{IsHSpace X}
+  (x : X) `{IsEquiv _ _ (x *.)} : X &lt;~&gt;* [X,x]
+  := Build_pEquiv' (equiv_hspace_left_op x) (right_identity x).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Connected H-spaces *)
+
+(** For connected H-spaces, left and right multiplication by an element is an equivalence. This is because left and right multiplication by the base point is one, and being an equivalence is a proposition. *)
+
+</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isequiv_hspace_left_op `{Univalence} {A : pType}
+  `{IsHSpace A} `{IsConnected 0 A}
+  : forall (a : A), IsEquiv (a *.).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 64
+Time: 0.002s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+  napply conn_point_elim; exact _.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance isequiv_hspace_right_op `{Univalence} {A : pType}
+  `{IsHSpace A} `{IsConnected 0 A}
+  : forall (a : A), IsEquiv (.* a).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 71
+Time: 0.002s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+  napply conn_point_elim; exact _.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Left-invertible H-spaces are homogeneous *)
+
+(** A homogeneous structure on a pointed type [A] gives, for any point [a : A], a self-equivalence of [A] sending the base point to [a]. (This is the same data as a left-invertible right-unital binary operation.) *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Class IsHomogeneous (A : pType)
+  := ishomogeneous : forall a, A &lt;~&gt;* [A, a].</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Any homogeneous structure can be modified so that the base point is mapped to the pointed identity map. *)
+
+</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 81
+Time: 0.001s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>Definition homogeneous_pt_id {A : pType} `{IsHomogeneous A}
+  : forall a, A &lt;~&gt;* [A,a]
+  := fun a =&gt; ishomogeneous a o*E (ishomogeneous (point A))^-1*.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition homogeneous_pt_id_beta {A : pType} `{IsHomogeneous A}
+  : homogeneous_pt_id (point A) ==* pequiv_pmap_idmap
+  := peisretr _.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 87
+Time: 0.002s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+
+Definition homogeneous_pt_id_beta' `{Funext} {A : pType} `{IsHomogeneous A}
+  : homogeneous_pt_id (point A) = pequiv_pmap_idmap
+  := ltac:(apply path_pequiv, peisretr).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** This modified structure makes any homogeneous type into a (left-invertible) H-space. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ishspace_homogeneous {A : pType} `{IsHomogeneous A}
+  : IsHSpace A.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 94
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_IsHSpace.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fun a b =&gt; homogeneous_pt_id a b).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro a; cbn.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply eisretr.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro a.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>  exact (point_eq (homogeneous_pt_id a)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Left-invertible H-spaces are homogeneous, giving a logical equivalence between left-invertible H-spaces and homogeneous types. (In fact, the type of homogeneous types with the base point sent to the pointed identity map is equivalent to the type of left-invertible coherent H-spaces, but we don't prove that here.) See [equiv_iscohhspace_ptd_action] for a closely related result. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 103
+Time: 0.001s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>Instance ishomogeneous_hspace {A : pType} `{IsHSpace A}
+  `{forall a, IsEquiv (a *.)}
+  : IsHomogeneous A
+  := (fun a =&gt; pequiv_hspace_left_op a).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Promoting unpointed homotopies to pointed homotopies *)
+
+(** Two pointed maps [f g : Y -&gt;* X] into an H-space are equal if and only if they are equal as unpointed maps. (Note: This is a logical "iff", not an equivalence of types.) This was first observed by Evan Cavallo for homogeneous types. Below we show a generalization due to Egbert Rijke, which we then specialize to H-spaces. Notably, the specialization does not require left-invertibility. This appears as Lemma 2.6 in https://arxiv.org/abs/2301.02636v1 *)
+
+(** First a version that assumes an equality of the unpointed maps. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 112
+Time: 0.001s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>Definition phomotopy_from_path_arrow {A B : pType}
+  (m : forall (a : A), (point A) = (point A) -&gt; a = a)
+  (q : m pt == idmap) {f g : B -&gt;* A} (K : pointed_fun f = pointed_fun g)
+  : f ==* g.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  napply issig_phomotopy.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 117
+Time: 0.001s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+  destruct f as [f fpt], g as [g gpt]; cbn in *.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 118
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction K.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct A as [A a0]; cbn in *.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction fpt.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 121
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exists (fun b =&gt; m (f b) (idpath @ gpt^)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 122
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply q.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 123
+Time: 0.003s">
+<div class="time" style="width: 5.5555555555556%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Assuming [Funext], we may take [K] to be a homotopy. With a more elaborate proof, [Funext] could be avoided here and therefore in the next result as well. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 126
+Time: 0.002s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>Definition phomotopy_from_homotopy `{Funext} {A B : pType}
+  (m : forall (a : A), (point A) = (point A) -&gt; a = a)
+  (q :  m pt == idmap) {f g : B -&gt;* A} (K : f == g)
+  : f ==* g
+  := phomotopy_from_path_arrow m q (path_forall _ _ K).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 130
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We specialize to H-spaces. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition hspace_phomotopy_from_homotopy `{Funext} {A B : pType}
+  `{IsHSpace A} {f g : B -&gt;* A} (K : f == g)
+  : f ==* g.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 135
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply (phomotopy_from_homotopy _ _ K).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 137
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro a.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 137
+Time: 0.002s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+    exact (fmap loops (pmap_hspace_left_op a o* (pequiv_hspace_left_op pt)^-1*)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> lazy beta.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 139
+Time: 0.001s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+    transitivity (fmap (b:=A) loops pmap_idmap).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 140
+Time: 0.003s">
+<div class="time" style="width: 5.5555555555556%"></div>
+<pre>
+    2: tapply (fmap_id loops).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 141
+Time: 0.003s">
+<div class="time" style="width: 5.5555555555556%"></div>
+<pre>
+    tapply (fmap2 loops).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 142
+Time: 0.001s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+    napply peisretr.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 143
+Time: 0.002s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A version with actual paths. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 146
+Time: 0.001s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>Definition hspace_path_pforall_from_path_arrow `{Funext} {A B : pType}
+  `{IsHSpace A} {f g : B -&gt;* A} (K : pointed_fun f = pointed_fun g)
+  : f = g.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 148
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply path_pforall, hspace_phomotopy_from_homotopy.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (path_arrow _ _)^-1.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact K.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 152
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A type equivalent to an H-space is an H-space. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 155
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ishspace_equiv_hspace {X Y : pType} `{IsHSpace Y} (f : X &lt;~&gt;* Y)
+  : IsHSpace X.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_IsHSpace.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 159
+Time: 0.001s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre> exact (fun a b =&gt; f^-1 (f a * f b)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro b.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rhs_V exact (eissect f b).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply ap.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    lhs exact (ap (.* f b) (point_eq f)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 163
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply left_identity.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 164
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 165
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro a.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 165
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rhs_V exact (eissect f a).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 166
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply ap.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    lhs exact (ap (f a *.) (point_eq f)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply right_identity.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 169
+Time: 0.001s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Every loop space is an H-space. Making this an instance breaks CayleyDickson.v because Coq finds this instance rather than the expected one. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ishspace_loops {X : pType} : IsHSpace (loops X).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_IsHSpace.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 174
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 175
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact concat.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 175
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact concat_1p.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact concat_p1.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 179
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

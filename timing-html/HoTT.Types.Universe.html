@@ -1,0 +1,2491 @@
+<html>
+<head>
+<title>Universe.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Universe.v</h1>
+
+<div class="code" title="File: Universe.v
+Line: 1
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>(** * Theorems about the universe, including the Univalence Axiom. *)
+
+</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 2
+Time: 0.03s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import HoTT.Basics.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 2
+Time: 0.006s">
+<div class="time" style="width: 20%"></div>
+<pre>
+Require Import Types.Sigma Types.Forall Types.Arrow Types.Paths Types.Equiv Types.Bool Types.Prod.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope path_scope.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Generalizable Variables A B f.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Paths *)
+
+</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition equiv_path (A B : Type@{u}) (p : A = B) : A &lt;~&gt; B
+  := equiv_transport (fun X =&gt; X) p.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition equiv_path_V `{Funext} (A B : Type) (p : A = B) :
+  equiv_path B A (p^) = (equiv_path A B p)^-1%equiv.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply path_equiv.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  reflexivity.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** See the note by [Funext] in Overture.v *)</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Monomorphic Axiom Univalence : Type0.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Existing Class Univalence.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Mark this axiom as a "global axiom", which some of our tactics will automatically handle. *)</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance is_global_axiom_univalence : IsGlobalAxiom Univalence := {}.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Axiom isequiv_equiv_path : forall `{Univalence} (A B : Type@{u}), IsEquiv (equiv_path A B).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Existing Instance isequiv_equiv_path.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A proof that univalence implies function extensionality can be found in the metatheory file [UnivalenceImpliesFunext], but that actual proof can't be used on our dummy typeclasses.  So we assert the following axiomatic instance.  *)</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance Univalence_implies_Funext `{Univalence} : Funext.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Admitted.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section Univalence.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Context `{Univalence}.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition path_universe_uncurried {A B : Type} (f : A &lt;~&gt; B) : A = B
+  := (equiv_path A B)^-1 f.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition path_universe {A B : Type} (f : A -&gt; B) {feq : IsEquiv f} : (A = B)
+  := path_universe_uncurried (Build_Equiv _ _ f feq).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Global Arguments path_universe {A B}%_type_scope f%_function_scope {feq}.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition eta_path_universe {A B : Type} (p : A = B)
+  : path_universe (equiv_path A B p) = p
+  := eissect (equiv_path A B) p.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition eta_path_universe_uncurried {A B : Type} (p : A = B)
+  : path_universe_uncurried (equiv_path A B p) = p
+  := eissect (equiv_path A B) p.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 48
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+
+Definition isequiv_path_universe {A B : Type}
+  : IsEquiv (@path_universe_uncurried A B)
+  := _.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition equiv_path_universe (A B : Type) : (A &lt;~&gt; B) &lt;~&gt; (A = B)
+  := Build_Equiv _ _ (@path_universe_uncurried A B) isequiv_path_universe.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition equiv_equiv_path  (A B : Type) : (A = B) &lt;~&gt; (A &lt;~&gt; B)
+  := (equiv_path_universe A B)^-1%equiv.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** These operations have too many names, making [rewrite] a pain.  So we give lots of names to the computation laws. *)</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 60
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>Definition path_universe_equiv_path {A B : Type} (p : A = B)
+  : path_universe (equiv_path A B p) = p
+  := eissect (equiv_path A B) p.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Definition path_universe_uncurried_equiv_path {A B : Type} (p : A = B)
+  : path_universe_uncurried (equiv_path A B p) = p
+  := eissect (equiv_path A B) p.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 65
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+Definition path_universe_transport_idmap {A B : Type} (p : A = B)
+  : path_universe (transport idmap p) = p
+  := eissect (equiv_path A B) p.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Definition path_universe_uncurried_transport_idmap {A B : Type} (p : A = B)
+  : path_universe_uncurried (equiv_transport idmap p) = p
+  := eissect (equiv_path A B) p.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Definition equiv_path_path_universe {A B : Type} (f : A &lt;~&gt; B)
+  : equiv_path A B (path_universe f) = f
+  := eisretr (equiv_path A B) f.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Definition equiv_path_path_universe_uncurried {A B : Type} (f : A &lt;~&gt; B)
+  : equiv_path A B (path_universe_uncurried f) = f
+  := eisretr (equiv_path A B) f.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 77
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+Definition transport_idmap_path_universe {A B : Type} (f : A &lt;~&gt; B)
+  : transport idmap (path_universe f) = f
+  := ap equiv_fun (eisretr (equiv_path A B) f).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 80
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+Definition transport_idmap_path_universe_uncurried {A B : Type} (f : A &lt;~&gt; B)
+  : transport idmap (path_universe_uncurried f) = f
+  := ap equiv_fun (eisretr (equiv_path A B) f).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Behavior on path operations *)
+
+(* We explicitly assume [Funext] here, since this result doesn't use [Univalence]. *)</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition equiv_path_pp `{Funext} {A B C : Type} (p : A = B) (q : B = C)
+  : equiv_path A C (p @ q) = equiv_path B C q oE equiv_path A B p.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply path_equiv, path_arrow.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  napply transport_pp.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 92
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+
+Definition path_universe_compose_uncurried {A B C : Type}
+  (f : A &lt;~&gt; B) (g : B &lt;~&gt; C)
+  : path_universe_uncurried (equiv_compose g f)
+    = path_universe_uncurried f @ path_universe_uncurried g.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert f.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> equiv_intro (equiv_path A B) f.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert g.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> equiv_intro (equiv_path B C) g.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine ((ap path_universe_uncurried (equiv_path_pp f g))^ @ _).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (eta_path_universe (f @ g) @ _).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 102
+Time: 0.002s">
+<div class="time" style="width: 6.6666666666667%"></div>
+<pre>
+  apply concat2; symmetry; apply eta_path_universe.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 103
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 104
+Time: 0.002s">
+<div class="time" style="width: 6.6666666666667%"></div>
+<pre>
+
+Definition path_universe_compose {A B C : Type}
+  (f : A &lt;~&gt; B) (g : B &lt;~&gt; C)
+  : path_universe (g o f) = path_universe f @ path_universe g
+  := path_universe_compose_uncurried f g.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition path_universe_1 {A : Type}
+  : path_universe (equiv_idmap A) = 1
+  := eta_path_universe 1.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition path_universe_V_uncurried {A B : Type} (f : A &lt;~&gt; B)
+  : path_universe_uncurried f^-1 = (path_universe_uncurried f)^.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert f.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 118
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> equiv_intro ((equiv_path_universe A B)^-1) p.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 118
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 118
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  transitivity (p^).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    2: exact (inverse2 (eisretr (equiv_path_universe A B) p)^).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  transitivity (path_universe_uncurried (equiv_path B A p^)).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 121
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 122
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by exact (ap _ (equiv_path_V A B p)^).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 122
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by exact (eissect (equiv_path B A) p^).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 123
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 124
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+
+Definition path_universe_V `(f : A -&gt; B) `{IsEquiv A B f}
+  : path_universe (f^-1) = (path_universe f)^
+  := path_universe_V_uncurried (Build_Equiv A B f _).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 128
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Path operations vs Type operations *)
+
+(** [ap (Equiv A)] behaves like postcomposition. *)</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 132
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>Definition ap_equiv_path_universe A {B C} (f : B &lt;~&gt; C)
+  : equiv_path (A &lt;~&gt; B) (A &lt;~&gt; C) (ap (Equiv A) (path_universe f))
+  = equiv_functor_equiv (equiv_idmap A) f.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 135
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert f.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> equiv_intro (equiv_path B C) f.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 136
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+  rewrite (eissect (equiv_path B C) f : path_universe (equiv_path B C f) = f).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 137
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct f; simpl.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply path_equiv, path_forall; intros g.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply path_equiv, path_forall; intros a.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  reflexivity.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 141
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [ap (prod A)] behaves like [equiv_functor_prod_l]. *)</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 144
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>Definition ap_prod_l_path_universe A {B C} (f : B &lt;~&gt; C)
+  : equiv_path (A * B) (A * C) (ap (prod A) (path_universe f))
+    = equiv_functor_prod_l f.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 147
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert f.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 148
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> equiv_intro (equiv_path B C) f.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 148
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite (eissect (equiv_path B C) f : path_universe (equiv_path B C f) = f).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct f.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply path_equiv, path_arrow; intros x; reflexivity.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 151
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 152
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [ap (fun Z =&gt; Z * A)] behaves like [equiv_functor_prod_r]. *)</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 154
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>Definition ap_prod_r_path_universe A {B C} (f : B &lt;~&gt; C)
+  : equiv_path (B * A) (C * A) (ap (fun Z =&gt; Z * A) (path_universe f))
+    = equiv_functor_prod_r f.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert f.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> equiv_intro (equiv_path B C) f.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 158
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+  rewrite (eissect (equiv_path B C) f : path_universe (equiv_path B C f) = f).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct f.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply path_equiv, path_arrow; intros x; reflexivity.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 161
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Transport *)
+
+(** There are two ways we could define [transport_path_universe]: we could give an explicit definition, or we could reduce it to paths by [equiv_ind] and give an explicit definition there.  The two should be equivalent, but we choose the second for now as it makes the currently needed coherence lemmas easier to prove. *)</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 166
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition transport_path_universe_uncurried
+  {A B : Type} (f : A &lt;~&gt; B) (z : A)
+  : transport (fun X:Type =&gt; X) (path_universe_uncurried f) z = f z.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert f.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>  equiv_intro (equiv_path A B) p.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (ap (fun s =&gt; transport idmap s z) (eissect _ p)).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+(* Alternatively, [apply ap10, transport_idmap_path_universe_uncurried.], but then some later proofs would have to change. *)
+
+</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 174
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>Definition transport_path_universe
+  {A B : Type} (f : A -&gt; B) {feq : IsEquiv f} (z : A)
+  : transport (fun X:Type =&gt; X) (path_universe f) z = f z
+  := transport_path_universe_uncurried (Build_Equiv A B f feq) z.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+(* Alternatively, [ap10_equiv (eisretr (equiv_path A B) (Build_Equiv _ _ f feq)) z]. *)
+
+</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 179
+Time: 0.002s">
+<div class="time" style="width: 6.6666666666667%"></div>
+<pre>Definition transport_path_universe_equiv_path
+  {A B : Type} (p : A = B) (z : A)
+  : transport_path_universe (equiv_path A B p) z =
+      (ap (fun s =&gt; transport idmap s z) (eissect _ p))
+  := equiv_ind_comp _ _ _.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 183
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* This somewhat fancier version is useful when working with HITs. *)</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 185
+Time: 0.002s">
+<div class="time" style="width: 6.6666666666667%"></div>
+<pre>Definition transport_path_universe'
+  {A : Type} (P : A -&gt; Type) {x y : A} (p : x = y)
+  (f : P x &lt;~&gt; P y) (q : ap P p = path_universe f) (u : P x)
+  : transport P p u = f u
+  := transport_compose idmap P p u
+      @ ap10 (ap (transport idmap) q) u
+      @ transport_path_universe f u.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 191
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** And a version for transporting backwards. *)
+
+</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 194
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>Definition transport_path_universe_V_uncurried
+  {A B : Type} (f : A &lt;~&gt; B) (z : B)
+  : transport (fun X:Type =&gt; X) (path_universe_uncurried f)^ z = f^-1 z.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert f.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> equiv_intro (equiv_path A B) p.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (ap (fun s =&gt; transport idmap s z) (inverse2 (eissect _ p))).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 199
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 200
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+
+Definition transport_path_universe_V
+  {A B : Type} (f : A -&gt; B) {feq : IsEquiv f} (z : B)
+  : transport (fun X:Type =&gt; X) (path_universe f)^ z = f^-1 z
+  := transport_path_universe_V_uncurried (Build_Equiv _ _ f feq) z.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 205
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+(* Alternatively, [(transport2 idmap (path_universe_V f) z)^ @ (transport_path_universe (f^-1) z)]. *)
+
+</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 207
+Time: 0.002s">
+<div class="time" style="width: 6.6666666666667%"></div>
+<pre>Definition transport_path_universe_V_equiv_path
+  {A B : Type} (p : A = B) (z : B)
+  : transport_path_universe_V (equiv_path A B p) z
+    = ap (fun s =&gt; transport idmap s z) (inverse2 (eissect _ p))
+  := equiv_ind_comp _ _ _.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 211
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** And some coherence for it. *)
+
+</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 214
+Time: 0.002s">
+<div class="time" style="width: 6.6666666666667%"></div>
+<pre>Definition transport_path_universe_Vp_uncurried
+  {A B : Type} (f : A &lt;~&gt; B) (z : A)
+  : ap (transport idmap (path_universe f)^) (transport_path_universe f z)
+      @ transport_path_universe_V f (f z)
+      @ eissect f z
+    = transport_Vp idmap (path_universe f) z.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 219
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 220
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  pattern f.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 221
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (equiv_ind (equiv_path A B) _ _ _); intros p.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 222
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* Something slightly sneaky happens here: by definition of [equiv_path], [eissect (equiv_path A B p)] is judgmentally equal to [transport_Vp idmap p].  Thus, we can apply [ap_transport_Vp_idmap]. *)
+ </pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 224
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>refine (_ @ ap_transport_Vp_idmap p (path_universe (equiv_path A B p))
+            (eissect (equiv_path A B) p) z).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply whiskerR.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 226
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply concat2.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 226
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 227
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply ap.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 227
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply transport_path_universe_equiv_path.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 227
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 228
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre> apply transport_path_universe_V_equiv_path.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 228
+Time: 0.006s">
+<div class="time" style="width: 20%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 229
+Time: 0.002s">
+<div class="time" style="width: 6.6666666666667%"></div>
+<pre>
+
+Definition transport_path_universe_Vp
+  {A B : Type} (f : A -&gt; B) {feq : IsEquiv f} (z : A)
+  : ap (transport idmap (path_universe f)^) (transport_path_universe f z)
+      @ transport_path_universe_V f (f z)
+      @ eissect f z
+    = transport_Vp idmap (path_universe f) z
+  := transport_path_universe_Vp_uncurried (Build_Equiv A B f feq) z.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 237
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Transporting in particular type families *)
+
+</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 240
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>Theorem transport_arrow_toconst_path_universe {A U V : Type} (w : U &lt;~&gt; V)
+  : forall f : U -&gt; A, transport (fun E : Type =&gt; E -&gt; A) (path_universe w) f = (f o w^-1).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 241
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 242
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros f.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 243
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> funext y.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 243
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (transport_arrow_toconst _ _ _ @ _).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 244
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply ap.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 245
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply transport_path_universe_V.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 246
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 247
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Transporting along an equivalence with univalence. *)</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 249
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition univalent_transport (S : Type -&gt; Type) {X Y} (e : X &lt;~&gt; Y) (s : S X)
+  : S Y
+  := (path_universe e) # s.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 251
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Transporting along the identity equivalence is the identity. *)</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 253
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition univalent_transport_idequiv (S : Type -&gt; Type) {X}
+  : @univalent_transport S X X equiv_idmap == idmap.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 254
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 255
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros s.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 256
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (transport2 S path_universe_1).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 257
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 258
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** 2-paths *)
+
+</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 261
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>Definition equiv_path2_universe
+  {A B : Type} (f g : A &lt;~&gt; B)
+  : (f == g) &lt;~&gt; (path_universe f = path_universe g).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 263
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 264
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_ oE equiv_path_arrow f g).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 265
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_ oE equiv_path_equiv f g).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 266
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (equiv_ap (equiv_path A B)^-1 _ _).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 267
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 268
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+
+Definition path2_universe
+  {A B : Type} {f g : A &lt;~&gt; B}
+  : (f == g) -&gt; (path_universe f = path_universe g)
+  := equiv_path2_universe f g.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 273
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition equiv_path2_universe_1
+  {A B : Type} (f : A &lt;~&gt; B)
+  : equiv_path2_universe f f (fun x =&gt; 1) = 1.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 277
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 278
+Time: 0.002s">
+<div class="time" style="width: 6.6666666666667%"></div>
+<pre>
+  simpl.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 279
+Time: 0.002s">
+<div class="time" style="width: 6.6666666666667%"></div>
+<pre>
+  rewrite concat_1p, concat_p1, path_forall_1, path_sigma_hprop_1.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 280
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  reflexivity.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 281
+Time: 0.002s">
+<div class="time" style="width: 6.6666666666667%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 282
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition path2_universe_1
+  {A B : Type} (f : A &lt;~&gt; B)
+  : @path2_universe _ _ f f (fun x =&gt; 1) = 1
+  := equiv_path2_universe_1 f.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 287
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** There ought to be a lemma which says something like this:
+
+&lt;&lt;
+Definition path2_universe_postcompose
+           {A B C : Type} {f1 f2 : A &lt;~&gt; B} (p : f1 == f2)
+           (g : B &lt;~&gt; C)
+: equiv_path2_universe (g o f1)
+                       (g o f2)
+                       (fun a =&gt; ap g (p a))
+  = path_universe_compose f1 g
+    @ whiskerR (path2_universe p) (path_universe g)
+    @ (path_universe_compose f2 g)^.
+&gt;&gt;
+
+and similarly
+
+&lt;&lt;
+Definition path2_universe_precompose
+           {A B C : Type} {f1 f2 : B &lt;~&gt; C} (p : f1 == f2)
+           (g : A &lt;~&gt; B)
+: equiv_path2_universe (f1 o g)
+                       (f2 o g)
+                       (fun a =&gt; (p (g a)))
+  = path_universe_compose g f1
+    @ whiskerL (path_universe g) (path2_universe p)
+    @ (path_universe_compose g f2)^.
+&gt;&gt;
+
+but I haven't managed to prove them yet.  Fortunately, for existing applications what we actually need is the following rather different-looking version that applies only when [f1] and [f2] are identities. *)
+
+(** Coq is too eager about unfolding [equiv_path_equiv] in the following proofs, so we tell it not to.  We go into a section in order to limit the scope of the [simpl never] command. *)</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 319
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section PathEquivSimplNever.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 319
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Local Arguments equiv_path_equiv : simpl never.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 320
+Time: 0.003s">
+<div class="time" style="width: 10%"></div>
+<pre>
+
+  Definition path2_universe_postcompose_idmap
+    {A C : Type} (p : forall a:A, a = a)
+    (g : A &lt;~&gt; C)
+    : equiv_path2_universe g g (fun a =&gt; ap g (p a))
+      = (concat_1p _)^
+        @ whiskerR (path_universe_1)^ (path_universe g)
+        @ whiskerR (equiv_path2_universe (equiv_idmap A) (equiv_idmap A) p)
+          (path_universe g)
+        @ whiskerR path_universe_1 (path_universe g)
+        @ concat_1p _.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 331
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 332
+Time: 0.002s">
+<div class="time" style="width: 6.6666666666667%"></div>
+<pre>
+    transitivity ((eta_path_universe (path_universe g))^
+                  @ equiv_path2_universe
+                    (equiv_path A C (path_universe g))
+                    (equiv_path A C (path_universe g))
+                    (fun a =&gt; ap (equiv_path A C (path_universe g)) (p a))
+                    @ eta_path_universe (path_universe g)).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 338
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 339
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre> refine ((apD (fun g' =&gt; equiv_path2_universe g' g'
+                                (fun a =&gt; ap g' (p a)))
+                   (eisretr (equiv_path A C) g))^ @ _).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 341
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      refine (transport_paths_FlFr (eisretr (equiv_path A C) g) _ @ _).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 342
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply concat2.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 343
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 344
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply whiskerR.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 344
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply inverse2, symmetry.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 345
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        exact (eisadj (equiv_path A C)^-1 g).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 346
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 347
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre> symmetry; exact (eisadj (equiv_path A C)^-1 g).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 347
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 348
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre> generalize (path_universe g).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 348
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      intros h.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 349
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre> destruct h.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 349
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre> cbn.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 349
+Time: 0.008s">
+<div class="time" style="width: 26.666666666667%"></div>
+<pre>
+      rewrite !concat_1p, !concat_p1.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 350
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+      refine (_ @ whiskerR (whiskerR_pp 1 path_universe_1^ _) _).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 351
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      refine (_ @ whiskerR_pp 1 _ path_universe_1).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 352
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      refine (_ @ (whiskerR_p1_1 _)^).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 353
+Time: 0.019s">
+<div class="time" style="width: 63.333333333333%"></div>
+<pre>
+      apply whiskerR, whiskerL, ap, ap, ap.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 354
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply path_forall; intros x; apply ap_idmap.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 355
+Time: 0.016s">
+<div class="time" style="width: 53.333333333333%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 356
+Time: 0.003s">
+<div class="time" style="width: 10%"></div>
+<pre>
+
+  Definition path2_universe_precompose_idmap
+    {A B : Type} (p : forall b:B, b = b)
+    (g : A &lt;~&gt; B)
+    : equiv_path2_universe g g (fun a =&gt; (p (g a)))
+      = (concat_p1 _)^
+        @ whiskerL (path_universe g) (path_universe_1)^
+        @ whiskerL (path_universe g)
+            (equiv_path2_universe (equiv_idmap B) (equiv_idmap B) p)
+        @ whiskerL (path_universe g) (path_universe_1)
+        @ concat_p1 _.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 367
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 368
+Time: 0.002s">
+<div class="time" style="width: 6.6666666666667%"></div>
+<pre>
+    transitivity ((eta_path_universe (path_universe g))^
+                  @ equiv_path2_universe
+                    (equiv_path A B (path_universe g))
+                    (equiv_path A B (path_universe g))
+                    (fun a =&gt; p (equiv_path A B (path_universe g) a))
+                  @ eta_path_universe (path_universe g)).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 374
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 375
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre> refine ((apD (fun g' =&gt; equiv_path2_universe g' g'
+                                (fun a =&gt; p (g' a)))
+                (eisretr (equiv_path A B) g))^ @ _).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 377
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      refine (transport_paths_FlFr (eisretr (equiv_path A B) g) _ @ _).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 378
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply concat2.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 379
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 380
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply whiskerR.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 380
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply inverse2, symmetry.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 381
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        exact (eisadj (equiv_path A B)^-1 g).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 382
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 383
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre> symmetry; exact (eisadj (equiv_path A B)^-1 g).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 383
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 384
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre> generalize (path_universe g).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 384
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      intros h.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 385
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre> destruct h.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 385
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 385
+Time: 0.003s">
+<div class="time" style="width: 10%"></div>
+<pre>
+      rewrite !concat_p1.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 386
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+      refine (_ @ (((concat_1p (whiskerL 1 path_universe_1^))^ @@ 1) @@ 1)).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 387
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      refine (_ @ whiskerR (whiskerL_pp 1 path_universe_1^ _) _).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 388
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      refine (_ @ whiskerL_pp 1 _ path_universe_1).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 389
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact ((whiskerL_1p_1 _)^).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 390
+Time: 0.016s">
+<div class="time" style="width: 53.333333333333%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 391
+Time: 0.003s">
+<div class="time" style="width: 10%"></div>
+<pre>
+
+End PathEquivSimplNever.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 393
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** 3-paths *)
+
+</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 396
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>Definition equiv_path3_universe
+  {A B : Type} {f g : A &lt;~&gt; B} (p q : f == g)
+  : (p == q) &lt;~&gt; (path2_universe p = path2_universe q).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 398
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 399
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_ oE equiv_path_forall p q).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 400
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_ oE equiv_ap (equiv_path_arrow f g) p q).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 401
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+  refine (_ oE equiv_ap (equiv_path_equiv f g) _ _).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 402
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold path2_universe, equiv_path2_universe.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 403
+Time: 0.007s">
+<div class="time" style="width: 23.333333333333%"></div>
+<pre>
+  simpl.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 404
+Time: 0.003s">
+<div class="time" style="width: 10%"></div>
+<pre> exact (equiv_ap (ap (equiv_path A B)^-1) _ _).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 404
+Time: 0.002s">
+<div class="time" style="width: 6.6666666666667%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 405
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+
+Definition path3_universe
+  {A B : Type} {f g : A &lt;~&gt; B} {p q : f == g}
+  : (p == q) -&gt; (path2_universe p = path2_universe q)
+  := equiv_path3_universe p q.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 410
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+
+Definition transport_path_universe_pV_uncurried
+  {A B : Type} (f : A &lt;~&gt; B) (z : B)
+  : transport_path_universe f (transport idmap (path_universe f)^ z)
+      @ ap f (transport_path_universe_V f z)
+      @ eisretr f z
+    = transport_pV idmap (path_universe f) z.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 417
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 418
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  pattern f.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 419
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (equiv_ind (equiv_path A B) _ _ _); intros p.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 420
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+  refine (_ @ ap_transport_pV_idmap p (path_universe (equiv_path A B p))
+            (eissect (equiv_path A B) p) z).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 422
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply whiskerR.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 423
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine ((concat_Ap _ _)^ @ _).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 424
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply concat2.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 425
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 426
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply ap.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 426
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (transport_path_universe_V_equiv_path _ _ @ _).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 427
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unfold inverse2.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 428
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre> symmetry; apply (ap_compose inverse (fun s =&gt; transport idmap s z)).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 428
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 429
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply transport_path_universe_equiv_path.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 429
+Time: 0.007s">
+<div class="time" style="width: 23.333333333333%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 430
+Time: 0.002s">
+<div class="time" style="width: 6.6666666666667%"></div>
+<pre>
+
+Definition transport_path_universe_pV
+  {A B : Type} (f : A -&gt; B) {feq : IsEquiv f } (z : B)
+  : transport_path_universe f (transport idmap (path_universe f)^ z)
+      @ ap f (transport_path_universe_V f z)
+      @ eisretr f z
+    = transport_pV idmap (path_universe f) z
+  := transport_path_universe_pV_uncurried (Build_Equiv A B f feq) z.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 438
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Equivalence induction *)
+
+(** Paulin-Mohring style *)</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 442
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Theorem equiv_induction {U : Type} (P : forall V, U &lt;~&gt; V -&gt; Type)
+  : (P U (equiv_idmap U)) -&gt; (forall V (w : U &lt;~&gt; V), P V w).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 443
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 444
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros H0 V.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 445
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (equiv_ind (equiv_path U V)).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 446
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro p; induction p; exact H0.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 447
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 448
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+
+Definition equiv_induction_comp {U : Type} (P : forall V, U &lt;~&gt; V -&gt; Type)
+  (didmap : P U (equiv_idmap U))
+  : equiv_induction P didmap U (equiv_idmap U) = didmap
+  := (equiv_ind_comp (P U) _ 1).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 453
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Martin-Löf style *)</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 455
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Theorem equiv_induction' (P : forall U V, U &lt;~&gt; V -&gt; Type)
+  : (forall T, P T T (equiv_idmap T)) -&gt; (forall U V (w : U &lt;~&gt; V), P U V w).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 456
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 457
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros H0 U V w.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 458
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (equiv_ind (equiv_path U V)).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 459
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro p; induction p; apply H0.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 460
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 461
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+
+Definition equiv_induction'_comp (P : forall U V, U &lt;~&gt; V -&gt; Type)
+  (didmap : forall T, P T T (equiv_idmap T)) (U : Type)
+  : equiv_induction' P didmap U U (equiv_idmap U) = didmap U
+  := (equiv_ind_comp (P U U) _ 1).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 466
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Theorem equiv_induction_inv {U : Type} (P : forall V, V &lt;~&gt; U -&gt; Type)
+  : (P U (equiv_idmap U)) -&gt; (forall V (w : V &lt;~&gt; U), P V w).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 469
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 470
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros H0 V.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 471
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (equiv_ind (equiv_path V U)).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 472
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* We manually apply [paths_ind_r] to reduce universe levels. *)
+ </pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 474
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>revert V; rapply paths_ind_r; exact H0.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 474
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 475
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+
+Definition equiv_induction_inv_comp {U : Type} (P : forall V, V &lt;~&gt; U -&gt; Type)
+  (didmap : P U (equiv_idmap U))
+  : equiv_induction_inv P didmap U (equiv_idmap U) = didmap
+  := (equiv_ind_comp (P U) _ 1).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 480
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Based equivalence types *)
+
+</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 483
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export] Instance contr_basedequiv@{u +} {X : Type@{u}}
+  : Contr {Y : Type@{u} &amp; X &lt;~&gt; Y}.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 484
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 485
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (Build_Contr _ (X; equiv_idmap)).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 486
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [Y f]; revert Y f.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 487
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (equiv_induction _ idpath).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 488
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 489
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+#[export] Instance contr_basedequiv'@{u +} {X : Type@{u}}
+  : Contr {Y : Type@{u} &amp; Y &lt;~&gt; X}.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 492
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 493
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* The next line is used so that Coq can figure out the type of (X; equiv_idmap). *)
+ </pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 495
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>srapply Build_Contr.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 495
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 496
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (X; equiv_idmap).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 496
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 497
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [Y f]; revert Y f.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 497
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (equiv_induction_inv _ idpath).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 498
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 499
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Any two functions that act like transport along an equivalence, i.e. maps of the type [T : forall X Y, X &lt;~&gt; Y -&gt; S X -&gt; S Y] with a computation rule of type [Trefl : forall X, (T (equiv_idmap X) == idmap)], are homotopic. This can be useful when we want to transport along an equivalence, but [univalent_transport] does not have the computational properties that we want. *)</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 501
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>Definition homotopic_trequiv (S : Type -&gt; Type) {X Y}
+  (T T' : forall {X Y}, X &lt;~&gt; Y -&gt; S X -&gt; S Y)
+  (Trefl : forall {X}, (T (equiv_idmap X) == idmap))
+  (T'refl : forall {X}, (T' (equiv_idmap X) == idmap))
+  (e : X &lt;~&gt; Y)
+  : T e == T' e.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 506
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 507
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert Y e.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 508
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply equiv_induction.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 509
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (pointwise_paths_concat (Trefl _)).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 510
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  symmetry; apply T'refl.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 511
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 512
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Truncations *)
+
+(** Truncatedness of the universe is a subtle question, but with univalence we can conclude things about truncations of certain of its path-spaces. *)</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 516
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export] Instance istrunc_paths_Type
+  {n : trunc_index} {A B : Type} `{IsTrunc n.+1 B}
+  : IsTrunc n.+1 (A = B).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 518
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 519
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+  exact (istrunc_isequiv_istrunc _ path_universe_uncurried).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 520
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 521
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We can also say easily that the universe is not a set. *)</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 523
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition not_hset_Type : ~ (IsHSet Type).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 523
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 524
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro HT.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 525
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply true_ne_false.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 526
+Time: 0.001s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+  pose (r := path_ishprop (path_universe equiv_negb) 1).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 527
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_ @ (ap (fun q =&gt; transport idmap q false) r)).</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 528
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  symmetry; apply transport_path_universe.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 529
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 530
+Time: 0.021s">
+<div class="time" style="width: 70%"></div>
+<pre>
+
+End Univalence.</pre>
+</div>
+<div class="code" title="File: Universe.v
+Line: 533
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

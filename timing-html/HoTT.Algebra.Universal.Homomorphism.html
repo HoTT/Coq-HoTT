@@ -1,0 +1,985 @@
+<html>
+<head>
+<title>Homomorphism.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Homomorphism.v</h1>
+
+<div class="code" title="File: Homomorphism.v
+Line: 1
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>(** This file implements algebra homomorphism. We show that algebras form a wild category with homomorphisms. The [WildCat] module provides some nice notations that we use: [A $-&gt; B] for homomorphism, [Id] for the identity homomorphism and [g $o f] for composition. *)
+
+</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 2
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Unset Elimination Schemes.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 2
+Time: 0.039s">
+<div class="time" style="width: 100%"></div>
+<pre>
+
+Require Export
+  HoTT.Algebra.Universal.Algebra
+  HoTT.WildCat.Core.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 6
+Time: 0.002s">
+<div class="time" style="width: 5.1282051282051%"></div>
+<pre>
+
+Require Import
+  HoTT.Types.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 9
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope Algebra_scope.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section is_homomorphism.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {σ} {A B : Algebra σ} (f : forall (s : Sort σ), A s -&gt; B s).</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 14
+Time: 0.001s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+
+  Definition OpPreserving {w : SymbolType σ}
+    (α : Operation A w) (β : Operation B w) : Type
+    := forall a : DomOperation A w,
+        f (sort_cod w) (α a) = β (fun i =&gt; f (sorts_dom w i) (a i)).</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance hprop_oppreserving `{Funext} {w : SymbolType σ}
+    (α : Operation A w) (β : Operation B w)
+    : IsHProp (OpPreserving α β).</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 24
+Time: 0.002s">
+<div class="time" style="width: 5.1282051282051%"></div>
+<pre>
+    exact istrunc_forall.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Class IsHomomorphism : Type
+    := oppreserving_hom : forall (u : Symbol σ), OpPreserving u.#A u.#B.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance hprop_is_homomorphism `{Funext}
+    : IsHProp IsHomomorphism.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 33
+Time: 0.001s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+    exact istrunc_forall.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+End is_homomorphism.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 36
+Time: 0.001s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+
+Record Homomorphism {σ} {A B : Algebra σ} : Type := Build_Homomorphism
+  { def_homomorphism : forall (s : Sort σ), A s -&gt; B s
+  ; is_homomorphism :: IsHomomorphism def_homomorphism }.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments Homomorphism {σ}.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments Build_Homomorphism {σ A B} def_homomorphism {is_homomorphism}.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Global Coercion def_homomorphism : Homomorphism &gt;-&gt; Funclass.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance isgraph_algebra (σ : Signature) : IsGraph (Algebra σ)
+  := Build_IsGraph (Algebra σ) Homomorphism.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 49
+Time: 0.001s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+
+Lemma apD10_homomorphism {σ} {A B : Algebra σ} {f g : A $-&gt; B}
+  : f = g -&gt; forall s, f s == g s.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro p.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 54
+Time: 0.001s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre> by destruct p.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 55
+Time: 0.001s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+
+Definition SigHomomorphism {σ} (A B : Algebra σ) : Type :=
+  { def_hom : forall s, A s -&gt; B s | IsHomomorphism def_hom }.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma issig_homomorphism {σ} (A B : Algebra σ)
+  : SigHomomorphism A B &lt;~&gt; (A $-&gt; B).</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 62
+Time: 0.004s">
+<div class="time" style="width: 10.25641025641%"></div>
+<pre>
+  issig.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 63
+Time: 0.001s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance hset_homomorphism `{Funext} {σ} (A B : Algebra σ)
+  : IsHSet (A $-&gt; B).</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 68
+Time: 0.008s">
+<div class="time" style="width: 20.512820512821%"></div>
+<pre>
+  exact (istrunc_equiv_istrunc _ (issig_homomorphism A B)).</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 70
+Time: 0.001s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+
+Lemma path_homomorphism `{Funext} {σ} {A B : Algebra σ}
+  (f g : A $-&gt; B) (p : def_homomorphism f = def_homomorphism g)
+  : f = g.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 75
+Time: 0.013s">
+<div class="time" style="width: 33.333333333333%"></div>
+<pre>
+  apply (ap (issig_homomorphism A B)^-1)^-1.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold issig_homomorphism; cbn.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 77
+Time: 0.001s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+  apply path_sigma_hprop.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact p.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 79
+Time: 0.002s">
+<div class="time" style="width: 5.1282051282051%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The identity homomorphism. *)
+
+</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section homomorphism_id.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {σ} (A : Algebra σ).</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance is_homomorphism_id
+    : IsHomomorphism (fun s (x : A s) =&gt; x).</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros u a.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition homomorphism_id : A $-&gt; A
+    := Build_Homomorphism (fun s (x : A s) =&gt; x).</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End homomorphism_id.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments homomorphism_id {σ} A%_Algebra_scope , {σ} {A}.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Composition of homomorphisms. *)
+
+</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section homomorphism_compose.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {σ} {A B C : Algebra σ}.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 101
+Time: 0.001s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+
+  #[export] Instance is_homomorphism_compose
+    (g : forall s, B s -&gt; C s) `{!IsHomomorphism g}
+    (f : forall s, A s -&gt; B s) `{!IsHomomorphism f}
+    : IsHomomorphism (fun s =&gt; g s o f s).</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros u a.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 108
+Time: 0.002s">
+<div class="time" style="width: 5.1282051282051%"></div>
+<pre>
+    by rewrite &lt;- (oppreserving_hom g), (oppreserving_hom f).</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 109
+Time: 0.001s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 110
+Time: 0.002s">
+<div class="time" style="width: 5.1282051282051%"></div>
+<pre>
+
+  Definition homomorphism_compose (g : B $-&gt; C) (f : A $-&gt; B) : A $-&gt; C
+    := Build_Homomorphism (fun s =&gt; g s o f s).</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End homomorphism_compose.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 115
+Time: 0.001s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+
+Instance is01cat_algebra (σ : Signature) : Is01Cat (Algebra σ)
+  := Build_Is01Cat _ _
+      (fun _ =&gt; homomorphism_id) (fun _ _ _ =&gt; homomorphism_compose).</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 119
+Time: 0.002s">
+<div class="time" style="width: 5.1282051282051%"></div>
+<pre>
+
+Lemma assoc_homomorphism_compose `{Funext} {σ}
+  {A B C D : Algebra σ} (h : C $-&gt; D) (g : B $-&gt; C) (f : A $-&gt; B)
+  : (h $o g) $o f = h $o (g $o f).</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by apply path_homomorphism.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 125
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 126
+Time: 0.001s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+
+Lemma left_id_homomorphism_compose `{Funext} {σ}
+  {A B : Algebra σ} (f : A $-&gt; B)
+  : Id B $o f = f.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 130
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 131
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by apply path_homomorphism.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 133
+Time: 0.001s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+
+Lemma right_id_homomorphism_compose `{Funext} {σ}
+  {A B : Algebra σ} (f : A $-&gt; B)
+  : f $o Id A = f.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 137
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by apply path_homomorphism.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 140
+Time: 0.002s">
+<div class="time" style="width: 5.1282051282051%"></div>
+<pre>
+
+Instance is2graph_algebra {σ} : Is2Graph (Algebra σ)
+  := fun A B
+    =&gt; Build_IsGraph _ (fun (f g : A $-&gt; B) =&gt; forall s, f s == g s).</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance is01cat_homomorphism {σ} (A B : Algebra σ)
+  : Is01Cat (A $-&gt; B).</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 147
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 148
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply Build_Is01Cat.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fun f s x =&gt; idpath).</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fun f g h P Q s x =&gt; Q s x @ P s x).</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 152
+Time: 0.001s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+
+Instance is0gpd_homomorphism {σ} {A B : Algebra σ}
+  : Is0Gpd (A $-&gt; B).</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 155
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply Build_Is0Gpd.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros f g P s x.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (P s x)^.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 158
+Time: 0.001s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+
+Instance is0functor_postcomp_homomorphism {σ}
+  (A : Algebra σ) {B C : Algebra σ} (h : B $-&gt; C)
+  : Is0Functor (@cat_postcomp (Algebra σ) _ _ A B C h).</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 163
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply Build_Is0Functor.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 164
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [f ?] [g ?] p s x.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 165
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (ap (h s) (p s x)).</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 166
+Time: 0.001s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 167
+Time: 0.001s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+
+Instance is0functor_precomp_homomorphism {σ}
+  {A B : Algebra σ} (h : A $-&gt; B) (C : Algebra σ)
+  : Is0Functor (@cat_precomp (Algebra σ) _ _ A B C h).</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply Build_Is0Functor.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [f ?] [g ?] p s x.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 174
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (p s (h s x)).</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 175
+Time: 0.001s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance is1cat_algebra (σ : Signature) : Is1Cat (Algebra σ).</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 179
+Time: 0.011s">
+<div class="time" style="width: 28.205128205128%"></div>
+<pre>
+  by rapply Build_Is1Cat.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 180
+Time: 0.001s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 181
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance is1cat_strong_algebra `{Funext} (σ : Signature)
+  : Is1Cat_Strong (Algebra σ).</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 184
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 185
+Time: 0.006s">
+<div class="time" style="width: 15.384615384615%"></div>
+<pre>
+  rapply Build_Is1Cat_Strong.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 186
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply assoc_homomorphism_compose.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> symmetry; apply assoc_homomorphism_compose.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 189
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 189
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply left_id_homomorphism_compose.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 189
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 190
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 190
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply right_id_homomorphism_compose.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 190
+Time: 0.001s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Homomorphism.v
+Line: 192
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+
+</pre>
+</div>
+</body>
+</html>
+

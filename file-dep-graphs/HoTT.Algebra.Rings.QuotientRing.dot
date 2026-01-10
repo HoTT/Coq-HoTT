@@ -1,0 +1,36 @@
+digraph HoTT_Algebra_Rings_QuotientRing {
+  graph [ratio=0.5]
+  node [style=filled]
+QuotientRing_rng_first_iso_ [label="rng_first_iso'", URL=<QuotientRing.html#rng_first_iso'>, peripheries=3, fillcolor="#F070D1"] ;
+QuotientRing_rng_quotient_invar [label="rng_quotient_invar", URL=<QuotientRing.html#rng_quotient_invar>, fillcolor="#F070D1"] ;
+QuotientRing_rng_first_iso [label="rng_first_iso", URL=<QuotientRing.html#rng_first_iso>, fillcolor="#F070D1"] ;
+QuotientRing_QuotientRing_rec [label="QuotientRing_rec", URL=<QuotientRing.html#QuotientRing_rec>, peripheries=3, fillcolor="#F070D1"] ;
+QuotientRing_QuotientRing_ind2_hprop [label="QuotientRing_ind2_hprop", URL=<QuotientRing.html#QuotientRing_ind2_hprop>, fillcolor="#F070D1"] ;
+QuotientRing_QuotientRing_ind_hprop [label="QuotientRing_ind_hprop", URL=<QuotientRing.html#QuotientRing_ind_hprop>, peripheries=3, fillcolor="#F070D1"] ;
+QuotientRing_QuotientRing_ind [label="QuotientRing_ind", URL=<QuotientRing.html#QuotientRing_ind>, peripheries=3, fillcolor="#F070D1"] ;
+QuotientRing_issurj_rng_quotient_map [label="issurj_rng_quotient_map", URL=<QuotientRing.html#issurj_rng_quotient_map>, peripheries=3, fillcolor="#F070D1"] ;
+QuotientRing_rng_quotient_map [label="rng_quotient_map", URL=<QuotientRing.html#rng_quotient_map>, fillcolor="#F070D1"] ;
+QuotientRing_QuotientRing [label="QuotientRing", URL=<QuotientRing.html#QuotientRing>, fillcolor="#F070D1"] ;
+QuotientRing_isring_quotient_abgroup [label="isring_quotient_abgroup", URL=<QuotientRing.html#isring_quotient_abgroup>, fillcolor="#F070D1"] ;
+QuotientRing_one_quotient_abgroup [label="one_quotient_abgroup", URL=<QuotientRing.html#one_quotient_abgroup>, fillcolor="#F070D1"] ;
+QuotientRing_mult_quotient_group [label="mult_quotient_group", URL=<QuotientRing.html#mult_quotient_group>, fillcolor="#F070D1"] ;
+QuotientRing_iscong_mult_incosetL [label="iscong_mult_incosetL", URL=<QuotientRing.html#iscong_mult_incosetL>, fillcolor="#F070D1"] ;
+QuotientRing_plus_quotient_group [label="plus_quotient_group", URL=<QuotientRing.html#plus_quotient_group>, fillcolor="#F070D1"] ;
+  QuotientRing_rng_first_iso_ -> QuotientRing_rng_quotient_invar [] ;
+  QuotientRing_rng_first_iso_ -> QuotientRing_rng_first_iso [] ;
+  QuotientRing_rng_quotient_invar -> QuotientRing_QuotientRing [] ;
+  QuotientRing_rng_first_iso -> QuotientRing_QuotientRing_ind2_hprop [] ;
+  QuotientRing_QuotientRing_rec -> QuotientRing_QuotientRing_ind2_hprop [] ;
+  QuotientRing_QuotientRing_ind2_hprop -> QuotientRing_rng_quotient_map [] ;
+  QuotientRing_QuotientRing_ind_hprop -> QuotientRing_rng_quotient_map [] ;
+  QuotientRing_QuotientRing_ind -> QuotientRing_rng_quotient_map [] ;
+  QuotientRing_issurj_rng_quotient_map -> QuotientRing_rng_quotient_map [] ;
+  QuotientRing_rng_quotient_map -> QuotientRing_QuotientRing [] ;
+  QuotientRing_QuotientRing -> QuotientRing_isring_quotient_abgroup [] ;
+  QuotientRing_isring_quotient_abgroup -> QuotientRing_one_quotient_abgroup [] ;
+  QuotientRing_isring_quotient_abgroup -> QuotientRing_mult_quotient_group [] ;
+  QuotientRing_isring_quotient_abgroup -> QuotientRing_plus_quotient_group [] ;
+  QuotientRing_mult_quotient_group -> QuotientRing_iscong_mult_incosetL [] ;
+subgraph cluster_QuotientRing { label="QuotientRing"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+QuotientRing_plus_quotient_group; QuotientRing_iscong_mult_incosetL; QuotientRing_mult_quotient_group; QuotientRing_one_quotient_abgroup; QuotientRing_isring_quotient_abgroup; QuotientRing_QuotientRing; QuotientRing_rng_quotient_map; QuotientRing_issurj_rng_quotient_map; QuotientRing_QuotientRing_ind; QuotientRing_QuotientRing_ind_hprop; QuotientRing_QuotientRing_ind2_hprop; QuotientRing_QuotientRing_rec; QuotientRing_rng_first_iso; QuotientRing_rng_quotient_invar; QuotientRing_rng_first_iso_; };
+} /* END */

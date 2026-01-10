@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>Morphisms.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-wsp"><span class="sd">(** * Morphisms in [set_cat] *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="morphisms-v-chkc0" style="display: none" type="checkbox"><label class="alectryon-input" for="morphisms-v-chkc0"><span class="kn">Require Import</span> Category.Core NaturalTransformation.Core.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Category.Morphisms NaturalTransformation.Paths.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Category.Univalent.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> SetCategory.Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> HoTT.Basics HoTT.Types TruncType.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Universe Polymorphism</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Implicit Arguments</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Generalizable All Variables</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Asymmetric Patterns</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> path_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> morphism_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> category_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="morphisms-v-chkc1" style="display: none" type="checkbox"><label class="alectryon-input" for="morphisms-v-chkc1"><span class="kn">Lemma</span> <span class="nf">isisomorphism_set_cat_natural_transformation_paths</span>
+      `{fs : Funext} (X : set_cat) C D F G
+      (T1 T2 : morphism set_cat X (Build_HSet (@NaturalTransformation C D F G)))
+      (H : <span class="kr">forall</span> <span class="nv">x</span> <span class="nv">y</span>, T1 x y = T2 x y)
+      `{@IsIsomorphism set_cat _ _ T1}
+: @IsIsomorphism set_cat _ _ T2.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>fs</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span>set_cat</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F, G</var><span class="hyp-type"><b>: </b><span>Core.Functor C D</span></span></span><br><span><var>T1, T2</var><span class="hyp-type"><b>: </b><span>morphism set_cat X
+  (Build_HSet (NaturalTransformation F G))</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">x</span> : X) (<span class="nv">y</span> : C), T1 x y = T2 x y</span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span>IsIsomorphism T1</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsIsomorphism T2</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="morphisms-v-chkc2" style="display: none" type="checkbox"><label class="alectryon-input" for="morphisms-v-chkc2"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>fs</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span>set_cat</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F, G</var><span class="hyp-type"><b>: </b><span>Core.Functor C D</span></span></span><br><span><var>T1, T2</var><span class="hyp-type"><b>: </b><span>morphism set_cat X
+  (Build_HSet (NaturalTransformation F G))</span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">x</span> : X) (<span class="nv">y</span> : C), T1 x y = T2 x y</span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span>IsIsomorphism T1</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsIsomorphism T2</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kr">exists</span> (<span class="nv">T1</span>^-<span class="mi">1</span>)%morphism;
+  <span class="kp">abstract</span> (
+      <span class="kp">first</span> [ <span class="nb">apply</span> @iso_moveR_Vp
+            | <span class="nb">apply</span> @iso_moveR_pV ];
+      <span class="kp">repeat</span> <span class="kp">first</span> [ <span class="nb">intro</span>
+                   | <span class="kp">solve</span> [ <span class="nb">auto</span>
+                           | <span class="nb">symmetry</span>; <span class="nb">auto</span> ]
+                   | <span class="nb">apply</span> @path_forall
+                   | path_natural_transformation ]
+    ).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">equiv_iso_set_cat</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  <span class="sd">(** ** Isomorphisms in [set_cat] are equivalent to equivalences. *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `{Funext}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">isiso_isequiv</span> <span class="nv">s</span> <span class="nv">d</span> (<span class="nv">m</span> : morphism set_cat s d)
+             `{IsEquiv _ _ m}
+  : IsIsomorphism m
+    := Build_IsIsomorphism
+         set_cat s d
+         m m^-<span class="mi">1</span>%function
+         (path_forall _ _ (eissect m))
+         (path_forall _ _ (eisretr m)).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">isequiv_isiso</span> <span class="nv">s</span> <span class="nv">d</span> (<span class="nv">m</span> : morphism set_cat s d)
+             `{IsIsomorphism _ _ _ m}
+  : IsEquiv m
+    := Build_IsEquiv
+         _ _
+         m m^-<span class="mi">1</span>%morphism
+         (ap10 right_inverse)
+         (ap10 left_inverse)
+         (<span class="kr">fun</span> <span class="nv">_</span> =&gt; path_ishprop _ _).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">iso_equiv</span> (<span class="nv">s</span> <span class="nv">d</span> : set_cat) (<span class="nv">m</span> : s &lt;~&gt; d)
+  : s &lt;~=~&gt; d
+    := Build_Isomorphic
+         (@isiso_isequiv s d m _).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="morphisms-v-chkc3" style="display: none" type="checkbox"><label class="alectryon-input" for="morphisms-v-chkc3">#[export] <span class="kn">Instance</span> <span class="nf">isequiv_isiso_isequiv</span> <span class="nv">s</span> <span class="nv">d</span>
+  : IsEquiv (@iso_equiv s d) | <span class="mi">0</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>set_cat</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsEquiv (iso_equiv s d)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="morphisms-v-chkc4" style="display: none" type="checkbox"><label class="alectryon-input" for="morphisms-v-chkc4"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>set_cat</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsEquiv (iso_equiv s d)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">refine</span> (isequiv_adjointify
+              (@iso_equiv s d)
+              (<span class="kr">fun</span> <span class="nv">m</span> =&gt; Build_Equiv _ _ _ (@isequiv_isiso s d m m))
+              _
+              _);
+    <span class="nb">simpl</span> <span class="kr">in</span> *;
+    <span class="nb">clear</span>;
+    <span class="kp">abstract</span> (
+        <span class="nb">intros</span> [? ?]; <span class="nb">simpl</span>;
+        <span class="nb">unfold</span> iso_equiv; <span class="nb">simpl</span>;
+        <span class="nb">apply</span> ap;
+        <span class="nb">apply</span> path_ishprop
+      ).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="morphisms-v-chkc5" style="display: none" type="checkbox"><label class="alectryon-input" for="morphisms-v-chkc5"><span class="kn">Lemma</span> <span class="nf">path_idtoequiv_idtoiso</span> (<span class="nv">s</span> <span class="nv">d</span> : set_cat) (<span class="nv">p</span> : s = d)
+  : iso_equiv s d (equiv_path _ _ (ap trunctype_type p)) = idtoiso set_cat p.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>set_cat</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>s = d</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">iso_equiv s d (equiv_path s d (ap trunctype_type p)) =
+idtoiso set_cat p</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="morphisms-v-chkc6" style="display: none" type="checkbox"><label class="alectryon-input" for="morphisms-v-chkc6"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>set_cat</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>s = d</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">iso_equiv s d (equiv_path s d (ap trunctype_type p)) =
+idtoiso set_cat p</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="morphisms-v-chkc7" style="display: none" type="checkbox"><label class="alectryon-input" for="morphisms-v-chkc7"><span class="nb">apply</span> path_isomorphic.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>set_cat</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>s = d</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">iso_equiv s d (equiv_path s d (ap trunctype_type p)) =
+idtoiso set_cat p</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="morphisms-v-chkc8" style="display: none" type="checkbox"><label class="alectryon-input" for="morphisms-v-chkc8"><span class="nb">case</span> p.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>set_cat</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>s = d</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">iso_equiv s s (equiv_path s s (ap trunctype_type <span class="mi">1</span>)) =
+idtoiso set_cat <span class="mi">1</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">reflexivity</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">equiv_iso_set_cat</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">equiv_iso_prop_cat</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  <span class="sd">(** ** Isomorphisms in [prop_cat] are equivalent to equivalences. *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `{Funext}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">isiso_isequiv_prop</span> <span class="nv">s</span> <span class="nv">d</span> (<span class="nv">m</span> : morphism prop_cat s d)
+             `{IsEquiv _ _ m}
+  : IsIsomorphism m
+    := Build_IsIsomorphism
+         prop_cat s d
+         m m^-<span class="mi">1</span>%function
+         (path_forall _ _ (eissect m))
+         (path_forall _ _ (eisretr m)).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">isequiv_isiso_prop</span> <span class="nv">s</span> <span class="nv">d</span> (<span class="nv">m</span> : morphism prop_cat s d)
+             `{IsIsomorphism _ _ _ m}
+  : IsEquiv m
+    := Build_IsEquiv
+         _ _
+         m m^-<span class="mi">1</span>%morphism
+         (ap10 right_inverse)
+         (ap10 left_inverse)
+         (<span class="kr">fun</span> <span class="nv">_</span> =&gt; path_ishprop _ _).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">iso_equiv_prop</span> (<span class="nv">s</span> <span class="nv">d</span> : prop_cat) (<span class="nv">m</span> : s &lt;~&gt; d)
+  : s &lt;~=~&gt; d
+    := Build_Isomorphic
+         (@isiso_isequiv_prop s d m _).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="morphisms-v-chkc9" style="display: none" type="checkbox"><label class="alectryon-input" for="morphisms-v-chkc9">#[export] <span class="kn">Instance</span> <span class="nf">isequiv_isiso_isequiv_prop</span> <span class="nv">s</span> <span class="nv">d</span>
+  : IsEquiv (@iso_equiv_prop s d) | <span class="mi">0</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>prop_cat</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsEquiv (iso_equiv_prop s d)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="morphisms-v-chkca" style="display: none" type="checkbox"><label class="alectryon-input" for="morphisms-v-chkca"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>prop_cat</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsEquiv (iso_equiv_prop s d)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">refine</span> (isequiv_adjointify
+              (@iso_equiv_prop s d)
+              (<span class="kr">fun</span> <span class="nv">m</span> =&gt; Build_Equiv _ _ _ (@isequiv_isiso_prop s d m _))
+              _
+              _);
+    <span class="nb">simpl</span> <span class="kr">in</span> *;
+    <span class="nb">clear</span>;
+    <span class="kp">abstract</span> (
+        <span class="nb">intros</span> [? ?]; <span class="nb">simpl</span>;
+        <span class="nb">unfold</span> iso_equiv_prop; <span class="nb">simpl</span>;
+        <span class="nb">apply</span> ap;
+        <span class="nb">apply</span> path_ishprop
+      ).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="morphisms-v-chkcb" style="display: none" type="checkbox"><label class="alectryon-input" for="morphisms-v-chkcb"><span class="kn">Lemma</span> <span class="nf">path_idtoequiv_idtoiso_prop</span> (<span class="nv">s</span> <span class="nv">d</span> : prop_cat) (<span class="nv">p</span> : s = d)
+  : iso_equiv_prop s d (equiv_path _ _ (ap trunctype_type p)) = idtoiso prop_cat p.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>prop_cat</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>s = d</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">iso_equiv_prop s d
+  (equiv_path s d (ap trunctype_type p)) =
+idtoiso prop_cat p</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="morphisms-v-chkcc" style="display: none" type="checkbox"><label class="alectryon-input" for="morphisms-v-chkcc"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>prop_cat</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>s = d</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">iso_equiv_prop s d
+  (equiv_path s d (ap trunctype_type p)) =
+idtoiso prop_cat p</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="morphisms-v-chkcd" style="display: none" type="checkbox"><label class="alectryon-input" for="morphisms-v-chkcd"><span class="nb">apply</span> path_isomorphic.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>prop_cat</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>s = d</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">iso_equiv_prop s d
+  (equiv_path s d (ap trunctype_type p)) =
+idtoiso prop_cat p</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="morphisms-v-chkce" style="display: none" type="checkbox"><label class="alectryon-input" for="morphisms-v-chkce"><span class="nb">case</span> p.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>prop_cat</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>s = d</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">iso_equiv_prop s s
+  (equiv_path s s (ap trunctype_type <span class="mi">1</span>)) =
+idtoiso prop_cat <span class="mi">1</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">reflexivity</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">equiv_iso_prop_cat</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Close Scope</span> morphism_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="morphisms-v-chkcf" style="display: none" type="checkbox"><label class="alectryon-input" for="morphisms-v-chkcf"><span class="kn">Instance</span> <span class="nf">iscategory_set_cat</span> `{Univalence}
+: IsCategory set_cat.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsCategory set_cat</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="morphisms-v-chkd0" style="display: none" type="checkbox"><label class="alectryon-input" for="morphisms-v-chkd0"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsCategory set_cat</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="morphisms-v-chkd1" style="display: none" type="checkbox"><label class="alectryon-input" for="morphisms-v-chkd1"><span class="nb">intros</span> C D.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>set_cat</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsEquiv (idtoiso set_cat (y:=D))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="morphisms-v-chkd2" style="display: none" type="checkbox"><label class="alectryon-input" for="morphisms-v-chkd2"><span class="nb">eapply</span> @isequiv_homotopic; [ | <span class="nb">intro</span>; <span class="nb">apply</span> path_idtoequiv_idtoiso ].</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>set_cat</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsEquiv
+  (<span class="kr">fun</span> <span class="nv">x</span> : C = D =&gt;
+   iso_equiv C D
+     (equiv_path C D (ap trunctype_type x)))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="morphisms-v-chkd3" style="display: none" type="checkbox"><label class="alectryon-input" for="morphisms-v-chkd3"><span class="nb">change</span> (IsEquiv (iso_equiv C D o equiv_path C D o @ap _ _ trunctype_type C D)).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>set_cat</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsEquiv
+  (iso_equiv C D o equiv_path C D o ap trunctype_type)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">typeclasses eauto</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="morphisms-v-chkd4" style="display: none" type="checkbox"><label class="alectryon-input" for="morphisms-v-chkd4"><span class="kn">Instance</span> <span class="nf">iscategory_prop_cat</span> `{Univalence}
+: IsCategory prop_cat.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsCategory prop_cat</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="morphisms-v-chkd5" style="display: none" type="checkbox"><label class="alectryon-input" for="morphisms-v-chkd5"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsCategory prop_cat</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="morphisms-v-chkd6" style="display: none" type="checkbox"><label class="alectryon-input" for="morphisms-v-chkd6"><span class="nb">intros</span> C D.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>prop_cat</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsEquiv (idtoiso prop_cat (y:=D))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="morphisms-v-chkd7" style="display: none" type="checkbox"><label class="alectryon-input" for="morphisms-v-chkd7"><span class="nb">eapply</span> @isequiv_homotopic; [ | <span class="nb">intro</span>; <span class="nb">apply</span> path_idtoequiv_idtoiso_prop ].</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>prop_cat</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsEquiv
+  (<span class="kr">fun</span> <span class="nv">x</span> : C = D =&gt;
+   iso_equiv_prop C D
+     (equiv_path C D (ap trunctype_type x)))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="morphisms-v-chkd8" style="display: none" type="checkbox"><label class="alectryon-input" for="morphisms-v-chkd8"><span class="nb">change</span> (IsEquiv (iso_equiv_prop C D o equiv_path C D o @ap _ _ trunctype_type C D)).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>prop_cat</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsEquiv
+  (iso_equiv_prop C D o equiv_path C D
+   o ap trunctype_type)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">typeclasses eauto</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span></span></pre>
+</div>
+</div></body>
+</html>

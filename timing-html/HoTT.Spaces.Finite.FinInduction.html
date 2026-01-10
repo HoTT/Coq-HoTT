@@ -1,0 +1,401 @@
+<html>
+<head>
+<title>FinInduction.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for FinInduction.v</h1>
+
+<div class="code" title="File: FinInduction.v
+Line: 1
+Time: 0.039s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import
+  HoTT.Basics
+  HoTT.Types
+  HoTT.Universes.HSet
+  HoTT.Spaces.Nat.Core
+  HoTT.Spaces.Finite.FinNat
+  HoTT.Spaces.Finite.Fin.</pre>
+</div>
+<div class="code" title="File: FinInduction.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope nat_scope.</pre>
+</div>
+<div class="code" title="File: FinInduction.v
+Line: 9
+Time: 0.001s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+
+Definition fin_ind (P : forall n : nat, Fin n -&gt; Type)
+  (z : forall n : nat, P n.+1 fin_zero)
+  (s : forall (n : nat) (k : Fin n), P n k -&gt; P n.+1 (fsucc k))
+  {n : nat} (k : Fin n)
+  : P n k.</pre>
+</div>
+<div class="code" title="File: FinInduction.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: FinInduction.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (transport (P n) (path_fin_to_finnat_to_fin k) _).</pre>
+</div>
+<div class="code" title="File: FinInduction.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (finnat_ind (fun n u =&gt; P n (finnat_to_fin u)) _ _ _).</pre>
+</div>
+<div class="code" title="File: FinInduction.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: FinInduction.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro.</pre>
+</div>
+<div class="code" title="File: FinInduction.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply z.</pre>
+</div>
+<div class="code" title="File: FinInduction.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: FinInduction.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros n' u c.</pre>
+</div>
+<div class="code" title="File: FinInduction.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine ((path_finnat_to_fin_succ _)^ # _).</pre>
+</div>
+<div class="code" title="File: FinInduction.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by apply s.</pre>
+</div>
+<div class="code" title="File: FinInduction.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: FinInduction.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma fin_ind_beta_zero (P : forall n : nat, Fin n -&gt; Type)
+  (z : forall n : nat, P n.+1 fin_zero)
+  (s : forall (n : nat) (k : Fin n), P n k -&gt; P n.+1 (fsucc k)) (n : nat)
+  : fin_ind P z s fin_zero = z n.</pre>
+</div>
+<div class="code" title="File: FinInduction.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: FinInduction.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold fin_ind.</pre>
+</div>
+<div class="code" title="File: FinInduction.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  generalize (path_fin_to_finnat_to_fin (@fin_zero n)).</pre>
+</div>
+<div class="code" title="File: FinInduction.v
+Line: 31
+Time: 0.001s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+  induction (path_fin_to_finnat_fin_zero n)^.</pre>
+</div>
+<div class="code" title="File: FinInduction.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro p.</pre>
+</div>
+<div class="code" title="File: FinInduction.v
+Line: 33
+Time: 0.005s">
+<div class="time" style="width: 12.820512820513%"></div>
+<pre>
+  destruct (hset_path2 1 p).</pre>
+</div>
+<div class="code" title="File: FinInduction.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lhs napply transport_1.</pre>
+</div>
+<div class="code" title="File: FinInduction.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  napply finnat_ind_beta_zero.</pre>
+</div>
+<div class="code" title="File: FinInduction.v
+Line: 36
+Time: 0.002s">
+<div class="time" style="width: 5.1282051282051%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: FinInduction.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma fin_ind_beta_fsucc (P : forall n : nat, Fin n -&gt; Type)
+  (z : forall n : nat, P n.+1 fin_zero)
+  (s : forall (n : nat) (k : Fin n), P n k -&gt; P n.+1 (fsucc k))
+  {n : nat} (k : Fin n)
+  : fin_ind P z s (fsucc k) = s n k (fin_ind P z s k).</pre>
+</div>
+<div class="code" title="File: FinInduction.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: FinInduction.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold fin_ind.</pre>
+</div>
+<div class="code" title="File: FinInduction.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  generalize (path_fin_to_finnat_to_fin (fsucc k)).</pre>
+</div>
+<div class="code" title="File: FinInduction.v
+Line: 46
+Time: 0.001s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+  induction (path_fin_to_finnat_fsucc k)^.</pre>
+</div>
+<div class="code" title="File: FinInduction.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro p.</pre>
+</div>
+<div class="code" title="File: FinInduction.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (ap (transport (P n.+1) p) (finnat_ind_beta_succ _ _ _ _) @ _).</pre>
+</div>
+<div class="code" title="File: FinInduction.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  generalize dependent p.</pre>
+</div>
+<div class="code" title="File: FinInduction.v
+Line: 50
+Time: 0.002s">
+<div class="time" style="width: 5.1282051282051%"></div>
+<pre>
+  induction (path_fin_to_finnat_to_fin k).</pre>
+</div>
+<div class="code" title="File: FinInduction.v
+Line: 51
+Time: 0.003s">
+<div class="time" style="width: 7.6923076923077%"></div>
+<pre>
+  induction (path_fin_to_finnat_to_fin k)^.</pre>
+</div>
+<div class="code" title="File: FinInduction.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro p.</pre>
+</div>
+<div class="code" title="File: FinInduction.v
+Line: 53
+Time: 0.006s">
+<div class="time" style="width: 15.384615384615%"></div>
+<pre>
+  induction (hset_path2 p (path_finnat_to_fin_succ (fin_to_finnat k))).</pre>
+</div>
+<div class="code" title="File: FinInduction.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply transport_pV.</pre>
+</div>
+<div class="code" title="File: FinInduction.v
+Line: 55
+Time: 0.004s">
+<div class="time" style="width: 10.25641025641%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: FinInduction.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition fin_rec (B : nat -&gt; Type)
+  : (forall n : nat, B n.+1) -&gt; (forall (n : nat), Fin n -&gt; B n -&gt; B n.+1) -&gt;
+    forall {n : nat}, Fin n -&gt; B n
+  := fin_ind (fun n _ =&gt; B n).</pre>
+</div>
+<div class="code" title="File: FinInduction.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma fin_rec_beta_zero (B : nat -&gt; Type)
+  (z : forall n : nat, B n.+1)
+  (s : forall (n : nat) (k : Fin n), B n -&gt; B n.+1) (n : nat)
+  : fin_rec B z s fin_zero = z n.</pre>
+</div>
+<div class="code" title="File: FinInduction.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: FinInduction.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (fin_ind_beta_zero (fun n _ =&gt; B n)).</pre>
+</div>
+<div class="code" title="File: FinInduction.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: FinInduction.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma fin_rec_beta_fsucc (B : nat -&gt; Type)
+  (z : forall n : nat, B n.+1)
+  (s : forall (n : nat) (k : Fin n), B n -&gt; B n.+1)
+  {n : nat} (k : Fin n)
+  : fin_rec B z s (fsucc k) = s n k (fin_rec B z s k).</pre>
+</div>
+<div class="code" title="File: FinInduction.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: FinInduction.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (fin_ind_beta_fsucc (fun n _ =&gt; B n)).</pre>
+</div>
+<div class="code" title="File: FinInduction.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: FinInduction.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+
+</pre>
+</div>
+</body>
+</html>
+

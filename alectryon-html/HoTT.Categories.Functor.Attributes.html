@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>Attributes.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-wsp"><span class="sd">(** * Attributes of functors (full, faithful, split essentially surjective) *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="attributes-v-chk0" style="display: none" type="checkbox"><label class="alectryon-input" for="attributes-v-chk0"><span class="kn">Require Import</span> Category.Core Functor.Core HomFunctor Category.Morphisms Category.Dual Functor.Dual Category.Prod Functor.Prod NaturalTransformation.Core SetCategory.Core Functor.Composition.Core.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Basics.Trunc Types.<span class="kn">Universe</span> <span class="nf">HIT</span>.iso HoTT.Truncations.Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Universe Polymorphism</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Implicit Arguments</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Generalizable All Variables</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Asymmetric Patterns</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> category_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">full_faithful</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `{Funext}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variables</span> <span class="nv">C</span> <span class="nv">D</span> : PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">F</span> : Functor C D.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** ** Natural transformation [hom_C(─, ─) → hom_D(Fᵒᵖ(─), F(─))] *)</span>
+  <span class="sd">(** TODO(JasonGross): Come up with a better name and location for this. *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="attributes-v-chk1" style="display: none" type="checkbox"><label class="alectryon-input" for="attributes-v-chk1"><span class="kn">Definition</span> <span class="nf">induced_hom_natural_transformation</span>
+  : NaturalTransformation (hom_functor C) (hom_functor D o (F^op, F)).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">NaturalTransformation (hom_functor C)
+  (hom_functor D o (F^op, F))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="attributes-v-chk2" style="display: none" type="checkbox"><label class="alectryon-input" for="attributes-v-chk2"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">NaturalTransformation (hom_functor C)
+  (hom_functor D o (F^op, F))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="attributes-v-chk3" style="display: none" type="checkbox"><label class="alectryon-input" for="attributes-v-chk3"><span class="nb">refine</span> (Build_NaturalTransformation
+              (hom_functor C)
+              (hom_functor D o (F^op, F))
+              (<span class="kr">fun</span> (<span class="nv">sd</span> : object (C^op * C)) <span class="nv">m</span> =&gt; (F _1 m)%morphism)
+              _
+           ).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">s</span> <span class="nv">d</span> : (C^op * C)%category)
+(<span class="nv">m</span> : morphism (C^op * C) s d),
+((<span class="kr">fun</span> <span class="nv">m0</span> : ((hom_functor C) _0 d)%object =&gt; F _1 m0)
+ o (hom_functor C) _1 m)%morphism =
+((hom_functor D o (F^op, F)) _1 m
+ o (<span class="kr">fun</span> <span class="nv">m0</span> : ((hom_functor C) _0 s)%object =&gt; F _1 m0))%morphism</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kp">abstract</span> (
+        <span class="kp">repeat</span> (<span class="nb">intros</span> [] || <span class="nb">intro</span>);
+        <span class="nb">simpl</span> <span class="kr">in</span> *;
+          <span class="kp">repeat</span> (<span class="nb">apply</span> path_forall; <span class="nb">intro</span>);
+        <span class="nb">simpl</span>;
+        <span class="nb">rewrite</span> !composition_of;
+        <span class="bp">reflexivity</span>
+      ).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** ** Full *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Class</span> <span class="nf">IsFull</span>
+    := is_full
+       : <span class="kr">forall</span> <span class="nv">x</span> <span class="nv">y</span> : C,
+           IsEpimorphism (induced_hom_natural_transformation (x, y)).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  <span class="sd">(** ** Faithful *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Class</span> <span class="nf">IsFaithful</span>
+    := is_faithful
+       : <span class="kr">forall</span> <span class="nv">x</span> <span class="nv">y</span> : C,
+           IsMonomorphism (induced_hom_natural_transformation (x, y)).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** ** Fully Faithful *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Class</span> <span class="nf">IsFullyFaithful</span>
+    := is_fully_faithful
+       : <span class="kr">forall</span> <span class="nv">x</span> <span class="nv">y</span> : C,
+           IsIsomorphism (induced_hom_natural_transformation (x, y)).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** ** Fully Faithful → Full *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="attributes-v-chk4" style="display: none" type="checkbox"><label class="alectryon-input" for="attributes-v-chk4">#[export] <span class="kn">Instance</span> <span class="nf">isfull_isfullyfaithful</span> `{IsFullyFaithful}
+  : IsFull.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span>IsFullyFaithful</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsFull</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="attributes-v-chk5" style="display: none" type="checkbox"><label class="alectryon-input" for="attributes-v-chk5"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span>IsFullyFaithful</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsFull</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="attributes-v-chk6" style="display: none" type="checkbox"><label class="alectryon-input" for="attributes-v-chk6"><span class="nb">intros</span> ? ?; <span class="nb">hnf</span> <span class="kr">in</span> * |- .</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> <span class="nv">y</span> : C,
+IsIsomorphism
+  (induced_hom_natural_transformation (x, y))</span></span></span><br><span><var>x, y</var><span class="hyp-type"><b>: </b><span>C</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsEpimorphism
+  (induced_hom_natural_transformation (x, y))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">typeclasses eauto</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Qed</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** ** Fully Faithful → Faithful *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="attributes-v-chk7" style="display: none" type="checkbox"><label class="alectryon-input" for="attributes-v-chk7">#[export] <span class="kn">Instance</span> <span class="nf">isfaithful_isfullyfaithful</span> `{IsFullyFaithful}
+  : IsFaithful.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span>IsFullyFaithful</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsFaithful</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="attributes-v-chk8" style="display: none" type="checkbox"><label class="alectryon-input" for="attributes-v-chk8"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span>IsFullyFaithful</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsFaithful</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="attributes-v-chk9" style="display: none" type="checkbox"><label class="alectryon-input" for="attributes-v-chk9"><span class="nb">intros</span> ? ?; <span class="nb">hnf</span> <span class="kr">in</span> * |- .</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> <span class="nv">y</span> : C,
+IsIsomorphism
+  (induced_hom_natural_transformation (x, y))</span></span></span><br><span><var>x, y</var><span class="hyp-type"><b>: </b><span>C</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsMonomorphism
+  (induced_hom_natural_transformation (x, y))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">typeclasses eauto</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Qed</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** ** Full * Faithful → Fully Faithful *)</span>
+  <span class="sd">(** We start with a helper method, which assumes that epi * mono → iso, and ten prove this assumption *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="attributes-v-chka" style="display: none" type="checkbox"><label class="alectryon-input" for="attributes-v-chka"><span class="kn">Lemma</span> <span class="nf">isfullyfaithful_isfull_isfaithful_helper</span> `{IsFull} `{IsFaithful}
+        (H&#39; : <span class="kr">forall</span> <span class="nv">x</span> <span class="nv">y</span> (<span class="nv">m</span> : morphism set_cat x y),
+                IsEpimorphism m
+                -&gt; IsMonomorphism m
+                -&gt; IsIsomorphism m)
+  : IsFullyFaithful.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span>IsFull</span></span></span><br><span><var>H1</var><span class="hyp-type"><b>: </b><span>IsFaithful</span></span></span><br><span><var>H'</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">x</span> <span class="nv">y</span> : set_cat)
+(<span class="nv">m</span> : morphism set_cat x y),
+IsEpimorphism m -&gt;
+IsMonomorphism m -&gt; IsIsomorphism m</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsFullyFaithful</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="attributes-v-chkb" style="display: none" type="checkbox"><label class="alectryon-input" for="attributes-v-chkb"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span>IsFull</span></span></span><br><span><var>H1</var><span class="hyp-type"><b>: </b><span>IsFaithful</span></span></span><br><span><var>H'</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">x</span> <span class="nv">y</span> : set_cat)
+(<span class="nv">m</span> : morphism set_cat x y),
+IsEpimorphism m -&gt;
+IsMonomorphism m -&gt; IsIsomorphism m</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsFullyFaithful</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="attributes-v-chkc" style="display: none" type="checkbox"><label class="alectryon-input" for="attributes-v-chkc"><span class="nb">intros</span> ? ?; <span class="nb">hnf</span> <span class="kr">in</span> * |- .</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> <span class="nv">y</span> : C,
+IsEpimorphism
+  (induced_hom_natural_transformation (x, y))</span></span></span><br><span><var>H1</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> <span class="nv">y</span> : C,
+IsMonomorphism
+  (induced_hom_natural_transformation (x, y))</span></span></span><br><span><var>H'</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">x</span> <span class="nv">y</span> : set_cat)
+(<span class="nv">m</span> : morphism set_cat x y),
+IsEpimorphism m -&gt;
+IsMonomorphism m -&gt; IsIsomorphism m</span></span></span><br><span><var>x, y</var><span class="hyp-type"><b>: </b><span>C</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsIsomorphism
+  (induced_hom_natural_transformation (x, y))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">apply</span> H&#39;; <span class="nb">eauto</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Qed</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">full_faithful</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">fully_faithful_helpers</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `{ua : Univalence}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variables</span> <span class="nv">x</span> <span class="nv">y</span> : HSet.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">m</span> : x -&gt; y.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="attributes-v-chkd" style="display: none" type="checkbox"><label class="alectryon-input" for="attributes-v-chkd"><span class="kn">Lemma</span> <span class="nf">isisomorphism_isequiv_set_cat</span>
+        `{H&#39; : IsEquiv _ _ m}
+  : IsIsomorphism (m : morphism set_cat x y).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>ua</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>x, y</var><span class="hyp-type"><b>: </b><span>HSet</span></span></span><br><span><var>m</var><span class="hyp-type"><b>: </b><span>x -&gt; y</span></span></span><br><span><var>H'</var><span class="hyp-type"><b>: </b><span>IsEquiv m</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsIsomorphism (m : morphism set_cat x y)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="attributes-v-chke" style="display: none" type="checkbox"><label class="alectryon-input" for="attributes-v-chke"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>ua</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>x, y</var><span class="hyp-type"><b>: </b><span>HSet</span></span></span><br><span><var>m</var><span class="hyp-type"><b>: </b><span>x -&gt; y</span></span></span><br><span><var>H'</var><span class="hyp-type"><b>: </b><span>IsEquiv m</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsIsomorphism (m : morphism set_cat x y)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kr">exists</span> (<span class="nv">m</span>^-<span class="mi">1</span>)%core;
+    <span class="nb">apply</span> path_forall; <span class="nb">intro</span>;
+    <span class="nb">destruct</span> H&#39;;
+    <span class="nb">simpl</span> <span class="kr">in</span> *;
+    <span class="nb">eauto</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Qed</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">isequiv_isepimorphism_ismonomorphism</span>
+             (<span class="nv">Hepi</span> : IsEpimorphism (m : morphism set_cat x y))
+             (<span class="nv">Hmono</span> : IsMonomorphism (m : morphism set_cat x y))
+  : @IsEquiv _ _ m
+    <span class="c">(* NB: This depends on the (arguably accidental) fact that `ismono` and `isepi` from HoTT core are *definitionally* identical to the specialization of `IsMonomorphism` and `IsEpimorphism` to the category of sets. *)</span>
+    := @isequiv_isepi_ismono _ x y m Hepi Hmono.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">fully_faithful_helpers</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Instance</span> <span class="nf">isfullyfaithful_isfull_isfaithful</span>
+       `{Univalence}
+       `{Hfull : @IsFull _ C D F}
+       `{Hfaithful : @IsFaithful _ C D F}
+: @IsFullyFaithful _ C D F
+  := <span class="kr">fun</span> <span class="nv">x</span> <span class="nv">y</span> =&gt; @isisomorphism_isequiv_set_cat
+                  _ _ _ _
+                  (@isequiv_isepimorphism_ismonomorphism
+                     _ _ _ _
+                     (Hfull x y)
+                     (Hfaithful x y)).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Split Essentially Surjective *)</span>
+<span class="sd">(** Quoting the HoTT Book:</span>
+
+<span class="sd">    We say a functor [F : A → B] is _split essentially surjective_ if</span>
+<span class="sd">    for all [b : B] there exists an [a : A] such that [F a ≅ b]. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Class</span> <span class="nf">IsSplitEssentiallySurjective</span> <span class="nv">A</span> <span class="nv">B</span> (<span class="nv">F</span> : Functor A B)
+  := is_split_essentially_surjective
+     : <span class="kr">forall</span> <span class="nv">b</span> : B, <span class="kr">exists</span> <span class="nv">a</span> : A, F a &lt;~=~&gt; b.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Essentially Surjective *)</span>
+<span class="sd">(** Quoting the HoTT Book:</span>
+
+<span class="sd">    A functor [F : A → B] is _split essentially surjective_ if for all</span>
+<span class="sd">    [b : B] there _merely_ exists an [a : A] such that [F a ≅ b]. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Class</span> <span class="nf">IsEssentiallySurjective</span> <span class="nv">A</span> <span class="nv">B</span> (<span class="nv">F</span> : Functor A B)
+  := is_essentially_surjective
+     : <span class="kr">forall</span> <span class="nv">b</span> : B, hexists (<span class="kr">fun</span> <span class="nv">a</span> : A =&gt; F a &lt;~=~&gt; b).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Weak Equivalence *)</span>
+<span class="sd">(** Quoting the HoTT Book:</span>
+
+<span class="sd">    We say [F] is a _weak equivalence_ if it is fully faithful and</span>
+<span class="sd">    essentially surjective. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Class</span> <span class="nf">IsWeakEquivalence</span> `{Funext} A B (F : Functor A B)
+  := { is_fully_faithful__is_weak_equivalence :: IsFullyFaithful F;
+       is_essentially_surjective__is_weak_equivalence :: IsEssentiallySurjective F }.</span></span></pre>
+</div>
+</div></body>
+</html>

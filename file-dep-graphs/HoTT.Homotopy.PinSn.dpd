@@ -1,0 +1,10 @@
+N: 5 "pi1_circle" [body=yes, kind=cnst, prop=no, path="PinSn", ];
+N: 4 "pi1_s1" [body=yes, kind=cnst, prop=no, path="PinSn", ];
+N: 2 "pi2_s2" [body=yes, kind=cnst, prop=no, path="PinSn", ];
+N: 1 "pin_sn" [body=yes, kind=cnst, prop=no, path="PinSn", ];
+N: 3 "ptr_loops_s2_s1" [body=yes, kind=cnst, prop=no, path="PinSn", ];
+E: 1 2 [weight=1, ];
+E: 1 4 [weight=1, ];
+E: 2 3 [weight=1, ];
+E: 2 4 [weight=1, ];
+E: 4 5 [weight=1, ];

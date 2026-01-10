@@ -1,0 +1,397 @@
+<html>
+<head>
+<title>UStructures.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for UStructures.v</h1>
+
+<div class="code" title="File: UStructures.v
+Line: 1
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>(** * Uniform Structures *)
+
+</pre>
+</div>
+<div class="code" title="File: UStructures.v
+Line: 2
+Time: 0.039s">
+<div class="time" style="width: 100%"></div>
+<pre>From HoTT Require Import Basics Types.</pre>
+</div>
+<div class="code" title="File: UStructures.v
+Line: 2
+Time: 0.033s">
+<div class="time" style="width: 84.615384615385%"></div>
+<pre>
+Require Import Truncations.Core.</pre>
+</div>
+<div class="code" title="File: UStructures.v
+Line: 3
+Time: 0.001s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+Require Import Spaces.Nat.Core.</pre>
+</div>
+<div class="code" title="File: UStructures.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope nat_scope.</pre>
+</div>
+<div class="code" title="File: UStructures.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** [nat]-graded uniform structures *)
+
+(** A uniform structure on a type consists of an equivalence relation for every natural number, each one being stronger than its predecessor. *)</pre>
+</div>
+<div class="code" title="File: UStructures.v
+Line: 10
+Time: 0.002s">
+<div class="time" style="width: 5.1282051282051%"></div>
+<pre>Class UStructure (us_type : Type) := {
+  us_rel : nat -&gt; Relation us_type;
+  us_reflexive :: forall n : nat, Reflexive (us_rel n);
+  us_symmetric :: forall n : nat, Symmetric (us_rel n);
+  us_transitive :: forall n : nat, Transitive (us_rel n);
+  us_pred : forall (n : nat) (x y : us_type), us_rel n.+1 x y -&gt; us_rel n x y
+}.</pre>
+</div>
+<div class="code" title="File: UStructures.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation "u =[ n ] v" := (us_rel n u v)
+  (at level 70, format "u  =[ n ]  v").</pre>
+</div>
+<div class="code" title="File: UStructures.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition us_rel_leq {X : Type} {struct : UStructure X}
+  {m n : nat} (hm : m &lt;= n) {u v : X} (h : u =[n] v)
+  : u =[m] v.</pre>
+</div>
+<div class="code" title="File: UStructures.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: UStructures.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction hm.</pre>
+</div>
+<div class="code" title="File: UStructures.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: UStructures.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assumption.</pre>
+</div>
+<div class="code" title="File: UStructures.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: UStructures.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply IHhm.</pre>
+</div>
+<div class="code" title="File: UStructures.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by apply us_pred.</pre>
+</div>
+<div class="code" title="File: UStructures.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: UStructures.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Every type admits the trivial uniform structure with the standard identity type on every level. *)</pre>
+</div>
+<div class="code" title="File: UStructures.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance trivial_us {X : Type} : UStructure X | 100.</pre>
+</div>
+<div class="code" title="File: UStructures.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: UStructures.v
+Line: 32
+Time: 0.001s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+  srapply (Build_UStructure _ (fun n x y =&gt; (x = y))).</pre>
+</div>
+<div class="code" title="File: UStructures.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (fun _ _ _ =&gt; idmap).</pre>
+</div>
+<div class="code" title="File: UStructures.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: UStructures.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Example of a uniform structures based on truncations, with the relation being the [n-2]-truncation of the identity type. *)</pre>
+</div>
+<div class="code" title="File: UStructures.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition trunc_us {X : Type} : UStructure X.</pre>
+</div>
+<div class="code" title="File: UStructures.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: UStructures.v
+Line: 38
+Time: 0.002s">
+<div class="time" style="width: 5.1282051282051%"></div>
+<pre>
+  srapply (Build_UStructure X
+            (fun n x y =&gt; Tr (trunc_index_inc (-2) n) (x = y))).</pre>
+</div>
+<div class="code" title="File: UStructures.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: UStructures.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros n x.</pre>
+</div>
+<div class="code" title="File: UStructures.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (tr idpath).</pre>
+</div>
+<div class="code" title="File: UStructures.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: UStructures.v
+Line: 42
+Time: 0.006s">
+<div class="time" style="width: 15.384615384615%"></div>
+<pre> intros n x y h; strip_truncations.</pre>
+</div>
+<div class="code" title="File: UStructures.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (tr h^).</pre>
+</div>
+<div class="code" title="File: UStructures.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: UStructures.v
+Line: 44
+Time: 0.012s">
+<div class="time" style="width: 30.769230769231%"></div>
+<pre> intros n x y z h1 h2; strip_truncations.</pre>
+</div>
+<div class="code" title="File: UStructures.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (tr (h1 @ h2)).</pre>
+</div>
+<div class="code" title="File: UStructures.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: UStructures.v
+Line: 46
+Time: 0.01s">
+<div class="time" style="width: 25.641025641026%"></div>
+<pre> intros n x y h; strip_truncations.</pre>
+</div>
+<div class="code" title="File: UStructures.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (tr h).</pre>
+</div>
+<div class="code" title="File: UStructures.v
+Line: 47
+Time: 0.001s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: UStructures.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Continuity *)
+
+(** Definition of a continuous function depending on two uniform structures. *)</pre>
+</div>
+<div class="code" title="File: UStructures.v
+Line: 52
+Time: 0.001s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>Definition IsContinuous
+  {X Y : Type} {usX : UStructure X} {usY : UStructure Y} (p : X -&gt; Y)
+  := forall (u : X) (m : nat),
+      {n : nat &amp; forall v : X, u =[n] v -&gt; p u =[m] p v}.</pre>
+</div>
+<div class="code" title="File: UStructures.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition uniformly_continuous {X Y : Type}
+  {usX : UStructure X} {usY : UStructure Y} (p : X -&gt; Y)
+  := forall (m : nat),
+      {n : nat &amp; forall u v : X, u =[n] v -&gt; p u =[m] p v}.</pre>
+</div>
+<div class="code" title="File: UStructures.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** In the case that the target has the trivial uniform structure, it is useful to state uniform continuity by providing the specific modulus, which now only depends on the function. *)</pre>
+</div>
+<div class="code" title="File: UStructures.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition is_modulus_of_uniform_continuity {X Y : Type} {usX : UStructure X}
+  (n : nat) (p : X -&gt; Y)
+  := forall u v : X, u =[n] v -&gt; p u = p v.</pre>
+</div>
+<div class="code" title="File: UStructures.v
+Line: 64
+Time: 0.001s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+
+Definition uniformly_continuous_has_modulus {X Y :Type} {usX : UStructure X}
+  {p : X -&gt; Y} {n : nat} (c : is_modulus_of_uniform_continuity n p)
+  : uniformly_continuous p
+  := fun m =&gt; (n; c).</pre>
+</div>
+<div class="code" title="File: UStructures.v
+Line: 69
+Time: 0.001s">
+<div class="time" style="width: 2.5641025641026%"></div>
+<pre>
+
+Definition iscontinuous_uniformly_continuous {X Y : Type}
+  {usX : UStructure X} {usY : UStructure Y} (p : X -&gt; Y)
+  : uniformly_continuous p -&gt; IsContinuous p
+  := fun uc u m =&gt; ((uc m).1 ; fun v =&gt; (uc m).2 u v).</pre>
+</div>
+<div class="code" title="File: UStructures.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

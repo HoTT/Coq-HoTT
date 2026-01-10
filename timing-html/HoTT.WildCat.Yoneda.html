@@ -1,0 +1,2448 @@
+<html>
+<head>
+<title>Yoneda.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Yoneda.v</h1>
+
+<div class="code" title="File: Yoneda.v
+Line: 1
+Time: 0.021s">
+<div class="time" style="width: 87.5%"></div>
+<pre>Require Import Basics.Overture Basics.Tactics.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 1
+Time: 0.002s">
+<div class="time" style="width: 8.3333333333333%"></div>
+<pre>
+Require Import WildCat.Core.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 2
+Time: 0.004s">
+<div class="time" style="width: 16.666666666667%"></div>
+<pre>
+Require Import WildCat.Equiv.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 3
+Time: 0.008s">
+<div class="time" style="width: 33.333333333333%"></div>
+<pre>
+Require Import WildCat.Universe.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import WildCat.Opposite.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 5
+Time: 0.001s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>
+Require Import WildCat.FunctorCat.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 6
+Time: 0.001s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>
+Require Import WildCat.NatTrans.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 7
+Time: 0.002s">
+<div class="time" style="width: 8.3333333333333%"></div>
+<pre>
+Require Import WildCat.Prod.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 8
+Time: 0.003s">
+<div class="time" style="width: 12.5%"></div>
+<pre>
+Require Import WildCat.Bifunctor.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 9
+Time: 0.001s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>
+Require Import WildCat.ZeroGroupoid.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Two-variable hom-functors *)
+
+</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 13
+Time: 0.001s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>Instance is0functor_hom {A} `{Is01Cat A}
+  : @Is0Functor (A^op * A) Type _ _ (uncurry (@Hom A _)).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply Build_Is0Functor.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [a1 a2] [b1 b2] [f1 f2] g; cbn in *.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (f2 $o g $o f1).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** This requires morphism extensionality! *)</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 21
+Time: 0.005s">
+<div class="time" style="width: 20.833333333333%"></div>
+<pre>Instance is1functor_hom {A} `{HasMorExt A}
+  : @Is1Functor (A^op * A) Type _ _ _ _ _ _ _ _ (uncurry (@Hom A _)) _.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply Build_Is1Functor.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 25
+Time: 0.003s">
+<div class="time" style="width: 12.5%"></div>
+<pre> intros [a1 a2] [b1 b2] [f1 f2] [g1 g2] [p1 p2] q;
+      unfold fst, snd in *.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_hom.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 27
+Time: 0.001s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>
+    exact (((p2 $@R q) $@R _) $@ ((g2 $o q) $@L p1)).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [a1 a2] f; cbn in *.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_hom.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (cat_idr _ $@ cat_idl f).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 32
+Time: 0.003s">
+<div class="time" style="width: 12.5%"></div>
+<pre> intros [a1 a2] [b1 b2] [c1 c2] [f1 f2] [g1 g2] h; cbn in *.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_hom.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (cat_assoc _ _ _ $@ _).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (cat_assoc _ _ _ $@ _).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (_ $@ cat_assoc_opp _ _ _).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (g2 $@L _).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (_ $@ cat_assoc_opp _ _ _).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (cat_assoc_opp _ _ _).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 39
+Time: 0.006s">
+<div class="time" style="width: 25%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance is0bifunctor_hom {A} `{Is01Cat A}
+  : Is0Bifunctor (A:=A^op) (B:=A) (C:=Type) (@Hom A _).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  napply Build_Is0Bifunctor'.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1-2: exact _.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact is0functor_hom.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** While it is possible to prove the bifunctor coherence condition from [Is1Cat_Strong], 1-functoriality requires morphism extensionality.*)</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 50
+Time: 0.003s">
+<div class="time" style="width: 12.5%"></div>
+<pre>Instance is1bifunctor_hom {A} `{Is1Cat A} `{HasMorExt A}
+  : Is1Bifunctor (A:=A^op) (B:=A) (C:=Type) (@Hom A _).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 52
+Time: 0.001s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>
+  napply Build_Is1Bifunctor'.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact is1functor_hom.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 55
+Time: 0.001s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>
+
+Definition fun01_hom {A} `{Is01Cat A}
+  : Fun01 (A^op * A) Type
+  := @Build_Fun01 _ _ _ _ _ is0functor_hom.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** The covariant Yoneda lemma *)
+
+(** This is easier than the contravariant version because it doesn't involve any "op"s. *)
+
+</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition opyon {A : Type} `{IsGraph A} (a : A) : A -&gt; Type
+  := fun b =&gt; (a $-&gt; b).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We prove this explicitly instead of using the bifunctor instance above so that we can apply [fmap] in each argument independently without mapping an identity in the other. *)</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance is0functor_opyon {A : Type} `{Is01Cat A} (a : A)
+  : Is0Functor (opyon a).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply Build_Is0Functor.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold opyon; intros b c f g; cbn in *.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (f $o g).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 73
+Time: 0.002s">
+<div class="time" style="width: 8.3333333333333%"></div>
+<pre>
+
+Instance is1functor_opyon {A : Type} `{Is1Cat A} `{!HasMorExt A} (a : A)
+  : Is1Functor (opyon a).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 77
+Time: 0.002s">
+<div class="time" style="width: 8.3333333333333%"></div>
+<pre>
+  rapply Build_Is1Functor.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y f g p h.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_hom.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (cat_prewhisker p).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x h.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_hom.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply cat_idl.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y z f g h.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_hom.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply cat_assoc.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 87
+Time: 0.001s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We record these corollaries here, since we use some of them below. *)</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 90
+Time: 0.004s">
+<div class="time" style="width: 16.666666666667%"></div>
+<pre>Definition equiv_postcompose_cat_equiv {A : Type} `{HasEquivs A} `{!HasMorExt A}
+  {x y z : A} (f : y $&lt;~&gt; z)
+  : (x $-&gt; y) &lt;~&gt; (x $-&gt; z)
+  := emap (opyon x) f.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 93
+Time: 0.003s">
+<div class="time" style="width: 12.5%"></div>
+<pre>
+
+Definition equiv_precompose_cat_equiv {A : Type} `{HasEquivs A} `{!HasMorExt A}
+  {x y z : A} (f : x $&lt;~&gt; y)
+  : (y $-&gt; z) &lt;~&gt; (x $-&gt; z)
+  := @equiv_postcompose_cat_equiv A^op _ _ _ _ _ _ z y x f.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* The following implicitly use [hasequivs_core].  Note that when [A] has morphism extensionality, it doesn't follow that [core A] does.  We'd need to know that being an equivalence is a proposition, and we don't assume that (since even for [Type] it requires [Funext], see [hasmorext_core_type]). So we need to assume this in the following results. *)
+
+(** Postcomposition with a cat_equiv is an equivalence between the types of equivalences. *)</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 102
+Time: 0.002s">
+<div class="time" style="width: 8.3333333333333%"></div>
+<pre>Definition equiv_postcompose_core_cat_equiv {A : Type} `{HasEquivs A} `{!HasMorExt (core A)}
+  {x y z : A} (f : y $&lt;~&gt; z)
+  : (x $&lt;~&gt; y) &lt;~&gt; (x $&lt;~&gt; z).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  change ((Build_core x $-&gt; Build_core y) &lt;~&gt; (Build_core x $-&gt; Build_core z)).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 106
+Time: 0.001s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>
+  refine (equiv_postcompose_cat_equiv (A := core A) _).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact f.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>  (* It doesn't work to insert [f] on the previous line. *)</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Defined.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 108
+Time: 0.002s">
+<div class="time" style="width: 8.3333333333333%"></div>
+<pre>
+
+Definition equiv_precompose_core_cat_equiv {A : Type} `{HasEquivs A} `{!HasMorExt (core A)}
+  {x y z : A} (f : x $&lt;~&gt; y)
+  : (y $&lt;~&gt; z) &lt;~&gt; (x $&lt;~&gt; z).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  change ((Build_core y $-&gt; Build_core z) &lt;~&gt; (Build_core x $-&gt; Build_core z)).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 114
+Time: 0.001s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>
+  refine (equiv_precompose_cat_equiv (A := core A) _).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact f.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>  (* It doesn't work to insert [f] on the previous line. *)</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Defined.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 116
+Time: 0.001s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>
+
+Definition opyoneda {A : Type} `{Is01Cat A} (a : A)
+           (F : A -&gt; Type) {ff : Is0Functor F}
+  : F a -&gt; (opyon a $=&gt; F).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 121
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x b f.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 122
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (fmap F f x).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 124
+Time: 0.001s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>
+
+Definition un_opyoneda {A : Type} `{Is01Cat A}
+  (a : A) (F : A -&gt; Type) {ff : Is0Functor F}
+  : (opyon a $=&gt; F) -&gt; F a
+  := fun alpha =&gt; alpha a (Id a).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 129
+Time: 0.003s">
+<div class="time" style="width: 12.5%"></div>
+<pre>
+
+Instance is1natural_opyoneda {A : Type} `{Is1Cat A}
+  (a : A) (F : A -&gt; Type) `{!Is0Functor F, !Is1Functor F} (x : F a)
+  : Is1Natural (opyon a) F (opyoneda a F x).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_Is1Natural.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 135
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold opyon, opyoneda; intros b c f g; cbn in *.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 136
+Time: 0.001s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>
+  exact (fmap_comp F g f x).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 137
+Time: 0.001s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** This is form of injectivity of [opyoneda]. *)</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 140
+Time: 0.002s">
+<div class="time" style="width: 8.3333333333333%"></div>
+<pre>Definition opyoneda_isinj {A : Type} `{Is1Cat A} (a : A)
+  (F : A -&gt; Type) `{!Is0Functor F, !Is1Functor F}
+  (x x' : F a) (p : forall b, opyoneda a F x b == opyoneda a F x' b)
+  : x = x'.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 144
+Time: 0.002s">
+<div class="time" style="width: 8.3333333333333%"></div>
+<pre>
+  refine ((fmap_id F a x)^ @ _ @ fmap_id F a x').</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 145
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  cbn in p.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (p a (Id a)).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 147
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 148
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** This says that [opyon] is faithful, although we haven't yet defined a graph structure on natural transformations to express this in that way.  This follows from the previous result, but then would need [HasMorExt A], since the previous result assumes that [F] is a 1-functor, which is stronger than what is needed.  The direct proof below only needs the weaker assumption [Is1Cat_Strong A]. *)</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 150
+Time: 0.002s">
+<div class="time" style="width: 8.3333333333333%"></div>
+<pre>Definition opyon_faithful {A : Type} `{Is1Cat_Strong A}
+  (a b : A) (f g : b $-&gt; a)
+  (p : forall (c : A) (h : a $-&gt; c), h $o f = h $o g)
+  : f = g
+  := (cat_idl_strong f)^ @ p a (Id a) @ cat_idl_strong g.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 154
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The composite in one direction is the identity map. *)</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 156
+Time: 0.003s">
+<div class="time" style="width: 12.5%"></div>
+<pre>Definition opyoneda_issect {A : Type} `{Is1Cat A} (a : A)
+           (F : A -&gt; Type) `{!Is0Functor F, !Is1Functor F}
+           (x : F a)
+  : un_opyoneda a F (opyoneda a F x) = x
+  := fmap_id F a x.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We assume for the converse that the coherences in [A] are equalities (this is a weak funext-type assumption).  Note that we do not in general recover the witness of 1-naturality.  Indeed, if [A] is fully coherent, then a transformation of the form [opyoneda a F x] is always also fully coherently natural, so an incoherent witness of 1-naturality could not be recovered in this way.  *)</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 162
+Time: 0.006s">
+<div class="time" style="width: 25%"></div>
+<pre>Definition opyoneda_isretr {A : Type} `{Is1Cat_Strong A} (a : A)
+           (F : A -&gt; Type) `{!Is0Functor F, !Is1Functor F}
+           (alpha : opyon a $=&gt; F) {alnat : Is1Natural (opyon a) F alpha}
+           (b : A)
+  : opyoneda a F (un_opyoneda a F alpha) b $== alpha b.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 166
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold opyoneda, un_opyoneda, opyon; intros f.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 168
+Time: 0.002s">
+<div class="time" style="width: 8.3333333333333%"></div>
+<pre>
+  refine ((isnat alpha f (Id a))^ @ _).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  cbn.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply ap.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (cat_idr_strong f).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 172
+Time: 0.001s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A natural transformation between representable functors induces a map between the representing objects. *)</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 175
+Time: 0.002s">
+<div class="time" style="width: 8.3333333333333%"></div>
+<pre>Definition opyon_cancel {A : Type} `{Is01Cat A} (a b : A)
+  : (opyon a $=&gt; opyon b) -&gt; (b $-&gt; a)
+  := un_opyoneda a (opyon b).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition opyon1 {A : Type} `{Is01Cat A} (a : A) : Fun01 A Type.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 179
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 180
+Time: 0.001s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>
+  exact (Build_Fun01 (opyon a)).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 181
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 182
+Time: 0.001s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>
+
+Definition opyon11 {A : Type} `{Is1Cat A} `{!HasMorExt A} (a : A) : Fun11 A Type.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 184
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 185
+Time: 0.001s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>
+  exact (Build_Fun11 _ _ (opyon a)).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 186
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** An equivalence between representable functors induces an equivalence between the representing objects. *)</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 189
+Time: 0.003s">
+<div class="time" style="width: 12.5%"></div>
+<pre>Definition opyon_equiv {A : Type} `{HasEquivs A} `{!Is1Cat_Strong A}
+           {a b : A}
+  : (opyon1 a $&lt;~&gt; opyon1 b) -&gt; (b $&lt;~&gt; a).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 191
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 192
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros f.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 193
+Time: 0.024s">
+<div class="time" style="width: 100%"></div>
+<pre>
+  refine (cate_adjointify (f a (Id a)) (f^-1$ b (Id b)) _ _);
+    apply GpdHom_path; cbn in *.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 196
+Time: 0.002s">
+<div class="time" style="width: 8.3333333333333%"></div>
+<pre> refine ((isnat_natequiv (natequiv_inverse f) (f a (Id a)) (Id b))^ @ _); cbn.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 196
+Time: 0.001s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>
+    refine (_ @ cate_issect (f a) (Id a)); cbn.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply ap.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 198
+Time: 0.001s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>
+    srapply cat_idr_strong.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 199
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 200
+Time: 0.002s">
+<div class="time" style="width: 8.3333333333333%"></div>
+<pre> refine ((isnat_natequiv f (f^-1$ b (Id b)) (Id a))^ @ _); cbn.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 200
+Time: 0.001s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>
+    refine (_ @ cate_isretr (f b) (Id b)); cbn.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 201
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply ap.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 202
+Time: 0.001s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>
+    srapply cat_idr_strong.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 203
+Time: 0.008s">
+<div class="time" style="width: 33.333333333333%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 204
+Time: 0.002s">
+<div class="time" style="width: 8.3333333333333%"></div>
+<pre>
+
+Definition natequiv_opyon_equiv {A : Type} `{HasEquivs A}
+  `{!HasMorExt A} {a b : A}
+  : (b $&lt;~&gt; a) -&gt; (opyon1 a $&lt;~&gt; opyon1 b).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 209
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro e.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 210
+Time: 0.003s">
+<div class="time" style="width: 12.5%"></div>
+<pre>
+  snapply Build_NatEquiv.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 211
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 212
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros c.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 212
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (equiv_precompose_cat_equiv e).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 213
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 214
+Time: 0.001s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre> rapply is1natural_opyoneda.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 214
+Time: 0.001s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 215
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** The covariant Yoneda lemma using 0-groupoids *)
+
+(** We repeat the above, regarding [opyon] as landing in 0-groupoids, using the 1-category structure on [ZeroGpd] in [ZeroGroupoid.v].  This has many advantages.  It avoids [HasMorExt], which means that we don't need [Funext] in many examples.  It also avoids [Is1Cat_Strong], which means the results all have the same hypotheses, namely that [A] is a 1-category.  This allows us to simplify the proof of [opyon_equiv_0gpd], making use of [opyoneda_isretr_0gpd]. *)
+
+</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 220
+Time: 0.001s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>Definition opyon_0gpd {A : Type} `{Is1Cat A} (a : A) : A -&gt; ZeroGpd
+  := fun b =&gt; Build_ZeroGpd (a $-&gt; b) _ _ _.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 221
+Time: 0.001s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>
+
+Instance is0functor_hom_0gpd {A : Type} `{Is1Cat A}
+  : Is0Functor (A:=A^op*A) (B:=ZeroGpd) (uncurry (opyon_0gpd (A:=A))).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 224
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  napply Build_Is0Functor.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 226
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [a1 a2] [b1 b2] [f1 f2]; unfold op in *; cbn in *.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 227
+Time: 0.007s">
+<div class="time" style="width: 29.166666666667%"></div>
+<pre>
+  rapply (Build_Fun01 (cat_postcomp b1 f2 o cat_precomp a2 f1)).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 228
+Time: 0.001s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 229
+Time: 0.003s">
+<div class="time" style="width: 12.5%"></div>
+<pre>
+
+Instance is1functor_hom_0gpd {A : Type} `{Is1Cat A}
+  : Is1Functor (A:=A^op*A) (B:=ZeroGpd) (uncurry (opyon_0gpd (A:=A))).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 232
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 233
+Time: 0.002s">
+<div class="time" style="width: 8.3333333333333%"></div>
+<pre>
+  napply Build_Is1Functor.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 234
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 235
+Time: 0.003s">
+<div class="time" style="width: 12.5%"></div>
+<pre> intros [a1 a2] [b1 b2] [f1 f2] [g1 g2] [p q] h.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 235
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (h $@L p $@@ q).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 236
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 237
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [a1 a2] h.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 237
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (cat_idl _ $@ cat_idr _).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 238
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 239
+Time: 0.002s">
+<div class="time" style="width: 8.3333333333333%"></div>
+<pre> intros [a1 a2] [b1 b2] [c1 c2] [f1 f2] [g1 g2] h.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 239
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (cat_assoc _ _ _ $@ _).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 240
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (g2 $@L _).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 241
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (_ $@L (cat_assoc_opp _ _ _) $@ _).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 242
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (cat_assoc_opp _ _ _).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 243
+Time: 0.006s">
+<div class="time" style="width: 25%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 244
+Time: 0.001s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>
+
+Instance is0bifunctor_hom_0gpd {A : Type} `{Is1Cat A}
+  : Is0Bifunctor (A:=A^op) (B:=A) (C:=ZeroGpd) (opyon_0gpd (A:=A)).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 247
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 248
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_Is0Bifunctor'.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 249
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1,2: exact _.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 250
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact is0functor_hom_0gpd.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 251
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 252
+Time: 0.001s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>
+
+Instance is1bifunctor_hom_0gpd {A : Type} `{Is1Cat A}
+  : Is1Bifunctor (A:=A^op) (B:=A) (C:=ZeroGpd) (opyon_0gpd (A:=A)).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 255
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 256
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_Is1Bifunctor'.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 257
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact is1functor_hom_0gpd.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 258
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 259
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance is0functor_opyon_0gpd {A : Type} `{Is1Cat A} (a : A)
+  : Is0Functor (opyon_0gpd a).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 262
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 263
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply Build_Is0Functor.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 264
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros b c f.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 265
+Time: 0.001s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>
+  exact (Build_Fun01 (cat_postcomp a f)).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 266
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 267
+Time: 0.001s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>
+
+Instance is1functor_opyon_0gpd {A : Type} `{Is1Cat A} (a : A)
+  : Is1Functor (opyon_0gpd a).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 270
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 271
+Time: 0.002s">
+<div class="time" style="width: 8.3333333333333%"></div>
+<pre>
+  rapply Build_Is1Functor.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 272
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 273
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y f g p h.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 273
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (cat_prewhisker p).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 274
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 275
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x h.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 275
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply cat_idl.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 276
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 277
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y z f g h.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 277
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply cat_assoc.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 278
+Time: 0.001s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 279
+Time: 0.001s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>
+
+Definition opyoneda_0gpd {A : Type} `{Is1Cat A} (a : A)
+           (F : A -&gt; ZeroGpd) `{!Is0Functor F, !Is1Functor F}
+  : F a -&gt; (opyon_0gpd a $=&gt; F).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 283
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 284
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x b.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 285
+Time: 0.001s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>
+  refine (Build_Fun01' (A:=opyon_0gpd a b) (B:=F b) (fun f =&gt; fmap F f x) _).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 286
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros f1 f2 h.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 287
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (fmap2 F h x).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 288
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 289
+Time: 0.001s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>
+
+Definition un_opyoneda_0gpd {A : Type} `{Is1Cat A}
+  (a : A) (F : A -&gt; ZeroGpd) {ff : Is0Functor F}
+  : (opyon_0gpd a $=&gt; F) -&gt; F a
+  := fun alpha =&gt; alpha a (Id a).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 294
+Time: 0.002s">
+<div class="time" style="width: 8.3333333333333%"></div>
+<pre>
+
+Instance is1natural_opyoneda_0gpd {A : Type} `{Is1Cat A}
+  (a : A) (F : A -&gt; ZeroGpd) `{!Is0Functor F, !Is1Functor F} (x : F a)
+  : Is1Natural (opyon_0gpd a) F (opyoneda_0gpd a F x).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 298
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 299
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_Is1Natural.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 300
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold opyon_0gpd, opyoneda_0gpd; intros b c f g; cbn in *.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 301
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (fmap_comp F g f x).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 302
+Time: 0.002s">
+<div class="time" style="width: 8.3333333333333%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 303
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** This is form of injectivity of [opyoneda_0gpd]. *)</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 305
+Time: 0.005s">
+<div class="time" style="width: 20.833333333333%"></div>
+<pre>Definition opyoneda_isinj_0gpd {A : Type} `{Is1Cat A} (a : A)
+  (F : A -&gt; ZeroGpd) `{!Is0Functor F, !Is1Functor F}
+  (x x' : F a) (p : forall b : A, opyoneda_0gpd a F x b $== opyoneda_0gpd a F x' b)
+  : x $== x'.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 308
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 309
+Time: 0.004s">
+<div class="time" style="width: 16.666666666667%"></div>
+<pre>
+  refine ((fmap_id F a x)^$ $@ _ $@ fmap_id F a x').</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 310
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  cbn in p.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 311
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (p a (Id a)).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 312
+Time: 0.001s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 313
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** This says that [opyon_0gpd] is faithful, although we haven't yet defined a graph structure on natural transformations to express this in that way. *)</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 315
+Time: 0.004s">
+<div class="time" style="width: 16.666666666667%"></div>
+<pre>Definition opyon_faithful_0gpd {A : Type} `{Is1Cat A} (a b : A)
+  (f g : b $-&gt; a) (p : forall (c : A) (h : a $-&gt; c), h $o f $== h $o g)
+  : f $== g
+  := opyoneda_isinj_0gpd a _ f g p.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 318
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The composite in one direction is the identity map. *)</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 320
+Time: 0.009s">
+<div class="time" style="width: 37.5%"></div>
+<pre>Definition opyoneda_issect_0gpd {A : Type} `{Is1Cat A} (a : A)
+  (F : A -&gt; ZeroGpd) `{!Is0Functor F, !Is1Functor F}
+  (x : F a)
+  : un_opyoneda_0gpd a F (opyoneda_0gpd a F x) $== x
+  := fmap_id F a x.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 324
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** For the other composite, note that we do not in general recover the witness of 1-naturality.  Indeed, if [A] is fully coherent, then a transformation of the form [opyoneda a F x] is always also fully coherently natural, so an incoherent witness of 1-naturality could not be recovered in this way.  *)</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 326
+Time: 0.006s">
+<div class="time" style="width: 25%"></div>
+<pre>Definition opyoneda_isretr_0gpd {A : Type} `{Is1Cat A} (a : A)
+  (F : A -&gt; ZeroGpd) `{!Is0Functor F, !Is1Functor F}
+  (alpha : opyon_0gpd a $=&gt; F) {alnat : Is1Natural (opyon_0gpd a) F alpha}
+  (b : A)
+  : opyoneda_0gpd a F (un_opyoneda_0gpd a F alpha) b $== alpha b.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 330
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 331
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold opyoneda, un_opyoneda, opyon; intros f.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 332
+Time: 0.003s">
+<div class="time" style="width: 12.5%"></div>
+<pre>
+  refine ((isnat alpha f (Id a))^$ $@ _).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 333
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  cbn.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 334
+Time: 0.001s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>
+  apply (fmap (alpha b)).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 335
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (cat_idr f).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 336
+Time: 0.001s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 337
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A natural transformation between representable functors induces a map between the representing objects. *)</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 339
+Time: 0.001s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>Definition opyon_cancel_0gpd {A : Type} `{Is1Cat A} (a b : A)
+  : (opyon_0gpd a $=&gt; opyon_0gpd b) -&gt; (b $-&gt; a)
+  := un_opyoneda_0gpd a (opyon_0gpd b).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 341
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Since no extra hypotheses are needed, we use the name with "1" for the [Fun11] version. *)</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 343
+Time: 0.001s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>Definition opyon1_0gpd {A : Type} `{Is1Cat A} (a : A) : Fun11 A ZeroGpd
+  := Build_Fun11 _ _ (opyon_0gpd a).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 344
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** An equivalence between representable functors induces an equivalence between the representing objects.  We explain how this compares to [opyon_equiv] above.  Instead of assuming that each [f c : (a $-&gt; c) -&gt; (b $-&gt; c)] is an equivalence of types, it only needs to be an equivalence of 0-groupoids.  For example, this means that we have a map [g c : (b $-&gt; c) -&gt; (a $-&gt; c)] such that for each [k : a $-&gt; c], [g c (f c k) $== k], rather than [g c (f c k) = k] as the version with types requires.  Similarly, the naturality is up to 2-cells, instead of up to paths.  This allows us to avoid [Funext] and [HasMorExt] when using this result.  As a side benefit, we also don't require that [A] is strong. The proof is also simpler, since we can re-use the work done in [opyoneda_isretr_0gpd]. *)</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 346
+Time: 0.002s">
+<div class="time" style="width: 8.3333333333333%"></div>
+<pre>Definition opyon_equiv_0gpd {A : Type} `{HasEquivs A}
+  {a b : A} (f : opyon1_0gpd a $&lt;~&gt; opyon1_0gpd b)
+  : b $&lt;~&gt; a.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 348
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 349
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* These are the maps that will define the desired equivalence: *)
+ </pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 351
+Time: 0.001s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>set (fa := (cate_fun f a) (Id a)).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 351
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>     (* Equivalently, [un_opyoneda_0gpd a _ f]. *)
+ </pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 352
+Time: 0.001s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>set (gb := (cate_fun f^-1$ b) (Id b)).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 352
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> (* Equivalently, [un_opyoneda_0gpd b _ f^-1$]. *)
+ </pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 353
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>srapply (cate_adjointify fa gb).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 353
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* [opyoneda_0gpd] is defined by postcomposition, so [opyoneda_isretr_0gpd] simplifies both LHSs.*)
+ </pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 355
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>-</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 355
+Time: 0.008s">
+<div class="time" style="width: 33.333333333333%"></div>
+<pre> exact (opyoneda_isretr_0gpd _ _ f^-1$ a fa $@ cat_eissect (f a) (Id a)).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 355
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 356
+Time: 0.007s">
+<div class="time" style="width: 29.166666666667%"></div>
+<pre> exact (opyoneda_isretr_0gpd _ _ f     b gb $@ cat_eisretr (f b) (Id b)).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 356
+Time: 0.006s">
+<div class="time" style="width: 25%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 357
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Since [opyon_0gpd] is a 1-functor, postcomposition with a [cat_equiv] is an equivalence between the hom 0-groupoids. Note that we do not require [HasMorExt], as [equiv_postcompose_cat_equiv] does. *)</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 359
+Time: 0.002s">
+<div class="time" style="width: 8.3333333333333%"></div>
+<pre>Definition equiv_postcompose_cat_equiv_0gpd {A : Type} `{HasEquivs A}
+  {x y z : A} (f : y $&lt;~&gt; z)
+  : opyon_0gpd x y $&lt;~&gt; opyon_0gpd x z
+  := emap (opyon_0gpd x) f.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 362
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The dual result, which is used in the next result. *)</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 364
+Time: 0.003s">
+<div class="time" style="width: 12.5%"></div>
+<pre>Definition equiv_precompose_cat_equiv_0gpd {A : Type} `{HasEquivs A}
+  {x y z : A} (f : x $&lt;~&gt; y)
+  : opyon_0gpd y z $&lt;~&gt; opyon_0gpd x z
+  := @equiv_postcompose_cat_equiv_0gpd A^op _ _ _ _ _ z y x f.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 367
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A converse to [opyon_equiv_0gpd].  Together, we get a logical equivalence between [b $&lt;~&gt; a] and [opyon_0gpd a $&lt;~&gt; opyon_0gpd b], without [HasMorExt]. *)</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 369
+Time: 0.002s">
+<div class="time" style="width: 8.3333333333333%"></div>
+<pre>Definition natequiv_opyon_equiv_0gpd {A : Type} `{HasEquivs A}
+  {a b : A} (e : b $&lt;~&gt; a)
+  : opyon1_0gpd a $&lt;~&gt; opyon1_0gpd b.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 371
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 372
+Time: 0.017s">
+<div class="time" style="width: 70.833333333333%"></div>
+<pre>
+  snapply Build_NatEquiv.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 373
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 374
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro c; exact (equiv_precompose_cat_equiv_0gpd e).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 374
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 375
+Time: 0.003s">
+<div class="time" style="width: 12.5%"></div>
+<pre> tapply is1natural_opyoneda_0gpd.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 375
+Time: 0.001s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 376
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** The contravariant Yoneda lemma *)
+
+(** We can deduce this from the covariant version with some boilerplate. *)
+
+</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 381
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition yon {A : Type} `{IsGraph A} (a : A) : A^op -&gt; Type
+  := opyon (A:=A^op) a.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 382
+Time: 0.001s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>
+
+Instance is0functor_yon {A : Type} `{H : Is01Cat A} (a : A)
+  : Is0Functor (yon a)
+  := is0functor_opyon (A:=A^op) a.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 386
+Time: 0.003s">
+<div class="time" style="width: 12.5%"></div>
+<pre>
+
+Instance is1functor_yon {A : Type} `{H : Is1Cat A} `{!HasMorExt A} (a : A)
+  : Is1Functor (yon a)
+  := is1functor_opyon (A:=A^op) a.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 390
+Time: 0.001s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>
+
+Definition yoneda {A : Type} `{Is01Cat A} (a : A)
+           (F : A^op -&gt; Type) `{!Is0Functor F}
+  : F a -&gt; (yon a $=&gt; F)
+  := @opyoneda (A^op) _ _ a F _.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 395
+Time: 0.001s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>
+
+Definition un_yoneda {A : Type} `{Is01Cat A} (a : A)
+           (F : A^op -&gt; Type) `{!Is0Functor F}
+  : (yon a $=&gt; F) -&gt; F a
+  := un_opyoneda (A:=A^op) a F.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 400
+Time: 0.005s">
+<div class="time" style="width: 20.833333333333%"></div>
+<pre>
+
+Instance is1natural_yoneda {A : Type} `{Is1Cat A} (a : A)
+       (F : A^op -&gt; Type) `{!Is0Functor F, !Is1Functor F} (x : F a)
+  : Is1Natural (yon a) F (yoneda a F x)
+  := is1natural_opyoneda (A:=A^op) a F x.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 405
+Time: 0.004s">
+<div class="time" style="width: 16.666666666667%"></div>
+<pre>
+
+Definition yoneda_isinj {A : Type} `{Is1Cat A} (a : A)
+  (F : A^op -&gt; Type) `{!Is0Functor F, !Is1Functor F}
+  (x x' : F a) (p : forall b, yoneda a F x b == yoneda a F x' b)
+  : x = x'
+  := opyoneda_isinj (A:=A^op) a F x x' p.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 411
+Time: 0.002s">
+<div class="time" style="width: 8.3333333333333%"></div>
+<pre>
+
+Definition yon_faithful {A : Type} `{Is1Cat_Strong A}
+  (a b : A) (f g : b $-&gt; a)
+  (p : forall (c : A) (h : c $-&gt; b), f $o h = g $o h)
+  : f = g
+  := opyon_faithful (A:=A^op) b a f g p.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 417
+Time: 0.003s">
+<div class="time" style="width: 12.5%"></div>
+<pre>
+
+Definition yoneda_issect {A : Type} `{Is1Cat A} (a : A)
+           (F : A^op -&gt; Type) `{!Is0Functor F, !Is1Functor F} (x : F a)
+  : un_yoneda a F (yoneda a F x) = x
+  := opyoneda_issect (A:=A^op) a F x.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 422
+Time: 0.008s">
+<div class="time" style="width: 33.333333333333%"></div>
+<pre>
+
+Definition yoneda_isretr {A : Type} `{Is1Cat_Strong A} (a : A)
+           (F : A^op -&gt; Type) `{!Is0Functor F}
+           (* Without the hint here, Coq guesses to first project from [Is1Cat_Strong A] and then pass to opposites, whereas what we need is to first pass to opposites and then project. *)
+           `{@Is1Functor _ _ _ _ _ (is1cat_is1cat_strong A^op) _ _ _ _ F _}
+           (alpha : yon a $=&gt; F) {alnat : Is1Natural (yon a) F alpha}
+           (b : A)
+  : yoneda a F (un_yoneda a F alpha) b $== alpha b
+  := opyoneda_isretr (A:=A^op) a F alpha b.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 431
+Time: 0.001s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>
+
+Definition yon_cancel {A : Type} `{Is01Cat A} (a b : A)
+  : (yon a $=&gt; yon b) -&gt; (a $-&gt; b)
+  := un_yoneda a (yon b).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 435
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition yon1 {A : Type} `{Is01Cat A} (a : A) : Fun01 A^op Type
+  := opyon1 (A:=A^op) a.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 438
+Time: 0.002s">
+<div class="time" style="width: 8.3333333333333%"></div>
+<pre>
+
+Definition yon11 {A : Type} `{Is1Cat A} `{!HasMorExt A} (a : A) : Fun11 A^op Type
+  := opyon11 (A:=A^op) a.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 441
+Time: 0.005s">
+<div class="time" style="width: 20.833333333333%"></div>
+<pre>
+
+Definition yon_equiv {A : Type} `{HasEquivs A} `{!Is1Cat_Strong A}
+           (a b : A)
+  : (yon1 a $&lt;~&gt; yon1 b) -&gt; (a $&lt;~&gt; b)
+  := opyon_equiv (A:=A^op).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 446
+Time: 0.005s">
+<div class="time" style="width: 20.833333333333%"></div>
+<pre>
+
+Definition natequiv_yon_equiv {A : Type} `{HasEquivs A}
+  `{!HasMorExt A} (a b : A)
+  : (a $&lt;~&gt; b) -&gt; (yon1 a $&lt;~&gt; yon1 b)
+  := natequiv_opyon_equiv (A:=A^op).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 451
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** The contravariant Yoneda lemma using 0-groupoids *)
+
+</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 454
+Time: 0.001s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>Definition yon_0gpd {A : Type} `{Is1Cat A} (a : A) : A^op -&gt; ZeroGpd
+  := opyon_0gpd (A:=A^op) a.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 455
+Time: 0.003s">
+<div class="time" style="width: 12.5%"></div>
+<pre>
+
+Instance is0functor_yon_0gpd {A : Type} `{Is1Cat A} (a : A)
+  : Is0Functor (yon_0gpd a)
+  := is0functor_opyon_0gpd (A:=A^op) a.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 459
+Time: 0.002s">
+<div class="time" style="width: 8.3333333333333%"></div>
+<pre>
+
+Instance is1functor_yon_0gpd {A : Type} `{Is1Cat A} (a : A)
+  : Is1Functor (yon_0gpd a)
+  := is1functor_opyon_0gpd (A:=A^op) a.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 463
+Time: 0.003s">
+<div class="time" style="width: 12.5%"></div>
+<pre>
+
+Definition yoneda_0gpd {A : Type} `{Is1Cat A} (a : A)
+  (F : A^op -&gt; ZeroGpd) `{!Is0Functor F, !Is1Functor F}
+  : F a -&gt; (yon_0gpd a $=&gt; F)
+  := opyoneda_0gpd (A:=A^op) a F.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 468
+Time: 0.002s">
+<div class="time" style="width: 8.3333333333333%"></div>
+<pre>
+
+Definition un_yoneda_0gpd {A : Type} `{Is1Cat A}
+  (a : A) (F : A^op -&gt; ZeroGpd) {ff : Is0Functor F}
+  : (yon_0gpd a $=&gt; F) -&gt; F a
+  := un_opyoneda_0gpd (A:=A^op) a F.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 473
+Time: 0.004s">
+<div class="time" style="width: 16.666666666667%"></div>
+<pre>
+
+Instance is1natural_yoneda_0gpd {A : Type} `{Is1Cat A}
+  (a : A) (F : A^op -&gt; ZeroGpd) `{!Is0Functor F, !Is1Functor F} (x : F a)
+  : Is1Natural (yon_0gpd a) F (yoneda_0gpd a F x)
+  := is1natural_opyoneda_0gpd (A:=A^op) a F x.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 478
+Time: 0.007s">
+<div class="time" style="width: 29.166666666667%"></div>
+<pre>
+
+Definition yoneda_isinj_0gpd {A : Type} `{Is1Cat A} (a : A)
+  (F : A^op -&gt; ZeroGpd) `{!Is0Functor F, !Is1Functor F}
+  (x x' : F a) (p : forall b : A, yoneda_0gpd a F x b $== yoneda_0gpd a F x' b)
+  : x $== x'
+  := opyoneda_isinj_0gpd (A:=A^op) a F x x' p.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 484
+Time: 0.004s">
+<div class="time" style="width: 16.666666666667%"></div>
+<pre>
+
+Definition yon_faithful_0gpd {A : Type} `{Is1Cat A} (a b : A)
+  (f g : b $-&gt; a) (p : forall (c : A) (h : c $-&gt; b), f $o h $== g $o h)
+  : f $== g
+  := opyon_faithful_0gpd (A:=A^op) b a f g p.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 489
+Time: 0.004s">
+<div class="time" style="width: 16.666666666667%"></div>
+<pre>
+
+Definition yoneda_issect_0gpd {A : Type} `{Is1Cat A} (a : A)
+  (F : A^op -&gt; ZeroGpd) `{!Is0Functor F, !Is1Functor F}
+  (x : F a)
+  : un_yoneda_0gpd a F (yoneda_0gpd a F x) $== x
+  := opyoneda_issect_0gpd (A:=A^op) a F x.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 495
+Time: 0.008s">
+<div class="time" style="width: 33.333333333333%"></div>
+<pre>
+
+Definition yoneda_isretr_0gpd {A : Type} `{Is1Cat A} (a : A)
+  (F : A^op -&gt; ZeroGpd) `{!Is0Functor F, !Is1Functor F}
+  (alpha : yon_0gpd a $=&gt; F) {alnat : Is1Natural (yon_0gpd a) F alpha}
+  (b : A)
+  : yoneda_0gpd a F (un_yoneda_0gpd a F alpha) b $== alpha b
+  := opyoneda_isretr_0gpd (A:=A^op) a F alpha b.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 502
+Time: 0.001s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>
+
+Definition yon_cancel_0gpd {A : Type} `{Is1Cat A} (a b : A)
+  : (yon_0gpd a $=&gt; yon_0gpd b) -&gt; (a $-&gt; b)
+  := opyon_cancel_0gpd (A:=A^op) a b.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 506
+Time: 0.001s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>
+
+Definition yon1_0gpd {A : Type} `{Is1Cat A} (a : A) : Fun11 A^op ZeroGpd
+  := opyon1_0gpd (A:=A^op) a.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 509
+Time: 0.005s">
+<div class="time" style="width: 20.833333333333%"></div>
+<pre>
+
+Definition yon_equiv_0gpd {A : Type} `{HasEquivs A}
+  {a b : A} (f : yon1_0gpd a $&lt;~&gt; yon1_0gpd b)
+  : a $&lt;~&gt; b
+  := opyon_equiv_0gpd (A:=A^op) f.</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 514
+Time: 0.006s">
+<div class="time" style="width: 25%"></div>
+<pre>
+
+Definition natequiv_yon_equiv_0gpd {A : Type} `{HasEquivs A}
+  {a b : A} (e : a $&lt;~&gt; b)
+  : yon1_0gpd (A:=A) a $&lt;~&gt; yon1_0gpd b
+  := natequiv_opyon_equiv_0gpd (A:=A^op) (e : CatEquiv (A:=A^op) b a).</pre>
+</div>
+<div class="code" title="File: Yoneda.v
+Line: 520
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

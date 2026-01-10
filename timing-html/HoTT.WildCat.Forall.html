@@ -1,0 +1,372 @@
+<html>
+<head>
+<title>Forall.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Forall.v</h1>
+
+<div class="code" title="File: Forall.v
+Line: 1
+Time: 0.021s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import Basics.Overture Basics.Tactics.</pre>
+</div>
+<div class="code" title="File: Forall.v
+Line: 1
+Time: 0.002s">
+<div class="time" style="width: 9.5238095238095%"></div>
+<pre>
+Require Import WildCat.Core.</pre>
+</div>
+<div class="code" title="File: Forall.v
+Line: 2
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Indexed product of categories *)
+
+</pre>
+</div>
+<div class="code" title="File: Forall.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isgraph_forall (A : Type) (B : A -&gt; Type)
+  `{forall a, IsGraph (B a)}
+  : IsGraph (forall a, B a).</pre>
+</div>
+<div class="code" title="File: Forall.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Forall.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply Build_IsGraph.</pre>
+</div>
+<div class="code" title="File: Forall.v
+Line: 9
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y; exact (forall (a : A), x a $-&gt; y a).</pre>
+</div>
+<div class="code" title="File: Forall.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Forall.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance is01cat_forall (A : Type) (B : A -&gt; Type)
+  `{forall a, IsGraph (B a)} `{forall a, Is01Cat (B a)}
+  : Is01Cat (forall a, B a).</pre>
+</div>
+<div class="code" title="File: Forall.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Forall.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply Build_Is01Cat.</pre>
+</div>
+<div class="code" title="File: Forall.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Forall.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x a; exact (Id (x a)).</pre>
+</div>
+<div class="code" title="File: Forall.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Forall.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y z f g a; exact (f a $o g a).</pre>
+</div>
+<div class="code" title="File: Forall.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Forall.v
+Line: 20
+Time: 0.001s">
+<div class="time" style="width: 4.7619047619048%"></div>
+<pre>
+
+Instance is0gpd_forall (A : Type) (B : A -&gt; Type)
+  (* Apparently when there's a [forall] there, Coq can't automatically add the [Is01Cat] instance from the [Is0Gpd] instance. *)
+  `{forall a, IsGraph (B a)} `{forall a, Is01Cat (B a)} `{forall a, Is0Gpd (B a)}
+  : Is0Gpd (forall a, B a).</pre>
+</div>
+<div class="code" title="File: Forall.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Forall.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  constructor.</pre>
+</div>
+<div class="code" title="File: Forall.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros f g p a; exact ((p a)^$).</pre>
+</div>
+<div class="code" title="File: Forall.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Forall.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance is2graph_forall (A : Type) (B : A -&gt; Type)
+  `{forall a, IsGraph (B a)} `{forall a, Is2Graph (B a)}
+  : Is2Graph (forall a, B a).</pre>
+</div>
+<div class="code" title="File: Forall.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Forall.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y; srapply Build_IsGraph.</pre>
+</div>
+<div class="code" title="File: Forall.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros f g; exact (forall a, f a $-&gt; g a).</pre>
+</div>
+<div class="code" title="File: Forall.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Forall.v
+Line: 37
+Time: 0.001s">
+<div class="time" style="width: 4.7619047619048%"></div>
+<pre>
+
+Instance is1cat_forall (A : Type) (B : A -&gt; Type)
+  `{forall a, IsGraph (B a)} `{forall a, Is01Cat (B a)}
+  `{forall a, Is2Graph (B a)} `{forall a, Is1Cat (B a)}
+  : Is1Cat (forall a, B a).</pre>
+</div>
+<div class="code" title="File: Forall.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Forall.v
+Line: 43
+Time: 0.006s">
+<div class="time" style="width: 28.571428571429%"></div>
+<pre>
+  srapply Build_Is1Cat.</pre>
+</div>
+<div class="code" title="File: Forall.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Forall.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y z h; srapply Build_Is0Functor.</pre>
+</div>
+<div class="code" title="File: Forall.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros f g p a.</pre>
+</div>
+<div class="code" title="File: Forall.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (h a $@L p a).</pre>
+</div>
+<div class="code" title="File: Forall.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Forall.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y z h; srapply Build_Is0Functor.</pre>
+</div>
+<div class="code" title="File: Forall.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros f g p a.</pre>
+</div>
+<div class="code" title="File: Forall.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (p a $@R h a).</pre>
+</div>
+<div class="code" title="File: Forall.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Forall.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros w x y z f g h a; apply cat_assoc.</pre>
+</div>
+<div class="code" title="File: Forall.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Forall.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros w x y z f g h a; apply cat_assoc_opp.</pre>
+</div>
+<div class="code" title="File: Forall.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Forall.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y f a; apply cat_idl.</pre>
+</div>
+<div class="code" title="File: Forall.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Forall.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y f a; apply cat_idr.</pre>
+</div>
+<div class="code" title="File: Forall.v
+Line: 54
+Time: 0.003s">
+<div class="time" style="width: 14.285714285714%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Forall.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

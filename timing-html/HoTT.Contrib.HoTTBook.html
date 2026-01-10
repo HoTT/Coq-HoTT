@@ -1,0 +1,5148 @@
+<html>
+<head>
+<title>HoTTBook.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for HoTTBook.v</h1>
+
+<div class="code" title="File: HoTTBook.v
+Line: 1
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>(** The HoTT Book formalization. *)
+
+(** This file links the results of the HoTT Book with their formalizations
+    in the HoTT library. You can lookup definitions and theorems by their
+    number in the HoTT Book. *)
+
+(*  IMPORTANT NOTE FOR THE HoTT DEVELOPERS:
+
+    This files is processed automagically by the etc/Book.py script. The
+    script parses the file according to the markers present in it (the
+    comment lines with many = signs followed by a LaTeX label). It
+    reorders the entries according to entry number X.Y.Z and inserts
+    missing entries. You must therefore obey the following rules:
+
+    0. Read the description below of what the correct procedure is.
+
+    1. Do not mess with the markers and do not insert new entries by hand.
+       If a LaTeX label has been renamed you may rename the corresponding
+       marker, but for addition of new entries you have to use the
+       etc/Book.py script, as described below.
+
+    2. If a theorem is gone, you may delete the corresponding entry,
+       but make sure first that it was not just moved elsewhere.
+
+    3. Make entries independent of other entries, as they may get
+       reordered or deleted.
+
+    4. If you need to import anything, do it before the first entry.
+
+    5. Each entry should define Book_X_Y_Z, but you can also
+       put in auxiliary definitions and lemmas (keep it short please).
+       The script renames the Book_X_Y_Z to whatever the correct number
+       is, so initially you can use whatever number you like.
+
+       If you are formalizing a Lemma with several part, use
+       Book_X_Y_Z_item_i, Book_X_Y_Z_item_ii, or some such.
+
+    6. If there is a corresponding HoTT library theorem or definition,
+       please use that one, even if it is not exactly the same.
+
+
+   PROCEDURE FOR UPDATING THE FILE:
+
+   1. Compile the latest version of the HoTT Book to update the LaTeX
+      labels. Do not forget to pull in changes from HoTT/HoTT.
+
+   2. Run `cat ../book/*.aux | etc/Book.py contrib/HoTTBook.v`.
+      If it complains, fix things.
+
+   3. Add contents to new entries.
+
+   4. Run `etc/Book.py` again to make sure it is happy.
+
+   5. Compile this file with `make contrib` or `make contrib/HoTTBook.vo`.
+
+   6. Do the git thing to submit your changes.
+
+*)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 59
+Time: 0.062s">
+<div class="time" style="width: 100%"></div>
+<pre>From HoTT Require Import Basics Truncations.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 59
+Time: 0.007s">
+<div class="time" style="width: 11.290322580645%"></div>
+<pre>
+From HoTT Require Idempotents Spaces.No Spaces.Nat.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 60
+Time: 0.048s">
+<div class="time" style="width: 77.41935483871%"></div>
+<pre>
+From HoTT Require HIT.V HIT.Flattening Homotopy.WhiteheadsPrinciple Homotopy.Hopf.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 61
+Time: 0.048s">
+<div class="time" style="width: 77.41935483871%"></div>
+<pre>
+From HoTT Require Categories.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+From HoTT Require Metatheory.IntervalImpliesFunext Metatheory.UnivalenceImpliesFunext.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 63
+Time: 0.016s">
+<div class="time" style="width: 25.806451612903%"></div>
+<pre>
+From HoTT Require Classes.theory.premetric.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+
+(* END OF PREAMBLE *)
+(* ================================================== lem:opp *)
+(** Lemma 2.1.1 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_2_1_1 := @HoTT.Basics.Overture.inverse.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== lem:concat *)
+(** Lemma 2.1.2 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_2_1_2 := @HoTT.Basics.Overture.transitive_paths.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:omg *)
+(** Lemma 2.1.4 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_2_1_4_item_i := @HoTT.Basics.PathGroupoids.concat_p1.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Definition Book_2_1_4_item_i' := @HoTT.Basics.PathGroupoids.concat_1p.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Definition Book_2_1_4_item_ii := @HoTT.Basics.PathGroupoids.concat_Vp.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Definition Book_2_1_4_item_ii' := @HoTT.Basics.PathGroupoids.concat_pV.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Definition Book_2_1_4_item_iii := @HoTT.Basics.PathGroupoids.inv_V.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Definition Book_2_1_4_item_iv := @HoTT.Basics.PathGroupoids.concat_p_pp.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:EckmannHilton *)
+(** Theorem 2.1.6 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_2_1_6 := @HoTT.Basics.PathGroupoids.eckmann_hilton.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== def:pointedtype *)
+(** Definition 2.1.7 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_2_1_7 := @HoTT.Basics.Overture.pType.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== def:loopspace *)
+(** Definition 2.1.8 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_2_1_8 := @HoTT.Pointed.Loops.iterated_loops.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== lem:map *)
+(** Lemma 2.2.1 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_2_2_1 := @HoTT.Basics.Overture.ap.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== lem:ap-functor *)
+(** Lemma 2.2.2 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_2_2_2_item_i   := @HoTT.Basics.PathGroupoids.ap_pp.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Definition Book_2_2_2_item_ii  := @HoTT.Basics.PathGroupoids.inverse_ap.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Definition Book_2_2_2_item_iii := @HoTT.Basics.PathGroupoids.ap_compose.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Definition Book_2_2_2_item_iv  := @HoTT.Basics.PathGroupoids.ap_idmap.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== lem:transport *)
+(** Lemma 2.3.1 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_2_3_1 := @HoTT.Basics.Overture.transport.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:path-lifting *)
+(** Lemma 2.3.2 *)
+
+(* special case of *)</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_2_3_2 := @HoTT.Types.Sigma.equiv_path_sigma.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== lem:mapdep *)
+(** Lemma 2.3.4 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_2_3_4 := @HoTT.Basics.Overture.apD.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:trans-trivial *)
+(** Lemma 2.3.5 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_2_3_5 := @HoTT.Basics.PathGroupoids.transport_const.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:apd-const *)
+(** Lemma 2.3.8 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_2_3_8 := @HoTT.Basics.PathGroupoids.apD_const.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:transport-concat *)
+(** Lemma 2.3.9 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 131
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_2_3_9 := @HoTT.Basics.PathGroupoids.transport_compose.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 131
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:transport-compose *)
+(** Lemma 2.3.10 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 135
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_2_3_10 := @HoTT.Basics.PathGroupoids.ap_transport.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 135
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:ap-transport *)
+(** Lemma 2.3.11 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_2_3_11 := @HoTT.Basics.PathGroupoids.transport_pp.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== defn:homotopy *)
+(** Definition 2.4.1 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_2_4_1 := @HoTT.Basics.Overture.pointwise_paths.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== lem:homotopy-props *)
+(** Lemma 2.4.2 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 147
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_2_4_2 := @HoTT.Basics.Overture.pointwise_paths.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 147
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== lem:htpy-natural *)
+(** Lemma 2.4.3 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_2_4_3 := @HoTT.Basics.PathGroupoids.concat_Ap.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== cor:hom-fg *)
+(** Corollary 2.4.4 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 155
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_2_4_4 := @HoTT.Basics.PathGroupoids.concat_A1p.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 155
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== defn:quasi-inverse *)
+(** Definition 2.4.6 *)
+
+(** Quasi-inverses do not occur explicitly in the library since
+    they are `not good'. They do only occur implicitly as input to
+    isequiv_adjointify : IsEquiv f. Therefore we link to the half
+    adjoint equivalence extending the quasi-inverse *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 164
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_2_4_6 := @HoTT.Basics.Equivalences.isequiv_adjointify.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 164
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== eg:idequiv *)
+(** Example 2.4.7 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_2_4_7 := @HoTT.Basics.Equivalences.equiv_idmap.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== eg:concatequiv *)
+(** Example 2.4.8 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_2_4_8_i := @HoTT.Types.Paths.isequiv_concat_l.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Definition Book_2_4_8_ii := @HoTT.Types.Paths.isequiv_concat_r.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:transportequiv *)
+(** Example 2.4.9 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_2_4_9 := @HoTT.Basics.Equivalences.isequiv_transport.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:equiv-eqrel *)
+(** Lemma 2.4.12 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 181
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_2_4_12_item_i   := @HoTT.Basics.Equivalences.reflexive_equiv.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 181
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Definition Book_2_4_12_item_ii  := @HoTT.Basics.Equivalences.symmetric_equiv.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 182
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Definition Book_2_4_12_item_iii := @HoTT.Basics.Equivalences.transitive_equiv.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 183
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:path-prod *)
+(** Theorem 2.6.2 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_2_6_2 := @HoTT.Types.Prod.equiv_path_prod.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:trans-prod *)
+(** Theorem 2.6.4 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 191
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_2_6_4 := @HoTT.Types.Prod.transport_prod.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 191
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:ap-prod *)
+(** Theorem 2.6.5 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_2_6_5 := @HoTT.Types.Prod.ap_functor_prod.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:path-sigma *)
+(** Theorem 2.7.2 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 199
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_2_7_2 := @HoTT.Types.Sigma.equiv_path_sigma.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 199
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:eta-sigma *)
+(** Corollary 2.7.3 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 203
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_2_7_3 := @HoTT.Types.Sigma.eta_sigma.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 203
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== transport-Sigma *)
+(** Theorem 2.7.4 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 207
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_2_7_4 := @HoTT.Types.Sigma.transportD_is_transport.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 207
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:path-unit *)
+(** Theorem 2.8.1 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 211
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_2_8_1 := @HoTT.Types.Unit.equiv_path_unit.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 211
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== axiom:funext *)
+(** Axiom 2.9.3 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 215
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_2_9_3 := @HoTT.Basics.Overture.path_forall.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 215
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:dpath-arrow *)
+(** Lemma 2.9.6 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 219
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_2_9_6 := @HoTT.Types.Arrow.dpath_arrow.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 219
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:dpath-forall *)
+(** Lemma 2.9.7 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 223
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_2_9_7 := @HoTT.Types.Forall.dpath_forall.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 223
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:idtoeqv *)
+(** Lemma 2.10.1 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 227
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_2_10_1 := @HoTT.Types.Universe.equiv_path.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 227
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== axiom:univalence *)
+(** Axiom 2.10.3 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 231
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_2_10_3 := @HoTT.Types.Universe.isequiv_equiv_path.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 231
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:transport-is-ap *)
+(** Lemma 2.10.5 *)
+
+(** Lemma 2.10.5 is a special case of Lemma 2.3.10, but also of: *)</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 236
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_2_10_5 := @HoTT.Types.Universe.transport_path_universe'.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 236
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:paths-respects-equiv *)
+(** Theorem 2.11.1 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 240
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_2_11_1 := @HoTT.Basics.Equivalences.isequiv_ap.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 240
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== cor:transport-path-prepost *)
+(** Lemma 2.11.2 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 244
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_2_11_2_item_1 := @HoTT.Types.Paths.transport_paths_l.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 244
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Definition Book_2_11_2_item_2 := @HoTT.Types.Paths.transport_paths_r.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 245
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Definition Book_2_11_2_item_3 := @HoTT.Types.Paths.transport_paths_lr.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 246
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:transport-path *)
+(** Theorem 2.11.3 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 250
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_2_11_3 := @HoTT.Types.Paths.transport_paths_FlFr.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 250
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:transport-path2 *)
+(** Theorem 2.11.4 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 254
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_2_11_4 := @HoTT.Types.Paths.transport_paths_FlFr_D.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 254
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:dpath-path *)
+(** Theorem 2.11.5 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 258
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_2_11_5 := @HoTT.Types.Paths.dpath_path_lr.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 258
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:path-coprod *)
+(** Theorem 2.12.5 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 262
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_2_12_5 := @HoTT.Types.Sum.equiv_path_sum.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 262
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:path-nat *)
+(** Theorem 2.13.1 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 266
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_2_13_1 := @HoTT.Spaces.Nat.Paths.equiv_path_nat.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 266
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:prod-ump *)
+(** Theorem 2.15.2 *)
+
+(** non-dependent as special case of dependent, Theorem 2.15.5 *)</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 271
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_2_15_2 := @HoTT.Types.Prod.isequiv_prod_coind.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 271
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:prod-umpd *)
+(** Theorem 2.15.5 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 275
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_2_15_5 := @HoTT.Types.Prod.isequiv_prod_coind.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 275
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:ttac *)
+(** Theorem 2.15.7 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 279
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_2_15_7 := @HoTT.Types.Sigma.isequiv_sig_coind.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 279
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== defn:set *)
+(** Definition 3.1.1 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 283
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_3_1_1 := fun A =&gt; @HoTT.Basics.Overture.IsTrunc 0 A.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 283
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== eg:isset-unit *)
+(** Example 3.1.2 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 287
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_3_1_2 := @HoTT.Types.Unit.contr_unit.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 287
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== eg:isset-empty *)
+(** Example 3.1.3 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 291
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_3_1_3 := @HoTT.Types.Empty.istrunc_Empty (-2).</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 291
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:nat-set *)
+(** Example 3.1.4 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 295
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_3_1_4 := @HoTT.Spaces.Nat.Core.ishset_nat.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 295
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:isset-prod *)
+(** Example 3.1.5 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 299
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_3_1_5 := @HoTT.Types.Prod.istrunc_prod.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 299
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:isset-forall *)
+(** Example 3.1.6 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 303
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_3_1_6 `{Funext} A P := @HoTT.Basics.Trunc.istrunc_forall _ A P 0.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 303
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== defn:1type *)
+(** Definition 3.1.7 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 307
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_3_1_7 := fun A =&gt; @HoTT.Basics.Overture.IsTrunc 1 A.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 307
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:isset-is1type *)
+(** Lemma 3.1.8 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 311
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_3_1_8 := @HoTT.Basics.Trunc.istrunc_succ 0.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 311
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:type-is-not-a-set *)
+(** Example 3.1.9 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 315
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_3_1_9 := @HoTT.Types.Universe.not_hset_Type.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 315
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:not-dneg *)
+(** Theorem 3.2.2 *)
+
+
+
+(* ================================================== thm:not-lem *)
+(** Corollary 3.2.7 *)
+
+
+
+(* ================================================== defn:isprop *)
+(** Definition 3.3.1 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 329
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_3_3_1 := fun A =&gt; @HoTT.Basics.Overture.IsTrunc (-1) A.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 329
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:inhabprop-eqvunit *)
+(** Lemma 3.3.2 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 333
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_3_3_2 := @HoTT.Universes.HProp.if_hprop_then_equiv_Unit.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 333
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== lem:equiv-iff-hprop *)
+(** Lemma 3.3.3 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 337
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_3_3_3 := @HoTT.Basics.Trunc.equiv_iff_hprop.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 337
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:prop-set *)
+(** Lemma 3.3.4 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 341
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_3_3_4 := @HoTT.Basics.Trunc.istrunc_succ (-1).</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 341
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:isprop-isset *)
+(** Lemma 3.3.5 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 345
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_3_3_5_i := @HoTT.Basics.Trunc.ishprop_istrunc.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 345
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:isprop-isprop *)
+(** Lemma 3.3.5 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 349
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_3_3_5_ii := @HoTT.Basics.Trunc.ishprop_istrunc.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 349
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== defn:decidable-equality *)
+(** Definition 3.4.3 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 353
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_3_4_3_part_i   := @HoTT.Basics.Decidable.Decidable.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 353
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+(** Definition Book_3_4_3_part_ii  :=  *)</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 354
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_3_4_3_part_iii := @HoTT.Basics.Decidable.DecidablePaths.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 354
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== defn:setof *)
+(** Lemma 3.5 *)
+
+
+
+(* ================================================== thm:path-subset *)
+(** Lemma 3.5.1 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 363
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_3_5_1 := @HoTT.Types.Sigma.path_sigma_hprop.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 363
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:isprop-forall *)
+(** Example 3.6.2 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 367
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_3_6_2 `{Funext} (A : Type) (B : A -&gt; Type)
+  := @HoTT.Basics.Trunc.istrunc_forall _ A B (-1).</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 368
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== defn:logical-notation *)
+(** Definition 3.7.1 *)
+
+
+
+(* ================================================== thm:ac-epis-split *)
+(** Lemma 3.8.2 *)
+
+
+
+(* ================================================== thm:no-higher-ac *)
+(** Lemma 3.8.5 *)
+
+
+
+(* ================================================== thm:prop-equiv-trunc *)
+(** Lemma 3.9.1 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 387
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_3_9_1 := @HoTT.Modalities.ReflectiveSubuniverse.isequiv_to_O_inO (Tr (-1)).</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 387
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== cor:UC *)
+(** Corollary 3.9.2 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 391
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_3_9_2 := @HoTT.HIT.unique_choice.unique_choice.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 391
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== defn:contractible *)
+(** Definition 3.11.1 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 395
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_3_11_1 := fun A =&gt; @HoTT.Basics.Overture.IsTrunc (-2) A.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 395
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:contr-unit *)
+(** Lemma 3.11.3 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 399
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_3_11_3 := @HoTT.Types.Unit.contr_unit.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 399
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:isprop-iscontr *)
+(** Lemma 3.11.4 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 403
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_3_11_4 := @HoTT.Basics.Trunc.ishprop_istrunc.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 403
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:contr-contr *)
+(** Corollary 3.11.5 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 407
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_3_11_5 `{Funext} := @HoTT.Basics.Trunc.contr_istrunc _ (-2).</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 407
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:contr-forall *)
+(** Lemma 3.11.6 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 411
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_3_11_6 `{Funext} A P := @HoTT.Basics.Trunc.istrunc_forall _ A P (-2).</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 411
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:retract-contr *)
+(** Lemma 3.11.7 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 415
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_3_11_7a := @HoTT.Idempotents.contr_retracttype.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 415
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Definition Book_3_11_7 := @HoTT.Modalities.ReflectiveSubuniverse.inO_to_O_retract (Tr (-2)).</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 416
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:contr-paths *)
+(** Lemma 3.11.8 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 420
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_3_11_8 := @HoTT.Basics.Contractible.contr_basedpaths.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 420
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:omit-contr *)
+(** Lemma 3.11.9 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 424
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_3_11_9_part_i  := @HoTT.Types.Sigma.equiv_sigma_contr.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 424
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Definition Book_3_11_9_part_ii := @HoTT.Types.Sigma.equiv_contr_sigma.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 425
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:prop-minusonetype *)
+(** Lemma 3.11.10 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 429
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_3_11_10_if     := @HoTT.Basics.Trunc.path_ishprop.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 429
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Definition Book_3_11_10_onlyif := @HoTT.Basics.Trunc.hprop_allpath.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 430
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== lem:qinv-autohtpy *)
+(** Lemma 4.1.1 *)
+
+
+
+(* ================================================== lem:autohtpy *)
+(** Lemma 4.1.2 *)
+
+
+
+(* ================================================== thm:qinv-notprop *)
+(** Theorem 4.1.3 *)
+
+
+
+(* ================================================== defn:ishae *)
+(** Definition 4.2.1 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 449
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_4_2_1 := @HoTT.Basics.Overture.IsEquiv.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 449
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== lem:coh-equiv *)
+(** Lemma 4.2.2 *)
+
+(* The proof of Lemma 4.2.2 is embedded in the proof of isequiv_inverse. *)</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 454
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_4_2_2 := fun (A B : Type) (f : A -&gt; B) (feq : IsEquiv f) (y : B) =&gt;
+  @HoTT.Basics.Overture.eisadj B A f^-1
+    (@HoTT.Basics.Equivalences.isequiv_inverse A B f feq) y.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 456
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:equiv-iso-adj *)
+(** Theorem 4.2.3 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 460
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_4_2_3 := @HoTT.Basics.Equivalences.isequiv_adjointify.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 460
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== defn:homotopy-fiber *)
+(** Definition 4.2.4 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 464
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_4_2_4 := @HoTT.Basics.Overture.hfiber.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 464
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== lem:hfib *)
+(** Lemma 4.2.5 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 468
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_4_2_5 := @HoTT.HFiber.equiv_path_hfiber.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 468
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:contr-hae *)
+(** Theorem 4.2.6 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 472
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_4_2_6 := @HoTT.Types.Equiv.contr_map_isequiv.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 472
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== defn:linv-rinv *)
+(** Definition 4.2.7 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 476
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_4_2_7_i {A B} (f : A -&gt; B) := {g : B -&gt; A &amp; g o f == idmap }.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 476
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Definition Book_4_2_7_ii {A B} (f : A -&gt; B) := {g : B -&gt; A &amp; f o g == idmap }.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 477
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:equiv-compose-equiv *)
+(** Lemma 4.2.8 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 481
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_4_2_8_i  := @HoTT.Basics.Equivalences.isequiv_postcompose.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 481
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Definition Book_4_2_8_ii := @HoTT.Basics.Equivalences.isequiv_precompose.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 482
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== lem:inv-hprop *)
+(** Lemma 4.2.9 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 486
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_4_2_9_i  := @HoTT.Types.Equiv.contr_sect_equiv.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 486
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Definition Book_4_2_9_ii := @HoTT.Types.Equiv.contr_retr_equiv.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 487
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== defn:lcoh-rcoh *)
+(** Definition 4.2.10 *)
+
+
+
+(* ================================================== lem:coh-hfib *)
+(** Lemma 4.2.11 *)
+
+
+
+(* ================================================== lem:coh-hprop *)
+(** Lemma 4.2.12 *)
+
+
+
+(* ================================================== thm:hae-hprop *)
+(** Theorem 4.2.13 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 506
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_4_2_13 := @HoTT.Types.Equiv.hprop_isequiv.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 506
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== defn:biinv *)
+(** Definition 4.3.1 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 510
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_4_3_1  := @HoTT.Equiv.BiInv.BiInv.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 510
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:isprop-biinv *)
+(** Theorem 4.3.2 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 514
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_4_3_2  := @HoTT.Equiv.BiInv.ishprop_biinv.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 514
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:equiv-biinv-isequiv *)
+(** Corollary 4.3.3 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 518
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_4_3_3  := @HoTT.Equiv.BiInv.equiv_biinv_isequiv.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 518
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== defn:equivalence *)
+(** Definition 4.4.1 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 522
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_4_4_1 := @HoTT.Basics.Trunc.IsTruncMap (-2).</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 522
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:lequiv-contr-hae *)
+(** Theorem 4.4.3 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 526
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_4_4_3 := @HoTT.Types.Equiv.isequiv_contr_map.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 526
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:contr-hprop *)
+(** Lemma 4.4.4 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 530
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_4_4_4 := @HoTT.Basics.Trunc.ishprop_istrunc.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 530
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:equiv-contr-hae *)
+(** Theorem 4.4.5 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 534
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_4_4_5 := @HoTT.Types.Equiv.equiv_contr_map_isequiv.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 534
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:equiv-inhabcod *)
+(** Corollary 4.4.6 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 538
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_4_4_6 := @HoTT.Types.Equiv.isequiv_inhab_codomain.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 538
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== defn:surj-emb *)
+(** Definition 4.6.1 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 542
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_4_6_1 := @HoTT.Basics.Trunc.IsTruncMap (-1).</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 542
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:mono-surj-equiv *)
+(** Theorem 4.6.3 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 546
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_4_6_3 := @HoTT.Modalities.ReflectiveSubuniverse.isequiv_conn_ino_map.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 546
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:two-out-of-three *)
+(** Theorem 4.7.1 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 550
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_4_7_1_part_i   := @HoTT.Basics.Equivalences.isequiv_compose.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 550
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Definition Book_4_7_1_part_ii  := @HoTT.Basics.Equivalences.cancelR_isequiv.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 551
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Definition Book_4_7_1_part_iii := @HoTT.Basics.Equivalences.cancelL_isequiv.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 552
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== defn:retract *)
+(** Definition 4.7.2 *)
+
+
+
+(* ================================================== lem:func_retract_to_fiber_retract *)
+(** Lemma 4.7.3 *)
+
+
+
+(* ================================================== thm:retract-equiv *)
+(** Theorem 4.7.4 *)
+
+
+
+(* ================================================== defn:total-map *)
+(** Definition 4.7.5 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 571
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_4_7_5 := @HoTT.Types.Sigma.functor_sigma.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 571
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== fibwise-fiber-total-fiber-equiv *)
+(** Theorem 4.7.6 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 575
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_4_7_6 := @HoTT.Types.Sigma.hfiber_functor_sigma.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 575
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:total-fiber-equiv *)
+(** Theorem 4.7.7 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 579
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_4_7_7 := @HoTT.Types.Equiv.equiv_total_iff_equiv_fiberwise.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 579
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:fiber-of-a-fibration *)
+(** Lemma 4.8.1 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 583
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_4_8_1 := @HoTT.HFiber.hfiber_fibration.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 583
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:total-space-of-the-fibers *)
+(** Lemma 4.8.2 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 587
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_4_8_2 := @HoTT.HFiber.equiv_fibration_replacement.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 587
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:nobject-classifier-appetizer *)
+(** Theorem 4.8.3 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 591
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_4_8_3 := @HoTT.Universes.ObjectClassifier.equiv_sigma_fibration.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 591
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:object-classifier *)
+(** Theorem 4.8.4 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 595
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_4_8_4 := @HoTT.Universes.ObjectClassifier.ispullback_objectclassifier_square.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 595
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== weakfunext *)
+(** Definition 4.9.1 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 599
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_4_9_1 := @HoTT.Metatheory.FunextVarieties.WeakFunext.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 599
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== UA-eqv-hom-eqv *)
+(** Lemma 4.9.2 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 603
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_4_9_2 := @HoTT.Metatheory.UnivalenceImpliesFunext.univalence_isequiv_postcompose.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 603
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== contrfamtotalpostcompequiv *)
+(** Corollary 4.9.3 *)
+
+
+
+(* ================================================== uatowfe *)
+(** Theorem 4.9.4 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 612
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_4_9_4 := @HoTT.Metatheory.UnivalenceImpliesFunext.Univalence_implies_WeakFunext.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 612
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== wfetofe *)
+(** Theorem 4.9.5 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 616
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_4_9_5 := @HoTT.Metatheory.FunextVarieties.WeakFunext_implies_Funext.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 616
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:nat-uniq *)
+(** Theorem 5.1.1 *)
+
+
+
+(* ================================================== thm:w-uniq *)
+(** Theorem 5.3.1 *)
+
+
+
+(* ================================================== defn:nalg *)
+(** Definition 5.4.1 *)
+
+
+
+(* ================================================== defn:nhom *)
+(** Definition 5.4.2 *)
+
+
+
+(* ================================================== thm:nat-hinitial *)
+(** Theorem 5.4.5 *)
+
+
+
+(* ================================================== thm:w-hinit *)
+(** Theorem 5.4.7 *)
+
+
+
+(* ================================================== lem:homotopy-induction-times-3 *)
+(** Lemma 5.5.4 *)
+
+
+
+(* ================================================== defn:identity-systems *)
+(** Definition 5.8.1 *)
+
+
+
+(* ================================================== thm:identity-systems *)
+(** Theorem 5.8.2 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 660
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_5_8_2_i_implies_ii := @HoTT.Homotopy.IdentitySystems.homocontr_pfammap_identitysystem.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 660
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Definition Book_5_8_2_ii_implies_iii := @HoTT.Homotopy.IdentitySystems.equiv_path_homocontr_pfammap.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 661
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Definition Book_5_8_2_iii_implies_iv := @HoTT.Homotopy.IdentitySystems.contr_sigma_equiv_path.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 662
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Definition Book_5_8_2_iv_implies_i := @HoTT.Homotopy.IdentitySystems.identitysystem_contr_sigma.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 663
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:ML-identity-systems *)
+(** Theorem 5.8.4 *)
+
+
+
+(* ================================================== thm:equiv-induction *)
+(** Corollary 5.8.5 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 672
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_5_8_5 := @HoTT.Types.Universe.equiv_induction'.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 672
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Definition Book_5_8_5_comp := @HoTT.Types.Universe.equiv_induction'_comp.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 673
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:htpy-induction *)
+(** Corollary 5.8.6 *)
+
+
+
+(* ================================================== thm:S1rec *)
+(** Lemma 6.2.5 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 682
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_6_2_5 := @HoTT.Spaces.Circle.Circle_rec.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 682
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:uniqueness-for-functions-on-S1 *)
+(** Lemma 6.2.8 *)
+
+
+
+(* ================================================== thm:S1ump *)
+(** Lemma 6.2.9 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 691
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_6_2_9 := @HoTT.Spaces.Circle.isequiv_Circle_rec_uncurried.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 691
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:contr-interval *)
+(** Lemma 6.3.1 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 695
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_6_3_1 := @HoTT.HIT.Interval.contr_interval.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 695
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:interval-funext *)
+(** Lemma 6.3.2 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 699
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_6_3_2 := @HoTT.Metatheory.IntervalImpliesFunext.funext_type_from_interval.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 699
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:loop-nontrivial *)
+(** Lemma 6.4.1 *)
+
+
+
+(* ================================================== thm:S1-autohtpy *)
+(** Lemma 6.4.2 *)
+
+
+
+(* ================================================== thm:ap2 *)
+(** Lemma 6.4.4 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 713
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_6_4_4 := @HoTT.Basics.PathGroupoids.ap02.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 713
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:transport2 *)
+(** Lemma 6.4.5 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 717
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_6_4_5 := @HoTT.Basics.PathGroupoids.transport2.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 717
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:apd2 *)
+(** Lemma 6.4.6 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 721
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_6_4_6 := @HoTT.Basics.PathGroupoids.apD02.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 721
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:suspbool *)
+(** Lemma 6.5.1 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 725
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_6_5_1 := @HoTT.Spaces.Spheres.isequiv_S1_to_Circle.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 725
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== lem:susp-loop-adj *)
+(** Lemma 6.5.4 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 729
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_6_5_4 := @HoTT.Pointed.pSusp.loop_susp_adjoint.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 729
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== defn:cocone *)
+(** Definition 6.8.1 *)
+
+
+
+(* ================================================== thm:pushout-ump *)
+(** Lemma 6.8.2 *)
+
+
+
+(* ================================================== thm:trunc0-ind *)
+(** Lemma 6.9.1 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 743
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_6_9_1 := @HoTT.Truncations.Core.Trunc.Trunc_ind 0.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 743
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:trunc0-lump *)
+(** Lemma 6.9.2 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 747
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_6_9_2 := @HoTT.Modalities.ReflectiveSubuniverse.isequiv_o_to_O.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 747
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:set-pushout *)
+(** Lemma 6.9.3 *)
+
+
+
+(* ================================================== thm:quotient-surjective *)
+(** Lemma 6.10.2 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 756
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_6_10_2 := @HoTT.HIT.quotient.quotient_surjective.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 756
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:quotient-ump *)
+(** Lemma 6.10.3 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 760
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_6_10_3 := @HoTT.HIT.quotient.quotient_ump.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 760
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== def:VVquotient *)
+(** Definition 6.10.5 *)
+
+
+
+(* ================================================== lem:quotient-when-canonical-representatives *)
+(** Lemma 6.10.8 *)
+
+
+
+(* ================================================== thm:retraction-quotient *)
+(** Corollary 6.10.10 *)
+
+
+
+(* ================================================== thm:sign-induction *)
+(** Lemma 6.10.12 *)
+
+
+
+(* ================================================== thm:looptothe *)
+(** Corollary 6.10.13 *)
+
+
+
+(* ================================================== thm:homotopy-groups *)
+(** Example 6.11.4 *)
+
+
+
+(* ================================================== thm:free-monoid *)
+(** Lemma 6.11.5 *)
+
+
+
+(* ================================================== thm:transport-is-given *)
+(** Lemma 6.12.1 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 799
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_6_12_1 := @HoTT.Types.Universe.transport_path_universe'.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 799
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:flattening *)
+(** Lemma 6.12.2 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 803
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_6_12_2 := @HoTT.HIT.Flattening.equiv_flattening.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 803
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:flattening-cp *)
+(** Lemma 6.12.3 *)
+
+
+
+(* ================================================== thm:flattening-rect *)
+(** Lemma 6.12.4 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 812
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_6_12_4 := @HoTT.HIT.Flattening.sWtil_ind.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 812
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:flattening-rectnd *)
+(** Lemma 6.12.5 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 816
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_6_12_5 := @HoTT.HIT.Flattening.sWtil_rec.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 816
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:ap-sigma-rect-path-pair *)
+(** Lemma 6.12.7 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 820
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_6_12_7 := @HoTT.Types.Sigma.ap_sig_rec_path_sigma.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 820
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:flattening-rectnd-beta-ppt *)
+(** Lemma 6.12.8 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 824
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_6_12_8 := @HoTT.HIT.Flattening.sWtil_rec_beta_ppt.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 824
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== eg:unnatural-hit *)
+(** Example 6.13.1 *)
+
+
+
+(* ================================================== def:hlevel *)
+(** Definition 7.1.1 *)
+
+
+
+(* ================================================== thm:h-level-retracts *)
+(** Theorem 7.1.4 *)
+
+
+
+(* ================================================== cor:preservation-hlevels-weq *)
+(** Corollary 7.1.5 *)
+
+
+
+(* ================================================== thm:isntype-mono *)
+(** Theorem 7.1.6 *)
+
+
+
+(* ================================================== thm:hlevel-cumulative *)
+(** Theorem 7.1.7 *)
+
+
+
+(* ================================================== thm:ntypes-sigma *)
+(** Theorem 7.1.8 *)
+
+
+
+(* ================================================== thm:hlevel-prod *)
+(** Theorem 7.1.9 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 863
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_7_1_9 := @HoTT.Basics.Trunc.istrunc_forall.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 863
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:isaprop-isofhlevel *)
+(** Theorem 7.1.10 *)
+
+
+
+(* ================================================== thm:hleveln-of-hlevelSn *)
+(** Theorem 7.1.11 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 872
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book7_1_11 := @HoTT.Universes.TruncType.istrunc_trunctype.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 872
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:h-set-uip-K *)
+(** Theorem 7.2.1 *)
+
+
+
+(* ================================================== thm:h-set-refrel-in-paths-sets *)
+(** Theorem 7.2.2 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 881
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_7_2_2 := @HoTT.Universes.HSet.ishset_hrel_subpaths.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 881
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== notnotstable-equality-to-set *)
+(** Corollary 7.2.3 *)
+
+
+
+(* ================================================== lem:hedberg-helper *)
+(** Lemma 7.2.4 *)
+
+
+
+(* ================================================== thm:hedberg *)
+(** Theorem 7.2.5 *)
+
+
+
+(* ================================================== prop:nat-is-set *)
+(** Theorem 7.2.6 *)
+
+
+
+(* ================================================== thm:hlevel-loops *)
+(** Theorem 7.2.7 *)
+
+
+
+(* ================================================== lem:hlevel-if-inhab-hlevel *)
+(** Lemma 7.2.8 *)
+
+
+
+(* ================================================== thm:ntype-nloop *)
+(** Theorem 7.2.9 *)
+
+
+
+(* ================================================== thm:truncn-ind *)
+(** Theorem 7.3.2 *)
+
+
+
+(* ================================================== thm:trunc-reflective *)
+(** Lemma 7.3.3 *)
+
+
+
+(* ================================================== thm:trunc-htpy *)
+(** Lemma 7.3.5 *)
+
+
+
+(* ================================================== cor:trunc-prod *)
+(** Theorem 7.3.8 *)
+
+
+
+(* ================================================== thm:trunc-in-truncated-sigma *)
+(** Theorem 7.3.9 *)
+
+
+
+(* ================================================== thm:refl-over-ntype-base *)
+(** Corollary 7.3.10 *)
+
+
+
+(* ================================================== thm:path-truncation *)
+(** Theorem 7.3.12 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 950
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_7_3_12 := @HoTT.Truncations.SeparatedTrunc.equiv_path_Tr.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 950
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== lem:truncation-le *)
+(** Lemma 7.3.15 *)
+
+
+
+(* ================================================== thm:conemap-funct *)
+(** Lemma 7.4.10 *)
+
+
+
+(* ================================================== reflectcommutespushout *)
+(** Theorem 7.4.12 *)
+
+
+
+(* ================================================== thm:minusoneconn-surjective *)
+(** Lemma 7.5.2 *)
+
+
+
+(* ================================================== lem:nconnected_postcomp *)
+(** Lemma 7.5.6 *)
+
+
+
+(* ================================================== cor:totrunc-is-connected *)
+(** Corollary 7.5.8 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 979
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_7_5_8 := @HoTT.Modalities.Modality.conn_map_to_O.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 979
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:nconn-to-ntype-const *)
+(** Corollary 7.5.9 *)
+
+
+
+(* ================================================== connectedtotruncated *)
+(** Corollary 7.5.9 *)
+
+
+
+(* ================================================== lem:nconnected_to_leveln_to_equiv *)
+(** Lemma 7.5.10 *)
+
+
+
+(* ================================================== thm:connected-pointed *)
+(** Lemma 7.5.11 *)
+
+
+
+(* ================================================== lem:nconnected_postcomp_variation *)
+(** Lemma 7.5.12 *)
+
+
+
+(* ================================================== prop:nconn_fiber_to_total *)
+(** Lemma 7.5.13 *)
+
+
+
+(* ================================================== lem:connected-map-equiv-truncation *)
+(** Lemma 7.5.14 *)
+
+
+
+(* ================================================== thm:modal-mono *)
+(** Lemma 7.6.2 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1018
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_7_6_2 := @HoTT.HFiber.equiv_istruncmap_ap.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1018
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== defn:modal-image *)
+(** Definition 7.6.3 *)
+
+
+
+(* ================================================== prop:to_image_is_connected *)
+(** Lemma 7.6.4 *)
+
+
+
+(* ================================================== prop:factor_equiv_fiber *)
+(** Lemma 7.6.5 *)
+
+
+
+(* ================================================== thm:orth-fact *)
+(** Theorem 7.6.6 *)
+
+
+
+(* ================================================== lem:hfiber_wrt_pullback *)
+(** Lemma 7.6.8 *)
+
+
+
+(* ================================================== thm:stable-images *)
+(** Theorem 7.6.9 *)
+
+
+
+(* ================================================== defn:reflective-subuniverse *)
+(** Definition 7.7.1 *)
+
+
+
+(* ================================================== thm:reflsubunv-forall *)
+(** Theorem 7.7.2 *)
+
+
+
+(* ================================================== cor:trunc_prod *)
+(** Corollary 7.7.3 *)
+
+
+
+(* ================================================== thm:modal-char *)
+(** Theorem 7.7.4 *)
+
+
+
+(* ================================================== defn:modality *)
+(** Definition 7.7.5 *)
+
+
+
+(* ================================================== prop:lv_n_deptype_sec_equiv_by_precomp *)
+(** Theorem 7.7.7 *)
+
+
+
+(* ================================================== def-of-homotopy-groups *)
+(** Definition 8.0.1 *)
+
+
+
+(* ================================================== S1-universal-cover *)
+(** Definition 8.1.1 *)
+
+
+
+(* ================================================== lem:transport-s1-code *)
+(** Lemma 8.1.2 *)
+
+
+
+(* ================================================== thm:pi1s1-decode *)
+(** Definition 8.1.6 *)
+
+
+
+(* ================================================== lem:s1-decode-encode *)
+(** Lemma 8.1.7 *)
+
+
+
+(* ================================================== lem:s1-encode-decode *)
+(** Lemma 8.1.8 *)
+
+
+
+(* ================================================== cor:omega-s1 *)
+(** Corollary 8.1.10 *)
+
+
+
+(* ================================================== cor:pi1s1 *)
+(** Corollary 8.1.11 *)
+
+
+
+(* ================================================== thm:iscontr-s1cover *)
+(** Lemma 8.1.12 *)
+
+
+
+(* ================================================== thm:encode-total-equiv *)
+(** Corollary 8.1.13 *)
+
+
+
+(* ================================================== thm:suspension-increases-connectedness *)
+(** Theorem 8.2.1 *)
+
+
+
+(* ================================================== cor:sn-connected *)
+(** Corollary 8.2.2 *)
+
+
+
+(* ================================================== lem:pik-nconnected *)
+(** Lemma 8.3.2 *)
+
+
+
+(* ================================================== def:pointedmap *)
+(** Definition 8.4.1 *)
+
+
+
+(* ================================================== def:loopfunctor *)
+(** Definition 8.4.2 *)
+
+
+
+(* ================================================== thm:fiber-of-the-fiber *)
+(** Lemma 8.4.4 *)
+
+
+
+(* ================================================== thm:les *)
+(** Theorem 8.4.6 *)
+
+
+
+(* ================================================== thm:ses *)
+(** Lemma 8.4.7 *)
+
+
+
+(* ================================================== thm:conn-pik *)
+(** Corollary 8.4.8 *)
+
+
+
+(* ================================================== thm:hopf-fibration *)
+(** Theorem 8.5.1 *)
+
+
+
+(* ================================================== cor:pis2-hopf *)
+(** Corollary 8.5.2 *)
+
+
+
+(* ================================================== lem:fibration-over-pushout *)
+(** Lemma 8.5.3 *)
+
+
+
+(* ================================================== lem:hopf-construction *)
+(** Lemma 8.5.7 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1192
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_8_5_6 := @HoTT.Homotopy.Hopf.hopf_construction.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1192
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Definition Book_8_5_7 := @HoTT.Homotopy.Hopf.pequiv_hopf_total_join.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1193
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== lem:hspace-S1 *)
+(** Lemma 8.5.8 *)
+
+
+
+(* ================================================== thm:conn-trunc-variable-ind *)
+(** Lemma 8.6.1 *)
+
+
+
+(* ================================================== thm:wedge-connectivity *)
+(** Lemma 8.6.2 *)
+
+
+
+(* ================================================== thm:freudenthal *)
+(** Theorem 8.6.4 *)
+
+
+
+(* ================================================== thm:freudcode *)
+(** Definition 8.6.5 *)
+
+
+
+(* ================================================== thm:freudlemma *)
+(** Lemma 8.6.10 *)
+
+
+
+(* ================================================== cor:freudenthal-equiv *)
+(** Corollary 8.6.14 *)
+
+
+
+(* ================================================== cor:stability-spheres *)
+(** Corollary 8.6.15 *)
+
+
+
+(* ================================================== thm:pinsn *)
+(** Theorem 8.6.17 *)
+
+
+
+(* ================================================== thm:pi3s2 *)
+(** Corollary 8.6.19 *)
+
+
+
+(* ================================================== thm:naive-van-kampen *)
+(** Theorem 8.7.4 *)
+
+
+
+(* ================================================== eg:circle *)
+(** Example 8.7.6 *)
+
+
+
+(* ================================================== eg:suspension *)
+(** Example 8.7.7 *)
+
+
+
+(* ================================================== eg:wedge *)
+(** Example 8.7.8 *)
+
+
+
+(* ================================================== thm:kbar *)
+(** Lemma 8.7.9 *)
+
+
+
+(* ================================================== thm:van-Kampen *)
+(** Theorem 8.7.12 *)
+
+
+
+(* ================================================== eg:clvk *)
+(** Example 8.7.13 *)
+
+
+
+(* ================================================== eg:cofiber *)
+(** Example 8.7.14 *)
+
+
+
+(* ================================================== eg:torus *)
+(** Example 8.7.15 *)
+
+
+
+(* ================================================== eg:kg1 *)
+(** Example 8.7.17 *)
+
+
+
+(* ================================================== thm:whitehead0 *)
+(** Theorem 8.8.1 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1297
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_8_8_1 := @HoTT.Homotopy.WhiteheadsPrinciple.isequiv_issurj_tr0_isequiv_ap.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1297
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:whitehead1 *)
+(** Corollary 8.8.2 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1301
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_8_8_2 := @HoTT.Homotopy.WhiteheadsPrinciple.isequiv_isbij_tr0_isequiv_loops.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1301
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:whiteheadn *)
+(** Theorem 8.8.3 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1305
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_8_8_3 := @HoTT.Homotopy.WhiteheadsPrinciple.whiteheads_principle.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1305
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:whitehead-contr *)
+(** Corollary 8.8.4 *)
+
+
+
+(* ================================================== thm:pik-conn *)
+(** Corollary 8.8.5 *)
+
+
+
+(* ================================================== lem:encode-decode-loop *)
+(** Lemma 8.9.1 *)
+
+
+
+(* ================================================== Blakers-Massey *)
+(** Theorem 8.10.2 *)
+
+
+
+(* ================================================== Eilenberg-Mac-Lane-Spaces *)
+(** Theorem 8.10.3 *)
+
+
+
+(* ================================================== thm:covering-spaces *)
+(** Theorem 8.10.4 *)
+
+
+
+(* ================================================== ct:precategory *)
+(** Definition 9.1.1 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1339
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_9_1_1 := @HoTT.Categories.Category.Core.PreCategory.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1339
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== ct:isomorphism *)
+(** Definition 9.1.2 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1343
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_9_1_2 := @HoTT.Categories.Category.Morphisms.Isomorphic.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1343
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== ct:isoprop *)
+(** Lemma 9.1.3 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1347
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_9_1_3 := @HoTT.Categories.Category.Morphisms.istrunc_isisomorphism.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1347
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== ct:idtoiso *)
+(** Lemma 9.1.4 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1351
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_9_1_4 := @HoTT.Categories.Category.Morphisms.idtoiso.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1351
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== ct:precatset *)
+(** Example 9.1.5 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1355
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_9_1_5 := @HoTT.Categories.SetCategory.Core.set_cat.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1355
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== ct:category *)
+(** Definition 9.1.6 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1359
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_9_1_6 C := (HoTT.Categories.Category.Univalent.IsCategory C).</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1359
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== ct:eg:set *)
+(** Example 9.1.7 *)
+
+(** Once this is proven, we will have
+&lt;&lt;
+Definition Book_9_1_7 := @HoTT.Categories.SetCategory.Morphisms.iscategory_set_cat.
+&gt;&gt;
+*)
+
+(* ================================================== ct:obj-1type *)
+(** Lemma 9.1.8 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1372
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_9_1_8 := @HoTT.Categories.Category.Univalent.trunc_category.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1372
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== ct:idtoiso-trans *)
+(** Lemma 9.1.9 *)
+
+
+
+(* ================================================== ct:orders *)
+(** Example 9.1.14 *)
+
+
+
+(* ================================================== ct:gaunt *)
+(** Example 9.1.15 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1386
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_9_1_15 A `{H : HoTT.Categories.Category.Univalent.IsCategory A}
+: IsHSet (HoTT.Categories.Category.Core.object A)
+  &lt;-&gt; (forall a b, IsHProp (@HoTT.Categories.Category.Morphisms.Isomorphic A a b)).</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1388
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1389
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  split.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1390
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1391
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros H' a b.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1391
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    eapply istrunc_isequiv_istrunc.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1392
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1393
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> refine (H' a b).</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1393
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1394
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply H.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1394
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1395
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros H'; apply istrunc_S; intros a b.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1395
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    eapply istrunc_isequiv_istrunc.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1396
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1397
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (H' a b).</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1397
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1398
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (@isequiv_inverse _ _ _ (H _ _)).</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1398
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1399
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== ct:discrete *)
+(** Example 9.1.16 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1403
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_9_1_16 := @HoTT.Categories.GroupoidCategory.Core.groupoid_category.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1403
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== ct:fundgpd *)
+(** Example 9.1.17 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1407
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_9_1_17 := @HoTT.Categories.FundamentalPreGroupoidCategory.fundamental_pregroupoid_category.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1407
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== ct:hoprecat *)
+(** Example 9.1.18 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1411
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_9_1_18 := @HoTT.Categories.HomotopyPreCategory.homotopy_precategory.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1411
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== ct:rel *)
+(** Example 9.1.19 *)
+
+
+
+(* ================================================== ct:functor *)
+(** Definition 9.2.1 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1420
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_9_2_1 := @HoTT.Categories.Functor.Core.Functor.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1420
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== ct:nattrans *)
+(** Definition 9.2.2 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1424
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_9_2_2 := @HoTT.Categories.NaturalTransformation.Core.NaturalTransformation.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1424
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== ct:functor-precat *)
+(** Definition 9.2.3 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1428
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_9_2_3 := @HoTT.Categories.FunctorCategory.Core.functor_category.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1428
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== ct:natiso *)
+(** Lemma 9.2.4 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1432
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_9_2_4 := @HoTT.Categories.FunctorCategory.Morphisms.isisomorphism_natural_transformation.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1432
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== ct:functor-cat *)
+(** Theorem 9.2.5 *)
+
+(** When this is done, it will be
+&lt;&lt;
+Definition Book_9_2_5 := @HoTT.Categories.FunctorCategory.Morphisms.iscategory_functor_category.
+&gt;&gt;
+*)
+
+(* ================================================== ct:functor-composition *)
+(** Definition 9.2.6 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1445
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_9_2_6 := @HoTT.Categories.Functor.Composition.Core.compose.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1445
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== ct:whisker *)
+(** Definition 9.2.7 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1449
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_9_2_7_l := @HoTT.Categories.NaturalTransformation.Composition.Core.whisker_l.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1449
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Definition Book_9_2_7_r := @HoTT.Categories.NaturalTransformation.Composition.Core.whisker_r.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1450
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== ct:interchange *)
+(** Lemma 9.2.8 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1454
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_9_2_8 := @HoTT.Categories.NaturalTransformation.Composition.Laws.exchange_whisker.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1454
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== ct:functor-assoc *)
+(** Lemma 9.2.9 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1458
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_9_2_9 := @HoTT.Categories.Functor.Composition.Laws.associativity.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1458
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== ct:pentagon *)
+(** Lemma 9.2.10 *)
+
+
+
+(* ================================================== ct:units *)
+(** Lemma 9.2.11 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1467
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_9_2_11_l := @HoTT.Categories.Functor.Composition.Laws.left_identity.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1467
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Definition Book_9_2_11_r := @HoTT.Categories.Functor.Composition.Laws.right_identity.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1468
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Definition Book_9_2_11 := @HoTT.Categories.Functor.Composition.Laws.triangle.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1469
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== ct:adjoints *)
+(** Definition 9.3.1 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1473
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_9_3_1 := @HoTT.Categories.Adjoint.UnitCounit.AdjunctionUnitCounit.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1473
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== ct:adjprop *)
+(** Lemma 9.3.2 *)
+
+
+
+(* ================================================== ct:equiv *)
+(** Definition 9.4.1 *)
+
+
+
+(* ================================================== ct:adjointification *)
+(** Lemma 9.4.2 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1487
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_9_4_2a := @HoTT.Categories.Functor.Attributes.IsFaithful.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1487
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Definition Book_9_4_2b := @HoTT.Categories.Functor.Attributes.IsFull.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1488
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Definition Book_9_4_2c := @HoTT.Categories.Functor.Attributes.IsFullyFaithful.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1489
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== ct:full-faithful *)
+(** Definition 9.4.3 *)
+
+
+
+(* ================================================== ct:split-essentially-surjective *)
+(** Definition 9.4.4 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1498
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_9_4_4 := @HoTT.Categories.Functor.Attributes.IsSplitEssentiallySurjective.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1498
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== ct:ffeso *)
+(** Lemma 9.4.5 *)
+
+
+
+(* ================================================== ct:essentially-surjective *)
+(** Definition 9.4.6 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1507
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_9_4_6_ess := @HoTT.Categories.Functor.Attributes.IsEssentiallySurjective.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1507
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Definition Book_9_4_6_weq := @HoTT.Categories.Functor.Attributes.IsWeakEquivalence.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1508
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== ct:catweq *)
+(** Lemma 9.4.7 *)
+
+
+
+(* ================================================== ct:isocat *)
+(** Definition 9.4.8 *)
+
+
+
+(* ================================================== ct:isoprecat *)
+(** Lemma 9.4.9 *)
+
+
+
+(* ================================================== ct:chaotic *)
+(** Example 9.4.13 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1527
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_9_4_13 := @HoTT.Categories.IndiscreteCategory.Core.indiscrete_category.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1527
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== ct:eqv-levelwise *)
+(** Lemma 9.4.14 *)
+
+
+
+(* ================================================== ct:cat-eq-iso *)
+(** Lemma 9.4.15 *)
+
+
+
+(* ================================================== ct:cat-2cat *)
+(** Theorem 9.4.16 *)
+
+
+
+(* ================================================== ct:opposite-category *)
+(** Definition 9.5.1 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1546
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_9_5_1 := @HoTT.Categories.Category.Dual.opposite.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1546
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== ct:prod-cat *)
+(** Definition 9.5.2 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1550
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_9_5_2 := @HoTT.Categories.Category.Prod.prod.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1550
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== ct:functorexpadj *)
+(** Lemma 9.5.3 *)
+
+(** When we prove it, this should be mapped to the law, not the functor. *)</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1555
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_9_5_3 := @HoTT.Categories.ExponentialLaws.Law4.Functors.functor.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1555
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== ct:yoneda *)
+(** Theorem 9.5.4 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1559
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_9_5_4 := @HoTT.Categories.Yoneda.yoneda_lemma.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1559
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== ct:yoneda-embedding *)
+(** Corollary 9.5.6 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1563
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_9_5_6 := @HoTT.Categories.Yoneda.yoneda_embedding.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1563
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== ct:yoneda-mono *)
+(** Corollary 9.5.7 *)
+
+
+
+(* ================================================== ct:representable *)
+(** Definition 9.5.8 *)
+
+
+
+(* ================================================== ct:representable-prop *)
+(** Theorem 9.5.9 *)
+
+
+
+(* ================================================== ct:adj-repr *)
+(** Lemma 9.5.10 *)
+
+
+
+(* ================================================== ct:adjprop2 *)
+(** Corollary 9.5.11 *)
+
+
+
+(* ================================================== ct:strict-category *)
+(** Definition 9.6.1 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1592
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_9_6_1 C := HoTT.Categories.Category.Strict.IsStrictCategory C.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1592
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== ct:mono-cat *)
+(** Example 9.6.2 *)
+
+
+
+(* ================================================== ct:galois *)
+(** Example 9.6.3 *)
+
+
+
+(* ================================================== ct:dagger-precategory *)
+(** Definition 9.7.1 *)
+
+
+
+(* ================================================== ct:unitary *)
+(** Definition 9.7.2 *)
+
+
+
+(* ================================================== ct:idtounitary *)
+(** Lemma 9.7.3 *)
+
+
+
+(* ================================================== ct:dagger-category *)
+(** Definition 9.7.4 *)
+
+
+
+(* ================================================== ct:rel-dagger-cat *)
+(** Example 9.7.5 *)
+
+
+
+(* ================================================== ct:groupoid-dagger-cat *)
+(** Example 9.7.6 *)
+
+
+
+(* ================================================== ct:hilb *)
+(** Example 9.7.7 *)
+
+
+
+(* ================================================== ct:sig *)
+(** Definition 9.8.1 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1641
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_9_8_1 := @HoTT.Categories.Structure.Core.NotionOfStructure.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1641
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:sip *)
+(** Theorem 9.8.2 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1645
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_9_8_2 := @HoTT.Categories.Structure.IdentityPrinciple.structure_identity_principle.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1645
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== ct:sip-functor-cat *)
+(** Example 9.8.3 *)
+
+
+
+(* ================================================== defn:fo-notion-of-structure *)
+(** Definition 9.8.4 *)
+
+
+
+(* ================================================== ct:esosurj-postcomp-faithful *)
+(** Lemma 9.9.1 *)
+
+
+
+(* ================================================== ct:esofull-precomp-ff *)
+(** Lemma 9.9.2 *)
+
+
+
+(* ================================================== ct:cat-weq-eq *)
+(** Theorem 9.9.4 *)
+
+
+
+(* ================================================== thm:rezk-completion *)
+(** Theorem 9.9.5 *)
+
+
+
+(* ================================================== ct:rezk-fundgpd-trunc1 *)
+(** Example 9.9.6 *)
+
+
+
+(* ================================================== ct:hocat *)
+(** Example 9.9.7 *)
+
+
+
+(* ================================================== ct:weq-iso-precat-cat *)
+(** Theorem 9.9.8 *)
+
+
+
+(* ================================================== thm:mono *)
+(** Lemma 10.1.1 *)
+
+(** The third notion in the book is called embedding. No complete equivalence yet, but see:*)</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1695
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_10_1_1_iii := @HSet.isinj_embedding.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1695
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:inj-mono *)
+(** Lemma 10.1.2 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1699
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_10_1_2rl := @HSet.isinj_ismono.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1699
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Definition Book_10_1_2lr := @HSet.ismono_isinj.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1700
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+(* This one is not in the book, but close to 10.1.2:
+ HSet.isembedding_isinj_hset*)
+
+(* ================================================== epis-surj *)
+(** Lemma 10.1.4 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1706
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_10_1_4_i_iii := @HIT.epi.isepi_issurj.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1706
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Definition Book_10_1_4_i_ii := @HIT.epi.isepi'_contr_cone.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1707
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Definition Book_10_1_4_iii_i := @HIT.epi.issurj_isepi.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1708
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== lem:images_are_coequalizers *)
+(** Theorem 10.1.5 *)
+
+
+
+(* ================================================== thm:set_regular *)
+(** Theorem 10.1.5 *)
+
+
+
+(* ================================================== lem:pb_of_coeq_is_coeq *)
+(** Lemma 10.1.6 *)
+
+
+
+(* ================================================== lem:sets_exact *)
+(** Lemma 10.1.8 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1727
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_10_1_8 := @HIT.quotient.sets_exact.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1727
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== prop:kernels_are_effective *)
+(** Theorem 10.1.9 *)
+
+(* See: HIT.unique_choice.unique_choice
+theories.ObjectClassifier.PowisoPFam
+Apparently closure under Pi and Sigma are still missing ? *)
+
+(* ================================================== thm:settopos *)
+(** Theorem 10.1.12 *)
+
+
+
+(* ================================================== prop:trunc_of_prop_is_set *)
+(** Lemma 10.1.13 *)
+
+
+
+(* ================================================== thm:1surj_to_surj_to_pem *)
+(** Theorem 10.1.14 *)
+
+
+
+(* ================================================== thm:ETCS *)
+(** Theorem 10.1.15 *)
+
+
+
+(* ================================================== defn:card *)
+(** Definition 10.2.1 *)
+
+
+
+(* ================================================== card:semiring *)
+(** Lemma 10.2.4 *)
+
+
+
+(* ================================================== card:exp *)
+(** Lemma 10.2.6 *)
+
+
+
+(* ================================================== thm:injsurj *)
+(** Lemma 10.2.9 *)
+
+
+
+(* ================================================== defn:accessibility *)
+(** Definition 10.3.1 *)
+
+
+
+(* ================================================== thm:nat-wf *)
+(** Example 10.3.5 *)
+
+
+
+(* ================================================== thm:wtype-wf *)
+(** Example 10.3.6 *)
+
+
+
+(* ================================================== thm:wfrec *)
+(** Lemma 10.3.7 *)
+
+
+
+(* ================================================== thm:wfmin *)
+(** Lemma 10.3.8 *)
+
+
+
+(* ================================================== def:simulation *)
+(** Definition 10.3.11 *)
+
+
+
+(* ================================================== thm:wfcat *)
+(** Corollary 10.3.15 *)
+
+
+
+(* ================================================== thm:ordord *)
+(** Theorem 10.3.20 *)
+
+
+
+(* ================================================== thm:ordsucc *)
+(** Lemma 10.3.21 *)
+
+
+
+(* ================================================== thm:ordunion *)
+(** Lemma 10.3.22 *)
+
+
+
+(* ================================================== thm:wellorder *)
+(** Theorem 10.4.3 *)
+
+
+
+(* ================================================== thm:wop *)
+(** Theorem 10.4.4 *)
+
+
+
+(* ================================================== defn:V *)
+(** Definition 10.5.1 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1838
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_10_5_1 := @HoTT.HIT.V.CumulativeHierarchy.V.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1838
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== def:bisimulation *)
+(** Definition 10.5.4 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1842
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_10_5_4 := @HoTT.HIT.V.bisimulation.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1842
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== lem:BisimEqualsId *)
+(** Lemma 10.5.5 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1846
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_10_5_5 := @HoTT.HIT.V.bisimulation_equiv_id.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1846
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== lem:MonicSetPresent *)
+(** Lemma 10.5.6 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1850
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_10_5_6 := @HoTT.HIT.V.monic_set_present.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1850
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== def:TypeOfElements *)
+(** Definition 10.5.7 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1854
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_10_5_7 := @HoTT.HIT.V.type_of_members.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1854
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:VisCST *)
+(** Theorem 10.5.8 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1858
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_10_5_8_item_i := @HoTT.HIT.V.extensionality.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1858
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Definition Book_10_5_8_item_ii := @HoTT.HIT.V.not_mem_Vempty.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1859
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Definition Book_10_5_8_item_iii := @HoTT.HIT.V.pairing.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1860
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Definition Book_10_5_8_item_iv := @HoTT.HIT.V.infinity.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1861
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Definition Book_10_5_8_item_v := @HoTT.HIT.V.union.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1862
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Definition Book_10_5_8_item_vi := @HoTT.HIT.V.function.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1863
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Definition Book_10_5_8_item_vii := @HoTT.HIT.V.mem_induction.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1864
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Definition Book_10_5_8_item_viii := @HoTT.HIT.V.replacement.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1865
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Definition Book_10_5_8_item_ix := @HoTT.HIT.V.separation.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1866
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== cor:Delta0sep *)
+(** Corollary 10.5.9 *)
+
+
+
+(* ================================================== lem:fullsep *)
+(** Lemma 10.5.10 *)
+
+
+
+(* ================================================== thm:zfc *)
+(** Theorem 10.5.11 *)
+
+
+
+(* ================================================== defn:dedekind-reals *)
+(** Definition 11.2.1 *)
+
+
+
+(* ================================================== dedekind-in-cut-as-le *)
+(** Lemma 11.2.2 *)
+
+
+
+(* ================================================== RD-inverse-apart-0 *)
+(** Theorem 11.2.4 *)
+
+
+
+(* ================================================== RD-archimedean *)
+(** Theorem 11.2.6 *)
+
+
+
+(* ================================================== ordered-field *)
+(** Definition 11.2.7 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1905
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_11_2_7 := @HoTT.Classes.interfaces.abstract_algebra.IsField.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1905
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Definition Book_11_2_7' := @HoTT.Classes.interfaces.orders.FullPseudoSemiRingOrder.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1906
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== RD-archimedean-ordered-field *)
+(** Theorem 11.2.8 *)
+
+
+
+(* ================================================== defn:cauchy-approximation *)
+(** Definition 11.2.10 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1915
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_11_2_10 := @HoTT.Classes.theory.premetric.Approximation.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1915
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== RD-cauchy-complete *)
+(** Theorem 11.2.12 *)
+
+
+
+(* ================================================== RD-final-field *)
+(** Theorem 11.2.14 *)
+
+
+
+(* ================================================== lem:cuts-preserve-admissibility *)
+(** Lemma 11.2.15 *)
+
+
+
+(* ================================================== RD-dedekind-complete *)
+(** Corollary 11.2.16 *)
+
+
+
+(* ================================================== defn:cauchy-reals *)
+(** Definition 11.3.2 *)
+
+
+
+(* ================================================== lem:close-reflexive *)
+(** Lemma 11.3.8 *)
+
+
+
+(* ================================================== thm:Cauchy-reals-are-a-set *)
+(** Theorem 11.3.9 *)
+
+
+
+(* ================================================== RC-lim-onto *)
+(** Lemma 11.3.10 *)
+
+
+
+(* ================================================== RC-lim-factor *)
+(** Lemma 11.3.11 *)
+
+
+
+(* ================================================== thm:RCsim-symmetric *)
+(** Lemma 11.3.12 *)
+
+
+
+(* ================================================== defn:lipschitz *)
+(** Definition 11.3.14 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1969
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_11_3_14 := @HoTT.Classes.theory.premetric.Lipschitz.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 1969
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== RC-extend-Q-Lipschitz *)
+(** Lemma 11.3.15 *)
+
+
+
+(* ================================================== defn:RC-approx *)
+(** Theorem 11.3.16 *)
+
+
+
+(* ================================================== thm:RC-sim-characterization *)
+(** Theorem 11.3.32 *)
+
+
+
+(* ================================================== thm:RC-sim-lim *)
+(** Lemma 11.3.36 *)
+
+
+
+(* ================================================== thm:RC-sim-lim-term *)
+(** Lemma 11.3.37 *)
+
+
+
+(* ================================================== RC-continuous-eq *)
+(** Lemma 11.3.39 *)
+
+
+
+(* ================================================== RC-binary-nonexpanding-extension *)
+(** Lemma 11.3.40 *)
+
+
+
+(* ================================================== RC-archimedean *)
+(** Theorem 11.3.41 *)
+
+
+
+(* ================================================== thm:RC-le-grow *)
+(** Lemma 11.3.42 *)
+
+
+
+(* ================================================== thm:RC-lt-open *)
+(** Lemma 11.3.43 *)
+
+
+
+(* ================================================== RC-sim-eqv-le *)
+(** Theorem 11.3.44 *)
+
+
+
+(* ================================================== RC-squaring *)
+(** Theorem 11.3.46 *)
+
+
+
+(* ================================================== RC-archimedean-ordered-field *)
+(** Theorem 11.3.48 *)
+
+
+
+(* ================================================== RC-initial-Cauchy-complete *)
+(** Theorem 11.3.50 *)
+
+
+
+(* ================================================== lem:untruncated-linearity-reals-coincide *)
+(** Lemma 11.4.1 *)
+
+
+
+(* ================================================== when-reals-coincide *)
+(** Corollary 11.4.3 *)
+
+
+
+(* ================================================== defn:metric-space *)
+(** Definition 11.5.1 *)
+
+
+
+(* ================================================== defn:complete-metric-space *)
+(** Definition 11.5.2 *)
+
+
+
+(* ================================================== defn:total-bounded-metric-space *)
+(** Definition 11.5.3 *)
+
+
+
+(* ================================================== defn:uniformly-continuous *)
+(** Definition 11.5.5 *)
+
+
+
+(* ================================================== analysis-interval-ctb *)
+(** Theorem 11.5.6 *)
+
+
+
+(* ================================================== ctb-uniformly-continuous-sup *)
+(** Theorem 11.5.7 *)
+
+
+
+(* ================================================== analysis-bw-lpo *)
+(** Theorem 11.5.9 *)
+
+
+
+(* ================================================== classical-Heine-Borel *)
+(** Theorem 11.5.11 *)
+
+
+
+(* ================================================== defn:inductive-cover *)
+(** Definition 11.5.13 *)
+
+
+
+(* ================================================== reals-formal-topology-locally-compact *)
+(** Lemma 11.5.14 *)
+
+
+
+(* ================================================== interval-Heine-Borel *)
+(** Corollary 11.5.15 *)
+
+
+
+(* ================================================== inductive-cover-classical *)
+(** Theorem 11.5.16 *)
+
+
+
+(* ================================================== defn:surreals *)
+(** Definition 11.6.1 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 2113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_11_6_1 := @HoTT.Spaces.No.Core.No.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 2113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:NO-simplicity *)
+(** Theorem 11.6.2 *)
+
+
+
+(* ================================================== thm:NO-refl-opt *)
+(** Theorem 11.6.4 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 2122
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_11_6_4_i := @HoTT.Spaces.No.Core.le_reflexive.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 2122
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Definition Book_11_6_4_ii_l := @HoTT.Spaces.No.Core.lt_lopt.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 2123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Definition Book_11_6_4_ii_r := @HoTT.Spaces.No.Core.lt_ropt.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 2124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:NO-set *)
+(** Corollary 11.6.5 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 2128
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_11_6_5 := @HoTT.Spaces.No.Core.isset_No.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 2128
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== defn:No-codes *)
+(** Theorem 11.6.7 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 2132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_11_6_7 := @HoTT.Spaces.No.Core.No_codes_package.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 2132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:NO-encode-decode *)
+(** Theorem 11.6.16 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 2136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_11_6_16_i := @HoTT.Spaces.No.Core.No_encode_le_lt.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 2136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Definition Book_11_6_16_ii := @HoTT.Spaces.No.Core.No_decode_le_lt.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 2137
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== thm:NO-unstrict-transitive *)
+(** Corollary 11.6.17 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 2141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_11_6_17_i := @HoTT.Spaces.No.Core.lt_le.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 2141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Definition Book_11_6_17_ii := @HoTT.Spaces.No.Core.le_le_trans.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 2142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Definition Book_11_6_17_iii := @HoTT.Spaces.No.Core.le_lt_trans.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 2143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Definition Book_11_6_17_iv := @HoTT.Spaces.No.Core.lt_le_trans.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 2144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ================================================== eg:surreal-addition *)
+(** Example 11.6.18 *)
+
+</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 2148
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Book_11_6_18 := @HoTT.Spaces.No.Addition.plus.</pre>
+</div>
+<div class="code" title="File: HoTTBook.v
+Line: 2149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

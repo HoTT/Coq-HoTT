@@ -1,0 +1,674 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>Operation.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-wsp"><span class="sd">(** This file continues the development of algebra [Operation]. It</span>
+<span class="sd">    gives a way to construct operations using (conventional) curried</span>
+<span class="sd">    functions, and shows that such curried operations are equivalent</span>
+<span class="sd">    to the uncurried operations [Operation]. *)</span>
+
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="operation-v-chk0" style="display: none" type="checkbox"><label class="alectryon-input" for="operation-v-chk0"><span class="kn">Require Export</span> HoTT.Algebra.Universal.Algebra.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span>
+  HoTT.Types
+  HoTT.Spaces.Finite
+  HoTT.Spaces.Nat.Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> Algebra_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> nat_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Functions [head_dom&#39;] and [head_dom] are used to get the first</span>
+<span class="sd">    element of a nonempty operation domain [a : forall i, A (ss i)]. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Monomorphic</span> <span class="kn">Definition</span> <span class="nf">head_dom&#39;</span> {<span class="nv">σ</span>} (<span class="nv">A</span> : Carriers σ) (<span class="nv">n</span> : nat)
+  : <span class="kr">forall</span> (<span class="nv">N</span> : n &gt; <span class="mi">0</span>) (<span class="nv">ss</span> : FinSeq n (Sort σ)) (<span class="nv">a</span> : <span class="kr">forall</span> <span class="nv">i</span>, A (ss i)),
+    A (fshead&#39; n N ss)
+  := <span class="kr">match</span> n <span class="kr">with</span>
+     | <span class="mi">0</span> =&gt; <span class="kr">fun</span> <span class="nv">N</span> <span class="nv">ss</span> <span class="nv">_</span> =&gt; Empty_rec (lt_irrefl _ N)
+     | n&#39;.+<span class="mi">1</span> =&gt; <span class="kr">fun</span> <span class="nv">N</span> <span class="nv">ss</span> <span class="nv">a</span> =&gt; a fin_zero
+     <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Monomorphic</span> <span class="kn">Definition</span> <span class="nf">head_dom</span> {<span class="nv">σ</span>} (<span class="nv">A</span> : Carriers σ) {<span class="nv">n</span> : nat}
+  (<span class="nv">ss</span> : FinSeq n.+<span class="mi">1</span> (Sort σ)) (<span class="nv">a</span> : <span class="kr">forall</span> <span class="nv">i</span>, A (ss i))
+  : A (fshead ss)
+  := head_dom&#39; A n.+<span class="mi">1</span> _ ss a.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Functions [tail_dom&#39;] and [tail_dom] are used to obtain the tail</span>
+<span class="sd">    of an operation domain [a : forall i, A (ss i)]. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Monomorphic</span> <span class="kn">Definition</span> <span class="nf">tail_dom&#39;</span> {<span class="nv">σ</span>} (<span class="nv">A</span> : Carriers σ) (<span class="nv">n</span> : nat)
+  : <span class="kr">forall</span> (<span class="nv">ss</span> : FinSeq n (Sort σ)) (<span class="nv">a</span> : <span class="kr">forall</span> <span class="nv">i</span>, A (ss i)) (<span class="nv">i</span> : Fin (nat_pred n)),
+    A (fstail&#39; n ss i)
+  := <span class="kr">match</span> n <span class="kr">with</span>
+     | <span class="mi">0</span> =&gt; <span class="kr">fun</span> <span class="nv">ss</span> <span class="nv">_</span> <span class="nv">i</span> =&gt; Empty_rec i
+     | n&#39;.+<span class="mi">1</span> =&gt; <span class="kr">fun</span> <span class="nv">ss</span> <span class="nv">a</span> <span class="nv">i</span> =&gt; a (fsucc i)
+     <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Monomorphic</span> <span class="kn">Definition</span> <span class="nf">tail_dom</span> {<span class="nv">σ</span>} (<span class="nv">A</span> : Carriers σ) {<span class="nv">n</span> : nat}
+  (<span class="nv">ss</span> : FinSeq n.+<span class="mi">1</span> (Sort σ)) (<span class="nv">a</span> : <span class="kr">forall</span> <span class="nv">i</span>, A (ss i))
+  : <span class="kr">forall</span> <span class="nv">i</span>, A (fstail ss i)
+  := tail_dom&#39; A n.+<span class="mi">1</span> ss a.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Functions [cons_dom&#39;] and [cons_dom] to add an element to</span>
+<span class="sd">    the front of a given domain [a : forall i, A (ss i)]. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Monomorphic</span> <span class="kn">Definition</span> <span class="nf">cons_dom&#39;</span> {<span class="nv">σ</span>} (<span class="nv">A</span> : Carriers σ) {<span class="nv">n</span> : nat}
+  : <span class="kr">forall</span> (<span class="nv">i</span> : Fin n) (<span class="nv">ss</span> : FinSeq n (Sort σ)) (<span class="nv">N</span> : n &gt; <span class="mi">0</span>),
+    A (fshead&#39; n N ss) -&gt; (<span class="kr">forall</span> <span class="nv">i</span>, A (fstail&#39; n ss i)) -&gt; A (ss i)
+  := fin_ind
+      (<span class="kr">fun</span> <span class="nv">n</span> <span class="nv">i</span> =&gt;
+        <span class="kr">forall</span> (<span class="nv">ss</span> : Fin n -&gt; Sort σ) (<span class="nv">N</span> : n &gt; <span class="mi">0</span>),
+        A (fshead&#39; n N ss) -&gt; (<span class="kr">forall</span> <span class="nv">i</span>, A (fstail&#39; n ss i)) -&gt; A (ss i))
+      (<span class="kr">fun</span> <span class="nv">n&#39;</span> <span class="nv">_</span> <span class="nv">z</span> <span class="nv">x</span> <span class="nv">_</span> =&gt; x)
+      (<span class="kr">fun</span> <span class="nv">n&#39;</span> <span class="nv">i&#39;</span> <span class="nv">_</span> =&gt; <span class="kr">fun</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">xs</span> =&gt; xs i&#39;).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">cons_dom</span> {<span class="nv">σ</span>} (<span class="nv">A</span> : Carriers σ)
+  {<span class="nv">n</span> : nat} (<span class="nv">ss</span> : FinSeq n.+<span class="mi">1</span> (Sort σ))
+  (<span class="nv">x</span> : A (fshead ss)) (<span class="nv">xs</span> : <span class="kr">forall</span> <span class="nv">i</span>, A (fstail ss i))
+  : <span class="kr">forall</span> <span class="nv">i</span> : Fin n.+<span class="mi">1</span>, A (ss i)
+  := <span class="kr">fun</span> <span class="nv">i</span> =&gt; cons_dom&#39; A i ss _ x xs.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** The empty domain: *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">nil_dom</span> {<span class="nv">σ</span>} (<span class="nv">A</span> : Carriers σ) (<span class="nv">ss</span> : FinSeq <span class="mi">0</span> (Sort σ))
+  : <span class="kr">forall</span> <span class="nv">i</span> : Fin <span class="mi">0</span>, A (ss i)
+  := Empty_ind (A o ss).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** A specialization of [Operation] to finite [Fin n] arity. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">FiniteOperation</span> {<span class="nv">σ</span> : Signature} (<span class="nv">A</span> : Carriers σ)
+  {<span class="nv">n</span> : nat} (<span class="nv">ss</span> : FinSeq n (Sort σ)) (<span class="nv">t</span> : Sort σ) : <span class="kt">Type</span>
+  := Operation A {| Arity := Fin n; sorts_dom := ss; sort_cod := t |}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** A type of curried operations</span>
+<span class="sd">&lt;&lt;</span>
+<span class="sd">CurriedOperation A [s1, ..., sn] t := A s1 -&gt; ... -&gt; A sn -&gt; A t.</span>
+<span class="sd">&gt;&gt;</span>
+<span class="sd">*)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Fixpoint</span> <span class="nf">CurriedOperation</span> {<span class="nv">σ</span>} (<span class="nv">A</span> : Carriers σ) {<span class="nv">n</span> : nat}
+  : (FinSeq n (<span class="kn">Sort</span> σ)) -&gt; <span class="kn">Sort</span> σ -&gt; <span class="kt">Type</span>
+  := <span class="kr">match</span> n <span class="kr">with</span>
+     | <span class="mi">0</span> =&gt; <span class="kr">fun</span> <span class="nv">ss</span> <span class="nv">t</span> =&gt; A t
+     | n&#39;.+<span class="mi">1</span> =&gt;
+        <span class="kr">fun</span> <span class="nv">ss</span> <span class="nv">t</span> =&gt; A (fshead ss) -&gt; CurriedOperation A (fstail ss) t
+     <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Function [operation_uncurry] is used to uncurry an operation</span>
+<span class="sd">&lt;&lt;</span>
+<span class="sd">operation_uncurry A [s1, ..., sn] t (op : CurriedOperation A [s1, ..., sn] t)</span>
+<span class="sd">  : FiniteOperation A [s1, ..., sn] t</span>
+<span class="sd">  := fun (x1 : A s1, ..., xn : A xn) =&gt; op x1 ... xn</span>
+<span class="sd">&gt;&gt;</span>
+<span class="sd">See [equiv_operation_curry] below. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Fixpoint</span> <span class="nf">operation_uncurry</span> {<span class="nv">σ</span>} (<span class="nv">A</span> : Carriers σ) {<span class="nv">n</span> : nat}
+  : <span class="kr">forall</span> (<span class="nv">ss</span> : FinSeq n (Sort σ)) (<span class="nv">t</span> : Sort σ),
+    CurriedOperation A ss t -&gt; FiniteOperation A ss t
+  := <span class="kr">match</span> n <span class="kr">with</span>
+     | <span class="mi">0</span> =&gt; <span class="kr">fun</span> <span class="nv">ss</span> <span class="nv">t</span> <span class="nv">op</span> <span class="nv">_</span> =&gt; op
+     | n&#39;.+<span class="mi">1</span> =&gt;
+        <span class="kr">fun</span> <span class="nv">ss</span> <span class="nv">t</span> <span class="nv">op</span> <span class="nv">a</span> =&gt;
+          operation_uncurry A (fstail ss) t (op (a fin_zero)) (a o fsucc)
+     <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="operation-v-chk1" style="display: none" type="checkbox"><label class="alectryon-input" for="operation-v-chk1"><span class="kn">Local Example</span> <span class="nf">computation_example_operation_uncurry</span>
+  : <span class="kr">forall</span>
+      (<span class="nv">σ</span> : Signature) (<span class="nv">A</span> : Carriers σ) (<span class="nv">n</span> : nat) (<span class="nv">s1</span> <span class="nv">s2</span> <span class="nv">t</span> : Sort σ)
+      (<span class="nv">ss</span> := (fscons s1 (fscons s2 fsnil)))
+      (<span class="nv">op</span> : CurriedOperation A ss t) (<span class="nv">a</span> : <span class="kr">forall</span> <span class="nv">i</span>, A (ss i)),
+    operation_uncurry A ss t op
+    = <span class="kr">fun</span> <span class="nv">a</span> =&gt; op (a fin_zero) (a (fsucc fin_zero)).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">σ</span> : Signature) (<span class="nv">A</span> : Carriers σ),
+nat -&gt;
+<span class="kr">forall</span> (<span class="nv">s1</span> <span class="nv">s2</span> <span class="nv">t</span> : Sort σ)
+(<span class="nv">ss</span> := fscons s1 (fscons s2 fsnil))
+(<span class="nv">op</span> : CurriedOperation A ss t),
+(<span class="kr">forall</span> <span class="nv">i</span> : Fin <span class="mi">2</span>, A (ss i)) -&gt;
+operation_uncurry A ss t op =
+(<span class="kr">fun</span>
+   <span class="nv">a</span> : <span class="kr">forall</span>
+       <span class="nv">i</span> : Arity
+             {|
+               Arity := Fin <span class="mi">2</span>;
+               sorts_dom := ss;
+               sort_cod := t
+             |},
+       A
+         (sorts_dom
+            {|
+              Arity := Fin <span class="mi">2</span>;
+              sorts_dom := ss;
+              sort_cod := t
+            |} i) =&gt;
+ op (a fin_zero) (a (fsucc fin_zero)))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="operation-v-chk2" style="display: none" type="checkbox"><label class="alectryon-input" for="operation-v-chk2"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">σ</span> : Signature) (<span class="nv">A</span> : Carriers σ),
+nat -&gt;
+<span class="kr">forall</span> (<span class="nv">s1</span> <span class="nv">s2</span> <span class="nv">t</span> : Sort σ)
+(<span class="nv">ss</span> := fscons s1 (fscons s2 fsnil))
+(<span class="nv">op</span> : CurriedOperation A ss t),
+(<span class="kr">forall</span> <span class="nv">i</span> : Fin <span class="mi">2</span>, A (ss i)) -&gt;
+operation_uncurry A ss t op =
+(<span class="kr">fun</span>
+   <span class="nv">a</span> : <span class="kr">forall</span>
+       <span class="nv">i</span> : Arity
+             {|
+               Arity := Fin <span class="mi">2</span>;
+               sorts_dom := ss;
+               sort_cod := t
+             |},
+       A
+         (sorts_dom
+            {|
+              Arity := Fin <span class="mi">2</span>;
+              sorts_dom := ss;
+              sort_cod := t
+            |} i) =&gt;
+ op (a fin_zero) (a (fsucc fin_zero)))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">reflexivity</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Qed</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** Function [operation_curry] is used to curry an operation</span>
+<span class="sd">&lt;&lt;</span>
+<span class="sd">operation_curry A [s1, ..., sn] t (op : FiniteOperation A [s1, ..., sn] t)</span>
+<span class="sd">  : CurriedOperation A [s1, ..., sn] t</span>
+<span class="sd">  := fun (x1 : A s1) ... (xn : A xn) =&gt; op (x1, ..., xn)</span>
+<span class="sd">&gt;&gt;</span>
+<span class="sd">See [equiv_operation_curry] below. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Fixpoint</span> <span class="nf">operation_curry</span> {<span class="nv">σ</span>} (<span class="nv">A</span> : Carriers σ) {<span class="nv">n</span> : nat} 
+  : <span class="kr">forall</span> (<span class="nv">ss</span> : FinSeq n (Sort σ)) (<span class="nv">t</span> : Sort σ),
+    FiniteOperation A ss t -&gt; CurriedOperation A ss t
+  := <span class="kr">match</span> n <span class="kr">with</span>
+     | <span class="mi">0</span> =&gt; <span class="kr">fun</span> <span class="nv">ss</span> <span class="nv">t</span> <span class="nv">op</span> =&gt; op (Empty_ind _)
+     | n&#39;.+<span class="mi">1</span> =&gt;
+        <span class="kr">fun</span> <span class="nv">ss</span> <span class="nv">t</span> <span class="nv">op</span> <span class="nv">x</span> =&gt;
+          operation_curry A (fstail ss) t (op o cons_dom A ss x)
+     <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="operation-v-chk3" style="display: none" type="checkbox"><label class="alectryon-input" for="operation-v-chk3"><span class="kn">Local Example</span> <span class="nf">computation_example_operation_curry</span>
+  : <span class="kr">forall</span>
+      (<span class="nv">σ</span> : Signature) (<span class="nv">A</span> : Carriers σ) (<span class="nv">n</span> : nat) (<span class="nv">s1</span> <span class="nv">s2</span> <span class="nv">t</span> : Sort σ)
+      (<span class="nv">ss</span> := (fscons s1 (fscons s2 fsnil)))
+      (<span class="nv">op</span> : FiniteOperation A ss t)
+      (<span class="nv">x1</span> : A s1) (<span class="nv">x2</span> : A s2),
+    operation_curry A ss t op
+    = <span class="kr">fun</span> <span class="nv">x1</span> <span class="nv">x2</span> =&gt; op (cons_dom A ss x1 (cons_dom A _ x2 (nil_dom A _))).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">σ</span> : Signature) (<span class="nv">A</span> : Carriers σ),
+nat -&gt;
+<span class="kr">forall</span> (<span class="nv">s1</span> <span class="nv">s2</span> <span class="nv">t</span> : Sort σ)
+(<span class="nv">ss</span> := fscons s1 (fscons s2 fsnil))
+(<span class="nv">op</span> : FiniteOperation A ss t),
+A s1 -&gt;
+A s2 -&gt;
+operation_curry A ss t op =
+(<span class="kr">fun</span> (<span class="nv">x1</span> : A (fshead ss))
+   (<span class="nv">x2</span> : A (fshead (fstail ss))) =&gt;
+ op
+   (cons_dom A ss x1
+      (cons_dom A (fstail ss) x2
+         (nil_dom A (fstail (fstail ss))))))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="operation-v-chk4" style="display: none" type="checkbox"><label class="alectryon-input" for="operation-v-chk4"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">σ</span> : Signature) (<span class="nv">A</span> : Carriers σ),
+nat -&gt;
+<span class="kr">forall</span> (<span class="nv">s1</span> <span class="nv">s2</span> <span class="nv">t</span> : Sort σ)
+(<span class="nv">ss</span> := fscons s1 (fscons s2 fsnil))
+(<span class="nv">op</span> : FiniteOperation A ss t),
+A s1 -&gt;
+A s2 -&gt;
+operation_curry A ss t op =
+(<span class="kr">fun</span> (<span class="nv">x1</span> : A (fshead ss))
+   (<span class="nv">x2</span> : A (fshead (fstail ss))) =&gt;
+ op
+   (cons_dom A ss x1
+      (cons_dom A (fstail ss) x2
+         (nil_dom A (fstail (fstail ss))))))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">reflexivity</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Qed</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="operation-v-chk5" style="display: none" type="checkbox"><label class="alectryon-input" for="operation-v-chk5"><span class="kn">Lemma</span> <span class="nf">expand_cons_dom&#39;</span> {<span class="nv">σ</span>} (<span class="nv">A</span> : Carriers σ) (<span class="nv">n</span> : nat)
+  : <span class="kr">forall</span> (<span class="nv">i</span> : Fin n) (<span class="nv">ss</span> : FinSeq n (Sort σ)) (<span class="nv">N</span> : n &gt; <span class="mi">0</span>)
+           (<span class="nv">a</span> : <span class="kr">forall</span> <span class="nv">i</span>, A (ss i)),
+    cons_dom&#39; A i ss N (head_dom&#39; A n N ss a) (tail_dom&#39; A n ss a) = a i.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>Carriers σ</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">i</span> : Fin n) (<span class="nv">ss</span> : FinSeq n (Sort σ))
+(<span class="nv">N</span> : n &gt; <span class="mi">0</span>) (<span class="nv">a</span> : <span class="kr">forall</span> <span class="nv">i0</span> : Fin n, A (ss i0)),
+cons_dom&#39; A i ss N (head_dom&#39; A n N ss a)
+  (tail_dom&#39; A n ss a) = a i</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="operation-v-chk6" style="display: none" type="checkbox"><label class="alectryon-input" for="operation-v-chk6"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>Carriers σ</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">i</span> : Fin n) (<span class="nv">ss</span> : FinSeq n (Sort σ))
+(<span class="nv">N</span> : n &gt; <span class="mi">0</span>) (<span class="nv">a</span> : <span class="kr">forall</span> <span class="nv">i0</span> : Fin n, A (ss i0)),
+cons_dom&#39; A i ss N (head_dom&#39; A n N ss a)
+  (tail_dom&#39; A n ss a) = a i</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="operation-v-chk7" style="display: none" type="checkbox"><label class="alectryon-input" for="operation-v-chk7"><span class="nb">intro</span> i.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>Carriers σ</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>i</var><span class="hyp-type"><b>: </b><span>Fin n</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> (<span class="nv">ss</span> : FinSeq n (Sort σ)) (<span class="nv">N</span> : n &gt; <span class="mi">0</span>)
+(<span class="nv">a</span> : <span class="kr">forall</span> <span class="nv">i</span> : Fin n, A (ss i)),
+cons_dom&#39; A i ss N (head_dom&#39; A n N ss a)
+  (tail_dom&#39; A n ss a) = a i</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="operation-v-chk8" style="display: none" type="checkbox"><label class="alectryon-input" for="operation-v-chk8"><span class="nb">induction</span> i <span class="nb">using</span> fin_ind; <span class="nb">intros</span> ss N a.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>Carriers σ</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>ss</var><span class="hyp-type"><b>: </b><span>FinSeq n.+<span class="mi">1</span> (<span class="kn">Sort</span> σ)</span></span></span><br><span><var>N</var><span class="hyp-type"><b>: </b><span>n.+<span class="mi">1</span> &gt; <span class="mi">0</span></span></span></span><br><span><var>a</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : Fin n.+<span class="mi">1</span>, A (ss i)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">cons_dom&#39; A fin_zero ss N (head_dom&#39; A n.+<span class="mi">1</span> N ss a)
+  (tail_dom&#39; A n.+<span class="mi">1</span> ss a) = a fin_zero</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="operation-v-chk9" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>Carriers σ</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>i</var><span class="hyp-type"><b>: </b><span>Fin n</span></span></span><br><span><var>IHi</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">ss</span> : FinSeq n (Sort σ)) (<span class="nv">N</span> : n &gt; <span class="mi">0</span>) (<span class="nv">a</span> : <span class="kr">forall</span> <span class="nv">i</span> : Fin n, A (ss i)),
+cons_dom&#39; A i ss N (head_dom&#39; A n N ss a) (tail_dom&#39; A n ss a) = a i</span></span></span><br><span><var>ss</var><span class="hyp-type"><b>: </b><span>FinSeq n.+<span class="mi">1</span> (<span class="kn">Sort</span> σ)</span></span></span><br><span><var>N</var><span class="hyp-type"><b>: </b><span>n.+<span class="mi">1</span> &gt; <span class="mi">0</span></span></span></span><br><span><var>a</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : Fin n.+<span class="mi">1</span>, A (ss i)</span></span></span><br></div><label class="goal-separator" for="operation-v-chk9"><hr></label><div class="goal-conclusion">cons_dom&#39; A (fsucc i) ss N (head_dom&#39; A n.+<span class="mi">1</span> N ss a)
+  (tail_dom&#39; A n.+<span class="mi">1</span> ss a) = a (fsucc i)</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="operation-v-chka" style="display: none" type="checkbox"><label class="alectryon-input" for="operation-v-chka">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>Carriers σ</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>ss</var><span class="hyp-type"><b>: </b><span>FinSeq n.+<span class="mi">1</span> (<span class="kn">Sort</span> σ)</span></span></span><br><span><var>N</var><span class="hyp-type"><b>: </b><span>n.+<span class="mi">1</span> &gt; <span class="mi">0</span></span></span></span><br><span><var>a</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : Fin n.+<span class="mi">1</span>, A (ss i)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">cons_dom&#39; A fin_zero ss N (head_dom&#39; A n.+<span class="mi">1</span> N ss a)
+  (tail_dom&#39; A n.+<span class="mi">1</span> ss a) = a fin_zero</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="operation-v-chkb" style="display: none" type="checkbox"><label class="alectryon-input" for="operation-v-chkb"><span class="nb">unfold</span> cons_dom&#39;.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>Carriers σ</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>ss</var><span class="hyp-type"><b>: </b><span>FinSeq n.+<span class="mi">1</span> (<span class="kn">Sort</span> σ)</span></span></span><br><span><var>N</var><span class="hyp-type"><b>: </b><span>n.+<span class="mi">1</span> &gt; <span class="mi">0</span></span></span></span><br><span><var>a</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : Fin n.+<span class="mi">1</span>, A (ss i)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">fin_ind
+  (<span class="kr">fun</span> (<span class="nv">n</span> : nat) (<span class="nv">i</span> : Fin n) =&gt;
+   <span class="kr">forall</span> (<span class="nv">ss</span> : Fin n -&gt; Sort σ) (<span class="nv">N</span> : n &gt; <span class="mi">0</span>),
+   A (fshead&#39; n N ss) -&gt;
+   (<span class="kr">forall</span> <span class="nv">i0</span> : Fin (nat_pred n), A (fstail&#39; n ss i0)) -&gt;
+   A (ss i))
+  (<span class="kr">fun</span> (<span class="nv">n&#39;</span> : nat) (<span class="nv">ss</span> : Fin n&#39;.+<span class="mi">1</span> -&gt; Sort σ)
+     (<span class="nv">z</span> : n&#39;.+<span class="mi">1</span> &gt; <span class="mi">0</span>) (<span class="nv">x</span> : A (fshead&#39; n&#39;.+<span class="mi">1</span> z ss))
+     (<span class="nv">_</span> : <span class="kr">forall</span> <span class="nv">i</span> : Fin (nat_pred n&#39;.+<span class="mi">1</span>),
+          A (fstail&#39; n&#39;.+<span class="mi">1</span> ss i)) =&gt; x)
+  (<span class="kr">fun</span> (<span class="nv">n&#39;</span> : nat) (<span class="nv">i&#39;</span> : Fin n&#39;)
+     (<span class="nv">_</span> : <span class="kr">forall</span> (<span class="nv">ss</span> : Fin n&#39; -&gt; Sort σ) (<span class="nv">N</span> : n&#39; &gt; <span class="mi">0</span>),
+          A (fshead&#39; n&#39; N ss) -&gt;
+          (<span class="kr">forall</span> <span class="nv">i</span> : Fin (nat_pred n&#39;),
+           A (fstail&#39; n&#39; ss i)) -&gt; A (ss i&#39;))
+     (<span class="nv">ss</span> : Fin n&#39;.+<span class="mi">1</span> -&gt; Sort σ) (<span class="nv">N</span> : n&#39;.+<span class="mi">1</span> &gt; <span class="mi">0</span>)
+     (<span class="nv">_</span> : A (fshead&#39; n&#39;.+<span class="mi">1</span> N ss))
+     (<span class="nv">xs</span> : <span class="kr">forall</span> <span class="nv">i</span> : Fin (nat_pred n&#39;.+<span class="mi">1</span>),
+           A (fstail&#39; n&#39;.+<span class="mi">1</span> ss i)) =&gt; xs i&#39;) fin_zero
+  ss N (head_dom&#39; A n.+<span class="mi">1</span> N ss a)
+  (tail_dom&#39; A n.+<span class="mi">1</span> ss a) = a fin_zero</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="operation-v-chkc" style="display: none" type="checkbox"><label class="alectryon-input" for="operation-v-chkc"><span class="nb">rewrite</span> fin_ind_beta_zero.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>Carriers σ</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>ss</var><span class="hyp-type"><b>: </b><span>FinSeq n.+<span class="mi">1</span> (<span class="kn">Sort</span> σ)</span></span></span><br><span><var>N</var><span class="hyp-type"><b>: </b><span>n.+<span class="mi">1</span> &gt; <span class="mi">0</span></span></span></span><br><span><var>a</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : Fin n.+<span class="mi">1</span>, A (ss i)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">head_dom&#39; A n.+<span class="mi">1</span> N ss a = a fin_zero</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">reflexivity</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="operation-v-chkd" style="display: none" type="checkbox"><label class="alectryon-input" for="operation-v-chkd">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>Carriers σ</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>i</var><span class="hyp-type"><b>: </b><span>Fin n</span></span></span><br><span><var>IHi</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">ss</span> : FinSeq n (Sort σ)) (<span class="nv">N</span> : n &gt; <span class="mi">0</span>) (<span class="nv">a</span> : <span class="kr">forall</span> <span class="nv">i</span> : Fin n, A (ss i)),
+cons_dom&#39; A i ss N (head_dom&#39; A n N ss a) (tail_dom&#39; A n ss a) = a i</span></span></span><br><span><var>ss</var><span class="hyp-type"><b>: </b><span>FinSeq n.+<span class="mi">1</span> (<span class="kn">Sort</span> σ)</span></span></span><br><span><var>N</var><span class="hyp-type"><b>: </b><span>n.+<span class="mi">1</span> &gt; <span class="mi">0</span></span></span></span><br><span><var>a</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : Fin n.+<span class="mi">1</span>, A (ss i)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">cons_dom&#39; A (fsucc i) ss N (head_dom&#39; A n.+<span class="mi">1</span> N ss a)
+  (tail_dom&#39; A n.+<span class="mi">1</span> ss a) = a (fsucc i)</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="operation-v-chke" style="display: none" type="checkbox"><label class="alectryon-input" for="operation-v-chke"><span class="nb">unfold</span> cons_dom&#39;.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>Carriers σ</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>i</var><span class="hyp-type"><b>: </b><span>Fin n</span></span></span><br><span><var>IHi</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">ss</span> : FinSeq n (Sort σ)) (<span class="nv">N</span> : n &gt; <span class="mi">0</span>) (<span class="nv">a</span> : <span class="kr">forall</span> <span class="nv">i</span> : Fin n, A (ss i)),
+cons_dom&#39; A i ss N (head_dom&#39; A n N ss a) (tail_dom&#39; A n ss a) = a i</span></span></span><br><span><var>ss</var><span class="hyp-type"><b>: </b><span>FinSeq n.+<span class="mi">1</span> (<span class="kn">Sort</span> σ)</span></span></span><br><span><var>N</var><span class="hyp-type"><b>: </b><span>n.+<span class="mi">1</span> &gt; <span class="mi">0</span></span></span></span><br><span><var>a</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : Fin n.+<span class="mi">1</span>, A (ss i)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">fin_ind
+  (<span class="kr">fun</span> (<span class="nv">n</span> : nat) (<span class="nv">i</span> : Fin n) =&gt;
+   <span class="kr">forall</span> (<span class="nv">ss</span> : Fin n -&gt; Sort σ) (<span class="nv">N</span> : n &gt; <span class="mi">0</span>),
+   A (fshead&#39; n N ss) -&gt;
+   (<span class="kr">forall</span> <span class="nv">i0</span> : Fin (nat_pred n), A (fstail&#39; n ss i0)) -&gt;
+   A (ss i))
+  (<span class="kr">fun</span> (<span class="nv">n&#39;</span> : nat) (<span class="nv">ss</span> : Fin n&#39;.+<span class="mi">1</span> -&gt; Sort σ)
+     (<span class="nv">z</span> : n&#39;.+<span class="mi">1</span> &gt; <span class="mi">0</span>) (<span class="nv">x</span> : A (fshead&#39; n&#39;.+<span class="mi">1</span> z ss))
+     (<span class="nv">_</span> : <span class="kr">forall</span> <span class="nv">i</span> : Fin (nat_pred n&#39;.+<span class="mi">1</span>),
+          A (fstail&#39; n&#39;.+<span class="mi">1</span> ss i)) =&gt; x)
+  (<span class="kr">fun</span> (<span class="nv">n&#39;</span> : nat) (<span class="nv">i&#39;</span> : Fin n&#39;)
+     (<span class="nv">_</span> : <span class="kr">forall</span> (<span class="nv">ss</span> : Fin n&#39; -&gt; Sort σ) (<span class="nv">N</span> : n&#39; &gt; <span class="mi">0</span>),
+          A (fshead&#39; n&#39; N ss) -&gt;
+          (<span class="kr">forall</span> <span class="nv">i</span> : Fin (nat_pred n&#39;),
+           A (fstail&#39; n&#39; ss i)) -&gt; A (ss i&#39;))
+     (<span class="nv">ss</span> : Fin n&#39;.+<span class="mi">1</span> -&gt; Sort σ) (<span class="nv">N</span> : n&#39;.+<span class="mi">1</span> &gt; <span class="mi">0</span>)
+     (<span class="nv">_</span> : A (fshead&#39; n&#39;.+<span class="mi">1</span> N ss))
+     (<span class="nv">xs</span> : <span class="kr">forall</span> <span class="nv">i</span> : Fin (nat_pred n&#39;.+<span class="mi">1</span>),
+           A (fstail&#39; n&#39;.+<span class="mi">1</span> ss i)) =&gt; xs i&#39;) (fsucc i)
+  ss N (head_dom&#39; A n.+<span class="mi">1</span> N ss a)
+  (tail_dom&#39; A n.+<span class="mi">1</span> ss a) = a (fsucc i)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">by</span> <span class="nb">rewrite</span> fin_ind_beta_fsucc.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Qed</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="operation-v-chkf" style="display: none" type="checkbox"><label class="alectryon-input" for="operation-v-chkf"><span class="kn">Lemma</span> <span class="nf">expand_cons_dom</span> `{Funext} {σ} (A : Carriers σ)
+  {n : nat} (ss : FinSeq n.+<span class="mi">1</span> (<span class="kn">Sort</span> σ)) (a : <span class="kr">forall</span> <span class="nv">i</span>, A (ss i))
+  : cons_dom A ss (head_dom A ss a) (tail_dom A ss a) = a.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>Carriers σ</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>ss</var><span class="hyp-type"><b>: </b><span>FinSeq n.+<span class="mi">1</span> (<span class="kn">Sort</span> σ)</span></span></span><br><span><var>a</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : Fin n.+<span class="mi">1</span>, A (ss i)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">cons_dom A ss (head_dom A ss a) (tail_dom A ss a) = a</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="operation-v-chk10" style="display: none" type="checkbox"><label class="alectryon-input" for="operation-v-chk10"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>Carriers σ</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>ss</var><span class="hyp-type"><b>: </b><span>FinSeq n.+<span class="mi">1</span> (<span class="kn">Sort</span> σ)</span></span></span><br><span><var>a</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : Fin n.+<span class="mi">1</span>, A (ss i)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">cons_dom A ss (head_dom A ss a) (tail_dom A ss a) = a</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="operation-v-chk11" style="display: none" type="checkbox"><label class="alectryon-input" for="operation-v-chk11">funext i.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>Carriers σ</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>ss</var><span class="hyp-type"><b>: </b><span>FinSeq n.+<span class="mi">1</span> (<span class="kn">Sort</span> σ)</span></span></span><br><span><var>a</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">i</span> : Fin n.+<span class="mi">1</span>, A (ss i)</span></span></span><br><span><var>i</var><span class="hyp-type"><b>: </b><span>Fin n.+<span class="mi">1</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">cons_dom A ss (head_dom A ss a) (tail_dom A ss a) i =
+a i</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">apply</span> expand_cons_dom&#39;.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="operation-v-chk12" style="display: none" type="checkbox"><label class="alectryon-input" for="operation-v-chk12"><span class="kn">Lemma</span> <span class="nf">path_operation_curry_to_cunurry</span> `{Funext} {σ} (A : Carriers σ)
+  {n : nat} (ss : FinSeq n (<span class="kn">Sort</span> σ)) (t : <span class="kn">Sort</span> σ)
+  : operation_uncurry A ss t o operation_curry A ss t == idmap.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>Carriers σ</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>ss</var><span class="hyp-type"><b>: </b><span>FinSeq n (<span class="kn">Sort</span> σ)</span></span></span><br><span><var>t</var><span class="hyp-type"><b>: </b><span><span class="kn">Sort</span> σ</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">operation_uncurry A ss t o operation_curry A ss t ==
+idmap</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="operation-v-chk13" style="display: none" type="checkbox"><label class="alectryon-input" for="operation-v-chk13"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>Carriers σ</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>ss</var><span class="hyp-type"><b>: </b><span>FinSeq n (<span class="kn">Sort</span> σ)</span></span></span><br><span><var>t</var><span class="hyp-type"><b>: </b><span><span class="kn">Sort</span> σ</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">operation_uncurry A ss t o operation_curry A ss t ==
+idmap</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="operation-v-chk14" style="display: none" type="checkbox"><label class="alectryon-input" for="operation-v-chk14"><span class="nb">intro</span> a.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>Carriers σ</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>ss</var><span class="hyp-type"><b>: </b><span>FinSeq n (<span class="kn">Sort</span> σ)</span></span></span><br><span><var>t</var><span class="hyp-type"><b>: </b><span><span class="kn">Sort</span> σ</span></span></span><br><span><var>a</var><span class="hyp-type"><b>: </b><span>FiniteOperation A ss t</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">operation_uncurry A ss t (operation_curry A ss t a) =
+a</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="operation-v-chk15" style="display: none" type="checkbox"><label class="alectryon-input" for="operation-v-chk15"><span class="nb">induction</span> n <span class="kr">as</span> [| n IHn].</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>Carriers σ</span></span></span><br><span><var>ss</var><span class="hyp-type"><b>: </b><span>FinSeq <span class="mi">0</span> (<span class="kn">Sort</span> σ)</span></span></span><br><span><var>t</var><span class="hyp-type"><b>: </b><span><span class="kn">Sort</span> σ</span></span></span><br><span><var>a</var><span class="hyp-type"><b>: </b><span>FiniteOperation A ss t</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">operation_uncurry A ss t (operation_curry A ss t a) =
+a</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="operation-v-chk16" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>Carriers σ</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>ss</var><span class="hyp-type"><b>: </b><span>FinSeq n.+<span class="mi">1</span> (<span class="kn">Sort</span> σ)</span></span></span><br><span><var>t</var><span class="hyp-type"><b>: </b><span><span class="kn">Sort</span> σ</span></span></span><br><span><var>a</var><span class="hyp-type"><b>: </b><span>FiniteOperation A ss t</span></span></span><br><span><var>IHn</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">ss</span> : FinSeq n (Sort σ)) (<span class="nv">a</span> : FiniteOperation A ss t),
+operation_uncurry A ss t (operation_curry A ss t a) = a</span></span></span><br></div><label class="goal-separator" for="operation-v-chk16"><hr></label><div class="goal-conclusion">operation_uncurry A ss t (operation_curry A ss t a) =
+a</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="operation-v-chk17" style="display: none" type="checkbox"><label class="alectryon-input" for="operation-v-chk17">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>Carriers σ</span></span></span><br><span><var>ss</var><span class="hyp-type"><b>: </b><span>FinSeq <span class="mi">0</span> (<span class="kn">Sort</span> σ)</span></span></span><br><span><var>t</var><span class="hyp-type"><b>: </b><span><span class="kn">Sort</span> σ</span></span></span><br><span><var>a</var><span class="hyp-type"><b>: </b><span>FiniteOperation A ss t</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">operation_uncurry A ss t (operation_curry A ss t a) =
+a</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="operation-v-chk18" style="display: none" type="checkbox"><label class="alectryon-input" for="operation-v-chk18">funext d.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>Carriers σ</span></span></span><br><span><var>ss</var><span class="hyp-type"><b>: </b><span>FinSeq <span class="mi">0</span> (<span class="kn">Sort</span> σ)</span></span></span><br><span><var>t</var><span class="hyp-type"><b>: </b><span><span class="kn">Sort</span> σ</span></span></span><br><span><var>a</var><span class="hyp-type"><b>: </b><span>FiniteOperation A ss t</span></span></span><br><span><var>d</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span>
+<span class="nv">i</span> : Arity
+      {|
+        Arity := Fin <span class="mi">0</span>;
+        sorts_dom := ss;
+        sort_cod := t
+      |},
+A
+  (sorts_dom
+     {|
+       Arity := Fin <span class="mi">0</span>;
+       sorts_dom := ss;
+       sort_cod := t
+     |} i)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">operation_uncurry A ss t (operation_curry A ss t a) d =
+a d</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="operation-v-chk19" style="display: none" type="checkbox"><label class="alectryon-input" for="operation-v-chk19"><span class="nb">refine</span> (ap a _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>Carriers σ</span></span></span><br><span><var>ss</var><span class="hyp-type"><b>: </b><span>FinSeq <span class="mi">0</span> (<span class="kn">Sort</span> σ)</span></span></span><br><span><var>t</var><span class="hyp-type"><b>: </b><span><span class="kn">Sort</span> σ</span></span></span><br><span><var>a</var><span class="hyp-type"><b>: </b><span>FiniteOperation A ss t</span></span></span><br><span><var>d</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span>
+<span class="nv">i</span> : Arity
+      {|
+        Arity := Fin <span class="mi">0</span>;
+        sorts_dom := ss;
+        sort_cod := t
+      |},
+A
+  (sorts_dom
+     {|
+       Arity := Fin <span class="mi">0</span>;
+       sorts_dom := ss;
+       sort_cod := t
+     |} i)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Empty_ind
+  (<span class="kr">fun</span> <span class="nv">e</span> : Empty =&gt;
+   A
+     (sorts_dom
+        {|
+          Arity := Fin <span class="mi">0</span>;
+          sorts_dom := ss;
+          sort_cod := t
+        |} e)) = d</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">apply</span> path_contr.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="operation-v-chk1a" style="display: none" type="checkbox"><label class="alectryon-input" for="operation-v-chk1a">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>Carriers σ</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>ss</var><span class="hyp-type"><b>: </b><span>FinSeq n.+<span class="mi">1</span> (<span class="kn">Sort</span> σ)</span></span></span><br><span><var>t</var><span class="hyp-type"><b>: </b><span><span class="kn">Sort</span> σ</span></span></span><br><span><var>a</var><span class="hyp-type"><b>: </b><span>FiniteOperation A ss t</span></span></span><br><span><var>IHn</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">ss</span> : FinSeq n (Sort σ)) (<span class="nv">a</span> : FiniteOperation A ss t),
+operation_uncurry A ss t (operation_curry A ss t a) = a</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">operation_uncurry A ss t (operation_curry A ss t a) =
+a</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="operation-v-chk1b" style="display: none" type="checkbox"><label class="alectryon-input" for="operation-v-chk1b">funext a&#39;.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>Carriers σ</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>ss</var><span class="hyp-type"><b>: </b><span>FinSeq n.+<span class="mi">1</span> (<span class="kn">Sort</span> σ)</span></span></span><br><span><var>t</var><span class="hyp-type"><b>: </b><span><span class="kn">Sort</span> σ</span></span></span><br><span><var>a</var><span class="hyp-type"><b>: </b><span>FiniteOperation A ss t</span></span></span><br><span><var>IHn</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">ss</span> : FinSeq n (Sort σ)) (<span class="nv">a</span> : FiniteOperation A ss t),
+operation_uncurry A ss t (operation_curry A ss t a) = a</span></span></span><br><span><var>a'</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span>
+<span class="nv">i</span> : Arity
+      {|
+        Arity := Fin n.+<span class="mi">1</span>;
+        sorts_dom := ss;
+        sort_cod := t
+      |},
+A
+  (sorts_dom
+     {|
+       Arity := Fin n.+<span class="mi">1</span>;
+       sorts_dom := ss;
+       sort_cod := t
+     |} i)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">operation_uncurry A ss t (operation_curry A ss t a) a&#39; =
+a a&#39;</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="operation-v-chk1c" style="display: none" type="checkbox"><label class="alectryon-input" for="operation-v-chk1c"><span class="nb">refine</span> (ap (<span class="kr">fun</span> <span class="nv">x</span> =&gt; x _) (IHn _ _) @ _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>Carriers σ</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>ss</var><span class="hyp-type"><b>: </b><span>FinSeq n.+<span class="mi">1</span> (<span class="kn">Sort</span> σ)</span></span></span><br><span><var>t</var><span class="hyp-type"><b>: </b><span><span class="kn">Sort</span> σ</span></span></span><br><span><var>a</var><span class="hyp-type"><b>: </b><span>FiniteOperation A ss t</span></span></span><br><span><var>IHn</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">ss</span> : FinSeq n (Sort σ)) (<span class="nv">a</span> : FiniteOperation A ss t),
+operation_uncurry A ss t (operation_curry A ss t a) = a</span></span></span><br><span><var>a'</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span>
+<span class="nv">i</span> : Arity
+      {|
+        Arity := Fin n.+<span class="mi">1</span>;
+        sorts_dom := ss;
+        sort_cod := t
+      |},
+A
+  (sorts_dom
+     {|
+       Arity := Fin n.+<span class="mi">1</span>;
+       sorts_dom := ss;
+       sort_cod := t
+     |} i)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">a
+  (cons_dom A ss (a&#39; fin_zero)
+     (<span class="kr">fun</span> <span class="nv">x</span> : Fin n =&gt; a&#39; (fsucc x))) = a a&#39;</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="operation-v-chk1d" style="display: none" type="checkbox"><label class="alectryon-input" for="operation-v-chk1d"><span class="nb">refine</span> (ap a _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>Carriers σ</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>ss</var><span class="hyp-type"><b>: </b><span>FinSeq n.+<span class="mi">1</span> (<span class="kn">Sort</span> σ)</span></span></span><br><span><var>t</var><span class="hyp-type"><b>: </b><span><span class="kn">Sort</span> σ</span></span></span><br><span><var>a</var><span class="hyp-type"><b>: </b><span>FiniteOperation A ss t</span></span></span><br><span><var>IHn</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">ss</span> : FinSeq n (Sort σ)) (<span class="nv">a</span> : FiniteOperation A ss t),
+operation_uncurry A ss t (operation_curry A ss t a) = a</span></span></span><br><span><var>a'</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span>
+<span class="nv">i</span> : Arity
+      {|
+        Arity := Fin n.+<span class="mi">1</span>;
+        sorts_dom := ss;
+        sort_cod := t
+      |},
+A
+  (sorts_dom
+     {|
+       Arity := Fin n.+<span class="mi">1</span>;
+       sorts_dom := ss;
+       sort_cod := t
+     |} i)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">cons_dom A ss (a&#39; fin_zero)
+  (<span class="kr">fun</span> <span class="nv">x</span> : Fin n =&gt; a&#39; (fsucc x)) = a&#39;</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">apply</span> expand_cons_dom.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Qed</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="operation-v-chk1e" style="display: none" type="checkbox"><label class="alectryon-input" for="operation-v-chk1e"><span class="kn">Lemma</span> <span class="nf">path_operation_uncurry_to_curry</span> `{Funext} {σ} (A : Carriers σ)
+  {n : nat} (ss : FinSeq n (<span class="kn">Sort</span> σ)) (t : <span class="kn">Sort</span> σ)
+  : operation_curry A ss t o operation_uncurry A ss t == idmap.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>Carriers σ</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>ss</var><span class="hyp-type"><b>: </b><span>FinSeq n (<span class="kn">Sort</span> σ)</span></span></span><br><span><var>t</var><span class="hyp-type"><b>: </b><span><span class="kn">Sort</span> σ</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">operation_curry A ss t o operation_uncurry A ss t ==
+idmap</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="operation-v-chk1f" style="display: none" type="checkbox"><label class="alectryon-input" for="operation-v-chk1f"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>Carriers σ</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>ss</var><span class="hyp-type"><b>: </b><span>FinSeq n (<span class="kn">Sort</span> σ)</span></span></span><br><span><var>t</var><span class="hyp-type"><b>: </b><span><span class="kn">Sort</span> σ</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">operation_curry A ss t o operation_uncurry A ss t ==
+idmap</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="operation-v-chk20" style="display: none" type="checkbox"><label class="alectryon-input" for="operation-v-chk20"><span class="nb">intro</span> a.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>Carriers σ</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>ss</var><span class="hyp-type"><b>: </b><span>FinSeq n (<span class="kn">Sort</span> σ)</span></span></span><br><span><var>t</var><span class="hyp-type"><b>: </b><span><span class="kn">Sort</span> σ</span></span></span><br><span><var>a</var><span class="hyp-type"><b>: </b><span>CurriedOperation A ss t</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">operation_curry A ss t (operation_uncurry A ss t a) =
+a</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="operation-v-chk21" style="display: none" type="checkbox"><label class="alectryon-input" for="operation-v-chk21"><span class="nb">induction</span> n; [<span class="bp">reflexivity</span>|].</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>Carriers σ</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>ss</var><span class="hyp-type"><b>: </b><span>FinSeq n.+<span class="mi">1</span> (<span class="kn">Sort</span> σ)</span></span></span><br><span><var>t</var><span class="hyp-type"><b>: </b><span><span class="kn">Sort</span> σ</span></span></span><br><span><var>a</var><span class="hyp-type"><b>: </b><span>CurriedOperation A ss t</span></span></span><br><span><var>IHn</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">ss</span> : FinSeq n (Sort σ)) (<span class="nv">a</span> : CurriedOperation A ss t),
+operation_curry A ss t (operation_uncurry A ss t a) = a</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">operation_curry A ss t (operation_uncurry A ss t a) =
+a</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="operation-v-chk22" style="display: none" type="checkbox"><label class="alectryon-input" for="operation-v-chk22">funext x.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>Carriers σ</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>ss</var><span class="hyp-type"><b>: </b><span>FinSeq n.+<span class="mi">1</span> (<span class="kn">Sort</span> σ)</span></span></span><br><span><var>t</var><span class="hyp-type"><b>: </b><span><span class="kn">Sort</span> σ</span></span></span><br><span><var>a</var><span class="hyp-type"><b>: </b><span>CurriedOperation A ss t</span></span></span><br><span><var>IHn</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">ss</span> : FinSeq n (Sort σ)) (<span class="nv">a</span> : CurriedOperation A ss t),
+operation_curry A ss t (operation_uncurry A ss t a) = a</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>A (fshead ss)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">operation_curry A ss t (operation_uncurry A ss t a) x =
+a x</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="operation-v-chk23" style="display: none" type="checkbox"><label class="alectryon-input" for="operation-v-chk23"><span class="nb">refine</span> (_ @ IHn (fstail ss) (a x)).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>Carriers σ</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>ss</var><span class="hyp-type"><b>: </b><span>FinSeq n.+<span class="mi">1</span> (<span class="kn">Sort</span> σ)</span></span></span><br><span><var>t</var><span class="hyp-type"><b>: </b><span><span class="kn">Sort</span> σ</span></span></span><br><span><var>a</var><span class="hyp-type"><b>: </b><span>CurriedOperation A ss t</span></span></span><br><span><var>IHn</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">ss</span> : FinSeq n (Sort σ)) (<span class="nv">a</span> : CurriedOperation A ss t),
+operation_curry A ss t (operation_uncurry A ss t a) = a</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>A (fshead ss)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">operation_curry A ss t (operation_uncurry A ss t a) x =
+operation_curry A (fstail ss) t
+  (operation_uncurry A (fstail ss) t (a x))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="operation-v-chk24" style="display: none" type="checkbox"><label class="alectryon-input" for="operation-v-chk24"><span class="nb">refine</span> (ap (operation_curry A (fstail ss) t) _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>Carriers σ</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>ss</var><span class="hyp-type"><b>: </b><span>FinSeq n.+<span class="mi">1</span> (<span class="kn">Sort</span> σ)</span></span></span><br><span><var>t</var><span class="hyp-type"><b>: </b><span><span class="kn">Sort</span> σ</span></span></span><br><span><var>a</var><span class="hyp-type"><b>: </b><span>CurriedOperation A ss t</span></span></span><br><span><var>IHn</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">ss</span> : FinSeq n (Sort σ)) (<span class="nv">a</span> : CurriedOperation A ss t),
+operation_curry A ss t (operation_uncurry A ss t a) = a</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>A (fshead ss)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">fun</span> <span class="nv">x0</span> : <span class="kr">forall</span> <span class="nv">i</span> : Fin n, A (fstail ss i) =&gt;
+ operation_uncurry A ss t a (cons_dom A ss x x0)) =
+operation_uncurry A (fstail ss) t (a x)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="operation-v-chk25" style="display: none" type="checkbox"><label class="alectryon-input" for="operation-v-chk25">funext a&#39;.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>Carriers σ</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>ss</var><span class="hyp-type"><b>: </b><span>FinSeq n.+<span class="mi">1</span> (<span class="kn">Sort</span> σ)</span></span></span><br><span><var>t</var><span class="hyp-type"><b>: </b><span><span class="kn">Sort</span> σ</span></span></span><br><span><var>a</var><span class="hyp-type"><b>: </b><span>CurriedOperation A ss t</span></span></span><br><span><var>IHn</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">ss</span> : FinSeq n (Sort σ)) (<span class="nv">a</span> : CurriedOperation A ss t),
+operation_curry A ss t (operation_uncurry A ss t a) = a</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>A (fshead ss)</span></span></span><br><span><var>a'</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span>
+<span class="nv">i</span> : Arity
+      {|
+        Arity := Fin n;
+        sorts_dom := fstail ss;
+        sort_cod := t
+      |},
+A
+  (sorts_dom
+     {|
+       Arity := Fin n;
+       sorts_dom := fstail ss;
+       sort_cod := t
+     |} i)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">operation_uncurry A ss t a (cons_dom A ss x a&#39;) =
+operation_uncurry A (fstail ss) t (a x) a&#39;</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="operation-v-chk26" style="display: none" type="checkbox"><label class="alectryon-input" for="operation-v-chk26"><span class="nb">simpl</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>Carriers σ</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>ss</var><span class="hyp-type"><b>: </b><span>FinSeq n.+<span class="mi">1</span> (<span class="kn">Sort</span> σ)</span></span></span><br><span><var>t</var><span class="hyp-type"><b>: </b><span><span class="kn">Sort</span> σ</span></span></span><br><span><var>a</var><span class="hyp-type"><b>: </b><span>CurriedOperation A ss t</span></span></span><br><span><var>IHn</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">ss</span> : FinSeq n (Sort σ)) (<span class="nv">a</span> : CurriedOperation A ss t),
+operation_curry A ss t (operation_uncurry A ss t a) = a</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>A (fshead ss)</span></span></span><br><span><var>a'</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span>
+<span class="nv">i</span> : Arity
+      {|
+        Arity := Fin n;
+        sorts_dom := fstail ss;
+        sort_cod := t
+      |},
+A
+  (sorts_dom
+     {|
+       Arity := Fin n;
+       sorts_dom := fstail ss;
+       sort_cod := t
+     |} i)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">operation_uncurry A (fstail ss) t
+  (a (cons_dom A ss x a&#39; fin_zero))
+  (<span class="kr">fun</span> <span class="nv">x0</span> : Fin n =&gt; cons_dom A ss x a&#39; (fsucc x0)) =
+operation_uncurry A (fstail ss) t (a x) a&#39;</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="operation-v-chk27" style="display: none" type="checkbox"><label class="alectryon-input" for="operation-v-chk27"><span class="nb">unfold</span> cons_dom, cons_dom&#39;.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>Carriers σ</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>ss</var><span class="hyp-type"><b>: </b><span>FinSeq n.+<span class="mi">1</span> (<span class="kn">Sort</span> σ)</span></span></span><br><span><var>t</var><span class="hyp-type"><b>: </b><span><span class="kn">Sort</span> σ</span></span></span><br><span><var>a</var><span class="hyp-type"><b>: </b><span>CurriedOperation A ss t</span></span></span><br><span><var>IHn</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">ss</span> : FinSeq n (Sort σ)) (<span class="nv">a</span> : CurriedOperation A ss t),
+operation_curry A ss t (operation_uncurry A ss t a) = a</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>A (fshead ss)</span></span></span><br><span><var>a'</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span>
+<span class="nv">i</span> : Arity
+      {|
+        Arity := Fin n;
+        sorts_dom := fstail ss;
+        sort_cod := t
+      |},
+A
+  (sorts_dom
+     {|
+       Arity := Fin n;
+       sorts_dom := fstail ss;
+       sort_cod := t
+     |} i)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">operation_uncurry A (fstail ss) t
+  (a
+     (fin_ind
+        (<span class="kr">fun</span> (<span class="nv">n</span> : nat) (<span class="nv">i</span> : Fin n) =&gt;
+         <span class="kr">forall</span> (<span class="nv">ss</span> : Fin n -&gt; Sort σ) (<span class="nv">N</span> : n &gt; <span class="mi">0</span>),
+         A (fshead&#39; n N ss) -&gt;
+         (<span class="kr">forall</span> <span class="nv">i0</span> : Fin (nat_pred n),
+          A (fstail&#39; n ss i0)) -&gt; A (ss i))
+        (<span class="kr">fun</span> (<span class="nv">n&#39;</span> : nat) (<span class="nv">ss</span> : Fin n&#39;.+<span class="mi">1</span> -&gt; Sort σ)
+           (<span class="nv">z</span> : n&#39;.+<span class="mi">1</span> &gt; <span class="mi">0</span>)
+           (<span class="nv">x</span> : A (fshead&#39; n&#39;.+<span class="mi">1</span> z ss))
+           (<span class="nv">_</span> : <span class="kr">forall</span> <span class="nv">i</span> : Fin (nat_pred n&#39;.+<span class="mi">1</span>),
+                A (fstail&#39; n&#39;.+<span class="mi">1</span> ss i)) =&gt; x)
+        (<span class="kr">fun</span> (<span class="nv">n&#39;</span> : nat) (<span class="nv">i&#39;</span> : Fin n&#39;)
+           (<span class="nv">_</span> : <span class="kr">forall</span> (<span class="nv">ss</span> : Fin n&#39; -&gt; Sort σ)
+                (<span class="nv">N</span> : n&#39; &gt; <span class="mi">0</span>),
+                A (fshead&#39; n&#39; N ss) -&gt;
+                (<span class="kr">forall</span> <span class="nv">i</span> : Fin (nat_pred n&#39;),
+                 A (fstail&#39; n&#39; ss i)) -&gt; A (ss i&#39;))
+           (<span class="nv">ss</span> : Fin n&#39;.+<span class="mi">1</span> -&gt; Sort σ) (<span class="nv">N</span> : n&#39;.+<span class="mi">1</span> &gt; <span class="mi">0</span>)
+           (<span class="nv">_</span> : A (fshead&#39; n&#39;.+<span class="mi">1</span> N ss))
+           (<span class="nv">xs</span> : <span class="kr">forall</span> <span class="nv">i</span> : Fin (nat_pred n&#39;.+<span class="mi">1</span>),
+                 A (fstail&#39; n&#39;.+<span class="mi">1</span> ss i)) =&gt; xs i&#39;)
+        fin_zero ss (leq_add_r <span class="mi">1</span> n) x a&#39;))
+  (<span class="kr">fun</span> <span class="nv">x0</span> : Fin n =&gt;
+   fin_ind
+     (<span class="kr">fun</span> (<span class="nv">n</span> : nat) (<span class="nv">i</span> : Fin n) =&gt;
+      <span class="kr">forall</span> (<span class="nv">ss</span> : Fin n -&gt; Sort σ) (<span class="nv">N</span> : n &gt; <span class="mi">0</span>),
+      A (fshead&#39; n N ss) -&gt;
+      (<span class="kr">forall</span> <span class="nv">i0</span> : Fin (nat_pred n),
+       A (fstail&#39; n ss i0)) -&gt; A (ss i))
+     (<span class="kr">fun</span> (<span class="nv">n&#39;</span> : nat) (<span class="nv">ss</span> : Fin n&#39;.+<span class="mi">1</span> -&gt; Sort σ)
+        (<span class="nv">z</span> : n&#39;.+<span class="mi">1</span> &gt; <span class="mi">0</span>) (<span class="nv">x</span> : A (fshead&#39; n&#39;.+<span class="mi">1</span> z ss))
+        (<span class="nv">_</span> : <span class="kr">forall</span> <span class="nv">i</span> : Fin (nat_pred n&#39;.+<span class="mi">1</span>),
+             A (fstail&#39; n&#39;.+<span class="mi">1</span> ss i)) =&gt; x)
+     (<span class="kr">fun</span> (<span class="nv">n&#39;</span> : nat) (<span class="nv">i&#39;</span> : Fin n&#39;)
+        (<span class="nv">_</span> : <span class="kr">forall</span> (<span class="nv">ss</span> : Fin n&#39; -&gt; Sort σ)
+             (<span class="nv">N</span> : n&#39; &gt; <span class="mi">0</span>),
+             A (fshead&#39; n&#39; N ss) -&gt;
+             (<span class="kr">forall</span> <span class="nv">i</span> : Fin (nat_pred n&#39;),
+              A (fstail&#39; n&#39; ss i)) -&gt; A (ss i&#39;))
+        (<span class="nv">ss</span> : Fin n&#39;.+<span class="mi">1</span> -&gt; Sort σ) (<span class="nv">N</span> : n&#39;.+<span class="mi">1</span> &gt; <span class="mi">0</span>)
+        (<span class="nv">_</span> : A (fshead&#39; n&#39;.+<span class="mi">1</span> N ss))
+        (<span class="nv">xs</span> : <span class="kr">forall</span> <span class="nv">i</span> : Fin (nat_pred n&#39;.+<span class="mi">1</span>),
+              A (fstail&#39; n&#39;.+<span class="mi">1</span> ss i)) =&gt; xs i&#39;)
+     (fsucc x0) ss (leq_add_r <span class="mi">1</span> n) x a&#39;) =
+operation_uncurry A (fstail ss) t (a x) a&#39;</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="operation-v-chk28" style="display: none" type="checkbox"><label class="alectryon-input" for="operation-v-chk28"><span class="nb">rewrite</span> fin_ind_beta_zero.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>Carriers σ</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>ss</var><span class="hyp-type"><b>: </b><span>FinSeq n.+<span class="mi">1</span> (<span class="kn">Sort</span> σ)</span></span></span><br><span><var>t</var><span class="hyp-type"><b>: </b><span><span class="kn">Sort</span> σ</span></span></span><br><span><var>a</var><span class="hyp-type"><b>: </b><span>CurriedOperation A ss t</span></span></span><br><span><var>IHn</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">ss</span> : FinSeq n (Sort σ)) (<span class="nv">a</span> : CurriedOperation A ss t),
+operation_curry A ss t (operation_uncurry A ss t a) = a</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>A (fshead ss)</span></span></span><br><span><var>a'</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span>
+<span class="nv">i</span> : Arity
+      {|
+        Arity := Fin n;
+        sorts_dom := fstail ss;
+        sort_cod := t
+      |},
+A
+  (sorts_dom
+     {|
+       Arity := Fin n;
+       sorts_dom := fstail ss;
+       sort_cod := t
+     |} i)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">operation_uncurry A (fstail ss) t (a x)
+  (<span class="kr">fun</span> <span class="nv">x0</span> : Fin n =&gt;
+   fin_ind
+     (<span class="kr">fun</span> (<span class="nv">n</span> : nat) (<span class="nv">i</span> : Fin n) =&gt;
+      <span class="kr">forall</span> (<span class="nv">ss</span> : Fin n -&gt; Sort σ) (<span class="nv">N</span> : n &gt; <span class="mi">0</span>),
+      A (fshead&#39; n N ss) -&gt;
+      (<span class="kr">forall</span> <span class="nv">i0</span> : Fin (nat_pred n),
+       A (fstail&#39; n ss i0)) -&gt; A (ss i))
+     (<span class="kr">fun</span> (<span class="nv">n&#39;</span> : nat) (<span class="nv">ss</span> : Fin n&#39;.+<span class="mi">1</span> -&gt; Sort σ)
+        (<span class="nv">z</span> : n&#39;.+<span class="mi">1</span> &gt; <span class="mi">0</span>) (<span class="nv">x</span> : A (fshead&#39; n&#39;.+<span class="mi">1</span> z ss))
+        (<span class="nv">_</span> : <span class="kr">forall</span> <span class="nv">i</span> : Fin (nat_pred n&#39;.+<span class="mi">1</span>),
+             A (fstail&#39; n&#39;.+<span class="mi">1</span> ss i)) =&gt; x)
+     (<span class="kr">fun</span> (<span class="nv">n&#39;</span> : nat) (<span class="nv">i&#39;</span> : Fin n&#39;)
+        (<span class="nv">_</span> : <span class="kr">forall</span> (<span class="nv">ss</span> : Fin n&#39; -&gt; Sort σ)
+             (<span class="nv">N</span> : n&#39; &gt; <span class="mi">0</span>),
+             A (fshead&#39; n&#39; N ss) -&gt;
+             (<span class="kr">forall</span> <span class="nv">i</span> : Fin (nat_pred n&#39;),
+              A (fstail&#39; n&#39; ss i)) -&gt; A (ss i&#39;))
+        (<span class="nv">ss</span> : Fin n&#39;.+<span class="mi">1</span> -&gt; Sort σ) (<span class="nv">N</span> : n&#39;.+<span class="mi">1</span> &gt; <span class="mi">0</span>)
+        (<span class="nv">_</span> : A (fshead&#39; n&#39;.+<span class="mi">1</span> N ss))
+        (<span class="nv">xs</span> : <span class="kr">forall</span> <span class="nv">i</span> : Fin (nat_pred n&#39;.+<span class="mi">1</span>),
+              A (fstail&#39; n&#39;.+<span class="mi">1</span> ss i)) =&gt; xs i&#39;)
+     (fsucc x0) ss (leq_add_r <span class="mi">1</span> n) x a&#39;) =
+operation_uncurry A (fstail ss) t (a x) a&#39;</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="operation-v-chk29" style="display: none" type="checkbox"><label class="alectryon-input" for="operation-v-chk29"><span class="nb">refine</span> (ap (operation_uncurry A (fstail ss) t (a x)) _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>Carriers σ</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>ss</var><span class="hyp-type"><b>: </b><span>FinSeq n.+<span class="mi">1</span> (<span class="kn">Sort</span> σ)</span></span></span><br><span><var>t</var><span class="hyp-type"><b>: </b><span><span class="kn">Sort</span> σ</span></span></span><br><span><var>a</var><span class="hyp-type"><b>: </b><span>CurriedOperation A ss t</span></span></span><br><span><var>IHn</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">ss</span> : FinSeq n (Sort σ)) (<span class="nv">a</span> : CurriedOperation A ss t),
+operation_curry A ss t (operation_uncurry A ss t a) = a</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>A (fshead ss)</span></span></span><br><span><var>a'</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span>
+<span class="nv">i</span> : Arity
+      {|
+        Arity := Fin n;
+        sorts_dom := fstail ss;
+        sort_cod := t
+      |},
+A
+  (sorts_dom
+     {|
+       Arity := Fin n;
+       sorts_dom := fstail ss;
+       sort_cod := t
+     |} i)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">fun</span> <span class="nv">x0</span> : Fin n =&gt;
+ fin_ind
+   (<span class="kr">fun</span> (<span class="nv">n</span> : nat) (<span class="nv">i</span> : Fin n) =&gt;
+    <span class="kr">forall</span> (<span class="nv">ss</span> : Fin n -&gt; Sort σ) (<span class="nv">N</span> : n &gt; <span class="mi">0</span>),
+    A (fshead&#39; n N ss) -&gt;
+    (<span class="kr">forall</span> <span class="nv">i0</span> : Fin (nat_pred n), A (fstail&#39; n ss i0)) -&gt;
+    A (ss i))
+   (<span class="kr">fun</span> (<span class="nv">n&#39;</span> : nat) (<span class="nv">ss</span> : Fin n&#39;.+<span class="mi">1</span> -&gt; Sort σ)
+      (<span class="nv">z</span> : n&#39;.+<span class="mi">1</span> &gt; <span class="mi">0</span>) (<span class="nv">x</span> : A (fshead&#39; n&#39;.+<span class="mi">1</span> z ss))
+      (<span class="nv">_</span> : <span class="kr">forall</span> <span class="nv">i</span> : Fin (nat_pred n&#39;.+<span class="mi">1</span>),
+           A (fstail&#39; n&#39;.+<span class="mi">1</span> ss i)) =&gt; x)
+   (<span class="kr">fun</span> (<span class="nv">n&#39;</span> : nat) (<span class="nv">i&#39;</span> : Fin n&#39;)
+      (<span class="nv">_</span> : <span class="kr">forall</span> (<span class="nv">ss</span> : Fin n&#39; -&gt; Sort σ)
+           (<span class="nv">N</span> : n&#39; &gt; <span class="mi">0</span>),
+           A (fshead&#39; n&#39; N ss) -&gt;
+           (<span class="kr">forall</span> <span class="nv">i</span> : Fin (nat_pred n&#39;),
+            A (fstail&#39; n&#39; ss i)) -&gt; A (ss i&#39;))
+      (<span class="nv">ss</span> : Fin n&#39;.+<span class="mi">1</span> -&gt; Sort σ) (<span class="nv">N</span> : n&#39;.+<span class="mi">1</span> &gt; <span class="mi">0</span>)
+      (<span class="nv">_</span> : A (fshead&#39; n&#39;.+<span class="mi">1</span> N ss))
+      (<span class="nv">xs</span> : <span class="kr">forall</span> <span class="nv">i</span> : Fin (nat_pred n&#39;.+<span class="mi">1</span>),
+            A (fstail&#39; n&#39;.+<span class="mi">1</span> ss i)) =&gt; xs i&#39;)
+   (fsucc x0) ss (leq_add_r <span class="mi">1</span> n) x a&#39;) = a&#39;</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="operation-v-chk2a" style="display: none" type="checkbox"><label class="alectryon-input" for="operation-v-chk2a">funext i&#39;.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>Carriers σ</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>ss</var><span class="hyp-type"><b>: </b><span>FinSeq n.+<span class="mi">1</span> (<span class="kn">Sort</span> σ)</span></span></span><br><span><var>t</var><span class="hyp-type"><b>: </b><span><span class="kn">Sort</span> σ</span></span></span><br><span><var>a</var><span class="hyp-type"><b>: </b><span>CurriedOperation A ss t</span></span></span><br><span><var>IHn</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">ss</span> : FinSeq n (Sort σ)) (<span class="nv">a</span> : CurriedOperation A ss t),
+operation_curry A ss t (operation_uncurry A ss t a) = a</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>A (fshead ss)</span></span></span><br><span><var>a'</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span>
+<span class="nv">i</span> : Arity
+      {|
+        Arity := Fin n;
+        sorts_dom := fstail ss;
+        sort_cod := t
+      |},
+A
+  (sorts_dom
+     {|
+       Arity := Fin n;
+       sorts_dom := fstail ss;
+       sort_cod := t
+     |} i)</span></span></span><br><span><var>i'</var><span class="hyp-type"><b>: </b><span>Arity
+  {|
+    Arity := Fin n;
+    sorts_dom := fstail ss;
+    sort_cod := t
+  |}</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">fin_ind
+  (<span class="kr">fun</span> (<span class="nv">n</span> : nat) (<span class="nv">i</span> : Fin n) =&gt;
+   <span class="kr">forall</span> (<span class="nv">ss</span> : Fin n -&gt; Sort σ) (<span class="nv">N</span> : n &gt; <span class="mi">0</span>),
+   A (fshead&#39; n N ss) -&gt;
+   (<span class="kr">forall</span> <span class="nv">i0</span> : Fin (nat_pred n), A (fstail&#39; n ss i0)) -&gt;
+   A (ss i))
+  (<span class="kr">fun</span> (<span class="nv">n&#39;</span> : nat) (<span class="nv">ss</span> : Fin n&#39;.+<span class="mi">1</span> -&gt; Sort σ)
+     (<span class="nv">z</span> : n&#39;.+<span class="mi">1</span> &gt; <span class="mi">0</span>) (<span class="nv">x</span> : A (fshead&#39; n&#39;.+<span class="mi">1</span> z ss))
+     (<span class="nv">_</span> : <span class="kr">forall</span> <span class="nv">i</span> : Fin (nat_pred n&#39;.+<span class="mi">1</span>),
+          A (fstail&#39; n&#39;.+<span class="mi">1</span> ss i)) =&gt; x)
+  (<span class="kr">fun</span> (<span class="nv">n&#39;</span> : nat) (<span class="nv">i&#39;</span> : Fin n&#39;)
+     (<span class="nv">_</span> : <span class="kr">forall</span> (<span class="nv">ss</span> : Fin n&#39; -&gt; Sort σ) (<span class="nv">N</span> : n&#39; &gt; <span class="mi">0</span>),
+          A (fshead&#39; n&#39; N ss) -&gt;
+          (<span class="kr">forall</span> <span class="nv">i</span> : Fin (nat_pred n&#39;),
+           A (fstail&#39; n&#39; ss i)) -&gt; A (ss i&#39;))
+     (<span class="nv">ss</span> : Fin n&#39;.+<span class="mi">1</span> -&gt; Sort σ) (<span class="nv">N</span> : n&#39;.+<span class="mi">1</span> &gt; <span class="mi">0</span>)
+     (<span class="nv">_</span> : A (fshead&#39; n&#39;.+<span class="mi">1</span> N ss))
+     (<span class="nv">xs</span> : <span class="kr">forall</span> <span class="nv">i</span> : Fin (nat_pred n&#39;.+<span class="mi">1</span>),
+           A (fstail&#39; n&#39;.+<span class="mi">1</span> ss i)) =&gt; xs i&#39;)
+  (fsucc i&#39;) ss (leq_add_r <span class="mi">1</span> n) x a&#39; = a&#39; i&#39;</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">by</span> <span class="nb">rewrite</span> fin_ind_beta_fsucc.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Qed</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="operation-v-chk2b" style="display: none" type="checkbox"><label class="alectryon-input" for="operation-v-chk2b"><span class="kn">Instance</span> <span class="nf">isequiv_operation_curry</span> `{Funext} {σ} (A : Carriers σ)
+  {n : nat} (ss : FinSeq n (<span class="kn">Sort</span> σ)) (t : <span class="kn">Sort</span> σ)
+  : IsEquiv (operation_curry A ss t).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>Carriers σ</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>ss</var><span class="hyp-type"><b>: </b><span>FinSeq n (<span class="kn">Sort</span> σ)</span></span></span><br><span><var>t</var><span class="hyp-type"><b>: </b><span><span class="kn">Sort</span> σ</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsEquiv (operation_curry A ss t)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="operation-v-chk2c" style="display: none" type="checkbox"><label class="alectryon-input" for="operation-v-chk2c"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>Carriers σ</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>ss</var><span class="hyp-type"><b>: </b><span>FinSeq n (<span class="kn">Sort</span> σ)</span></span></span><br><span><var>t</var><span class="hyp-type"><b>: </b><span><span class="kn">Sort</span> σ</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsEquiv (operation_curry A ss t)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="operation-v-chk2d" style="display: none" type="checkbox"><label class="alectryon-input" for="operation-v-chk2d">srapply isequiv_adjointify.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>Carriers σ</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>ss</var><span class="hyp-type"><b>: </b><span>FinSeq n (<span class="kn">Sort</span> σ)</span></span></span><br><span><var>t</var><span class="hyp-type"><b>: </b><span><span class="kn">Sort</span> σ</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">CurriedOperation A ss t -&gt; FiniteOperation A ss t</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="operation-v-chk2e" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>Carriers σ</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>ss</var><span class="hyp-type"><b>: </b><span>FinSeq n (<span class="kn">Sort</span> σ)</span></span></span><br><span><var>t</var><span class="hyp-type"><b>: </b><span><span class="kn">Sort</span> σ</span></span></span><br></div><label class="goal-separator" for="operation-v-chk2e"><hr></label><div class="goal-conclusion">operation_curry A ss t o <span class="nl">?g</span> == idmap</div></blockquote><input class="alectryon-extra-goal-toggle" id="operation-v-chk2f" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>Carriers σ</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>ss</var><span class="hyp-type"><b>: </b><span>FinSeq n (<span class="kn">Sort</span> σ)</span></span></span><br><span><var>t</var><span class="hyp-type"><b>: </b><span><span class="kn">Sort</span> σ</span></span></span><br></div><label class="goal-separator" for="operation-v-chk2f"><hr></label><div class="goal-conclusion"><span class="nl">?g</span> o operation_curry A ss t == idmap</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="operation-v-chk30" style="display: none" type="checkbox"><label class="alectryon-input" for="operation-v-chk30">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>Carriers σ</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>ss</var><span class="hyp-type"><b>: </b><span>FinSeq n (<span class="kn">Sort</span> σ)</span></span></span><br><span><var>t</var><span class="hyp-type"><b>: </b><span><span class="kn">Sort</span> σ</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">CurriedOperation A ss t -&gt; FiniteOperation A ss t</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">apply</span> operation_uncurry.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="operation-v-chk31" style="display: none" type="checkbox"><label class="alectryon-input" for="operation-v-chk31">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>Carriers σ</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>ss</var><span class="hyp-type"><b>: </b><span>FinSeq n (<span class="kn">Sort</span> σ)</span></span></span><br><span><var>t</var><span class="hyp-type"><b>: </b><span><span class="kn">Sort</span> σ</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">operation_curry A ss t o operation_uncurry A ss t ==
+idmap</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">apply</span> path_operation_uncurry_to_curry.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="operation-v-chk32" style="display: none" type="checkbox"><label class="alectryon-input" for="operation-v-chk32">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>Carriers σ</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>ss</var><span class="hyp-type"><b>: </b><span>FinSeq n (<span class="kn">Sort</span> σ)</span></span></span><br><span><var>t</var><span class="hyp-type"><b>: </b><span><span class="kn">Sort</span> σ</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">operation_uncurry A ss t o operation_curry A ss t ==
+idmap</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">apply</span> path_operation_curry_to_cunurry.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">equiv_operation_curry</span> `{Funext} {σ} (A : Carriers σ)
+  {n : nat} (ss : FinSeq n (<span class="kn">Sort</span> σ)) (t : <span class="kn">Sort</span> σ)
+  : FiniteOperation A ss t &lt;~&gt; CurriedOperation A ss t
+  := Build_Equiv _ _ (operation_curry A ss t) _.</span></span></pre>
+</div>
+</div></body>
+</html>

@@ -1,0 +1,1302 @@
+<html>
+<head>
+<title>Moduli.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Moduli.v</h1>
+
+<div class="code" title="File: Moduli.v
+Line: 1
+Time: 0.093s">
+<div class="time" style="width: 100%"></div>
+<pre>From HoTT Require Import Basics Types HSpace.Core HSpace.Coherent HSpace.Pointwise
+  Pointed Homotopy.EvaluationFibration.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 2
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope pointed_scope.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope mc_mult_scope.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope path_scope.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * The moduli type of coherent H-space structures *)
+
+(** When [A] is a left-invertible coherent H-space, we construct an equivalence between the ("moduli") type of coherent H-space structures on [A] and the type [A -&gt;* (A -&gt;** A)]. By the smash-hom adjunction for pointed types, due to Floris van Doorn in HoTT, the latter is also equivalent to the type [Smash A A -&gt;* A].
+
+This equivalence generalizes a formula of Arkowitz--Curjel and Copeland for spaces, and appears as Theorem 2.27 in https://arxiv.org/abs/2301.02636v1 *)
+
+(** ** Paths between H-space structures *)
+
+(** Paths between H-space structures correspond to homotopies between the underlying binary operations which respect the identities. This is the type of the latter. *)</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition path_ishspace_type {X : pType} (mu nu : IsHSpace X) : Type.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct mu as [mu mu_lid mu_rid], nu as [nu nu_lid nu_rid].</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine { h : forall x0 x1, mu x0 x1 = nu x0 x1 &amp; prod (forall x:X, _) (forall x:X, _) }.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (mu_lid x = h pt x @ nu_lid x).</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (mu_rid x = h x pt @ nu_rid x).</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Transport of left and right identities of binary operations along paths between the underlying functions. *)</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 24
+Time: 0.002s">
+<div class="time" style="width: 2.1505376344086%"></div>
+<pre>Local Definition transport_binop_lr_id `{Funext} {X : Type} {x : X}
+  {mu nu : X -&gt; X -&gt; X} `{mu_lid : forall y, mu x y = y}
+  `{mu_rid : forall y, mu y x = y} (p : mu = nu)
+  : transport (fun m : X -&gt; X -&gt; X =&gt;
+                 (forall y, m x y = y) * (forall y, m y x = y))
+      p (mu_lid, mu_rid)
+    = (fun y =&gt; (ap100 p _ _)^ @ mu_lid y,
+         fun y =&gt; (ap100 p _ _)^ @ mu_rid y).</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction p; cbn.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply path_prod'; funext y.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  all: exact (concat_1p _)^.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 35
+Time: 0.001s">
+<div class="time" style="width: 1.0752688172043%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Characterization of paths between H-space structures. *)</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition equiv_path_ishspace `{Funext} {X : pType} (mu nu : IsHSpace X)
+  : path_ishspace_type mu nu &lt;~&gt; (mu = nu).</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct mu as [mu mu_lid mu_rid], nu as [nu nu_lid nu_rid];
+    unfold path_ishspace_type.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  nrefine (equiv_ap_inv' issig_ishspace _ _ oE _).</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 43
+Time: 0.002s">
+<div class="time" style="width: 2.1505376344086%"></div>
+<pre>
+  nrefine (equiv_path_sigma _ _ _ oE _); cbn.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (equiv_functor_sigma' (equiv_path_arrow2 _ _)); intro h; cbn.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  nrefine (equiv_concat_l _ _ oE _).</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: apply transport_binop_lr_id.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 47
+Time: 0.001s">
+<div class="time" style="width: 1.0752688172043%"></div>
+<pre>
+  nrefine (equiv_path_prod _ _ oE _); cbn.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 48
+Time: 0.002s">
+<div class="time" style="width: 2.1505376344086%"></div>
+<pre>
+  apply equiv_functor_prod';
+    nrefine (equiv_path_forall _ _ oE _);
+    apply equiv_functor_forall_id; intro x.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 51
+Time: 0.009s">
+<div class="time" style="width: 9.6774193548387%"></div>
+<pre>
+  all: nrefine (equiv_moveR_Vp _ _ _ oE _);
+    apply equiv_concat_r;
+    apply whiskerR; symmetry;
+    apply ap100_path_arrow2.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 55
+Time: 0.015s">
+<div class="time" style="width: 16.129032258065%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Sections of evaluation fibrations *)
+
+(** We first show that coherent H-space structures on a pointed type correspond to pointed sections of the evaluation fibration [ev A]. *)</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition equiv_iscohhspace_psect `{Funext} (A : pType)
+  : IsCohHSpace A &lt;~&gt; pSect (ev A).</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (issig_psect (ev A) oE _^-1%equiv oE (issig_iscohhspace A)^-1%equiv).</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold SgOp, LeftIdentity, RightIdentity.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply equiv_functor_sigma_id; intro mu.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (equiv_functor_sigma' (equiv_apD10 _ _ _)); intro H1; cbn.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply equiv_functor_sigma_id; intro H2; cbn.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (equiv_path_inverse _ _ oE _).</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply equiv_concat_r.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply concat_p1.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 70
+Time: 0.005s">
+<div class="time" style="width: 5.3763440860215%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Our next goal is to see that when [A] is a left-invertible H-space, then the fibration [ev A] is trivial. We begin with two results that allow the domain to be a general pointed type [B]. We'll later just need the case when [B] is [A]. *)
+
+(** This lemma says that the family [fun a =&gt; B -&gt;* [A,a]] is trivial. *)</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma equiv_pmap_hspace `{Funext} {A B : pType}
+  (a : A) `{IsHSpace A} `{!IsEquiv (hspace_op a)}
+  : (B -&gt;* A) &lt;~&gt; (B -&gt;* [A,a]).</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  napply pequiv_pequiv_postcompose.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 79
+Time: 0.001s">
+<div class="time" style="width: 1.0752688172043%"></div>
+<pre>
+  rapply pequiv_hspace_left_op.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The next result is a consequence of the previous lemma. *)</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Proposition equiv_map_pmap_hspace `{Funext} {A B : pType}
+  `{IsHSpace A} `{forall a:A, IsEquiv (a *.)}
+  : (B -&gt;* A) * A &lt;~&gt; (B -&gt; A).</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 86
+Time: 0.001s">
+<div class="time" style="width: 1.0752688172043%"></div>
+<pre>
+  transitivity {a : A  &amp; {f : B -&gt; A &amp; f pt = a}}.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 87
+Time: 0.002s">
+<div class="time" style="width: 2.1505376344086%"></div>
+<pre>
+  2: exact (equiv_sigma_contr _ oE (equiv_sigma_symm _)^-1%equiv).</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_ oE (equiv_sigma_prod0 _ _)^-1%equiv oE equiv_prod_symm _ _).</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply equiv_functor_sigma_id; intro a.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact ((issig_pmap B [A,a])^-1%equiv oE equiv_pmap_hspace a).</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 91
+Time: 0.001s">
+<div class="time" style="width: 1.0752688172043%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The equivalence [equiv_map_pmap_hspace] is pointed when [B] is [A]. (Note that [selfmaps A] is pointed at [idmap].) This is a pointed equivalence between the domains of [psnd : (A -&gt;* A) * A -&gt;* A] and [ev A : selfmaps A -&gt; A], respectively. *)</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 94
+Time: 0.001s">
+<div class="time" style="width: 1.0752688172043%"></div>
+<pre>Proposition pequiv_map_pmap_hspace `{Funext} {A : pType}
+  `{IsHSpace A} `{forall a:A, IsEquiv (a *.)}
+  : [(A -&gt;* A) * A, (pmap_idmap, pt)] &lt;~&gt;* selfmaps A.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_pEquiv'.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact equiv_map_pmap_hspace.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  cbn.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply path_forall, hspace_left_identity.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** When [A] is coherent, the pointed equivalence [pequiv_map_pmap_hspace] is a pointed equivalence over [A], i.e., a trivialization of [ev A]. *)</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 104
+Time: 0.001s">
+<div class="time" style="width: 1.0752688172043%"></div>
+<pre>Proposition hspace_ev_trivialization `{Funext} {A : pType}
+  `{IsCoherent A} `{forall a:A, IsEquiv (a *.)}
+  : ev A o* pequiv_map_pmap_hspace ==* psnd (A:=[A -&gt;* A, pmap_idmap]).</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_pHomotopy.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 109
+Time: 0.001s">
+<div class="time" style="width: 1.0752688172043%"></div>
+<pre> intros [f x]; cbn.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (ap _ (dpoint_eq f) @ hspace_right_identity _).</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 110
+Time: 0.003s">
+<div class="time" style="width: 3.2258064516129%"></div>
+<pre>
+  cbn.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (concat_1p _ @ _^).</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (concat_p1 _ @ concat_p1 _ @ _).</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (ap10_path_forall _ _ _ _ @ _).</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact iscoherent.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 115
+Time: 0.006s">
+<div class="time" style="width: 6.4516129032258%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** The equivalence [IsCohHSpace A &lt;~&gt; (A -&gt;* (A -&gt;** A))] *)
+
+</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 119
+Time: 0.001s">
+<div class="time" style="width: 1.0752688172043%"></div>
+<pre>Theorem equiv_cohhspace_ppmap `{Funext} {A : pType}
+  `{IsCoherent A} `{forall a:A, IsEquiv (hspace_op a)}
+  : IsCohHSpace A &lt;~&gt; (A -&gt;* (A -&gt;** A)).</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 121
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 122
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_ oE equiv_iscohhspace_psect A).</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 123
+Time: 0.001s">
+<div class="time" style="width: 1.0752688172043%"></div>
+<pre>
+  refine (_ oE (equiv_pequiv_pslice_psect _ _ _ hspace_ev_trivialization^*)^-1%equiv).</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_ oE equiv_psect_psnd (A:=[A -&gt;* A, pmap_idmap])).</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 125
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (pequiv_pequiv_postcompose _); symmetry.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 126
+Time: 0.006s">
+<div class="time" style="width: 6.4516129032258%"></div>
+<pre>
+  rapply pequiv_hspace_left_op.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 127
+Time: 0.001s">
+<div class="time" style="width: 1.0752688172043%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 128
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Here is a third characterization of the type of coherent H-space structures. It simply involves shuffling the data around and using [Funext]. *)</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 130
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition equiv_iscohhspace_ptd_action `{Funext} (A : pType)
+  : IsCohHSpace A &lt;~&gt; { act : forall a, A -&gt;* [A,a] &amp; act pt ==* pmap_idmap }.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 131
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_ oE (issig_iscohhspace A)^-1).</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold IsPointed.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* First we shuffle the data on the LHS to be of this form: *)
+ </pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 136
+Time: 0.001s">
+<div class="time" style="width: 1.0752688172043%"></div>
+<pre>equiv_via {s : {act : A -&gt; (A -&gt; A) &amp; forall a, act a pt = a} &amp; {h : s.1 pt == idmap &amp; h pt = s.2 pt}}.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 136
+Time: 0.013s">
+<div class="time" style="width: 13.978494623656%"></div>
+<pre>
+  1: make_equiv.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 137
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* Then we break up [-&gt;*] and [==*] on the RHS using issig lemmas, and handle a trailing [@ 1]. *)
+ </pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>snapply equiv_functor_sigma'.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> refine (equiv_functor_forall_id (fun a =&gt; issig_pmap A [A,a]) oE _).</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unfold IsPointed.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    napply equiv_sig_coind.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros [act p]; simpl.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (issig_phomotopy _ _ oE _); cbn.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 145
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply equiv_functor_sigma_id; intro q.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 146
+Time: 0.001s">
+<div class="time" style="width: 1.0752688172043%"></div>
+<pre>
+    apply equiv_concat_r; symmetry; apply concat_p1.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 147
+Time: 0.038s">
+<div class="time" style="width: 40.860215053763%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 148
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** It follows that any homogeneous type is a coherent H-space.  This generalizes [ishspace_homogeneous]. *)</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition iscohhspace_homogeneous `{Funext} {A : pType} `{IsHomogeneous A}
+  : IsCohHSpace A.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 152
+Time: 0.002s">
+<div class="time" style="width: 2.1505376344086%"></div>
+<pre>
+  apply (equiv_iscohhspace_ptd_action A)^-1.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exists homogeneous_pt_id.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 154
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact homogeneous_pt_id_beta.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 155
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** One can also show directly that the H-space structure defined by [ishspace_homogeneous] is coherent. This also avoids [Funext]. *)</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition iscoherent_homogeneous {A : pType} `{IsHomogeneous A}
+  : @IsCoherent A (ishspace_homogeneous).</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold IsCoherent; cbn.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 161
+Time: 0.002s">
+<div class="time" style="width: 2.1505376344086%"></div>
+<pre>
+  set (f := ishomogeneous pt).</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 162
+Time: 0.001s">
+<div class="time" style="width: 1.0752688172043%"></div>
+<pre>
+  change (eisretr f pt = ap f (moveR_equiv_V pt pt (point_eq f)^) @ point_eq f).</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 163
+Time: 0.001s">
+<div class="time" style="width: 1.0752688172043%"></div>
+<pre>
+  rewrite &lt;- (point_eq f).</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 164
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold moveR_equiv_V; simpl.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 165
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rhs napply concat_p1.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 166
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lhs napply (eisadj f).</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply ap.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  symmetry; apply concat_1p.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 169
+Time: 0.005s">
+<div class="time" style="width: 5.3763440860215%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Using either of these, we can "upgrade" any left-invertible H-space structure to a coherent one. This one has a prime because the direct proof below computes better. *)</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition iscohhspace_hspace' (A : pType)
+  `{IsHSpace A} `{forall a, IsEquiv (a *.)}
+  : IsCohHSpace A.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 174
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 175
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_IsCohHSpace.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> napply ishspace_homogeneous.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact ishomogeneous_hspace.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact iscoherent_homogeneous.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 179
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 180
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The new multiplication is homotopic to the original one.  Relative to this, we expect that one of the identity laws also agrees, but that the other does not. *)</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 182
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition iscohhspace_hspace'_beta_mu `{Funext} (A : pType)
+  {m : IsHSpace A} `{forall a, IsEquiv (a *.)}
+  : @hspace_op A (@ishspace_cohhspace A (iscohhspace_hspace' A)) = @hspace_op A m.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 184
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  cbn.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 186
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> (* [*], [sg_op] and [hspace_op] all denote the original operation. *)
+ </pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>funext a b.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (ap (a *.) _).</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply moveR_equiv_V.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 189
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  symmetry; apply left_identity.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 190
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 191
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Here's a different proof that directly upgrades an H-space structure, leaving the multiplication and left-identity definitionally the same, but changing the right-identity. *)</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 193
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition iscohhspace_hspace (A : pType)
+  {m : IsHSpace A} `{forall a, IsEquiv (a *.)}
+  : IsCohHSpace A.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_IsCohHSpace.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: snapply Build_IsHSpace.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 199
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (@hspace_op A m).</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 199
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (@hspace_left_identity A m).</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 201
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro a.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 201
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    lhs exact (ap (a *.) (hspace_right_identity pt))^.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 202
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    lhs exact (ap (a *.) (hspace_left_identity pt)).</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 203
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (hspace_right_identity a).</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 204
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 205
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> unfold IsCoherent; cbn.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 205
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply moveL_Vp.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    lhs napply concat_A1p.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 207
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (_ @@ 1).</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (cancelR _ _ (hspace_left_identity pt)).</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 209
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    symmetry; apply concat_A1p.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 210
+Time: 0.003s">
+<div class="time" style="width: 3.2258064516129%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Moduli.v
+Line: 212
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

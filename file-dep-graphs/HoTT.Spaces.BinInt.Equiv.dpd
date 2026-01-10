@@ -1,0 +1,11 @@
+N: 5 "binint_iter" [body=yes, kind=cnst, prop=no, path="Equiv", ];
+N: 4 "binint_iter_succ_l" [body=yes, kind=cnst, prop=no, path="Equiv", ];
+N: 3 "binint_iter_succ_r" [body=yes, kind=cnst, prop=no, path="Equiv", ];
+N: 2 "iter_binint_pred_l" [body=yes, kind=cnst, prop=no, path="Equiv", ];
+N: 1 "iter_binint_pred_r" [body=yes, kind=cnst, prop=no, path="Equiv", ];
+E: 1 3 [weight=1, ];
+E: 1 5 [weight=37, ];
+E: 2 4 [weight=1, ];
+E: 2 5 [weight=27, ];
+E: 3 5 [weight=28, ];
+E: 4 5 [weight=28, ];

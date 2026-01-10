@@ -1,0 +1,19 @@
+digraph HoTT_Homotopy_Join_JoinSusp {
+  graph [ratio=0.5]
+  node [style=filled]
+JoinSusp_equiv_join_sphere [label="equiv_join_sphere", URL=<JoinSusp.html#equiv_join_sphere>, peripheries=3, fillcolor="#F070D1"] ;
+JoinSusp_equiv_bool_pow_sphere [label="equiv_bool_pow_sphere", URL=<JoinSusp.html#equiv_bool_pow_sphere>, fillcolor="#F070D1"] ;
+JoinSusp_bool_pow [label="bool_pow", URL=<JoinSusp.html#bool_pow>, fillcolor="#F070D1"] ;
+JoinSusp_equiv_join_susp [label="equiv_join_susp", URL=<JoinSusp.html#equiv_join_susp>, fillcolor="#F070D1"] ;
+JoinSusp_isequiv_join_to_susp [label="isequiv_join_to_susp", URL=<JoinSusp.html#isequiv_join_to_susp>, fillcolor="#F070D1"] ;
+JoinSusp_susp_to_join [label="susp_to_join", URL=<JoinSusp.html#susp_to_join>, fillcolor="#F070D1"] ;
+JoinSusp_join_to_susp [label="join_to_susp", URL=<JoinSusp.html#join_to_susp>, fillcolor="#F070D1"] ;
+  JoinSusp_equiv_join_sphere -> JoinSusp_equiv_bool_pow_sphere [] ;
+  JoinSusp_equiv_bool_pow_sphere -> JoinSusp_bool_pow [] ;
+  JoinSusp_equiv_bool_pow_sphere -> JoinSusp_equiv_join_susp [] ;
+  JoinSusp_equiv_join_susp -> JoinSusp_isequiv_join_to_susp [] ;
+  JoinSusp_isequiv_join_to_susp -> JoinSusp_susp_to_join [] ;
+  JoinSusp_isequiv_join_to_susp -> JoinSusp_join_to_susp [] ;
+subgraph cluster_JoinSusp { label="JoinSusp"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+JoinSusp_join_to_susp; JoinSusp_susp_to_join; JoinSusp_isequiv_join_to_susp; JoinSusp_equiv_join_susp; JoinSusp_bool_pow; JoinSusp_equiv_bool_pow_sphere; JoinSusp_equiv_join_sphere; };
+} /* END */

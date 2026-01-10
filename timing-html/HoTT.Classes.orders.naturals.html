@@ -1,0 +1,732 @@
+<html>
+<head>
+<title>naturals.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for naturals.v</h1>
+
+<div class="code" title="File: naturals.v
+Line: 1
+Time: 0.024s">
+<div class="time" style="width: 55.813953488372%"></div>
+<pre>Require Import
+  HoTT.Types.Sigma.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 2
+Time: 0.043s">
+<div class="time" style="width: 100%"></div>
+<pre>
+Require Import
+  HoTT.Classes.theory.naturals.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 4
+Time: 0.015s">
+<div class="time" style="width: 34.883720930233%"></div>
+<pre>
+Require Import
+  HoTT.Classes.interfaces.abstract_algebra
+  HoTT.Classes.interfaces.orders
+  HoTT.Classes.theory.rings
+  HoTT.Classes.orders.rings
+  HoTT.Classes.implementations.peano_naturals.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 10
+Time: 0.001s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre>
+Require Export
+  HoTT.Classes.orders.nat_int.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Generalizable Variables N R Rle Rlt f.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section naturals_order.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Context `{Funext} `{Univalence}.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Context `{Naturals N} `{!TrivialApart N}.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance nat_nonneg x : PropHolds (0 ≤ x).</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 21
+Time: 0.003s">
+<div class="time" style="width: 6.9767441860465%"></div>
+<pre> apply (to_semiring_nonneg (f:=id)).</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> Qed.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma nat_le_plus {x y: N}: x ≤ y &lt;-&gt; exists z, y = x + z.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+split; intros E.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+-</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 26
+Time: 0.002s">
+<div class="time" style="width: 4.6511627906977%"></div>
+<pre> destruct (decompose_le E) as [z [Ez1 Ez2]].</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists z.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> trivial.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+-</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct E as [z Ez].</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 27
+Time: 0.002s">
+<div class="time" style="width: 4.6511627906977%"></div>
+<pre>
+  apply compose_le with z; [solve_propholds | trivial].</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma nat_not_neg x : ~(x &lt; 0).</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply le_not_lt_flip, nat_nonneg.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> Qed.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma nat_0_or_pos x : x = 0 |_| 0 &lt; x.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 35
+Time: 0.006s">
+<div class="time" style="width: 13.953488372093%"></div>
+<pre>
+destruct (trichotomy (&lt;) 0 x) as [?|[?|?]]; auto.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+-</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> left;symmetry;trivial.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+-</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (nat_not_neg x).</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> trivial.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma nat_0_or_ge_1 x : x = 0 |_| 1 ≤ x.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 42
+Time: 0.007s">
+<div class="time" style="width: 16.279069767442%"></div>
+<pre>
+destruct (nat_0_or_pos x);auto.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 43
+Time: 0.003s">
+<div class="time" style="width: 6.9767441860465%"></div>
+<pre>
+right;apply pos_ge_1.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> trivial.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma nat_ne_0_pos x : x &lt;&gt; 0 &lt;-&gt; 0 &lt; x.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+split.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+-</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (nat_0_or_pos x); auto.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros E;destruct E;trivial.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+-</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros E1 E2.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite E2 in E1.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 52
+Time: 0.001s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre> destruct (irreflexivity (&lt;) 0).</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> trivial.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma nat_ne_0_ge_1 x : x &lt;&gt; 0 &lt;-&gt; 1 ≤ x.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 56
+Time: 0.003s">
+<div class="time" style="width: 6.9767441860465%"></div>
+<pre>
+etransitivity.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+-</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply nat_ne_0_pos.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+-</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 59
+Time: 0.003s">
+<div class="time" style="width: 6.9767441860465%"></div>
+<pre> apply pos_ge_1.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+#[export] Instance orderreflecting_left_mult : forall (z : N), PropHolds (z &lt;&gt; 0) -&gt; OrderReflecting (z *.).</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+intros z ?.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> red.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 64
+Time: 0.013s">
+<div class="time" style="width: 30.232558139535%"></div>
+<pre> apply (order_reflecting_pos (.*.) z).</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+apply nat_ne_0_pos.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> trivial.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+#[export] Instance slow_nat_le_dec: forall x y: N, Decidable (x ≤ y) | 10.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+intros x y.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 70
+Time: 0.002s">
+<div class="time" style="width: 4.6511627906977%"></div>
+<pre>
+destruct (nat_le_dec (naturals_to_semiring _ nat x) (naturals_to_semiring _ nat y))
+as [E | E].</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+-</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> left.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 73
+Time: 0.007s">
+<div class="time" style="width: 16.279069767442%"></div>
+<pre>
+  apply (order_reflecting (naturals_to_semiring N nat)).</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact E.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+-</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> right.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros E'.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply E.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply order_preserving;trivial.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 76
+Time: 0.006s">
+<div class="time" style="width: 13.953488372093%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 76
+Time: 0.002s">
+<div class="time" style="width: 4.6511627906977%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section another_ring.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 79
+Time: 0.002s">
+<div class="time" style="width: 4.6511627906977%"></div>
+<pre>
+  Context `{IsCRing R} `{Apart R} `{!FullPseudoSemiRingOrder (A:=R) Rle Rlt}
+    `{!IsSemiRingPreserving (f : N -&gt; R)}.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma negate_to_ring_nonpos n : -f n ≤ 0.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 84
+Time: 0.001s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre> apply flip_nonneg_negate.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 84
+Time: 0.001s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre> apply to_semiring_nonneg.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> Qed.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma between_to_ring n : -f n ≤ f n.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply between_nonneg.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 87
+Time: 0.001s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre> apply to_semiring_nonneg.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> Qed.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+End another_ring.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 88
+Time: 0.001s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre>
+End naturals_order.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+#[export]
+Hint Extern 20 (PropHolds (_ ≤ _)) =&gt; eapply @nat_nonneg : typeclass_instances.</pre>
+</div>
+<div class="code" title="File: naturals.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

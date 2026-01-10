@@ -1,0 +1,3507 @@
+<html>
+<head>
+<title>FreeGroup.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for FreeGroup.v</h1>
+
+<div class="code" title="File: FreeGroup.v
+Line: 1
+Time: 0.039s">
+<div class="time" style="width: 53.424657534247%"></div>
+<pre>From HoTT Require Import Basics Types.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 1
+Time: 0.073s">
+<div class="time" style="width: 100%"></div>
+<pre>
+Require Import Group Subgroup
+  WildCat.Core WildCat.Universe Colimits.Coeq
+  Truncations.Core Truncations.SeparatedTrunc
+  Spaces.List.Core Spaces.List.Theory.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope mc_scope.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope mc_mult_scope.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [IsFreeGroup] is defined in Group.v. In this file we construct free groups and and prove properties about them. *)
+
+(** We construct the free group on a type [A] as a higher inductive type. This construction is due to Kraus-Altenkirch 2018 arXiv:1805.02069. Their construction is actually more general, but we set-truncate it to suit our needs which is the free group as a set. This is a very simple HIT in a similar manner to the abelianization HIT used in Algebra.AbGroup.Abelianization. *)
+
+</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section Reduction.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Universe u.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context (A : Type@{u}).</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  
+  Local Open Scope list_scope.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** We define words (with inverses) on A to be lists of marked elements of A *)
+ </pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Definition Words : Type@{u} := list (A + A).</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Given a marked element of A we can change its mark *)
+ </pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Definition change_sign : A + A -&gt; A + A := equiv_sum_symm A A.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** We introduce a local notation for [change_sign]. It is only defined in this section however. *)
+ </pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Notation "a ^'" := (change_sign a) (at level 1).</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Changing sign is an involution *)
+ </pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Definition change_sign_inv a : a^'^' = a.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by destruct a.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Now we wish to define the free group on A as the following HIT: 
+
+    HIT N(A) : hSet
+     | eta : Words -&gt; N(A)
+     | tau (x : Words) (a : A + A) (y : Words)
+         : eta (x ++ [a] ++ [a^] ++ y) = eta (x ++ y).
+
+    Since we cannot write our HITs directly like this (without resorting to private inductive types), we will construct this HIT out of HITs we know. In fact, we can define N(A) as a coequalizer. *)
+
+ </pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Definition map1 : Words * (A + A) * Words -&gt; Words.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros [[x a] y].</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (x ++ [a] ++ [a^'] ++ y).</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  
+  Arguments map1 _ /.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Definition map2 : Words * (A + A) * Words -&gt; Words.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros [[x a] y].</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (x ++ y).</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  
+  Arguments map2 _ /.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Now we can define the underlying type of the free group as the 0-truncated coequalizer of these two maps *)
+ </pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition freegroup_type : Type := Tr 0 (Coeq map1 map2).</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** This is the point constructor *)
+ </pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition freegroup_eta : Words -&gt; freegroup_type := tr o coeq.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** This is the path constructor *)
+ </pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition freegroup_tau (x : Words) (a : A + A) (y : Words)
+    : freegroup_eta (x ++ [a] ++ [a^'] ++ y) = freegroup_eta (x ++ y).</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_Tr, tr.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact ((cglue (x, a, y))).</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The group operation *)
+ </pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export] Instance sgop_freegroup : SgOp freegroup_type.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros x y.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 77
+Time: 0.013s">
+<div class="time" style="width: 17.808219178082%"></div>
+<pre>
+    strip_truncations.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    revert x; snapply Coeq_rec.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x; revert y.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      snapply Coeq_rec.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      {</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros y.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        exact (freegroup_eta (x ++ y)).</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      intros [[y a] z]; simpl.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      change (freegroup_eta (x ++ y ++ ([a] ++ [a^'] ++ z))
+        = freegroup_eta (x ++ y ++ z)).</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rhs napply ap.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      2: napply app_assoc.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      lhs napply ap.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      1: napply app_assoc.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      napply (freegroup_tau _ a).</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 91
+Time: 0.002s">
+<div class="time" style="width: 2.7397260273973%"></div>
+<pre>
+    intros [[c b] d].</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    revert y.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 93
+Time: 0.012s">
+<div class="time" style="width: 16.438356164384%"></div>
+<pre>
+    srapply Coeq_ind_hprop.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 94
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro a.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    change (freegroup_eta ((c ++ [b] ++ [b^'] ++ d) ++ a)
+      = freegroup_eta ((c ++ d) ++ a)).</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    lhs_V napply ap.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: napply app_assoc.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    lhs_V napply (ap (fun x =&gt; freegroup_eta (c ++ x))).</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: napply app_assoc.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 101
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+    lhs_V napply (ap (fun x =&gt; freegroup_eta (c ++ _ ++ x))).</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: napply app_assoc.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rhs_V napply ap.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    2: napply app_assoc.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    napply freegroup_tau.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 106
+Time: 0.006s">
+<div class="time" style="width: 8.2191780821918%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The unit of the free group is the empty word *)
+ </pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export] Instance monunit_freegroup_type : MonUnit freegroup_type
+    := freegroup_eta nil.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** We can change the sign of all the elements in a word and reverse the order. This will be the inversion in the group *)
+ </pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition word_change_sign (x : Words) : Words
+    := reverse (list_map change_sign x).</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Changing the sign changes the order of word concatenation *)
+ </pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 118
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition word_change_sign_ww (x y : Words)
+    : word_change_sign (x ++ y) = word_change_sign y ++ word_change_sign x.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unfold word_change_sign.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 121
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    lhs napply (ap reverse).</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 122
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: napply list_map_app.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    napply reverse_app.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 125
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** This is also involutive *)
+ </pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 128
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma word_change_sign_inv x : word_change_sign (word_change_sign x) = x.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 128
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unfold word_change_sign.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 130
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    lhs_V napply list_map_reverse.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 131
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    lhs napply ap.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: napply reverse_reverse.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 133
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre> 
+    lhs_V napply list_map_compose.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply list_map_id.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 135
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros a ?.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply change_sign_inv.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 137
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Changing the sign gives us left inverses *)
+ </pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma word_concat_Vw x : freegroup_eta (word_change_sign x ++ x) = mon_unit.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    induction x.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: reflexivity.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 144
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+    lhs napply (ap (fun x =&gt; freegroup_eta (x ++ _))).</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 145
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: napply reverse_cons.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    change (freegroup_eta ((word_change_sign x ++ [a^']) ++ [a] ++ x)
+      = mon_unit).</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 148
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre> 
+    lhs_V napply ap.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: napply app_assoc.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    set (a' := a^').</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite &lt;- (change_sign_inv a).</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 152
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    lhs napply freegroup_tau.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact IHx.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 154
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 155
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** And since changing the sign is involutive we get right inverses from left inverses *)
+ </pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma word_concat_wV x : freegroup_eta (x ++ word_change_sign x) = mon_unit.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    set (x' := word_change_sign x).</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite &lt;- (word_change_sign_inv x).</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    change (freegroup_eta (word_change_sign x' ++ x') = mon_unit).</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply word_concat_Vw.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 163
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 164
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Inverses are defined by changing the order of a word that appears in eta. Most of the work here is checking that it is agreeable with the path constructor. *)
+ </pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export] Instance inverse_freegroup_type : Inverse freegroup_type.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro x.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 169
+Time: 0.005s">
+<div class="time" style="width: 6.8493150684932%"></div>
+<pre>
+    strip_truncations.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    revert x; srapply Coeq_rec.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro x.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply freegroup_eta.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (word_change_sign x).</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 174
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 174
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros [[b a] c].</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 175
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unfold map1, map2.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    lhs napply ap.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> lhs napply word_change_sign_ww.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      napply (ap (fun x =&gt; x ++ _)).</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 179
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> 
+      lhs napply word_change_sign_ww.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 180
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      napply (ap (fun x =&gt; x ++ _)).</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 181
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> 
+      lhs napply word_change_sign_ww.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 182
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      napply (ap (fun x =&gt; _ ++ x)).</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 183
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (word_change_sign_inv [a]).</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 184
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 184
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    lhs_V napply ap.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: rhs_V napply app_assoc.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 186
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: napply app_assoc.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rhs napply ap.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    2: napply word_change_sign_ww.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 189
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    napply freegroup_tau.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 190
+Time: 0.002s">
+<div class="time" style="width: 2.7397260273973%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 191
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Now we can start to prove the group laws. Since these are hprops we can ignore what happens with the path constructor. *)
+
+  (** Our operation is associative *)
+ </pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export] Instance associative_freegroup_type : Associative sg_op.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros x y z.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 198
+Time: 0.047s">
+<div class="time" style="width: 64.383561643836%"></div>
+<pre>
+    strip_truncations.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 199
+Time: 0.003s">
+<div class="time" style="width: 4.1095890410959%"></div>
+<pre>
+    revert x; srapply Coeq_ind_hprop; intro x.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 200
+Time: 0.003s">
+<div class="time" style="width: 4.1095890410959%"></div>
+<pre>
+    revert y; srapply Coeq_ind_hprop; intro y.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 201
+Time: 0.004s">
+<div class="time" style="width: 5.4794520547945%"></div>
+<pre>
+    revert z; srapply Coeq_ind_hprop; intro z.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 202
+Time: 0.002s">
+<div class="time" style="width: 2.7397260273973%"></div>
+<pre>
+    napply (ap (tr o coeq)).</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 203
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    napply app_assoc.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 204
+Time: 0.002s">
+<div class="time" style="width: 2.7397260273973%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 205
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Left identity *)
+ </pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export] Instance leftidentity_freegroup_type : LeftIdentity sg_op mon_unit.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 209
+Time: 0.004s">
+<div class="time" style="width: 5.4794520547945%"></div>
+<pre>
+    rapply Trunc_ind.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 210
+Time: 0.003s">
+<div class="time" style="width: 4.1095890410959%"></div>
+<pre>
+    srapply Coeq_ind_hprop; intros x.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 211
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    reflexivity.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 212
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 213
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Right identity *)
+ </pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 216
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export] Instance rightidentity_freegroup_type : RightIdentity sg_op mon_unit.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 216
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 217
+Time: 0.003s">
+<div class="time" style="width: 4.1095890410959%"></div>
+<pre>
+    rapply Trunc_ind.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 218
+Time: 0.003s">
+<div class="time" style="width: 4.1095890410959%"></div>
+<pre>
+    srapply Coeq_ind_hprop; intros x.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 219
+Time: 0.021s">
+<div class="time" style="width: 28.767123287671%"></div>
+<pre>
+    apply (ap tr), ap.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 220
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    napply app_nil.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 221
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 222
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Left inverse *)
+ </pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export] Instance leftinverse_freegroup_type : LeftInverse (.*.) (^) mon_unit.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 226
+Time: 0.004s">
+<div class="time" style="width: 5.4794520547945%"></div>
+<pre>
+    rapply Trunc_ind.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 227
+Time: 0.003s">
+<div class="time" style="width: 4.1095890410959%"></div>
+<pre>
+    srapply Coeq_ind_hprop; intro x.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 228
+Time: 0.002s">
+<div class="time" style="width: 2.7397260273973%"></div>
+<pre>
+    apply word_concat_Vw.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 229
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 230
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Right inverse *)
+ </pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 233
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export] Instance rightinverse_freegroup_type : RightInverse (.*.) (^) mon_unit.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 233
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 234
+Time: 0.004s">
+<div class="time" style="width: 5.4794520547945%"></div>
+<pre>
+    rapply Trunc_ind.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 235
+Time: 0.003s">
+<div class="time" style="width: 4.1095890410959%"></div>
+<pre>
+    srapply Coeq_ind_hprop; intro x.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 236
+Time: 0.002s">
+<div class="time" style="width: 2.7397260273973%"></div>
+<pre>
+    apply word_concat_wV.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 237
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 238
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Finally we have defined the free group on [A] *)
+ </pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 241
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition FreeGroup : Group.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 241
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 242
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+    snapply (Build_Group freegroup_type); repeat split; exact _.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 243
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 244
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  
+  Definition word_rec (G : Group) (s : A -&gt; G) : A + A -&gt; G.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 246
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 247
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros [x|x].</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 248
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 249
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (s x).</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 249
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 250
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (s x)^.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 250
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 251
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** When we have a list of words we can recursively define a group element. The obvious choice would be to map [nil] to the identity and [x :: xs] to [x * words_rec xs]. This has the disadvantage that a single generating element gets mapped to [x * 1] instead of [x]. To fix this issue, we map [nil] to the identity, the singleton to the element we want, and do the rest recursively. *)
+ </pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 254
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition words_rec (G : Group) (s : A -&gt; G) : Words -&gt; G.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 254
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 255
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro xs.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 256
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    induction xs as [|x [|y xs] IHxs].</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 257
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 258
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact mon_unit.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 258
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 259
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (word_rec G s x).</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 259
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 260
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (word_rec G s x * IHxs).</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 260
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 261
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition words_rec_cons (G : Group) (s : A -&gt; G) (x : A + A) (xs : Words)
+    : words_rec G s (x :: xs)%list = word_rec G s x * words_rec G s xs.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 264
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 265
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    induction xs in x |- *.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 266
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 267
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> symmetry; napply grp_unit_r.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 267
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 268
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 268
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 269
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma words_rec_pp (G : Group) (s : A -&gt; G)  (x y : Words)
+    : words_rec G s (x ++ y) = words_rec G s x * words_rec G s y.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 272
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 273
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    induction x as [|x xs IHxs] in y |- *.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 274
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 275
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> symmetry; napply grp_unit_l.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 275
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 276
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> change ((?x :: ?xs) ++ y) with (x :: xs ++ y).</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 276
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      lhs napply words_rec_cons.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 277
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      lhs napply ap.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 278
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      1: napply IHxs.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 279
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      lhs napply grp_assoc.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 280
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      napply (ap (.* _)).</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 281
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      symmetry.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 282
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply words_rec_cons.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 283
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 284
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma words_rec_coh (G : Group) (s : A -&gt; G) (a : A + A) (b c : Words)
+    : words_rec G s (map1 (b, a, c)) = words_rec G s (map2 (b, a, c)).</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 287
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 288
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unfold map1, map2.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 289
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rhs napply (words_rec_pp G s).</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 290
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    lhs napply words_rec_pp.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 291
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    napply (ap (_ *.)).</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 292
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    lhs napply words_rec_pp.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 293
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    lhs napply ap.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 294
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: napply words_rec_pp.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 295
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    lhs napply grp_assoc.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 296
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rhs_V napply grp_unit_l.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 297
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    napply (ap (.* _)).</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 298
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct a; simpl.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 299
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 300
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> napply grp_inv_r.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 300
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 301
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> napply grp_inv_l.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 301
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 302
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Given a group [G] we can construct a group homomorphism [FreeGroup A $-&gt; G] if we have a map [A -&gt; G]. *)
+ </pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 305
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition FreeGroup_rec {G : Group} (s : A -&gt; G) : FreeGroup $-&gt; G.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 305
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 306
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply Build_GroupHomomorphism.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 307
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 308
+Time: 0.004s">
+<div class="time" style="width: 5.4794520547945%"></div>
+<pre> rapply Trunc_rec.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 308
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      srapply Coeq_rec.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 309
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      1: apply words_rec, s.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 310
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      intros [[b a] c].</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 311
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply words_rec_coh.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 312
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 312
+Time: 0.036s">
+<div class="time" style="width: 49.315068493151%"></div>
+<pre>
+    intros x y; strip_truncations.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 313
+Time: 0.007s">
+<div class="time" style="width: 9.5890410958904%"></div>
+<pre>
+    revert x; srapply Coeq_ind_hprop; intro x.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 314
+Time: 0.008s">
+<div class="time" style="width: 10.958904109589%"></div>
+<pre>
+    revert y; srapply Coeq_ind_hprop; intro y.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 315
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> 
+    simpl.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 316
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply words_rec_pp.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 317
+Time: 0.003s">
+<div class="time" style="width: 4.1095890410959%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 318
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition freegroup_in : A -&gt; FreeGroup
+    := freegroup_eta o (fun x =&gt; [ x ]) o inl.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 321
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition FreeGroup_rec_beta {G : Group} (f : A -&gt; G)
+    : FreeGroup_rec f o freegroup_in == f
+    := fun _ =&gt; idpath.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 325
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Coercion freegroup_in : A &gt;-&gt; group_type.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 327
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  
+  Definition FreeGroup_ind_hprop' (P : FreeGroup -&gt; Type)
+    `{forall x, IsHProp (P x)}
+    (H1 : forall w, P (freegroup_eta w))
+    : forall x, P x.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 332
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 333
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+    rapply Trunc_ind.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 334
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+    srapply Coeq_ind_hprop.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 335
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact H1.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 336
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 337
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+ 
+  Definition FreeGroup_ind_hprop (P : FreeGroup -&gt; Type)
+    `{forall x, IsHProp (P x)}
+    (H1 : P mon_unit)
+    (Hin : forall x, P (freegroup_in x))
+    (Hop : forall x y, P x -&gt; P y -&gt; P (x^ * y))
+    : forall x, P x.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 344
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 345
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+    rapply FreeGroup_ind_hprop'.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 346
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros w.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 347
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    induction w as [|a w IHw].</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 348
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 349
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact H1.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 349
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 350
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct a as [a|a].</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 350
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 351
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> change (P ((freegroup_in a) * freegroup_eta w)).</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 351
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>  
+        rewrite &lt;- (grp_inv_inv a).</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 352
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply Hop.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 353
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        *</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 354
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite &lt;- grp_unit_r.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 354
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          by apply Hop.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 355
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        *</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 356
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assumption.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 356
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 357
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> change (P ((freegroup_in a)^ * freegroup_eta w)).</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 357
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        by apply Hop.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 358
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 359
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+  
+  Definition FreeGroup_ind_homotopy {G : Group} {f f' : FreeGroup $-&gt; G}
+    (H : forall x, f (freegroup_in x) = f' (freegroup_in x))
+    : f $== f'.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 363
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 364
+Time: 0.008s">
+<div class="time" style="width: 10.958904109589%"></div>
+<pre>
+    rapply FreeGroup_ind_hprop.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 365
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 366
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (concat (grp_homo_unit f) (grp_homo_unit f')^).</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 366
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 367
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact H.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 367
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 368
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y p q.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 368
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre> refine (grp_homo_op_agree f f' _ q).</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 368
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      lhs napply grp_homo_inv.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 369
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rhs napply grp_homo_inv.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 370
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (ap _ p).</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 371
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 372
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Now we need to prove that the free group satisfies the universal property of the free group. *)
+  (** TODO: remove funext from here and universal property of free group *)
+ </pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 376
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export] Instance isfreegroupon_freegroup `{Funext}
+    : IsFreeGroupOn A FreeGroup freegroup_in.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 377
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 378
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros G f.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 379
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply Build_Contr.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 380
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 381
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> srefine (_;_); simpl.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 381
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      1: apply FreeGroup_rec, f.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 382
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      intro x; reflexivity.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 383
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 383
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros [g h].</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 384
+Time: 0.009s">
+<div class="time" style="width: 12.328767123288%"></div>
+<pre>
+    napply path_sigma_hprop; [ exact _ |].</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 385
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    simpl.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 386
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply equiv_path_grouphomomorphism.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 387
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    symmetry.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 388
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply FreeGroup_ind_homotopy.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 389
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact h.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 390
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 391
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Typeclass search can already find this but we leave it here as a definition for reference. *)
+ </pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 394
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition isfreegroup_freegroup `{Funext} : IsFreeGroup FreeGroup := _.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 394
+Time: 0.014s">
+<div class="time" style="width: 19.178082191781%"></div>
+<pre>
+
+End Reduction.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 396
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments FreeGroup_rec {A G}.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 398
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments FreeGroup_ind_homotopy {A G f f'}.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 399
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments freegroup_eta {A}.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 400
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments freegroup_in {A}.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 401
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Properties of free groups *)
+
+(* Given a function on the generators, there is an induced group homomorphism from the free group. *)</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 405
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>Definition isfreegroupon_rec {S : Type} {F_S : Group}
+  {i : S -&gt; F_S} `{IsFreeGroupOn S F_S i}
+  {G : Group} (f : S -&gt; G) : F_S $-&gt; G
+  := (center (FactorsThroughFreeGroup S F_S i G f)).1.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 408
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* The propositional computation rule for the recursor. *)</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 410
+Time: 0.004s">
+<div class="time" style="width: 5.4794520547945%"></div>
+<pre>Definition isfreegroupon_rec_beta
+  {S : Type} {F_S : Group} {i : S -&gt; F_S} `{IsFreeGroupOn S F_S i}
+  {G : Group} (f : S -&gt; G)
+  : isfreegroupon_rec f o i == f
+  := (center (FactorsThroughFreeGroup S F_S i G f)).2.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 414
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* Two homomorphisms from a free group are equal if they agree on the generators. *)</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 416
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>Definition path_homomorphism_from_free_group {S : Type}
+  {F_S : Group} {i : S -&gt; F_S} `{IsFreeGroupOn S F_S i}
+  {G : Group} (f g : F_S $-&gt; G) (K : f o i == g o i)
+  : f = g.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 419
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 420
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* By assumption, the type [FactorsThroughFreeGroup S F_S i G (g o i)] of factorizations of [g o i] through [i] is contractible.  Therefore the two elements we have are equal.  Therefore, their first components are equal. *)
+ </pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 422
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>exact (path_contr (f; K) (g; fun x =&gt; idpath))..1.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 422
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 423
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance isequiv_isfreegroupon_rec `{Funext} {S : Type}
+  {F_S : Group} {i : S -&gt; F_S} `{IsFreeGroupOn S F_S i} {G : Group}
+  : IsEquiv (@isfreegroupon_rec S F_S i _ G).</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 427
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 428
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (isequiv_adjointify isfreegroupon_rec (fun f =&gt; f o i)).</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 429
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 430
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro f.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 430
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_homomorphism_from_free_group.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 431
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply isfreegroupon_rec_beta.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 432
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 433
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro f.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 433
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (* here we need [Funext]: *)
+   </pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 435
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>apply path_arrow, isfreegroupon_rec_beta.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 435
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 436
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The universal property of a free group. *)</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 438
+Time: 0.002s">
+<div class="time" style="width: 2.7397260273973%"></div>
+<pre>Definition equiv_isfreegroupon_rec `{Funext} {G F : Group} {A : Type}
+  {i : A -&gt; F} `{IsFreeGroupOn A F i}
+  : (A -&gt; G) &lt;~&gt; (F $-&gt; G) := Build_Equiv _ _ isfreegroupon_rec _.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 440
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The above theorem is true regardless of the implementation of free groups. This lets us state the more specific theorem about the canonical free groups. This can be read as [FreeGroup] is left adjoint to the forgetful functor [group_type]. *)</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 442
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition equiv_freegroup_rec `{Funext} (G : Group) (A : Type)
+  : (A -&gt; G) &lt;~&gt; (FreeGroup A $-&gt; G)
+  := equiv_isfreegroupon_rec.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 444
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance ishprop_isfreegroupon `{Funext} (F : Group) (A : Type) (i : A -&gt; F)
+  : IsHProp (IsFreeGroupOn A F i).</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 447
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 448
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold IsFreeGroupOn.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 449
+Time: 0.003s">
+<div class="time" style="width: 4.1095890410959%"></div>
+<pre>
+  exact istrunc_forall.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 450
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 451
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Both ways of stating the universal property are equivalent. *)</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 453
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>Definition equiv_isfreegroupon_isequiv_precomp `{Funext}
+  (F : Group) (A : Type) (i : A -&gt; F)
+  : IsFreeGroupOn A F i &lt;~&gt; forall G, IsEquiv (fun f : F $-&gt; G =&gt; f o i).</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 455
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 456
+Time: 0.006s">
+<div class="time" style="width: 8.2191780821918%"></div>
+<pre>
+  srapply equiv_iff_hprop.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 457
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: intros ? ?; exact (equiv_isequiv (equiv_isfreegroupon_rec)^-1).</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 458
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros k G g.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 459
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  specialize (k G).</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 460
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply contr_equiv'.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 461
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact (hfiber (fun f x =&gt; grp_homo_map f (i x)) g).</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 462
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 463
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rapply equiv_functor_sigma_id.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 463
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro y; symmetry.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 464
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply equiv_path_forall.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 465
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 465
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact _.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 466
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 467
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Subgroups of free groups *)
+
+(* We say that a group [G] is generated by a subtype [X] if the natural map from the subgroup generated by [X] to [G] is a surjection.  One could equivalently say [IsEquiv (subgroup_incl (subgroup_generated X))], [forall g, subgroup_generated X g], or [subgroup_generated X = maximal_subgroup], but the definition using surjectivity is convenient later. *)</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 471
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition isgeneratedby (G : Group) (X : G -&gt; Type)
+  := IsSurjection (subgroup_incl (subgroup_generated X)).</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 472
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section FreeGroupGenerated.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 474
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* In this Section, we prove that the free group [F_S] on a type [S] is generated in the above sense by the image of [S].  We conclude that the inclusion map is an equivalence, and that the free group is isomorphic as a group to the subgroup. We show that the inclusion is a surjection by showing that it is split epi in the category of groups. *)
+
+ </pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 477
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Context {S : Type} {F_S : Group} {i : S -&gt; F_S} `{IsFreeGroupOn S F_S i}.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 477
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (* We define a group homomorphism from [F_S] to the subgroup [G] generated by [S] by sending a generator [s] to "itself".  This map will be a section of the inclusion map. *)
+ </pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 480
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Definition to_subgroup_generated
+    : F_S $-&gt; subgroup_generated (hfiber i).</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 481
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 482
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply isfreegroupon_rec.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 483
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro s.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 484
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+    snapply subgroup_generated_gen_incl.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 485
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 486
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (i s).</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 486
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 487
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (s; idpath).</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 487
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 488
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (* We record the computation rule that [to_subgroup_generated] satisfies. *)
+ </pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 491
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>Local Definition to_subgroup_generated_beta (s : S)
+    : to_subgroup_generated (i s) = subgroup_generated_gen_incl (i s) (s; idpath)
+    := isfreegroupon_rec_beta _ _.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 493
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (* It follows that [to_subgroup_generated] is a section of the inclusion map from [G] to [F_S]. *)
+ </pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 496
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Definition is_retraction
+    : (subgroup_incl _) $o to_subgroup_generated = grp_homo_id.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 497
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 498
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_homomorphism_from_free_group; cbn.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 499
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro s.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 500
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (ap pr1 (to_subgroup_generated_beta s)).</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 501
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 502
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (* It follows that the inclusion map is a surjection, i.e., that [F_S] is generated by the image of [S]. *)
+ </pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 505
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition isgenerated_isfreegroupon
+    : isgeneratedby F_S (hfiber i).</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 506
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 507
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply issurj_retr.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 508
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 509
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact to_subgroup_generated.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 509
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 510
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply ap10; cbn.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 510
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (ap grp_homo_map is_retraction).</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 511
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 512
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (* Therefore, the inclusion map is an equivalence, since it is known to be an embedding. *)
+ </pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 515
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition isequiv_subgroup_incl_freegroupon
+    : IsEquiv (subgroup_incl (subgroup_generated (hfiber i))).</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 516
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 517
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply isequiv_surj_emb.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 518
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 519
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact isgenerated_isfreegroupon.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 519
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 520
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 520
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 521
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (* Therefore, the subgroup is isomorphic to the free group. *)
+ </pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 524
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition iso_subgroup_incl_freegroupon
+    : GroupIsomorphism (subgroup_generated (hfiber i)) F_S.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 525
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 526
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    napply Build_GroupIsomorphism.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 527
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact isequiv_subgroup_incl_freegroupon.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 528
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 529
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End FreeGroupGenerated.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 531
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Properties of recursor *)
+
+</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 534
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition freegroup_rec_in {A : Type}
+  : FreeGroup_rec freegroup_in $== Id (FreeGroup A).</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 535
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 536
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by snapply FreeGroup_ind_homotopy.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 537
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 538
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+
+Definition freegroup_rec_compose {A : Type} {G H : Group}
+  (f : A -&gt; G) (k : G $-&gt; H)
+  : FreeGroup_rec (k o f) $== k $o FreeGroup_rec f.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 542
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 543
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by snapply FreeGroup_ind_homotopy; intros x.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 544
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 545
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition freegroup_const {A : Type} {G : Group}
+  : FreeGroup_rec (fun _ : A =&gt; 1) $== @grp_homo_const _ G.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 548
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 549
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by snapply FreeGroup_ind_homotopy.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 550
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 551
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  
+(** ** Functoriality *)
+
+</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 554
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance is0functor_freegroup : Is0Functor FreeGroup.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 554
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 555
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_Is0Functor.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 556
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros X Y f.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 557
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply FreeGroup_rec.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 558
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (freegroup_in o f).</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 559
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 560
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance is1functor_freegroup : Is1Functor FreeGroup.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 562
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 563
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+  snapply Build_Is1Functor.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 564
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 565
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros X Y f g p.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 565
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply FreeGroup_ind_homotopy.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 566
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros x.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 567
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (ap freegroup_in (p x)).</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 568
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 569
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro; exact freegroup_rec_in.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 569
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 570
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros X Y Z f g.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 570
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+    by snapply FreeGroup_ind_homotopy.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 571
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: FreeGroup.v
+Line: 573
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

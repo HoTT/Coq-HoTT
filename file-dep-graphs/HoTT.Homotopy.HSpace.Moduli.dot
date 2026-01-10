@@ -1,0 +1,33 @@
+digraph HoTT_Homotopy_HSpace_Moduli {
+  graph [ratio=0.5]
+  node [style=filled]
+Moduli_iscohhspace_hspace [label="iscohhspace_hspace", URL=<Moduli.html#iscohhspace_hspace>, peripheries=3, fillcolor="#F070D1"] ;
+Moduli_iscohhspace_hspace__beta_mu [label="iscohhspace_hspace'_beta_mu", URL=<Moduli.html#iscohhspace_hspace'_beta_mu>, peripheries=3, fillcolor="#F070D1"] ;
+Moduli_iscohhspace_hspace_ [label="iscohhspace_hspace'", URL=<Moduli.html#iscohhspace_hspace'>, fillcolor="#F070D1"] ;
+Moduli_iscoherent_homogeneous [label="iscoherent_homogeneous", URL=<Moduli.html#iscoherent_homogeneous>, fillcolor="#F070D1"] ;
+Moduli_internal_paths_rew_dep [label="internal_paths_rew_dep", URL=<Moduli.html#internal_paths_rew_dep>, fillcolor="#F070D1"] ;
+Moduli_iscohhspace_homogeneous [label="iscohhspace_homogeneous", URL=<Moduli.html#iscohhspace_homogeneous>, peripheries=3, fillcolor="#F070D1"] ;
+Moduli_equiv_iscohhspace_ptd_action [label="equiv_iscohhspace_ptd_action", URL=<Moduli.html#equiv_iscohhspace_ptd_action>, fillcolor="#F070D1"] ;
+Moduli_equiv_cohhspace_ppmap [label="equiv_cohhspace_ppmap", URL=<Moduli.html#equiv_cohhspace_ppmap>, peripheries=3, fillcolor="#F070D1"] ;
+Moduli_hspace_ev_trivialization [label="hspace_ev_trivialization", URL=<Moduli.html#hspace_ev_trivialization>, fillcolor="#F070D1"] ;
+Moduli_pequiv_map_pmap_hspace [label="pequiv_map_pmap_hspace", URL=<Moduli.html#pequiv_map_pmap_hspace>, fillcolor="#F070D1"] ;
+Moduli_equiv_map_pmap_hspace [label="equiv_map_pmap_hspace", URL=<Moduli.html#equiv_map_pmap_hspace>, fillcolor="#F070D1"] ;
+Moduli_equiv_pmap_hspace [label="equiv_pmap_hspace", URL=<Moduli.html#equiv_pmap_hspace>, fillcolor="#F070D1"] ;
+Moduli_equiv_iscohhspace_psect [label="equiv_iscohhspace_psect", URL=<Moduli.html#equiv_iscohhspace_psect>, fillcolor="#F070D1"] ;
+Moduli_equiv_path_ishspace [label="equiv_path_ishspace", URL=<Moduli.html#equiv_path_ishspace>, peripheries=3, fillcolor="#F070D1"] ;
+Moduli_transport_binop_lr_id [label="transport_binop_lr_id", URL=<Moduli.html#transport_binop_lr_id>, fillcolor="#F070D1"] ;
+Moduli_path_ishspace_type [label="path_ishspace_type", URL=<Moduli.html#path_ishspace_type>, fillcolor="#F070D1"] ;
+  Moduli_iscohhspace_hspace__beta_mu -> Moduli_iscohhspace_hspace_ [] ;
+  Moduli_iscohhspace_hspace_ -> Moduli_iscoherent_homogeneous [] ;
+  Moduli_iscoherent_homogeneous -> Moduli_internal_paths_rew_dep [] ;
+  Moduli_iscohhspace_homogeneous -> Moduli_equiv_iscohhspace_ptd_action [] ;
+  Moduli_equiv_cohhspace_ppmap -> Moduli_hspace_ev_trivialization [] ;
+  Moduli_equiv_cohhspace_ppmap -> Moduli_equiv_iscohhspace_psect [] ;
+  Moduli_hspace_ev_trivialization -> Moduli_pequiv_map_pmap_hspace [] ;
+  Moduli_pequiv_map_pmap_hspace -> Moduli_equiv_map_pmap_hspace [] ;
+  Moduli_equiv_map_pmap_hspace -> Moduli_equiv_pmap_hspace [] ;
+  Moduli_equiv_path_ishspace -> Moduli_transport_binop_lr_id [] ;
+  Moduli_equiv_path_ishspace -> Moduli_path_ishspace_type [] ;
+subgraph cluster_Moduli { label="Moduli"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Moduli_path_ishspace_type; Moduli_transport_binop_lr_id; Moduli_equiv_path_ishspace; Moduli_equiv_iscohhspace_psect; Moduli_equiv_pmap_hspace; Moduli_equiv_map_pmap_hspace; Moduli_pequiv_map_pmap_hspace; Moduli_hspace_ev_trivialization; Moduli_equiv_cohhspace_ppmap; Moduli_equiv_iscohhspace_ptd_action; Moduli_iscohhspace_homogeneous; Moduli_internal_paths_rew_dep; Moduli_iscoherent_homogeneous; Moduli_iscohhspace_hspace_; Moduli_iscohhspace_hspace__beta_mu; Moduli_iscohhspace_hspace; };
+} /* END */

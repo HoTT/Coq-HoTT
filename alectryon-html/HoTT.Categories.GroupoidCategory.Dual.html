@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>Dual.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-wsp"><span class="sd">(** * Propositional self-duality of groupoid categories *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="dual-v-chk7" style="display: none" type="checkbox"><label class="alectryon-input" for="dual-v-chk7"><span class="kn">Require Import</span> Category.Core GroupoidCategory.Core Category.Paths Category.Dual.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> HoTT.Types.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Basics.Trunc Basics.Tactics.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Universe Polymorphism</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Implicit Arguments</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Generalizable All Variables</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Asymmetric Patterns</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> category_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="dual-v-chk8" style="display: none" type="checkbox"><label class="alectryon-input" for="dual-v-chk8"><span class="kn">Lemma</span> <span class="nf">path_groupoid_dual</span> `{Univalence} `{IsTrunc <span class="mi">1</span> X}
+: (groupoid_category X)^op = groupoid_category X.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>IsTrunc0</var><span class="hyp-type"><b>: </b><span>IsTrunc <span class="mi">1</span> X</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(groupoid_category X)^op = groupoid_category X</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="dual-v-chk9" style="display: none" type="checkbox"><label class="alectryon-input" for="dual-v-chk9"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Univalence</span></span></span><br><span><var>X</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>IsTrunc0</var><span class="hyp-type"><b>: </b><span>IsTrunc <span class="mi">1</span> X</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(groupoid_category X)^op = groupoid_category X</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kp">repeat</span> <span class="kr">match goal with</span>
+           | _ =&gt; <span class="nb">intro</span>
+           | _ =&gt; <span class="kp">progress</span> <span class="nb">cbn</span>
+           | _ =&gt; <span class="bp">reflexivity</span>
+           | _ =&gt; <span class="nb">apply</span> path_forall
+           | _ =&gt; <span class="nb">apply</span> (path_universe (<span class="nb">symmetry</span> _ _))
+           | _ =&gt; <span class="bp">exact</span> (center _)
+           | _ =&gt; <span class="kp">progress</span> <span class="nb">rewrite</span> <span class="nl">?transport_path_universe</span>, <span class="nl">?transport_path_universe_V</span>
+           | _ =&gt; <span class="kp">progress</span> path_category
+           | _ =&gt; <span class="kp">progress</span> path_induction
+         <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Qed</span>.</span></span></pre>
+</div>
+</div></body>
+</html>

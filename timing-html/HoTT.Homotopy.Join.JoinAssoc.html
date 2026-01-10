@@ -1,0 +1,2490 @@
+<html>
+<head>
+<title>JoinAssoc.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for JoinAssoc.v</h1>
+
+<div class="code" title="File: JoinAssoc.v
+Line: 1
+Time: 0.085s">
+<div class="time" style="width: 44.041450777202%"></div>
+<pre>From HoTT Require Import Basics Types Join.Core Join.TriJoin Spaces.Nat.Core.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 1
+Time: 0.006s">
+<div class="time" style="width: 3.1088082901554%"></div>
+<pre>
+From HoTT.WildCat Require Import Core Universe Equiv ZeroGroupoid
+  Yoneda FunctorCat NatTrans Monoidal.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * The associativity of [Join]
+
+  We use the recursion principle for the triple join (from TriJoin.v) to prove the associativity of Join.  We'll use the common technique of combining symmetry and a twist equivalence.  Temporarily writing * for Join, symmetry says that [A * B &lt;~&gt; B * A] and the twist says that [A * (B * C) &lt;~&gt; B * (A * C)].  From these we get a composite equivalence [A * (B * C) &lt;~&gt; A * (C * B) &lt;~&gt; C * (A * B) &lt;~&gt; (A * B) * C].  One advantage of this approach is that both symmetry and the twist are their own inverses, so there are fewer maps to define and fewer composites to prove are homotopic to the identity. Symmetry is proved in Join/Core.v. *)
+
+(** ** The twist equivalence [TriJoin A B C &lt;~&gt; TriJoin B A C]
+
+  We prove the twist equivalence using the Yoneda lemma.  The idea is that [TriJoin A B C -&gt; P] is equivalent (as a 0-groupoid) to [TriJoinRecData A B C P], and the latter is very symmetrical by construction, which makes it easy to show that it is equivalent to [TriJoinRecData B A C P].  Going back along the first equivalence gets us to [TriJoin B A C -&gt; P].  These equivalences are natural in [P], so the twist equivalence follows from the Yoneda lemma. *)
+
+(** First we define a map of 0-groupoids that will underlie the natural equivalence. *)</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition trijoinrecdata_twist (A B C P : Type)
+  : trijoinrecdata_0gpd A B C P $-&gt; trijoinrecdata_0gpd B A C P.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_Fun01'.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* The map of types [TriJoinRecData A B C P -&gt; TriJoinRecData B A C P]: *)
+ </pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>-</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros [f1 f2 f3 f12 f13 f23 f123].</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply (Build_TriJoinRecData f2 f1 f3).</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros b a; exact (f12 a b)^.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact f23.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact f13.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a b c; cbn beta.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply moveR_Vp.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      symmetry; apply f123.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* It respects the paths. *)
+ </pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>-</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros f g h; cbn in *.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 28
+Time: 0.004s">
+<div class="time" style="width: 2.0725388601036%"></div>
+<pre>
+    snapply Build_TriJoinRecPath; intros; simpl.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 29
+Time: 0.001s">
+<div class="time" style="width: 0.51813471502591%"></div>
+<pre>
+    1, 2, 3, 5, 6: apply h.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn zeta.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 31
+Time: 0.003s">
+<div class="time" style="width: 1.5544041450777%"></div>
+<pre>
+      prism_ind_two g h b a _X_; cbn beta.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply concat_p1_1p.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn beta zeta.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 34
+Time: 0.014s">
+<div class="time" style="width: 7.2538860103627%"></div>
+<pre>
+      prism_ind g h b a c; cbn beta.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 35
+Time: 0.019s">
+<div class="time" style="width: 9.8445595854922%"></div>
+<pre>
+      by triangle_ind f b a c.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 36
+Time: 0.062s">
+<div class="time" style="width: 32.124352331606%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** This map is its own inverse in the 1-category of 0-groupoids. *)</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 39
+Time: 0.003s">
+<div class="time" style="width: 1.5544041450777%"></div>
+<pre>Definition trijoinrecdata_twist_inv (A B C P : Type)
+  : trijoinrecdata_twist B A C P $o trijoinrecdata_twist A B C P $== Id _.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 41
+Time: 0.008s">
+<div class="time" style="width: 4.1450777202073%"></div>
+<pre>
+  intro f; simpl.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 42
+Time: 0.004s">
+<div class="time" style="width: 2.0725388601036%"></div>
+<pre>
+  bundle_trijoinrecpath.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  all: intros; cbn.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply inv_V.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 48
+Time: 0.003s">
+<div class="time" style="width: 1.5544041450777%"></div>
+<pre> by triangle_ind f a b c.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 48
+Time: 0.013s">
+<div class="time" style="width: 6.7357512953368%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We get the twist natural equivalence on [TriJoinRecData]. *)</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 51
+Time: 0.002s">
+<div class="time" style="width: 1.0362694300518%"></div>
+<pre>Definition trijoinrecdata_twist_natequiv (A B C : Type)
+  : NatEquiv (trijoinrecdata_0gpd_fun A B C) (trijoinrecdata_0gpd_fun B A C).</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 53
+Time: 0.001s">
+<div class="time" style="width: 0.51813471502591%"></div>
+<pre>
+  snapply Build_NatEquiv.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* An equivalence of 0-groupoids for each [P]: *)
+ </pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>-</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro P.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 56
+Time: 0.002s">
+<div class="time" style="width: 1.0362694300518%"></div>
+<pre>
+    snapply cate_adjointify.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1, 2: apply trijoinrecdata_twist.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1, 2: apply trijoinrecdata_twist_inv.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* Naturality: *)
+ </pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>-</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 61
+Time: 0.001s">
+<div class="time" style="width: 0.51813471502591%"></div>
+<pre> snapply Build_Is1Natural.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 61
+Time: 0.003s">
+<div class="time" style="width: 1.5544041450777%"></div>
+<pre>
+    intros P Q g f; simpl.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 62
+Time: 0.016s">
+<div class="time" style="width: 8.2901554404145%"></div>
+<pre>
+    bundle_trijoinrecpath.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    all: intros; cbn.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> symmetry; apply ap_V.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 68
+Time: 0.007s">
+<div class="time" style="width: 3.6269430051813%"></div>
+<pre> by triangle_ind f b a c.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 68
+Time: 0.023s">
+<div class="time" style="width: 11.917098445596%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Combining with the recursion equivalence [trijoin_rec_inv_natequiv] and its inverse gives the twist natural equivalence between the representable functors. *)</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 71
+Time: 0.005s">
+<div class="time" style="width: 2.5906735751295%"></div>
+<pre>Definition trijoinrecdata_fun_twist (A B C : Type)
+  : NatEquiv (opyon_0gpd (TriJoin A B C)) (opyon_0gpd (TriJoin B A C))
+  := natequiv_compose (trijoin_rec_natequiv B A C)
+      (natequiv_compose (trijoinrecdata_twist_natequiv A B C) (trijoin_rec_inv_natequiv A B C)).</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The Yoneda lemma for 0-groupoid valued functors therefore gives us an equivalence between the representing objects.  We mark this with a prime, since we'll use a homotopic map with a slightly simpler definition. *)</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition equiv_trijoin_twist' (A B C : Type)
+  : TriJoin A B C &lt;~&gt; TriJoin B A C.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 78
+Time: 0.003s">
+<div class="time" style="width: 1.5544041450777%"></div>
+<pre>
+  tapply (opyon_equiv_0gpd (A:=Type)).</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 79
+Time: 0.001s">
+<div class="time" style="width: 0.51813471502591%"></div>
+<pre>
+  apply trijoinrecdata_fun_twist.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** It has the nice property that the underlying function of the inverse is again [equiv_trijoin_twist'], with arguments permuted. *)</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 83
+Time: 0.021s">
+<div class="time" style="width: 10.880829015544%"></div>
+<pre>Local Definition trijoin_twist_check1 (A B C : Type)
+  : (equiv_trijoin_twist' A B C)^-1 = equiv_fun (equiv_trijoin_twist' B A C)
+  := idpath.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The definition we end up with is almost the same as the obvious one, but has some extra [ap idmap]s in it. *)</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 87
+Time: 0.007s">
+<div class="time" style="width: 3.6269430051813%"></div>
+<pre>Local Definition twijoin_twist_check2 (A B C : Type)
+  : equiv_fun (equiv_trijoin_twist' A B C)
+    = trijoin_rec {| j1 := join2; j2 := join1; j3 := join3;
+      j12 := fun (b : A) (a : B) =&gt; (ap idmap (join12 a b))^;
+      j13 := fun (b : A) (c : C) =&gt; ap idmap (join23 b c);
+      j23 := fun (a : B) (c : C) =&gt; ap idmap (join13 a c);
+      j123 := fun (a : A) (b : B) (c : C) =&gt;
+               moveR_Vp _ _ _ (ap_triangle idmap (join123 b a c))^ |}
+  := idpath.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The next two give the obvious definition. *)</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 97
+Time: 0.003s">
+<div class="time" style="width: 1.5544041450777%"></div>
+<pre>Definition trijoin_twist_recdata (A B C : Type)
+  : TriJoinRecData A B C (TriJoin B A C)
+  := Build_TriJoinRecData join2 join1 join3
+      (fun a b =&gt; (join12 b a)^) join23 join13
+      (fun a b c =&gt; moveR_Vp _ _ _ (join123 b a c)^).</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition trijoin_twist (A B C : Type)
+  : TriJoin A B C -&gt; TriJoin B A C
+  := trijoin_rec (trijoin_twist_recdata A B C).</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** As an aside, note that [trijoin_twist] computes nicely on [joinr]. *)</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 107
+Time: 0.003s">
+<div class="time" style="width: 1.5544041450777%"></div>
+<pre>Local Definition trijoin_twist_joinr (A B C : Type)
+  : trijoin_twist A B C o joinr = functor_join idmap joinr
+  := idpath.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The obvious definition is homotopic to the definition via the Yoneda lemma. *)</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition trijoin_twist_homotopic (A B C : Type)
+  : trijoin_twist A B C == equiv_trijoin_twist' A B C.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  symmetry.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (** Both sides are [trijoin_rec] applied to [TriJoinRecData]: *)
+ </pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 116
+Time: 0.005s">
+<div class="time" style="width: 2.5906735751295%"></div>
+<pre>tapply (fmap trijoin_rec).</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 116
+Time: 0.031s">
+<div class="time" style="width: 16.062176165803%"></div>
+<pre>
+  bundle_trijoinrecpath; intros; cbn.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: refine (ap inverse _).</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 118
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1, 2, 3: apply ap_idmap.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 119
+Time: 0.002s">
+<div class="time" style="width: 1.0362694300518%"></div>
+<pre>
+  generalize (join123 b a c).</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 120
+Time: 0.002s">
+<div class="time" style="width: 1.0362694300518%"></div>
+<pre>
+  generalize (join23 (A:=B) a c).</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 121
+Time: 0.002s">
+<div class="time" style="width: 1.0362694300518%"></div>
+<pre>
+  generalize (join13 (B:=A) b c).</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 122
+Time: 0.002s">
+<div class="time" style="width: 1.0362694300518%"></div>
+<pre>
+  generalize (join12 (C:=C) b a).</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 123
+Time: 0.002s">
+<div class="time" style="width: 1.0362694300518%"></div>
+<pre>
+  generalize (join3 (A:=B) (B:=A) c).</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 124
+Time: 0.003s">
+<div class="time" style="width: 1.5544041450777%"></div>
+<pre>
+  generalize (join2 (A:=B) (C:=C) a).</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 125
+Time: 0.002s">
+<div class="time" style="width: 1.0362694300518%"></div>
+<pre>
+  generalize (join1 (B:=A) (C:=C) b).</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 126
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros k1 k2 k3 k12 k13 k23 k123.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 127
+Time: 0.006s">
+<div class="time" style="width: 3.1088082901554%"></div>
+<pre>
+  induction k12, k23, k123.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 128
+Time: 0.002s">
+<div class="time" style="width: 1.0362694300518%"></div>
+<pre>
+  reflexivity.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 129
+Time: 0.024s">
+<div class="time" style="width: 12.435233160622%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 130
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Therefore the obvious definition is also an equivalence, and the inverse function can also be chosen to be [trijoin_twist]. *)</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 132
+Time: 0.007s">
+<div class="time" style="width: 3.6269430051813%"></div>
+<pre>Definition equiv_trijoin_twist (A B C : Type)
+  : TriJoin A B C &lt;~&gt; TriJoin B A C
+  := equiv_homotopic_inverse (equiv_trijoin_twist' A B C)
+                            (trijoin_twist_homotopic A B C)
+                            (trijoin_twist_homotopic B A C).</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** The associativity of [Join] *)
+
+(** [trijoin_twist] corresponds to the permutation (1,2).  The equivalence corresponding to the permutation (2,3) also plays a key role, so we name it here. *)</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition trijoin_id_sym A B C : TriJoin A B C &lt;~&gt; TriJoin A C B
+  := equiv_functor_join equiv_idmap (equiv_join_sym B C).</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments trijoin_id_sym : simpl never.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition join_assoc A B C : Join A (Join B C) &lt;~&gt; Join (Join A B) C.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 145
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_ oE trijoin_id_sym _ _ _).</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 147
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_ oE equiv_trijoin_twist _ _ _).</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 148
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply equiv_join_sym.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments join_assoc : simpl never.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 152
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** As a consequence, we get associativity of powers. *)</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 154
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Corollary join_join_power A n m
+  : Join (join_power A n) (join_power A m) &lt;~&gt; join_power A (n + m)%nat.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 155
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction n as [|n IHn].</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact (equiv_join_empty_left _).</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simpl.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> refine (_ oE (join_assoc _ _ _)^-1%equiv).</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (equiv_functor_join equiv_idmap IHn).</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Naturality of [trijoin_twist] *)
+
+(** Our goal is to prove that [trijoin_twist A' B' C' o functor_join f (functor_join g h)] is homotopic to [functor_join g (functor_join f h) o trijoin_twist A B C]. *)
+
+(** We first give a way to write anything of the form [trijoin_rec f o trijoin_twist A B C] as [trijoin_rec] applied to some [TriJoinRecData]. *)</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 167
+Time: 0.001s">
+<div class="time" style="width: 0.51813471502591%"></div>
+<pre>Definition trijoin_rec_trijoin_twist {A B C P} (f : TriJoinRecData B A C P)
+  : trijoin_rec f o trijoin_twist A B C == trijoin_rec (trijoinrecdata_twist _ _ _ _ f).</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* We first replace [trijoin_twist] with [equiv_trijoin_twist']. *)
+ </pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 171
+Time: 0.001s">
+<div class="time" style="width: 0.51813471502591%"></div>
+<pre>transitivity (trijoin_rec f o equiv_trijoin_twist' A B C).</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact (fun x =&gt; ap (trijoin_rec f) (trijoin_twist_homotopic A B C x)).</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* The LHS is now the twist natural transformation applied to [Id], followed by postcomposition; naturality states that that is the same as the natural trans applied to [trijoin_rec f]. *)
+ </pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 174
+Time: 0.003s">
+<div class="time" style="width: 1.5544041450777%"></div>
+<pre>refine ((isnat_natequiv (trijoinrecdata_fun_twist B A C) (trijoin_rec f) _)^$ $@ _).</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 174
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* The LHS simplifies to [trijoinrecdata_fun_twist] applied to [trijoin_rec f].  The former is a composite of [trijoin_rec], [trijoinrecdata_twist] and [trijoin_rec_inv], so we can write the LHS as: *)
+ </pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 176
+Time: 0.002s">
+<div class="time" style="width: 1.0362694300518%"></div>
+<pre>change (?L $== ?R) with (trijoin_rec (trijoinrecdata_twist B A C P (trijoin_rec_inv (trijoin_rec f))) $== R).</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 176
+Time: 0.001s">
+<div class="time" style="width: 0.51813471502591%"></div>
+<pre>
+  refine (fmap trijoin_rec _).</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 177
+Time: 0.002s">
+<div class="time" style="width: 1.0362694300518%"></div>
+<pre>
+  refine (fmap (trijoinrecdata_twist B A C P) _).</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply trijoin_rec_beta.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 179
+Time: 0.006s">
+<div class="time" style="width: 3.1088082901554%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 180
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Naturality of [trijoin_twist].  This version uses [functor_trijoin] and simply combines previous results. *)</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 182
+Time: 0.001s">
+<div class="time" style="width: 0.51813471502591%"></div>
+<pre>Definition trijoin_twist_nat' {A B C A' B' C'} (f : A -&gt; A') (g : B -&gt; B') (h : C -&gt; C')
+  : trijoin_twist A' B' C' o functor_trijoin f g h
+    == functor_trijoin g f h o trijoin_twist A B C.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 184
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro x.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 186
+Time: 0.002s">
+<div class="time" style="width: 1.0362694300518%"></div>
+<pre>
+  rhs napply trijoin_rec_trijoin_twist.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 187
+Time: 0.001s">
+<div class="time" style="width: 0.51813471502591%"></div>
+<pre>
+  napply trijoin_rec_functor_trijoin.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 188
+Time: 0.001s">
+<div class="time" style="width: 0.51813471502591%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 189
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** And now a version using [functor_join]. *)</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 191
+Time: 0.002s">
+<div class="time" style="width: 1.0362694300518%"></div>
+<pre>Definition trijoin_twist_nat {A B C A' B' C'} (f : A -&gt; A') (g : B -&gt; B') (h : C -&gt; C')
+  : trijoin_twist A' B' C' o functor_join f (functor_join g h)
+    == functor_join g (functor_join f h) o trijoin_twist A B C.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 193
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 194
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro x.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lhs nrefine (ap _ (functor_trijoin_as_functor_join f g h x)).</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 196
+Time: 0.001s">
+<div class="time" style="width: 0.51813471502591%"></div>
+<pre>
+  rhs napply functor_trijoin_as_functor_join.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply trijoin_twist_nat'.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 198
+Time: 0.001s">
+<div class="time" style="width: 0.51813471502591%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 199
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Naturality of [trijoin_id_sym] *)
+
+(** Naturality of [trijoin_id_sym], using [functor_join].  In this case, it's easier to do this version first. *)</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 203
+Time: 0.002s">
+<div class="time" style="width: 1.0362694300518%"></div>
+<pre>Definition trijoin_id_sym_nat {A B C A' B' C'} (f : A -&gt; A') (g : B -&gt; B') (h : C -&gt; C')
+  : trijoin_id_sym A' B' C' o functor_join f (functor_join g h)
+    == functor_join f (functor_join h g) o trijoin_id_sym A B C.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 205
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 206
+Time: 0.001s">
+<div class="time" style="width: 0.51813471502591%"></div>
+<pre>
+  intro x; simpl.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 207
+Time: 0.001s">
+<div class="time" style="width: 0.51813471502591%"></div>
+<pre>
+  lhs_V napply functor_join_compose.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 208
+Time: 0.001s">
+<div class="time" style="width: 0.51813471502591%"></div>
+<pre>
+  rhs_V napply functor_join_compose.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 209
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply functor2_join.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 210
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 211
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 211
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 212
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply join_sym_nat.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 212
+Time: 0.001s">
+<div class="time" style="width: 0.51813471502591%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 213
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Naturality of [trijoin_id_sym], using [functor_trijoin]. *)</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 215
+Time: 0.004s">
+<div class="time" style="width: 2.0725388601036%"></div>
+<pre>Definition trijoin_id_sym_nat' {A B C A' B' C'} (f : A -&gt; A') (g : B -&gt; B') (h : C -&gt; C')
+  : trijoin_id_sym A' B' C' o functor_trijoin f g h
+    == functor_trijoin f h g o trijoin_id_sym A B C.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 217
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 218
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro x.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 219
+Time: 0.001s">
+<div class="time" style="width: 0.51813471502591%"></div>
+<pre>
+  lhs_V nrefine (ap _ (functor_trijoin_as_functor_join f g h x)).</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 220
+Time: 0.001s">
+<div class="time" style="width: 0.51813471502591%"></div>
+<pre>
+  rhs_V napply functor_trijoin_as_functor_join.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 221
+Time: 0.001s">
+<div class="time" style="width: 0.51813471502591%"></div>
+<pre>
+  apply trijoin_id_sym_nat.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 222
+Time: 0.001s">
+<div class="time" style="width: 0.51813471502591%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 223
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Naturality of [join_assoc] *)
+
+(** Since [join_assoc] is a composite of [join_sym], [trijoin_twist] and [trijoin_id_sym], we just use their naturality. *)</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 227
+Time: 0.002s">
+<div class="time" style="width: 1.0362694300518%"></div>
+<pre>Definition join_assoc_nat {A B C A' B' C'} (f : A -&gt; A') (g : B -&gt; B') (h : C -&gt; C')
+  : join_assoc A' B' C' o functor_join f (functor_join g h)
+    == functor_join (functor_join f g) h o join_assoc A B C.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 229
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 230
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* We'll work from right to left, as it is easier to work near the head of a term. *)
+ </pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 232
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>intro x.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 232
+Time: 0.001s">
+<div class="time" style="width: 0.51813471502591%"></div>
+<pre>
+  unfold join_assoc; cbn.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 233
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* First we pass the [functor_joins]s through the outer [join_sym]. *)
+ </pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 235
+Time: 0.001s">
+<div class="time" style="width: 0.51813471502591%"></div>
+<pre>rhs_V napply join_sym_nat.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 235
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* Strip off the outer [join_sym]. *)
+ </pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 237
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>apply (ap _).</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 237
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* Next we pass the [functor_join]s through [trijoin_twist]. *)
+ </pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 239
+Time: 0.001s">
+<div class="time" style="width: 0.51813471502591%"></div>
+<pre>rhs_V napply trijoin_twist_nat.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 239
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* Strip off the [trijoin_twist]. *)
+ </pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 241
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>apply (ap _).</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 241
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* Finally, we pass the [functor_join]s through [trijoin_id_sym]. *)
+ </pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 243
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>apply trijoin_id_sym_nat.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 243
+Time: 0.002s">
+<div class="time" style="width: 1.0362694300518%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 244
+Time: 0.001s">
+<div class="time" style="width: 0.51813471502591%"></div>
+<pre>
+
+Instance join_associator : Associator Join.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 246
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 247
+Time: 0.001s">
+<div class="time" style="width: 0.51813471502591%"></div>
+<pre>
+  snapply Build_Associator; simpl.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 248
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 249
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact join_assoc.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 249
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 250
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> snapply Build_Is1Natural.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 250
+Time: 0.004s">
+<div class="time" style="width: 2.0725388601036%"></div>
+<pre>
+    intros [[A B] C] [[A' B'] C'] [[f g] h]; cbn.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 251
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply join_assoc_nat.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 252
+Time: 0.002s">
+<div class="time" style="width: 1.0362694300518%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 253
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** The Triangle Law *)
+
+(** The unitors were defined in Join/Core.v, since they do not require associativity. *)
+
+(** Here's a version of the triangle law expressed using [trijoin_twist] instead of [join_assoc], and only using the right unitor. Since the left unitor is defined using [join_sym], the usual triangle law follows. *)</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 259
+Time: 0.001s">
+<div class="time" style="width: 0.51813471502591%"></div>
+<pre>Definition join_trianglelaw' A B
+  : join_sym B A o functor_join idmap (equiv_join_empty_right A) o trijoin_twist A B Empty
+    == functor_join idmap (equiv_join_empty_right B).</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 261
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 262
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* A direct proof with [Join_ind] three times is not hard, but the path algebra is slightly simpler if we manipulate things ahead of time using [functor_join_join_rec] and [trijoin_rec_trijoin_twist]. *)
+ </pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 264
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>intro x.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 264
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rapply moveR_equiv_M.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 265
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold equiv_join_empty_right at 1; cbn.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 266
+Time: 0.002s">
+<div class="time" style="width: 1.0362694300518%"></div>
+<pre>
+  lhs napply functor_join_join_rec; cbn.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 267
+Time: 0.002s">
+<div class="time" style="width: 1.0362694300518%"></div>
+<pre>
+  lhs napply trijoin_rec_trijoin_twist.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 268
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert x.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 269
+Time: 0.001s">
+<div class="time" style="width: 0.51813471502591%"></div>
+<pre>
+  apply moveR_trijoin_rec.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 270
+Time: 0.025s">
+<div class="time" style="width: 12.953367875648%"></div>
+<pre>
+  snapply Build_TriJoinRecPath; intros; cbn.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 271
+Time: 0.001s">
+<div class="time" style="width: 0.51813471502591%"></div>
+<pre>
+  3, 5, 6, 7: by destruct c.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 272
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 273
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 273
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 274
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 274
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 275
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply equiv_p1_1q.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 275
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    symmetry.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 276
+Time: 0.007s">
+<div class="time" style="width: 3.6269430051813%"></div>
+<pre>
+    lhs napply (ap_compose (functor_join idmap _) _ (join12 a b)).</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 277
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    lhs napply ap.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 278
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: apply functor_join_beta_jglue.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 279
+Time: 0.068s">
+<div class="time" style="width: 35.233160621762%"></div>
+<pre>
+    apply join_sym_beta_jglue.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 280
+Time: 0.037s">
+<div class="time" style="width: 19.170984455959%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 281
+Time: 0.001s">
+<div class="time" style="width: 0.51813471502591%"></div>
+<pre>
+
+Definition join_trianglelaw : TriangleIdentity Join Empty.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 283
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 284
+Time: 0.001s">
+<div class="time" style="width: 0.51813471502591%"></div>
+<pre>
+  intros A B x; cbn.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 285
+Time: 0.001s">
+<div class="time" style="width: 0.51813471502591%"></div>
+<pre> 
+  lhs napply (functor_join_compose idmap _ idmap _).</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 286
+Time: 0.001s">
+<div class="time" style="width: 0.51813471502591%"></div>
+<pre>
+  lhs_V napply join_trianglelaw'.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 287
+Time: 0.001s">
+<div class="time" style="width: 0.51813471502591%"></div>
+<pre>
+  unfold join_assoc; cbn.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 288
+Time: 0.01s">
+<div class="time" style="width: 5.1813471502591%"></div>
+<pre>
+  apply join_sym_nat.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 289
+Time: 0.024s">
+<div class="time" style="width: 12.435233160622%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 290
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** The hexagon axiom *)
+
+(** For the hexagon, we'll need to know how to compose [trijoin_id_sym] with something of the form [trijoin_rec f]. For some reason, the proof is harder than it was for [trijoin_twist]. *)
+
+(** This describes the transformation on [TriJoinRecData] corresponding to precomposition with [trijoin_id_sym], as in the next result. *)</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 296
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition trijoinrecdata_id_sym {A B C P} (f : TriJoinRecData A B C P)
+  : TriJoinRecData A C B P.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 297
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 298
+Time: 0.001s">
+<div class="time" style="width: 0.51813471502591%"></div>
+<pre>
+  snapply (Build_TriJoinRecData (j1 f) (j3 f) (j2 f)); intros.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 299
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 300
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (j13 f).</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 300
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 301
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (j12 f).</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 301
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 302
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> symmetry; apply (j23 f).</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 302
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 303
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn beta.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 303
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>  apply moveR_pV; symmetry.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 303
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (j123 f).</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 304
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 305
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** This is analogous to [trijoin_rec_trijoin_twist] above, with [trijoin_twist] replaced by [trijoin_id_sym]. *)</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 307
+Time: 0.001s">
+<div class="time" style="width: 0.51813471502591%"></div>
+<pre>Definition trijoin_rec_id_sym {A B C P} (f : TriJoinRecData A C B P)
+  : trijoin_rec f o trijoin_id_sym A B C == trijoin_rec (trijoinrecdata_id_sym f).</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 308
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 309
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* First we use [functor_join_join_rec] on the LHS. *)
+ </pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 311
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>etransitivity.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 311
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 312
+Time: 0.001s">
+<div class="time" style="width: 0.51813471502591%"></div>
+<pre> refine (cat_postwhisker (A:=Type) (trijoin_rec f) _).</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 312
+Time: 0.004s">
+<div class="time" style="width: 2.0725388601036%"></div>
+<pre>
+    apply functor_join_join_rec.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 313
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 313
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold join_sym_recdata, jl, jr, jg.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 314
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* And now we use naturality of the second [trijoin_rec] on the LHS. *)
+ </pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 316
+Time: 0.002s">
+<div class="time" style="width: 1.0362694300518%"></div>
+<pre>refine ((trijoin_rec_nat A B C (trijoin_rec f) _)^$ $@ _).</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 316
+Time: 0.001s">
+<div class="time" style="width: 0.51813471502591%"></div>
+<pre>
+  refine (fmap trijoin_rec _).</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 317
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* Finally, we provide the needed [TriJoinRecPath]. *)
+ </pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 319
+Time: 0.009s">
+<div class="time" style="width: 4.6632124352332%"></div>
+<pre>bundle_trijoinrecpath; intros; cbn.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 319
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 320
+Time: 0.005s">
+<div class="time" style="width: 2.5906735751295%"></div>
+<pre> apply trijoin_rec_beta_join13.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 320
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 321
+Time: 0.005s">
+<div class="time" style="width: 2.5906735751295%"></div>
+<pre> apply trijoin_rec_beta_join12.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 321
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 322
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> lhs refine (ap _ (ap_V _ _)).</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 322
+Time: 0.001s">
+<div class="time" style="width: 0.51813471502591%"></div>
+<pre>
+    lhs refine (ap_V (trijoin_rec f) _).</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 323
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (ap inverse).</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 324
+Time: 0.004s">
+<div class="time" style="width: 2.0725388601036%"></div>
+<pre>
+    apply trijoin_rec_beta_join23.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 325
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 326
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> unfold prism'.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 326
+Time: 0.021s">
+<div class="time" style="width: 10.880829015544%"></div>
+<pre>
+    rewrite ap_trijoin_V.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 327
+Time: 0.005s">
+<div class="time" style="width: 2.5906735751295%"></div>
+<pre>
+    rewrite trijoin_rec_beta_join123.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 328
+Time: 0.008s">
+<div class="time" style="width: 4.1450777202073%"></div>
+<pre>
+    set (f' := f).</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 329
+Time: 0.067s">
+<div class="time" style="width: 34.715025906736%"></div>
+<pre>
+    destruct f as [f1 f2 f3 f12 f13 f23 f123]; cbn.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 330
+Time: 0.011s">
+<div class="time" style="width: 5.699481865285%"></div>
+<pre>
+    generalize (f123 a c b).</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 331
+Time: 0.037s">
+<div class="time" style="width: 19.170984455959%"></div>
+<pre>
+    generalize (trijoin_rec_beta_join23 f' c b); cbn.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 332
+Time: 0.012s">
+<div class="time" style="width: 6.2176165803109%"></div>
+<pre>
+    generalize (f23 c b).</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 333
+Time: 0.041s">
+<div class="time" style="width: 21.243523316062%"></div>
+<pre>
+    generalize (trijoin_rec_beta_join13 f' a b); cbn.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 334
+Time: 0.013s">
+<div class="time" style="width: 6.7357512953368%"></div>
+<pre>
+    generalize (f13 a b).</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 335
+Time: 0.032s">
+<div class="time" style="width: 16.580310880829%"></div>
+<pre>
+    generalize (trijoin_rec_beta_join12 f' a c); cbn.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 336
+Time: 0.033s">
+<div class="time" style="width: 17.098445595855%"></div>
+<pre>
+    generalize (f12 a c); cbn.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 337
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros p12 beta12 p13 beta13 p23 beta23 p123.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 338
+Time: 0.079s">
+<div class="time" style="width: 40.932642487047%"></div>
+<pre>
+    induction beta12, beta13, beta23; cbn.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 339
+Time: 0.02s">
+<div class="time" style="width: 10.362694300518%"></div>
+<pre>
+    rewrite 3 concat_p1, concat_1p.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 340
+Time: 0.003s">
+<div class="time" style="width: 1.5544041450777%"></div>
+<pre>
+    reflexivity.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 341
+Time: 0.193s">
+<div class="time" style="width: 100%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 342
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Here is our first hexagon law.  This is not the usual hexagon axiom, but we will see that it is equivalent, and is itself useful.  This law states that the following diagram commutes, where we write [*] for [Join]:
+&lt;&lt;
+    A * (B * C) -&gt; A * (C * B) -&gt; C * (A * B)
+        |                            |
+        v                            v
+    B * (A * C) -&gt; B * (C * A) -&gt; C * (B * A)
+&gt;&gt;
+Here every arrow is either [trijoin_twist _ _ _] or [trijoin_id_sym _ _ _], and they alternate as you go around.  These correspond to the permutations (1,2) and (2,3) in the symmetric group on three letters.  We already know that they are their own inverses, i.e., they have order two.  The above says that the composite (1,2)(2,3) has order three.  These are the only relations in this presentation of [S_3].  Note also that every object in this diagram is parenthesized in the same way.  That will be important in our proof. *)</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 351
+Time: 0.002s">
+<div class="time" style="width: 1.0362694300518%"></div>
+<pre>Definition hexagon_join_twist_sym A B C
+  : trijoin_id_sym C A B o trijoin_twist A C B o trijoin_id_sym A B C
+    == trijoin_twist B C A o trijoin_id_sym B A C o trijoin_twist A B C.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 353
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 354
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* It's enough to show that both sides induces the same natural transformation under the covariant Yoneda embedding, i.e., after postcomposing with a general function [f]. *)
+ </pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 356
+Time: 0.005s">
+<div class="time" style="width: 2.5906735751295%"></div>
+<pre>tapply (opyon_faithful_0gpd (A:=Type)).</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 356
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros P f.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 357
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* We replace [f] by [trijoin_rec t] for generic [t].  This will allow induction later. *)
+ </pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 359
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>pose proof (p := issect_trijoin_rec_inv f).</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 359
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro x; refine ((p _)^ @ _ @ p _); clear p.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 360
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  generalize (trijoin_rec_inv f) as t.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 361
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro t; clear f.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 362
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* Now we use how these various maps postcompose with [trijoin_rec foo]. *)
+ </pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 364
+Time: 0.001s">
+<div class="time" style="width: 0.51813471502591%"></div>
+<pre>lhs rapply trijoin_rec_id_sym.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 364
+Time: 0.003s">
+<div class="time" style="width: 1.5544041450777%"></div>
+<pre>
+  lhs rapply trijoin_rec_trijoin_twist.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 365
+Time: 0.001s">
+<div class="time" style="width: 0.51813471502591%"></div>
+<pre>
+  lhs rapply trijoin_rec_id_sym.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 366
+Time: 0.003s">
+<div class="time" style="width: 1.5544041450777%"></div>
+<pre>
+  rhs rapply trijoin_rec_trijoin_twist.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 367
+Time: 0.001s">
+<div class="time" style="width: 0.51813471502591%"></div>
+<pre>
+  rhs rapply trijoin_rec_id_sym.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 368
+Time: 0.003s">
+<div class="time" style="width: 1.5544041450777%"></div>
+<pre>
+  rhs rapply trijoin_rec_trijoin_twist.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 369
+Time: 0.002s">
+<div class="time" style="width: 1.0362694300518%"></div>
+<pre>
+  revert x; refine (fmap trijoin_rec _).</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 370
+Time: 0.07s">
+<div class="time" style="width: 36.269430051813%"></div>
+<pre>
+  bundle_trijoinrecpath; intros; cbn.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 371
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1, 2, 3: reflexivity.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 372
+Time: 0.007s">
+<div class="time" style="width: 3.6269430051813%"></div>
+<pre>
+  by triangle_ind t c b a.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 373
+Time: 0.009s">
+<div class="time" style="width: 4.6632124352332%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 374
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Next we paste on a naturality square for [join_sym] on the right of the diagram:
+&lt;&lt;
+    A * (B * C) -&gt; A * (C * B) -&gt; C * (A * B) -&gt; (A * B) * C
+        |                            |                |
+        v                            v                v
+    B * (A * C) -&gt; B * (C * A) -&gt; C * (B * A) -&gt; (B * A) * C
+&gt;&gt;
+The new horizontal maps are [join_sym _ _] and the new vertical map is [functor_join (join_sym A B) idmap]. This makes both horizontal composites definitionally equal to [join_assoc _ _ _], so the statement is about a square. *)</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 383
+Time: 0.001s">
+<div class="time" style="width: 0.51813471502591%"></div>
+<pre>Definition square_join_sym_assoc_twist A B C
+  : functor_join (join_sym A B) idmap o join_assoc A B C
+    == join_assoc B A C o trijoin_twist A B C.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 385
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 386
+Time: 0.001s">
+<div class="time" style="width: 0.51813471502591%"></div>
+<pre>
+  unfold join_assoc; cbn.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 387
+Time: 0.001s">
+<div class="time" style="width: 0.51813471502591%"></div>
+<pre>
+  intro x; lhs_V rapply join_sym_nat.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 388
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply ap.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 389
+Time: 0.026s">
+<div class="time" style="width: 13.471502590674%"></div>
+<pre>
+  apply hexagon_join_twist_sym.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 390
+Time: 0.011s">
+<div class="time" style="width: 5.699481865285%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 391
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Finally, we paste on the defining square for [join_assoc] on the left to get the hexagon axiom for the symmetric monoidal structure:
+&lt;&lt;
+    A * (C * B) -&gt; A * (B * C) -&gt; (A * B) * C
+         |              |              |
+         v              v              v
+    (A * C) * B -&gt; B * (A * C) -&gt; (B * A) * C
+&gt;&gt;
+The right-hand square is a horizontally-compressed version of the rectangle from the previous result, whose horizontal arrows are associativity. In the left-hand square, the new vertical map is [join_assoc A C B] and the horizontal maps are [trijoin_id_sym A C B] and [join_sym (Join A C) B]. *)</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 400
+Time: 0.002s">
+<div class="time" style="width: 1.0362694300518%"></div>
+<pre>Definition hexagon_join_assoc_sym A B C
+  : functor_join (join_sym A B) idmap o join_assoc A B C o trijoin_id_sym A C B
+    == join_assoc B A C o join_sym (Join A C) B o join_assoc A C B.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 402
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 403
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro x.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 404
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (square_join_sym_assoc_twist A B C _ @ _).</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 405
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply ap.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 406
+Time: 0.017s">
+<div class="time" style="width: 8.8082901554404%"></div>
+<pre>
+  simpl.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 407
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  symmetry.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 408
+Time: 0.009s">
+<div class="time" style="width: 4.6632124352332%"></div>
+<pre>
+  exact (eissect (equiv_join_sym B (Join A C)) _).</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 409
+Time: 0.01s">
+<div class="time" style="width: 5.1813471502591%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: JoinAssoc.v
+Line: 411
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

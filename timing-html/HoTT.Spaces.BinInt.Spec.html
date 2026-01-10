@@ -1,0 +1,3008 @@
+<html>
+<head>
+<title>Spec.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Spec.v</h1>
+
+<div class="code" title="File: Spec.v
+Line: 1
+Time: 0.027s">
+<div class="time" style="width: 100%"></div>
+<pre>From HoTT Require Import Basics.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 1
+Time: 0.007s">
+<div class="time" style="width: 25.925925925926%"></div>
+<pre>
+Require Import Spaces.Pos.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 2
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Spaces.BinInt.Core.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Set Universe Minimization ToSet.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope binint_scope.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Addition is commutative *)
+
+</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma binint_add_comm n m : n + m = m + n.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 11
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+  destruct n, m; trivial.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> all: cbn.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  all: apply ap, pos_add_comm.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Zero is the additive identity. *)
+
+</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition binint_add_0_l n : 0 + n = n
+  := 1.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma binint_add_0_r n : n + 0 = n.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by destruct n.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Multiplication by zero is zero *)
+
+</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition binint_mul_0_l n : 0 * n = 0
+  := 1.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma binint_mul_0_r n : n * 0 = 0.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by destruct n.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** One is the multiplicative identity *)
+
+</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma binint_mul_1_l n : 1 * n = n.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by destruct n.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma binint_mul_1_r n : n * 1 = n.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct n; trivial; cbn; apply ap, pos_mul_1_r.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Inverse laws *)
+
+</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma binint_pos_sub_diag n : binint_pos_sub n n = 0.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction n; trivial; cbn.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  all: exact (ap binint_double IHn).</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma binint_add_negation_l n : (-n) + n = 0.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct n; trivial; cbn; apply binint_pos_sub_diag.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma binint_add_negation_r n : n + (-n) = 0.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct n; trivial; cbn; apply binint_pos_sub_diag.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Permutation of [neg] and [pos_succ] *)</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma binint_neg_pos_succ p : neg (pos_succ p) = binint_pred (neg p).</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by destruct p.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Permutation of [pos] and [pos_succ] *)</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma binint_pos_pos_succ p : pos (pos_succ p) = binint_succ (pos p).</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by destruct p.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Negation of a doubled positive integer *)</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma binint_negation_double a : - (binint_double a) = binint_double (- a).</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by destruct a.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Negation of the predecessor of a doubled positive integer. *)</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma binint_negation_pred_double a
+  : - (binint_pred_double a) = binint_succ_double (- a).</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by destruct a.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Negation of the doubling of the successor of an positive. *)</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma binint_negation_succ_double a
+  : - (binint_succ_double a) = binint_pred_double (- a).</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by destruct a.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Negation of subtraction of positive integers *)</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma binint_pos_sub_negation a b
+  : - (binint_pos_sub a b) = binint_pos_sub b a.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert a b.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 92
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+  induction a as [|a ah|a ah];
+  destruct b;
+  cbn; trivial.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 95
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+  all: rewrite ?binint_negation_double,
+    ?binint_negation_succ_double,
+    ?binint_negation_pred_double.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  all: apply ap, ah.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** [binint_succ] is a retract of [binint_pred] *)</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition binint_succ_pred : binint_succ o binint_pred == idmap.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [n | | n]; [|trivial|].</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  all: destruct n; trivial.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1,2: cbn; apply ap.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: apply pos_pred_double_succ.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite pos_add_1_r.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply pos_succ_pred_double.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** [binint_pred] is a retract of [binint_succ] *)</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition binint_pred_succ : binint_pred o binint_succ == idmap.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [n | | n]; [|trivial|].</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  all: destruct n; trivial.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1,2: cbn; apply ap.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: rewrite pos_add_1_r.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: apply pos_succ_pred_double.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 118
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply pos_pred_double_succ.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ** The successor auto-equivalence. *)</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 122
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isequiv_binint_succ : IsEquiv binint_succ | 0
+  := isequiv_adjointify binint_succ _ binint_succ_pred binint_pred_succ.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition equiv_binint_succ : BinInt &lt;~&gt; BinInt
+  := Build_Equiv _ _ _ isequiv_binint_succ.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 126
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Negation distributes over addition *)</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 128
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma binint_negation_add_distr n m : - (n + m) = - n + - m.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 128
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 129
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+ destruct n, m; simpl; trivial using binint_pos_sub_negation.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 130
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 131
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Negation is injective *)</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma binint_negation_inj n m : -n = -m -&gt; n = m.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct n, m; simpl; intro H.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 135
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: apply pos_inj in H.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  2: apply pos_neq_zero in H.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 137
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  3: apply pos_neq_neg in H.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  4: apply  zero_neq_pos in H.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  6: apply  zero_neq_neg in H.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  7: apply  neg_neq_pos in H.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  8: apply  neg_neq_zero in H.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  9: apply  neg_inj in H.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  all: by destruct H.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 145
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Subtracting 1 from a successor gives the positive integer. *)</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 147
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma binint_pos_sub_succ_l a
+  : binint_pos_sub (pos_succ a) 1%pos = pos a.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 148
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct a; trivial.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  cbn; apply ap, pos_pred_double_succ.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 152
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Subtracting a successor from 1 gives minus the integer. *)</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 154
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma binint_pos_sub_succ_r a
+  : binint_pos_sub 1%pos (pos_succ a) = neg a.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 155
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct a; trivial.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  cbn; apply ap, pos_pred_double_succ.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Interaction of doubling functions and subtraction *)
+
+</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma binint_succ_double_binint_pos_sub a b
+  : binint_succ_double (binint_pos_sub a (pos_succ b))
+    = binint_pred_double (binint_pos_sub a b).</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 164
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 165
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert a b.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 166
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+  induction a; induction b; trivial.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn; apply ap.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by rewrite pos_pred_double_succ.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct a; trivial.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn; destruct (binint_pos_sub a b); trivial.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite &lt;- IHa.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct (binint_pos_sub a (pos_succ b)); trivial.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 174
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 175
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct a; trivial.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 175
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn; destruct (binint_pos_sub a b); trivial.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite IHa.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    cbn; destruct (binint_pos_sub a b); trivial.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 179
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 180
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma binint_pred_double_binint_pos_sub a b 
+  : binint_pred_double (binint_pos_sub (pos_succ a) b)
+    = binint_succ_double (binint_pos_sub a b).</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 184
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert a b.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 186
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+  induction a; induction b; trivial.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by destruct b.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 189
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by destruct b.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 189
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 190
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn; by destruct (binint_pos_sub a b).</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 190
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 191
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn; by destruct (binint_pos_sub a b).</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 191
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 192
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn; apply ap.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 192
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by rewrite pos_pred_double_succ.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 193
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 194
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 194
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite &lt;- IHa.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by destruct (binint_pos_sub (pos_succ a) b).</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite IHa.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by destruct (binint_pos_sub a b).</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 199
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Subtractions cancel successors. *)</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 202
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma binint_pos_sub_succ_succ a b
+  : binint_pos_sub (pos_succ a) (pos_succ b) = binint_pos_sub a b.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 203
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 204
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite &lt;- 2 pos_add_1_r.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 205
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert a b.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 206
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+  induction a; induction b; trivial.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 207
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: destruct b; trivial.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 209
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct b; trivial.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 209
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    cbn; apply ap.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 210
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by rewrite pos_pred_double_succ.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 211
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 211
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: destruct a; trivial.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 212
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: apply binint_succ_double_binint_pos_sub.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 213
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 214
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct a; trivial.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 214
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    cbn; apply ap, ap, pos_pred_double_succ.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 215
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 215
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: apply binint_pred_double_binint_pos_sub.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 216
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  cbn; apply ap.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 217
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite &lt;- 2 pos_add_1_r.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 218
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply IHa.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 219
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 220
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Predecessor of a subtraction is the subtraction of a successor. *)</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 222
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma binint_pred_pos_sub_r a b
+  : binint_pred (binint_pos_sub a b) = binint_pos_sub a (pos_succ b).</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 223
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 224
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert a.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction b as [|b bH] using pos_peano_ind.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 226
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: destruct a; trivial; destruct a; trivial.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 227
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro a.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert b bH.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 229
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction a as [|a aH] using pos_peano_ind.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 230
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 231
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros b bH.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 231
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite &lt;- bH.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 232
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct b; trivial.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 233
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    cbn; apply ap.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 234
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite 2 pos_add_1_r.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 235
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite pos_succ_pred_double.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 236
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite pos_pred_double_succ.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 237
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    trivial.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 238
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 238
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros b bH.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 239
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite 2 binint_pos_sub_succ_succ.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 240
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply bH.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 241
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 242
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Negation of the predecessor is an involution. *)</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 244
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma binint_negation_pred_negation_red x
+  : - binint_pred (- binint_pred x) = x.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 245
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 246
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+  destruct x as [x| |x]; trivial;
+  destruct x; trivial; cbn; apply ap.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 248
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: apply pos_pred_double_succ.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 249
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite pos_add_1_r.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 250
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply pos_succ_pred_double.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 251
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 252
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Predecessor of a sum is the sum with a predecessor *)</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 254
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma binint_pred_add_r a b
+  : binint_pred (a + b) = a + binint_pred b.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 255
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 256
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert a b.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 257
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [a| |a] [b| |b]; trivial.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 258
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 259
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn; apply ap.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 259
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by rewrite pos_add_assoc.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 260
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 261
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> revert a.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 261
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    induction b as [|b bH] using pos_peano_ind.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 262
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 263
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro a; exact (binint_pred_succ (neg a)).</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 263
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 264
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro a.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 264
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite &lt;- pos_add_1_r.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 265
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite (binint_pred_succ (pos b)).</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 266
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite binint_add_comm.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 267
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      cbn.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 268
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite pos_add_1_r.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 269
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite &lt;- binint_pos_sub_negation.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 270
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite &lt;- binint_pred_pos_sub_r.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 271
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply binint_negation_inj.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 272
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite binint_pos_sub_negation.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 273
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply binint_negation_pred_negation_red.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 274
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 275
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 275
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite pos_add_1_r.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 276
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply binint_pred_pos_sub_r.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 277
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 278
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> revert a.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 278
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    induction b as [|b bH] using pos_peano_ind.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 279
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 280
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro a; exact (binint_pred_succ (pos a)).</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 280
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 281
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro a.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 281
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite &lt;- pos_add_1_r.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 282
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite (binint_pred_succ (pos b)).</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 283
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      cbn; rewrite pos_add_assoc.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 284
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      change (binint_pred (binint_succ (pos (a + b)%pos)) = pos a + pos b).</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 285
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply binint_pred_succ.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 286
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 287
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Subtraction from a sum is the sum of a subtraction *)</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 289
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma binint_pos_sub_add (a b c : Pos)
+  : binint_pos_sub (a + b)%pos c = pos a + binint_pos_sub b c.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 290
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 291
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert c b a.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 292
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction c as [|c ch] using pos_peano_ind.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 293
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 294
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros b a.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 294
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    change (binint_pred (pos a + pos b) = pos a + (binint_pred (pos b))).</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 295
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply binint_pred_add_r.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 296
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 296
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros b a.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 297
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite &lt;- binint_pred_pos_sub_r.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 298
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite ch.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 299
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite &lt;- binint_pred_pos_sub_r.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 300
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply binint_pred_add_r.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 301
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 302
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** An auxiliary lemma used to prove associativity. *)</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 304
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma binint_add_assoc_pos p n m : pos p + (n + m) = pos p + n + m.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 304
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 305
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct n as [n| |n], m as [m| |m]; trivial.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 306
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 307
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn; apply binint_negation_inj.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 307
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite !binint_negation_add_distr, !binint_pos_sub_negation.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 308
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite binint_add_comm, pos_add_comm.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 309
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply binint_pos_sub_add.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 310
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 311
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> symmetry.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 311
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply binint_add_0_r.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 312
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 313
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by rewrite &lt;- binint_pos_sub_add, binint_add_comm,
+      &lt;- binint_pos_sub_add, pos_add_comm.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 314
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 315
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> symmetry.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 315
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply binint_pos_sub_add.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 316
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 317
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn; apply ap, pos_add_assoc.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 317
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 318
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Associativity of addition *)</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 320
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma binint_add_assoc n m p : n + (m + p) = n + m + p.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 320
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 321
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct n.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 322
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 323
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply binint_negation_inj.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 323
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite !binint_negation_add_distr.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 324
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply binint_add_assoc_pos.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 325
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 326
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> trivial.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 326
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 327
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply binint_add_assoc_pos.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 327
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 328
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Relationship between [int_succ], [int_pred] and addition. *)</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 330
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma binint_add_succ_l a b : binint_succ a + b = binint_succ (a + b).</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 330
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 331
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite &lt;- binint_add_assoc, (binint_add_comm 1 b).</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 332
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply binint_add_assoc.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 333
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 334
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma binint_add_succ_r a b : a + binint_succ b = binint_succ (a + b).</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 336
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 337
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply binint_add_assoc.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 338
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 339
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma binint_add_pred_l a b : binint_pred a + b = binint_pred (a + b).</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 341
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 342
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite &lt;- binint_add_assoc, (binint_add_comm (-1) b).</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 343
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply binint_add_assoc.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 344
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 345
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma binint_add_pred_r a b : a + binint_pred b = binint_pred (a + b).</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 347
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 348
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply binint_add_assoc.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 349
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 350
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Commutativity of multiplication *)</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 352
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma binint_mul_comm n m : n * m = m * n.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 352
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 353
+Time: 0.002s">
+<div class="time" style="width: 7.4074074074074%"></div>
+<pre>
+  destruct n, m; cbn; try reflexivity;
+  apply ap; apply pos_mul_comm.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 355
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 356
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Distributivity of multiplication over addition *)
+
+</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 359
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma binint_pos_sub_mul_pos n m p
+  : binint_pos_sub n m * pos p = binint_pos_sub (n * p)%pos (m * p)%pos.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 360
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 361
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite binint_mul_comm.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 362
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite 2 (pos_mul_comm _ p).</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 363
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction p.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 364
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 365
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite 2 pos_mul_1_l.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 365
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply binint_mul_1_l.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 366
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 366
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 367
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 367
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite &lt;- IHp.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 368
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    set (binint_pos_sub n m) as k.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 369
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by destruct k.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 370
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 370
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  cbn.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 371
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite binint_pos_sub_add.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 372
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite &lt;- (binint_pos_sub_negation _ (x0 _)).</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 373
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite binint_pos_sub_add.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 374
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite binint_negation_add_distr.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 375
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite binint_pos_sub_negation.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 376
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite binint_add_assoc.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 377
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  cbn.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 378
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite &lt;- IHp.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 379
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  set (binint_pos_sub n m) as k.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 380
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by destruct k.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 381
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 382
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma binint_pos_sub_mul_neg n m p
+  : binint_pos_sub m n  * neg p = binint_pos_sub (n * p)%pos (m * p)%pos.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 385
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 386
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite binint_mul_comm.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 387
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite 2 (pos_mul_comm _ p).</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 388
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction p.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 389
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 390
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite 2 pos_mul_1_l.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 390
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite &lt;- binint_pos_sub_negation.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 391
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by destruct (binint_pos_sub n m).</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 392
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 392
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 393
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 393
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite &lt;- IHp.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 394
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite &lt;- binint_pos_sub_negation.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 395
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    set (binint_pos_sub n m) as k.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 396
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by destruct k.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 397
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 397
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  cbn.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 398
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite binint_pos_sub_add.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 399
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite &lt;- (binint_pos_sub_negation _ (x0 _)).</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 400
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite binint_pos_sub_add.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 401
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite binint_negation_add_distr.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 402
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite binint_pos_sub_negation.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 403
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite binint_add_assoc.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 404
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  cbn.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 405
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite &lt;- IHp.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 406
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite &lt;- (binint_pos_sub_negation m).</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 407
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  set (binint_pos_sub m n) as k.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 408
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by destruct k.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 409
+Time: 0.002s">
+<div class="time" style="width: 7.4074074074074%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 410
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma binint_mul_add_distr_r n m p : (n + m) * p = n * p + m * p.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 412
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 413
+Time: 0.004s">
+<div class="time" style="width: 14.814814814815%"></div>
+<pre>
+  induction p; destruct n, m; cbn; trivial; try f_ap;
+  try apply pos_mul_add_distr_r;
+  try apply binint_pos_sub_mul_neg;
+  try apply binint_pos_sub_mul_pos;
+  apply binint_mul_0_r.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 418
+Time: 0.002s">
+<div class="time" style="width: 7.4074074074074%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 419
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma binint_mul_add_distr_l n m p : n * (m + p) = n * m + n * p.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 421
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 422
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite 3 (binint_mul_comm n); apply binint_mul_add_distr_r.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 423
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 424
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma binint_mul_assoc n m p : n * (m * p) = n * m * p.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 426
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 427
+Time: 0.004s">
+<div class="time" style="width: 14.814814814815%"></div>
+<pre>
+  destruct n, m, p; cbn; trivial; f_ap; apply pos_mul_assoc.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 428
+Time: 0.002s">
+<div class="time" style="width: 7.4074074074074%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Spec.v
+Line: 430
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

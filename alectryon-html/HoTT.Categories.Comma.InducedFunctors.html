@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>InducedFunctors.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-wsp"><span class="sd">(** * Induced functors between comma categories *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="inducedfunctors-v-chk0" style="display: none" type="checkbox"><label class="alectryon-input" for="inducedfunctors-v-chk0"><span class="kn">Require Import</span> Category.Core Functor.Core NaturalTransformation.Core.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Category.Dual.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Category.Prod.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> NaturalTransformation.Identity.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> FunctorCategory.Core Cat.Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> InitialTerminalCategory.Core InitialTerminalCategory.Functors.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require</span> Comma.Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Set Warnings</span> <span class="s2">&quot;-notation-overridden&quot;</span>. <span class="c">(* work around bug #5567, https://coq.inria.fr/bugs/show_bug.cgi?id=5567, notation-overridden,parsing should not trigger for only printing notations *)</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Import</span> Comma.Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Set Warnings</span> <span class="s2">&quot;notation-overridden&quot;</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> HoTT.Tactics.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Basics.Tactics.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Universe Polymorphism</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Implicit Arguments</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Generalizable All Variables</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Asymmetric Patterns</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> functor_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> category_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Morphisms in [(A → C)ᵒᵖ × (B → C)] from [(s₀, s₁)] to [(d₀, d₁)] induce functors [(s₀ / s₁) → (d₀ / d₁)] *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">comma_category_induced_functor</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `{Funext}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variables</span> <span class="nv">A</span> <span class="nv">B</span> <span class="nv">C</span> : PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">comma_category_induced_functor_object_of</span> <span class="nv">s</span> <span class="nv">d</span>
+             (<span class="nv">m</span> : morphism ((A -&gt; C)^op * (B -&gt; C)) s d)
+             (<span class="nv">x</span> : fst s / snd s)
+  : (fst d / snd d)
+    := CommaCategory.Build_object
+         (fst d) (snd d)
+         (CommaCategory.a x)
+         (CommaCategory.b x)
+         ((snd m) (CommaCategory.b x) o CommaCategory.f x o (fst m) (CommaCategory.a x)).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="inducedfunctors-v-chk1" style="display: none" type="checkbox"><label class="alectryon-input" for="inducedfunctors-v-chk1"><span class="kn">Lemma</span> <span class="nf">comma_category_induced_functor_object_of_identity</span> <span class="nv">s</span> <span class="nv">x</span>
+  : comma_category_induced_functor_object_of (Category.Core.identity s) x
+    = x.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span>(A -&gt; C)^op * (B -&gt; C)</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>fst s / snd s</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">comma_category_induced_functor_object_of <span class="mi">1</span> x = x</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="inducedfunctors-v-chk2" style="display: none" type="checkbox"><label class="alectryon-input" for="inducedfunctors-v-chk2"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span>(A -&gt; C)^op * (B -&gt; C)</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>fst s / snd s</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">comma_category_induced_functor_object_of <span class="mi">1</span> x = x</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="inducedfunctors-v-chk3" style="display: none" type="checkbox"><label class="alectryon-input" for="inducedfunctors-v-chk3"><span class="kr">let</span> <span class="nv">x1</span> := <span class="kr">match goal with</span> |- <span class="nl">?x1</span> = <span class="nl">?x2</span> =&gt; <span class="kp">constr</span>:(x1) <span class="kr">end</span> <span class="kr">in</span>
+    <span class="kr">let</span> <span class="nv">x2</span> := <span class="kr">match goal with</span> |- <span class="nl">?x1</span> = <span class="nl">?x2</span> =&gt; <span class="kp">constr</span>:(x2) <span class="kr">end</span> <span class="kr">in</span>
+    <span class="nb">apply</span> (CommaCategory.path_object&#39; x1 x2 idpath idpath).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span>(A -&gt; C)^op * (B -&gt; C)</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>fst s / snd s</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport
+  (<span class="kr">fun</span> <span class="nv">X</span> : A =&gt;
+   morphism C ((fst s) _0 X)%object
+     ((snd s) _0 (CommaCategory.b x))%object) <span class="mi">1</span>
+  (transport
+     (<span class="kr">fun</span> <span class="nv">Y</span> : B =&gt;
+      morphism C
+        ((fst s)
+         _0 (CommaCategory.a
+               (comma_category_induced_functor_object_of
+                  <span class="mi">1</span> x)))%object ((snd s) _0 Y)%object)
+     <span class="mi">1</span>
+     (CommaCategory.f
+        (comma_category_induced_functor_object_of <span class="mi">1</span> x))) =
+CommaCategory.f x</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="inducedfunctors-v-chk4" style="display: none" type="checkbox"><label class="alectryon-input" for="inducedfunctors-v-chk4"><span class="nb">simpl</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>s</var><span class="hyp-type"><b>: </b><span>(A -&gt; C)^op * (B -&gt; C)</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>fst s / snd s</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="mi">1</span> o CommaCategory.f x o <span class="mi">1</span>)%morphism =
+CommaCategory.f x</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kp">abstract</span> (<span class="nb">rewrite</span> <span class="nl">?left_identity</span>, <span class="nl">?right_identity</span>; <span class="bp">reflexivity</span>).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="inducedfunctors-v-chk5" style="display: none" type="checkbox"><label class="alectryon-input" for="inducedfunctors-v-chk5"><span class="kn">Definition</span> <span class="nf">comma_category_induced_functor_object_of_compose</span> <span class="nv">s</span> <span class="nv">d</span> <span class="nv">d&#39;</span>
+             (<span class="nv">m</span> : morphism ((A -&gt; C)^op * (B -&gt; C)) d d&#39;)
+             (<span class="nv">m&#39;</span> : morphism ((A -&gt; C)^op * (B -&gt; C)) s d)
+             <span class="nv">x</span>
+  : comma_category_induced_functor_object_of (m o m&#39;) x
+    = comma_category_induced_functor_object_of
+        m
+        (comma_category_induced_functor_object_of m&#39; x).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>s, d, d'</var><span class="hyp-type"><b>: </b><span>(A -&gt; C)^op * (B -&gt; C)</span></span></span><br><span><var>m</var><span class="hyp-type"><b>: </b><span>morphism ((A -&gt; C)^op * (B -&gt; C)) d d&#39;</span></span></span><br><span><var>m'</var><span class="hyp-type"><b>: </b><span>morphism ((A -&gt; C)^op * (B -&gt; C)) s d</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>fst s / snd s</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">comma_category_induced_functor_object_of (m o m&#39;) x =
+comma_category_induced_functor_object_of m
+  (comma_category_induced_functor_object_of m&#39; x)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="inducedfunctors-v-chk6" style="display: none" type="checkbox"><label class="alectryon-input" for="inducedfunctors-v-chk6"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>s, d, d'</var><span class="hyp-type"><b>: </b><span>(A -&gt; C)^op * (B -&gt; C)</span></span></span><br><span><var>m</var><span class="hyp-type"><b>: </b><span>morphism ((A -&gt; C)^op * (B -&gt; C)) d d&#39;</span></span></span><br><span><var>m'</var><span class="hyp-type"><b>: </b><span>morphism ((A -&gt; C)^op * (B -&gt; C)) s d</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>fst s / snd s</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">comma_category_induced_functor_object_of (m o m&#39;) x =
+comma_category_induced_functor_object_of m
+  (comma_category_induced_functor_object_of m&#39; x)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="inducedfunctors-v-chk7" style="display: none" type="checkbox"><label class="alectryon-input" for="inducedfunctors-v-chk7"><span class="kr">let</span> <span class="nv">x1</span> := <span class="kr">match goal with</span> |- <span class="nl">?x1</span> = <span class="nl">?x2</span> =&gt; <span class="kp">constr</span>:(x1) <span class="kr">end</span> <span class="kr">in</span>
+    <span class="kr">let</span> <span class="nv">x2</span> := <span class="kr">match goal with</span> |- <span class="nl">?x1</span> = <span class="nl">?x2</span> =&gt; <span class="kp">constr</span>:(x2) <span class="kr">end</span> <span class="kr">in</span>
+    <span class="nb">apply</span> (CommaCategory.path_object&#39; x1 x2 idpath idpath).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>s, d, d'</var><span class="hyp-type"><b>: </b><span>(A -&gt; C)^op * (B -&gt; C)</span></span></span><br><span><var>m</var><span class="hyp-type"><b>: </b><span>morphism ((A -&gt; C)^op * (B -&gt; C)) d d&#39;</span></span></span><br><span><var>m'</var><span class="hyp-type"><b>: </b><span>morphism ((A -&gt; C)^op * (B -&gt; C)) s d</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>fst s / snd s</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport
+  (<span class="kr">fun</span> <span class="nv">X</span> : A =&gt;
+   morphism C ((fst d&#39;) _0 X)%object
+     ((snd d&#39;)
+      _0 (CommaCategory.b
+            (comma_category_induced_functor_object_of
+               m
+               (comma_category_induced_functor_object_of
+                  m&#39; x))))%object) <span class="mi">1</span>
+  (transport
+     (<span class="kr">fun</span> <span class="nv">Y</span> : B =&gt;
+      morphism C
+        ((fst d&#39;)
+         _0 (CommaCategory.a
+               (comma_category_induced_functor_object_of
+                  (m o m&#39;) x)))%object
+        ((snd d&#39;) _0 Y)%object) <span class="mi">1</span>
+     (CommaCategory.f
+        (comma_category_induced_functor_object_of
+           (m o m&#39;) x))) =
+CommaCategory.f
+  (comma_category_induced_functor_object_of m
+     (comma_category_induced_functor_object_of m&#39; x))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kp">abstract</span> (
+        <span class="nb">destruct</span> m&#39;, m, x;
+        <span class="nb">simpl</span> <span class="kr">in</span> *;
+          <span class="nb">rewrite</span> !associativity;
+        <span class="bp">reflexivity</span>
+      ).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="inducedfunctors-v-chk8" style="display: none" type="checkbox"><label class="alectryon-input" for="inducedfunctors-v-chk8"><span class="kn">Definition</span> <span class="nf">comma_category_induced_functor_morphism_of</span> <span class="nv">s</span> <span class="nv">d</span> <span class="nv">m</span> <span class="nv">s0</span> <span class="nv">d0</span>
+             (<span class="nv">m0</span> : morphism (fst s / snd s) s0 d0)
+  : morphism (fst d / snd d)
+             (@comma_category_induced_functor_object_of s d m s0)
+             (@comma_category_induced_functor_object_of s d m d0).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>(CC_Functor&#39; A C * CC_Functor&#39; B C)%type</span></span></span><br><span><var>m</var><span class="hyp-type"><b>: </b><span>morphism ((A -&gt; C)^op * (B -&gt; C)) s d</span></span></span><br><span><var>s0, d0</var><span class="hyp-type"><b>: </b><span>fst s / snd s</span></span></span><br><span><var>m0</var><span class="hyp-type"><b>: </b><span>morphism (fst s / snd s) s0 d0</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">morphism (fst d / snd d)
+  (comma_category_induced_functor_object_of m s0)
+  (comma_category_induced_functor_object_of m d0)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="inducedfunctors-v-chk9" style="display: none" type="checkbox"><label class="alectryon-input" for="inducedfunctors-v-chk9"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>(CC_Functor&#39; A C * CC_Functor&#39; B C)%type</span></span></span><br><span><var>m</var><span class="hyp-type"><b>: </b><span>morphism ((A -&gt; C)^op * (B -&gt; C)) s d</span></span></span><br><span><var>s0, d0</var><span class="hyp-type"><b>: </b><span>fst s / snd s</span></span></span><br><span><var>m0</var><span class="hyp-type"><b>: </b><span>morphism (fst s / snd s) s0 d0</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">morphism (fst d / snd d)
+  (comma_category_induced_functor_object_of m s0)
+  (comma_category_induced_functor_object_of m d0)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="inducedfunctors-v-chka" style="display: none" type="checkbox"><label class="alectryon-input" for="inducedfunctors-v-chka"><span class="nb">simpl</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>(CC_Functor&#39; A C * CC_Functor&#39; B C)%type</span></span></span><br><span><var>m</var><span class="hyp-type"><b>: </b><span>morphism ((A -&gt; C)^op * (B -&gt; C)) s d</span></span></span><br><span><var>s0, d0</var><span class="hyp-type"><b>: </b><span>fst s / snd s</span></span></span><br><span><var>m0</var><span class="hyp-type"><b>: </b><span>morphism (fst s / snd s) s0 d0</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">CommaCategory.morphism
+  (comma_category_induced_functor_object_of m s0)
+  (comma_category_induced_functor_object_of m d0)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="inducedfunctors-v-chkb" style="display: none" type="checkbox"><label class="alectryon-input" for="inducedfunctors-v-chkb"><span class="kr">let</span> <span class="nv">s</span> := <span class="kr">match goal with</span> |- CommaCategory.morphism <span class="nl">?s</span> <span class="nl">?d</span> =&gt; <span class="kp">constr</span>:(s) <span class="kr">end</span> <span class="kr">in</span>
+    <span class="kr">let</span> <span class="nv">d</span> := <span class="kr">match goal with</span> |- CommaCategory.morphism <span class="nl">?s</span> <span class="nl">?d</span> =&gt; <span class="kp">constr</span>:(d) <span class="kr">end</span> <span class="kr">in</span>
+    <span class="nb">refine</span> (CommaCategory.Build_morphism s d (CommaCategory.g m0) (CommaCategory.h m0) _);
+      <span class="nb">simpl</span> <span class="kr">in</span> *; <span class="nb">clear</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>(Functor A C * Functor B C)%type</span></span></span><br><span><var>m</var><span class="hyp-type"><b>: </b><span>(NaturalTransformation (fst d) (fst s) *
+ NaturalTransformation (snd s) (snd d))%type</span></span></span><br><span><var>s0, d0</var><span class="hyp-type"><b>: </b><span>CommaCategory.object (fst s) (snd s)</span></span></span><br><span><var>m0</var><span class="hyp-type"><b>: </b><span>CommaCategory.morphism s0 d0</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">((snd d) _1 (CommaCategory.h m0)
+ o (snd m (CommaCategory.b s0) o CommaCategory.f s0
+    o fst m (CommaCategory.a s0)))%morphism =
+(snd m (CommaCategory.b d0) o CommaCategory.f d0
+ o fst m (CommaCategory.a d0)
+ o (fst d) _1 (CommaCategory.g m0))%morphism</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kp">abstract</span> (
+        destruct_head prod;
+        destruct_head CommaCategory.morphism;
+        destruct_head CommaCategory.object;
+        <span class="nb">simpl</span> <span class="kr">in</span> *;
+          <span class="kp">repeat</span> (try_associativity_quick (<span class="nb">rewrite</span> &lt;- !commutes || (<span class="kp">progress</span> f_ap)));
+        <span class="kp">repeat</span> (try_associativity_quick (<span class="nb">rewrite</span> !commutes || (<span class="kp">progress</span> f_ap)));
+        <span class="bp">assumption</span>
+      ). <span class="c">(* 3.495 s *)</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="inducedfunctors-v-chkc" style="display: none" type="checkbox"><label class="alectryon-input" for="inducedfunctors-v-chkc"><span class="kn">Definition</span> <span class="nf">comma_category_induced_functor</span> <span class="nv">s</span> <span class="nv">d</span>
+             (<span class="nv">m</span> : morphism ((A -&gt; C)^op * (B -&gt; C)) s d)
+  : Functor (fst s / snd s) (fst d / snd d).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>(A -&gt; C)^op * (B -&gt; C)</span></span></span><br><span><var>m</var><span class="hyp-type"><b>: </b><span>morphism ((A -&gt; C)^op * (B -&gt; C)) s d</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Functor (fst s / snd s) (fst d / snd d)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="inducedfunctors-v-chkd" style="display: none" type="checkbox"><label class="alectryon-input" for="inducedfunctors-v-chkd"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>A, B, C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>(A -&gt; C)^op * (B -&gt; C)</span></span></span><br><span><var>m</var><span class="hyp-type"><b>: </b><span>morphism ((A -&gt; C)^op * (B -&gt; C)) s d</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Functor (fst s / snd s) (fst d / snd d)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">refine</span> (Build_Functor (fst s / snd s) (fst d / snd d)
+                          (@comma_category_induced_functor_object_of s d m)
+                          (@comma_category_induced_functor_morphism_of s d m)
+                          _
+                          _
+           );
+    <span class="kp">abstract</span> (
+        <span class="nb">intros</span>; <span class="nb">apply</span> CommaCategory.path_morphism; <span class="bp">reflexivity</span>
+      ).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">comma_category_induced_functor</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Morphisms in [C] from [a] to [a&#39;] induce functors [(C / a) → (C / a&#39;)] *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">slice_category_induced_functor</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `{Funext}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">C</span> : PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">slice_coslice</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">D</span> : PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+    <span class="sd">(** TODO(JasonGross): See if this can be recast as an exponential law functor about how [1 → Cat] is isomorphic to [Cat], or something *)</span>
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="inducedfunctors-v-chke" style="display: none" type="checkbox"><label class="alectryon-input" for="inducedfunctors-v-chke"><span class="kn">Definition</span> <span class="nf">slice_category_induced_functor_nt</span> <span class="nv">s</span> <span class="nv">d</span> (<span class="nv">m</span> : morphism D s d)
+    : NaturalTransformation !s !d.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>D</span></span></span><br><span><var>m</var><span class="hyp-type"><b>: </b><span>morphism D s d</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">NaturalTransformation !s !d</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="inducedfunctors-v-chkf" style="display: none" type="checkbox"><label class="alectryon-input" for="inducedfunctors-v-chkf"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>D</span></span></span><br><span><var>m</var><span class="hyp-type"><b>: </b><span>morphism D s d</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">NaturalTransformation !s !d</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kr">exists</span> (<span class="nv">fun</span> <span class="nv">_</span> : Unit =&gt; m);
+      <span class="nb">simpl</span>; <span class="nb">intros</span>; <span class="nb">clear</span>;
+      <span class="kp">abstract</span> (<span class="nb">autorewrite with</span> category; <span class="bp">reflexivity</span>).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">F</span> : Functor C D.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">a</span> : D.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">slice</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">slice_category_induced_functor</span> <span class="nv">F&#39;</span> <span class="nv">a&#39;</span>
+                 (<span class="nv">m</span> : morphism D a a&#39;)
+                 (<span class="nv">T</span> : NaturalTransformation F&#39; F)
+      : Functor (F / a) (F&#39; / a&#39;)
+        := comma_category_induced_functor
+             (s := (F, !a))
+             (d := (F&#39;, !a&#39;))
+             (T, @slice_category_induced_functor_nt a a&#39; m).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">slice_category_nt_induced_functor</span> <span class="nv">F&#39;</span> <span class="nv">T</span>
+        := @slice_category_induced_functor F&#39; a <span class="mi">1</span> T.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">slice_category_morphism_induced_functor</span> <span class="nv">a&#39;</span> <span class="nv">m</span>
+        := @slice_category_induced_functor F a&#39; m <span class="mi">1</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">slice</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">coslice</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">coslice_category_induced_functor</span> <span class="nv">F&#39;</span> <span class="nv">a&#39;</span>
+                 (<span class="nv">m</span> : morphism D a&#39; a)
+                 (<span class="nv">T</span> : NaturalTransformation F F&#39;)
+      : Functor (a / F) (a&#39; / F&#39;)
+        := comma_category_induced_functor
+             (s := (!a, F))
+             (d := (!a&#39;, F&#39;))
+             (@slice_category_induced_functor_nt a&#39; a m, T).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">coslice_category_nt_induced_functor</span> <span class="nv">F&#39;</span> <span class="nv">T</span>
+        := @coslice_category_induced_functor F&#39; a <span class="mi">1</span> T.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">coslice_category_morphism_induced_functor</span> <span class="nv">a&#39;</span> <span class="nv">m</span>
+        := @coslice_category_induced_functor F a&#39; m <span class="mi">1</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">coslice</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">slice_coslice</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">slice_category_over_induced_functor</span> <span class="nv">a</span> <span class="nv">a&#39;</span> (<span class="nv">m</span> : morphism C a a&#39;)
+  : Functor (C / a) (C / a&#39;)
+    := <span class="kn">Eval</span> <span class="nb">hnf</span> <span class="kr">in</span> slice_category_morphism_induced_functor _ _ _ m.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">coslice_category_over_induced_functor</span> <span class="nv">a</span> <span class="nv">a&#39;</span> (<span class="nv">m</span> : morphism C a&#39; a)
+  : Functor (a \ C) (a&#39; \ C)
+    := <span class="kn">Eval</span> <span class="nb">hnf</span> <span class="kr">in</span> coslice_category_morphism_induced_functor _ _ _ m.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">slice_category_induced_functor</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Functors [A → A&#39;] functors [(cat / A) → (cat / A&#39;)] *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">cat_over_induced_functor</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> type_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `{Funext}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">P</span> : PreCategory -&gt; <span class="kt">Type</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `{H0 : <span class="kr">forall</span> <span class="nv">C</span> <span class="nv">D</span>, P C -&gt; P D -&gt; IsHSet (Functor C D)}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Notation</span> <span class="nf">cat</span> := (@sub_pre_cat _ P H0).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">cat_over_induced_functor</span> <span class="nv">a</span> <span class="nv">a&#39;</span> (<span class="nv">m</span> : morphism cat a a&#39;)
+  : Functor (cat / a) (cat / a&#39;)
+    := slice_category_over_induced_functor cat a a&#39; m.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">over_cat_induced_functor</span> <span class="nv">a</span> <span class="nv">a&#39;</span> (<span class="nv">m</span> : morphism cat a&#39; a)
+  : Functor (a \ cat) (a&#39; \ cat)
+    := coslice_category_over_induced_functor cat a a&#39; m.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">cat_over_induced_functor</span>.</span></span></pre>
+</div>
+</div></body>
+</html>

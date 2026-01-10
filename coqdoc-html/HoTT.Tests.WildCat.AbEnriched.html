@@ -1,0 +1,129 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Tests.WildCat.AbEnriched</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Tests.WildCat.AbEnriched</h1>
+
+<div class="code">
+<span class="id" title="keyword">From</span> <span class="id" title="var">HoTT</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.WildCat.SetoidRewrite.html#"><span class="id" title="library">WildCat.SetoidRewrite</span></a> <a class="idref" href="HoTT.WildCat.Core.html#"><span class="id" title="library">WildCat.Core</span></a> <a class="idref" href="HoTT.WildCat.AbEnriched.html#"><span class="id" title="library">WildCat.AbEnriched</span></a>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">HoTT</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.Overture.html#"><span class="id" title="library">Basics.Overture</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">mc_add_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Test that setoid rewriting works with the additive structure. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="test1" class="idref" href="#test1"><span class="id" title="definition">test1</span></a> (<a id="A:1" class="idref" href="#A:1"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>) `{<a id="H2:5" class="idref" href="#H2:5"><span class="id" title="binder">IsAbGroup_0gpd</span></a> <a id="H2:5" class="idref" href="#H2:5"><span class="id" title="binder">A</span></a>}<br/>
+&nbsp;&nbsp;{<a id="a:6" class="idref" href="#a:6"><span class="id" title="binder">a</span></a> <a id="b:7" class="idref" href="#b:7"><span class="id" title="binder">b</span></a> <a id="c:8" class="idref" href="#c:8"><span class="id" title="binder">c</span></a> <a id="d:9" class="idref" href="#d:9"><span class="id" title="binder">d</span></a> : <a class="idref" href="HoTT.Tests.WildCat.AbEnriched.html#A:1"><span class="id" title="variable">A</span></a>} (<a id="p:10" class="idref" href="#p:10"><span class="id" title="binder">p</span></a> : <a class="idref" href="HoTT.Tests.WildCat.AbEnriched.html#b:7"><span class="id" title="variable">b</span></a> <a class="idref" href="HoTT.WildCat.Core.html#96ad82935041c71951ddbfbeea7fcc62"><span class="id" title="notation">$==</span></a> <a class="idref" href="HoTT.Tests.WildCat.AbEnriched.html#c:8"><span class="id" title="variable">c</span></a>) (<a id="q:11" class="idref" href="#q:11"><span class="id" title="binder">q</span></a> : <a class="idref" href="HoTT.Tests.WildCat.AbEnriched.html#c:8"><span class="id" title="variable">c</span></a> <a class="idref" href="HoTT.WildCat.Core.html#96ad82935041c71951ddbfbeea7fcc62"><span class="id" title="notation">$==</span></a> <a class="idref" href="HoTT.Tests.WildCat.AbEnriched.html#d:9"><span class="id" title="variable">d</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Tests.WildCat.AbEnriched.html#b:7"><span class="id" title="variable">b</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#bf5a294baaba05398b1e9b95e91f2799"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Tests.WildCat.AbEnriched.html#a:6"><span class="id" title="variable">a</span></a> <a class="idref" href="HoTT.WildCat.Core.html#96ad82935041c71951ddbfbeea7fcc62"><span class="id" title="notation">$==</span></a> <a class="idref" href="HoTT.Tests.WildCat.AbEnriched.html#d:9"><span class="id" title="variable">d</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#bf5a294baaba05398b1e9b95e91f2799"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Tests.WildCat.AbEnriched.html#a:6"><span class="id" title="variable">a</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">p</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> &lt;- <span class="id" title="var">q</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="test2" class="idref" href="#test2"><span class="id" title="definition">test2</span></a> (<a id="A:12" class="idref" href="#A:12"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>) `{<a id="H2:16" class="idref" href="#H2:16"><span class="id" title="binder">IsAbGroup_0gpd</span></a> <a id="H2:16" class="idref" href="#H2:16"><span class="id" title="binder">A</span></a>}<br/>
+&nbsp;&nbsp;{<a id="a:17" class="idref" href="#a:17"><span class="id" title="binder">a</span></a> <a id="b:18" class="idref" href="#b:18"><span class="id" title="binder">b</span></a> <a id="c:19" class="idref" href="#c:19"><span class="id" title="binder">c</span></a> <a id="d:20" class="idref" href="#d:20"><span class="id" title="binder">d</span></a> : <a class="idref" href="HoTT.Tests.WildCat.AbEnriched.html#A:12"><span class="id" title="variable">A</span></a>} (<a id="p:21" class="idref" href="#p:21"><span class="id" title="binder">p</span></a> : <a class="idref" href="HoTT.Tests.WildCat.AbEnriched.html#b:18"><span class="id" title="variable">b</span></a> <a class="idref" href="HoTT.WildCat.Core.html#96ad82935041c71951ddbfbeea7fcc62"><span class="id" title="notation">$==</span></a> <a class="idref" href="HoTT.Tests.WildCat.AbEnriched.html#c:19"><span class="id" title="variable">c</span></a>) (<a id="q:22" class="idref" href="#q:22"><span class="id" title="binder">q</span></a> : <a class="idref" href="HoTT.Tests.WildCat.AbEnriched.html#c:19"><span class="id" title="variable">c</span></a> <a class="idref" href="HoTT.WildCat.Core.html#96ad82935041c71951ddbfbeea7fcc62"><span class="id" title="notation">$==</span></a> <a class="idref" href="HoTT.Tests.WildCat.AbEnriched.html#d:20"><span class="id" title="variable">d</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Tests.WildCat.AbEnriched.html#a:17"><span class="id" title="variable">a</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#bf5a294baaba05398b1e9b95e91f2799"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Tests.WildCat.AbEnriched.html#b:18"><span class="id" title="variable">b</span></a> <a class="idref" href="HoTT.WildCat.Core.html#96ad82935041c71951ddbfbeea7fcc62"><span class="id" title="notation">$==</span></a> <a class="idref" href="HoTT.Tests.WildCat.AbEnriched.html#a:17"><span class="id" title="variable">a</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#bf5a294baaba05398b1e9b95e91f2799"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Tests.WildCat.AbEnriched.html#d:20"><span class="id" title="variable">d</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">p</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> &lt;- <span class="id" title="var">q</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="test3" class="idref" href="#test3"><span class="id" title="definition">test3</span></a> (<a id="A:23" class="idref" href="#A:23"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>) `{<a id="H2:27" class="idref" href="#H2:27"><span class="id" title="binder">IsAbGroup_0gpd</span></a> <a id="H2:27" class="idref" href="#H2:27"><span class="id" title="binder">A</span></a>}<br/>
+&nbsp;&nbsp;{<a id="a:28" class="idref" href="#a:28"><span class="id" title="binder">a</span></a> <a id="b:29" class="idref" href="#b:29"><span class="id" title="binder">b</span></a> <a id="c:30" class="idref" href="#c:30"><span class="id" title="binder">c</span></a> <a id="d:31" class="idref" href="#d:31"><span class="id" title="binder">d</span></a> : <a class="idref" href="HoTT.Tests.WildCat.AbEnriched.html#A:23"><span class="id" title="variable">A</span></a>} (<a id="p:32" class="idref" href="#p:32"><span class="id" title="binder">p</span></a> : <a class="idref" href="HoTT.Tests.WildCat.AbEnriched.html#a:28"><span class="id" title="variable">a</span></a> <a class="idref" href="HoTT.WildCat.Core.html#96ad82935041c71951ddbfbeea7fcc62"><span class="id" title="notation">$==</span></a> <a class="idref" href="HoTT.Tests.WildCat.AbEnriched.html#c:30"><span class="id" title="variable">c</span></a>) (<a id="q:33" class="idref" href="#q:33"><span class="id" title="binder">q</span></a> : <a class="idref" href="HoTT.Tests.WildCat.AbEnriched.html#b:29"><span class="id" title="variable">b</span></a> <a class="idref" href="HoTT.WildCat.Core.html#96ad82935041c71951ddbfbeea7fcc62"><span class="id" title="notation">$==</span></a> <a class="idref" href="HoTT.Tests.WildCat.AbEnriched.html#d:31"><span class="id" title="variable">d</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Tests.WildCat.AbEnriched.html#a:28"><span class="id" title="variable">a</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#AdditiveNotations.::mc_add_scope:x_'-'_x"><span class="id" title="notation">-</span></a> <a class="idref" href="HoTT.Tests.WildCat.AbEnriched.html#b:29"><span class="id" title="variable">b</span></a> <a class="idref" href="HoTT.WildCat.Core.html#96ad82935041c71951ddbfbeea7fcc62"><span class="id" title="notation">$==</span></a> <a class="idref" href="HoTT.Tests.WildCat.AbEnriched.html#c:30"><span class="id" title="variable">c</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#AdditiveNotations.::mc_add_scope:x_'-'_x"><span class="id" title="notation">-</span></a> <a class="idref" href="HoTT.Tests.WildCat.AbEnriched.html#d:31"><span class="id" title="variable">d</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">p</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> &lt;- <span class="id" title="var">q</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="test4" class="idref" href="#test4"><span class="id" title="definition">test4</span></a> (<a id="A:34" class="idref" href="#A:34"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>) `{<a id="H2:38" class="idref" href="#H2:38"><span class="id" title="binder">IsAbGroup_0gpd</span></a> <a id="H2:38" class="idref" href="#H2:38"><span class="id" title="binder">A</span></a>}<br/>
+&nbsp;&nbsp;{<a id="a:39" class="idref" href="#a:39"><span class="id" title="binder">a</span></a> <a id="b:40" class="idref" href="#b:40"><span class="id" title="binder">b</span></a> : <a class="idref" href="HoTT.Tests.WildCat.AbEnriched.html#A:34"><span class="id" title="variable">A</span></a>} (<a id="p:41" class="idref" href="#p:41"><span class="id" title="binder">p</span></a> : <a class="idref" href="HoTT.Tests.WildCat.AbEnriched.html#a:39"><span class="id" title="variable">a</span></a> <a class="idref" href="HoTT.WildCat.Core.html#96ad82935041c71951ddbfbeea7fcc62"><span class="id" title="notation">$==</span></a> <a class="idref" href="HoTT.Tests.WildCat.AbEnriched.html#b:40"><span class="id" title="variable">b</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#AdditiveNotations.::mc_add_scope:'-'_x"><span class="id" title="notation">-</span></a> <a class="idref" href="HoTT.Tests.WildCat.AbEnriched.html#a:39"><span class="id" title="variable">a</span></a> <a class="idref" href="HoTT.WildCat.Core.html#96ad82935041c71951ddbfbeea7fcc62"><span class="id" title="notation">$==</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#AdditiveNotations.::mc_add_scope:'-'_x"><span class="id" title="notation">-</span></a> <a class="idref" href="HoTT.Tests.WildCat.AbEnriched.html#b:40"><span class="id" title="variable">b</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">p</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Test rewriting just on LHS of a sum. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="test5" class="idref" href="#test5"><span class="id" title="definition">test5</span></a> (<a id="A:42" class="idref" href="#A:42"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>) `{<a id="H2:46" class="idref" href="#H2:46"><span class="id" title="binder">IsAbGroup_0gpd</span></a> <a id="H2:46" class="idref" href="#H2:46"><span class="id" title="binder">A</span></a>}<br/>
+&nbsp;&nbsp;{<a id="a:47" class="idref" href="#a:47"><span class="id" title="binder">a</span></a> <a id="b:48" class="idref" href="#b:48"><span class="id" title="binder">b</span></a> <a id="c:49" class="idref" href="#c:49"><span class="id" title="binder">c</span></a> : <a class="idref" href="HoTT.Tests.WildCat.AbEnriched.html#A:42"><span class="id" title="variable">A</span></a>} (<a id="p:50" class="idref" href="#p:50"><span class="id" title="binder">p</span></a> : <a class="idref" href="HoTT.Tests.WildCat.AbEnriched.html#a:47"><span class="id" title="variable">a</span></a> <a class="idref" href="HoTT.WildCat.Core.html#96ad82935041c71951ddbfbeea7fcc62"><span class="id" title="notation">$==</span></a> <a class="idref" href="HoTT.Tests.WildCat.AbEnriched.html#b:48"><span class="id" title="variable">b</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Tests.WildCat.AbEnriched.html#a:47"><span class="id" title="variable">a</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#bf5a294baaba05398b1e9b95e91f2799"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Tests.WildCat.AbEnriched.html#c:49"><span class="id" title="variable">c</span></a> <a class="idref" href="HoTT.WildCat.Core.html#96ad82935041c71951ddbfbeea7fcc62"><span class="id" title="notation">$==</span></a> <a class="idref" href="HoTT.Tests.WildCat.AbEnriched.html#b:48"><span class="id" title="variable">b</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#bf5a294baaba05398b1e9b95e91f2799"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Tests.WildCat.AbEnriched.html#c:49"><span class="id" title="variable">c</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">p</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Test rewriting just on RHS of a sum. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="test6" class="idref" href="#test6"><span class="id" title="definition">test6</span></a> (<a id="A:51" class="idref" href="#A:51"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>) `{<a id="H2:55" class="idref" href="#H2:55"><span class="id" title="binder">IsAbGroup_0gpd</span></a> <a id="H2:55" class="idref" href="#H2:55"><span class="id" title="binder">A</span></a>}<br/>
+&nbsp;&nbsp;{<a id="a:56" class="idref" href="#a:56"><span class="id" title="binder">a</span></a> <a id="b:57" class="idref" href="#b:57"><span class="id" title="binder">b</span></a> <a id="c:58" class="idref" href="#c:58"><span class="id" title="binder">c</span></a> : <a class="idref" href="HoTT.Tests.WildCat.AbEnriched.html#A:51"><span class="id" title="variable">A</span></a>} (<a id="p:59" class="idref" href="#p:59"><span class="id" title="binder">p</span></a> : <a class="idref" href="HoTT.Tests.WildCat.AbEnriched.html#a:56"><span class="id" title="variable">a</span></a> <a class="idref" href="HoTT.WildCat.Core.html#96ad82935041c71951ddbfbeea7fcc62"><span class="id" title="notation">$==</span></a> <a class="idref" href="HoTT.Tests.WildCat.AbEnriched.html#b:57"><span class="id" title="variable">b</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Tests.WildCat.AbEnriched.html#c:58"><span class="id" title="variable">c</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#bf5a294baaba05398b1e9b95e91f2799"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Tests.WildCat.AbEnriched.html#a:56"><span class="id" title="variable">a</span></a> <a class="idref" href="HoTT.WildCat.Core.html#96ad82935041c71951ddbfbeea7fcc62"><span class="id" title="notation">$==</span></a> <a class="idref" href="HoTT.Tests.WildCat.AbEnriched.html#c:58"><span class="id" title="variable">c</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#bf5a294baaba05398b1e9b95e91f2799"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Tests.WildCat.AbEnriched.html#b:57"><span class="id" title="variable">b</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">p</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Test rewriting simultaneously on both sides of a sum. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="test7" class="idref" href="#test7"><span class="id" title="definition">test7</span></a> (<a id="A:60" class="idref" href="#A:60"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>) `{<a id="H2:64" class="idref" href="#H2:64"><span class="id" title="binder">IsAbGroup_0gpd</span></a> <a id="H2:64" class="idref" href="#H2:64"><span class="id" title="binder">A</span></a>}<br/>
+&nbsp;&nbsp;{<a id="a:65" class="idref" href="#a:65"><span class="id" title="binder">a</span></a> <a id="b:66" class="idref" href="#b:66"><span class="id" title="binder">b</span></a> : <a class="idref" href="HoTT.Tests.WildCat.AbEnriched.html#A:60"><span class="id" title="variable">A</span></a>} (<a id="p:67" class="idref" href="#p:67"><span class="id" title="binder">p</span></a> : <a class="idref" href="HoTT.Tests.WildCat.AbEnriched.html#a:65"><span class="id" title="variable">a</span></a> <a class="idref" href="HoTT.WildCat.Core.html#96ad82935041c71951ddbfbeea7fcc62"><span class="id" title="notation">$==</span></a> <a class="idref" href="HoTT.Tests.WildCat.AbEnriched.html#b:66"><span class="id" title="variable">b</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Tests.WildCat.AbEnriched.html#a:65"><span class="id" title="variable">a</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#bf5a294baaba05398b1e9b95e91f2799"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Tests.WildCat.AbEnriched.html#a:65"><span class="id" title="variable">a</span></a> <a class="idref" href="HoTT.WildCat.Core.html#96ad82935041c71951ddbfbeea7fcc62"><span class="id" title="notation">$==</span></a> <a class="idref" href="HoTT.Tests.WildCat.AbEnriched.html#b:66"><span class="id" title="variable">b</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#bf5a294baaba05398b1e9b95e91f2799"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Tests.WildCat.AbEnriched.html#b:66"><span class="id" title="variable">b</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">p</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

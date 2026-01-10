@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>ua_setalgebra.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-wsp"><span class="sd">(** This file defines [SetAlgebra], a specialized [Algebra] where</span>
+<span class="sd">    the carriers are always sets. *)</span>
+
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="ua-setalgebra-v-chk0" style="display: none" type="checkbox"><label class="alectryon-input" for="ua-setalgebra-v-chk0"><span class="kn">Require Export</span> HoTT.Classes.interfaces.ua_algebra.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Record</span> <span class="nf">SetAlgebra</span> {<span class="nv">σ</span> : Signature} : <span class="kt">Type</span> := BuildSetAlgebra
+  { algebra_setalgebra : Algebra σ
+  ; is_hset_algebra_setalgebra :: IsHSetAlgebra algebra_setalgebra }.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> SetAlgebra : <span class="kn">clear implicits</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global Coercion</span> <span class="nf">algebra_setalgebra</span> : SetAlgebra &gt;-&gt; Algebra.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** To find a path [A = B] between set algebras [A B : SetAlgebra σ],</span>
+<span class="sd">    it is enough to find a path between the defining algebras,</span>
+<span class="sd">    [algebra_setalgebra A = algebra_setalgebra B]. *)</span>
+
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="ua-setalgebra-v-chk1" style="display: none" type="checkbox"><label class="alectryon-input" for="ua-setalgebra-v-chk1"><span class="kn">Lemma</span> <span class="nf">path_setalgebra</span> `{Funext} {σ} (A B : SetAlgebra σ)
+  (p : algebra_setalgebra A = algebra_setalgebra B)
+  : A = B.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A, B</var><span class="hyp-type"><b>: </b><span>SetAlgebra σ</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>A = B</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">A = B</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="ua-setalgebra-v-chk2" style="display: none" type="checkbox"><label class="alectryon-input" for="ua-setalgebra-v-chk2"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A, B</var><span class="hyp-type"><b>: </b><span>SetAlgebra σ</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>A = B</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">A = B</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="ua-setalgebra-v-chk3" style="display: none" type="checkbox"><label class="alectryon-input" for="ua-setalgebra-v-chk3"><span class="nb">destruct</span> A <span class="kr">as</span> [A AH], B <span class="kr">as</span> [B BH].</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>Algebra σ</span></span></span><br><span><var>AH</var><span class="hyp-type"><b>: </b><span>IsHSetAlgebra A</span></span></span><br><span><var>B</var><span class="hyp-type"><b>: </b><span>Algebra σ</span></span></span><br><span><var>BH</var><span class="hyp-type"><b>: </b><span>IsHSetAlgebra B</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>{|
+  algebra_setalgebra := A;
+  is_hset_algebra_setalgebra := AH
+|} =
+{|
+  algebra_setalgebra := B;
+  is_hset_algebra_setalgebra := BH
+|}</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{|
+  algebra_setalgebra := A;
+  is_hset_algebra_setalgebra := AH
+|} =
+{|
+  algebra_setalgebra := B;
+  is_hset_algebra_setalgebra := BH
+|}</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="ua-setalgebra-v-chk4" style="display: none" type="checkbox"><label class="alectryon-input" for="ua-setalgebra-v-chk4"><span class="nb">cbn</span> <span class="kr">in</span> *.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>Algebra σ</span></span></span><br><span><var>AH</var><span class="hyp-type"><b>: </b><span>IsHSetAlgebra A</span></span></span><br><span><var>B</var><span class="hyp-type"><b>: </b><span>Algebra σ</span></span></span><br><span><var>BH</var><span class="hyp-type"><b>: </b><span>IsHSetAlgebra B</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>A = B</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{|
+  algebra_setalgebra := A;
+  is_hset_algebra_setalgebra := AH
+|} =
+{|
+  algebra_setalgebra := B;
+  is_hset_algebra_setalgebra := BH
+|}</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="ua-setalgebra-v-chk5" style="display: none" type="checkbox"><label class="alectryon-input" for="ua-setalgebra-v-chk5">transparent <span class="nb">assert</span> (a : (p#AH = BH)) <span class="bp">by</span> <span class="nb">apply</span> path_ishprop.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>Algebra σ</span></span></span><br><span><var>AH</var><span class="hyp-type"><b>: </b><span>IsHSetAlgebra A</span></span></span><br><span><var>B</var><span class="hyp-type"><b>: </b><span>Algebra σ</span></span></span><br><span><var>BH</var><span class="hyp-type"><b>: </b><span>IsHSetAlgebra B</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>A = B</span></span></span><br><span><var>H0</var><span><span class="hyp-body"><b>:= </b><span>path_ishprop (transport IsHSetAlgebra p AH) BH</span></span><span class="hyp-type"><b>: </b><span>transport IsHSetAlgebra p AH = BH</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{|
+  algebra_setalgebra := A;
+  is_hset_algebra_setalgebra := AH
+|} =
+{|
+  algebra_setalgebra := B;
+  is_hset_algebra_setalgebra := BH
+|}</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">by</span> path_induction.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** The id path is mapped to the id path by [path_setalgebra]. *)</span>
+
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="ua-setalgebra-v-chk6" style="display: none" type="checkbox"><label class="alectryon-input" for="ua-setalgebra-v-chk6"><span class="kn">Lemma</span> <span class="nf">path_setalgebra_1</span> `{Funext} {σ} (A : SetAlgebra σ)
+  : path_setalgebra A A idpath = idpath.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>SetAlgebra σ</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">path_setalgebra A A <span class="mi">1</span> = <span class="mi">1</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="ua-setalgebra-v-chk7" style="display: none" type="checkbox"><label class="alectryon-input" for="ua-setalgebra-v-chk7"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>SetAlgebra σ</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">path_setalgebra A A <span class="mi">1</span> = <span class="mi">1</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="ua-setalgebra-v-chk8" style="display: none" type="checkbox"><label class="alectryon-input" for="ua-setalgebra-v-chk8">transparent <span class="nb">assert</span> (p :
+      (<span class="kr">∀</span> <span class="nv">I</span> : IsHSetAlgebra A, path_ishprop I I = idpath)).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>SetAlgebra σ</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">I</span> : IsHSetAlgebra A, path_ishprop I I = <span class="mi">1</span></div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="ua-setalgebra-v-chk9" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>SetAlgebra σ</span></span></span><br><span><var>p</var><span><span class="hyp-body"><b>:= </b><span><span class="nl">?Goal</span></span></span><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">I</span> : IsHSetAlgebra A, path_ishprop I I = <span class="mi">1</span></span></span></span></span><br></div><label class="goal-separator" for="ua-setalgebra-v-chk9"><hr></label><div class="goal-conclusion">path_setalgebra A A <span class="mi">1</span> = <span class="mi">1</span></div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="ua-setalgebra-v-chka" style="display: none" type="checkbox"><label class="alectryon-input" for="ua-setalgebra-v-chka">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>SetAlgebra σ</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">I</span> : IsHSetAlgebra A, path_ishprop I I = <span class="mi">1</span></div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="ua-setalgebra-v-chkb" style="display: none" type="checkbox"><label class="alectryon-input" for="ua-setalgebra-v-chkb"><span class="nb">intros</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>SetAlgebra σ</span></span></span><br><span><var>I</var><span class="hyp-type"><b>: </b><span>IsHSetAlgebra A</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">path_ishprop I I = <span class="mi">1</span></div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">apply</span> path_ishprop.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="ua-setalgebra-v-chkc" style="display: none" type="checkbox"><label class="alectryon-input" for="ua-setalgebra-v-chkc">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>SetAlgebra σ</span></span></span><br><span><var>p</var><span><span class="hyp-body"><b>:= </b><span><span class="kr">λ</span> <span class="nv">I</span> : IsHSetAlgebra A,
+path_ishprop (path_ishprop I I) <span class="mi">1</span></span></span><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">I</span> : IsHSetAlgebra A, path_ishprop I I = <span class="mi">1</span></span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">path_setalgebra A A <span class="mi">1</span> = <span class="mi">1</span></div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="ua-setalgebra-v-chkd" style="display: none" type="checkbox"><label class="alectryon-input" for="ua-setalgebra-v-chkd"><span class="nb">unfold</span> path_setalgebra.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>SetAlgebra σ</span></span></span><br><span><var>p</var><span><span class="hyp-body"><b>:= </b><span><span class="kr">λ</span> <span class="nv">I</span> : IsHSetAlgebra A,
+path_ishprop (path_ishprop I I) <span class="mi">1</span></span></span><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">I</span> : IsHSetAlgebra A, path_ishprop I I = <span class="mi">1</span></span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">paths_rect (IsHSetAlgebra A)
+  (transport IsHSetAlgebra <span class="mi">1</span>
+     (is_hset_algebra_setalgebra A))
+  (<span class="kr">λ</span> (<span class="nv">BH</span> : IsHSetAlgebra A)
+   (<span class="nv">_</span> : transport IsHSetAlgebra <span class="mi">1</span>
+          (is_hset_algebra_setalgebra A) = BH),
+   {|
+     algebra_setalgebra := A;
+     is_hset_algebra_setalgebra :=
+       is_hset_algebra_setalgebra A
+   |} =
+   {|
+     algebra_setalgebra := A;
+     is_hset_algebra_setalgebra := BH
+   |})
+  (paths_rect (Algebra σ) A
+     (<span class="kr">λ</span> (<span class="nv">B</span> : Algebra σ) (<span class="nv">p</span> : A = B),
+      {|
+        algebra_setalgebra := A;
+        is_hset_algebra_setalgebra :=
+          is_hset_algebra_setalgebra A
+      |} =
+      {|
+        algebra_setalgebra := B;
+        is_hset_algebra_setalgebra :=
+          transport IsHSetAlgebra p
+            (is_hset_algebra_setalgebra A)
+      |}) <span class="mi">1</span> A <span class="mi">1</span>) (is_hset_algebra_setalgebra A)
+  (path_ishprop
+     (transport IsHSetAlgebra <span class="mi">1</span>
+        (is_hset_algebra_setalgebra A))
+     (is_hset_algebra_setalgebra A)) = <span class="mi">1</span></div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">by</span> <span class="nb">rewrite</span> p.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Qed</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** The function [path_setalgebra A B] is an equivalence with inverse</span>
+<span class="sd">    [ap algebra_setalgebra]. *)</span>
+
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="ua-setalgebra-v-chke" style="display: none" type="checkbox"><label class="alectryon-input" for="ua-setalgebra-v-chke"><span class="kn">Instance</span> <span class="nf">isequiv_path_setalgebra</span> `{Funext} {σ : Signature}
+  (A B : SetAlgebra σ)
+  : IsEquiv (path_setalgebra A B).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A, B</var><span class="hyp-type"><b>: </b><span>SetAlgebra σ</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsEquiv (path_setalgebra A B)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="ua-setalgebra-v-chkf" style="display: none" type="checkbox"><label class="alectryon-input" for="ua-setalgebra-v-chkf"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A, B</var><span class="hyp-type"><b>: </b><span>SetAlgebra σ</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsEquiv (path_setalgebra A B)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="ua-setalgebra-v-chk10" style="display: none" type="checkbox"><label class="alectryon-input" for="ua-setalgebra-v-chk10"><span class="nb">refine</span> (isequiv_adjointify
+            (path_setalgebra A B) (ap algebra_setalgebra) _ _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A, B</var><span class="hyp-type"><b>: </b><span>SetAlgebra σ</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">λ</span> <span class="nv">x</span> : A = B,
+ path_setalgebra A B (ap algebra_setalgebra x)) ==
+idmap</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="ua-setalgebra-v-chk11" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A, B</var><span class="hyp-type"><b>: </b><span>SetAlgebra σ</span></span></span><br></div><label class="goal-separator" for="ua-setalgebra-v-chk11"><hr></label><div class="goal-conclusion">(<span class="kr">λ</span> <span class="nv">x</span> : A = B,
+ ap algebra_setalgebra (path_setalgebra A B x)) ==
+idmap</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="ua-setalgebra-v-chk12" style="display: none" type="checkbox"><label class="alectryon-input" for="ua-setalgebra-v-chk12">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A, B</var><span class="hyp-type"><b>: </b><span>SetAlgebra σ</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">λ</span> <span class="nv">x</span> : A = B,
+ path_setalgebra A B (ap algebra_setalgebra x)) ==
+idmap</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kp">abstract</span> (<span class="nb">intro</span> p; <span class="nb">induction</span> p; <span class="bp">by</span> <span class="nb">rewrite</span> path_setalgebra_1).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="ua-setalgebra-v-chk13" style="display: none" type="checkbox"><label class="alectryon-input" for="ua-setalgebra-v-chk13">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>σ</var><span class="hyp-type"><b>: </b><span>Signature</span></span></span><br><span><var>A, B</var><span class="hyp-type"><b>: </b><span>SetAlgebra σ</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">λ</span> <span class="nv">x</span> : A = B,
+ ap algebra_setalgebra (path_setalgebra A B x)) ==
+idmap</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kp">abstract</span> (
+      <span class="nb">intro</span> e; <span class="nb">destruct</span> A <span class="kr">as</span> [A AH], B <span class="kr">as</span> [B BH];
+      <span class="nb">cbn</span> <span class="kr">in</span> e; <span class="nb">destruct</span> e;
+      <span class="nb">unfold</span> path_setalgebra; <span class="bp">by</span> <span class="nb">destruct</span> path_ishprop).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span></span></pre>
+</div>
+</div></body>
+</html>

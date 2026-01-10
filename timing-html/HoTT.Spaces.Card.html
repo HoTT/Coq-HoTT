@@ -1,0 +1,1449 @@
+<html>
+<head>
+<title>Card.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Card.v</h1>
+
+<div class="code" title="File: Card.v
+Line: 1
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>(** Representation of cardinals, see Chapter 10 of the HoTT book. *)</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 1
+Time: 0.03s">
+<div class="time" style="width: 47.619047619048%"></div>
+<pre>Require Import HoTT.Universes.TruncType.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 1
+Time: 0.049s">
+<div class="time" style="width: 77.777777777778%"></div>
+<pre>
+Require Import HoTT.Classes.interfaces.abstract_algebra.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 2
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** This speeds things up considerably *)</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Opaque equiv_isequiv istrunc_isequiv_istrunc.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Definitions and operations *)
+
+</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Card := Trunc 0 HSet.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition card A `{IsHSet A} : Card
+  := tr (Build_HSet A).</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition sum_card (a b : Card) : Card.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 13
+Time: 0.011s">
+<div class="time" style="width: 17.460317460317%"></div>
+<pre>
+  strip_truncations.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 14
+Time: 0.005s">
+<div class="time" style="width: 7.9365079365079%"></div>
+<pre>
+  exact (tr (Build_HSet (a + b))).</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition prod_card (a b : Card) : Card.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 19
+Time: 0.011s">
+<div class="time" style="width: 17.460317460317%"></div>
+<pre>
+  strip_truncations.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 20
+Time: 0.005s">
+<div class="time" style="width: 7.9365079365079%"></div>
+<pre>
+  exact (tr (Build_HSet (a * b))).</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition exp_card `{Funext} (b a : Card) : Card.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 25
+Time: 0.014s">
+<div class="time" style="width: 22.222222222222%"></div>
+<pre>
+  strip_truncations.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 26
+Time: 0.005s">
+<div class="time" style="width: 7.9365079365079%"></div>
+<pre>
+  exact (tr (Build_HSet (b -&gt; a))).</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition leq_card `{Univalence} : Card -&gt; Card -&gt; HProp.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 31
+Time: 0.005s">
+<div class="time" style="width: 7.9365079365079%"></div>
+<pre>
+  refine (Trunc_rec (fun a =&gt; _)).</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (Trunc_rec (fun b =&gt; _)).</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (hexists (fun (i : a -&gt; b) =&gt; IsInjective i)).</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Properties *)</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section contents.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{Univalence}.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance plus_card : Plus Card := sum_card.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  #[export] Instance mult_card : Mult Card := prod_card.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  #[export] Instance zero_card : Zero Card := tr (Build_HSet Empty).</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 42
+Time: 0.001s">
+<div class="time" style="width: 1.5873015873016%"></div>
+<pre>
+  #[export] Instance one_card : One Card := tr (Build_HSet Unit).</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  #[export] Instance le_card : Le Card := leq_card.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (* Reduce an algebraic equation to an equivalence *)
+ </pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Ltac reduce :=
+    repeat (intros ?); strip_truncations; cbn; f_ap; apply path_hset.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (* Simplify an equation by unfolding all the definitions apart from
+  the actual operations. *)
+  (* Note that this is an expensive thing to do, and will be very slow unless we tell it not to unfold the following. *)
+ </pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Ltac simpl_ops :=
+    cbv-[plus_card mult_card zero_card one_card exp_card].</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** We only make the instances of upper classes global, since the
+  other instances will be project anyway. *)
+
+  (** *** [Card] is a semi-ring *)
+ </pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance associative_sum : Associative plus_card.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 61
+Time: 0.032s">
+<div class="time" style="width: 50.793650793651%"></div>
+<pre> reduce.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> symmetry.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply equiv_sum_assoc.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 61
+Time: 0.013s">
+<div class="time" style="width: 20.634920634921%"></div>
+<pre> Defined.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Instance rightid_sum : RightIdentity plus_card zero_card.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 64
+Time: 0.007s">
+<div class="time" style="width: 11.111111111111%"></div>
+<pre> reduce.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply sum_empty_r.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> Defined.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Instance commutative_sum : Commutative plus_card.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 67
+Time: 0.014s">
+<div class="time" style="width: 22.222222222222%"></div>
+<pre> reduce.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply equiv_sum_symm.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> Defined.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Instance associative_prod : Associative mult_card.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 70
+Time: 0.042s">
+<div class="time" style="width: 66.666666666667%"></div>
+<pre> reduce.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply equiv_prod_assoc.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 70
+Time: 0.008s">
+<div class="time" style="width: 12.698412698413%"></div>
+<pre> Defined.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Instance rightid_prod : RightIdentity mult_card one_card.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 73
+Time: 0.01s">
+<div class="time" style="width: 15.873015873016%"></div>
+<pre> reduce.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply prod_unit_r.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 73
+Time: 0.001s">
+<div class="time" style="width: 1.5873015873016%"></div>
+<pre> Defined.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Instance commutative_prod : Commutative mult_card.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 76
+Time: 0.018s">
+<div class="time" style="width: 28.571428571429%"></div>
+<pre> reduce.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply equiv_prod_symm.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 76
+Time: 0.002s">
+<div class="time" style="width: 3.1746031746032%"></div>
+<pre> Defined.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Instance leftdistributive_card : LeftDistribute mult_card plus_card.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 79
+Time: 0.028s">
+<div class="time" style="width: 44.444444444444%"></div>
+<pre> reduce.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply sum_distrib_l.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 79
+Time: 0.004s">
+<div class="time" style="width: 6.3492063492063%"></div>
+<pre> Defined.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Instance leftabsorb_card : LeftAbsorb mult_card zero_card.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 82
+Time: 0.009s">
+<div class="time" style="width: 14.285714285714%"></div>
+<pre> reduce.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply prod_empty_l.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 82
+Time: 0.001s">
+<div class="time" style="width: 1.5873015873016%"></div>
+<pre> Defined.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance issemiring_card : IsSemiCRing Card.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 85
+Time: 0.006s">
+<div class="time" style="width: 9.5238095238095%"></div>
+<pre>
+    repeat split; try exact _.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> repeat intro.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl_ops.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite (commutativity zero_card _).</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply rightid_sum.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> repeat intro.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl_ops.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite (commutativity one_card _).</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply rightid_prod.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** *** Properties of exponentiation *)
+ </pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma exp_zero_card (a : Card) : exp_card 0 a = 1.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl_ops.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 97
+Time: 0.008s">
+<div class="time" style="width: 12.698412698413%"></div>
+<pre> reduce.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> symmetry.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply equiv_empty_rec.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 97
+Time: 0.001s">
+<div class="time" style="width: 1.5873015873016%"></div>
+<pre> Defined.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma exp_card_one (a : Card) : exp_card a 1 = 1.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl_ops.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 100
+Time: 0.008s">
+<div class="time" style="width: 12.698412698413%"></div>
+<pre> reduce.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> symmetry.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply equiv_unit_coind.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 100
+Time: 0.001s">
+<div class="time" style="width: 1.5873015873016%"></div>
+<pre> Defined.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma exp_one_card (a : Card) : exp_card 1 a = a.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 103
+Time: 0.009s">
+<div class="time" style="width: 14.285714285714%"></div>
+<pre> reduce.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> symmetry.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply equiv_unit_rec.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 103
+Time: 0.001s">
+<div class="time" style="width: 1.5873015873016%"></div>
+<pre> Defined.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma exp_card_sum_mult (a b c : Card) :
+    exp_card (b + c) a = (exp_card b a) * (exp_card c a).</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 107
+Time: 0.031s">
+<div class="time" style="width: 49.206349206349%"></div>
+<pre> reduce.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 107
+Time: 0.001s">
+<div class="time" style="width: 1.5873015873016%"></div>
+<pre> symmetry.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply equiv_sum_distributive.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 107
+Time: 0.011s">
+<div class="time" style="width: 17.460317460317%"></div>
+<pre> Defined.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma exp_mult_card_exp (a b c : Card) :
+    exp_card (b * c) a = exp_card c (exp_card b a).</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite (@commutativity _ _ (.*.) _ b c).</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 112
+Time: 0.027s">
+<div class="time" style="width: 42.857142857143%"></div>
+<pre>
+    reduce.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> symmetry.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply equiv_uncurry.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 113
+Time: 0.004s">
+<div class="time" style="width: 6.3492063492063%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma exp_card_mult_mult (a b c : Card) :
+    exp_card c (a * b) = (exp_card c a) * (exp_card c b).</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 118
+Time: 0.034s">
+<div class="time" style="width: 53.968253968254%"></div>
+<pre> reduce.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 118
+Time: 0.001s">
+<div class="time" style="width: 1.5873015873016%"></div>
+<pre> symmetry.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 118
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply equiv_prod_coind.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 118
+Time: 0.011s">
+<div class="time" style="width: 17.460317460317%"></div>
+<pre> Defined.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 118
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** *** Properties of ≤ *)
+ </pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 121
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance reflexive_card : Reflexive leq_card.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 121
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 122
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro x.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 123
+Time: 0.01s">
+<div class="time" style="width: 15.873015873016%"></div>
+<pre> strip_truncations.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply tr.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists idmap.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fun _ _ =&gt; idmap).</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 125
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Instance transitive_card : Transitive leq_card.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 128
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros a b c.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 129
+Time: 0.063s">
+<div class="time" style="width: 100%"></div>
+<pre> strip_truncations.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros Hab Hbc.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 130
+Time: 0.012s">
+<div class="time" style="width: 19.047619047619%"></div>
+<pre> strip_truncations.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 130
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct Hab as [iab Hab].</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 131
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct Hbc as [ibc Hbc].</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply tr.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists (ibc ∘ iab).</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros x y Hxy.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply Hab.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 135
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply Hbc.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 135
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact Hxy.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 135
+Time: 0.001s">
+<div class="time" style="width: 1.5873015873016%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance preorder_card : PreOrder le_card.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split; exact _.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> Defined.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 139
+Time: 0.038s">
+<div class="time" style="width: 60.31746031746%"></div>
+<pre>
+
+End contents.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+
+(** * Cardinality comparisons *)
+
+(* We also work with cardinality comparisons directly to avoid unnecessary type truncations via cardinals. *)
+
+</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 147
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Injection X Y :=
+  { f : X -&gt; Y | IsInjective f }.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 148
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance Injection_refl :
+  Reflexive Injection.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 152
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros X.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists (fun x =&gt; x).</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x x'.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> done.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 154
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma Injection_trans X Y Z :
+  Injection X Y -&gt; Injection Y Z -&gt; Injection X Z.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [f Hf] [g Hg].</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists (fun x =&gt; g (f x)).</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x x' H.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by apply Hf, Hg.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition InjectsInto X Y :=
+  merely (Injection X Y).</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 164
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance InjectsInto_refl :
+  Reflexive InjectsInto.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros X.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma InjectsInto_trans X Y Z :
+  InjectsInto X Y -&gt; InjectsInto Y Z -&gt; InjectsInto X Z.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 174
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros H1 H2.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 175
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  eapply merely_destruct; try exact H1.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [f Hf].</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  eapply merely_destruct; try exact H2.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [g Hg].</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply tr.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists (fun x =&gt; g (f x)).</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x x' H.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 179
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by apply Hf, Hg.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 179
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 180
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+
+
+(** * Infinity *)
+
+(* We call a set infinite if nat embeds into it. *)
+
+</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition infinite X :=
+  Injection nat X.</pre>
+</div>
+<div class="code" title="File: Card.v
+Line: 189
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

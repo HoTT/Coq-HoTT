@@ -1,0 +1,1003 @@
+<html>
+<head>
+<title>Limit.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Limit.v</h1>
+
+<div class="code" title="File: Limit.v
+Line: 1
+Time: 0.029s">
+<div class="time" style="width: 100%"></div>
+<pre>From HoTT Require Import Basics.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 1
+Time: 0.016s">
+<div class="time" style="width: 55.172413793103%"></div>
+<pre>
+Require Import Diagrams.Diagram.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 2
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Diagrams.Graph.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Diagrams.Cone.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Diagrams.ConstantDiagram.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope path_scope.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Generalizable All Variables.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** This file contains the definition of limits, and functoriality results on limits. *)
+
+(** * Limits *)
+
+(** A Limit is the extremity of a cone. *)
+
+</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 15
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>Class IsLimit `(D : Diagram G) (Q : Type) := {
+  islimit_cone :: Cone Q D;
+  islimit_unicone : UniversalCone islimit_cone;
+}.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Coercion islimit_cone : IsLimit &gt;-&gt; Cone.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments Build_IsLimit {G D Q} C H : rename.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments islimit_cone {G D Q} C : rename.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments islimit_unicone {G D Q} H : rename.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [cone_precompose_inv] is defined for convenience: it is only the inverse of [cone_precompose]. It allows to recover the map [h] from a cone [C']. *)
+
+</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition cone_precompose_inv `{D: Diagram G} {Q X}
+  (H : IsLimit D Q) (C' : Cone X D) : X -&gt; Q
+  := @equiv_inv _ _ _ (islimit_unicone H X) C'.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+
+(** * Existence of limits *)
+
+</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 32
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>Record Limit `(D : Diagram G) := {
+  lim : forall i, D i;
+  limp : forall i j (g : G i j), D _f g (lim i) = lim j;
+}.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments lim {_ _}.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments limp {_ _}.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition cone_limit `(D : Diagram G) : Cone (Limit D) D.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply Build_Cone.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros i x.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (lim x i).</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros i j g x.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply limp.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance unicone_limit `(D : Diagram G)
+  : UniversalCone (cone_limit D).</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 51
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+  srapply Build_UniversalCone; intro Y.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply isequiv_adjointify.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros c y.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply Build_Limit.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro i.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (legs c i y).</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros i j g.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply legs_comm.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  all: intro; reflexivity.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 60
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance islimit_limit `(D : Diagram G) : IsLimit D (Limit D)
+  := Build_IsLimit (cone_limit _) _.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Functoriality of limits *)
+
+</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section FunctorialityLimit.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context `{Funext} {G : Graph}.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Limits are preserved by composition with a (diagram) equivalence. *)
+
+ </pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition islimit_precompose_equiv {D : Diagram G} `(f : Q &lt;~&gt; Q')
+    : IsLimit D Q' -&gt; IsLimit D Q.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros HQ.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 76
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+    srapply (Build_IsLimit (cone_precompose HQ f) _).</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply cone_precompose_equiv_universality, HQ.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition islimit_postcompose_equiv {D1 D2 : Diagram G} (m : D1 ~d~ D2)
+    {Q : Type} : IsLimit D1 Q -&gt; IsLimit D2 Q.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros HQ.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 84
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+    srapply (Build_IsLimit (cone_postcompose m HQ) _).</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply cone_postcompose_equiv_universality, HQ.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** A diagram map [m] : [D1] =&gt; [D2] induces a map between any two limits of [D1] and [D2]. *)
+
+ </pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 91
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>Definition functor_limit {D1 D2 : Diagram G} (m : DiagramMap D1 D2)
+    {Q1 Q2} (HQ1 : IsLimit D1 Q1) (HQ2 : IsLimit D2 Q2)
+    : Q1 -&gt; Q2 := cone_precompose_inv HQ2 (cone_postcompose m HQ1).</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** And this map commutes with diagram map. *)
+
+ </pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 97
+Time: 0.002s">
+<div class="time" style="width: 6.8965517241379%"></div>
+<pre>Definition functor_limit_commute {D1 D2 : Diagram G}
+    (m : DiagramMap D1 D2) {Q1 Q2}
+    (HQ1 : IsLimit D1 Q1) (HQ2 : IsLimit D2 Q2)
+    : cone_postcompose m HQ1
+      = cone_precompose HQ2 (functor_limit m HQ1 HQ2)
+    := (eisretr (cone_precompose HQ2) _)^.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** ** Limits of equivalent diagrams *)
+
+  (** Now we have than two equivalent diagrams have equivalent limits. *)
+
+ </pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Context {D1 D2 : Diagram G} (m : D1 ~d~ D2) {Q1 Q2}
+    (HQ1 : IsLimit D1 Q1) (HQ2 : IsLimit D2 Q2).</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 109
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+
+  Definition functor_limit_eissect
+    : functor_limit m HQ1 HQ2
+      o functor_limit (diagram_equiv_inv m) HQ2 HQ1 == idmap.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply ap10.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 115
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+    srapply (equiv_inj (cone_precompose HQ2) _).</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: apply HQ2.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    etransitivity.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 118
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    2:symmetry; apply cone_precompose_identity.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    etransitivity.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: apply cone_precompose_comp.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 121
+Time: 0.003s">
+<div class="time" style="width: 10.344827586207%"></div>
+<pre>
+    rewrite eisretr, cone_postcompose_precompose, eisretr.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 122
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+    rewrite cone_postcompose_comp, diagram_inv_is_section.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply cone_postcompose_identity.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 124
+Time: 0.002s">
+<div class="time" style="width: 6.8965517241379%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 125
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+
+  Definition functor_limit_eisretr
+    : functor_limit (diagram_equiv_inv m) HQ2 HQ1
+      o functor_limit m HQ1 HQ2 == idmap.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 130
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply ap10.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 131
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+    srapply (equiv_inj (cone_precompose HQ1) _).</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: apply HQ1.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    etransitivity.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    2:symmetry; apply cone_precompose_identity.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 135
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    etransitivity.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: apply cone_precompose_comp.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 137
+Time: 0.003s">
+<div class="time" style="width: 10.344827586207%"></div>
+<pre>
+    rewrite eisretr, cone_postcompose_precompose, eisretr.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 138
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+    rewrite cone_postcompose_comp, diagram_inv_is_retraction.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply cone_postcompose_identity.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 140
+Time: 0.002s">
+<div class="time" style="width: 6.8965517241379%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 141
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+
+  #[export] Instance isequiv_functor_limit
+    : IsEquiv (functor_limit m HQ1 HQ2)
+    := isequiv_adjointify _ _
+      functor_limit_eissect functor_limit_eisretr.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition equiv_functor_limit : Q1 &lt;~&gt; Q2
+    := Build_Equiv _ _ _ isequiv_functor_limit.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 149
+Time: 0.002s">
+<div class="time" style="width: 6.8965517241379%"></div>
+<pre>
+
+End FunctorialityLimit.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Unicity of limits *)
+
+(** A particular case of the functoriality result is that all limits of a diagram are equivalent (and hence equal in presence of univalence). *)
+
+</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Theorem limit_unicity `{Funext} {G : Graph} {D : Diagram G} {Q1 Q2 : Type}
+  (HQ1 : IsLimit D Q1) (HQ2 : IsLimit D Q2)
+  : Q1 &lt;~&gt; Q2.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 159
+Time: 0.002s">
+<div class="time" style="width: 6.8965517241379%"></div>
+<pre>
+  srapply equiv_functor_limit.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 160
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+  srapply (Build_diagram_equiv (diagram_idmap D)).</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Limits are right adjoint to constant diagram *)
+
+</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 165
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Theorem limit_adjoint {G : Graph} {D : Diagram G} {C : Type}
+  : (C -&gt; Limit D) &lt;~&gt; DiagramMap (diagram_const C) D.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 166
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply equiv_adjointify.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro f.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply Build_DiagramMap.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros i c.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply lim, f, c.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros i j g x.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply limp.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 174
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 174
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 175
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [f p] c.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 175
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply Build_Limit.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro i.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply f, c.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros i j g.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 179
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply p.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 180
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 180
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1,2: intro; reflexivity.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 181
+Time: 0.001s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Limit.v
+Line: 183
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+
+</pre>
+</div>
+</body>
+</html>
+

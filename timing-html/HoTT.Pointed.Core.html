@@ -1,0 +1,6007 @@
+<html>
+<head>
+<title>Core.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Core.v</h1>
+
+<div class="code" title="File: Core.v
+Line: 1
+Time: 0.037s">
+<div class="time" style="width: 2.4246395806029%"></div>
+<pre>From HoTT Require Import Basics Types.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 1
+Time: 0.008s">
+<div class="time" style="width: 0.52424639580603%"></div>
+<pre>
+Require Import Homotopy.IdentitySystems.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 2
+Time: 0.021s">
+<div class="time" style="width: 1.3761467889908%"></div>
+<pre>
+From HoTT.WildCat Require Import Core PointedCat TwoOneCat NatTrans
+  Universe Products Equiv Yoneda.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 4
+Time: 0.015s">
+<div class="time" style="width: 0.9829619921363%"></div>
+<pre>
+Require Import Truncations.Core.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 5
+Time: 0.003s">
+<div class="time" style="width: 0.19659239842726%"></div>
+<pre>
+Require Import ReflectiveSubuniverse.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Extensions.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Set Polymorphic Inductive Cumulativity.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 9
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Declare Scope pointed_scope.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope pointed_scope.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope path_scope.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Generalizable Variables A B f.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Pointed Types *)
+
+</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Notation "'pt'" := (point _) : pointed_scope.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Notation "[ X , x ]" := (Build_pType X x) : pointed_scope.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The unit type is pointed *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance ispointed_unit : IsPointed Unit := tt.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The Unit [pType] *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition pUnit : pType := [Unit, tt].</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A sigma type of pointed components is pointed. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance ispointed_sigma `{IsPointed A} `{IsPointed (B (point A))}
+: IsPointed (sig B)
+  := (point A; point (B (point A))).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A product of pointed types is pointed. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance ispointed_prod `{IsPointed A, IsPointed B} : IsPointed (A * B)
+  := (point A, point B).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We override the notation for products in pointed_scope *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Notation "X * Y" := ([X * Y, ispointed_prod]) : pointed_scope.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A pointed type family consists of a type family over a pointed type and a section of that family at the basepoint. By making this a Record, it has one fewer universe variable, and is cumulative. We declare [pfam_pr1] to be a coercion [pFam &gt;-&gt; Funclass]. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 35
+Time: 0.001s">
+<div class="time" style="width: 0.065530799475754%"></div>
+<pre>Record pFam (A : pType) := { pfam_pr1 :&gt; A -&gt; Type; dpoint : pfam_pr1 (point A)}.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments Build_pFam {A} _ _.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments pfam_pr1 {A} P : rename.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments dpoint {A} P : rename.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The constant pointed family *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition pfam_const {A : pType} (B : pType) : pFam A
+  := Build_pFam (fun _ =&gt; pointed_type B) (point B).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [IsTrunc] for a pointed type family *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Class IsTrunc_pFam n {A} (P : pFam A)
+  := trunc_pfam_is_trunc : forall x, IsTrunc n (P x).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Pointed dependent functions *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 47
+Time: 0.001s">
+<div class="time" style="width: 0.065530799475754%"></div>
+<pre>Record pForall (A : pType) (P : pFam A) := {
+  pointed_fun : forall x, P x ;
+  dpoint_eq : pointed_fun (point A) = dpoint P ;
+}.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments dpoint_eq {A P} f : rename.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments pointed_fun {A P} f : rename.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Coercion pointed_fun : pForall &gt;-&gt; Funclass.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Pointed functions *)
+
+(** A pointed map is a map with a proof that it preserves the point. We define it as as a notation for a non-dependent version of [pForall]. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Notation "A -&gt;* B" := (pForall A (pfam_const B)) : pointed_scope.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 58
+Time: 0.001s">
+<div class="time" style="width: 0.065530799475754%"></div>
+<pre>
+
+Definition Build_pMap {A B : pType} (f : A -&gt; B) (p : f (point A) = point B)
+  : A -&gt;* B
+  := Build_pForall A (pfam_const B) f p.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The [&amp;] is a bidirectionality hint that tells Coq to unify with the typing context after type checking the arguments to the left.  In practice, this allows Coq to infer [A] and [B] from the context. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Arguments Build_pMap {A B} &amp; f p.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Pointed maps preserve the base point *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition point_eq {A B : pType} (f : A -&gt;* B)
+  : f (point A) = point B
+  := dpoint_eq f.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The identity pointed map *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition pmap_idmap {A : pType} : A -&gt;* A
+  := Build_pMap idmap 1.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Composition of pointed maps *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 73
+Time: 0.001s">
+<div class="time" style="width: 0.065530799475754%"></div>
+<pre>Definition pmap_compose {A B C : pType} (g : B -&gt;* C) (f : A -&gt;* B)
+  : A -&gt;* C
+  := Build_pMap (g o f) (ap g (point_eq f) @ point_eq g).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Infix "o*" := pmap_compose : pointed_scope.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Pointed homotopies *)
+
+(** A pointed homotopy is a homotopy with a proof that the preservation paths agree. We define it instead as a special case of a [pForall]. This means that we can define pointed homotopies between pointed homotopies. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 81
+Time: 0.001s">
+<div class="time" style="width: 0.065530799475754%"></div>
+<pre>Definition pfam_phomotopy {A : pType} {P : pFam A} (f g : pForall A P) : pFam A
+  := Build_pFam (fun x =&gt; f x = g x) (dpoint_eq f @ (dpoint_eq g)^).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition pHomotopy {A : pType} {P : pFam A} (f g : pForall A P)
+  := pForall A (pfam_phomotopy f g).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Infix "==*" := pHomotopy : pointed_scope.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 87
+Time: 0.001s">
+<div class="time" style="width: 0.065530799475754%"></div>
+<pre>
+
+Definition Build_pHomotopy {A : pType} {P : pFam A} {f g : pForall A P}
+  (p : f == g) (q : p (point A) = dpoint_eq f @ (dpoint_eq g)^)
+  : f ==* g
+  := Build_pForall A (pfam_phomotopy f g) p q.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The underlying homotopy of a pointed homotopy *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 94
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Coercion pointed_htpy {A : pType} {P : pFam A} {f g : pForall A P} (h : f ==* g)
+  : f == g
+  := h.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** This is the form that the underlying proof of a pointed homotopy used to take before we changed it to be defined in terms of [pForall]. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 98
+Time: 0.001s">
+<div class="time" style="width: 0.065530799475754%"></div>
+<pre>Definition point_htpy {A : pType} {P : pFam A} {f g : pForall A P}
+  (h : f ==* g) : h (point A) @ dpoint_eq g = dpoint_eq f.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply moveR_pM.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (dpoint_eq h).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Pointed equivalences *)
+
+(** A pointed equivalence is a pointed map and a proof that it is an equivalence *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 107
+Time: 0.001s">
+<div class="time" style="width: 0.065530799475754%"></div>
+<pre>Record pEquiv (A B : pType) := {
+  pointed_equiv_fun : pForall A (pfam_const B) ;
+  pointed_isequiv :: IsEquiv pointed_equiv_fun ;
+}.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments Build_pEquiv {A B} &amp; _ _.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** TODO: It might be better behaved to define [pEquiv] as an equivalence and a proof that this equivalence is pointed. In pEquiv.v we have another constructor [Build_pEquiv'] which Coq can infer faster than [Build_pEquiv]. *)
+
+</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Infix "&lt;~&gt;*" := pEquiv : pointed_scope.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Note: because we define [pMap] as a special case of [pForall], we must declare all coercions into [pForall], *not* into [pMap]. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Coercion pointed_equiv_fun : pEquiv &gt;-&gt; pForall.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 117
+Time: 0.001s">
+<div class="time" style="width: 0.065530799475754%"></div>
+<pre>
+
+Coercion pointed_equiv_equiv {A B} (f : A &lt;~&gt;* B)
+  : A &lt;~&gt; B := Build_Equiv A B f _.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The pointed identity is a pointed equivalence *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 122
+Time: 0.001s">
+<div class="time" style="width: 0.065530799475754%"></div>
+<pre>Definition pequiv_pmap_idmap {A} : A &lt;~&gt;* A
+  := Build_pEquiv pmap_idmap _.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Pointed sigma types *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 125
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition psigma {A : pType} (P : pFam A) : pType
+  := [sig P, (point A; dpoint P)].</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 126
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Pointed products *)
+
+(** Pointed pi types; note that the domain is not pointed *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 130
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition pproduct {A : Type} (F : A -&gt; pType) : pType
+  := [forall (a : A), pointed_type (F a), ispointed_type o F].</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 131
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition pproduct_corec `{Funext} {A : Type} (F : A -&gt; pType)
+  (X : pType) (f : forall a, X -&gt;* F a)
+  : X -&gt;* pproduct F.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 135
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_pMap.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 137
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x a.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (f a x).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    funext a.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply point_eq.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition pproduct_proj {A : Type} {F : A -&gt; pType} (a : A)
+  : pproduct F -&gt;* F a.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 147
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_pMap.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 148
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (x a).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 152
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The projections from a pointed product are pointed maps. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 154
+Time: 0.001s">
+<div class="time" style="width: 0.065530799475754%"></div>
+<pre>Definition pfst {A B : pType} : A * B -&gt;* A
+  := Build_pMap fst idpath.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 155
+Time: 0.001s">
+<div class="time" style="width: 0.065530799475754%"></div>
+<pre>
+
+Definition psnd {A B : pType} : A * B -&gt;* B
+  := Build_pMap snd idpath.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 158
+Time: 0.002s">
+<div class="time" style="width: 0.13106159895151%"></div>
+<pre>
+
+Definition pprod_corec {X Y} (Z : pType) (f : Z -&gt;* X) (g : Z -&gt;* Y)
+  : Z -&gt;* (X * Y)
+  := Build_pMap (fun z =&gt; (f z, g z))
+      (path_prod' (point_eq _) (point_eq _)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 163
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition pprod_corec_beta_fst {X Y} (Z : pType) (f : Z -&gt;* X) (g : Z -&gt;* Y)
+  : pfst o* pprod_corec Z f g ==* f.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 166
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_pHomotopy.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply moveL_pV.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (concat_1p _ @ _^ @ (concat_p1 _)^).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply ap_fst_path_prod'.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 172
+Time: 0.003s">
+<div class="time" style="width: 0.19659239842726%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition pprod_corec_beta_snd {X Y} (Z : pType) (f : Z -&gt;* X) (g : Z -&gt;* Y)
+  : psnd o* pprod_corec Z f g ==* g.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_pHomotopy.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 179
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply moveL_pV.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 180
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (concat_1p _ @ _^ @ (concat_p1 _)^).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 181
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply ap_snd_path_prod'.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 182
+Time: 0.003s">
+<div class="time" style="width: 0.19659239842726%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 183
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The following tactics often allow us to "pretend" that pointed maps and homotopies preserve basepoints strictly. *)
+
+(** First a version with no rewrites, which leaves some cleanup to be done but which can be used in transparent proofs. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Ltac pointed_reduce :=
+  (*TODO: are these correct? *)
+  unfold pointed_fun, pointed_htpy;
+  cbn in *;
+  repeat match goal with
+           | [ X : pType |- _ ] =&gt; destruct X as [X ?point]
+           | [ P : pFam ?X |- _ ] =&gt; destruct P as [P ?]
+           | [ phi : pForall ?X ?Y |- _ ] =&gt; destruct phi as [phi ?]
+           | [ alpha : pHomotopy ?f ?g |- _ ] =&gt; let H := fresh in destruct alpha as [alpha H]; try (apply moveR_pM in H)
+           | [ equiv : pEquiv ?X ?Y |- _ ] =&gt; destruct equiv as [equiv ?iseq]
+         end;
+  cbn in *; unfold point in *;
+  path_induction; cbn.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 199
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Next a version that uses [rewrite], and should only be used in opaque proofs. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 201
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Ltac pointed_reduce_rewrite :=
+  pointed_reduce;
+  rewrite ?concat_p1, ?concat_1p.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 203
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Finally, a version that just strictifies a single map or equivalence.  This has the advantage that it leaves the context more readable. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 205
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Ltac pointed_reduce_pmap f
+  := try match type of f with
+    | pEquiv ?X ?Y =&gt; destruct f as [f ?iseq]
+    end;
+    match type of f with
+    | _ -&gt;* ?Y =&gt; let p := fresh in destruct Y as [Y ?], f as [f p]; cbn in *; destruct p; cbn
+    end.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 211
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A general tactic to replace pointedness paths in a [pForall] with reflexivity.  Because it generalizes [f pt], it can usually only be applied once the function itself is not longer needed.  Compared to [pointed_reduce], an advantage is that the pointed types do not need to be destructed. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 213
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Ltac pelim f :=
+  try match type of f with
+    | pEquiv ?X ?Y =&gt; destruct f as [f ?iseq]; unfold pointed_fun in *
+  end;
+  destruct f as [f ?ptd];
+  cbn in f, ptd |- *;
+  match type of ptd with ?fpt = _ =&gt; generalize dependent fpt end;
+  napply paths_ind_r;
+  try clear f.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 221
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Tactic Notation "pelim" constr(x0) := pelim x0.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 223
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Tactic Notation "pelim" constr(x0) constr(x1) := pelim x0; pelim x1.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 224
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Tactic Notation "pelim" constr(x0) constr(x1) constr(x2) := pelim x0; pelim x1 x2.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Tactic Notation "pelim" constr(x0) constr(x1) constr(x2) constr(x3) := pelim x0; pelim x1 x2 x3.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 226
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Tactic Notation "pelim" constr(x0) constr(x1) constr(x2) constr(x3) constr(x4) := pelim x0; pelim x1 x2 x3 x4.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 227
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Tactic Notation "pelim" constr(x0) constr(x1) constr(x2) constr(x3) constr(x4) constr(x5) := pelim x0; pelim x1 x2 x3 x4 x5.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Tactic Notation "pelim" constr(x0) constr(x1) constr(x2) constr(x3) constr(x4) constr(x5) constr(x6) := pelim x0; pelim x1 x2 x3 x4 x5 x6.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 229
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Equivalences to sigma-types. *)
+
+(** [pType] *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 233
+Time: 0.004s">
+<div class="time" style="width: 0.26212319790301%"></div>
+<pre>Definition issig_ptype : { X : Type &amp; X } &lt;~&gt; pType := ltac:(issig).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 233
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [pForall] *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 235
+Time: 0.006s">
+<div class="time" style="width: 0.39318479685452%"></div>
+<pre>Definition issig_pforall (A : pType) (P : pFam A)
+  : {f : forall x, P x &amp; f (point A) = dpoint P} &lt;~&gt; (pForall A P)
+  := ltac:(issig).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 237
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [pMap] *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 239
+Time: 0.006s">
+<div class="time" style="width: 0.39318479685452%"></div>
+<pre>Definition issig_pmap (A B : pType)
+  : {f : A -&gt; B &amp; f (point A) = point B} &lt;~&gt; (A -&gt;* B)
+  := ltac:(issig).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 241
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [pHomotopy] *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 243
+Time: 0.011s">
+<div class="time" style="width: 0.72083879423329%"></div>
+<pre>Definition issig_phomotopy {A : pType} {P : pFam A} (f g : pForall A P)
+  : {p : f == g &amp; p (point A) = dpoint_eq f @ (dpoint_eq g)^} &lt;~&gt; (f ==* g)
+  := ltac:(issig).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 245
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [pEquiv] *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 247
+Time: 0.005s">
+<div class="time" style="width: 0.32765399737877%"></div>
+<pre>Definition issig_pequiv (A B : pType)
+  : {f : A -&gt;* B &amp; IsEquiv f} &lt;~&gt; (A &lt;~&gt;* B)
+  := ltac:(issig).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 249
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The record for pointed equivalences is equivalently a different sigma type *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 251
+Time: 0.017s">
+<div class="time" style="width: 1.1140235910878%"></div>
+<pre>Definition issig_pequiv' (A B : pType)
+  : {f : A &lt;~&gt; B &amp; f (point A) = point B} &lt;~&gt; (A &lt;~&gt;* B)
+  := ltac:(make_equiv).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 253
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [pForall] can also be described as a type of extensions. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 255
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition equiv_extension_along_pforall `{Funext} {A : pType} (P : pFam A)
+  : ExtensionAlong@{Set _ _ _} (unit_name (point A)) P (unit_name (dpoint P)) &lt;~&gt; pForall A P.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 256
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 257
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold ExtensionAlong.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 258
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (issig_pforall A P oE _).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 259
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply equiv_functor_sigma_id; intro s.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 260
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  symmetry; apply equiv_unit_rec.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 261
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 262
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** This is [equiv_prod_coind] for pointed families. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 264
+Time: 0.001s">
+<div class="time" style="width: 0.065530799475754%"></div>
+<pre>Definition equiv_pprod_coind {A : pType} (P Q : pFam A)
+  : (pForall A P * pForall A Q) &lt;~&gt;
+      (pForall A (Build_pFam (fun a =&gt; prod (P a) (Q a)) (dpoint P, dpoint Q))).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 266
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 267
+Time: 0.001s">
+<div class="time" style="width: 0.065530799475754%"></div>
+<pre>
+  transitivity {p : prod (forall a:A, P a) (forall a:A, Q a)
+                    &amp; prod (fst p _ = dpoint P) (snd p _ = dpoint Q)}.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 269
+Time: 0.007s">
+<div class="time" style="width: 0.45871559633028%"></div>
+<pre>
+  1: make_equiv.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 270
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (issig_pforall _ _ oE _).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 271
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply equiv_functor_sigma'.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 272
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: apply equiv_prod_coind.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 273
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro f; cbn.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 274
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold prod_coind_uncurried.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 275
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (equiv_path_prod (fst f _, snd f _) (dpoint P, dpoint Q)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 276
+Time: 0.008s">
+<div class="time" style="width: 0.52424639580603%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 277
+Time: 0.001s">
+<div class="time" style="width: 0.065530799475754%"></div>
+<pre>
+
+Definition functor_pprod {A A' B B' : pType} (f : A -&gt;* A') (g : B -&gt;* B')
+  : A * B -&gt;* A' * B'.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 280
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 281
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_pMap.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 282
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 283
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (functor_prod f g).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 283
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 284
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply path_prod; apply point_eq.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 284
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 285
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [isequiv_functor_prod] applies, and is an Instance. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 287
+Time: 0.021s">
+<div class="time" style="width: 1.3761467889908%"></div>
+<pre>Definition equiv_functor_pprod {A A' B B' : pType} (f : A &lt;~&gt;* A') (g : B &lt;~&gt;* B')
+  : A * B &lt;~&gt;* A' * B'
+  := Build_pEquiv (functor_pprod f g) _.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 289
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Various operations with pointed homotopies *)
+
+(** For the following three instances, the typeclass (e.g. [Reflexive]) requires a third universe variable, the maximum of the universe of [A] and the universe of the values of [P].  Because of this, in each case we first prove a version not mentioning the typeclass, which avoids a stray universe variable. *)
+
+(** [pHomotopy] is a reflexive relation *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 295
+Time: 0.001s">
+<div class="time" style="width: 0.065530799475754%"></div>
+<pre>Definition phomotopy_reflexive {A : pType} {P : pFam A} (f : pForall A P)
+  : f ==* f
+  := Build_pHomotopy (fun x =&gt; 1) (concat_pV _)^.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 297
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance phomotopy_reflexive' {A : pType} {P : pFam A}
+  : Reflexive (@pHomotopy A P)
+  := @phomotopy_reflexive A P.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 301
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [pHomotopy] is a symmetric relation *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 303
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition phomotopy_symmetric {A P} {f g : pForall A P} (p : f ==* g)
+  : g ==* f.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 304
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 305
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snrefine (Build_pHomotopy _ _); cbn.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 306
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: intros x; exact ((p x)^).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 307
+Time: 0.003s">
+<div class="time" style="width: 0.19659239842726%"></div>
+<pre>
+  by pelim p f g.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 308
+Time: 0.002s">
+<div class="time" style="width: 0.13106159895151%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 309
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance phomotopy_symmetric' {A P}
+  : Symmetric (@pHomotopy A P)
+  := @phomotopy_symmetric A P.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 313
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation "p ^*" := (phomotopy_symmetric p) : pointed_scope.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 315
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [pHomotopy] is a transitive relation *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 317
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition phomotopy_transitive {A P} {f g h : pForall A P} (p : f ==* g) (q : g ==* h)
+  : f ==* h.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 318
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 319
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snrefine (Build_pHomotopy (fun x =&gt; p x @ q x) _).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 320
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  nrefine (dpoint_eq p @@ dpoint_eq q @ concat_pp_p _ _ _ @ _).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 321
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  napply whiskerL; napply concat_V_pp.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 322
+Time: 0.001s">
+<div class="time" style="width: 0.065530799475754%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 323
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance phomotopy_transitive' {A P} : Transitive (@pHomotopy A P)
+  := @phomotopy_transitive A P.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 326
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation "p @* q" := (phomotopy_transitive p q) : pointed_scope.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 328
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Whiskering of pointed homotopies by pointed functions *)
+
+</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 331
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition pmap_postwhisker {A B C : pType} {f g : A -&gt;* B}
+  (h : B -&gt;* C) (p : f ==* g)
+  : h o* f ==* h o* g.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 333
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 334
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snrefine (Build_pHomotopy _ _); cbn.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 335
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact (fun x =&gt; ap h (p x)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 336
+Time: 0.005s">
+<div class="time" style="width: 0.32765399737877%"></div>
+<pre>
+  by pelim p f g h.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 337
+Time: 0.004s">
+<div class="time" style="width: 0.26212319790301%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 338
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition pmap_prewhisker {A B C : pType} (f : A -&gt;* B)
+  {g h : B -&gt;* C} (p : g ==* h)
+  : g o* f ==* h o* f.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 342
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 343
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snrefine (Build_pHomotopy _ _); cbn.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 344
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact (fun x =&gt; p (f x)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 345
+Time: 0.005s">
+<div class="time" style="width: 0.32765399737877%"></div>
+<pre>
+  by pelim f p g h.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 346
+Time: 0.003s">
+<div class="time" style="width: 0.19659239842726%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 347
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** 1-categorical properties of [pType]. *)
+
+(** Composition of pointed maps is associative up to pointed homotopy *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 351
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition pmap_compose_assoc {A B C D : pType} (h : C -&gt;* D)
+  (g : B -&gt;* C) (f : A -&gt;* B)
+  : (h o* g) o* f ==* h o* (g o* f).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 353
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 354
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_pHomotopy.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 355
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 356
+Time: 0.004s">
+<div class="time" style="width: 0.26212319790301%"></div>
+<pre>
+  by pelim f g h.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 357
+Time: 0.003s">
+<div class="time" style="width: 0.19659239842726%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 358
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** precomposition of identity pointed map *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 360
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition pmap_precompose_idmap {A B : pType} (f : A -&gt;* B)
+: f o* pmap_idmap ==* f.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 361
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 362
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_pHomotopy.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 363
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 364
+Time: 0.001s">
+<div class="time" style="width: 0.065530799475754%"></div>
+<pre>
+  by pelim f.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 365
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 366
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** postcomposition of identity pointed map *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 368
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition pmap_postcompose_idmap {A B : pType} (f : A -&gt;* B)
+: pmap_idmap o* f ==* f.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 369
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 370
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_pHomotopy.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 371
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 372
+Time: 0.001s">
+<div class="time" style="width: 0.065530799475754%"></div>
+<pre>
+  by pelim f.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 373
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 374
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** 1-categorical properties of [pForall]. *)
+
+</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 377
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition phomotopy_postwhisker {A : pType} {P : pFam A}
+  {f g h : pForall A P} {p p' : f ==* g} (r : p ==* p') (q : g ==* h)
+  : p @* q ==* p' @* q.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 379
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 380
+Time: 0.011s">
+<div class="time" style="width: 0.72083879423329%"></div>
+<pre>
+  snapply Build_pHomotopy.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 381
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact (fun x =&gt; whiskerR (r x) (q x)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 382
+Time: 0.078s">
+<div class="time" style="width: 5.1114023591088%"></div>
+<pre>
+  by pelim q r p p' f g h.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 383
+Time: 0.061s">
+<div class="time" style="width: 3.997378768021%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 384
+Time: 0.001s">
+<div class="time" style="width: 0.065530799475754%"></div>
+<pre>
+
+Definition phomotopy_prewhisker {A : pType} {P : pFam A}
+  {f g h : pForall A P} (p : f ==* g) {q q' : g ==* h} (s : q ==* q')
+  : p @* q ==* p @* q'.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 388
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 389
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_pHomotopy.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 390
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact (fun x =&gt; whiskerL (p x) (s x)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 391
+Time: 0.089s">
+<div class="time" style="width: 5.8322411533421%"></div>
+<pre>
+  by pelim s q q' p f g h.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 392
+Time: 0.062s">
+<div class="time" style="width: 4.0629095674967%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 393
+Time: 0.001s">
+<div class="time" style="width: 0.065530799475754%"></div>
+<pre>
+
+Definition phomotopy_compose_assoc {A : pType} {P : pFam A}
+  {f g h k : pForall A P} (p : f ==* g) (q : g ==* h) (r : h ==* k)
+  : p @* (q @* r) ==* (p @* q) @* r.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 397
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 398
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_pHomotopy.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 399
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact (fun x =&gt; concat_p_pp (p x) (q x) (r x)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 400
+Time: 0.143s">
+<div class="time" style="width: 9.3709043250328%"></div>
+<pre>
+  by pelim r q p f g h k.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 401
+Time: 0.137s">
+<div class="time" style="width: 8.9777195281782%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 402
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition phomotopy_compose_p1 {A : pType} {P : pFam A} {f g : pForall A P}
+ (p : f ==* g) : p @* reflexivity g ==* p.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 405
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 406
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply Build_pHomotopy.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 407
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: intro; apply concat_p1.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 408
+Time: 0.028s">
+<div class="time" style="width: 1.8348623853211%"></div>
+<pre>
+  by pelim p f g.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 409
+Time: 0.015s">
+<div class="time" style="width: 0.9829619921363%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 410
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition phomotopy_compose_1p {A : pType} {P : pFam A} {f g : pForall A P}
+ (p : f ==* g) : reflexivity f @* p ==* p.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 413
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 414
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply Build_pHomotopy.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 415
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: intro x; apply concat_1p.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 416
+Time: 0.017s">
+<div class="time" style="width: 1.1140235910878%"></div>
+<pre>
+  by pelim p f g.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 417
+Time: 0.014s">
+<div class="time" style="width: 0.91743119266055%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 418
+Time: 0.001s">
+<div class="time" style="width: 0.065530799475754%"></div>
+<pre>
+
+Definition phomotopy_compose_pV {A : pType} {P : pFam A} {f g : pForall A P}
+ (p : f ==* g) : p @* p ^* ==* phomotopy_reflexive f.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 421
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 422
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply Build_pHomotopy.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 423
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: intro x; apply concat_pV.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 424
+Time: 0.022s">
+<div class="time" style="width: 1.4416775884666%"></div>
+<pre>
+  by pelim p f g.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 425
+Time: 0.019s">
+<div class="time" style="width: 1.2450851900393%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 426
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition phomotopy_compose_Vp {A : pType} {P : pFam A} {f g : pForall A P}
+ (p : f ==* g) : p ^* @* p ==* phomotopy_reflexive g.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 429
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 430
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply Build_pHomotopy.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 431
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: intro x; apply concat_Vp.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 432
+Time: 0.025s">
+<div class="time" style="width: 1.6382699868938%"></div>
+<pre>
+  by pelim p f g.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 433
+Time: 0.019s">
+<div class="time" style="width: 1.2450851900393%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 434
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** The pointed category structure of [pType] *)
+
+(** Pointed types of pointed maps *)
+
+(** A family of pointed types gives rise to a [pFam]. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 440
+Time: 0.001s">
+<div class="time" style="width: 0.065530799475754%"></div>
+<pre>Definition pointed_fam {A : pType} (B : A -&gt; pType) : pFam A
+  := Build_pFam (pointed_type o B) (point (B (point A))).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 441
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The section of a family of pointed types *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 443
+Time: 0.001s">
+<div class="time" style="width: 0.065530799475754%"></div>
+<pre>Definition point_pforall {A : pType} (B : A -&gt; pType) : pForall A (pointed_fam B)
+  := Build_pForall A (pointed_fam B) (fun x =&gt; point (B x)) 1.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 444
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The pointed type of dependent pointed maps. Note that we need a family of pointed types, not just a family of types with a point over the basepoint of [A]. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 446
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ppForall (A : pType) (B : A -&gt; pType) : pType
+  := [pForall A (pointed_fam B), point_pforall B].</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 447
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation "'ppforall'  x .. y , P"
+  := (ppForall _ (fun x =&gt; .. (ppForall _ (fun y =&gt; P)) ..))
+     : pointed_scope.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 451
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The constant (zero) map *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 453
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition pconst {A B : pType} : A -&gt;* B
+  := point_pforall (fun _ =&gt; B).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 454
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The pointed type of pointed maps.  This is a special case of [ppForall]. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 456
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ppMap (A B : pType) : pType
+  := [A -&gt;* B, pconst].</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 457
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Infix "-&gt;**" := ppMap : pointed_scope.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 459
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma pmap_punit_pconst {A : pType} (f : A -&gt;* pUnit) : pconst ==* f.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 461
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 462
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply Build_pHomotopy.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 463
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: intro; apply path_unit.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 464
+Time: 0.001s">
+<div class="time" style="width: 0.065530799475754%"></div>
+<pre>
+  apply path_contr.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 465
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 466
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma punit_pmap_pconst {A : pType} (f : pUnit -&gt;* A) : pconst ==* f.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 468
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 469
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply Build_pHomotopy.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 470
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: intros []; exact (point_eq f)^.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 471
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (concat_1p _)^.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 472
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 473
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance contr_pmap_from_contr `{Funext} {A B : pType} `{C : Contr A}
+  : Contr (A -&gt;* B).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 476
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 477
+Time: 0.003s">
+<div class="time" style="width: 0.19659239842726%"></div>
+<pre>
+  rapply (contr_equiv' { b : B &amp; b = pt }).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 478
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (issig_pmap A B oE _).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 479
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (equiv_functor_sigma_pb (equiv_arrow_from_contr A B)^-1%equiv).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 480
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 481
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * [pType] and [pForall] as wild categories *)
+
+(** Note that the definitions for [pForall] are also used for the higher structure in [pType]. *)
+
+(** [pType] is a graph *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 487
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isgraph_ptype : IsGraph pType
+  := Build_IsGraph pType (fun X Y =&gt; X -&gt;* Y).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 488
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [pForall] is a graph *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 490
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isgraph_pforall (A : pType) (P : pFam A)
+  : IsGraph (pForall A P)
+  := Build_IsGraph _ pHomotopy.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 492
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [pType] is a 0-coherent 1-category *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 494
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance is01cat_ptype : Is01Cat pType
+  := Build_Is01Cat pType _ (@pmap_idmap) (@pmap_compose).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 495
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [pForall] is a 0-coherent 1-category *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 497
+Time: 0.001s">
+<div class="time" style="width: 0.065530799475754%"></div>
+<pre>Instance is01cat_pforall (A : pType) (P : pFam A) : Is01Cat (pForall A P).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 497
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 498
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  econstructor.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 499
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 500
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact phomotopy_reflexive.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 500
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 501
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a b c f g.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 501
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (g @* f).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 501
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 502
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance is2graph_ptype : Is2Graph pType := fun f g =&gt; _.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 504
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance is2graph_pforall (A : pType) (P : pFam A)
+  : Is2Graph (pForall A P)
+  := fun f g =&gt; _.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 508
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [pForall] is a 0-coherent 1-groupoid *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 510
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance is0gpd_pforall (A : pType) (P : pFam A) : Is0Gpd (pForall A P).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 510
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 511
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply Build_Is0Gpd.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 512
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros ? ? h.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 512
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact h^*.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 512
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 513
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [pType] is a 1-coherent 1-category *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 515
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance is1cat_ptype : Is1Cat pType.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 515
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 516
+Time: 0.001s">
+<div class="time" style="width: 0.065530799475754%"></div>
+<pre>
+  snapply Build_Is1Cat'.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 517
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1, 2: exact _.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 518
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 519
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros A B C h; rapply Build_Is0Functor.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 519
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros f g p; cbn.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 520
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply pmap_postwhisker; assumption.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 521
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 522
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros A B C h; rapply Build_Is0Functor.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 522
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros f g p; cbn.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 523
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply pmap_prewhisker; assumption.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 524
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 525
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros ? ? ? ? f g h; exact (pmap_compose_assoc h g f).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 525
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 526
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros ? ? f; exact (pmap_postcompose_idmap f).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 526
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 527
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros ? ? f; exact (pmap_precompose_idmap f).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 527
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 528
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [pType] is a pointed category *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 530
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance ispointedcat_ptype : IsPointedCat pType.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 530
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 531
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_IsPointedCat.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 532
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 533
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact pUnit.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 533
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 534
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro A.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 534
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists pconst.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 535
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact punit_pmap_pconst.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 536
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 537
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro B.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 537
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists pconst.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 538
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact pmap_punit_pconst.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 539
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 540
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The constant map is definitionally equal to the zero_morphism of a pointed category *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 542
+Time: 0.001s">
+<div class="time" style="width: 0.065530799475754%"></div>
+<pre>Definition path_zero_morphism_pconst (A B : pType)
+  : (@pconst A B) = zero_morphism := idpath.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 543
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [pForall] is a 1-category *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 545
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance is1cat_pforall (A : pType) (P : pFam A) : Is1Cat (pForall A P) | 10.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 545
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 546
+Time: 0.001s">
+<div class="time" style="width: 0.065530799475754%"></div>
+<pre>
+  snapply Build_Is1Cat'.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 547
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1, 2: exact _.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 548
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 549
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros f g h p; rapply Build_Is0Functor.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 549
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros q r s.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 550
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (phomotopy_postwhisker s p).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 550
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 551
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros f g h p; rapply Build_Is0Functor.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 551
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros q r s.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 552
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (phomotopy_prewhisker p s).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 552
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 553
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros ? ? ? ? p q r.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 553
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 553
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (phomotopy_compose_assoc p q r).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 553
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 554
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros ? ? p; exact (phomotopy_compose_p1 p).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 554
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 555
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros ? ? p; exact (phomotopy_compose_1p p).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 555
+Time: 0.001s">
+<div class="time" style="width: 0.065530799475754%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 556
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [pForall] is a 1-groupoid *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 558
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance is1gpd_pforall (A : pType) (P : pFam A) : Is1Gpd (pForall A P) | 10.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 558
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 559
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  econstructor.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 560
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 561
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros ? ? p.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 561
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (phomotopy_compose_pV p).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 561
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 562
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros ? ? p.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 562
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (phomotopy_compose_Vp p).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 562
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 563
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance is3graph_ptype : Is3Graph pType
+  := fun f g =&gt; is2graph_pforall _ _.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 566
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance is21cat_ptype : Is21Cat pType.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 568
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 569
+Time: 0.002s">
+<div class="time" style="width: 0.13106159895151%"></div>
+<pre>
+  unshelve econstructor.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 570
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 571
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 571
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 572
+Time: 0.002s">
+<div class="time" style="width: 0.13106159895151%"></div>
+<pre> intros A B C f; napply Build_Is1Functor.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 572
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 573
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros g h p q r.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 573
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      srapply Build_pHomotopy.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 574
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      1: exact (fun _ =&gt; ap _ (r _)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 575
+Time: 0.047s">
+<div class="time" style="width: 3.0799475753604%"></div>
+<pre>
+      by pelim r p q g h f.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 576
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 577
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros g.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 577
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      srapply Build_pHomotopy.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 578
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 579
+Time: 0.01s">
+<div class="time" style="width: 0.65530799475754%"></div>
+<pre>
+      by pelim g f.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 580
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 581
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros g h i p q.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 581
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      srapply Build_pHomotopy.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 582
+Time: 0.001s">
+<div class="time" style="width: 0.065530799475754%"></div>
+<pre>
+      1: cbn; exact (fun _ =&gt; ap_pp _ _ _).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 583
+Time: 0.159s">
+<div class="time" style="width: 10.419397116645%"></div>
+<pre>
+      by pelim p q g h i f.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 584
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 585
+Time: 0.002s">
+<div class="time" style="width: 0.13106159895151%"></div>
+<pre> intros A B C f; napply Build_Is1Functor.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 585
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 586
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros g h p q r.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 586
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      srapply Build_pHomotopy.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 587
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      1: intro; exact (r _).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 588
+Time: 0.044s">
+<div class="time" style="width: 2.8833551769332%"></div>
+<pre>
+      by pelim f r p q g h.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 589
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 590
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros g.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 590
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      srapply Build_pHomotopy.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 591
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 592
+Time: 0.011s">
+<div class="time" style="width: 0.72083879423329%"></div>
+<pre>
+      by pelim f g.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 593
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 594
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros g h i p q.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 594
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      srapply Build_pHomotopy.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 595
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 596
+Time: 0.136s">
+<div class="time" style="width: 8.9121887287025%"></div>
+<pre>
+      by pelim f p q i g h.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 597
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 598
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros A B C f g h k p q.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 598
+Time: 0.001s">
+<div class="time" style="width: 0.065530799475754%"></div>
+<pre>
+    snapply Build_pHomotopy.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 599
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 600
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 600
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (concat_Ap q _)^.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 601
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 602
+Time: 0.196s">
+<div class="time" style="width: 12.844036697248%"></div>
+<pre> by pelim p f g q h k.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 602
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 603
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros A B C D f g.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 603
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply Build_Is1Natural.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 604
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros r1 r2 s1.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 605
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply Build_pHomotopy.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 606
+Time: 0.001s">
+<div class="time" style="width: 0.065530799475754%"></div>
+<pre>
+    1: exact (fun _ =&gt; concat_p1 _ @ (concat_1p _)^).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 607
+Time: 0.198s">
+<div class="time" style="width: 12.975098296199%"></div>
+<pre>
+    by pelim f g s1 r1 r2.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 608
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 609
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros A B C D f g.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 609
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply Build_Is1Natural.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 610
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros r1 r2 s1.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 611
+Time: 0.001s">
+<div class="time" style="width: 0.065530799475754%"></div>
+<pre>
+    srapply Build_pHomotopy.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 612
+Time: 0.005s">
+<div class="time" style="width: 0.32765399737877%"></div>
+<pre>
+    1: exact (fun _ =&gt; concat_p1 _ @ (concat_1p _)^).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 613
+Time: 0.269s">
+<div class="time" style="width: 17.627785058978%"></div>
+<pre>
+    by pelim f s1 r1 r2 g.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 614
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 615
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros A B C D f g.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 615
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply Build_Is1Natural.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 616
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros r1 r2 s1.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 617
+Time: 0.001s">
+<div class="time" style="width: 0.065530799475754%"></div>
+<pre>
+    srapply Build_pHomotopy.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 618
+Time: 0.004s">
+<div class="time" style="width: 0.26212319790301%"></div>
+<pre>
+    1: cbn; exact (fun _ =&gt; concat_p1 _ @ ap_compose _ _ _ @ (concat_1p _)^).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 619
+Time: 0.276s">
+<div class="time" style="width: 18.086500655308%"></div>
+<pre>
+    by pelim s1 r1 r2 f g.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 620
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 621
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros A B.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 621
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply Build_Is1Natural.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 622
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros r1 r2 s1.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 623
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply Build_pHomotopy.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 624
+Time: 0.001s">
+<div class="time" style="width: 0.065530799475754%"></div>
+<pre>
+    1: exact (fun _ =&gt; concat_p1 _ @ ap_idmap _ @ (concat_1p _)^).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 625
+Time: 0.061s">
+<div class="time" style="width: 3.997378768021%"></div>
+<pre>
+    by pelim s1 r1 r2.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 626
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 627
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros A B.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 627
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply Build_Is1Natural.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 628
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros r1 r2 s1.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 629
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply Build_pHomotopy.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 630
+Time: 0.001s">
+<div class="time" style="width: 0.065530799475754%"></div>
+<pre>
+    1: exact (fun _ =&gt; concat_p1 _ @ (concat_1p _)^).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 631
+Time: 0.071s">
+<div class="time" style="width: 4.6526867627785%"></div>
+<pre>
+    simpl; by pelim s1 r1 r2.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 632
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 633
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros A B C D E f g h j.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 633
+Time: 0.001s">
+<div class="time" style="width: 0.065530799475754%"></div>
+<pre>
+    srapply Build_pHomotopy.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 634
+Time: 0.001s">
+<div class="time" style="width: 0.065530799475754%"></div>
+<pre>
+    1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 635
+Time: 0.367s">
+<div class="time" style="width: 24.049803407602%"></div>
+<pre>
+    by pelim f g h j.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 636
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 637
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros A B C f g.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 637
+Time: 0.001s">
+<div class="time" style="width: 0.065530799475754%"></div>
+<pre>
+    srapply Build_pHomotopy.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 638
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 639
+Time: 0.042s">
+<div class="time" style="width: 2.7522935779817%"></div>
+<pre>
+    by pelim f g.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 640
+Time: 1.526s">
+<div class="time" style="width: 100%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 641
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The forgetful map from [pType] to [Type] is a 0-functor *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 643
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance is0functor_pointed_type : Is0Functor pointed_type.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 643
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 644
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply Build_Is0Functor.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 645
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 645
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact f.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 645
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 646
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The forgetful map from [pType] to [Type] is a 1-functor *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 648
+Time: 0.001s">
+<div class="time" style="width: 0.065530799475754%"></div>
+<pre>Instance is1functor_pointed_type : Is1Functor pointed_type.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 648
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 649
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply Build_Is1Functor.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 650
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 651
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros ? ? ? ? h.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 651
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact h.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 651
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 652
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 652
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 652
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 653
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 653
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 653
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 654
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [pType] has binary products *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 656
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance hasbinaryproducts_ptype : HasBinaryProducts pType.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 656
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 657
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros X Y.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 658
+Time: 0.001s">
+<div class="time" style="width: 0.065530799475754%"></div>
+<pre>
+  snapply Build_BinaryProduct.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 659
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 660
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (X * Y).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 660
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 661
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact pfst.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 661
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 662
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact psnd.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 662
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 663
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact pprod_corec.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 663
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 664
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact pprod_corec_beta_fst.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 664
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 665
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact pprod_corec_beta_snd.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 665
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 666
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros Z f g p q.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 666
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    simpl.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 667
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply Build_pHomotopy.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 668
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 669
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 669
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply path_prod'; cbn.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 670
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 671
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (p a).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 671
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 672
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (q a).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 672
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 672
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    simpl.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 673
+Time: 0.01s">
+<div class="time" style="width: 0.65530799475754%"></div>
+<pre>
+    by pelim p q f g.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 674
+Time: 0.011s">
+<div class="time" style="width: 0.72083879423329%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 675
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [pType] has I-indexed product. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 677
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance hasallproducts_ptype `{Funext} : HasAllProducts pType.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 677
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 678
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros I x.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 679
+Time: 0.001s">
+<div class="time" style="width: 0.065530799475754%"></div>
+<pre>
+  snapply Build_Product.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 680
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 681
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (pproduct x).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 681
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 682
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact pproduct_proj.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 682
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> 
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 683
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (pproduct_corec x).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 683
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 684
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros Z f i.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 684
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply Build_pHomotopy.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 685
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 686
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply moveL_pV.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 687
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply equiv_1p_q1.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 688
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (apD10_path_forall _ _ (fun a =&gt; point_eq (f a)) i)^.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 689
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 690
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros Z f g p.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 690
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply Build_pHomotopy.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 691
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: intros z; funext i; apply p.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 692
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    cbn; apply moveR_equiv_V.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 693
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    funext i.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 694
+Time: 0.002s">
+<div class="time" style="width: 0.13106159895151%"></div>
+<pre>
+    rhs napply ap_pp.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 695
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    lhs exact (dpoint_eq (p i)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 696
+Time: 0.003s">
+<div class="time" style="width: 0.19659239842726%"></div>
+<pre>
+    cbn; f_ap.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 697
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 698
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply concat_p1.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 698
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 699
+Time: 0.001s">
+<div class="time" style="width: 0.065530799475754%"></div>
+<pre> rhs napply (ap_V _ (dpoint_eq g)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 699
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply inverse2.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 700
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply concat_p1.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 701
+Time: 0.007s">
+<div class="time" style="width: 0.45871559633028%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 702
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Some higher homotopies *)
+
+(** Horizontal composition of homotopies. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 706
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Notation "p @@* q" := (p $@@ q).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 706
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Funext for pointed types and direct consequences. *)
+
+(** By funext pointed homotopies are equivalent to paths *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 710
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition equiv_path_pforall `{Funext} {A : pType}
+  {P : pFam A} (f g : pForall A P)
+  : (f ==* g) &lt;~&gt; (f = g).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 712
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 713
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_ oE (issig_phomotopy f g)^-1).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 714
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert f g; apply (equiv_path_issig_contr (issig_pforall A P)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 715
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 716
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [f feq]; cbn.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 716
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists (fun a =&gt; 1%path).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 717
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (concat_pV _)^.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 718
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 718
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [f feq]; cbn.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 719
+Time: 0.011s">
+<div class="time" style="width: 0.72083879423329%"></div>
+<pre>
+  contr_sigsig f (fun a:A =&gt; idpath (f a)); cbn.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 720
+Time: 0.006s">
+<div class="time" style="width: 0.39318479685452%"></div>
+<pre>
+  refine (contr_equiv' {feq' : f (point A) = dpoint P &amp; feq = feq'} _).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 721
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (equiv_functor_sigma' (equiv_idmap _) _); intros p.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 722
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_^-1 oE equiv_path_inverse _ _).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 723
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply equiv_moveR_1M.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 724
+Time: 0.005s">
+<div class="time" style="width: 0.32765399737877%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 725
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition path_pforall `{Funext} {A : pType} {P : pFam A} {f g : pForall A P}
+  : (f ==* g) -&gt; (f = g) := equiv_path_pforall f g.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 728
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We note that the inverse of [path_pforall] computes definitionally on reflexivity, and hence [path_pforall] itself computes typally so. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 730
+Time: 0.001s">
+<div class="time" style="width: 0.065530799475754%"></div>
+<pre>Definition equiv_inverse_path_pforall_1 `{Funext} {A : pType} {P : pFam A} (f : pForall A P)
+  : (equiv_path_pforall f f)^-1%equiv 1%path = reflexivity f
+  := 1.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 732
+Time: 0.002s">
+<div class="time" style="width: 0.13106159895151%"></div>
+<pre>
+
+Definition path_pforall_1 `{Funext} {A : pType} {P : pFam A} {f : pForall A P}
+  : equiv_path_pforall _ _ (reflexivity f) = 1%path
+  := moveR_equiv_M _ _ (equiv_inverse_path_pforall_1 f)^.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 736
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Here is the inverse map without assuming funext *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 738
+Time: 0.001s">
+<div class="time" style="width: 0.065530799475754%"></div>
+<pre>Definition phomotopy_path {A : pType} {P : pFam A} {f g : pForall A P}
+  : (f = g) -&gt; (f ==* g) := ltac:(by intros []).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 739
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** And we prove that it agrees with the inverse of [equiv_path_pforall] *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 741
+Time: 0.002s">
+<div class="time" style="width: 0.13106159895151%"></div>
+<pre>Definition path_equiv_path_pforall_phomotopy_path `{Funext} {A : pType}
+  {P : pFam A} {f g : pForall A P}
+  : phomotopy_path (f:=f) (g:=g) = (equiv_path_pforall f g)^-1%equiv
+  := ltac:(by funext []).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 744
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** TODO: The next few results could be proven for [GpdHom_path] in any WildCat. *)
+
+(** [phomotopy_path] sends concatenation to composition of pointed homotopies.*)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 748
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition phomotopy_path_pp {A : pType} {P : pFam A}
+  {f g h : pForall A P} (p : f = g) (q : g = h)
+  : phomotopy_path (p @ q) ==* phomotopy_path p @* phomotopy_path q.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 750
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 751
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction p.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 752
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> induction q.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 752
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> symmetry.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 752
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply phomotopy_compose_p1.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 752
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 753
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** [phomotopy_path] respects 2-cells. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 755
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition phomotopy_path2 {A : pType} {P : pFam A}
+  {f g : pForall A P} {p p' : f = g} (q : p = p')
+  : phomotopy_path p ==* phomotopy_path p'.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 757
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 758
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction q.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 759
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 759
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 760
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [phomotopy_path] sends inverses to inverses.*)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 762
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition phomotopy_path_V {A : pType} {P : pFam A}
+  {f g : pForall A P} (p : f = g)
+  : phomotopy_path (p^) ==* (phomotopy_path p)^*.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 764
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 765
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction p.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 766
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 766
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> symmetry.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 766
+Time: 0.001s">
+<div class="time" style="width: 0.065530799475754%"></div>
+<pre> exact gpd_rev_1.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 766
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 767
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Since pointed homotopies are equivalent to equalities, we can act as if they are paths and define a path induction for them. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 769
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition phomotopy_ind `{H0 : Funext} {A : pType} {P : pFam A}
+  {k : pForall A P} (Q : forall (k' : pForall A P), (k ==* k') -&gt; Type)
+  (q : Q k (reflexivity k)) (k' : pForall A P)
+  : forall (H : k ==* k'), Q k' H.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 772
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 773
+Time: 0.013s">
+<div class="time" style="width: 0.8519003931848%"></div>
+<pre>
+  equiv_intro (equiv_path_pforall k k')^-1%equiv p.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 774
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction p.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 775
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact q.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 776
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 777
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Sometimes you have a goal with both a pointed homotopy [H] and [path_pforall H].  This is an induction principle that allows us to replace both of them by reflexivity at the same time. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 779
+Time: 0.001s">
+<div class="time" style="width: 0.065530799475754%"></div>
+<pre>Definition phomotopy_ind' `{H0 : Funext} {A : pType} {P : pFam A}
+  {k : pForall A P} (Q : forall (k' : pForall A P), (k ==* k') -&gt; (k = k') -&gt; Type)
+  (q : Q k (reflexivity k) 1 % path) (k' : pForall A P) (H : k ==* k')
+  (p : k = k') (r : path_pforall H = p)
+  : Q k' H p.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 783
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 784
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction r.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 785
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert k' H.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 786
+Time: 0.001s">
+<div class="time" style="width: 0.065530799475754%"></div>
+<pre>
+  rapply phomotopy_ind.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 787
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (transport (Q _ (reflexivity _)) path_pforall_1^ q).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 788
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 789
+Time: 0.001s">
+<div class="time" style="width: 0.065530799475754%"></div>
+<pre>
+
+Definition phomotopy_ind_1 `{H0 : Funext} {A : pType} {P : pFam A}
+  {k : pForall A P} (Q : forall (k' : pForall A P), (k ==* k') -&gt; Type)
+  (q : Q k (reflexivity k)) :
+  phomotopy_ind Q q k (reflexivity k) = q.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 794
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 795
+Time: 0.001s">
+<div class="time" style="width: 0.065530799475754%"></div>
+<pre>
+  change (reflexivity k) with ((equiv_path_pforall k k)^-1%equiv (idpath k)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 796
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply equiv_ind_comp.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 797
+Time: 0.001s">
+<div class="time" style="width: 0.065530799475754%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 798
+Time: 0.002s">
+<div class="time" style="width: 0.13106159895151%"></div>
+<pre>
+
+Definition phomotopy_ind_1' `{H0 : Funext} {A : pType} {P : pFam A}
+  {k : pForall A P} (Q : forall (k' : pForall A P), (k ==* k') -&gt; (k = k') -&gt; Type)
+  (q : Q k (reflexivity k) 1 % path)
+  : phomotopy_ind' Q q k (reflexivity k) (path_pforall (reflexivity k)) (1 % path)
+  = transport (Q k (reflexivity k)) path_pforall_1^ q.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 804
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 805
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply phomotopy_ind_1.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 806
+Time: 0.001s">
+<div class="time" style="width: 0.065530799475754%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 807
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Every homotopy between pointed maps of sets is a pointed homotopy. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 809
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition phomotopy_homotopy_hset {X Y : pType} `{IsHSet Y} {f g : X -&gt;* Y} (h : f == g)
+  : f ==* g.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 810
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 811
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (Build_pHomotopy h).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 812
+Time: 0.001s">
+<div class="time" style="width: 0.065530799475754%"></div>
+<pre>
+  apply path_ishprop.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 813
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 814
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Pointed homotopies in a set form an HProp. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 816
+Time: 0.041s">
+<div class="time" style="width: 2.6867627785059%"></div>
+<pre>Instance ishprop_phomotopy_hset `{Funext} {X Y : pType} `{IsHSet Y} (f g : X -&gt;* Y)
+  : IsHProp (f ==* g)
+  := inO_equiv_inO' (O:=Tr (-1)) _ (issig_phomotopy f g).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 818
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Operations on equivalences needed to make [pType] a wild category with equivalences *)
+
+(** The inverse equivalence of a pointed equivalence is again a pointed equivalence *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 822
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition pequiv_inverse {A B} (f : A &lt;~&gt;* B) : B &lt;~&gt;* A.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 822
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 823
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_pEquiv.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 824
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: apply (Build_pMap f^-1).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 825
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: apply moveR_equiv_V; symmetry; apply point_eq.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 826
+Time: 0.003s">
+<div class="time" style="width: 0.19659239842726%"></div>
+<pre>
+  exact _.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 827
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 828
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* A pointed equivalence is a section of its inverse *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 830
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition peissect {A B : pType} (f : A &lt;~&gt;* B)
+  : (pequiv_inverse f) o* f ==* pmap_idmap.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 831
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 832
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srefine (Build_pHomotopy _ _).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 833
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact (eissect f).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 834
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simpl.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 835
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> unfold moveR_equiv_V.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 835
+Time: 0.003s">
+<div class="time" style="width: 0.19659239842726%"></div>
+<pre>
+  pointed_reduce.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 836
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  symmetry.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 837
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (concat_p1 _ @ concat_1p _ @ concat_1p _).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 838
+Time: 0.004s">
+<div class="time" style="width: 0.26212319790301%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 839
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* A pointed equivalence is a retraction of its inverse *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 841
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition peisretr {A B : pType} (f : A &lt;~&gt;* B)
+  : f o* (pequiv_inverse f) ==* pmap_idmap.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 842
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 843
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srefine (Build_pHomotopy _ _).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 844
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact (eisretr f).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 845
+Time: 0.006s">
+<div class="time" style="width: 0.39318479685452%"></div>
+<pre>
+  pointed_reduce.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 846
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold moveR_equiv_V.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 847
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (eisadj f _ @ _).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 848
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  symmetry.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 849
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (concat_p1 _ @ concat_p1 _ @ ap _ (concat_1p _)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 850
+Time: 0.003s">
+<div class="time" style="width: 0.19659239842726%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 851
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Univalence for pointed types *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 853
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition equiv_path_ptype `{Univalence} (A B : pType@{u}) : A &lt;~&gt;* B &lt;~&gt; A = B.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 853
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 854
+Time: 0.001s">
+<div class="time" style="width: 0.065530799475754%"></div>
+<pre>
+  refine (equiv_path_from_contr A (fun C =&gt; A &lt;~&gt;* C) pequiv_pmap_idmap _ B).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 855
+Time: 0.001s">
+<div class="time" style="width: 0.065530799475754%"></div>
+<pre>
+  napply (contr_equiv' { X : Type@{u} &amp; { f : A &lt;~&gt; X &amp; {x : X &amp; f pt = x} }}).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 856
+Time: 0.013s">
+<div class="time" style="width: 0.8519003931848%"></div>
+<pre>
+  1: make_equiv.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 857
+Time: 0.001s">
+<div class="time" style="width: 0.065530799475754%"></div>
+<pre>
+  rapply (contr_equiv' { X : Type@{u} &amp;  A &lt;~&gt; X }).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 858
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  napply equiv_functor_sigma_id; intro X; symmetry.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 859
+Time: 0.002s">
+<div class="time" style="width: 0.13106159895151%"></div>
+<pre>
+  rapply equiv_sigma_contr.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 860
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (** If you replace the type in the second line with { Xf : {X : Type &amp; A &lt;~&gt; X} &amp; {x : Xf.1 &amp; Xf.2 pt = x} }, then the third line completes the proof, but that results in an extra universe variable. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 861
+Time: 0.008s">
+<div class="time" style="width: 0.52424639580603%"></div>
+<pre>Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 861
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition path_ptype `{Univalence} {A B : pType} : (A &lt;~&gt;* B) -&gt; A = B
+  := equiv_path_ptype A B.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 864
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The inverse map can be defined without Univalence. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 866
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition pequiv_path {A B : pType} (p : A = B) : (A &lt;~&gt;* B)
+  := match p with idpath =&gt; pequiv_pmap_idmap end.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 867
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** This just confirms that it is definitionally the inverse map. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 869
+Time: 0.005s">
+<div class="time" style="width: 0.32765399737877%"></div>
+<pre>Definition pequiv_path_equiv_path_ptype_inverse `{Univalence} {A B : pType}
+  : @pequiv_path A B = (equiv_path_ptype A B)^-1
+  := idpath.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 871
+Time: 0.006s">
+<div class="time" style="width: 0.39318479685452%"></div>
+<pre>
+
+Instance isequiv_pequiv_path `{Univalence} {A B : pType}
+  : IsEquiv (@pequiv_path A B)
+  := isequiv_inverse (equiv_path_ptype A B).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 875
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Two pointed equivalences are equal if their underlying pointed functions are equal. This requires [Funext] for knowing that [IsEquiv] is an [HProp]. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 877
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition equiv_path_pequiv' `{Funext} {A B : pType} (f g : A &lt;~&gt;* B)
+  : (f = g :&gt; (A -&gt;* B)) &lt;~&gt; (f = g :&gt; (A &lt;~&gt;* B)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 878
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 879
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine ((equiv_ap' (issig_pequiv A B)^-1%equiv f g)^-1%equiv oE _); cbn.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 880
+Time: 0.001s">
+<div class="time" style="width: 0.065530799475754%"></div>
+<pre>
+  match goal with |- _ &lt;~&gt; ?F = ?G =&gt; exact (equiv_path_sigma_hprop F G) end.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 881
+Time: 0.001s">
+<div class="time" style="width: 0.065530799475754%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 882
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Two pointed equivalences are equal if their underlying pointed functions are pointed homotopic. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 884
+Time: 0.001s">
+<div class="time" style="width: 0.065530799475754%"></div>
+<pre>Definition equiv_path_pequiv `{Funext} {A B : pType} (f g : A &lt;~&gt;* B)
+  : (f ==* g) &lt;~&gt; (f = g)
+  := equiv_path_pequiv' f g oE equiv_path_pforall f g.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 886
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition path_pequiv `{Funext} {A B : pType} (f g : A &lt;~&gt;* B)
+  : (f ==* g) -&gt; (f = g)
+  := equiv_path_pequiv f g.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 890
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition equiv_phomotopy_concat_l `{Funext} {A B : pType}
+  (f g h : A -&gt;* B) (K : g ==* f)
+  : f ==* h &lt;~&gt; g ==* h.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 894
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 895
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine ((equiv_path_pforall _ _)^-1%equiv oE _ oE equiv_path_pforall _ _).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 896
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rapply equiv_concat_l.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 897
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply equiv_path_pforall.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 898
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact K.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 899
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 900
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Under funext, [pType] has morphism extensionality *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 902
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance hasmorext_ptype `{Funext} : HasMorExt pType.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 902
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 903
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros A B f g.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 904
+Time: 0.014s">
+<div class="time" style="width: 0.91743119266055%"></div>
+<pre>
+  refine (isequiv_homotopic (equiv_path_pforall f g)^-1%equiv _).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 905
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros []; reflexivity.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 906
+Time: 0.003s">
+<div class="time" style="width: 0.19659239842726%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 907
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [pType] has equivalences *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 909
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance hasequivs_ptype : HasEquivs pType.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 909
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 910
+Time: 0.004s">
+<div class="time" style="width: 0.26212319790301%"></div>
+<pre>
+  stapply (
+    Build_HasEquivs _ _ _ _ _ pEquiv (fun A B f =&gt; IsEquiv f));
+  intros A B f; cbn; intros.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 913
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 914
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact f.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 914
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 915
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 915
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 916
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (Build_pEquiv f _).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 916
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 917
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 917
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 918
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (pequiv_inverse f).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 918
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 919
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply peissect.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 919
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 920
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 920
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (peisretr f).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 920
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 921
+Time: 0.001s">
+<div class="time" style="width: 0.065530799475754%"></div>
+<pre> rapply (isequiv_adjointify f g).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 921
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 922
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x; exact (r x).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 922
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 923
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x; exact (s x).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 923
+Time: 0.001s">
+<div class="time" style="width: 0.065530799475754%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 924
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance hasmorext_core_ptype `{Funext} : HasMorExt (core pType).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 926
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 927
+Time: 0.036s">
+<div class="time" style="width: 2.3591087811271%"></div>
+<pre>
+  rapply hasmorext_core.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 928
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros A B f g.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 929
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply isequiv_homotopic'.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 930
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact (equiv_path_pequiv' f g)^-1%equiv.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 931
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by intros [].</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 932
+Time: 0.003s">
+<div class="time" style="width: 0.19659239842726%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 933
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [pType] is a univalent 1-coherent 1-category *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 935
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isunivalent_ptype `{Univalence} : IsUnivalent1Cat pType.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 935
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 936
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros A B.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 937
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* [cate_equiv_path] is almost definitionally equal to [pequiv_path].  Both are defined by path induction, sending [idpath A] to [id_cate A] and [pequiv_pmap_idmap A], respectively.  [id_cate A] is almost definitionally equal to [pequiv_pmap_idmap A], except that the former uses [catie_adjointify], so the adjoint law is different. However, the underlying pointed maps are definitionally equal. *)
+ </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 939
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>refine (isequiv_homotopic pequiv_path _).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 939
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [].</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 940
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply equiv_path_pequiv'.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 941
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>  (* Change to equality as pointed functions. *)
+ </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 942
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>reflexivity.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 942
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 943
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The free base point added to a type. This is in fact a functor and left adjoint to the forgetful functor [pType] to [Type]. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 945
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition pointify (S : Type) : pType := [S + Unit, inr tt].</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 945
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance is0functor_pointify : Is0Functor pointify.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 947
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 948
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply Build_Is0Functor.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 949
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros A B f.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 950
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply Build_pMap.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 951
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact (functor_sum f idmap).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 952
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  reflexivity.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 953
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 954
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [pointify] is left adjoint to forgetting the basepoint in the following sense *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 956
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Theorem equiv_pointify_map `{Funext} (A : Type) (X : pType)
+  : (pointify A -&gt;* X) &lt;~&gt; (A -&gt; X).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 957
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 958
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply equiv_adjointify.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 959
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact (fun f =&gt; f o inl).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 960
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 961
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros f.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 961
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply Build_pMap.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 962
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 963
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [a|].</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 963
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      1: exact (f a).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 964
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact pt.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 965
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 965
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    reflexivity.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 966
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 966
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: intro x; reflexivity.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 967
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros f.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 968
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  cbv.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 969
+Time: 0.001s">
+<div class="time" style="width: 0.065530799475754%"></div>
+<pre>
+  pointed_reduce.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 970
+Time: 0.001s">
+<div class="time" style="width: 0.065530799475754%"></div>
+<pre>
+  rapply equiv_path_pforall.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 971
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_pHomotopy.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 972
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: by intros [a|[]].</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 973
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  reflexivity.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 974
+Time: 0.004s">
+<div class="time" style="width: 0.26212319790301%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 975
+Time: 0.003s">
+<div class="time" style="width: 0.19659239842726%"></div>
+<pre>
+
+Lemma natequiv_pointify_r `{Funext} (A : Type)
+  : NatEquiv (opyon (pointify A)) (opyon A o pointed_type).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 978
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 979
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_NatEquiv.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 980
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: rapply equiv_pointify_map.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 981
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_Is1Natural.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 982
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  cbv; reflexivity.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 983
+Time: 0.001s">
+<div class="time" style="width: 0.065530799475754%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 984
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Pointed categories give rise to pointed structures *)
+
+(** Pointed categories have pointed hom sets *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 988
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition pHom {A : Type} `{IsPointedCat A} (a1 a2 : A)
+  := [Hom a1 a2, zero_morphism].</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 989
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Pointed functors give pointed maps on morphisms *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 991
+Time: 0.003s">
+<div class="time" style="width: 0.19659239842726%"></div>
+<pre>Definition pfmap {A B : Type} (F : A -&gt; B)
+  `{IsPointedCat A, IsPointedCat B, !HasEquivs B, !HasMorExt B}
+  `{!Is0Functor F, !Is1Functor F, !IsPointedFunctor F}
+  {a1 a2 : A}
+  : pHom a1 a2 -&gt;* pHom (F a1) (F a2).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 995
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 996
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_pMap.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 997
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 998
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fmap F).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 998
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 999
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply path_hom.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 999
+Time: 0.003s">
+<div class="time" style="width: 0.19659239842726%"></div>
+<pre>
+    snapply fmap_zero_morphism; assumption.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 1000
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 1002
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

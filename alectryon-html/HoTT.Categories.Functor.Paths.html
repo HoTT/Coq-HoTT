@@ -1,0 +1,658 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>Paths.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-wsp"><span class="sd">(** * Classification of path spaces of functors *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="paths-v-chk218" style="display: none" type="checkbox"><label class="alectryon-input" for="paths-v-chk218"><span class="kn">Require Import</span> Category.Core Functor.Core.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> HoTT.Basics HoTT.Types HoTT.Tactics.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Universe Polymorphism</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Implicit Arguments</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Generalizable All Variables</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Asymmetric Patterns</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> path_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> morphism_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> functor_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">path_functor</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `{Funext}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variables</span> <span class="nv">C</span> <span class="nv">D</span> : PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+
+
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Notation</span> <span class="nf">functor_sig_T</span> :=
+    { OO : C -&gt; D
+    | { MO : <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span>, morphism C s d -&gt; morphism D (OO s) (OO d)
+      | { FCO : <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> <span class="nv">d&#39;</span> (<span class="nv">m1</span> : morphism C s d) (<span class="nv">m2</span> : morphism C d d&#39;),
+                  MO _ _ (m2 o m1) = MO d d&#39; m2 o MO s d m1
+        | <span class="kr">forall</span> <span class="nv">x</span>,
+            MO x x (identity x) = identity (OO x) } } }
+      (<span class="kn">only parsing</span>).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** ** Equivalence between the record and sigma-type versions of a functor *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="paths-v-chk219" style="display: none" type="checkbox"><label class="alectryon-input" for="paths-v-chk219"><span class="kn">Lemma</span> <span class="nf">equiv_sig_functor</span>
+  : functor_sig_T &lt;~&gt; Functor C D.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{OO : C -&gt; D &amp;
+{MO
+: <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : C,
+  morphism C s d -&gt; morphism D (OO s) (OO d) &amp;
+{_
+: <span class="kr">forall</span> (<span class="nv">s</span> <span class="nv">d</span> <span class="nv">d&#39;</span> : C) (<span class="nv">m1</span> : morphism C s d)
+  (<span class="nv">m2</span> : morphism C d d&#39;),
+  MO s d&#39; (m2 o m1) = MO d d&#39; m2 o MO s d m1 &amp;
+<span class="kr">forall</span> <span class="nv">x</span> : C, MO x x <span class="mi">1</span> = <span class="mi">1</span>}}} &lt;~&gt; Functor C D</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="paths-v-chk21a" style="display: none" type="checkbox"><label class="alectryon-input" for="paths-v-chk21a"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{OO : C -&gt; D &amp;
+{MO
+: <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : C,
+  morphism C s d -&gt; morphism D (OO s) (OO d) &amp;
+{_
+: <span class="kr">forall</span> (<span class="nv">s</span> <span class="nv">d</span> <span class="nv">d&#39;</span> : C) (<span class="nv">m1</span> : morphism C s d)
+  (<span class="nv">m2</span> : morphism C d d&#39;),
+  MO s d&#39; (m2 o m1) = MO d d&#39; m2 o MO s d m1 &amp;
+<span class="kr">forall</span> <span class="nv">x</span> : C, MO x x <span class="mi">1</span> = <span class="mi">1</span>}}} &lt;~&gt; Functor C D</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input">issig.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** We could leave it at that and be done with it, but we want a more convenient form for actually constructing paths between functors.  For this, we write a trimmed down version of something equivalent to the type of paths between functors. *)</span>
+
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Notation</span> <span class="nf">path_functor&#39;_T</span> F G
+    := { HO : object_of F = object_of G
+       | transport (<span class="kr">fun</span> <span class="nv">GO</span> =&gt; <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span>, morphism C s d -&gt; morphism D (GO s) (GO d))
+                   HO
+                   (morphism_of F)
+         = morphism_of G }
+         (<span class="kn">only parsing</span>).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** We could just go prove that the path space of [functor_sig_T] is equivalent to [path_functor&#39;_T], but unification is far too slow to do this effectively.  So instead we explicitly classify [path_functor&#39;_T], and provide an equivalence between it and the path space of [Functor C D]. *)</span>
+
+  <span class="sd">(**</span>
+<span class="sd">&lt;&lt;</span>
+<span class="sd">  Definition equiv_path_functor_uncurried_sig (F G : Functor C D)</span>
+<span class="sd">  : path_functor&#39;_T F G &lt;~&gt; (@equiv_inv _ _ _ equiv_sig_functor F</span>
+<span class="sd">                              = @equiv_inv _ _ _ equiv_sig_functor G).</span>
+<span class="sd">  Proof.</span>
+<span class="sd">    etransitivity; [ | by apply equiv_path_sigma ].</span>
+<span class="sd">    eapply @equiv_functor_sigma.</span>
+<span class="sd">    repeat match goal with</span>
+<span class="sd">             | [ |- context[(@equiv_inv ?A ?B ?f ?H ?F).1] ]</span>
+<span class="sd">               =&gt; change ((@equiv_inv A B f H F).1) with (object_of F)</span>
+<span class="sd">           end.</span>
+<span class="sd">    Time exact (isequiv_idmap (object_of F = object_of G)). (* 13.411 secs *)</span>
+<span class="sd">  Abort.</span>
+<span class="sd">&gt;&gt;</span>
+<span class="sd">   *)</span>
+
+  <span class="sd">(** ** Classify sufficient conditions to prove functors equal *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="paths-v-chk21b" style="display: none" type="checkbox"><label class="alectryon-input" for="paths-v-chk21b"><span class="kn">Definition</span> <span class="nf">path_functor_uncurried</span> (<span class="nv">F</span> <span class="nv">G</span> : Functor C D) : path_functor&#39;_T F G -&gt; F = G.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F, G</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{HO : F = G &amp;
+transport
+  (<span class="kr">fun</span> <span class="nv">GO</span> : C -&gt; D =&gt;
+   <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : C,
+   morphism C s d -&gt; morphism D (GO s) (GO d)) HO
+  (morphism_of F) = morphism_of G} -&gt; F = G</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="paths-v-chk21c" style="display: none" type="checkbox"><label class="alectryon-input" for="paths-v-chk21c"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F, G</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{HO : F = G &amp;
+transport
+  (<span class="kr">fun</span> <span class="nv">GO</span> : C -&gt; D =&gt;
+   <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : C,
+   morphism C s d -&gt; morphism D (GO s) (GO d)) HO
+  (morphism_of F) = morphism_of G} -&gt; F = G</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="paths-v-chk21d" style="display: none" type="checkbox"><label class="alectryon-input" for="paths-v-chk21d"><span class="nb">intros</span> [? ?].</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F, G</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br><span><var>proj1</var><span class="hyp-type"><b>: </b><span>F = G</span></span></span><br><span><var>proj2</var><span class="hyp-type"><b>: </b><span>transport
+  (<span class="kr">fun</span> <span class="nv">GO</span> : C -&gt; D =&gt;
+   <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : C,
+   morphism C s d -&gt; morphism D (GO s) (GO d))
+  proj1 (morphism_of F) = 
+morphism_of G</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">F = G</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="paths-v-chk21e" style="display: none" type="checkbox"><label class="alectryon-input" for="paths-v-chk21e"><span class="nb">destruct</span> F, G; <span class="nb">simpl</span> <span class="kr">in</span> *.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>object_of</var><span class="hyp-type"><b>: </b><span>C -&gt; D</span></span></span><br><span><var>morphism_of</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : C,
+morphism C s d -&gt;
+morphism D (object_of s) (object_of d)</span></span></span><br><span><var>composition_of</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">s</span> <span class="nv">d</span> <span class="nv">d&#39;</span> : C)
+(<span class="nv">m1</span> : morphism C s d)
+(<span class="nv">m2</span> : morphism C d d&#39;),
+morphism_of s d&#39; (m2 o m1) =
+morphism_of d d&#39; m2
+o morphism_of s d m1</span></span></span><br><span><var>identity_of</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> : C, morphism_of x x <span class="mi">1</span> = <span class="mi">1</span></span></span></span><br><span><var>object_of0</var><span class="hyp-type"><b>: </b><span>C -&gt; D</span></span></span><br><span><var>morphism_of0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : C,
+morphism C s d -&gt;
+morphism D (object_of0 s)
+  (object_of0 d)</span></span></span><br><span><var>composition_of0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">s</span> <span class="nv">d</span> <span class="nv">d&#39;</span> : C)
+(<span class="nv">m1</span> : morphism C s d)
+(<span class="nv">m2</span> : morphism C d d&#39;),
+morphism_of0 s d&#39; (m2 o m1) =
+morphism_of0 d d&#39; m2
+o morphism_of0 s d m1</span></span></span><br><span><var>identity_of0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> : C, morphism_of0 x x <span class="mi">1</span> = <span class="mi">1</span></span></span></span><br><span><var>proj1</var><span class="hyp-type"><b>: </b><span>object_of = object_of0</span></span></span><br><span><var>proj2</var><span class="hyp-type"><b>: </b><span>transport
+  (<span class="kr">fun</span> <span class="nv">GO</span> : C -&gt; D =&gt;
+   <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : C,
+   morphism C s d -&gt; morphism D (GO s) (GO d))
+  proj1 morphism_of = morphism_of0</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{|
+  object_of := object_of;
+  morphism_of := morphism_of;
+  composition_of := composition_of;
+  identity_of := identity_of
+|} =
+{|
+  object_of := object_of0;
+  morphism_of := morphism_of0;
+  composition_of := composition_of0;
+  identity_of := identity_of0
+|}</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="paths-v-chk21f" style="display: none" type="checkbox"><label class="alectryon-input" for="paths-v-chk21f">path_induction; <span class="nb">simpl</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>object_of</var><span class="hyp-type"><b>: </b><span>C -&gt; D</span></span></span><br><span><var>morphism_of</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : C,
+morphism C s d -&gt;
+morphism D (object_of s) (object_of d)</span></span></span><br><span><var>composition_of</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">s</span> <span class="nv">d</span> <span class="nv">d&#39;</span> : C)
+(<span class="nv">m1</span> : morphism C s d)
+(<span class="nv">m2</span> : morphism C d d&#39;),
+morphism_of s d&#39; (m2 o m1) =
+morphism_of d d&#39; m2
+o morphism_of s d m1</span></span></span><br><span><var>identity_of</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> : C, morphism_of x x <span class="mi">1</span> = <span class="mi">1</span></span></span></span><br><span><var>composition_of0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">s</span> <span class="nv">d</span> <span class="nv">d&#39;</span> : C)
+(<span class="nv">m1</span> : morphism C s d)
+(<span class="nv">m2</span> : morphism C d d&#39;),
+transport
+  (<span class="kr">fun</span> <span class="nv">GO</span> : C -&gt; D =&gt;
+   <span class="kr">forall</span> <span class="nv">s0</span> <span class="nv">d0</span> : C,
+   morphism C s0 d0 -&gt;
+   morphism D (GO s0) (GO d0)) <span class="mi">1</span>
+  morphism_of s d&#39; (m2 o m1) =
+transport
+  (<span class="kr">fun</span> <span class="nv">GO</span> : C -&gt; D =&gt;
+   <span class="kr">forall</span> <span class="nv">s0</span> <span class="nv">d0</span> : C,
+   morphism C s0 d0 -&gt;
+   morphism D (GO s0) (GO d0)) <span class="mi">1</span>
+  morphism_of d d&#39; m2
+o transport
+    (<span class="kr">fun</span> <span class="nv">GO</span> : C -&gt; D =&gt;
+     <span class="kr">forall</span> <span class="nv">s0</span> <span class="nv">d0</span> : C,
+     morphism C s0 d0 -&gt;
+     morphism D (GO s0) (GO d0)) <span class="mi">1</span>
+    morphism_of s d m1</span></span></span><br><span><var>identity_of0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> : C,
+transport
+  (<span class="kr">fun</span> <span class="nv">GO</span> : C -&gt; D =&gt;
+   <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : C,
+   morphism C s d -&gt;
+   morphism D (GO s) (GO d)) <span class="mi">1</span>
+  morphism_of x x <span class="mi">1</span> = <span class="mi">1</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{|
+  object_of := object_of;
+  morphism_of := morphism_of;
+  composition_of := composition_of;
+  identity_of := identity_of
+|} =
+{|
+  object_of := object_of;
+  morphism_of := morphism_of;
+  composition_of := composition_of0;
+  identity_of := identity_of0
+|}</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input">f_ap;
+      <span class="nb">eapply</span> @center; <span class="kp">abstract</span> <span class="bp">exact</span> _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** *** Said proof respects [object_of] *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="paths-v-chk220" style="display: none" type="checkbox"><label class="alectryon-input" for="paths-v-chk220"><span class="kn">Lemma</span> <span class="nf">path_functor_uncurried_fst</span> <span class="nv">F</span> <span class="nv">G</span> <span class="nv">HO</span> <span class="nv">HM</span>
+  : ap object_of (@path_functor_uncurried F G (HO; HM)) = HO.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F, G</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br><span><var>HO</var><span class="hyp-type"><b>: </b><span>F = G</span></span></span><br><span><var>HM</var><span class="hyp-type"><b>: </b><span>(<span class="kr">fun</span> <span class="nv">HO</span> : F = G =&gt;
+ transport
+   (<span class="kr">fun</span> <span class="nv">GO</span> : C -&gt; D =&gt;
+    <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : C,
+    morphism C s d -&gt; morphism D (GO s) (GO d))
+   HO (morphism_of F) = morphism_of G) HO</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">ap object_of (path_functor_uncurried F G (HO; HM)) =
+HO</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="paths-v-chk221" style="display: none" type="checkbox"><label class="alectryon-input" for="paths-v-chk221"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F, G</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br><span><var>HO</var><span class="hyp-type"><b>: </b><span>F = G</span></span></span><br><span><var>HM</var><span class="hyp-type"><b>: </b><span>(<span class="kr">fun</span> <span class="nv">HO</span> : F = G =&gt;
+ transport
+   (<span class="kr">fun</span> <span class="nv">GO</span> : C -&gt; D =&gt;
+    <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : C,
+    morphism C s d -&gt; morphism D (GO s) (GO d))
+   HO (morphism_of F) = morphism_of G) HO</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">ap object_of (path_functor_uncurried F G (HO; HM)) =
+HO</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="paths-v-chk222" style="display: none" type="checkbox"><label class="alectryon-input" for="paths-v-chk222"><span class="nb">destruct</span> F, G; <span class="nb">simpl</span> <span class="kr">in</span> *.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>object_of</var><span class="hyp-type"><b>: </b><span>C -&gt; D</span></span></span><br><span><var>morphism_of</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : C,
+morphism C s d -&gt;
+morphism D (object_of s) (object_of d)</span></span></span><br><span><var>composition_of</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">s</span> <span class="nv">d</span> <span class="nv">d&#39;</span> : C)
+(<span class="nv">m1</span> : morphism C s d)
+(<span class="nv">m2</span> : morphism C d d&#39;),
+morphism_of s d&#39; (m2 o m1) =
+morphism_of d d&#39; m2
+o morphism_of s d m1</span></span></span><br><span><var>identity_of</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> : C, morphism_of x x <span class="mi">1</span> = <span class="mi">1</span></span></span></span><br><span><var>object_of0</var><span class="hyp-type"><b>: </b><span>C -&gt; D</span></span></span><br><span><var>morphism_of0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : C,
+morphism C s d -&gt;
+morphism D (object_of0 s)
+  (object_of0 d)</span></span></span><br><span><var>composition_of0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">s</span> <span class="nv">d</span> <span class="nv">d&#39;</span> : C)
+(<span class="nv">m1</span> : morphism C s d)
+(<span class="nv">m2</span> : morphism C d d&#39;),
+morphism_of0 s d&#39; (m2 o m1) =
+morphism_of0 d d&#39; m2
+o morphism_of0 s d m1</span></span></span><br><span><var>identity_of0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> : C, morphism_of0 x x <span class="mi">1</span> = <span class="mi">1</span></span></span></span><br><span><var>HO</var><span class="hyp-type"><b>: </b><span>object_of = object_of0</span></span></span><br><span><var>HM</var><span class="hyp-type"><b>: </b><span>transport
+  (<span class="kr">fun</span> <span class="nv">GO</span> : C -&gt; D =&gt;
+   <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : C,
+   morphism C s d -&gt; morphism D (GO s) (GO d)) HO
+  morphism_of = morphism_of0</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">ap Core.object_of
+  (<span class="kr">match</span>
+     HM <span class="kr">in</span> (_ = a0)
+     <span class="kr">return</span>
+       (<span class="kr">forall</span>
+        (<span class="nv">composition_of0</span> : <span class="kr">forall</span> (<span class="nv">s</span> <span class="nv">d</span> <span class="nv">d&#39;</span> : C)
+                           (<span class="nv">m1</span> : morphism C s d)
+                           (<span class="nv">m2</span> : morphism C d d&#39;),
+                           a0 s d&#39; (m2 o m1) =
+                           a0 d d&#39; m2 o a0 s d m1)
+        (<span class="nv">identity_of0</span> : <span class="kr">forall</span> <span class="nv">x</span> : C, a0 x x <span class="mi">1</span> = <span class="mi">1</span>),
+        {|
+          object_of := object_of;
+          morphism_of := morphism_of;
+          composition_of := composition_of;
+          identity_of := identity_of
+        |} =
+        {|
+          object_of := object_of0;
+          morphism_of := a0;
+          composition_of := composition_of0;
+          identity_of := identity_of0
+        |})
+   <span class="kr">with</span>
+   | <span class="mi">1</span>%path =&gt;
+       <span class="kr">fun</span>
+         (<span class="nv">composition_of0</span> : <span class="kr">forall</span> (<span class="nv">s</span> <span class="nv">d</span> <span class="nv">d&#39;</span> : C)
+                            (<span class="nv">m1</span> : morphism C s d)
+                            (<span class="nv">m2</span> : morphism C d d&#39;),
+                            transport
+                              (<span class="kr">fun</span> <span class="nv">GO</span> : C -&gt; D =&gt;
+                               <span class="kr">forall</span> <span class="nv">s0</span> <span class="nv">d0</span> : C,
+                               morphism C s0 d0 -&gt;
+                               morphism D (GO s0)
+                                 (GO d0)) HO
+                              morphism_of s d&#39;
+                              (m2 o m1) =
+                            transport
+                              (<span class="kr">fun</span> <span class="nv">GO</span> : C -&gt; D =&gt;
+                               <span class="kr">forall</span> <span class="nv">s0</span> <span class="nv">d0</span> : C,
+                               morphism C s0 d0 -&gt;
+                               morphism D (GO s0)
+                                 (GO d0)) HO
+                              morphism_of d d&#39; m2
+                            o transport
+                                (<span class="kr">fun</span> <span class="nv">GO</span> : C -&gt; D =&gt;
+                                 <span class="kr">forall</span> <span class="nv">s0</span> <span class="nv">d0</span> : C,
+                                 morphism C s0 d0 -&gt;
+                                 morphism D (GO s0)
+                                   (GO d0)) HO
+                                morphism_of s d m1)
+         (<span class="nv">identity_of0</span> : <span class="kr">forall</span> <span class="nv">x</span> : C,
+                         transport
+                           (<span class="kr">fun</span> <span class="nv">GO</span> : C -&gt; D =&gt;
+                            <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : C,
+                            morphism C s d -&gt;
+                            morphism D (GO s) (GO d))
+                           HO morphism_of x x <span class="mi">1</span> = <span class="mi">1</span>)
+       =&gt;
+       paths_rect (C -&gt; D) object_of
+         (<span class="kr">fun</span> (<span class="nv">object_of0</span> : C -&gt; D)
+            (<span class="nv">proj1</span> : object_of = object_of0) =&gt;
+          <span class="kr">forall</span>
+          (<span class="nv">composition_of1</span> : <span class="kr">forall</span> (<span class="nv">s</span> <span class="nv">d</span> <span class="nv">d&#39;</span> : C)
+                             (<span class="nv">m1</span> : morphism C s d)
+                             (<span class="nv">m2</span> : morphism C d d&#39;),
+                             transport
+                               (<span class="kr">fun</span> <span class="nv">GO</span> : C -&gt; D =&gt;
+                                <span class="kr">forall</span> <span class="nv">s0</span> <span class="nv">d0</span> : C,
+                                morphism C s0 d0 -&gt;
+                                morphism D (GO s0)
+                                  (GO d0)) proj1
+                               morphism_of s d&#39;
+                               (m2 o m1) =
+                             transport
+                               (<span class="kr">fun</span> <span class="nv">GO</span> : C -&gt; D =&gt;
+                                <span class="kr">forall</span> <span class="nv">s0</span> <span class="nv">d0</span> : C,
+                                morphism C s0 d0 -&gt;
+                                morphism D (GO s0)
+                                  (GO d0)) proj1
+                               morphism_of d d&#39; m2
+                             o transport
+                                 (<span class="kr">fun</span> <span class="nv">GO</span> : C -&gt; D =&gt;
+                                  <span class="kr">forall</span> <span class="nv">s0</span> <span class="nv">d0</span> : C,
+                                  morphism C s0 d0 -&gt;
+                                  morphism D (GO s0)
+                                    (GO d0)) proj1
+                                 morphism_of s d m1)
+          (<span class="nv">identity_of1</span> : <span class="kr">forall</span> <span class="nv">x</span> : C,
+                          transport
+                            (<span class="kr">fun</span> <span class="nv">GO</span> : C -&gt; D =&gt;
+                             <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : C,
+                             morphism C s d -&gt;
+                             morphism D (GO s) (GO d))
+                            proj1 morphism_of x x <span class="mi">1</span> =
+                          <span class="mi">1</span>),
+          {|
+            object_of := object_of;
+            morphism_of := morphism_of;
+            composition_of := composition_of;
+            identity_of := identity_of
+          |} =
+          {|
+            object_of := object_of0;
+            morphism_of :=
+              transport
+                (<span class="kr">fun</span> <span class="nv">GO</span> : C -&gt; D =&gt;
+                 <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : C,
+                 morphism C s d -&gt;
+                 morphism D (GO s) (GO d)) proj1
+                morphism_of;
+            composition_of := composition_of1;
+            identity_of := identity_of1
+          |})
+         (<span class="kr">fun</span>
+            (<span class="nv">composition_of1</span> : <span class="kr">forall</span> (<span class="nv">s</span> <span class="nv">d</span> <span class="nv">d&#39;</span> : C)
+                               (<span class="nv">m1</span> : morphism C s d)
+                               (<span class="nv">m2</span> : morphism C d d&#39;),
+                               morphism_of s d&#39;
+                                 (m2 o m1) =
+                               morphism_of d d&#39; m2
+                               o morphism_of s d m1)
+            (<span class="nv">identity_of1</span> : <span class="kr">forall</span> <span class="nv">x</span> : C,
+                            morphism_of x x <span class="mi">1</span> = <span class="mi">1</span>) =&gt;
+          ap11
+            <span class="kr">match</span>
+              center
+                (composition_of = composition_of1) <span class="kr">in</span>
+              (_ = a)
+              <span class="kr">return</span>
+                (Build_Functor C D object_of
+                   morphism_of composition_of =
+                 Build_Functor C D object_of
+                   morphism_of a)
+            <span class="kr">with</span>
+            | <span class="mi">1</span> =&gt; <span class="mi">1</span>
+            <span class="kr">end</span> (center (identity_of = identity_of1)))
+         object_of0 HO composition_of0 identity_of0
+   <span class="kr">end</span> composition_of0 identity_of0) = HO</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input">path_induction_hammer.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Qed</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** *** Said proof respects [idpath] *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="paths-v-chk223" style="display: none" type="checkbox"><label class="alectryon-input" for="paths-v-chk223"><span class="kn">Lemma</span> <span class="nf">path_functor_uncurried_idpath</span> <span class="nv">F</span>
+  : @path_functor_uncurried F F (idpath; idpath) = idpath.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">path_functor_uncurried F F (<span class="mi">1</span>%path; <span class="mi">1</span>%path) = <span class="mi">1</span>%path</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="paths-v-chk224" style="display: none" type="checkbox"><label class="alectryon-input" for="paths-v-chk224"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">path_functor_uncurried F F (<span class="mi">1</span>%path; <span class="mi">1</span>%path) = <span class="mi">1</span>%path</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="paths-v-chk225" style="display: none" type="checkbox"><label class="alectryon-input" for="paths-v-chk225"><span class="nb">destruct</span> F; <span class="nb">simpl</span> <span class="kr">in</span> *.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>object_of</var><span class="hyp-type"><b>: </b><span>C -&gt; D</span></span></span><br><span><var>morphism_of</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : C,
+morphism C s d -&gt;
+morphism D (object_of s) (object_of d)</span></span></span><br><span><var>composition_of</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">s</span> <span class="nv">d</span> <span class="nv">d&#39;</span> : C)
+(<span class="nv">m1</span> : morphism C s d)
+(<span class="nv">m2</span> : morphism C d d&#39;),
+morphism_of s d&#39; (m2 o m1) =
+morphism_of d d&#39; m2
+o morphism_of s d m1</span></span></span><br><span><var>identity_of</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> : C, morphism_of x x <span class="mi">1</span> = <span class="mi">1</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">ap11
+  <span class="kr">match</span>
+    center (composition_of = composition_of) <span class="kr">in</span>
+    (_ = a)
+    <span class="kr">return</span>
+      (Build_Functor C D object_of morphism_of
+         composition_of =
+       Build_Functor C D object_of morphism_of a)
+  <span class="kr">with</span>
+  | <span class="mi">1</span> =&gt; <span class="mi">1</span>
+  <span class="kr">end</span> (center (identity_of = identity_of)) = <span class="mi">1</span>%path</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="paths-v-chk226" style="display: none" type="checkbox"><label class="alectryon-input" for="paths-v-chk226"><span class="nb">rewrite</span> !(contr idpath).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>object_of</var><span class="hyp-type"><b>: </b><span>C -&gt; D</span></span></span><br><span><var>morphism_of</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : C,
+morphism C s d -&gt;
+morphism D (object_of s) (object_of d)</span></span></span><br><span><var>composition_of</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">s</span> <span class="nv">d</span> <span class="nv">d&#39;</span> : C)
+(<span class="nv">m1</span> : morphism C s d)
+(<span class="nv">m2</span> : morphism C d d&#39;),
+morphism_of s d&#39; (m2 o m1) =
+morphism_of d d&#39; m2
+o morphism_of s d m1</span></span></span><br><span><var>identity_of</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> : C, morphism_of x x <span class="mi">1</span> = <span class="mi">1</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">ap11 <span class="mi">1</span> <span class="mi">1</span> = <span class="mi">1</span>%path</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">reflexivity</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Qed</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** ** Equality of functors gives rise to an inhabitant of the path-classifying-type *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">path_functor_uncurried_inv</span> (<span class="nv">F</span> <span class="nv">G</span> : Functor C D) : F = G -&gt; path_functor&#39;_T F G
+    := <span class="kr">fun</span> <span class="nv">H&#39;</span>
+       =&gt; (ap object_of H&#39;;
+           (transport_compose _ object_of _ _) ^ @ apD (@morphism_of _ _) H&#39;)%path.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** ** Curried version of path classifying lemma *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">path_functor</span> (<span class="nv">F</span> <span class="nv">G</span> : Functor C D)
+        (<span class="nv">HO</span> : object_of F = object_of G)
+        (<span class="nv">HM</span> : transport (<span class="kr">fun</span> <span class="nv">GO</span> =&gt; <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span>, morphism C s d -&gt; morphism D (GO s) (GO d)) HO (morphism_of F) = morphism_of G)
+  : F = G
+    := path_functor_uncurried F G (HO; HM).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** ** Curried version of path classifying lemma, using [forall] in place of equality of functions *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="paths-v-chk227" style="display: none" type="checkbox"><label class="alectryon-input" for="paths-v-chk227"><span class="kn">Definition</span> <span class="nf">path_functor_pointwise</span> (<span class="nv">F</span> <span class="nv">G</span> : Functor C D)
+        (<span class="nv">HO</span> : object_of F == object_of G)
+        (<span class="nv">HM</span> : <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> <span class="nv">m</span>,
+                transport (<span class="kr">fun</span> <span class="nv">GO</span> =&gt; <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span>, morphism C s d -&gt; morphism D (GO s) (GO d))
+                          (path_forall _ _ HO)
+                          (morphism_of F)
+                          s d m
+                = G _1 m)
+  : F = G.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F, G</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br><span><var>HO</var><span class="hyp-type"><b>: </b><span>F == G</span></span></span><br><span><var>HM</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">s</span> <span class="nv">d</span> : C) (<span class="nv">m</span> : morphism C s d),
+transport
+  (<span class="kr">fun</span> <span class="nv">GO</span> : C -&gt; D =&gt;
+   <span class="kr">forall</span> <span class="nv">s0</span> <span class="nv">d0</span> : C,
+   morphism C s0 d0 -&gt; morphism D (GO s0) (GO d0))
+  (path_forall F G HO) (morphism_of F) s d m =
+G _1 m</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">F = G</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="paths-v-chk228" style="display: none" type="checkbox"><label class="alectryon-input" for="paths-v-chk228"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F, G</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br><span><var>HO</var><span class="hyp-type"><b>: </b><span>F == G</span></span></span><br><span><var>HM</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">s</span> <span class="nv">d</span> : C) (<span class="nv">m</span> : morphism C s d),
+transport
+  (<span class="kr">fun</span> <span class="nv">GO</span> : C -&gt; D =&gt;
+   <span class="kr">forall</span> <span class="nv">s0</span> <span class="nv">d0</span> : C,
+   morphism C s0 d0 -&gt; morphism D (GO s0) (GO d0))
+  (path_forall F G HO) (morphism_of F) s d m =
+G _1 m</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">F = G</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="paths-v-chk229" style="display: none" type="checkbox"><label class="alectryon-input" for="paths-v-chk229"><span class="nb">refine</span> (path_functor F G (path_forall _ _ HO) _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F, G</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br><span><var>HO</var><span class="hyp-type"><b>: </b><span>F == G</span></span></span><br><span><var>HM</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">s</span> <span class="nv">d</span> : C) (<span class="nv">m</span> : morphism C s d),
+transport
+  (<span class="kr">fun</span> <span class="nv">GO</span> : C -&gt; D =&gt;
+   <span class="kr">forall</span> <span class="nv">s0</span> <span class="nv">d0</span> : C,
+   morphism C s0 d0 -&gt; morphism D (GO s0) (GO d0))
+  (path_forall F G HO) (morphism_of F) s d m =
+G _1 m</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport
+  (<span class="kr">fun</span> <span class="nv">GO</span> : C -&gt; D =&gt;
+   <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : C,
+   morphism C s d -&gt; morphism D (GO s) (GO d))
+  (path_forall F G HO) (morphism_of F) = morphism_of G</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kp">repeat</span> (<span class="nb">apply</span> path_forall; <span class="nb">intro</span>); <span class="nb">apply</span> HM.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** ** Classify equality of functors up to equivalence *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="paths-v-chk22a" style="display: none" type="checkbox"><label class="alectryon-input" for="paths-v-chk22a">#[export] <span class="kn">Instance</span> <span class="nf">isequiv_path_functor_uncurried</span> (<span class="nv">F</span> <span class="nv">G</span> : Functor C D)
+  : IsEquiv (@path_functor_uncurried F G).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F, G</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsEquiv (path_functor_uncurried F G)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="paths-v-chk22b" style="display: none" type="checkbox"><label class="alectryon-input" for="paths-v-chk22b"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F, G</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsEquiv (path_functor_uncurried F G)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="paths-v-chk22c" style="display: none" type="checkbox"><label class="alectryon-input" for="paths-v-chk22c"><span class="nb">apply</span> (isequiv_adjointify (@path_functor_uncurried F G)
+                              (@path_functor_uncurried_inv F G)).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F, G</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">fun</span> <span class="nv">x</span> : F = G =&gt;
+ path_functor_uncurried F G
+   (path_functor_uncurried_inv x)) == idmap</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="paths-v-chk22d" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F, G</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br></div><label class="goal-separator" for="paths-v-chk22d"><hr></label><div class="goal-conclusion">(<span class="kr">fun</span>
+   <span class="nv">x</span> : {HO : F = G &amp;
+       transport
+         (<span class="kr">fun</span> <span class="nv">GO</span> : C -&gt; D =&gt;
+          <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : C,
+          morphism C s d -&gt; morphism D (GO s) (GO d))
+         HO (morphism_of F) = morphism_of G} =&gt;
+ path_functor_uncurried_inv
+   (path_functor_uncurried F G x)) == idmap</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="paths-v-chk22e" style="display: none" type="checkbox"><label class="alectryon-input" for="paths-v-chk22e">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F, G</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">fun</span> <span class="nv">x</span> : F = G =&gt;
+ path_functor_uncurried F G
+   (path_functor_uncurried_inv x)) == idmap</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="paths-v-chk22f" style="display: none" type="checkbox"><label class="alectryon-input" for="paths-v-chk22f"><span class="nb">hnf</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F, G</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">x</span> : F = G,
+path_functor_uncurried F G
+  (path_functor_uncurried_inv x) = x</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="paths-v-chk230" style="display: none" type="checkbox"><label class="alectryon-input" for="paths-v-chk230"><span class="nb">intros</span> [].</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F, G</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">path_functor_uncurried F F
+  (path_functor_uncurried_inv <span class="mi">1</span>) = <span class="mi">1</span>%path</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">apply</span> path_functor_uncurried_idpath.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="paths-v-chk231" style="display: none" type="checkbox"><label class="alectryon-input" for="paths-v-chk231">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F, G</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">fun</span>
+   <span class="nv">x</span> : {HO : F = G &amp;
+       transport
+         (<span class="kr">fun</span> <span class="nv">GO</span> : C -&gt; D =&gt;
+          <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : C,
+          morphism C s d -&gt; morphism D (GO s) (GO d))
+         HO (morphism_of F) = morphism_of G} =&gt;
+ path_functor_uncurried_inv
+   (path_functor_uncurried F G x)) == idmap</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="paths-v-chk232" style="display: none" type="checkbox"><label class="alectryon-input" for="paths-v-chk232"><span class="nb">hnf</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F, G</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span>
+<span class="nv">x</span> : {HO : F = G &amp;
+    transport
+      (<span class="kr">fun</span> <span class="nv">GO</span> : C -&gt; D =&gt;
+       <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : C,
+       morphism C s d -&gt; morphism D (GO s) (GO d)) HO
+      (morphism_of F) = morphism_of G},
+path_functor_uncurried_inv
+  (path_functor_uncurried F G x) = x</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="paths-v-chk233" style="display: none" type="checkbox"><label class="alectryon-input" for="paths-v-chk233"><span class="nb">intros</span> [? ?].</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F, G</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br><span><var>proj1</var><span class="hyp-type"><b>: </b><span>F = G</span></span></span><br><span><var>proj2</var><span class="hyp-type"><b>: </b><span>transport
+  (<span class="kr">fun</span> <span class="nv">GO</span> : C -&gt; D =&gt;
+   <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : C,
+   morphism C s d -&gt; morphism D (GO s) (GO d))
+  proj1 (morphism_of F) = 
+morphism_of G</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">path_functor_uncurried_inv
+  (path_functor_uncurried F G (proj1; proj2)) =
+(proj1; proj2)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="paths-v-chk234" style="display: none" type="checkbox"><label class="alectryon-input" for="paths-v-chk234"><span class="nb">apply</span> path_sigma_uncurried.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F, G</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br><span><var>proj1</var><span class="hyp-type"><b>: </b><span>F = G</span></span></span><br><span><var>proj2</var><span class="hyp-type"><b>: </b><span>transport
+  (<span class="kr">fun</span> <span class="nv">GO</span> : C -&gt; D =&gt;
+   <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : C,
+   morphism C s d -&gt; morphism D (GO s) (GO d))
+  proj1 (morphism_of F) = 
+morphism_of G</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{p
+: (path_functor_uncurried_inv
+     (path_functor_uncurried F G (proj1; proj2))).<span class="mi">1</span> =
+  (proj1; proj2).<span class="mi">1</span> &amp;
+transport
+  (<span class="kr">fun</span> <span class="nv">HO</span> : F = G =&gt;
+   transport
+     (<span class="kr">fun</span> <span class="nv">GO</span> : C -&gt; D =&gt;
+      <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : C,
+      morphism C s d -&gt; morphism D (GO s) (GO d)) HO
+     (morphism_of F) = morphism_of G) p
+  (path_functor_uncurried_inv
+     (path_functor_uncurried F G (proj1; proj2))).<span class="mi">2</span> =
+(proj1; proj2).<span class="mi">2</span>}</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="paths-v-chk235" style="display: none" type="checkbox"><label class="alectryon-input" for="paths-v-chk235"><span class="kr">exists</span> (<span class="nv">path_functor_uncurried_fst</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span>).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F, G</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br><span><var>proj1</var><span class="hyp-type"><b>: </b><span>F = G</span></span></span><br><span><var>proj2</var><span class="hyp-type"><b>: </b><span>transport
+  (<span class="kr">fun</span> <span class="nv">GO</span> : C -&gt; D =&gt;
+   <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : C,
+   morphism C s d -&gt; morphism D (GO s) (GO d))
+  proj1 (morphism_of F) = 
+morphism_of G</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport
+  (<span class="kr">fun</span> <span class="nv">HO</span> : F = G =&gt;
+   transport
+     (<span class="kr">fun</span> <span class="nv">GO</span> : C -&gt; D =&gt;
+      <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : C,
+      morphism C s d -&gt; morphism D (GO s) (GO d)) HO
+     (morphism_of F) = morphism_of G)
+  (path_functor_uncurried_fst F G proj2)
+  (path_functor_uncurried_inv
+     (path_functor_uncurried F G (proj1; proj2))).<span class="mi">2</span> =
+(proj1; proj2).<span class="mi">2</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (center _).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">equiv_path_functor_uncurried</span> (<span class="nv">F</span> <span class="nv">G</span> : Functor C D)
+  : path_functor&#39;_T F G &lt;~&gt; F = G
+    := Build_Equiv _ _ (@path_functor_uncurried F G) _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> function_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="paths-v-chk236" style="display: none" type="checkbox"><label class="alectryon-input" for="paths-v-chk236"><span class="kn">Definition</span> <span class="nf">path_path_functor_uncurried</span> (<span class="nv">F</span> <span class="nv">G</span> : Functor C D) (<span class="nv">p</span> <span class="nv">q</span> : F = G)
+  : ap object_of p = ap object_of q -&gt; p = q.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F, G</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br><span><var>p, q</var><span class="hyp-type"><b>: </b><span>F = G</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">ap object_of p = ap object_of q -&gt; p = q</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="paths-v-chk237" style="display: none" type="checkbox"><label class="alectryon-input" for="paths-v-chk237"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F, G</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br><span><var>p, q</var><span class="hyp-type"><b>: </b><span>F = G</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">ap object_of p = ap object_of q -&gt; p = q</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="paths-v-chk238" style="display: none" type="checkbox"><label class="alectryon-input" for="paths-v-chk238"><span class="nb">refine</span> ((ap (@path_functor_uncurried F G)^-<span class="mi">1</span>)^-<span class="mi">1</span> o _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F, G</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br><span><var>p, q</var><span class="hyp-type"><b>: </b><span>F = G</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">ap object_of p = ap object_of q -&gt;
+(path_functor_uncurried F G)^-<span class="mi">1</span> p =
+(path_functor_uncurried F G)^-<span class="mi">1</span> q</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="paths-v-chk239" style="display: none" type="checkbox"><label class="alectryon-input" for="paths-v-chk239"><span class="nb">refine</span> ((path_sigma_uncurried _ _ _) o _); <span class="nb">simpl</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F, G</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br><span><var>p, q</var><span class="hyp-type"><b>: </b><span>F = G</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">ap object_of p = ap object_of q -&gt;
+{p0 : ap object_of p = ap object_of q &amp;
+transport
+  (<span class="kr">fun</span> <span class="nv">HO</span> : F = G =&gt;
+   transport
+     (<span class="kr">fun</span> <span class="nv">GO</span> : C -&gt; D =&gt;
+      <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : C,
+      morphism C s d -&gt; morphism D (GO s) (GO d)) HO
+     (morphism_of F) = morphism_of G) p0
+  ((transport_compose
+      (<span class="kr">fun</span> <span class="nv">GO</span> : C -&gt; D =&gt;
+       <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : C,
+       morphism C s d -&gt; morphism D (GO s) (GO d))
+      object_of p (morphism_of F))^ @
+   apD (morphism_of (D:=D)) p) =
+(transport_compose
+   (<span class="kr">fun</span> <span class="nv">GO</span> : C -&gt; D =&gt;
+    <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : C,
+    morphism C s d -&gt; morphism D (GO s) (GO d))
+   object_of q (morphism_of F))^ @
+apD (morphism_of (D:=D)) q}</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (pr1^-<span class="mi">1</span>).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="paths-v-chk23a" style="display: none" type="checkbox"><label class="alectryon-input" for="paths-v-chk23a">#[export] <span class="kn">Instance</span> <span class="nf">isequiv_path_path_functor_uncurried</span> <span class="nv">F</span> <span class="nv">G</span> <span class="nv">p</span> <span class="nv">q</span>
+  : IsEquiv (@path_path_functor_uncurried F G p q).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F, G</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br><span><var>p, q</var><span class="hyp-type"><b>: </b><span>F = G</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsEquiv (path_path_functor_uncurried p q)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="paths-v-chk23b" style="display: none" type="checkbox"><label class="alectryon-input" for="paths-v-chk23b"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F, G</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br><span><var>p, q</var><span class="hyp-type"><b>: </b><span>F = G</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsEquiv (path_path_functor_uncurried p q)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="paths-v-chk23c" style="display: none" type="checkbox"><label class="alectryon-input" for="paths-v-chk23c"><span class="nb">unfold</span> path_path_functor_uncurried.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F, G</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br><span><var>p, q</var><span class="hyp-type"><b>: </b><span>F = G</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsEquiv
+  (<span class="kr">fun</span> <span class="nv">x</span> : ap object_of p = ap object_of q =&gt;
+   (ap (path_functor_uncurried F G)^-<span class="mi">1</span>)^-<span class="mi">1</span>
+     (path_sigma_uncurried
+        (<span class="kr">fun</span> <span class="nv">HO</span> : F = G =&gt;
+         transport
+           (<span class="kr">fun</span> <span class="nv">GO</span> : C -&gt; D =&gt;
+            <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : C,
+            morphism C s d -&gt; morphism D (GO s) (GO d))
+           HO (morphism_of F) = morphism_of G)
+        ((path_functor_uncurried F G)^-<span class="mi">1</span> p)
+        ((path_functor_uncurried F G)^-<span class="mi">1</span> q) (pr1^-<span class="mi">1</span> x)))</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    <span class="sd">(** N.B. [exact _] is super-slow here.  Not sure why. *)</span>
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kp">repeat</span> <span class="kr">match goal with</span>
+             | [ |- IsEquiv (_ o _) ] =&gt; <span class="nb">eapply</span> @isequiv_compose
+             | [ |- IsEquiv (_^-<span class="mi">1</span>) ] =&gt; <span class="nb">eapply</span> @isequiv_inverse
+             | [ |- IsEquiv (path_sigma_uncurried _ _ _) ] =&gt; <span class="nb">eapply</span> @isequiv_path_sigma
+             | _ =&gt; <span class="nb">apply</span> @isequiv_compose
+           <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** ** If the objects in [D] are n-truncated, then so is the type of functors [C → D] *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="paths-v-chk23d" style="display: none" type="checkbox"><label class="alectryon-input" for="paths-v-chk23d">#[export] <span class="kn">Instance</span> <span class="nf">trunc_functor</span> `{IsTrunc n D} `{<span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span>, IsTrunc n (morphism D s d)}
+  : IsTrunc n (Functor C D).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>IsTrunc0</var><span class="hyp-type"><b>: </b><span>IsTrunc n D</span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : D, IsTrunc n (morphism D s d)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsTrunc n (Functor C D)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="paths-v-chk23e" style="display: none" type="checkbox"><label class="alectryon-input" for="paths-v-chk23e"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>IsTrunc0</var><span class="hyp-type"><b>: </b><span>IsTrunc n D</span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : D, IsTrunc n (morphism D s d)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsTrunc n (Functor C D)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="paths-v-chk23f" style="display: none" type="checkbox"><label class="alectryon-input" for="paths-v-chk23f"><span class="nb">eapply</span> istrunc_equiv_istrunc; [ <span class="bp">exact</span> equiv_sig_functor | ].</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>n</var><span class="hyp-type"><b>: </b><span>trunc_index</span></span></span><br><span><var>IsTrunc0</var><span class="hyp-type"><b>: </b><span>IsTrunc n D</span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : D, IsTrunc n (morphism D s d)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsTrunc n
+  {OO : C -&gt; D &amp;
+  {MO
+  : <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : C,
+    morphism C s d -&gt; morphism D (OO s) (OO d) &amp;
+  {_
+  : <span class="kr">forall</span> (<span class="nv">s</span> <span class="nv">d</span> <span class="nv">d&#39;</span> : C) (<span class="nv">m1</span> : morphism C s d)
+    (<span class="nv">m2</span> : morphism C d d&#39;),
+    MO s d&#39; (m2 o m1)%morphism =
+    (MO d d&#39; m2 o MO s d m1)%morphism &amp;
+  <span class="kr">forall</span> <span class="nv">x</span> : C, MO x x <span class="mi">1</span> = <span class="mi">1</span>}}}</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">induction</span> n;
+    <span class="nb">simpl</span>; <span class="nb">intros</span>;
+    <span class="nb">typeclasses eauto</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Qed</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">path_functor</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Tactic for proving equality of functors *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">path_functor</span> :=
+  <span class="kp">repeat</span> <span class="kr">match goal with</span>
+           | _ =&gt; <span class="nb">intro</span>
+           | _ =&gt; <span class="bp">reflexivity</span>
+           | _ =&gt; <span class="nb">apply</span> path_functor_uncurried; <span class="nb">simpl</span>
+           | _ =&gt; (<span class="kr">exists</span> <span class="nv">idpath</span>)
+         <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Global</span> <span class="kn">Arguments</span> path_functor_uncurried : <span class="nb">simpl</span> never.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Tactic for pushing [ap object_of] through other [ap]s.</span>
+
+<span class="sd">    This allows lemmas like [path_functor_uncurried_fst] to apply more</span>
+<span class="sd">    easily. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">push_ap_object_of&#39;</span> :=
+  <span class="kp">idtac</span>;
+  <span class="kr">match goal with</span>
+    | [ |- <span class="kp">context</span>[ap object_of (ap <span class="nl">?f</span> <span class="nl">?p</span>)] ]
+      =&gt; <span class="nb">rewrite</span> &lt;- (ap_compose&#39; f object_of p); <span class="nb">simpl</span>
+    | [ |- <span class="kp">context</span> G[ap (<span class="kr">fun</span> <span class="nv">F&#39;</span> <span class="nv">x</span> =&gt; object_of F&#39; (@<span class="nl">?f</span> x)) <span class="nl">?p</span>] ]
+      =&gt; <span class="kr">let</span> <span class="nv">P</span> := context_to_lambda G <span class="kr">in</span>
+         <span class="nb">refine</span> (transport P (ap_compose&#39; object_of (<span class="kr">fun</span> <span class="nv">F&#39;</span> <span class="nv">x</span> =&gt; F&#39; (f x)) p)^ _)
+    | [ |- <span class="kp">context</span> G[ap (<span class="kr">fun</span> <span class="nv">F&#39;</span> <span class="nv">x</span> =&gt; <span class="nl">?f</span> (object_of F&#39; x)) <span class="nl">?p</span>] ]
+      =&gt; <span class="kr">let</span> <span class="nv">P</span> := context_to_lambda G <span class="kr">in</span>
+         <span class="nb">refine</span> (transport P (ap_compose&#39; object_of (<span class="kr">fun</span> <span class="nv">F&#39;</span> <span class="nv">x</span> =&gt; f (F&#39; x)) p)^ _)
+  <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">push_ap_object_of</span> := <span class="kp">repeat</span> push_ap_object_of&#39;.</span></span></pre>
+</div>
+</div></body>
+</html>

@@ -1,0 +1,1028 @@
+<html>
+<head>
+<title>pTrunc.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for pTrunc.v</h1>
+
+<div class="code" title="File: pTrunc.v
+Line: 1
+Time: 0.087s">
+<div class="time" style="width: 100%"></div>
+<pre>From HoTT Require Import Basics Types Truncations
+  Pointed.Core Pointed.pEquiv Pointed.Loops Pointed.pModality.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 2
+Time: 0.002s">
+<div class="time" style="width: 2.2988505747126%"></div>
+<pre>
+From HoTT.WildCat Require Import Core Equiv.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope pointed_scope.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Truncations of pointed types *)
+
+(** TODO: Many things here can be generalized to any modality or any reflective subuniverse, and could be moved to pModality.v *)
+
+</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 10
+Time: 0.001s">
+<div class="time" style="width: 1.1494252873563%"></div>
+<pre>Definition pTr (n : trunc_index) (A : pType) : pType
+  := [Tr n A, _].</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We specialize [pto] and [pequiv_pto] from pModalities.v to truncations. *)
+
+</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ptr {n : trunc_index} {A : pType} : A -&gt;* pTr n A
+  := pto (Tr n) _.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 15
+Time: 0.004s">
+<div class="time" style="width: 4.5977011494253%"></div>
+<pre>
+
+Definition pequiv_ptr {n : trunc_index} {A : pType} `{IsTrunc n A}
+  : A &lt;~&gt;* pTr n A := @pequiv_pto (Tr n) A _.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We could specialize [pO_rec] to give the following result, but since maps induced by truncation-recursion compute on elements of the form [tr _], we can give a better proof of pointedness than the one coming from [pO_rec]. *)</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 20
+Time: 0.001s">
+<div class="time" style="width: 1.1494252873563%"></div>
+<pre>Definition pTr_rec n {X Y : pType} `{IsTrunc n Y} (f : X -&gt;* Y)
+  : pTr n X -&gt;* Y
+  := Build_pMap (Trunc_rec f) (point_eq f).</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Note that we get an equality of pointed functions here, without Funext, while [pO_rec_beta] only gives a pointed homotopy. This is because [pTr_rec] computes on elements of the form [tr _]. *)</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition pTr_rec_beta_path n {X Y : pType} `{IsTrunc n Y} (f : X -&gt;* Y)
+  : pTr_rec n f o* ptr = f.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold pTr_rec, "o*"; cbn.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* Since [f] is definitionally equal to [Build_pMap _ _ f (point_eq f)], this works: *)
+ </pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>apply (ap (Build_pMap f)).</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply concat_1p.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 30
+Time: 0.001s">
+<div class="time" style="width: 1.1494252873563%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The version with a pointed homotopy. *)</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 33
+Time: 0.001s">
+<div class="time" style="width: 1.1494252873563%"></div>
+<pre>Definition pTr_rec_beta n {X Y : pType} `{IsTrunc n Y} (f : X -&gt;* Y)
+  : pTr_rec n f o* ptr ==* f
+  := phomotopy_path (pTr_rec_beta_path n f).</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A pointed version of the induction principle. *)</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 37
+Time: 0.002s">
+<div class="time" style="width: 2.2988505747126%"></div>
+<pre>Definition pTr_ind n {X : pType} {Y : pFam (pTr n X)} `{forall x, IsTrunc n (Y x)}
+  (f : pForall X (Build_pFam (Y o tr) (dpoint Y)))
+  : pForall (pTr n X) Y
+  := Build_pForall (pTr n X) Y (Trunc_ind Y f) (dpoint_eq f).</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 40
+Time: 0.004s">
+<div class="time" style="width: 4.5977011494253%"></div>
+<pre>
+
+Definition pequiv_ptr_rec `{Funext} {n} {X Y : pType} `{IsTrunc n Y}
+  : (pTr n X -&gt;** Y) &lt;~&gt;* (X -&gt;** Y)
+  := pequiv_o_pto_O _ X Y.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Functoriality of [pTr] *)
+
+</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance is0functor_ptr n : Is0Functor (pTr n).</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply Build_Is0Functor.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros X Y f.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (pTr_rec _ (ptr o* f)).</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 52
+Time: 0.001s">
+<div class="time" style="width: 1.1494252873563%"></div>
+<pre>
+
+Instance is1functor_ptr n : Is1Functor (pTr n).</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply Build_Is1Functor.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros X Y f g p.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 57
+Time: 0.006s">
+<div class="time" style="width: 6.8965517241379%"></div>
+<pre>
+    srapply pTr_ind; cbn.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 58
+Time: 0.001s">
+<div class="time" style="width: 1.1494252873563%"></div>
+<pre>
+    snapply Build_pForall.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fun x =&gt; ap tr (p x)).</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 61
+Time: 0.006s">
+<div class="time" style="width: 6.8965517241379%"></div>
+<pre> pointed_reduce.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (concat_p1 _ @ concat_p1 _ @ ap _ (concat_p1 _))^.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros X.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply Build_pHomotopy.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: apply Trunc_rec_tr.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    cbn.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros X Y Z f g.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply Build_pHomotopy.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 68
+Time: 0.005s">
+<div class="time" style="width: 5.7471264367816%"></div>
+<pre>
+    1: by rapply Trunc_ind.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 69
+Time: 0.011s">
+<div class="time" style="width: 12.64367816092%"></div>
+<pre>
+    by pointed_reduce.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 70
+Time: 0.017s">
+<div class="time" style="width: 19.540229885057%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Naturality of [ptr].  Note that we get a equality of pointed functions, not just a pointed homotopy. *)</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 73
+Time: 0.002s">
+<div class="time" style="width: 2.2988505747126%"></div>
+<pre>Definition ptr_natural_path (n : trunc_index) {X Y : pType} (f : X -&gt;* Y)
+  : fmap (pTr n) f o* ptr = ptr o* f
+  := pTr_rec_beta_path n (ptr o* f).</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The version with a pointed homotopy. *)</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 77
+Time: 0.001s">
+<div class="time" style="width: 1.1494252873563%"></div>
+<pre>Definition ptr_natural (n : trunc_index) {X Y : pType} (f : X -&gt;* Y)
+  : fmap (pTr n) f o* ptr ==* ptr o* f
+  := phomotopy_path (ptr_natural_path n f).</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition ptr_functor_pconst {X Y : pType} n
+  : fmap (pTr n) (@pconst X Y) ==* pconst.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply Build_pHomotopy.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 84
+Time: 0.005s">
+<div class="time" style="width: 5.7471264367816%"></div>
+<pre>
+  1: by rapply Trunc_ind.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  reflexivity.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 86
+Time: 0.001s">
+<div class="time" style="width: 1.1494252873563%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 87
+Time: 0.002s">
+<div class="time" style="width: 2.2988505747126%"></div>
+<pre>
+
+Definition pequiv_ptr_functor {X Y : pType} (n : trunc_index) (f : X &lt;~&gt;* Y)
+  : pTr n X &lt;~&gt;* pTr n Y
+  := emap (pTr n) f.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition ptr_loops `{Univalence} (n : trunc_index) (A : pType)
+  : pTr n (loops A) &lt;~&gt;* loops (pTr n.+1 A).</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 94
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply Build_pEquiv'.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: apply equiv_path_Tr.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  reflexivity.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition ptr_iterated_loops `{Univalence} (n : trunc_index)
+  (k : nat) (A : pType)
+  : pTr n (iterated_loops k A) &lt;~&gt;* iterated_loops k (pTr (trunc_index_inc' n k) A).</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert A n.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction k.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros A n; cbn.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    reflexivity.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros A n.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  cbn; etransitivity.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: apply ptr_loops.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 111
+Time: 0.003s">
+<div class="time" style="width: 3.448275862069%"></div>
+<pre>
+  tapply (emap loops).</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply IHk.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition ptr_loops_eq `{Univalence} (n : trunc_index) (A : pType)
+  : pTr n (loops A) = loops (pTr n.+1 A) :&gt; pType
+  := path_ptype (ptr_loops n A).</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 118
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* This lemma generalizes a goal that appears in [ptr_loops_commutes], allowing us to prove it by path induction. *)</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition path_Tr_commutes (n : trunc_index) (A : Type) (a0 a1 : A) (p : a0 = a1)
+  : path_Tr (n:=n) (tr p) = ap tr p.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 121
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 122
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by destruct p.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* [ptr_loops] commutes with the two [ptr] maps. *)</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 126
+Time: 0.001s">
+<div class="time" style="width: 1.1494252873563%"></div>
+<pre>Definition ptr_loops_commutes `{Univalence} (n : trunc_index) (A : pType)
+  : (ptr_loops n A) o* ptr ==* fmap loops ptr.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 128
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply Build_pHomotopy.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 130
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro p.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 130
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    simpl.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 131
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (_ @ _).</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply path_Tr_commutes.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 134
+Time: 0.001s">
+<div class="time" style="width: 1.1494252873563%"></div>
+<pre> symmetry; refine (_ @ _).</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 135
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply concat_1p.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 135
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply concat_p1.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 137
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 137
+Time: 0.018s">
+<div class="time" style="width: 20.689655172414%"></div>
+<pre>
+    reflexivity.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 138
+Time: 0.005s">
+<div class="time" style="width: 5.7471264367816%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Pointed truncation preserves binary products. *)</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 141
+Time: 0.001s">
+<div class="time" style="width: 1.1494252873563%"></div>
+<pre>Definition pequiv_ptr_prod (n : trunc_index) (A B : pType)
+  : pTr n (A * B) &lt;~&gt;* pTr n A * pTr n B.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_pEquiv'.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: napply equiv_Trunc_prod_cmp.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 145
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  reflexivity.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 147
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Truncatedness of [pForall] and [pMap] *)
+
+(** Buchholtz-van Doorn-Rijke, Theorem 4.2:  Let [j &gt;= -1] and [n &gt;= -2].  When [X] is [j]-connected and [Y] is a pointed family of [j+n+1]-truncated types, the type of pointed sections is [n]-truncated.  We formalize it with [j] replaced with a trunc index [m.+1] to enforce [j &gt;= -1]. This version also allows [n] to be one smaller than BvDR allow. *)</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition istrunc_pforall `{Univalence} {m n : trunc_index}
+  (X : pType@{u}) {iscX : IsConnected m.+1 X}
+  (Y : pFam@{u v} X) {istY : forall x, IsTrunc (n +2+ m) (Y x)}
+  : IsTrunc@{w} n (pForall X Y).</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 154
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 155
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  napply (istrunc_equiv_istrunc _ (equiv_extension_along_pforall@{v w u} Y)).</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 156
+Time: 0.001s">
+<div class="time" style="width: 1.1494252873563%"></div>
+<pre>
+  rapply (istrunc_extension_along_conn (n:=m) _ Y (HP:=istY)).</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** From this we deduce the non-dependent version, which is Corollary 4.3 of BvDR.  We include [n = -2] here as well, but in this case it is not interesting.  Since [X -&gt;* Y] is inhabited, the [n = -1] case also gives contractibility, with weaker hypotheses. *)</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 160
+Time: 0.001s">
+<div class="time" style="width: 1.1494252873563%"></div>
+<pre>Definition istrunc_pmap `{Univalence} {m n : trunc_index} (X Y : pType)
+  `{!IsConnected m.+1 X} `{!IsTrunc (n +2+ m) Y}
+  : IsTrunc n (X -&gt;* Y)
+  := istrunc_pforall X (pfam_const Y).</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 163
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We can give a different proof of the [n = -1] case (with the conclusion upgraded to contractibility).  This proof works with [Tr (m.+1)] replaced with any reflective subuniverse [O] and doesn't require univalence.  Is it possible to generalize this to dependent functions while still avoiding univalence and/or keeping [O] a general RSU or modality?  Can [istrunc_pmap] be proven without univalence?  What about [istrunc_pforall]?  If the [n = -2] or [n = -1] cases can be proven without univalence, the rest can be done inductively without univalence. *)</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 165
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition contr_pmap_isconnected_inO `{Funext} (O : ReflectiveSubuniverse)
+  (X : pType) `{IsConnected O X} (Y : pType) `{In O Y}
+  : Contr (X -&gt;* Y).</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 168
+Time: 0.001s">
+<div class="time" style="width: 1.1494252873563%"></div>
+<pre>
+  srapply (contr_equiv' ([O X, _] -&gt;* Y)).</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 169
+Time: 0.001s">
+<div class="time" style="width: 1.1494252873563%"></div>
+<pre>
+  rapply pequiv_o_pto_O.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Every pointed type is (-1)-connected. *)</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance is_minus_one_connected_pointed (X : pType)
+  : IsConnected (Tr (-1)) X
+  := contr_inhabited_hprop _ (tr pt).</pre>
+</div>
+<div class="code" title="File: pTrunc.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

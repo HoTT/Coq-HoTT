@@ -1,0 +1,467 @@
+<html>
+<head>
+<title>Negation.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Negation.v</h1>
+
+<div class="code" title="File: Negation.v
+Line: 1
+Time: 0.029s">
+<div class="time" style="width: 72.5%"></div>
+<pre>Require Import HoTT.Basics.</pre>
+</div>
+<div class="code" title="File: Negation.v
+Line: 1
+Time: 0.04s">
+<div class="time" style="width: 100%"></div>
+<pre>
+Require Import HoTT.Spaces.No.Core.</pre>
+</div>
+<div class="code" title="File: Negation.v
+Line: 2
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope path_scope.</pre>
+</div>
+<div class="code" title="File: Negation.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope surreal_scope.</pre>
+</div>
+<div class="code" title="File: Negation.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Negation of surreal numbers *)
+
+(** Negation requires the option sorts to be symmetric. *)</pre>
+</div>
+<div class="code" title="File: Negation.v
+Line: 9
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Class HasNegation (S : OptionSort) 
+  := symmetric_options :: forall L R, InSort S L R -&gt; InSort S R L.</pre>
+</div>
+<div class="code" title="File: Negation.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance hasnegation_maxsort : HasNegation MaxSort
+  := fun _ _ _ =&gt; tt.</pre>
+</div>
+<div class="code" title="File: Negation.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance hasnegation_decsort : HasNegation DecSort.</pre>
+</div>
+<div class="code" title="File: Negation.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Negation.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros L R [? ?]; split; assumption.</pre>
+</div>
+<div class="code" title="File: Negation.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: Negation.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section HasNegation.</pre>
+</div>
+<div class="code" title="File: Negation.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Universe i.</pre>
+</div>
+<div class="code" title="File: Negation.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {S : OptionSort@{i}} `{HasNegation S}.</pre>
+</div>
+<div class="code" title="File: Negation.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Let No := GenNo S.</pre>
+</div>
+<div class="code" title="File: Negation.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition negate : No -&gt; No.</pre>
+</div>
+<div class="code" title="File: Negation.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Negation.v
+Line: 26
+Time: 0.001s">
+<div class="time" style="width: 2.5%"></div>
+<pre>
+    simple refine (No_rec No (fun x y =&gt; y &lt;= x) (fun x y =&gt; y &lt; x)
+                          _ _ _ _ _); intros.</pre>
+</div>
+<div class="code" title="File: Negation.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Negation.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact {{ fxR | fxL // fun r l =&gt; fxcut l r }}.</pre>
+</div>
+<div class="code" title="File: Negation.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Negation.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply path_No; assumption.</pre>
+</div>
+<div class="code" title="File: Negation.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Negation.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn in *.</pre>
+</div>
+<div class="code" title="File: Negation.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply le_lr; intros; [ apply dq | apply dp ].</pre>
+</div>
+<div class="code" title="File: Negation.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Negation.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn in *.</pre>
+</div>
+<div class="code" title="File: Negation.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply lt_r with l; intros; assumption.</pre>
+</div>
+<div class="code" title="File: Negation.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Negation.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn in *.</pre>
+</div>
+<div class="code" title="File: Negation.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply lt_l with r; intros; assumption.</pre>
+</div>
+<div class="code" title="File: Negation.v
+Line: 33
+Time: 0.001s">
+<div class="time" style="width: 2.5%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Negation.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** More useful is the following rewriting lemma. *)
+ </pre>
+</div>
+<div class="code" title="File: Negation.v
+Line: 37
+Time: 0.001s">
+<div class="time" style="width: 2.5%"></div>
+<pre>Definition negate_cut
+             {L R : Type@{i} } {Sx : InSort S L R}
+             (xL : L -&gt; No) (xR : R -&gt; No)
+             (xcut : forall (l : L) (r : R), xL l &lt; xR r)
+    : { nxcut : forall r l, negate (xR r) &lt; negate (xL l) &amp;
+        negate {{ xL | xR // xcut }} =
+        {{ (fun r =&gt; negate (xR r)) | (fun l =&gt; negate (xL l)) // nxcut }} }.</pre>
+</div>
+<div class="code" title="File: Negation.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Negation.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    eexists.</pre>
+</div>
+<div class="code" title="File: Negation.v
+Line: 45
+Time: 0.002s">
+<div class="time" style="width: 5%"></div>
+<pre>
+    unfold negate at 1; rewrite No_rec_cut.</pre>
+</div>
+<div class="code" title="File: Negation.v
+Line: 46
+Time: 0.001s">
+<div class="time" style="width: 2.5%"></div>
+<pre>
+    reflexivity.</pre>
+</div>
+<div class="code" title="File: Negation.v
+Line: 47
+Time: 0.008s">
+<div class="time" style="width: 20%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Negation.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The following proof verifies that [No_rec] applied to a cut reduces definitionally to a cut with the expected options (although it does produce quite a large term). *)
+ </pre>
+</div>
+<div class="code" title="File: Negation.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Context `{InSort S Empty Empty} `{InSort S Unit Empty}.</pre>
+</div>
+<div class="code" title="File: Negation.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Goal negate one = minusone.</pre>
+</div>
+<div class="code" title="File: Negation.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Negation.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unfold one; rewrite (negate_cut _ _ _).2.</pre>
+</div>
+<div class="code" title="File: Negation.v
+Line: 54
+Time: 0.001s">
+<div class="time" style="width: 2.5%"></div>
+<pre>
+    apply path_No; apply le_lr; intros.</pre>
+</div>
+<div class="code" title="File: Negation.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (** Since [le_lr] only proves inequality of cuts, this would not work if [negate] didn't compute to a cut when applied to a cut. *)
+   </pre>
+</div>
+<div class="code" title="File: Negation.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>-</pre>
+</div>
+<div class="code" title="File: Negation.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> elim l.</pre>
+</div>
+<div class="code" title="File: Negation.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Negation.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply lt_r with r.</pre>
+</div>
+<div class="code" title="File: Negation.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      unfold zero; rewrite (negate_cut _ _ _).2.</pre>
+</div>
+<div class="code" title="File: Negation.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply le_lr; apply Empty_ind.</pre>
+</div>
+<div class="code" title="File: Negation.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Negation.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> elim l.</pre>
+</div>
+<div class="code" title="File: Negation.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Negation.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> unfold zero; rewrite (negate_cut _ _ _).2.</pre>
+</div>
+<div class="code" title="File: Negation.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply lt_r with r.</pre>
+</div>
+<div class="code" title="File: Negation.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply le_lr; apply Empty_ind.</pre>
+</div>
+<div class="code" title="File: Negation.v
+Line: 64
+Time: 0.003s">
+<div class="time" style="width: 7.5%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: Negation.v
+Line: 65
+Time: 0.003s">
+<div class="time" style="width: 7.5%"></div>
+<pre>
+
+End HasNegation.</pre>
+</div>
+<div class="code" title="File: Negation.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

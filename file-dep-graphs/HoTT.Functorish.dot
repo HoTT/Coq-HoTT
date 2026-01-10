@@ -1,0 +1,27 @@
+digraph HoTT_Functorish {
+  graph [ratio=0.5]
+  node [style=filled]
+Functorish_fmap_agrees_with_univalence [label="fmap_agrees_with_univalence", URL=<Functorish.html#fmap_agrees_with_univalence>, peripheries=3, fillcolor="#F070D1"] ;
+Functorish_isequiv_fmap [label="isequiv_fmap", URL=<Functorish.html#isequiv_fmap>, peripheries=3, fillcolor="#F070D1"] ;
+Functorish_fmap_idmap [label="fmap_idmap", URL=<Functorish.html#fmap_idmap>, fillcolor="#F070D1"] ;
+Functorish_fmap [label="fmap", URL=<Functorish.html#fmap>, peripheries=3, fillcolor="#F070D1"] ;
+Functorish_Functorish_sind [label="Functorish_sind", URL=<Functorish.html#Functorish_sind>, peripheries=3, fillcolor="#F070D1"] ;
+Functorish_Functorish_rec [label="Functorish_rec", URL=<Functorish.html#Functorish_rec>, peripheries=3, fillcolor="#F070D1"] ;
+Functorish_Functorish_ind [label="Functorish_ind", URL=<Functorish.html#Functorish_ind>, peripheries=3, fillcolor="#7FFFD4"] ;
+Functorish_Functorish_rect [label="Functorish_rect", URL=<Functorish.html#Functorish_rect>, fillcolor="#F070D1"] ;
+Functorish_Build_Functorish [label="Build_Functorish", URL=<Functorish.html#Build_Functorish>, fillcolor="#7FAAFF"] ;
+Functorish_Functorish [label="Functorish", URL=<Functorish.html#Functorish>, fillcolor="#E2CDFA"] ;
+  Functorish_fmap_agrees_with_univalence -> Functorish_fmap_idmap [] ;
+  Functorish_isequiv_fmap -> Functorish_Functorish [] ;
+  Functorish_fmap_idmap -> Functorish_Functorish [] ;
+  Functorish_fmap -> Functorish_Functorish [] ;
+  Functorish_Functorish_sind -> Functorish_Build_Functorish [] ;
+  Functorish_Functorish_sind -> Functorish_Functorish [] ;
+  Functorish_Functorish_rec -> Functorish_Functorish_rect [] ;
+  Functorish_Functorish_ind -> Functorish_Build_Functorish [] ;
+  Functorish_Functorish_ind -> Functorish_Functorish [] ;
+  Functorish_Functorish_rect -> Functorish_Build_Functorish [] ;
+  Functorish_Functorish_rect -> Functorish_Functorish [] ;
+subgraph cluster_Functorish { label="Functorish"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Functorish_Functorish; Functorish_Build_Functorish; Functorish_Functorish_rect; Functorish_Functorish_ind; Functorish_Functorish_rec; Functorish_Functorish_sind; Functorish_fmap; Functorish_fmap_idmap; Functorish_isequiv_fmap; Functorish_fmap_agrees_with_univalence; };
+} /* END */

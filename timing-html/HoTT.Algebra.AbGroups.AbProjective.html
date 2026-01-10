@@ -1,0 +1,192 @@
+<html>
+<head>
+<title>AbProjective.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for AbProjective.v</h1>
+
+<div class="code" title="File: AbProjective.v
+Line: 1
+Time: 0.11s">
+<div class="time" style="width: 100%"></div>
+<pre>From HoTT Require Import Basics Types AbelianGroup AbPullback
+  WildCat.Core Limits.Pullback ReflectiveSubuniverse Truncations.Core.</pre>
+</div>
+<div class="code" title="File: AbProjective.v
+Line: 2
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Projective abelian groups *)
+
+(** We define projective abelian groups and show that [P] is projective if and only if every epimorphism [A -&gt; P] merely splits. *)
+
+(** An abelian group [P] is projective if for any map [P -&gt; B] and epimorphism [A -&gt; B], there merely exists a lift [P -&gt; A] making the following triangle commute:
+
+              A
+            ^ |
+         l /  |
+              | e
+         /    |
+              V
+       P ---&gt; B
+          f
+*)</pre>
+</div>
+<div class="code" title="File: AbProjective.v
+Line: 18
+Time: 0.002s">
+<div class="time" style="width: 1.8181818181818%"></div>
+<pre>Class IsAbProjective@{u +} (P : AbGroup@{u}) : Type :=
+  isabprojective : forall (A B : AbGroup@{u}), forall (e : A $-&gt; B),
+    forall (f : P $-&gt; B), IsSurjection e -&gt; merely (exists l : P $-&gt; A, e $o l == f).</pre>
+</div>
+<div class="code" title="File: AbProjective.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** An abelian group is projective iff epis into it merely split. *)</pre>
+</div>
+<div class="code" title="File: AbProjective.v
+Line: 22
+Time: 0.001s">
+<div class="time" style="width: 0.90909090909091%"></div>
+<pre>Proposition iff_isabprojective_surjections_split (P : AbGroup)
+  : IsAbProjective P
+    &lt;-&gt; (forall A, forall p : A $-&gt; P, IsSurjection p -&gt;
+                           merely (exists s : P $-&gt; A, p $o s == grp_homo_id)).</pre>
+</div>
+<div class="code" title="File: AbProjective.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: AbProjective.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  split.</pre>
+</div>
+<div class="code" title="File: AbProjective.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: AbProjective.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros H A B.</pre>
+</div>
+<div class="code" title="File: AbProjective.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply H.</pre>
+</div>
+<div class="code" title="File: AbProjective.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: AbProjective.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros H A B e f H1.</pre>
+</div>
+<div class="code" title="File: AbProjective.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    pose proof (s := H (ab_pullback f e) (grp_pullback_pr1 f e)
+                       (conn_map_pullback _ f e)).</pre>
+</div>
+<div class="code" title="File: AbProjective.v
+Line: 32
+Time: 0.016s">
+<div class="time" style="width: 14.545454545455%"></div>
+<pre>
+    strip_truncations.</pre>
+</div>
+<div class="code" title="File: AbProjective.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct s as [s h].</pre>
+</div>
+<div class="code" title="File: AbProjective.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (tr ((grp_pullback_pr2 f e) $o s; _)); intro x.</pre>
+</div>
+<div class="code" title="File: AbProjective.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine ((pullback_commsq f e _)^ @ _).</pre>
+</div>
+<div class="code" title="File: AbProjective.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (ap f (h x)).</pre>
+</div>
+<div class="code" title="File: AbProjective.v
+Line: 37
+Time: 0.003s">
+<div class="time" style="width: 2.7272727272727%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: AbProjective.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

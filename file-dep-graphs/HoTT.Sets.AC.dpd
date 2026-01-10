@@ -1,0 +1,9 @@
+N: 3 "AC" [body=no, kind=cnst, prop=no, path="AC", ];
+N: 5 "Choice" [body=no, kind=cnst, prop=no, path="AC", ];
+N: 4 "Choice_type" [body=yes, kind=cnst, prop=no, path="AC", ];
+N: 1 "WO_AC" [body=yes, kind=cnst, prop=no, path="AC", ];
+N: 2 "is_global_axiom_propresizing" [body=yes, kind=cnst, prop=no, path="AC", ];
+E: 1 4 [weight=2, ];
+E: 2 5 [weight=2, ];
+E: 3 4 [weight=1, ];
+E: 3 5 [weight=1, ];

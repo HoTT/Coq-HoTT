@@ -1,0 +1,543 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>Morphisms.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-wsp"><span class="sd">(** * Classification of morphisms of the Grothendieck Construction of a functor to Set *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="morphisms-v-chk98" style="display: none" type="checkbox"><label class="alectryon-input" for="morphisms-v-chk98"><span class="kn">Require Import</span> Category.Core Functor.Core.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Category.Morphisms.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> SetCategory.Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Grothendieck.ToSet.Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> HoTT.Basics HoTT.Types.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Universe Polymorphism</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Implicit Arguments</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Generalizable All Variables</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Asymmetric Patterns</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> morphism_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">Grothendieck</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `{Funext}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> {<span class="nv">C</span> : PreCategory}
+          {<span class="nv">F</span> : Functor C set_cat}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="morphisms-v-chk99" style="display: none" type="checkbox"><label class="alectryon-input" for="morphisms-v-chk99"><span class="kn">Definition</span> <span class="nf">isequiv_sigma_category_isomorphism</span> {<span class="nv">s</span> <span class="nv">d</span> : category F}
+  : (s &lt;~=~&gt; d)%category &lt;~&gt; { e : (s.(c) &lt;~=~&gt; d.(c))%category | (F _1 e s.(x) = d.(x))%category }.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C set_cat</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>category F</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(s &lt;~=~&gt; d)%category &lt;~&gt;
+{e : (c s &lt;~=~&gt; c d)%category &amp; (F _1 e) (x s) = x d}</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="morphisms-v-chk9a" style="display: none" type="checkbox"><label class="alectryon-input" for="morphisms-v-chk9a"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C set_cat</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>category F</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(s &lt;~=~&gt; d)%category &lt;~&gt;
+{e : (c s &lt;~=~&gt; c d)%category &amp; (F _1 e) (x s) = x d}</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="morphisms-v-chk9b" style="display: none" type="checkbox"><label class="alectryon-input" for="morphisms-v-chk9b"><span class="nb">simple refine</span> (equiv_adjointify _ _ _ _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C set_cat</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>category F</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(s &lt;~=~&gt; d)%category -&gt;
+{e : (c s &lt;~=~&gt; c d)%category &amp; (F _1 e) (x s) = x d}</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="morphisms-v-chk9c" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C set_cat</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>category F</span></span></span><br></div><label class="goal-separator" for="morphisms-v-chk9c"><hr></label><div class="goal-conclusion">{e : (c s &lt;~=~&gt; c d)%category &amp; (F _1 e) (x s) = x d} -&gt;
+(s &lt;~=~&gt; d)%category</div></blockquote><input class="alectryon-extra-goal-toggle" id="morphisms-v-chk9d" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C set_cat</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>category F</span></span></span><br></div><label class="goal-separator" for="morphisms-v-chk9d"><hr></label><div class="goal-conclusion"><span class="nl">?f</span> o <span class="nl">?g</span> == idmap</div></blockquote><input class="alectryon-extra-goal-toggle" id="morphisms-v-chk9e" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C set_cat</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>category F</span></span></span><br></div><label class="goal-separator" for="morphisms-v-chk9e"><hr></label><div class="goal-conclusion"><span class="nl">?g</span> o <span class="nl">?f</span> == idmap</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="morphisms-v-chk9f" style="display: none" type="checkbox"><label class="alectryon-input" for="morphisms-v-chk9f">{</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C set_cat</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>category F</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(s &lt;~=~&gt; d)%category -&gt;
+{e : (c s &lt;~=~&gt; c d)%category &amp; (F _1 e) (x s) = x d}</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="morphisms-v-chka0" style="display: none" type="checkbox"><label class="alectryon-input" for="morphisms-v-chka0"><span class="nb">intro</span> m.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C set_cat</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>category F</span></span></span><br><span><var>m</var><span class="hyp-type"><b>: </b><span>(s &lt;~=~&gt; d)%category</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{e : (c s &lt;~=~&gt; c d)%category &amp; (F _1 e) (x s) = x d}</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="morphisms-v-chka1" style="display: none" type="checkbox"><label class="alectryon-input" for="morphisms-v-chka1"><span class="nb">simple refine</span> (_; _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C set_cat</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>category F</span></span></span><br><span><var>m</var><span class="hyp-type"><b>: </b><span>(s &lt;~=~&gt; d)%category</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(c s &lt;~=~&gt; c d)%category</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="morphisms-v-chka2" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C set_cat</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>category F</span></span></span><br><span><var>m</var><span class="hyp-type"><b>: </b><span>(s &lt;~=~&gt; d)%category</span></span></span><br></div><label class="goal-separator" for="morphisms-v-chka2"><hr></label><div class="goal-conclusion">(<span class="kr">fun</span> <span class="nv">e</span> : (c s &lt;~=~&gt; c d)%category =&gt;
+ (F _1 e) (x s) = x d) <span class="nl">?proj1</span></div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="morphisms-v-chka3" style="display: none" type="checkbox"><label class="alectryon-input" for="morphisms-v-chka3">{</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C set_cat</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>category F</span></span></span><br><span><var>m</var><span class="hyp-type"><b>: </b><span>(s &lt;~=~&gt; d)%category</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(c s &lt;~=~&gt; c d)%category</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="morphisms-v-chka4" style="display: none" type="checkbox"><label class="alectryon-input" for="morphisms-v-chka4"><span class="kr">exists</span> (<span class="nv">m</span> : morphism _ _ _).<span class="mi">1</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C set_cat</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>category F</span></span></span><br><span><var>m</var><span class="hyp-type"><b>: </b><span>(s &lt;~=~&gt; d)%category</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsIsomorphism m.<span class="mi">1</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">        </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="morphisms-v-chka5" style="display: none" type="checkbox"><label class="alectryon-input" for="morphisms-v-chka5"><span class="kr">exists</span> (<span class="nv">m</span>^-<span class="mi">1</span>).<span class="mi">1</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C set_cat</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>category F</span></span></span><br><span><var>m</var><span class="hyp-type"><b>: </b><span>(s &lt;~=~&gt; d)%category</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(m^-<span class="mi">1</span>).<span class="mi">1</span> o m.<span class="mi">1</span> = <span class="mi">1</span></div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="morphisms-v-chka6" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C set_cat</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>category F</span></span></span><br><span><var>m</var><span class="hyp-type"><b>: </b><span>(s &lt;~=~&gt; d)%category</span></span></span><br></div><label class="goal-separator" for="morphisms-v-chka6"><hr></label><div class="goal-conclusion">m.<span class="mi">1</span> o (m^-<span class="mi">1</span>).<span class="mi">1</span> = <span class="mi">1</span></div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">        </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="morphisms-v-chka7" style="display: none" type="checkbox"><label class="alectryon-input" for="morphisms-v-chka7">{</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C set_cat</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>category F</span></span></span><br><span><var>m</var><span class="hyp-type"><b>: </b><span>(s &lt;~=~&gt; d)%category</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(m^-<span class="mi">1</span>).<span class="mi">1</span> o m.<span class="mi">1</span> = <span class="mi">1</span></div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (ap proj1 (@left_inverse _ _ _ m _)).</span><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="morphisms-v-chka8" style="display: none" type="checkbox"><label class="alectryon-input" for="morphisms-v-chka8">}</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C set_cat</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>category F</span></span></span><br><span><var>m</var><span class="hyp-type"><b>: </b><span>(s &lt;~=~&gt; d)%category</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">m.<span class="mi">1</span> o (m^-<span class="mi">1</span>).<span class="mi">1</span> = <span class="mi">1</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">        </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="morphisms-v-chka9" style="display: none" type="checkbox"><label class="alectryon-input" for="morphisms-v-chka9">{</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C set_cat</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>category F</span></span></span><br><span><var>m</var><span class="hyp-type"><b>: </b><span>(s &lt;~=~&gt; d)%category</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">m.<span class="mi">1</span> o (m^-<span class="mi">1</span>).<span class="mi">1</span> = <span class="mi">1</span></div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (ap proj1 (@right_inverse _ _ _ m _)).</span><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input">}</span><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="morphisms-v-chkaa" style="display: none" type="checkbox"><label class="alectryon-input" for="morphisms-v-chkaa">}</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C set_cat</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>category F</span></span></span><br><span><var>m</var><span class="hyp-type"><b>: </b><span>(s &lt;~=~&gt; d)%category</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">fun</span> <span class="nv">e</span> : (c s &lt;~=~&gt; c d)%category =&gt;
+ (F _1 e) (x s) = x d)
+  {|
+    morphism_isomorphic := m.<span class="mi">1</span>;
+    isisomorphism_isomorphic :=
+      {|
+        morphism_inverse := (m^-<span class="mi">1</span>).<span class="mi">1</span>;
+        left_inverse := ap pr1 left_inverse;
+        right_inverse := ap pr1 right_inverse
+      |}
+  |}</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="morphisms-v-chkab" style="display: none" type="checkbox"><label class="alectryon-input" for="morphisms-v-chkab">{</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C set_cat</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>category F</span></span></span><br><span><var>m</var><span class="hyp-type"><b>: </b><span>(s &lt;~=~&gt; d)%category</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">fun</span> <span class="nv">e</span> : (c s &lt;~=~&gt; c d)%category =&gt;
+ (F _1 e) (x s) = x d)
+  {|
+    morphism_isomorphic := m.<span class="mi">1</span>;
+    isisomorphism_isomorphic :=
+      {|
+        morphism_inverse := (m^-<span class="mi">1</span>).<span class="mi">1</span>;
+        left_inverse := ap pr1 left_inverse;
+        right_inverse := ap pr1 right_inverse
+      |}
+  |}</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (m : morphism _ _ _).<span class="mi">2</span>.</span><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input">}</span><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="morphisms-v-chkac" style="display: none" type="checkbox"><label class="alectryon-input" for="morphisms-v-chkac">}</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C set_cat</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>category F</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{e : (c s &lt;~=~&gt; c d)%category &amp; (F _1 e) (x s) = x d} -&gt;
+(s &lt;~=~&gt; d)%category</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="morphisms-v-chkad" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C set_cat</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>category F</span></span></span><br></div><label class="goal-separator" for="morphisms-v-chkad"><hr></label><div class="goal-conclusion">(<span class="kr">fun</span> <span class="nv">m</span> : (s &lt;~=~&gt; d)%category =&gt;
+ ({|
+    morphism_isomorphic := m.<span class="mi">1</span>;
+    isisomorphism_isomorphic :=
+      {|
+        morphism_inverse := (m^-<span class="mi">1</span>%morphism).<span class="mi">1</span>;
+        left_inverse := ap pr1 left_inverse;
+        right_inverse := ap pr1 right_inverse
+      |}
+  |}; (m : morphism (category F) s d).<span class="mi">2</span>)) o <span class="nl">?g</span> ==
+idmap</div></blockquote><input class="alectryon-extra-goal-toggle" id="morphisms-v-chkae" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C set_cat</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>category F</span></span></span><br></div><label class="goal-separator" for="morphisms-v-chkae"><hr></label><div class="goal-conclusion"><span class="nl">?g</span>
+o (<span class="kr">fun</span> <span class="nv">m</span> : (s &lt;~=~&gt; d)%category =&gt;
+   ({|
+      morphism_isomorphic := m.<span class="mi">1</span>;
+      isisomorphism_isomorphic :=
+        {|
+          morphism_inverse := (m^-<span class="mi">1</span>%morphism).<span class="mi">1</span>;
+          left_inverse := ap pr1 left_inverse;
+          right_inverse := ap pr1 right_inverse
+        |}
+    |}; (m : morphism (category F) s d).<span class="mi">2</span>)) == idmap</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="morphisms-v-chkaf" style="display: none" type="checkbox"><label class="alectryon-input" for="morphisms-v-chkaf">{</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C set_cat</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>category F</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{e : (c s &lt;~=~&gt; c d)%category &amp; (F _1 e) (x s) = x d} -&gt;
+(s &lt;~=~&gt; d)%category</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="morphisms-v-chkb0" style="display: none" type="checkbox"><label class="alectryon-input" for="morphisms-v-chkb0"><span class="nb">intro</span> m.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C set_cat</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>category F</span></span></span><br><span><var>m</var><span class="hyp-type"><b>: </b><span>{e : (c s &lt;~=~&gt; c d)%category &amp;
+(F _1 e) (x s) = x d}</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(s &lt;~=~&gt; d)%category</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="morphisms-v-chkb1" style="display: none" type="checkbox"><label class="alectryon-input" for="morphisms-v-chkb1"><span class="kr">exists</span> (<span class="nv">m</span>.<span class="mi">1</span> : morphism _ _ _ ; m.<span class="mi">2</span>).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C set_cat</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>category F</span></span></span><br><span><var>m</var><span class="hyp-type"><b>: </b><span>{e : (c s &lt;~=~&gt; c d)%category &amp;
+(F _1 e) (x s) = x d}</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsIsomorphism (m.<span class="mi">1</span>; m.<span class="mi">2</span>)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="morphisms-v-chkb2" style="display: none" type="checkbox"><label class="alectryon-input" for="morphisms-v-chkb2"><span class="nb">eexists</span> (m.<span class="mi">1</span>^-<span class="mi">1</span>;
+               ((ap (F _1 (m.<span class="mi">1</span>)^-<span class="mi">1</span>) m.<span class="mi">2</span>)^)
+                 @ (ap10 ((((composition_of F _ _ _ _ _)^)
+                             @ (ap (<span class="kr">fun</span> <span class="nv">m</span> =&gt; F _1 m) (@left_inverse _ _ _ m.<span class="mi">1</span> _))
+                             @ (identity_of F _))
+                          : (F _1 (m.<span class="mi">1</span> : morphism _ _ _)^-<span class="mi">1</span>) o F _1 m.<span class="mi">1</span> = idmap) s.(x)));
+        <span class="nb">apply</span> path_sigma_hprop.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C set_cat</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>category F</span></span></span><br><span><var>m</var><span class="hyp-type"><b>: </b><span>{e : (c s &lt;~=~&gt; c d)%category &amp;
+(F _1 e) (x s) = x d}</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(((m.<span class="mi">1</span>)^-<span class="mi">1</span>;
+ (ap (F _1 (m.<span class="mi">1</span>)^-<span class="mi">1</span>) m.<span class="mi">2</span>)^ @
+ ap10
+   (((composition_of F (c s) (c d) (c s) m.<span class="mi">1</span> (m.<span class="mi">1</span>)^-<span class="mi">1</span>)^ @
+     ap (<span class="kr">fun</span> <span class="nv">m</span> : morphism C (c s) (c s) =&gt; F _1 m)
+       left_inverse) @ identity_of F (c s)) (x s))
+ o (m.<span class="mi">1</span>; m.<span class="mi">2</span>)).<span class="mi">1</span> = <span class="mi">1</span>.<span class="mi">1</span></div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="morphisms-v-chkb3" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C set_cat</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>category F</span></span></span><br><span><var>m</var><span class="hyp-type"><b>: </b><span>{e : (c s &lt;~=~&gt; c d)%category &amp;
+(F _1 e) (x s) = x d}</span></span></span><br></div><label class="goal-separator" for="morphisms-v-chkb3"><hr></label><div class="goal-conclusion">((m.<span class="mi">1</span>; m.<span class="mi">2</span>)
+ o ((m.<span class="mi">1</span>)^-<span class="mi">1</span>;
+   (ap (F _1 (m.<span class="mi">1</span>)^-<span class="mi">1</span>) m.<span class="mi">2</span>)^ @
+   ap10
+     (((composition_of F (c s) (c d) (c s) m.<span class="mi">1</span>
+          (m.<span class="mi">1</span>)^-<span class="mi">1</span>)^ @
+       ap (<span class="kr">fun</span> <span class="nv">m</span> : morphism C (c s) (c s) =&gt; F _1 m)
+         left_inverse) @ identity_of F (c s)) (x s))).<span class="mi">1</span> =
+<span class="mi">1</span>.<span class="mi">1</span></div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="morphisms-v-chkb4" style="display: none" type="checkbox"><label class="alectryon-input" for="morphisms-v-chkb4">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C set_cat</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>category F</span></span></span><br><span><var>m</var><span class="hyp-type"><b>: </b><span>{e : (c s &lt;~=~&gt; c d)%category &amp;
+(F _1 e) (x s) = x d}</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(((m.<span class="mi">1</span>)^-<span class="mi">1</span>;
+ (ap (F _1 (m.<span class="mi">1</span>)^-<span class="mi">1</span>) m.<span class="mi">2</span>)^ @
+ ap10
+   (((composition_of F (c s) (c d) (c s) m.<span class="mi">1</span> (m.<span class="mi">1</span>)^-<span class="mi">1</span>)^ @
+     ap (<span class="kr">fun</span> <span class="nv">m</span> : morphism C (c s) (c s) =&gt; F _1 m)
+       left_inverse) @ identity_of F (c s)) (x s))
+ o (m.<span class="mi">1</span>; m.<span class="mi">2</span>)).<span class="mi">1</span> = <span class="mi">1</span>.<span class="mi">1</span></div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> left_inverse.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="morphisms-v-chkb5" style="display: none" type="checkbox"><label class="alectryon-input" for="morphisms-v-chkb5">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C set_cat</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>category F</span></span></span><br><span><var>m</var><span class="hyp-type"><b>: </b><span>{e : (c s &lt;~=~&gt; c d)%category &amp;
+(F _1 e) (x s) = x d}</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">((m.<span class="mi">1</span>; m.<span class="mi">2</span>)
+ o ((m.<span class="mi">1</span>)^-<span class="mi">1</span>;
+   (ap (F _1 (m.<span class="mi">1</span>)^-<span class="mi">1</span>) m.<span class="mi">2</span>)^ @
+   ap10
+     (((composition_of F (c s) (c d) (c s) m.<span class="mi">1</span>
+          (m.<span class="mi">1</span>)^-<span class="mi">1</span>)^ @
+       ap (<span class="kr">fun</span> <span class="nv">m</span> : morphism C (c s) (c s) =&gt; F _1 m)
+         left_inverse) @ identity_of F (c s)) (x s))).<span class="mi">1</span> =
+<span class="mi">1</span>.<span class="mi">1</span></div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> right_inverse.</span><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="morphisms-v-chkb6" style="display: none" type="checkbox"><label class="alectryon-input" for="morphisms-v-chkb6">}</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C set_cat</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>category F</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">fun</span> <span class="nv">m</span> : (s &lt;~=~&gt; d)%category =&gt;
+ ({|
+    morphism_isomorphic := m.<span class="mi">1</span>;
+    isisomorphism_isomorphic :=
+      {|
+        morphism_inverse := (m^-<span class="mi">1</span>%morphism).<span class="mi">1</span>;
+        left_inverse := ap pr1 left_inverse;
+        right_inverse := ap pr1 right_inverse
+      |}
+  |}; (m : morphism (category F) s d).<span class="mi">2</span>))
+o (<span class="kr">fun</span>
+     <span class="nv">m</span> : {e : (c s &lt;~=~&gt; c d)%category &amp;
+         (F _1 e) (x s) = x d} =&gt;
+   {|
+     morphism_isomorphic := (m.<span class="mi">1</span>; m.<span class="mi">2</span>);
+     isisomorphism_isomorphic :=
+       {|
+         morphism_inverse :=
+           ((m.<span class="mi">1</span>)^-<span class="mi">1</span>%morphism;
+           (ap (F _1 (m.<span class="mi">1</span>)^-<span class="mi">1</span>) m.<span class="mi">2</span>)^ @
+           ap10
+             (((composition_of F (c s) (c d) (c s) m.<span class="mi">1</span>
+                  (m.<span class="mi">1</span>)^-<span class="mi">1</span>)^ @
+               ap
+                 (<span class="kr">fun</span> <span class="nv">m0</span> : morphism C (c s) (c s) =&gt;
+                  F _1 m0) left_inverse) @
+              identity_of F (c s)) (x s));
+         left_inverse :=
+           path_sigma_hprop
+             (((m.<span class="mi">1</span>)^-<span class="mi">1</span>;
+              (ap (F _1 (m.<span class="mi">1</span>)^-<span class="mi">1</span>) m.<span class="mi">2</span>)^ @
+              ap10
+                (((composition_of F (c s) (c d) (c s)
+                     m.<span class="mi">1</span> (m.<span class="mi">1</span>)^-<span class="mi">1</span>)^ @
+                  ap
+                    (<span class="kr">fun</span> <span class="nv">m0</span> : morphism C (...) (...)
+                     =&gt; F _1 m0) left_inverse) @
+                 identity_of F (c s)) (x s))
+              o (m.<span class="mi">1</span>; m.<span class="mi">2</span>))%morphism <span class="mi">1</span> left_inverse;
+         right_inverse :=
+           path_sigma_hprop
+             ((m.<span class="mi">1</span>; m.<span class="mi">2</span>)
+              o ((m.<span class="mi">1</span>)^-<span class="mi">1</span>;
+                (ap (F _1 (m.<span class="mi">1</span>)^-<span class="mi">1</span>) m.<span class="mi">2</span>)^ @
+                ap10
+                  (((composition_of F (c s) (c d)
+                       (c s) m.<span class="mi">1</span> (m.<span class="mi">1</span>)^-<span class="mi">1</span>)^ @
+                    ap
+                      (<span class="kr">fun</span> <span class="nv">m0</span> : morphism C (...) (...)
+                       =&gt; F _1 m0) left_inverse) @
+                   identity_of F (c s)) (x s)))%morphism
+             <span class="mi">1</span> right_inverse
+       |}
+   |}) == idmap</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="morphisms-v-chkb7" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C set_cat</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>category F</span></span></span><br></div><label class="goal-separator" for="morphisms-v-chkb7"><hr></label><div class="goal-conclusion">(<span class="kr">fun</span>
+   <span class="nv">m</span> : {e : (c s &lt;~=~&gt; c d)%category &amp;
+       (F _1 e) (x s) = x d} =&gt;
+ {|
+   morphism_isomorphic := (m.<span class="mi">1</span>; m.<span class="mi">2</span>);
+   isisomorphism_isomorphic :=
+     {|
+       morphism_inverse :=
+         ((m.<span class="mi">1</span>)^-<span class="mi">1</span>%morphism;
+         (ap (F _1 (m.<span class="mi">1</span>)^-<span class="mi">1</span>) m.<span class="mi">2</span>)^ @
+         ap10
+           (((composition_of F (c s) (c d) (c s) m.<span class="mi">1</span>
+                (m.<span class="mi">1</span>)^-<span class="mi">1</span>)^ @
+             ap
+               (<span class="kr">fun</span> <span class="nv">m0</span> : morphism C (c s) (c s) =&gt;
+                F _1 m0) left_inverse) @
+            identity_of F (c s)) (x s));
+       left_inverse :=
+         path_sigma_hprop
+           (((m.<span class="mi">1</span>)^-<span class="mi">1</span>;
+            (ap (F _1 (m.<span class="mi">1</span>)^-<span class="mi">1</span>) m.<span class="mi">2</span>)^ @
+            ap10
+              (((composition_of F (c s) (c d) (c s)
+                   m.<span class="mi">1</span> (m.<span class="mi">1</span>)^-<span class="mi">1</span>)^ @
+                ap
+                  (<span class="kr">fun</span> <span class="nv">m0</span> : morphism C (...) (...) =&gt;
+                   F _1 m0) left_inverse) @
+               identity_of F (c s)) (x s))
+            o (m.<span class="mi">1</span>; m.<span class="mi">2</span>))%morphism <span class="mi">1</span> left_inverse;
+       right_inverse :=
+         path_sigma_hprop
+           ((m.<span class="mi">1</span>; m.<span class="mi">2</span>)
+            o ((m.<span class="mi">1</span>)^-<span class="mi">1</span>;
+              (ap (F _1 (m.<span class="mi">1</span>)^-<span class="mi">1</span>) m.<span class="mi">2</span>)^ @
+              ap10
+                (((composition_of F (c s) (c d) (c s)
+                     m.<span class="mi">1</span> (m.<span class="mi">1</span>)^-<span class="mi">1</span>)^ @
+                  ap
+                    (<span class="kr">fun</span> <span class="nv">m0</span> : morphism C (...) (...)
+                     =&gt; F _1 m0) left_inverse) @
+                 identity_of F (c s)) (x s)))%morphism
+           <span class="mi">1</span> right_inverse
+     |}
+ |})
+o (<span class="kr">fun</span> <span class="nv">m</span> : (s &lt;~=~&gt; d)%category =&gt;
+   ({|
+      morphism_isomorphic := m.<span class="mi">1</span>;
+      isisomorphism_isomorphic :=
+        {|
+          morphism_inverse := (m^-<span class="mi">1</span>%morphism).<span class="mi">1</span>;
+          left_inverse := ap pr1 left_inverse;
+          right_inverse := ap pr1 right_inverse
+        |}
+    |}; (m : morphism (category F) s d).<span class="mi">2</span>)) == idmap</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="morphisms-v-chkb8" style="display: none" type="checkbox"><label class="alectryon-input" for="morphisms-v-chkb8">{</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C set_cat</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>category F</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">fun</span> <span class="nv">m</span> : (s &lt;~=~&gt; d)%category =&gt;
+ ({|
+    morphism_isomorphic := m.<span class="mi">1</span>;
+    isisomorphism_isomorphic :=
+      {|
+        morphism_inverse := (m^-<span class="mi">1</span>%morphism).<span class="mi">1</span>;
+        left_inverse := ap pr1 left_inverse;
+        right_inverse := ap pr1 right_inverse
+      |}
+  |}; (m : morphism (category F) s d).<span class="mi">2</span>))
+o (<span class="kr">fun</span>
+     <span class="nv">m</span> : {e : (c s &lt;~=~&gt; c d)%category &amp;
+         (F _1 e) (x s) = x d} =&gt;
+   {|
+     morphism_isomorphic := (m.<span class="mi">1</span>; m.<span class="mi">2</span>);
+     isisomorphism_isomorphic :=
+       {|
+         morphism_inverse :=
+           ((m.<span class="mi">1</span>)^-<span class="mi">1</span>%morphism;
+           (ap (F _1 (m.<span class="mi">1</span>)^-<span class="mi">1</span>) m.<span class="mi">2</span>)^ @
+           ap10
+             (((composition_of F (c s) (c d) (c s) m.<span class="mi">1</span>
+                  (m.<span class="mi">1</span>)^-<span class="mi">1</span>)^ @
+               ap
+                 (<span class="kr">fun</span> <span class="nv">m0</span> : morphism C (c s) (c s) =&gt;
+                  F _1 m0) left_inverse) @
+              identity_of F (c s)) (x s));
+         left_inverse :=
+           path_sigma_hprop
+             (((m.<span class="mi">1</span>)^-<span class="mi">1</span>;
+              (ap (F _1 (m.<span class="mi">1</span>)^-<span class="mi">1</span>) m.<span class="mi">2</span>)^ @
+              ap10
+                (((composition_of F (c s) (c d) (c s)
+                     m.<span class="mi">1</span> (m.<span class="mi">1</span>)^-<span class="mi">1</span>)^ @
+                  ap
+                    (<span class="kr">fun</span> <span class="nv">m0</span> : morphism C (...) (...)
+                     =&gt; F _1 m0) left_inverse) @
+                 identity_of F (c s)) (x s))
+              o (m.<span class="mi">1</span>; m.<span class="mi">2</span>))%morphism <span class="mi">1</span> left_inverse;
+         right_inverse :=
+           path_sigma_hprop
+             ((m.<span class="mi">1</span>; m.<span class="mi">2</span>)
+              o ((m.<span class="mi">1</span>)^-<span class="mi">1</span>;
+                (ap (F _1 (m.<span class="mi">1</span>)^-<span class="mi">1</span>) m.<span class="mi">2</span>)^ @
+                ap10
+                  (((composition_of F (c s) (c d)
+                       (c s) m.<span class="mi">1</span> (m.<span class="mi">1</span>)^-<span class="mi">1</span>)^ @
+                    ap
+                      (<span class="kr">fun</span> <span class="nv">m0</span> : morphism C (...) (...)
+                       =&gt; F _1 m0) left_inverse) @
+                   identity_of F (c s)) (x s)))%morphism
+             <span class="mi">1</span> right_inverse
+       |}
+   |}) == idmap</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="morphisms-v-chkb9" style="display: none" type="checkbox"><label class="alectryon-input" for="morphisms-v-chkb9"><span class="nb">intro</span> x; <span class="nb">apply</span> path_sigma_hprop; <span class="nb">apply</span> path_isomorphic.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C set_cat</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>category F</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>{e : (c s &lt;~=~&gt; c d)%category &amp;
+(F _1 e) (Core.x s) = Core.x d}</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">({|
+   morphism_isomorphic :=
+     {|
+       morphism_isomorphic := (x.<span class="mi">1</span>; x.<span class="mi">2</span>);
+       isisomorphism_isomorphic :=
+         {|
+           morphism_inverse :=
+             ((x.<span class="mi">1</span>)^-<span class="mi">1</span>;
+             (ap (F _1 (x.<span class="mi">1</span>)^-<span class="mi">1</span>) x.<span class="mi">2</span>)^ @
+             ap10
+               (((composition_of F (c s) (c d) (c s)
+                    x.<span class="mi">1</span> (x.<span class="mi">1</span>)^-<span class="mi">1</span>)^ @
+                 ap
+                   (<span class="kr">fun</span> <span class="nv">m</span> : morphism C (c s) (c s) =&gt;
+                    F _1 m) left_inverse) @
+                identity_of F (c s)) (Core.x s));
+           left_inverse :=
+             path_sigma_hprop
+               (((x.<span class="mi">1</span>)^-<span class="mi">1</span>;
+                (ap (F _1 (x.<span class="mi">1</span>)^-<span class="mi">1</span>) x.<span class="mi">2</span>)^ @
+                ap10
+                  (((composition_of F (c s) (c d)
+                       (c s) x.<span class="mi">1</span> (x.<span class="mi">1</span>)^-<span class="mi">1</span>)^ @
+                    ap
+                      (<span class="kr">fun</span> <span class="nv">m</span> : morphism C ... ... =&gt;
+                       F _1 m) left_inverse) @
+                   identity_of F (c s)) (Core.x s))
+                o (x.<span class="mi">1</span>; x.<span class="mi">2</span>)) <span class="mi">1</span> left_inverse;
+           right_inverse :=
+             path_sigma_hprop
+               ((x.<span class="mi">1</span>; x.<span class="mi">2</span>)
+                o ((x.<span class="mi">1</span>)^-<span class="mi">1</span>;
+                  (ap (F _1 (x.<span class="mi">1</span>)^-<span class="mi">1</span>) x.<span class="mi">2</span>)^ @
+                  ap10
+                    (((composition_of F (c s) (c d)
+                         (c s) x.<span class="mi">1</span> (x.<span class="mi">1</span>)^-<span class="mi">1</span>)^ @
+                      ap
+                        (<span class="kr">fun</span> <span class="nv">m</span> : morphism C ... ... =&gt;
+                         F _1 m) left_inverse) @
+                     identity_of F (c s)) (Core.x s)))
+               <span class="mi">1</span> right_inverse
+         |}
+     |}.<span class="mi">1</span>;
+   isisomorphism_isomorphic :=
+     {|
+       morphism_inverse :=
+         ({|
+            morphism_isomorphic := (x.<span class="mi">1</span>; x.<span class="mi">2</span>);
+            isisomorphism_isomorphic :=
+              {|
+                morphism_inverse :=
+                  ((x.<span class="mi">1</span>)^-<span class="mi">1</span>;
+                  (ap (F _1 (x.<span class="mi">1</span>)^-<span class="mi">1</span>) x.<span class="mi">2</span>)^ @
+                  ap10
+                    (((composition_of F (c s) (c d)
+                         (c s) x.<span class="mi">1</span> (x.<span class="mi">1</span>)^-<span class="mi">1</span>)^ @
+                      ap (<span class="kr">fun</span> <span class="nv">m</span> : ... =&gt; F _1 m)
+                        left_inverse) @
+                     identity_of F (c s)) (Core.x s));
+                left_inverse :=
+                  path_sigma_hprop
+                    (((x.<span class="mi">1</span>)^-<span class="mi">1</span>;
+                     (ap (F _1 (x.<span class="mi">1</span>)^-<span class="mi">1</span>) x.<span class="mi">2</span>)^ @
+                     ap10
+                       (((composition_of F ... ... ...
+                            x.<span class="mi">1</span> ...^-<span class="mi">1</span>)^ @
+                         ap (...) left_inverse) @
+                        identity_of F (c s))
+                       (Core.x s)) o (x.<span class="mi">1</span>; x.<span class="mi">2</span>)) <span class="mi">1</span>
+                    left_inverse;
+                right_inverse :=
+                  path_sigma_hprop
+                    ((x.<span class="mi">1</span>; x.<span class="mi">2</span>)
+                     o ((x.<span class="mi">1</span>)^-<span class="mi">1</span>;
+                       (ap (F _1 (x.<span class="mi">1</span>)^-<span class="mi">1</span>) x.<span class="mi">2</span>)^ @
+                       ap10
+                         (((composition_of F ... ...
+                              ... x.<span class="mi">1</span> ...^-<span class="mi">1</span>)^ @
+                           ap (...) left_inverse) @
+                          identity_of F (c s))
+                         (Core.x s))) <span class="mi">1</span> right_inverse
+              |}
+          |}^-<span class="mi">1</span>).<span class="mi">1</span>;
+       left_inverse := ap pr1 left_inverse;
+       right_inverse := ap pr1 right_inverse
+     |}
+ |};
+{|
+  morphism_isomorphic := (x.<span class="mi">1</span>; x.<span class="mi">2</span>);
+  isisomorphism_isomorphic :=
+    {|
+      morphism_inverse :=
+        ((x.<span class="mi">1</span>)^-<span class="mi">1</span>;
+        (ap (F _1 (x.<span class="mi">1</span>)^-<span class="mi">1</span>) x.<span class="mi">2</span>)^ @
+        ap10
+          (((composition_of F (c s) (c d) (c s) x.<span class="mi">1</span>
+               (x.<span class="mi">1</span>)^-<span class="mi">1</span>)^ @
+            ap
+              (<span class="kr">fun</span> <span class="nv">m</span> : morphism C (c s) (c s) =&gt;
+               F _1 m) left_inverse) @
+           identity_of F (c s)) (Core.x s));
+      left_inverse :=
+        path_sigma_hprop
+          (((x.<span class="mi">1</span>)^-<span class="mi">1</span>;
+           (ap (F _1 (x.<span class="mi">1</span>)^-<span class="mi">1</span>) x.<span class="mi">2</span>)^ @
+           ap10
+             (((composition_of F (c s) (c d) (c s) x.<span class="mi">1</span>
+                  (x.<span class="mi">1</span>)^-<span class="mi">1</span>)^ @
+               ap
+                 (<span class="kr">fun</span> <span class="nv">m</span> : morphism C (c s) (c s) =&gt;
+                  F _1 m) left_inverse) @
+              identity_of F (c s)) (Core.x s))
+           o (x.<span class="mi">1</span>; x.<span class="mi">2</span>)) <span class="mi">1</span> left_inverse;
+      right_inverse :=
+        path_sigma_hprop
+          ((x.<span class="mi">1</span>; x.<span class="mi">2</span>)
+           o ((x.<span class="mi">1</span>)^-<span class="mi">1</span>;
+             (ap (F _1 (x.<span class="mi">1</span>)^-<span class="mi">1</span>) x.<span class="mi">2</span>)^ @
+             ap10
+               (((composition_of F (c s) (c d) (c s)
+                    x.<span class="mi">1</span> (x.<span class="mi">1</span>)^-<span class="mi">1</span>)^ @
+                 ap
+                   (<span class="kr">fun</span> <span class="nv">m</span> : morphism C (c s) (c s) =&gt;
+                    F _1 m) left_inverse) @
+                identity_of F (c s)) (Core.x s))) <span class="mi">1</span>
+          right_inverse
+    |}
+|}.<span class="mi">2</span>).<span class="mi">1</span> = x.<span class="mi">1</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">reflexivity</span>.</span><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="morphisms-v-chkba" style="display: none" type="checkbox"><label class="alectryon-input" for="morphisms-v-chkba">}</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C set_cat</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>category F</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">fun</span>
+   <span class="nv">m</span> : {e : (c s &lt;~=~&gt; c d)%category &amp;
+       (F _1 e) (x s) = x d} =&gt;
+ {|
+   morphism_isomorphic := (m.<span class="mi">1</span>; m.<span class="mi">2</span>);
+   isisomorphism_isomorphic :=
+     {|
+       morphism_inverse :=
+         ((m.<span class="mi">1</span>)^-<span class="mi">1</span>%morphism;
+         (ap (F _1 (m.<span class="mi">1</span>)^-<span class="mi">1</span>) m.<span class="mi">2</span>)^ @
+         ap10
+           (((composition_of F (c s) (c d) (c s) m.<span class="mi">1</span>
+                (m.<span class="mi">1</span>)^-<span class="mi">1</span>)^ @
+             ap
+               (<span class="kr">fun</span> <span class="nv">m0</span> : morphism C (c s) (c s) =&gt;
+                F _1 m0) left_inverse) @
+            identity_of F (c s)) (x s));
+       left_inverse :=
+         path_sigma_hprop
+           (((m.<span class="mi">1</span>)^-<span class="mi">1</span>;
+            (ap (F _1 (m.<span class="mi">1</span>)^-<span class="mi">1</span>) m.<span class="mi">2</span>)^ @
+            ap10
+              (((composition_of F (c s) (c d) (c s)
+                   m.<span class="mi">1</span> (m.<span class="mi">1</span>)^-<span class="mi">1</span>)^ @
+                ap
+                  (<span class="kr">fun</span> <span class="nv">m0</span> : morphism C (...) (...) =&gt;
+                   F _1 m0) left_inverse) @
+               identity_of F (c s)) (x s))
+            o (m.<span class="mi">1</span>; m.<span class="mi">2</span>))%morphism <span class="mi">1</span> left_inverse;
+       right_inverse :=
+         path_sigma_hprop
+           ((m.<span class="mi">1</span>; m.<span class="mi">2</span>)
+            o ((m.<span class="mi">1</span>)^-<span class="mi">1</span>;
+              (ap (F _1 (m.<span class="mi">1</span>)^-<span class="mi">1</span>) m.<span class="mi">2</span>)^ @
+              ap10
+                (((composition_of F (c s) (c d) (c s)
+                     m.<span class="mi">1</span> (m.<span class="mi">1</span>)^-<span class="mi">1</span>)^ @
+                  ap
+                    (<span class="kr">fun</span> <span class="nv">m0</span> : morphism C (...) (...)
+                     =&gt; F _1 m0) left_inverse) @
+                 identity_of F (c s)) (x s)))%morphism
+           <span class="mi">1</span> right_inverse
+     |}
+ |})
+o (<span class="kr">fun</span> <span class="nv">m</span> : (s &lt;~=~&gt; d)%category =&gt;
+   ({|
+      morphism_isomorphic := m.<span class="mi">1</span>;
+      isisomorphism_isomorphic :=
+        {|
+          morphism_inverse := (m^-<span class="mi">1</span>%morphism).<span class="mi">1</span>;
+          left_inverse := ap pr1 left_inverse;
+          right_inverse := ap pr1 right_inverse
+        |}
+    |}; (m : morphism (category F) s d).<span class="mi">2</span>)) == idmap</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="morphisms-v-chkbb" style="display: none" type="checkbox"><label class="alectryon-input" for="morphisms-v-chkbb">{</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C set_cat</span></span></span><br><span><var>s, d</var><span class="hyp-type"><b>: </b><span>category F</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(<span class="kr">fun</span>
+   <span class="nv">m</span> : {e : (c s &lt;~=~&gt; c d)%category &amp;
+       (F _1 e) (x s) = x d} =&gt;
+ {|
+   morphism_isomorphic := (m.<span class="mi">1</span>; m.<span class="mi">2</span>);
+   isisomorphism_isomorphic :=
+     {|
+       morphism_inverse :=
+         ((m.<span class="mi">1</span>)^-<span class="mi">1</span>%morphism;
+         (ap (F _1 (m.<span class="mi">1</span>)^-<span class="mi">1</span>) m.<span class="mi">2</span>)^ @
+         ap10
+           (((composition_of F (c s) (c d) (c s) m.<span class="mi">1</span>
+                (m.<span class="mi">1</span>)^-<span class="mi">1</span>)^ @
+             ap
+               (<span class="kr">fun</span> <span class="nv">m0</span> : morphism C (c s) (c s) =&gt;
+                F _1 m0) left_inverse) @
+            identity_of F (c s)) (x s));
+       left_inverse :=
+         path_sigma_hprop
+           (((m.<span class="mi">1</span>)^-<span class="mi">1</span>;
+            (ap (F _1 (m.<span class="mi">1</span>)^-<span class="mi">1</span>) m.<span class="mi">2</span>)^ @
+            ap10
+              (((composition_of F (c s) (c d) (c s)
+                   m.<span class="mi">1</span> (m.<span class="mi">1</span>)^-<span class="mi">1</span>)^ @
+                ap
+                  (<span class="kr">fun</span> <span class="nv">m0</span> : morphism C (...) (...) =&gt;
+                   F _1 m0) left_inverse) @
+               identity_of F (c s)) (x s))
+            o (m.<span class="mi">1</span>; m.<span class="mi">2</span>))%morphism <span class="mi">1</span> left_inverse;
+       right_inverse :=
+         path_sigma_hprop
+           ((m.<span class="mi">1</span>; m.<span class="mi">2</span>)
+            o ((m.<span class="mi">1</span>)^-<span class="mi">1</span>;
+              (ap (F _1 (m.<span class="mi">1</span>)^-<span class="mi">1</span>) m.<span class="mi">2</span>)^ @
+              ap10
+                (((composition_of F (c s) (c d) (c s)
+                     m.<span class="mi">1</span> (m.<span class="mi">1</span>)^-<span class="mi">1</span>)^ @
+                  ap
+                    (<span class="kr">fun</span> <span class="nv">m0</span> : morphism C (...) (...)
+                     =&gt; F _1 m0) left_inverse) @
+                 identity_of F (c s)) (x s)))%morphism
+           <span class="mi">1</span> right_inverse
+     |}
+ |})
+o (<span class="kr">fun</span> <span class="nv">m</span> : (s &lt;~=~&gt; d)%category =&gt;
+   ({|
+      morphism_isomorphic := m.<span class="mi">1</span>;
+      isisomorphism_isomorphic :=
+        {|
+          morphism_inverse := (m^-<span class="mi">1</span>%morphism).<span class="mi">1</span>;
+          left_inverse := ap pr1 left_inverse;
+          right_inverse := ap pr1 right_inverse
+        |}
+    |}; (m : morphism (category F) s d).<span class="mi">2</span>)) == idmap</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">intro</span> x; <span class="nb">apply</span> path_isomorphic; <span class="bp">reflexivity</span>.</span><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input">}</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">Grothendieck</span>.</span></span></pre>
+</div>
+</div></body>
+</html>

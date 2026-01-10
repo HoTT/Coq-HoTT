@@ -1,0 +1,1136 @@
+<html>
+<head>
+<title>TruncType.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for TruncType.v</h1>
+
+<div class="code" title="File: TruncType.v
+Line: 1
+Time: 0.037s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import HoTT.Basics HoTT.Types.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 1
+Time: 0.002s">
+<div class="time" style="width: 5.4054054054054%"></div>
+<pre>
+Require Import HProp.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 2
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Generalizable Variables A B n f.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Universes of truncated types
+
+Now that we have the univalence axiom (from [Types/Universe]), we study further the universes [TruncType] of truncated types (including [hProp] and [hSet]) that were defined in [Basics/Trunc].  *)
+
+(** ** Paths in [TruncType] *)
+
+</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section TruncType.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{Univalence}.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition issig_trunctype {n : trunc_index}
+    : { X : Type &amp; IsTrunc n X } &lt;~&gt; TruncType n.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 16
+Time: 0.003s">
+<div class="time" style="width: 8.1081081081081%"></div>
+<pre>
+    issig.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition equiv_path_trunctype' {n : trunc_index} (A B : TruncType n)
+    : (A = B :&gt; Type) &lt;~&gt; (A = B :&gt; TruncType n).</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine ((equiv_ap' issig_trunctype^-1 _ _)^-1 oE _).</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 23
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+    exact (equiv_path_sigma_hprop (_;_) (_;_)).</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance isequiv_ap_trunctype {n : trunc_index} (A B : n-Type)
+    : IsEquiv (@ap _ _ (@trunctype_type n) A B).</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 29
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+    srefine (isequiv_homotopic _^-1%equiv _).</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: apply equiv_path_trunctype'.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros []; reflexivity.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition equiv_path_trunctype {n : trunc_index} (A B : TruncType n)
+    : (A &lt;~&gt; B) &lt;~&gt; (A = B :&gt; TruncType n)
+    := equiv_path_trunctype' _ _ oE equiv_path_universe _ _.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition path_trunctype@{a b} {n : trunc_index} {A B : TruncType n}
+    : A &lt;~&gt; B -&gt; (A = B :&gt; TruncType n)
+  := equiv_path_trunctype@{a b} A B.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 41
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+
+  #[export] Instance isequiv_path_trunctype {n : trunc_index} {A B : TruncType n}
+    : IsEquiv (@path_trunctype n A B) := _.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** [path_trunctype] is functorial *)
+ </pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition path_trunctype_1 {n : trunc_index} {A : TruncType n}
+  : path_trunctype (equiv_idmap A) = idpath.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 49
+Time: 0.002s">
+<div class="time" style="width: 5.4054054054054%"></div>
+<pre>
+    unfold path_trunctype; simpl.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite (eta_path_universe_uncurried 1).</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite path_sigma_hprop_1.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    reflexivity.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 53
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition path_trunctype_V {n : trunc_index} {A B : TruncType n}
+             (f : A &lt;~&gt; B)
+    : path_trunctype f^-1 = (path_trunctype f)^.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 59
+Time: 0.006s">
+<div class="time" style="width: 16.216216216216%"></div>
+<pre>
+    unfold path_trunctype; simpl.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite path_universe_V_uncurried.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 61
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+    rewrite (path_sigma_hprop_V (path_universe_uncurried f)).</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (concat_p1 _ @ concat_1p _ @ _).</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 63
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+    refine (_ @ (ap inverse (concat_1p _))^ @ (ap inverse (concat_p1 _))^).</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (ap_V _ _).</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 65
+Time: 0.005s">
+<div class="time" style="width: 13.513513513514%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 66
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+
+  Definition path_trunctype_pp {n : trunc_index} {A B C : TruncType n}
+             (f : A &lt;~&gt; B) (g : B &lt;~&gt; C)
+    : path_trunctype (g oE f) = path_trunctype f @ path_trunctype g.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 71
+Time: 0.007s">
+<div class="time" style="width: 18.918918918919%"></div>
+<pre>
+    unfold path_trunctype; simpl.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 72
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+    rewrite path_universe_compose_uncurried.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 73
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+    rewrite (path_sigma_hprop_pp (path_universe_uncurried f) _ _ (trunctype_istrunc B)).</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (concat_p1 _ @ concat_1p _ @ _).</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (_ @ (ap _ (concat_1p _))^ @ (ap _ (concat_p1 _))^).</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 76
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+    refine (_ @ (ap (fun z =&gt; z @ _) (concat_1p _))^ @ (ap (fun z =&gt; z @ _) (concat_p1 _))^).</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (ap_pp _ _ _).</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 78
+Time: 0.014s">
+<div class="time" style="width: 37.837837837838%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition ap_trunctype {n : trunc_index} {A B : TruncType n} {f : A &lt;~&gt; B}
+    : ap trunctype_type (path_trunctype f) = path_universe_uncurried f.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct A, B.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 84
+Time: 0.002s">
+<div class="time" style="width: 5.4054054054054%"></div>
+<pre>
+    cbn in *.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 85
+Time: 0.002s">
+<div class="time" style="width: 5.4054054054054%"></div>
+<pre>
+    cbn; destruct (path_universe_uncurried f).</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 86
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+    rewrite concat_1p, concat_p1.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 87
+Time: 0.003s">
+<div class="time" style="width: 8.1081081081081%"></div>
+<pre>
+    rewrite &lt;- 2 ap_compose.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply ap_const.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 89
+Time: 0.011s">
+<div class="time" style="width: 29.72972972973%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition path_hset {A B} := @path_trunctype 0 A B.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition path_hprop {A B} := @path_trunctype (-1) A B.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance istrunc_trunctype {n : trunc_index}
+    : IsTrunc n.+1 (TruncType n) | 0.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply istrunc_S.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros A B.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (istrunc_equiv_istrunc _ (equiv_path_trunctype@{i j} A B)).</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    case n as [ | n'].</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact contr_equiv_contr_contr.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> (* The reason is different in this case. *)
+   </pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>-</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact istrunc_equiv.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance isset_HProp : IsHSet HProp := _.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance istrunc_sig_istrunc : forall n, IsTrunc n.+1 { A : Type &amp; IsTrunc n A } | 0.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro n.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (istrunc_equiv_istrunc _ issig_trunctype^-1).</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** ** Some standard inhabitants *)
+
+ </pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Unit_hp : HProp := (Build_HProp Unit).</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition False_hp : HProp := (Build_HProp Empty).</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 117
+Time: 0.002s">
+<div class="time" style="width: 5.4054054054054%"></div>
+<pre>
+  Definition Negation_hp `{Funext} (hprop : HProp) : HProp := Build_HProp (~hprop).</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 118
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (** We could continue with products etc *)
+
+  (** ** The canonical map from [Bool] to [HProp] *)
+ </pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 122
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition is_true (b : Bool) : HProp
+    := if b then Unit_hp else False_hp.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** ** Facts about [HProp]s using univalence *)
+
+ </pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export] Instance trunc_path_IsHProp X Y `{IsHProp Y}
+  : IsHProp (X = Y).</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 128
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply hprop_allpath.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 130
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros pf1 pf2.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 131
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (equiv_inj (equiv_path X Y)).</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_equiv, path_arrow.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros x; by apply path_ishprop.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 135
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+
+  Definition path_iff_ishprop_uncurried `{IsHProp A, IsHProp B}
+  : (A &lt;-&gt; B) -&gt; A = B :&gt; Type
+    := @path_universe_uncurried _ A B o equiv_iff_hprop_uncurried.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 139
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+
+  Definition path_iff_hprop_uncurried {A B : HProp}
+  : (A &lt;-&gt; B) -&gt; A = B :&gt; HProp
+    := (@path_hprop A B) o (@equiv_iff_hprop_uncurried A _ B _).</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 143
+Time: 0.005s">
+<div class="time" style="width: 13.513513513514%"></div>
+<pre>
+
+  #[export] Instance isequiv_path_iff_ishprop_uncurried `{IsHProp A, IsHProp B}
+  : IsEquiv (@path_iff_ishprop_uncurried A _ B _) := _.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 146
+Time: 0.017s">
+<div class="time" style="width: 45.945945945946%"></div>
+<pre>
+
+  #[export] Instance isequiv_path_iff_hprop_uncurried {A B : HProp}
+  : IsEquiv (@path_iff_hprop_uncurried A B) := _.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 149
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+
+  Definition path_iff_ishprop `{IsHProp A, IsHProp B}
+  : (A -&gt; B) -&gt; (B -&gt; A) -&gt; A = B :&gt; Type
+    := fun f g =&gt; path_iff_ishprop_uncurried (f,g).</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition path_iff_hprop {A B : HProp}
+  : (A -&gt; B) -&gt; (B -&gt; A) -&gt; A = B :&gt; HProp
+    := fun f g =&gt; path_iff_hprop_uncurried (f,g).</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma equiv_path_iff_ishprop {A B : Type} `{IsHProp A, IsHProp B}
+    : (A &lt;-&gt; B) &lt;~&gt; (A = B).</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (Build_Equiv _ _ path_iff_ishprop_uncurried _).</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 163
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma equiv_path_iff_hprop {A B : HProp}
+    : (A &lt;-&gt; B) &lt;~&gt; (A = B).</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 166
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 167
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+    exact (equiv_path_trunctype' _ _ oE equiv_path_iff_ishprop).</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** An [HProp] cannot be not equal to [Unit_hp] and not equal to [False_hp]. *)
+ </pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 172
+Time: 0.014s">
+<div class="time" style="width: 37.837837837838%"></div>
+<pre>Definition not_not_unit_and_not_empty_hprop (P : HProp)
+    : ~ ((P &lt;&gt; Unit_hp) * (P &lt;&gt; False_hp)).</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 174
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros [h1 h2].</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 175
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (iff_contradiction (~ P)); constructor.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro p.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply h1.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (path_iff_hprop (fun _ =&gt; tt) (fun _ =&gt; p)).</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro q.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply h2.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (path_iff_hprop q Empty_rec).</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 179
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Any map from [HProp] to a type with [~~]-stable paths that maps [Unit_hp] and [False_hp] to equal terms is weakly constant. *)
+ </pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 182
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition weaklyconstant_hprop_to_stable_paths' {A : Type}
+    (F : HProp -&gt; A) (s : forall x y : HProp, Stable (F x = F y))
+    (h1 : F Unit_hp = F False_hp)
+    : forall (B : HProp), F B = F Unit_hp.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 186
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros B.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (s B Unit_hp); intro h'.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (not_not_unit_and_not_empty_hprop B).</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 189
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    split; intro p; apply h'.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 190
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 191
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (ap F p).</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 191
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 192
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (ap F p @ h1^).</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 192
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 193
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+
+  Definition weaklyconstant_hprop_to_stable_paths {A : Type}
+    (F : HProp -&gt; A) (s : forall x y : HProp, Stable (F x = F y))
+    (h1 : F Unit_hp = F False_hp)
+    : WeaklyConstant F
+    := fun B C =&gt; weaklyconstant_hprop_to_stable_paths' F s h1 B
+                  @ (weaklyconstant_hprop_to_stable_paths' F s h1 C)^.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition not_not_constant_family_hprop (P : HProp -&gt; Type)
+    (p : P Unit_hp) (p' : P False_hp) (x : HProp)
+    : ~~P x.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 204
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 205
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro f.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (not_not_unit_and_not_empty_hprop x).</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 207
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    split; intro h; apply f.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 209
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (h^ # p).</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 209
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 210
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (h^ # p').</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 210
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 211
+Time: 0.002s">
+<div class="time" style="width: 5.4054054054054%"></div>
+<pre>
+
+End TruncType.</pre>
+</div>
+<div class="code" title="File: TruncType.v
+Line: 214
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

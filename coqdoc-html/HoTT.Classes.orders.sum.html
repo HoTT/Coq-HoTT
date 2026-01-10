@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Classes.orders.sum</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Classes.orders.sum</h1>
+
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span><br/>
+&nbsp;&nbsp;<a class="idref" href="HoTT.Classes.interfaces.abstract_algebra.html#"><span class="id" title="library">HoTT.Classes.interfaces.abstract_algebra</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Generalizable Variables</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="Empty_lt" class="idref" href="#Empty_lt"><span class="id" title="instance">Empty_lt</span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Lt"><span class="id" title="class">Lt@</span></a><a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Lt"><span class="id" title="class">{</span></a><a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Lt"><span class="id" title="class">Set</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Lt"><span class="id" title="class">Set</span></a><a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Lt"><span class="id" title="class">}</span></a> <a class="idref" href="HoTT.Basics.Overture.html#Empty"><span class="id" title="inductive">Empty</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">intros</span> []. <span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="Unit_lt" class="idref" href="#Unit_lt"><span class="id" title="instance">Unit_lt</span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Lt"><span class="id" title="class">Lt@</span></a><a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Lt"><span class="id" title="class">{</span></a><a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Lt"><span class="id" title="class">Set</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Lt"><span class="id" title="class">Set</span></a><a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Lt"><span class="id" title="class">}</span></a> <a class="idref" href="HoTT.Basics.Overture.html#Unit"><span class="id" title="inductive">Unit</span></a> := <span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#Empty"><span class="id" title="inductive">Empty</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="empty_tricho" class="idref" href="#empty_tricho"><span class="id" title="instance">empty_tricho</span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Trichotomy"><span class="id" title="class">Trichotomy@</span></a><a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Trichotomy"><span class="id" title="class">{</span></a><a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Trichotomy"><span class="id" title="class">Set</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Trichotomy"><span class="id" title="class">Set</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Trichotomy"><span class="id" title="class">Set</span></a><a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Trichotomy"><span class="id" title="class">}</span></a> (<span class="id" title="var">_</span>:<a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Lt"><span class="id" title="class">Lt</span></a> <a class="idref" href="HoTT.Basics.Overture.html#Empty"><span class="id" title="inductive">Empty</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+<span class="id" title="tactic">intros</span> [].<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="unit_tricho" class="idref" href="#unit_tricho"><span class="id" title="instance">unit_tricho</span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Trichotomy"><span class="id" title="class">Trichotomy@</span></a><a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Trichotomy"><span class="id" title="class">{</span></a><a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Trichotomy"><span class="id" title="class">Set</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Trichotomy"><span class="id" title="class">Set</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Trichotomy"><span class="id" title="class">Set</span></a><a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Trichotomy"><span class="id" title="class">}</span></a> (<span class="id" title="var">_</span>:<a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Lt"><span class="id" title="class">Lt</span></a> <a class="idref" href="HoTT.Basics.Overture.html#Unit"><span class="id" title="inductive">Unit</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+<span class="id" title="tactic">intros</span> [] [];<span class="id" title="tactic">auto</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="contents" class="idref" href="#contents"><span class="id" title="section">contents</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Context</span> `{<a id="Alt:2" class="idref" href="#Alt:2"><span class="id" title="binder">Alt</span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Lt"><span class="id" title="class">Lt@</span></a><a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Lt"><span class="id" title="class">{</span></a><a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Lt"><span class="id" title="class">Set</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Lt"><span class="id" title="class">Set</span></a><a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Lt"><span class="id" title="class">}</span></a> <a id="A:1" class="idref" href="#A:1"><span class="id" title="binder">A</span></a>} `{<a id="Blt:4" class="idref" href="#Blt:4"><span class="id" title="binder">Blt</span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Lt"><span class="id" title="class">Lt@</span></a><a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Lt"><span class="id" title="class">{</span></a><a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Lt"><span class="id" title="class">Set</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Lt"><span class="id" title="class">Set</span></a><a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Lt"><span class="id" title="class">}</span></a> <a id="B:3" class="idref" href="#B:3"><span class="id" title="binder">B</span></a>}.<br/>
+
+<br/>
+#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="sum_lt" class="idref" href="#sum_lt"><span class="id" title="instance">sum_lt</span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Lt"><span class="id" title="class">Lt@</span></a><a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Lt"><span class="id" title="class">{</span></a><a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Lt"><span class="id" title="class">Set</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Lt"><span class="id" title="class">Set</span></a><a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Lt"><span class="id" title="class">}</span></a> (<a class="idref" href="HoTT.Classes.orders.sum.html#contents.A"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#bb39a8e92ce12cfa0e6356e26e0a8a98"><span class="id" title="notation">|</span></a><a class="idref" href="HoTT.Basics.Overture.html#bb39a8e92ce12cfa0e6356e26e0a8a98"><span class="id" title="notation">_</span></a><a class="idref" href="HoTT.Basics.Overture.html#bb39a8e92ce12cfa0e6356e26e0a8a98"><span class="id" title="notation">|</span></a> <a class="idref" href="HoTT.Classes.orders.sum.html#contents.B"><span class="id" title="variable">B</span></a>) | 2<br/>
+&nbsp;&nbsp;:= <span class="id" title="keyword">fun</span> <a id="s1:5" class="idref" href="#s1:5"><span class="id" title="binder">s1</span></a> <a id="s2:6" class="idref" href="#s2:6"><span class="id" title="binder">s2</span></a> ⇒<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Classes.orders.sum.html#s1:5"><span class="id" title="variable">s1</span></a>, <a class="idref" href="HoTT.Classes.orders.sum.html#s2:6"><span class="id" title="variable">s2</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Overture.html#inl"><span class="id" title="constructor">inl</span></a> <span class="id" title="var">a1</span>, <a class="idref" href="HoTT.Basics.Overture.html#inl"><span class="id" title="constructor">inl</span></a> <span class="id" title="var">a2</span> ⇒ <span class="id" title="var">a1</span> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#::mc_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <span class="id" title="var">a2</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Overture.html#inr"><span class="id" title="constructor">inr</span></a> <span class="id" title="var">b1</span>, <a class="idref" href="HoTT.Basics.Overture.html#inr"><span class="id" title="constructor">inr</span></a> <span class="id" title="var">b2</span> ⇒ <span class="id" title="var">b1</span> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#::mc_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <span class="id" title="var">b2</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Overture.html#inl"><span class="id" title="constructor">inl</span></a> <span class="id" title="var">_</span>, <a class="idref" href="HoTT.Basics.Overture.html#inr"><span class="id" title="constructor">inr</span></a> <span class="id" title="var">_</span> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#Unit"><span class="id" title="inductive">Unit</span></a><br/>
+&nbsp;&nbsp;| <a class="idref" href="HoTT.Basics.Overture.html#inr"><span class="id" title="constructor">inr</span></a> <span class="id" title="var">_</span>, <a class="idref" href="HoTT.Basics.Overture.html#inl"><span class="id" title="constructor">inl</span></a> <span class="id" title="var">_</span> ⇒ <a class="idref" href="HoTT.Basics.Overture.html#Empty"><span class="id" title="inductive">Empty</span></a><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="sum_tricho" class="idref" href="#sum_tricho"><span class="id" title="instance">sum_tricho</span></a> `{<a id="Trichotomy0:9" class="idref" href="#Trichotomy0:9"><span class="id" title="binder">!</span></a><a id="Trichotomy0:9" class="idref" href="#Trichotomy0:9"><span class="id" title="binder">Trichotomy@</span></a><a id="Trichotomy0:9" class="idref" href="#Trichotomy0:9"><span class="id" title="binder">{</span></a><a id="Trichotomy0:9" class="idref" href="#Trichotomy0:9"><span class="id" title="binder">Set</span></a> <a id="Trichotomy0:9" class="idref" href="#Trichotomy0:9"><span class="id" title="binder">Set</span></a> <a id="Trichotomy0:9" class="idref" href="#Trichotomy0:9"><span class="id" title="binder">Set</span></a><a id="Trichotomy0:9" class="idref" href="#Trichotomy0:9"><span class="id" title="binder">}</span></a> <a id="Trichotomy0:9" class="idref" href="#Trichotomy0:9"><span class="id" title="binder">Alt</span></a>} `{<a id="Trichotomy1:10" class="idref" href="#Trichotomy1:10"><span class="id" title="binder">!</span></a><a id="Trichotomy1:10" class="idref" href="#Trichotomy1:10"><span class="id" title="binder">Trichotomy@</span></a><a id="Trichotomy1:10" class="idref" href="#Trichotomy1:10"><span class="id" title="binder">{</span></a><a id="Trichotomy1:10" class="idref" href="#Trichotomy1:10"><span class="id" title="binder">Set</span></a> <a id="Trichotomy1:10" class="idref" href="#Trichotomy1:10"><span class="id" title="binder">Set</span></a> <a id="Trichotomy1:10" class="idref" href="#Trichotomy1:10"><span class="id" title="binder">Set</span></a><a id="Trichotomy1:10" class="idref" href="#Trichotomy1:10"><span class="id" title="binder">}</span></a> <a id="Trichotomy1:10" class="idref" href="#Trichotomy1:10"><span class="id" title="binder">Blt</span></a>}<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Trichotomy"><span class="id" title="class">Trichotomy@</span></a><a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Trichotomy"><span class="id" title="class">{</span></a><a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Trichotomy"><span class="id" title="class">Set</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Trichotomy"><span class="id" title="class">Set</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Trichotomy"><span class="id" title="class">Set</span></a><a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Trichotomy"><span class="id" title="class">}</span></a> <a class="idref" href="HoTT.Classes.orders.sum.html#sum_lt"><span class="id" title="instance">sum_lt</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+<span class="id" title="tactic">hnf</span>. <span class="id" title="tactic">intros</span> [<span class="id" title="var">a1</span>|<span class="id" title="var">b1</span>] [<span class="id" title="var">a2</span>|<span class="id" title="var">b2</span>];<span class="id" title="tactic">simpl</span>.<br/>
+- <span class="id" title="tactic">destruct</span> (<a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#trichotomy"><span class="id" title="definition">trichotomy</span></a> <span class="id" title="var">_</span> <span class="id" title="var">a1</span> <span class="id" title="var">a2</span>) <span class="id" title="keyword">as</span> [?|[?|?]];<span class="id" title="tactic">auto</span>.<br/>
+- <span class="id" title="tactic">auto</span>.<br/>
+- <span class="id" title="tactic">auto</span>.<br/>
+- <span class="id" title="tactic">destruct</span> (<a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#trichotomy"><span class="id" title="definition">trichotomy</span></a> <span class="id" title="var">_</span> <span class="id" title="var">b1</span> <span class="id" title="var">b2</span>) <span class="id" title="keyword">as</span> [?|[?|?]];<span class="id" title="tactic">auto</span>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Classes.orders.sum.html#contents"><span class="id" title="section">contents</span></a>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

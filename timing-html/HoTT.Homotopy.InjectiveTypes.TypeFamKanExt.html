@@ -1,0 +1,2108 @@
+<html>
+<head>
+<title>TypeFamKanExt.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for TypeFamKanExt.v</h1>
+
+<div class="code" title="File: TypeFamKanExt.v
+Line: 1
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>(** * Kan extensions of type families *)
+
+(** This is part of the formalization of section 4 of the paper: Injective Types in Univalent Mathematics by Martín Escardó.  Many proofs are guided by Martín Escardó's original Agda formalization of this paper which can be found at: https://www.cs.bham.ac.uk/~mhe/TypeTopology/InjectiveTypes.Article.html. *)
+
+</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 4
+Time: 0.029s">
+<div class="time" style="width: 82.857142857143%"></div>
+<pre>From HoTT Require Import Basics.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 4
+Time: 0.007s">
+<div class="time" style="width: 20%"></div>
+<pre>
+Require Import Types.Sigma Types.Unit Types.Arrow Types.Forall Types.Empty Types.Universe Types.Equiv Types.Paths.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 5
+Time: 0.006s">
+<div class="time" style="width: 17.142857142857%"></div>
+<pre>
+Require Import HFiber.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 6
+Time: 0.029s">
+<div class="time" style="width: 82.857142857143%"></div>
+<pre>
+Require Import Truncations.Core.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 7
+Time: 0.001s">
+<div class="time" style="width: 2.8571428571429%"></div>
+<pre>
+Require Import Modalities.ReflectiveSubuniverse Modalities.Modality.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We are careful about universe variables for these first few definitions because they are used in the rest of the paper.  We use [u], [v], [w], etc. as our typical universe variables. Our convention for the max of two universes [u] and [v] is [uv]. *)
+
+</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section UniverseStructure.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Universes u v w uv uw vw uvw.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Constraint u &lt;= uv, v &lt;= uv, u &lt;= uw, w &lt;= uw, v &lt;= vw, w &lt;= vw,
+    uv &lt;= uvw, uw &lt;= uvw, vw &lt;= uvw.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition LeftKanFam@{} {X : Type@{u}} {Y : Type@{v}} (P : X -&gt; Type@{w}) (j : X -&gt; Y)
+    : Y -&gt; Type@{uvw}
+    := fun y =&gt; sig@{uv w} (fun (w : hfiber j y) =&gt; P (w.1)).</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition RightKanFam@{} {X : Type@{u}} {Y : Type@{v}} (P : X -&gt; Type@{w}) (j : X -&gt; Y)
+    : Y -&gt; Type@{uvw}
+    := fun y =&gt; forall (w : hfiber j y), P (w.1).</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Below we will introduce notations [P &lt;| j] and [P |&gt; j] for these Kan extensions. *)
+
+  (** If [j] is an embedding, then [P &lt;| j] and [P |&gt; j] are extensions in the following sense: [(P &lt;| j o j) x &lt;~&gt; P x &lt;~&gt; (P |&gt; j o j) x].  So, with univalence, we get that they are extensions. *)
+
+ </pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition isext_equiv_leftkanfam@{} {X : Type@{u}} {Y : Type@{v}}
+    (P : X -&gt; Type@{w}) (j : X -&gt; Y) (isem : IsEmbedding@{u v uv} j) (x : X)
+    : Equiv@{uvw w} (LeftKanFam@{} P j (j x)) (P x).</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 31
+Time: 0.001s">
+<div class="time" style="width: 2.8571428571429%"></div>
+<pre>
+    exact (@equiv_contr_sigma (hfiber j (j x)) _ _).</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition isext_equiv_rightkanfam@{} `{Funext} {X : Type@{u}} {Y : Type@{v}}
+    (P : X -&gt; Type@{w}) (j : X -&gt; Y) (isem : IsEmbedding@{u v uv} j) (x : X)
+    : Equiv@{uvw w} (RightKanFam@{} P j (j x)) (P x).</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (@equiv_contr_forall _ (hfiber j (j x)) _ _).</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 40
+Time: 0.001s">
+<div class="time" style="width: 2.8571428571429%"></div>
+<pre>
+
+  Definition isext_leftkanfam@{suvw | uvw &lt; suvw} `{Univalence} {X : Type@{u}} {Y : Type@{v}}
+    (P : X -&gt; Type@{w}) (j : X -&gt; Y) (isem : IsEmbedding@{u v uv} j) (x : X)
+    : @paths@{suvw} Type@{uvw} (LeftKanFam@{} P j (j x)) (P x)
+    := path_universe_uncurried (isext_equiv_leftkanfam _ _ _ _).</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition isext_rightkanfam@{suvw | uvw &lt; suvw} `{Univalence} {X : Type@{u}} {Y : Type@{v}}
+    (P : X -&gt; Type@{w}) (j : X -&gt; Y) (isem : IsEmbedding@{u v uv} j) (x : X)
+    : @paths@{suvw} Type@{uvw} (RightKanFam@{} P j (j x)) (P x)
+    := path_universe_uncurried (isext_equiv_rightkanfam _ _ _ _).</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End UniverseStructure.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation "P &lt;| j" := (LeftKanFam P j) : function_scope.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Notation "P |&gt; j" := (RightKanFam P j) : function_scope.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** For [y : Y] not in the image of [j], [(P &lt;| j) y] is empty and [(P |&gt; j) y] is contractible. *)</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 57
+Time: 0.001s">
+<div class="time" style="width: 2.8571428571429%"></div>
+<pre>Definition isempty_leftkanfam {X : Type} {Y : Type}
+  (P : X -&gt; Type) (j : X -&gt; Y) (y : Y) (ynin : forall x : X, j x &lt;&gt; y)
+  : (P &lt;| j) y -&gt; Empty
+  := fun '((x; p); _) =&gt; ynin x p.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition contr_rightkanfam `{Funext} {X : Type} {Y : Type}
+  (P : X -&gt; Type@{w}) (j : X -&gt; Y) (y : Y) (ynin : forall x : X, j x &lt;&gt; y)
+  : Contr ((P |&gt; j) y).</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply contr_forall.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [x p].</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (Empty_rec (ynin x p)).</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The following equivalences tell us that [{ y : Y &amp; (P &lt;| j) y}] and [forall y : Y, (P |&gt; j) y] can be thought of as just different notation for the sum and product of a type family. *)</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition equiv_leftkanfam {X : Type} {Y : Type}
+  (P : X -&gt; Type) (j : X -&gt; Y)
+  : {x : X &amp; P x} &lt;~&gt; {y : Y &amp; (P &lt;| j) y}.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply equiv_adjointify.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fun w : {x : X &amp; P x} =&gt; (j w.1; (w.1; idpath); w.2)).</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fun '((y; ((x; p); y')) : {y : Y &amp; (P &lt;| j) y}) =&gt; (x; y')).</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 78
+Time: 0.007s">
+<div class="time" style="width: 20%"></div>
+<pre> by intros [y [[x []] y']].</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 79
+Time: 0.003s">
+<div class="time" style="width: 8.5714285714286%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition equiv_rightkanfam `{Funext} {X : Type} {Y : Type}
+  (P : X -&gt; Type@{w}) (j : X -&gt; Y)
+  : (forall x, P x) &lt;~&gt; (forall y, (P |&gt; j) y).</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply equiv_adjointify.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros g y w.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (g w.1).</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fun h x =&gt; h (j x) (x; idpath)).</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros h.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 89
+Time: 0.001s">
+<div class="time" style="width: 2.8571428571429%"></div>
+<pre> by funext y [x []].</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros g.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 90
+Time: 0.001s">
+<div class="time" style="width: 2.8571428571429%"></div>
+<pre> by apply path_forall.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 90
+Time: 0.001s">
+<div class="time" style="width: 2.8571428571429%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Here we are taking the perspective of a type family [P : X -&gt; Type] as an oo-presheaf, considering the interpretation of [X] as an oo-groupoid and [Type] as a universe of spaces i.e. an appropriate generalization of the category of sets. It is easy to see that a type family [P] is functorial if we define its action on paths with [transport]. Functoriality then reduces to known lemmas about the [transport] function. *)
+
+(** With this in mind, we define the type of transformations between two type families. [concat_Ap] says that these transformations are automatically natural. *)</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition MapFam {X : Type} (P : X -&gt; Type) (R : X -&gt; Type)
+  := forall x, P x -&gt; R x.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation "P &gt;=&gt; R" := (MapFam P R) : function_scope.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Composition of transformations. *)</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 100
+Time: 0.001s">
+<div class="time" style="width: 2.8571428571429%"></div>
+<pre>Definition compose_mapfam {X} {P R Q : X -&gt; Type} (b : R &gt;=&gt; Q) (a : P &gt;=&gt; R)
+  : P &gt;=&gt; Q
+  := fun x =&gt; (b x) o (a x).</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** If [j] is an embedding then [(P &lt;| j) =&lt; (P |&gt; j)]. *)</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition transform_leftkanfam_rightkanfam {X Y : Type}
+  (P : X -&gt; Type) (j : X -&gt; Y) (isem : IsEmbedding j)
+  : (P &lt;| j) &gt;=&gt; (P |&gt; j).</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros y [w' z] w.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply (transport (fun a =&gt; P a.1) _ z).</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply path_ishprop.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Under this interpretation, we can think of the maps [P &lt;| j] and [P |&gt; j] as left and right Kan extensions of [P : X -&gt; Type] along [j : X -&gt; Y]. To see this we can construct the (co)unit transformations of our extensions. *)</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 113
+Time: 0.001s">
+<div class="time" style="width: 2.8571428571429%"></div>
+<pre>Definition unit_leftkanfam {X Y : Type} (P : X -&gt; Type) (j : X -&gt; Y)
+  : P &gt;=&gt; ((P &lt;| j) o j)
+  := fun x A =&gt; ((x; idpath); A).</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 115
+Time: 0.001s">
+<div class="time" style="width: 2.8571428571429%"></div>
+<pre>
+  
+Definition counit_rightkanfam {X Y : Type} (P : X -&gt; Type) (j : X -&gt; Y)
+  : ((P |&gt; j) o j) &gt;=&gt; P
+  := fun x A =&gt; A (x; idpath).</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition counit_leftkanfam {X Y : Type} (R : Y -&gt; Type) (j : X -&gt; Y)
+  : ((R o j) &lt;| j) &gt;=&gt; R.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 122
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros y [[x p] C].</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (transport R p C).</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 125
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 126
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition unit_rightkanfam {X Y : Type} (R : Y -&gt; Type) (j : X -&gt; Y)
+  : R &gt;=&gt; ((R o j) |&gt; j).</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 130
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros y C [x p].</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 131
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (transport R p^ C).</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Universal property of the Kan extensions. *)</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 135
+Time: 0.001s">
+<div class="time" style="width: 2.8571428571429%"></div>
+<pre>Definition univ_property_leftkanfam {X Y} {j : X -&gt; Y}
+  {P : X -&gt; Type} {R : Y -&gt; Type} (a : P &gt;=&gt; R o j)
+  : { b : P &lt;| j &gt;=&gt; R &amp; compose_mapfam (b o j) (unit_leftkanfam P j) == a}.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 137
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snrefine (_; _).</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros y [[x p] A].</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (p # a x A).</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 142
+Time: 0.001s">
+<div class="time" style="width: 2.8571428571429%"></div>
+<pre>
+
+Definition contr_univ_property_leftkanfam `{Funext} {X Y} {j : X -&gt; Y}
+  {P : X -&gt; Type} {R : Y -&gt; Type} {a : P &gt;=&gt; R o j}
+  : Contr { b : P &lt;| j &gt;=&gt; R | compose_mapfam (b o j) (unit_leftkanfam P j) == a}.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 147
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (Build_Contr _ (univ_property_leftkanfam a)).</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 148
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [b F].</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  symmetry.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> (* Do now to avoid inversion in the first subgoal. *)
+ </pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>srapply path_sigma.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 152
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> funext y.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 152
+Time: 0.001s">
+<div class="time" style="width: 2.8571428571429%"></div>
+<pre> funext [[w []] c].</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 152
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> srefine (ap10 (F w) c).</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 152
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    funext x.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 154
+Time: 0.001s">
+<div class="time" style="width: 2.8571428571429%"></div>
+<pre>
+    lhs napply transport_forall_constant.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 155
+Time: 0.001s">
+<div class="time" style="width: 2.8571428571429%"></div>
+<pre>
+    lhs napply transport_paths_Fl.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply moveR_Vp.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 157
+Time: 0.001s">
+<div class="time" style="width: 2.8571428571429%"></div>
+<pre>
+    rhs napply concat_p1.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unfold compose_mapfam, unit_leftkanfam.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    symmetry.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    pose (i := fun px: P x =&gt; ((x; 1); px) : (P &lt;| j) (j x)).</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 161
+Time: 0.002s">
+<div class="time" style="width: 5.7142857142857%"></div>
+<pre>
+    lhs napply (ap_compose (fun k : (P &lt;| j) &gt;=&gt; R =&gt; k (j x)) (fun ka =&gt; ka o i)).</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (* [ap (fun k =&gt; k (j x))] is exactly [apD10], so it cancels the first [path_forall]. *)
+   </pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 164
+Time: 0.001s">
+<div class="time" style="width: 2.8571428571429%"></div>
+<pre>lhs nrefine (ap _ (apD10_path_forall _ _ _ _)).</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 164
+Time: 0.002s">
+<div class="time" style="width: 5.7142857142857%"></div>
+<pre>
+    lhs rapply (ap_precompose _ i).</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 165
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unfold path_forall, ap10.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 166
+Time: 0.002s">
+<div class="time" style="width: 5.7142857142857%"></div>
+<pre>
+    rewrite (eisretr apD10); cbn.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply eissect.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 168
+Time: 0.031s">
+<div class="time" style="width: 88.571428571429%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 169
+Time: 0.001s">
+<div class="time" style="width: 2.8571428571429%"></div>
+<pre>
+
+Definition univ_property_rightkanfam {X Y} {j : X -&gt; Y}
+  {P : X -&gt; Type} {R : Y -&gt; Type} (a : R o j &gt;=&gt; P)
+  : { b : R &gt;=&gt; P |&gt; j &amp; compose_mapfam (counit_rightkanfam P j) (b o j) == a}.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 174
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snrefine (_; _).</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 175
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros y A [x p].</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (a x (p^ # A)).</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro x.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 177
+Time: 0.001s">
+<div class="time" style="width: 2.8571428571429%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 178
+Time: 0.001s">
+<div class="time" style="width: 2.8571428571429%"></div>
+<pre>
+
+Definition contr_univ_property_rightkanfam `{Funext} {X Y} {j : X -&gt; Y}
+  {P : X -&gt; Type} {R : Y -&gt; Type} (a : R o j &gt;=&gt; P)
+  : Contr { b : R &gt;=&gt; P |&gt; j &amp; compose_mapfam (counit_rightkanfam P j) (b o j) == a}.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 182
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 183
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (Build_Contr _ (univ_property_rightkanfam a)).</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 184
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [b F].</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  symmetry.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 186
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> (* Do now to avoid inversion in the first subgoal. *)
+ </pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>srapply path_sigma.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> funext y.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> funext C.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> funext [x p].</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct p.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> srefine (ap10 (F x) C).</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 189
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 189
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    funext x.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 190
+Time: 0.001s">
+<div class="time" style="width: 2.8571428571429%"></div>
+<pre>
+    lhs napply transport_forall_constant.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 191
+Time: 0.001s">
+<div class="time" style="width: 2.8571428571429%"></div>
+<pre>
+    lhs napply transport_paths_Fl.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 192
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply moveR_Vp.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 193
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    symmetry.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 194
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    lhs napply concat_p1.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unfold compose_mapfam.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 196
+Time: 0.004s">
+<div class="time" style="width: 11.428571428571%"></div>
+<pre>
+    lhs napply (ap_compose (fun k : R &gt;=&gt; (P |&gt; j) =&gt; k (j x)) (fun ka =&gt; _ o ka)).</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (* [ap (fun k =&gt; k (j x))] is exactly [apD10], so it cancels the first [path_forall]. *)
+   </pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 199
+Time: 0.001s">
+<div class="time" style="width: 2.8571428571429%"></div>
+<pre>lhs nrefine (ap _ (apD10_path_forall _ _ _ _)).</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 199
+Time: 0.001s">
+<div class="time" style="width: 2.8571428571429%"></div>
+<pre>
+    lhs napply ap_postcompose.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unfold path_forall, ap10.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 201
+Time: 0.002s">
+<div class="time" style="width: 5.7142857142857%"></div>
+<pre>
+    rewrite (eisretr apD10).</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 202
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    change (ap _ ?p) with (apD10 p (x; 1)).</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 203
+Time: 0.001s">
+<div class="time" style="width: 2.8571428571429%"></div>
+<pre>
+    napply moveR_equiv_V.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 204
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    funext r.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 205
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (apD10_path_forall _ _ _ (x; _)).</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 206
+Time: 0.035s">
+<div class="time" style="width: 100%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 207
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The above (co)unit constructions are special cases of the following, which tells us that these extensions are adjoint to restriction by [j] *)</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 209
+Time: 0.001s">
+<div class="time" style="width: 2.8571428571429%"></div>
+<pre>Definition leftadjoint_leftkanfam `{Funext} {X Y : Type} (P : X -&gt; Type)
+  (R : Y -&gt; Type) (j : X -&gt; Y)
+  : ((P &lt;| j) &gt;=&gt; R) &lt;~&gt; (P &gt;=&gt; R o j).</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 211
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 212
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply equiv_adjointify.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 213
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 214
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a x B.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 214
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (a (j x) ((x; idpath); B)).</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 214
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 215
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros b y [[x p] C].</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 215
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (p # (b x C)).</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 215
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 216
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros b.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 216
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by funext x C.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 216
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 217
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 217
+Time: 0.001s">
+<div class="time" style="width: 2.8571428571429%"></div>
+<pre> by funext y [[x []] C].</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 217
+Time: 0.002s">
+<div class="time" style="width: 5.7142857142857%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 218
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition rightadjoint_rightkanfam `{Funext} {X Y : Type} (P : X -&gt; Type)
+  (R : Y -&gt; Type) (j : X -&gt; Y)
+  : (R &gt;=&gt; (P |&gt; j)) &lt;~&gt; (R o j &gt;=&gt; P).</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 222
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 223
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply equiv_adjointify.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 224
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a x C.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (a (j x) C (x; idpath)).</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 226
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a y C [x p].</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 226
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (a x).</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 226
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (p^ # C).</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 226
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 227
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 227
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by funext x C.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 227
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros b.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> funext y C [x p].</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct p; cbn.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 228
+Time: 0.002s">
+<div class="time" style="width: 5.7142857142857%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 229
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** This section is all set up for the proof that the left Kan extension of an embedding is an embedding of type families. *)</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 231
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section EmbedProofLeft.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 231
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{Univalence} {X Y : Type} (j : X -&gt; Y) (isem : IsEmbedding j).</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 232
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The counit transformation of a type family of the form [P &lt;| j] has each of its components an equivalence.  In other words, the type family [P &lt;| j] is the left Kan extension of its restriction along [j]. *)
+ </pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 235
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition isequiv_counit_leftkanfam_leftkanfam (P : X -&gt; Type) {y : Y}
+    : IsEquiv (counit_leftkanfam (P &lt;| j) j y).</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 236
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 237
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply isequiv_adjointify.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 238
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 239
+Time: 0.001s">
+<div class="time" style="width: 2.8571428571429%"></div>
+<pre> exact (fun '(((x; p); C) : (P &lt;| j) y) =&gt; ((x; p); ((x; idpath); C))).</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 239
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 240
+Time: 0.001s">
+<div class="time" style="width: 2.8571428571429%"></div>
+<pre> by intros [[x []] C].</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 240
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 241
+Time: 0.002s">
+<div class="time" style="width: 5.7142857142857%"></div>
+<pre> intros [[x []] [[x' p'] C]]; cbn; cbn in C, p'.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 241
+Time: 0.001s">
+<div class="time" style="width: 2.8571428571429%"></div>
+<pre>
+      revert p'; apply (equiv_ind (ap j)).</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 242
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      by intros [].</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 243
+Time: 0.014s">
+<div class="time" style="width: 40%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 244
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** We now use the above fact to show that type families over [X] are equivalent to type families over [Y] such that the counit map is a natural isomorphism. *)
+ </pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 247
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition leftkanfam_counit_equiv (P : X -&gt; Type)
+    : { R : Y -&gt; Type &amp; forall y, IsEquiv (counit_leftkanfam R j y) }.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 248
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 249
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists (P &lt;| j).</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 250
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rapply isequiv_counit_leftkanfam_leftkanfam.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 251
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 252
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance isequiv_leftkanfam_counit_equiv
+    : IsEquiv leftkanfam_counit_equiv.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 255
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 256
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply isequiv_adjointify.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 257
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 258
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [R e].</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 258
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (R o j).</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 258
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 259
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [R e].</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 259
+Time: 0.002s">
+<div class="time" style="width: 5.7142857142857%"></div>
+<pre> srapply path_sigma_hprop; cbn.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 259
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      funext y.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 260
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (path_universe _ (feq:=e y)).</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 261
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 262
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros P.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 262
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      funext x.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 263
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rapply isext_leftkanfam.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 264
+Time: 0.001s">
+<div class="time" style="width: 2.8571428571429%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 265
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Using these facts we can show that the map [_ &lt;| j] is an embedding if [j] is an embedding. *)
+ </pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 268
+Time: 0.01s">
+<div class="time" style="width: 28.571428571429%"></div>
+<pre>Definition isembed_leftkanfam_ext
+    : IsEmbedding (fun P =&gt; P &lt;| j)
+    := mapinO_compose (O:=-1) leftkanfam_counit_equiv pr1.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 270
+Time: 0.002s">
+<div class="time" style="width: 5.7142857142857%"></div>
+<pre>
+
+End EmbedProofLeft.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 272
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Dual proof for the right Kan extension. *)</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 274
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section EmbedProofRight.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 274
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{Univalence} {X Y : Type} (j : X -&gt; Y) (isem : IsEmbedding j).</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 275
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition isequiv_unit_rightkanfam_rightkanfam (P : X -&gt; Type) {y : Y}
+    : IsEquiv (unit_rightkanfam (P |&gt; j) j y).</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 278
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 279
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply isequiv_adjointify.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 280
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 281
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros C [x p].</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 281
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (C (x; p) (x; idpath)).</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 281
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 282
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros C.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 282
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> funext [x p].</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 282
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct p.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 282
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> funext w.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 282
+Time: 0.003s">
+<div class="time" style="width: 8.5714285714286%"></div>
+<pre>
+      rapply (@transport _ (fun t =&gt; C t (t.1; idpath) = C (x; idpath) t) _ w
+        (center _ (isem (j x) (x; idpath) w)) idpath).</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 284
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 285
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 285
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> funext [x p].</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 285
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct p.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 285
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      reflexivity.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 286
+Time: 0.002s">
+<div class="time" style="width: 5.7142857142857%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 287
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition rightkanfam_unit_equiv (P : X -&gt; Type)
+    : {R : Y -&gt; Type &amp; forall y, IsEquiv (unit_rightkanfam R j y)}.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 290
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 291
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists (P |&gt; j).</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 292
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rapply isequiv_unit_rightkanfam_rightkanfam.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 293
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 294
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      
+  #[export] Instance isequiv_rightkanfam_unit_equiv
+    : IsEquiv rightkanfam_unit_equiv.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 297
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 298
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply isequiv_adjointify.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 299
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 300
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [R e].</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 300
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (R o j).</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 300
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 301
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [R e].</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 301
+Time: 0.002s">
+<div class="time" style="width: 5.7142857142857%"></div>
+<pre> srapply path_sigma_hprop; cbn.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 301
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      funext y.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 302
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      symmetry; exact (path_universe _ (feq:=e y)).</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 303
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 304
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros P.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 304
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      funext x.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 305
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rapply isext_rightkanfam.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 306
+Time: 0.001s">
+<div class="time" style="width: 2.8571428571429%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 307
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The map [_ |&gt; j] is an embedding if [j] is an embedding. *)
+ </pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 310
+Time: 0.01s">
+<div class="time" style="width: 28.571428571429%"></div>
+<pre>Definition isembed_rightkanfam_ext
+    : IsEmbedding (fun P =&gt; P |&gt; j)
+    := mapinO_compose (O:=-1) rightkanfam_unit_equiv pr1.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 312
+Time: 0.002s">
+<div class="time" style="width: 5.7142857142857%"></div>
+<pre>
+
+End EmbedProofRight.</pre>
+</div>
+<div class="code" title="File: TypeFamKanExt.v
+Line: 315
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

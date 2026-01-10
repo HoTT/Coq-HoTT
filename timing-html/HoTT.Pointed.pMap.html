@@ -1,0 +1,1190 @@
+<html>
+<head>
+<title>pMap.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for pMap.v</h1>
+
+<div class="code" title="File: pMap.v
+Line: 1
+Time: 0.037s">
+<div class="time" style="width: 86.046511627907%"></div>
+<pre>From HoTT Require Import Basics Types.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 1
+Time: 0.043s">
+<div class="time" style="width: 100%"></div>
+<pre>
+Require Import Pointed.Core.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 2
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope pointed_scope.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Trivially pointed maps *)
+
+(** Not infrequently we have a map between two unpointed types and want to consider it as a pointed map that trivially respects some given point in the domain. *)</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition pmap_from_point {A B : Type} (f : A -&gt; B) (a : A)
+  : [A, a] -&gt;* [B, f a]
+  := Build_pMap f 1%path.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A variant of [pmap_from_point] where the domain is pointed, but the codomain is not. *)</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition pmap_from_pointed {A : pType} {B : Type} (f : A -&gt; B)
+  : A -&gt;* [B, f (point A)]
+  := Build_pMap f 1%path.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The same, for a dependent pointed map. *)</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition pforall_from_pointed {A : pType} {B : A -&gt; Type} (f : forall x, B x)
+  : pForall A (Build_pFam B (f (point A)))
+  := Build_pForall A (Build_pFam B (f (point A))) f 1%path.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* precomposing the zero map is the zero map *)</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma precompose_pconst {A B C : pType} (f : B -&gt;* C)
+  : f o* @pconst A B ==* pconst.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply Build_pHomotopy.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: intro; apply point_eq.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (concat_p1 _ @ concat_1p _)^.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 25
+Time: 0.001s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* postcomposing the zero map is the zero map *)</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma postcompose_pconst {A B C : pType} (f : A -&gt;* B)
+  : pconst o* f ==* @pconst A C.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply Build_pHomotopy.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: reflexivity.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (concat_p1 _ @ concat_p1 _ @ ap_const _ _)^.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 33
+Time: 0.002s">
+<div class="time" style="width: 4.6511627906977%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma pconst_factor {A B : pType} {f : pUnit -&gt;* B} {g : A -&gt;* pUnit}
+  : f o* g ==* pconst.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_ @* precompose_pconst f).</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply pmap_postwhisker.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  symmetry.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply pmap_punit_pconst.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* We note that the inverse of [path_pmap] computes definitionally on reflexivity, and hence [path_pmap] itself computes typally so.  *)</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 45
+Time: 0.001s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre>Definition equiv_inverse_path_pmap_1 `{Funext} {A B} {f : A -&gt;* B}
+  : (equiv_path_pforall f f)^-1%equiv 1%path = reflexivity f
+  := 1.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** If we have a fiberwise pointed map, with a variable as codomain, this is an
+  induction principle that allows us to assume it respects all basepoints by
+  reflexivity*)</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 51
+Time: 0.001s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre>Definition fiberwise_pointed_map_rec `{H0 : Funext} {A : Type} {B : A -&gt; pType}
+  (P : forall (C : A -&gt; pType) (g : forall a, B a -&gt;* C a), Type)
+  (H : forall (C : A -&gt; Type) (g : forall a, B a -&gt; C a),
+     P _ (fun a =&gt; pmap_from_pointed (g a)))
+  : forall (C : A -&gt; pType) (g : forall a, B a -&gt;* C a), P C g.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 56
+Time: 0.001s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre>
+  equiv_intros (equiv_functor_arrow' (equiv_idmap A) issig_ptype oE
+    equiv_sig_coind _ _) C.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct C as [C c0].</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 59
+Time: 0.001s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre>
+  equiv_intros (@equiv_functor_forall_id _ A _ _
+    (fun a =&gt; issig_pmap (B a) [C a, c0 a]) oE
+    equiv_sig_coind _ _) g.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simpl in *.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct g as [g g0].</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold point in g0.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> unfold functor_forall, sig_coind_uncurried.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* now we need to apply path induction on the homotopy g0 *)
+ </pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>pose (path_forall _ c0 g0).</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  assert (p = path_forall (fun x : A =&gt; g x (ispointed_type (B x))) c0 g0).</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: reflexivity.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction p.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply moveR_equiv_V in X.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> induction X.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply H.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 71
+Time: 0.005s">
+<div class="time" style="width: 11.627906976744%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A alternative constructor to build a [pHomotopy] between maps into [pForall] *)</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 74
+Time: 0.002s">
+<div class="time" style="width: 4.6511627906977%"></div>
+<pre>Definition Build_pHomotopy_pForall `{Funext} {A B : pType} {C : B -&gt; pType}
+  {f g : A -&gt;* ppforall b, C b} (p : forall a, f a ==* g a)
+  (q : p (point A) ==* phomotopy_path (point_eq f) @* (phomotopy_path (point_eq g))^*)
+  : f ==* g.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_pHomotopy.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: intro a; exact (path_pforall (p a)).</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 80
+Time: 0.001s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre>
+  hnf; rapply moveR_equiv_M'.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_^ @ ap10 _ _).</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 82
+Time: 0.02s">
+<div class="time" style="width: 46.511627906977%"></div>
+<pre>
+  2: exact path_equiv_path_pforall_phomotopy_path.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply path_pforall.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 84
+Time: 0.001s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre>
+  refine (phomotopy_path_pp _ _ @* _ @* q^*).</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply phomotopy_prewhisker.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply phomotopy_path_V.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 87
+Time: 0.006s">
+<div class="time" style="width: 13.953488372093%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Operations on dependent pointed maps *)
+
+(* functorial action of [pForall A B] in [B] *)</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 92
+Time: 0.002s">
+<div class="time" style="width: 4.6511627906977%"></div>
+<pre>Definition functor_pforall_right {A : pType} {B B' : pFam A}
+  (f : forall a, B a -&gt; B' a)
+  (p : f (point A) (dpoint B) = dpoint B') (g : pForall A B)
+    : pForall A B' :=
+  Build_pForall A B' (fun a =&gt; f a (g a)) (ap (f (point A)) (dpoint_eq g) @ p).</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition equiv_functor_pforall_id `{Funext} {A : pType} {B B' : pFam A}
+  (f : forall a, B a &lt;~&gt; B' a) (p : f (point A) (dpoint B) = dpoint B')
+  : pForall A B &lt;~&gt; pForall A B'.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (issig_pforall _ _ oE _ oE (issig_pforall _ _)^-1).</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply equiv_functor_sigma'.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact (equiv_functor_forall_id f).</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro s; cbn.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (equiv_concat_r p _ oE _).</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (equiv_ap' (f (point A))).</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 107
+Time: 0.001s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 108
+Time: 0.002s">
+<div class="time" style="width: 4.6511627906977%"></div>
+<pre>
+
+Definition functor2_pforall_right {A : pType} {B C : pFam A}
+  {g g' : forall (a : A), B a -&gt; C a}
+  {g₀ : g (point A) (dpoint B) = dpoint C}
+  {g₀' : g' (point A) (dpoint B) = dpoint C} {f f' : pForall A B}
+  (p : forall a, g a == g' a) (q : f ==* f')
+  (r : p (point A) (dpoint B) @ g₀' = g₀)
+  : functor_pforall_right g g₀ f ==* functor_pforall_right g' g₀' f'.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply Build_pHomotopy.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 118
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: {</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro a.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (p a (f a) @ ap (g' a) (q a)).</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 119
+Time: 0.015s">
+<div class="time" style="width: 34.883720930233%"></div>
+<pre>
+  pointed_reduce_rewrite.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> symmetry.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply concat_Ap.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 120
+Time: 0.01s">
+<div class="time" style="width: 23.255813953488%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 121
+Time: 0.002s">
+<div class="time" style="width: 4.6511627906977%"></div>
+<pre>
+
+Definition functor2_pforall_right_refl {A : pType} {B C : pFam A}
+  (g : forall a, B a -&gt; C a) (g₀ : g (point A) (dpoint B) = dpoint C)
+  (f : pForall A B)
+  : functor2_pforall_right (fun a =&gt; reflexivity (g a)) (phomotopy_reflexive f)
+      (concat_1p _)
+    ==* phomotopy_reflexive (functor_pforall_right g g₀ f).</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 128
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 129
+Time: 0.005s">
+<div class="time" style="width: 11.627906976744%"></div>
+<pre>
+  pointed_reduce.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 130
+Time: 0.001s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 130
+Time: 0.005s">
+<div class="time" style="width: 11.627906976744%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 131
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* functorial action of [pForall A (pointed_fam B)] in [B]. *)</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition pmap_compose_ppforall {A : pType} {B B' : A -&gt; pType}
+  (g : forall a, B a -&gt;* B' a) (f : ppforall a, B a) : ppforall a, B' a.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 135
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simple refine (functor_pforall_right _ _ f).</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 137
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact g.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 137
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (point_eq (g (point A))).</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition pmap_compose_ppforall_point {A : pType} {B B' : A -&gt; pType}
+  (g : forall a, B a -&gt;* B' a)
+  : pmap_compose_ppforall g (point_pforall B) ==* point_pforall B'.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply Build_pHomotopy.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 145
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro x.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (point_eq (g x)).</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 147
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (concat_p1 _ @ concat_1p _)^.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 147
+Time: 0.002s">
+<div class="time" style="width: 4.6511627906977%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 148
+Time: 0.001s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre>
+
+Definition pmap_compose_ppforall_compose {A : pType} {P Q R : A -&gt; pType}
+  (h : forall (a : A), Q a -&gt;* R a) (g : forall (a : A), P a -&gt;* Q a)
+  (f : ppforall a, P a)
+  : pmap_compose_ppforall (fun a =&gt; h a o* g a) f ==* pmap_compose_ppforall h (pmap_compose_ppforall g f).</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 154
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply Build_pHomotopy.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 155
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 157
+Time: 0.001s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre> refine ((whiskerL _ (inverse2 _)) @ concat_pV _)^.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (whiskerR _ _ @ concat_pp_p _ _ _).</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 158
+Time: 0.001s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre>
+    refine (ap_pp _ _ _ @ whiskerR (ap_compose _ _ _)^ _).</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 159
+Time: 0.015s">
+<div class="time" style="width: 34.883720930233%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 160
+Time: 0.001s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre>
+
+Definition pmap_compose_ppforall2 {A : pType} {P Q : A -&gt; pType} {g g' : forall (a : A), P a -&gt;* Q a}
+  {f f' : ppforall (a : A), P a} (p : forall a, g a ==* g' a) (q : f ==* f')
+  : pmap_compose_ppforall g f ==* pmap_compose_ppforall g' f'.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 164
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 165
+Time: 0.013s">
+<div class="time" style="width: 30.232558139535%"></div>
+<pre>
+  srapply functor2_pforall_right.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 166
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact p.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact q.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (point_htpy (p (point A))).</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 169
+Time: 0.001s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 170
+Time: 0.002s">
+<div class="time" style="width: 4.6511627906977%"></div>
+<pre>
+
+Definition pmap_compose_ppforall2_left {A : pType} {P Q : A -&gt; pType} {g g' : forall (a : A), P a -&gt;* Q a}
+  (f : ppforall (a : A), P a) (p : forall a, g a ==* g' a)
+  : pmap_compose_ppforall g f ==* pmap_compose_ppforall g' f :=
+  pmap_compose_ppforall2 p (phomotopy_reflexive f).</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 175
+Time: 0.001s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre>
+
+Definition pmap_compose_ppforall2_right {A : pType} {P Q : A -&gt; pType} (g : forall (a : A), P a -&gt;* Q a)
+  {f f' : ppforall (a : A), P a} (q : f ==* f')
+  : pmap_compose_ppforall g f ==* pmap_compose_ppforall g f' :=
+  pmap_compose_ppforall2 (fun a =&gt; phomotopy_reflexive (g a)) q.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 180
+Time: 0.001s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre>
+
+Definition pmap_compose_ppforall2_refl `{Funext} {A : pType} {P Q : A -&gt; pType}
+  (g : forall (a : A), P a -&gt;* Q a) (f : ppforall (a : A), P a)
+  : pmap_compose_ppforall2 (fun a =&gt; phomotopy_reflexive (g a)) (phomotopy_reflexive f)
+    ==* phomotopy_reflexive _.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 186
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold pmap_compose_ppforall2.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert Q g.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> refine (fiberwise_pointed_map_rec _ _).</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros Q g.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 188
+Time: 0.001s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre>
+  srapply functor2_pforall_right_refl.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 189
+Time: 0.001s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 190
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition pmap_compose_ppforall_pid_left {A : pType} {P : A -&gt; pType}
+  (f : ppforall (a : A), P a) : pmap_compose_ppforall (fun a =&gt; pmap_idmap) f ==* f.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 193
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 194
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply Build_pHomotopy.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> symmetry.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (whiskerR (concat_p1 _ @ ap_idmap _) _ @ concat_pV _).</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 197
+Time: 0.002s">
+<div class="time" style="width: 4.6511627906977%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 198
+Time: 0.001s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre>
+
+Definition pmap_compose_ppforall_path_pforall `{Funext} {A : pType} {P Q : A -&gt; pType}
+  (g : forall a, P a -&gt;* Q a) {f f' : ppforall a, P a} (p : f ==* f') :
+  ap (pmap_compose_ppforall g) (path_pforall p) =
+  path_pforall (pmap_compose_ppforall2_right g p).</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 203
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 204
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert f' p.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 205
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> refine (phomotopy_ind _ _).</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 205
+Time: 0.001s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre>
+  refine (ap _ path_pforall_1 @ path_pforall_1^ @ ap _ _^).</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (path_pforall (pmap_compose_ppforall2_refl _ _)).</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 207
+Time: 0.002s">
+<div class="time" style="width: 4.6511627906977%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: pMap.v
+Line: 209
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

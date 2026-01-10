@@ -1,0 +1,1289 @@
+<html>
+<head>
+<title>GCH.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for GCH.v</h1>
+
+<div class="code" title="File: GCH.v
+Line: 1
+Time: 0.074s">
+<div class="time" style="width: 100%"></div>
+<pre>From HoTT Require Import TruncType abstract_algebra.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 1
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+From HoTT Require Import Universes.Smallness.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 2
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+From HoTT Require Import Spaces.Nat.Core Spaces.Card.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope type.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope hprop_scope.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+
+(** * Formulation of GCH *)
+
+(* GCH states that for any infinite set X with Y between X and P(X) either Y embeds into X or P(X) embeds into Y. *)
+
+</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 12
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>Definition GCH :=
+  forall X Y : HSet, infinite X -&gt; InjectsInto X Y -&gt; InjectsInto Y (X -&gt; HProp) -&gt; InjectsInto Y X + InjectsInto (X -&gt; HProp) Y.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+
+
+(** * GCH is a proposition *)
+
+</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma Cantor_inj {PR : PropResizing} {FE : Funext} X :
+  ~ Injection (X -&gt; HProp) X.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [i HI].</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 21
+Time: 0.011s">
+<div class="time" style="width: 14.864864864865%"></div>
+<pre> pose (p n := Build_HProp (smalltype (forall q, i q = n -&gt; ~ q n))).</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  enough (Hp : p (i p) &lt;-&gt; ~ p (i p)).</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply Hp; apply Hp; intros H; by apply Hp.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold p at 1.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros H.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply equiv_smalltype in H.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply H.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros H.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply equiv_smalltype.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros q -&gt; % HI.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact H.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 26
+Time: 0.003s">
+<div class="time" style="width: 4.0540540540541%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* The concluding disjunction of GCH is exclusive since otherwise we'd obtain an injection of P(X) into X. *)
+
+</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma hprop_GCH {PR : PropResizing} {FE : Funext} :
+  IsHProp GCH.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 32
+Time: 0.006s">
+<div class="time" style="width: 8.1081081081081%"></div>
+<pre>
+  repeat (napply istrunc_forall; intros).</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply hprop_allpath.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [H|H] [H'|H'].</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 35
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre> enough (H = H') as -&gt;; trivial.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply path_ishprop.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply Empty_rec.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 36
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre> eapply merely_destruct; try eapply (Cantor_inj a); trivial.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 36
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre> by apply InjectsInto_trans with a0.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply Empty_rec.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 37
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre> eapply merely_destruct; try eapply (Cantor_inj a); trivial.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 37
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre> by apply InjectsInto_trans with a0.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 38
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre> enough (H = H') as -&gt;; trivial.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply path_ishprop.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 38
+Time: 0.002s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+
+
+(** * GCH implies LEM *)
+
+</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section LEM.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Variable X : HSet.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Variable P : HProp.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {PR : PropResizing}.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {FE : Funext}.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 50
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+
+  Definition hpaths (x y : X) :=
+    Build_HProp (paths x y).</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition sing (p : X -&gt; HProp) :=
+    exists x, p = hpaths x.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Let sings :=
+    { p : X -&gt; HProp | sing p \/ (P + ~ P) }.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (* The main idea is that for a given set X and proposition P, the set sings fits between X and P(X).
+     Then CH for X implies that either sings embeds into X (which can be refuted constructively),
+     or that P(X) embeds into sings, from which we can extract a proof of P + ~P. *)  
+
+ </pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma Cantor_sing (i : (X -&gt; HProp) -&gt; (X -&gt; HProp)) :
+    IsInjective i -&gt; exists p, ~ sing (i p).</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros HI.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 68
+Time: 0.012s">
+<div class="time" style="width: 16.216216216216%"></div>
+<pre> pose (p n := Build_HProp (smalltype (forall q, i q = hpaths n -&gt; ~ q n))).</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists p.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [n HN].</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> enough (Hp : p n &lt;-&gt; ~ p n).</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply Hp; apply Hp; intros H; by apply Hp.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unfold p at 1.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros H.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply equiv_smalltype in H.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply H, HN.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros H.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply equiv_smalltype.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros q HQ.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite &lt;- HN in HQ.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by apply HI in HQ as -&gt;.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 73
+Time: 0.003s">
+<div class="time" style="width: 4.0540540540541%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma injective_proj1 {Z} (r : Z -&gt; HProp) :
+    IsInjective (@proj1 Z r).</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros [p Hp] [q Hq]; cbn.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros -&gt;.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> unshelve eapply path_sigma; cbn.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply path_ishprop.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma inject_sings :
+    (P + ~ P) -&gt; Injection (X -&gt; HProp) sings.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros HP.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> unshelve eexists.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros p.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists p.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by right.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros p q.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros H.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> change p with ((exist (fun r =&gt; sing r \/ (P + ~ P)) p (tr (inr HP))).1).</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite H.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 91
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 92
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+
+  Theorem CH_LEM :
+    (Injection X sings -&gt; Injection sings (X -&gt; HProp) -&gt; ~ (Injection sings X) -&gt; InjectsInto (X -&gt; HProp) sings)
+    -&gt; P \/ ~ P.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros ch.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 98
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre> eapply merely_destruct; try apply ch.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> unshelve eexists.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists (hpaths x).</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> left.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists x.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros H % pr1_path.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn in H.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> change (hpaths x y).</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by rewrite H.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists (@proj1 _ _).</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by apply injective_proj1.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros H.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assert (HP' : ~ ~ (P + ~ P)).</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      {</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros HP.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply HP.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> right.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros p.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply HP.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by left.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply HP'.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros HP % inject_sings.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> clear HP'.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply Cantor_inj with X.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by eapply (Injection_trans _ _ _ HP).</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [i Hi].</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (Cantor_sing (fun p =&gt; @proj1 _ _ (i p))) as [p HP].</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y H % injective_proj1.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by apply Hi.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (i p) as [q Hq]; cbn in *.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        eapply merely_destruct; try exact Hq.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        intros [H|H]; [destruct (HP H)|by apply tr].</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 111
+Time: 0.003s">
+<div class="time" style="width: 4.0540540540541%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End LEM.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* We can instantiate the previous lemma with nat to obtain GCH -&gt; LEM. *)
+
+</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Theorem GCH_LEM {PR : PropResizing} {UA : Univalence} :
+  GCH -&gt; (forall P : HProp, P \/ ~ P).</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 118
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros gch P.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> eapply (CH_LEM (Build_HSet nat)); try exact _.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros H1 H2 H3.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  pose (sings := { p : nat -&gt; HProp | sing (Build_HSet nat) p \/ (P + ~ P) }).</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 121
+Time: 0.016s">
+<div class="time" style="width: 21.621621621622%"></div>
+<pre>
+  destruct (gch (Build_HSet nat) (Build_HSet sings)) as [H|H].</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 122
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists idmap.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply isinj_idmap.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact H1.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 125
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 125
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact H2.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 125
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 126
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply Empty_rec.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 126
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> eapply merely_destruct; try exact H.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 126
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact H3.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 126
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact H.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 127
+Time: 0.003s">
+<div class="time" style="width: 4.0540540540541%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: GCH.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

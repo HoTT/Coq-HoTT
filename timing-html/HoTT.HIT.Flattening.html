@@ -1,0 +1,843 @@
+<html>
+<head>
+<title>Flattening.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Flattening.v</h1>
+
+<div class="code" title="File: Flattening.v
+Line: 1
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>(** * The flattening lemma. *)
+
+</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 2
+Time: 0.027s">
+<div class="time" style="width: 21.259842519685%"></div>
+<pre>Require Import HoTT.Basics.</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 2
+Time: 0.006s">
+<div class="time" style="width: 4.7244094488189%"></div>
+<pre>
+Require Import Types.Paths Types.Forall Types.Sigma Types.Arrow Types.Universe.</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope path_scope.</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 4
+Time: 0.007s">
+<div class="time" style="width: 5.511811023622%"></div>
+<pre>
+Require Import HoTT.Colimits.Coeq.</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The base HIT [W] is just a homotopy coequalizer [Coeq]. *)
+
+(** TODO: Make the names in this file more usable, move it into [Coeq.v], and use it to derive corresponding flattening lemmas for [pushout], etc. *)
+
+(** Now we define the flattened HIT which will be equivalent to the total space of a fibration over [W]. *)
+
+</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Module Export FlattenedHIT.</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 12
+Time: 0.001s">
+<div class="time" style="width: 0.78740157480315%"></div>
+<pre>
+
+Private Inductive Wtil (A B : Type) (f g : B -&gt; A)
+  (C : A -&gt; Type) (D : forall b, C (f b) &lt;~&gt; C (g b))
+  : Type :=
+| cct : forall a, C a -&gt; Wtil A B f g C D.</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments cct {A B f g C D} a c.</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Axiom ppt : forall {A B f g C D} (b:B) (y:C (f b)),
+  @cct A B f g C D (f b) y = cct (g b) (D b y).</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 22
+Time: 0.003s">
+<div class="time" style="width: 2.3622047244094%"></div>
+<pre>
+
+Definition Wtil_ind {A B f g C D} (Q : Wtil A B f g C D -&gt; Type)
+  (cct' : forall a x, Q (cct a x))
+  (ppt' : forall b y, (ppt b y) # (cct' (f b) y) = cct' (g b) (D b y))
+  : forall w, Q w
+  := fun w =&gt; match w with cct a x =&gt; fun _ =&gt; cct' a x end ppt'.</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 28
+Time: 0.003s">
+<div class="time" style="width: 2.3622047244094%"></div>
+<pre>
+
+Axiom Wtil_ind_beta_ppt
+  : forall {A B f g C D} (Q : Wtil A B f g C D -&gt; Type)
+    (cct' : forall a x, Q (cct a x))
+    (ppt' : forall b y, (ppt b y) # (cct' (f b) y) = cct' (g b) (D b y))
+    (b:B) (y : C (f b)),
+    apD (Wtil_ind Q cct' ppt') (ppt b y) = ppt' b y.</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End FlattenedHIT.</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 37
+Time: 0.002s">
+<div class="time" style="width: 1.5748031496063%"></div>
+<pre>
+
+Definition Wtil_rec {A B f g C} {D : forall b, C (f b) &lt;~&gt; C (g b)}
+  (Q : Type) (cct' : forall a (x : C a), Q)
+  (ppt' : forall b (y : C (f b)), cct' (f b) y = cct' (g b) (D b y))
+  : Wtil A B f g C D -&gt; Q
+  := Wtil_ind (fun _ =&gt; Q) cct' (fun b y =&gt; transport_const _ _ @ ppt' b y).</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 43
+Time: 0.002s">
+<div class="time" style="width: 1.5748031496063%"></div>
+<pre>
+
+Definition Wtil_rec_beta_ppt
+  {A B f g C} {D : forall b, C (f b) &lt;~&gt; C (g b)}
+  (Q : Type) (cct' : forall a (x : C a), Q)
+  (ppt' : forall (b:B) (y : C (f b)), cct' (f b) y = cct' (g b) (D b y))
+  (b:B) (y: C (f b))
+  : ap (@Wtil_rec A B f g C D Q cct' ppt') (ppt b y) = ppt' b y.</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold Wtil_rec.</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 52
+Time: 0.001s">
+<div class="time" style="width: 0.78740157480315%"></div>
+<pre>
+  eapply (cancelL (transport_const (ppt (C:=C) b y) _)).</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 53
+Time: 0.001s">
+<div class="time" style="width: 0.78740157480315%"></div>
+<pre>
+  refine ((apD_const
+    (@Wtil_ind A B f g C D (fun _ =&gt; Q) cct' _) (ppt b y))^ @ _).</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (Wtil_ind_beta_ppt (fun _ =&gt; Q) _ _ _ _).</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 56
+Time: 0.007s">
+<div class="time" style="width: 5.511811023622%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+
+
+(** Now we define the fibration over it that we will be considering the total space of. *)
+
+</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section AssumeAxioms.</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Context `{Univalence}.</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Context {B A : Type} {f g : B -&gt; A}.</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Context {C : A -&gt; Type} {D : forall b, C (f b) &lt;~&gt; C (g b)}.</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Let W' := Coeq f g.</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Let P : W' -&gt; Type
+  := Coeq_rec Type C (fun b =&gt; path_universe (D b)).</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+
+
+(** Now we give the total space the same structure as [Wtil]. *)
+
+</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Let sWtil := { w:W' &amp; P w }.</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Let scct (a:A) (x:C a) : sWtil := (exist P (coeq a) x).</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 78
+Time: 0.002s">
+<div class="time" style="width: 1.5748031496063%"></div>
+<pre>
+
+Let sppt (b:B) (y:C (f b)) : scct (f b) y = scct (g b) (D b y)
+  := path_sigma' P (cglue b)
+       (transport_path_universe' P (cglue b) (D b)
+         (Coeq_rec_beta_cglue Type C (fun b0 =&gt; path_universe (D b0)) b) y).</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Here is the dependent eliminator *)</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition sWtil_ind (Q : sWtil -&gt; Type)
+  (scct' : forall a x, Q (scct a x))
+  (sppt' : forall b y, (sppt b y) # (scct' (f b) y) = scct' (g b) (D b y))
+  : forall w, Q w.</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply sig_ind.</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (Coeq_ind (fun w =&gt; forall x:P w, Q (w;x))
+    (fun a x =&gt; scct' a x) _).</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros b.</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (dpath_forall P (fun a b =&gt; Q (a;b)) _ _ (cglue b)
+    (scct' (f b)) (scct' (g b))).</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros y.</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 96
+Time: 0.001s">
+<div class="time" style="width: 0.78740157480315%"></div>
+<pre>
+  set (q := transport_path_universe' P (cglue b) (D b)
+    (Coeq_rec_beta_cglue Type C (fun b0 : B =&gt; path_universe (D b0)) b) y).</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite transportD_is_transport.</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_ @ apD (scct' (g b)) q^).</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (moveL_transport_V (fun x =&gt; Q (scct (g b) x)) q _ _ _).</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 101
+Time: 0.001s">
+<div class="time" style="width: 0.78740157480315%"></div>
+<pre>
+  rewrite transport_compose, &lt;- transport_pp.</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_ @ sppt' b y).</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply ap10, ap.</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (whiskerL _ (ap_exist P (coeq (g b)) _ _ q) @ _).</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact ((path_sigma_p1_1p' _ _ _)^).</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 106
+Time: 0.007s">
+<div class="time" style="width: 5.511811023622%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The eliminator computes on the point constructor. *)</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 109
+Time: 0.001s">
+<div class="time" style="width: 0.78740157480315%"></div>
+<pre>Definition sWtil_ind_beta_cct (Q : sWtil -&gt; Type)
+  (scct' : forall a x, Q (scct a x))
+  (sppt' : forall b y, (sppt b y) # (scct' (f b) y) = scct' (g b) (D b y))
+  (a:A) (x:C a)
+  : sWtil_ind Q scct' sppt' (scct a x) = scct' a x
+  := 1.</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** This would be its propositional computation rule on the path constructor... *)
+(**
+&lt;&lt;
+Definition sWtil_ind_beta_ppt (Q : sWtil -&gt; Type)
+  (scct' : forall a x, Q (scct a x))
+  (sppt' : forall b y, (sppt b y) # (scct' (f b) y) = scct' (g b) (D b y))
+  (b:B) (y:C (f b))
+  : apD (sWtil_ind Q scct' sppt') (sppt b y) = sppt' b y.
+Proof.
+  unfold sWtil_ind.
+  (** ... but it's a doozy! *)
+Abort.
+&gt;&gt;
+*)
+
+(** Fortunately, it turns out to be enough to have the computation rule for the *non-dependent* eliminator! *)
+
+(** We could define that in terms of the dependent one, as usual...
+&lt;&lt;
+Definition sWtil_rec (P : Type)
+  (scct' : forall a (x : C a), P)
+  (sppt' : forall b (y : C (f b)), scct' (f b) y = scct' (g b) (D b y))
+  : sWtil -&gt; P
+  := sWtil_ind (fun _ =&gt; P) scct' (fun b y =&gt; transport_const _ _ @ sppt' b y).
+&gt;&gt;
+*)
+
+(** ...but if we define it diindly, then it's easier to reason about. *)</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition sWtil_rec (Q : Type)
+  (scct' : forall a (x : C a), Q)
+  (sppt' : forall b (y : C (f b)), scct' (f b) y = scct' (g b) (D b y))
+  : sWtil -&gt; Q.</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 147
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply sig_ind.</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 148
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (Coeq_ind (fun w =&gt; P w -&gt; Q) (fun a x =&gt; scct' a x) _).</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros b.</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (dpath_arrow P (fun _ =&gt; Q) _ _ _ _).</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros y.</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 152
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (transport_const _ _ @ _).</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (sppt' b _ @ ap _ _).</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 154
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine ((transport_path_universe' P (cglue b) (D b) _ _)^).</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 155
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (Coeq_rec_beta_cglue _ _ _ _).</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 156
+Time: 0.001s">
+<div class="time" style="width: 0.78740157480315%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Open Scope long_path_scope.</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 159
+Time: 0.001s">
+<div class="time" style="width: 0.78740157480315%"></div>
+<pre>
+
+Definition sWtil_rec_beta_ppt (Q : Type)
+  (scct' : forall a (x : C a), Q)
+  (sppt' : forall b (y : C (f b)), scct' (f b) y = scct' (g b) (D b y))
+  (b:B) (y: C (f b))
+  : ap (sWtil_rec Q scct' sppt') (sppt b y) = sppt' b y.</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 165
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 166
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold sWtil_rec, sppt.</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 167
+Time: 0.008s">
+<div class="time" style="width: 6.2992125984252%"></div>
+<pre>
+  refine (@ap_sig_rec_path_sigma W' P Q _ _ (cglue b) _ _ _ _ @ _); simpl.</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 168
+Time: 0.004s">
+<div class="time" style="width: 3.1496062992126%"></div>
+<pre>
+  rewrite (@Coeq_ind_beta_cglue B A f g).</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 169
+Time: 0.004s">
+<div class="time" style="width: 3.1496062992126%"></div>
+<pre>
+  rewrite (ap10_dpath_arrow P (fun _ =&gt; Q) (cglue b) _ _ _ y).</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 170
+Time: 0.02s">
+<div class="time" style="width: 15.748031496063%"></div>
+<pre>
+  repeat rewrite concat_p_pp.</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (** Now everything cancels! *)
+ </pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 173
+Time: 0.013s">
+<div class="time" style="width: 10.236220472441%"></div>
+<pre>rewrite ap_V, concat_pV_p, concat_pV_p, concat_pV_p, concat_Vp.</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by apply concat_1p.</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 174
+Time: 0.127s">
+<div class="time" style="width: 100%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 175
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Close Scope long_path_scope.</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Woot! *)</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 179
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition equiv_flattening : Wtil A B f g C D &lt;~&gt; sWtil.</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 179
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 180
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (** The maps back and forth are obtained easily from the non-dependent eliminators. *)
+ </pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 182
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>refine (equiv_adjointify
+    (Wtil_rec _ scct sppt)
+    (sWtil_rec _ cct ppt)
+    _ _).</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (** The two homotopies are completely symmetrical, using the *dependent* eliminators, but only the computation rules for the non-dependent ones. *)
+ </pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>-</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> refine (sWtil_ind _ (fun a x =&gt; 1) _).</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros b y.</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply dpath_path_FFlr.</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 188
+Time: 0.001s">
+<div class="time" style="width: 0.78740157480315%"></div>
+<pre>
+    rewrite concat_1p, concat_p1.</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 189
+Time: 0.001s">
+<div class="time" style="width: 0.78740157480315%"></div>
+<pre>
+    rewrite sWtil_rec_beta_ppt.</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 190
+Time: 0.001s">
+<div class="time" style="width: 0.78740157480315%"></div>
+<pre>
+      by symmetry; apply (@Wtil_rec_beta_ppt A B f g C D).</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 191
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 192
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> refine (Wtil_ind _ (fun a x =&gt; 1) _).</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 192
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros b y.</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 192
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply dpath_path_FFlr.</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 193
+Time: 0.001s">
+<div class="time" style="width: 0.78740157480315%"></div>
+<pre>
+    rewrite concat_1p, concat_p1.</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 194
+Time: 0.001s">
+<div class="time" style="width: 0.78740157480315%"></div>
+<pre>
+    rewrite Wtil_rec_beta_ppt.</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 195
+Time: 0.001s">
+<div class="time" style="width: 0.78740157480315%"></div>
+<pre>
+      by symmetry; apply sWtil_rec_beta_ppt.</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 196
+Time: 0.008s">
+<div class="time" style="width: 6.2992125984252%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 197
+Time: 0.006s">
+<div class="time" style="width: 4.7244094488189%"></div>
+<pre>
+
+End AssumeAxioms.</pre>
+</div>
+<div class="code" title="File: Flattening.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

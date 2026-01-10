@@ -1,0 +1,2313 @@
+<html>
+<head>
+<title>Displayed.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Displayed.v</h1>
+
+<div class="code" title="File: Displayed.v
+Line: 1
+Time: 0.019s">
+<div class="time" style="width: 38.775510204082%"></div>
+<pre>Require Import Basics.Overture.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 1
+Time: 0.002s">
+<div class="time" style="width: 4.0816326530612%"></div>
+<pre>
+Require Import Basics.PathGroupoids.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 2
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Basics.Tactics.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 3
+Time: 0.005s">
+<div class="time" style="width: 10.204081632653%"></div>
+<pre>
+Require Import Types.Sigma.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 4
+Time: 0.002s">
+<div class="time" style="width: 4.0816326530612%"></div>
+<pre>
+Require Import WildCat.Core.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 5
+Time: 0.004s">
+<div class="time" style="width: 8.1632653061224%"></div>
+<pre>
+Require Import WildCat.Prod.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 6
+Time: 0.001s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>
+
+Class IsDGraph {A : Type} `{IsGraph A} (D : A -&gt; Type)
+  := DHom : forall {a b : A}, (a $-&gt; b) -&gt; D a -&gt; D b -&gt; Type.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 9
+Time: 0.003s">
+<div class="time" style="width: 6.1224489795918%"></div>
+<pre>
+
+Class IsD01Cat {A : Type} `{Is01Cat A} (D : A -&gt; Type) `{!IsDGraph D} :=
+{
+  DId : forall {a : A} (a' : D a), DHom (Id a) a' a';
+  dcat_comp : forall {a b c : A} {g : b $-&gt; c} {f : a $-&gt; b}
+              {a' : D a} {b' : D b} {c' : D c},
+              DHom g b' c' -&gt; DHom f a' b' -&gt; DHom (g $o f) a' c';
+}.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation "g '$o'' f" := (dcat_comp g f).</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 19
+Time: 0.002s">
+<div class="time" style="width: 4.0816326530612%"></div>
+<pre>
+
+Definition dcat_postcomp {A : Type} {D : A -&gt; Type} `{IsD01Cat A D} {a b c : A}
+  {g : b $-&gt; c} {a' : D a} {b' : D b} {c' : D c} (g' : DHom g b' c')
+  : forall (f : a $-&gt; b), DHom f a' b' -&gt; DHom (g $o f) a' c'
+  := fun _ f' =&gt; g' $o' f'.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 24
+Time: 0.002s">
+<div class="time" style="width: 4.0816326530612%"></div>
+<pre>
+
+Definition dcat_precomp {A : Type} {D : A -&gt; Type} `{IsD01Cat A D} {a b c : A}
+  {f : a $-&gt; b} {a' : D a} {b' : D b} {c' : D c} (f' : DHom f a' b')
+  : forall (g : b $-&gt; c), DHom g b' c' -&gt; DHom (g $o f) a' c'
+  := fun _ g' =&gt; g' $o' f'.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 29
+Time: 0.002s">
+<div class="time" style="width: 4.0816326530612%"></div>
+<pre>
+
+Class IsD0Gpd {A : Type} `{Is0Gpd A} (D : A -&gt; Type)
+  `{!IsDGraph D, !IsD01Cat D}
+  := dgpd_rev : forall {a b : A} {f : a $== b} {a' : D a} {b' : D b},
+                DHom f a' b' -&gt; DHom (f^$) b' a'.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation "p ^$'" := (dgpd_rev p).</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 36
+Time: 0.001s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>
+
+Definition DGpdHom {A : Type} {D : A -&gt; Type} `{IsD0Gpd A D} {a b : A}
+  (f : a $== b) (a' : D a) (b' : D b)
+  := DHom f a' b'.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Diagrammatic order to match gpd_comp *)</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 42
+Time: 0.003s">
+<div class="time" style="width: 6.1224489795918%"></div>
+<pre>Definition dgpd_comp {A : Type} {D : A -&gt; Type} `{IsD0Gpd A D} {a b c : A}
+  {f : a $== b} {g : b $== c} {a' : D a} {b' : D b} {c' : D c}
+  : DGpdHom f a' b' -&gt; DGpdHom g b' c' -&gt; DGpdHom (g $o f) a' c'
+  := fun f' g' =&gt; g' $o' f'.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation "p '$@'' q" := (dgpd_comp p q).</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition DHom_path {A : Type} {D : A -&gt; Type} `{IsD01Cat A D} {a b : A}
+  (p : a = b) {a' : D a} {b': D b} (p' : transport D p a' = b')
+  : DHom (Hom_path p) a' b'.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct p, p'; apply DId.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 54
+Time: 0.001s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>
+
+Definition DGpdHom_path {A : Type} {D : A -&gt; Type} `{IsD0Gpd A D} {a b : A}
+  (p : a = b) {a' : D a} {b': D b} (p' : transport D p a' = b')
+  : DGpdHom (GpdHom_path p) a' b'
+  := DHom_path p p'.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 59
+Time: 0.001s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>
+
+Instance reflexive_DHom {A} {D : A -&gt; Type} `{IsD01Cat A D} {a : A}
+  : Reflexive (DHom (Id a))
+  := fun a' =&gt; DId a'.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 63
+Time: 0.001s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>
+
+Instance reflexive_DGpdHom {A} {D : A -&gt; Type} `{IsD0Gpd A D} {a : A}
+  : Reflexive (DGpdHom (Id a))
+  := fun a' =&gt; DId a'.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A displayed 0-functor [F'] over a 0-functor [F] acts on displayed objects and 1-cells and satisfies no axioms. *)</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 69
+Time: 0.002s">
+<div class="time" style="width: 4.0816326530612%"></div>
+<pre>Class IsD0Functor {A : Type} {B : Type}
+  {DA : A -&gt; Type} `{IsDGraph A DA} {DB : B -&gt; Type} `{IsDGraph B DB}
+  (F : A -&gt; B) `{!Is0Functor F} (F' : forall (a : A), DA a -&gt; DB (F a))
+  := dfmap : forall {a b : A} {f : a $-&gt; b} {a' : DA a} {b' : DA b},
+              DHom f a' b' -&gt; DHom (fmap F f) (F' a a') (F' b b').</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments dfmap {A B DA _ _ DB _ _} F {_} F' {_ _ _ _ _ _} f'.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 75
+Time: 0.001s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>
+
+Class IsD2Graph {A : Type} `{Is2Graph A}
+  (D : A -&gt; Type) `{!IsDGraph D}
+  := isdgraph_hom :: forall {a b} {a'} {b'},
+                      IsDGraph (fun (f:a $-&gt; b) =&gt; DHom f a' b').</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+#[global] Typeclasses Transparent IsD2Graph.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 82
+Time: 0.049s">
+<div class="time" style="width: 100%"></div>
+<pre>
+
+Class IsD1Cat {A : Type} `{Is1Cat A}
+  (D : A -&gt; Type) `{!IsDGraph D, !IsD2Graph D, !IsD01Cat D} :=
+{
+  isd01cat_hom :: forall {a b : A} {a' : D a} {b' : D b},
+                 IsD01Cat (fun f =&gt; DHom f a' b');
+  isd0gpd_hom :: forall {a b : A} {a' : D a} {b' : D b},
+                IsD0Gpd (fun f =&gt; DHom f a' b');
+  isd0functor_postcomp :: forall {a b c : A} {g : b $-&gt; c} {a' : D a}
+                         {b' : D b} {c' : D c} (g' : DHom g b' c'),
+                         @IsD0Functor _ _ (fun f =&gt; DHom f a' b')
+                         _ _ (fun gf =&gt; DHom gf a' c')
+                         _ _ (cat_postcomp a g) _ (dcat_postcomp g');
+  isd0functor_precomp :: forall {a b c : A} {f : a $-&gt; b} {a' : D a}
+                        {b' : D b} {c' : D c} (f' : DHom f a' b'),
+                        @IsD0Functor _ _ (fun g =&gt; DHom g b' c')
+                        _ _ (fun gf =&gt; DHom gf a' c')
+                        _ _ (cat_precomp c f) _ (dcat_precomp f');
+  dcat_assoc : forall {a b c d : A} {f : a $-&gt; b} {g : b $-&gt; c} {h : c $-&gt; d}
+               {a' : D a} {b' : D b} {c' : D c} {d' : D d}
+               (f' : DHom f a' b') (g' : DHom g b' c') (h' : DHom h c' d'),
+               DHom (cat_assoc f g h) ((h' $o' g') $o' f')
+               (h' $o' (g' $o' f'));
+  dcat_assoc_opp : forall {a b c d : A} {f : a $-&gt; b} {g : b $-&gt; c} {h : c $-&gt; d}
+               {a' : D a} {b' : D b} {c' : D c} {d' : D d}
+               (f' : DHom f a' b') (g' : DHom g b' c') (h' : DHom h c' d'),
+               DHom (cat_assoc_opp f g h) (h' $o' (g' $o' f'))
+               ((h' $o' g') $o' f');
+  dcat_idl : forall {a b : A} {f : a $-&gt; b} {a' : D a} {b' : D b}
+             (f' : DHom f a' b'), DHom (cat_idl f) (DId b' $o' f') f';
+  dcat_idr : forall {a b : A} {f : a $-&gt; b} {a' : D a} {b' : D b}
+             (f' : DHom f a' b'), DHom (cat_idr f) (f' $o' DId a') f';
+}.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 115
+Time: 0.009s">
+<div class="time" style="width: 18.367346938776%"></div>
+<pre>
+
+Definition dcat_postwhisker {A : Type} {D : A -&gt; Type} `{IsD1Cat A D}
+  {a b c : A} {f g : a $-&gt; b} {h : b $-&gt; c} {p : f $== g}
+  {a' : D a} {b' : D b} {c' : D c} {f' : DHom f a' b'} {g' : DHom g a' b'}
+  (h' : DHom h b' c') (p' : DHom p f' g')
+  : DHom (h $@L p) (h' $o' f') (h' $o' g')
+  := dfmap (cat_postcomp a h) (dcat_postcomp h') p'.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 122
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation "h $@L' p" := (dcat_postwhisker h p).</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 124
+Time: 0.009s">
+<div class="time" style="width: 18.367346938776%"></div>
+<pre>
+
+Definition dcat_prewhisker {A : Type} {D : A -&gt; Type} `{IsD1Cat A D}
+  {a b c : A} {f : a $-&gt; b} {g h : b $-&gt; c} {p : g $== h}
+  {a' : D a} {b' : D b} {c' : D c} {g' : DHom g b' c'} {h' : DHom h b' c'}
+  (p' : DHom p g' h') (f' : DHom f a' b')
+  : DHom (p $@R f) (g' $o' f') (h' $o' f')
+  := dfmap (cat_precomp c f) (dcat_precomp f') p'.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 131
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation "p $@R' f" := (dcat_prewhisker p f).</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 133
+Time: 0.013s">
+<div class="time" style="width: 26.530612244898%"></div>
+<pre>
+
+Definition dcat_comp2 {A : Type} {D : A -&gt; Type} `{IsD1Cat A D} {a b c : A}
+  {f g : a $-&gt; b} {h k : b $-&gt; c} {p : f $== g} {q : h $== k}
+  {a' : D a} {b' : D b} {c' : D c} {f' : DHom f a' b'} {g' : DHom g a' b'}
+  {h' : DHom h b' c'} {k' : DHom k b' c'}
+  (p' : DHom p f' g') (q' : DHom q h' k')
+  : DHom (p $@@ q) (h' $o' f') (k' $o' g')
+  :=  (k' $@L' p') $o' (q' $@R' f').</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation "q $@@' p" := (dcat_comp2 q p).</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Monomorphisms and epimorphisms. *)
+
+</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 146
+Time: 0.007s">
+<div class="time" style="width: 14.285714285714%"></div>
+<pre>Definition DMonic {A} {D : A -&gt; Type} `{IsD1Cat A D} {b c : A}
+  {f : b $-&gt; c} {mon : Monic f} {b' : D b} {c' : D c} (f' : DHom f b' c')
+  := forall (a : A) (g h : a $-&gt; b) (p : f $o g $== f $o h) (a' : D a)
+      (g' : DHom g a' b') (h' : DHom h a' b'),
+      DGpdHom p (f' $o' g') (f' $o' h') -&gt; DGpdHom (mon a g h p) g' h'.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 150
+Time: 0.02s">
+<div class="time" style="width: 40.816326530612%"></div>
+<pre>
+
+Definition DEpic {A} {D : A -&gt; Type} `{IsD1Cat A D} {a b : A}
+  {f : a $-&gt; b} {epi : Epic f} {a' : D a} {b' : D b} (f' : DHom f a' b')
+  := forall (c : A) (g h : b $-&gt; c) (p : g $o f $== h $o f) (c' : D c)
+      (g' : DHom g b' c') (h' : DHom h b' c'),
+      DGpdHom p (g' $o' f') (h' $o' f') -&gt; DGpdHom (epi c g h p) g' h'.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance isgraph_total {A : Type} (D : A -&gt; Type) `{IsDGraph A D}
+  : IsGraph (sig D).</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply Build_IsGraph.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [a a'] [b b'].</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact {f : a $-&gt; b &amp; DHom f a' b'}.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 163
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 164
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance is01cat_total {A : Type} (D : A -&gt; Type) `{IsD01Cat A D}
+  : Is01Cat (sig D).</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply Build_Is01Cat.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [a a'].</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (Id a; DId a').</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [a a'] [b b'] [c c'] [g g'] [f f'].</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (g $o f; g' $o' f').</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 174
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance is0gpd_total {A : Type} (D : A -&gt; Type) `{IsD0Gpd A D}
+  : Is0Gpd (sig D).</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply Build_Is0Gpd.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 179
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [a a'] [b b'] [f f'].</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 180
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (f^$; dgpd_rev f').</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 181
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 182
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance is0functor_total_pr1 {A : Type} (D : A -&gt; Type) `{IsDGraph A D}
+  : Is0Functor (pr1 : sig D -&gt; A).</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 186
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply Build_Is0Functor.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [a a'] [b b'] [f f'].</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact f.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 189
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 190
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance is2graph_total {A : Type} (D : A -&gt; Type) `{IsD2Graph A D}
+  : Is2Graph (sig D).</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 193
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 194
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [a a'] [b b'].</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply Build_IsGraph.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [f f'] [g g'].</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact ({p : f $-&gt; g &amp; DHom p f' g'}).</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 199
+Time: 0.002s">
+<div class="time" style="width: 4.0816326530612%"></div>
+<pre>
+
+Instance is0functor_total {A : Type} (DA : A -&gt; Type) `{IsD01Cat A DA}
+  {B : Type} (DB : B -&gt; Type) `{IsD01Cat B DB} (F : A -&gt; B) `{!Is0Functor F}
+  (F' : forall (a : A), DA a -&gt; DB (F a)) `{!IsD0Functor F F'}
+  : Is0Functor (functor_sigma F F').</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 204
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 205
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply Build_Is0Functor.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [a a'] [b b'].</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 207
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [f f'].</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (fmap F f; dfmap F F' f').</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 209
+Time: 0.001s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 210
+Time: 0.001s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>
+
+Instance is1cat_total {A : Type} (D : A -&gt; Type) `{IsD1Cat A D}
+  : Is1Cat (sig D).</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 213
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 214
+Time: 0.011s">
+<div class="time" style="width: 22.448979591837%"></div>
+<pre>
+  srapply Build_Is1Cat.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 215
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 216
+Time: 0.001s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre> intros [a a'] [b b'] [c c'] [f f'].</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 216
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply Build_Is0Functor.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 217
+Time: 0.001s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>
+    intros [g g'] [h h'] [p p'].</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 218
+Time: 0.001s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>
+    exact (f $@L p; f' $@L' p').</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 219
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 220
+Time: 0.001s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre> intros [a a'] [b b'] [c c'] [f f'].</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 220
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply Build_Is0Functor.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 221
+Time: 0.001s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>
+    intros [g g'] [h h'] [p p'].</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 222
+Time: 0.001s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>
+    exact (p $@R f; p' $@R' f').</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 223
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 224
+Time: 0.004s">
+<div class="time" style="width: 8.1632653061224%"></div>
+<pre> intros [a a'] [b b'] [c c'] [d d'] [f f'] [g g'] [h h'].</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 224
+Time: 0.001s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>
+    exact (cat_assoc f g h; dcat_assoc f' g' h').</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 226
+Time: 0.004s">
+<div class="time" style="width: 8.1632653061224%"></div>
+<pre> intros [a a'] [b b'] [c c'] [d d'] [f f'] [g g'] [h h'].</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 226
+Time: 0.001s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>
+    exact (cat_assoc_opp f g h; dcat_assoc_opp f' g' h').</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 227
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 228
+Time: 0.005s">
+<div class="time" style="width: 10.204081632653%"></div>
+<pre> intros [a a'] [b b'] [f f'].</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (cat_idl f; dcat_idl f').</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 229
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 230
+Time: 0.001s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre> intros [a a'] [b b'] [f f'].</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 230
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (cat_idr f; dcat_idr f').</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 231
+Time: 0.009s">
+<div class="time" style="width: 18.367346938776%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 232
+Time: 0.002s">
+<div class="time" style="width: 4.0816326530612%"></div>
+<pre>
+
+Instance is1functor_pr1 {A : Type} {D : A -&gt; Type} `{IsD1Cat A D}
+  : Is1Functor (pr1 : sig D -&gt; A).</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 235
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 236
+Time: 0.002s">
+<div class="time" style="width: 4.0816326530612%"></div>
+<pre>
+  srapply Build_Is1Functor.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 237
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 238
+Time: 0.002s">
+<div class="time" style="width: 4.0816326530612%"></div>
+<pre> intros [a a'] [b b'] [f f'] [g g'] [p p'].</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 238
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact p.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 239
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 240
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [a a'].</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 240
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply Id.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 241
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 242
+Time: 0.001s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre> intros [a a'] [b b'] [c c'] [f f'] [g g'].</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 242
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply Id.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 243
+Time: 0.001s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 244
+Time: 0.045s">
+<div class="time" style="width: 91.836734693878%"></div>
+<pre>
+
+Class IsD1Cat_Strong {A : Type} `{Is1Cat_Strong A}
+  (D : A -&gt; Type)
+  `{!IsDGraph D, !IsD2Graph D, !IsD01Cat D} :=
+{
+  isd01cat_hom_strong :: forall {a b : A} {a' : D a} {b' : D b},
+                        IsD01Cat (fun f =&gt; DHom f a' b');
+  isd0gpd_hom_strong :: forall {a b : A} {a' : D a} {b' : D b},
+                       IsD0Gpd (fun f =&gt; DHom f a' b');
+  isd0functor_postcomp_strong :: forall {a b c : A} {g : b $-&gt; c} {a' : D a}
+                                {b' : D b} {c' : D c} (g' : DHom g b' c'),
+                                @IsD0Functor _ _ (fun f =&gt; DHom f a' b')
+                                _ _ (fun gf =&gt; DHom gf a' c')
+                                _ _ (cat_postcomp a g) _ (dcat_postcomp g');
+  isd0functor_precomp_strong :: forall {a b c : A} {f : a $-&gt; b} {a' : D a}
+                                {b' : D b} {c' : D c} (f' : DHom f a' b'),
+                                @IsD0Functor _ _ (fun g =&gt; DHom g b' c')
+                                _ _ (fun gf =&gt; DHom gf a' c')
+                                _ _ (cat_precomp c f) _ (dcat_precomp f');
+  dcat_assoc_strong : forall {a b c d : A} {f : a $-&gt; b} {g : b $-&gt; c} {h : c $-&gt; d}
+                      {a' : D a} {b' : D b} {c' : D c} {d' : D d}
+                      (f' : DHom f a' b') (g' : DHom g b' c') (h' : DHom h c' d'),
+                      (transport (fun k =&gt; DHom k a' d') (cat_assoc_strong f g h)
+                      ((h' $o' g') $o' f')) = h' $o' (g' $o' f');
+  dcat_assoc_opp_strong : forall {a b c d : A} {f : a $-&gt; b} {g : b $-&gt; c} {h : c $-&gt; d}
+                      {a' : D a} {b' : D b} {c' : D c} {d' : D d}
+                      (f' : DHom f a' b') (g' : DHom g b' c') (h' : DHom h c' d'),
+                      (transport (fun k =&gt; DHom k a' d') (cat_assoc_opp_strong f g h)
+                      (h' $o' (g' $o' f'))) = (h' $o' g') $o' f';
+  dcat_idl_strong : forall {a b : A} {f : a $-&gt; b} {a' : D a} {b' : D b}
+                    (f' : DHom f a' b'),
+                    (transport (fun k =&gt; DHom k a' b') (cat_idl_strong f)
+                    (DId b' $o' f')) = f';
+  dcat_idr_strong : forall {a b : A} {f : a $-&gt; b} {a' : D a} {b' : D b}
+                    (f' : DHom f a' b'),
+                    (transport (fun k =&gt; DHom k a' b') (cat_idr_strong f)
+                    (f' $o' DId a')) = f';
+}.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 282
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* If in the future we make a [Build_Is1Cat_Strong'] that lets the user omit the second proof of associativity, this shows how it can be recovered from the original proof:
+Definition dcat_assoc_opp_strong {A : Type} {D : A -&gt; Type} `{IsD1Cat_Strong A D}
+  {a b c d : A}  {f : a $-&gt; b} {g : b $-&gt; c} {h : c $-&gt; d}
+  {a' : D a} {b' : D b} {c' : D c} {d' : D d}
+  (f' : DHom f a' b') (g' : DHom g b' c') (h' : DHom h c' d')
+  : (transport (fun k =&gt; DHom k a' d') (cat_assoc_opp_strong f g h)
+    (h' $o' (g' $o' f'))) = (h' $o' g') $o' f'.
+Proof.
+  exact (moveR_transport_V (fun k =&gt; DHom k a' d') (cat_assoc_strong f g h) _ _).
+  exact ((dcat_assoc_strong f' g' h')^).
+Defined.
+*)
+
+</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 296
+Time: 0.001s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>Instance isd1cat_isd1catstrong {A : Type} (D : A -&gt; Type)
+  `{IsD1Cat_Strong A D} : IsD1Cat D.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 297
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 298
+Time: 0.008s">
+<div class="time" style="width: 16.326530612245%"></div>
+<pre>
+  srapply Build_IsD1Cat.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 299
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 300
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a b c d f g h a' b' c' d' f' g' h'.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 300
+Time: 0.001s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>
+    exact (DHom_path (cat_assoc_strong f g h) (dcat_assoc_strong f' g' h')).</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 301
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 302
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a b c d f g h a' b' c' d' f' g' h'.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 302
+Time: 0.001s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>
+    exact (DHom_path (cat_assoc_opp_strong f g h) (dcat_assoc_opp_strong f' g' h')).</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 303
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 304
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a b f a' b' f'.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 304
+Time: 0.001s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>
+    exact (DHom_path (cat_idl_strong f) (dcat_idl_strong f')).</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 305
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 306
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a b f a' b' f'.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 306
+Time: 0.001s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>
+    exact (DHom_path (cat_idr_strong f) (dcat_idr_strong f')).</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 307
+Time: 0.002s">
+<div class="time" style="width: 4.0816326530612%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 308
+Time: 0.001s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>
+
+Instance is1catstrong_total {A : Type}
+  (D : A -&gt; Type) `{IsD1Cat_Strong A D}
+  : Is1Cat_Strong (sig D).</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 312
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 313
+Time: 0.014s">
+<div class="time" style="width: 28.571428571429%"></div>
+<pre>
+  srapply Build_Is1Cat_Strong.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 314
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 315
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros aa' bb' cc' dd' [f f'] [g g'] [h h'].</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 315
+Time: 0.001s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>
+    exact (path_sigma' _
+            (cat_assoc_strong f g h) (dcat_assoc_strong f' g' h')).</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 317
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 318
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros aa' bb' cc' dd' [f f'] [g g'] [h h'].</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 318
+Time: 0.001s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>
+    exact (path_sigma' _
+            (cat_assoc_opp_strong f g h) (dcat_assoc_opp_strong f' g' h')).</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 320
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 321
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros aa' bb' [f f'].</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 321
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (path_sigma' _ (cat_idl_strong f) (dcat_idl_strong f')).</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 322
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 323
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros aa' bb' [f f'].</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 323
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (path_sigma' _ (cat_idr_strong f) (dcat_idr_strong f')).</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 324
+Time: 0.003s">
+<div class="time" style="width: 6.1224489795918%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 325
+Time: 0.029s">
+<div class="time" style="width: 59.183673469388%"></div>
+<pre>
+
+Class IsD1Functor
+  {A B : Type} {DA : A -&gt; Type} `{IsD1Cat A DA} {DB : B -&gt; Type} `{IsD1Cat B DB}
+  (F : A -&gt; B) `{!Is0Functor F, !Is1Functor F}
+  (F' : forall (a : A), DA a -&gt; DB (F a)) `{!IsD0Functor F F'} :=
+{
+  dfmap2 : forall {a b : A} {f g : a $-&gt; b} {p : f $== g} {a' : DA a}
+            {b' : DA b} (f' : DHom f a' b') (g' : DHom g a' b'),
+            DHom p f' g' -&gt; DHom (fmap2 F p) (dfmap F F' f') (dfmap F F' g');
+  dfmap_id : forall {a : A} (a' : DA a),
+              DHom (fmap_id F a) (dfmap F F' (DId a')) (DId (F' a a'));
+  dfmap_comp : forall {a b c : A} {f : a $-&gt; b} {g : b $-&gt; c} {a' : DA a}
+                {b' : DA b} {c' : DA c} (f' : DHom f a' b') (g' : DHom g b' c'),
+                DHom (fmap_comp F f g) (dfmap F F' (g' $o' f'))
+                (dfmap F F' g' $o' dfmap F F' f');
+}.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 341
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments dfmap2 {A B DA _ _ _ _ _ _ _ _ DB _ _ _ _ _ _ _ _}
+  F {_ _} F' {_ _ a b f g p a' b' f' g'} p'.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 344
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments dfmap_id {A B DA _ _ _ _ _ _ _ _ DB _ _ _ _ _ _ _ _}
+  F {_ _} F' {_ _ a} a'.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 346
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments dfmap_comp {A B DA _ _ _ _ _ _ _ _ DB _ _ _ _ _ _ _ _}
+  F {_ _} F' {_ _ a b c f g a' b' c'} f' g'.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 348
+Time: 0.006s">
+<div class="time" style="width: 12.244897959184%"></div>
+<pre>
+
+Instance is1functor_total {A B : Type} (DA : A -&gt; Type) (DB : B -&gt; Type)
+  (F : A -&gt; B) (F' : forall (a : A), DA a -&gt; DB (F a)) `{IsD1Functor A B DA DB F F'}
+  : Is1Functor (functor_sigma F F').</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 352
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 353
+Time: 0.012s">
+<div class="time" style="width: 24.489795918367%"></div>
+<pre>
+  srapply Build_Is1Functor.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 354
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 355
+Time: 0.002s">
+<div class="time" style="width: 4.0816326530612%"></div>
+<pre> intros [a a'] [b b'] [f f'] [g g'] [p p'].</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 355
+Time: 0.001s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>
+    exists (fmap2 F p).</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 356
+Time: 0.001s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>
+    exact (dfmap2 F F' p').</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 357
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 358
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [a a'].</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 358
+Time: 0.002s">
+<div class="time" style="width: 4.0816326530612%"></div>
+<pre>
+    exact (fmap_id F a; dfmap_id F F' a').</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 359
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 360
+Time: 0.002s">
+<div class="time" style="width: 4.0816326530612%"></div>
+<pre> intros [a a'] [b b'] [c c'] [f f'] [g g'].</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 360
+Time: 0.002s">
+<div class="time" style="width: 4.0816326530612%"></div>
+<pre>
+    exact (fmap_comp F f g; dfmap_comp F F' f' g').</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 361
+Time: 0.006s">
+<div class="time" style="width: 12.244897959184%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 362
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section IdentityFunctor.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 364
+Time: 0.001s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>
+  #[export] Instance isd0functor_idmap {A : Type} `{Is01Cat A}
+    (DA : A -&gt; Type) `{!IsDGraph DA, !IsD01Cat DA}
+    : IsD0Functor (idmap) (fun a a' =&gt; a').</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 367
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 368
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros a b f a' b' f'.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 369
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    assumption.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 370
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 371
+Time: 0.003s">
+<div class="time" style="width: 6.1224489795918%"></div>
+<pre>
+
+  #[export] Instance isd1functor_idmap {A : Type} (DA : A -&gt; Type)
+    `{IsD1Cat A DA}
+    : IsD1Functor (idmap) (fun a a' =&gt; a').</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 375
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 376
+Time: 0.001s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>
+    apply Build_IsD1Functor.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 377
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 378
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a b f g p a' b' f' g' p'.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 378
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      assumption.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 379
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 380
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a a'.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 380
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply DId.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 381
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 382
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a b c f g a' b' c' f' g'.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 382
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply DId.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 383
+Time: 0.001s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 384
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+End IdentityFunctor.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 385
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section ConstantFunctor.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 387
+Time: 0.001s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>
+  #[export] Instance isd0functor_const {A : Type} `{IsGraph A}
+    {B : Type} `{Is01Cat B} (DA : A -&gt; Type) `{!IsDGraph DA}
+    (DB : B -&gt; Type) `{!IsDGraph DB, !IsD01Cat DB} (x : B) (x' : DB x)
+    : IsD0Functor (fun _ : A =&gt; x) (fun _ _ =&gt; x').</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 391
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 392
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros a b f a' b' f'.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 393
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply DId.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 394
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 395
+Time: 0.003s">
+<div class="time" style="width: 6.1224489795918%"></div>
+<pre>
+
+  #[export] Instance isd1functor_const {A : Type} {B : Type}
+    (DA : A -&gt; Type)
+    `{IsD1Cat A DA}
+    (DB : B -&gt; Type)
+    `{IsD1Cat B DB}
+    (x : B) (x' : DB x)
+    : IsD1Functor (fun _ =&gt; x) (fun _ _ =&gt; x').</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 403
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 404
+Time: 0.01s">
+<div class="time" style="width: 20.408163265306%"></div>
+<pre>
+    snapply Build_IsD1Functor.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 405
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 406
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a b f g p a' b' f' g' p'.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 406
+Time: 0.001s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>
+      apply DId.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 407
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 408
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a a'.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 408
+Time: 0.005s">
+<div class="time" style="width: 10.204081632653%"></div>
+<pre>
+      apply DId.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 409
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 410
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a b c f g a' b' c' f' g'.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 410
+Time: 0.001s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>
+      apply dgpd_rev.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 411
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply dcat_idl.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 412
+Time: 0.002s">
+<div class="time" style="width: 4.0816326530612%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 413
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+End ConstantFunctor.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 414
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section CompositeFunctor.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 416
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {A B C : Type} {DA : A -&gt; Type} {DB : B -&gt; Type} {DC : C -&gt; Type}
+    (F : A -&gt; B) (G : B -&gt; C)
+    (F' : forall (a : A), DA a -&gt; DB (F a))
+    (G' : forall (b : B), DB b -&gt; DC (G b)).</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 420
+Time: 0.003s">
+<div class="time" style="width: 6.1224489795918%"></div>
+<pre>
+
+  #[export] Instance isd0functor_compose
+    `{IsDGraph A DA} `{IsDGraph B DB} `{IsDGraph C DC}
+    `{!Is0Functor F} `{!Is0Functor G}
+    `{!IsD0Functor F F'} `{!IsD0Functor G G'}
+    : IsD0Functor (G o F) (fun a a' =&gt; (G' (F a) o (F' a)) a').</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 426
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 427
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros a b f a' b' f'.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 428
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (dfmap G G' (dfmap F F' f')).</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 429
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 430
+Time: 0.023s">
+<div class="time" style="width: 46.938775510204%"></div>
+<pre>
+
+  #[export] Instance isd1functor_compose
+    `{IsD1Cat A DA} `{IsD1Cat B DB} `{IsD1Cat C DC}
+    `{!Is0Functor F, !Is1Functor F} `{!Is0Functor G, !Is1Functor G}
+    `{!IsD0Functor F F', !IsD1Functor F F'}
+    `{!IsD0Functor G G', !IsD1Functor G G'}
+    : IsD1Functor (G o F) (fun a a' =&gt; (G' (F a) o (F' a)) a').</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 437
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 438
+Time: 0.02s">
+<div class="time" style="width: 40.816326530612%"></div>
+<pre>
+    snapply Build_IsD1Functor.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 439
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 440
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a b f g p a' b' f' g' p'.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 440
+Time: 0.002s">
+<div class="time" style="width: 4.0816326530612%"></div>
+<pre>
+      exact (dfmap2 _ _ (dfmap2 F F' p')).</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 441
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 442
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a a'.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 442
+Time: 0.005s">
+<div class="time" style="width: 10.204081632653%"></div>
+<pre>
+      exact (dfmap2 _ _ (dfmap_id F F' a') $@' dfmap_id G G' _).</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 443
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 444
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a b c f g a' b' c' f' g'.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 444
+Time: 0.007s">
+<div class="time" style="width: 14.285714285714%"></div>
+<pre>
+      exact (dfmap2 _ _ (dfmap_comp F F' f' g') $@' dfmap_comp G G' _ _).</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 445
+Time: 0.004s">
+<div class="time" style="width: 8.1632653061224%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 446
+Time: 0.002s">
+<div class="time" style="width: 4.0816326530612%"></div>
+<pre>
+End CompositeFunctor.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 447
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Definition pointwise_prod {A B : Type} (DA : A -&gt; Type) (DB : B -&gt; Type)
+  (x : A * B) := DA (fst x) * DB (snd x).</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 450
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance isdgraph_prod {A B : Type} (DA : A -&gt; Type) `{IsDGraph A DA}
+  (DB : B -&gt; Type) `{IsDGraph B DB}
+  : IsDGraph (pointwise_prod DA DB).</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 454
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 455
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [a1 b1] [a2 b2] [f g] [a1' b1'] [a2' b2'].</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 456
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (DHom f a1' a2' * DHom g b1' b2').</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 457
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 458
+Time: 0.001s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>
+
+Instance isd01cat_prod {A B : Type} (DA : A -&gt; Type) `{IsD01Cat A DA}
+  (DB : B -&gt; Type) `{IsD01Cat B DB}
+  : IsD01Cat (pointwise_prod DA DB).</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 462
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 463
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply Build_IsD01Cat.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 464
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 465
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [a b] [a' b'].</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 465
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (DId a', DId b').</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 466
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 467
+Time: 0.003s">
+<div class="time" style="width: 6.1224489795918%"></div>
+<pre> intros [a1 b1] [a2 b2] [a3 b3] [f2 g2] [f1 g1] [a1' b1'] [a2' b2'] [a3' b3'].</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 467
+Time: 0.001s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>
+    intros [f2' g2'] [f1' g1'].</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 468
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (f2' $o' f1', g2' $o' g1').</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 469
+Time: 0.002s">
+<div class="time" style="width: 4.0816326530612%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 470
+Time: 0.002s">
+<div class="time" style="width: 4.0816326530612%"></div>
+<pre>
+
+Instance isd0gpd_prod {A B : Type} (DA : A -&gt; Type) `{IsD0Gpd A DA}
+  (DB : B -&gt; Type) `{IsD0Gpd B DB}
+  : IsD0Gpd (pointwise_prod DA DB).</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 474
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 475
+Time: 0.009s">
+<div class="time" style="width: 18.367346938776%"></div>
+<pre>
+  intros [a1 b1] [a2 b2] [f g] [a1' b1'] [a2' b2'] [f' g'].</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 476
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (f'^$', g'^$').</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 477
+Time: 0.001s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 478
+Time: 0.001s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>
+
+Instance isd2graph_prod {A B : Type} (DA : A -&gt; Type) `{IsD2Graph A DA}
+  (DB : B -&gt; Type) `{IsD2Graph B DB}
+  : IsD2Graph (pointwise_prod DA DB).</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 482
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 483
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [a1 b1] [a2 b2] [a1' b1'] [a2' b2'].</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 484
+Time: 0.002s">
+<div class="time" style="width: 4.0816326530612%"></div>
+<pre>
+  srapply isdgraph_prod.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 485
+Time: 0.001s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 486
+Time: 0.003s">
+<div class="time" style="width: 6.1224489795918%"></div>
+<pre>
+
+Instance isd1cat_prod {A B : Type} (DA : A -&gt; Type) `{IsD1Cat A DA}
+  (DB : B -&gt; Type) `{IsD1Cat B DB}
+  : IsD1Cat (pointwise_prod DA DB).</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 490
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 491
+Time: 0.007s">
+<div class="time" style="width: 14.285714285714%"></div>
+<pre>
+  snapply Build_IsD1Cat.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 492
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 493
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros ab1 ab2 ab1' ab2'.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 493
+Time: 0.004s">
+<div class="time" style="width: 8.1632653061224%"></div>
+<pre>
+    srapply isd01cat_prod.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 494
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 495
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros ab1 ab2 ab1' ab2'.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 495
+Time: 0.002s">
+<div class="time" style="width: 4.0816326530612%"></div>
+<pre>
+    exact (isd0gpd_prod _ _).</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 496
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 497
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros ab1 ab2 ab3 fg ab1' ab2' ab3' [f' g'].</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 497
+Time: 0.001s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>
+    intros hk1 hk2 pq hk1' hk2' [p' q'].</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 498
+Time: 0.001s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>
+    exact (f' $@L' p', g' $@L' q').</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 499
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 500
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros ab1 ab2 ab3 fg ab1' ab2' ab3' [f' g'].</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 500
+Time: 0.001s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>
+    intros hk1 hk2 pq hk1' hk2' [p' q'].</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 501
+Time: 0.001s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>
+    exact (p' $@R' f', q' $@R' g').</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 502
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 503
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros ab1 ab2 ab3 ab4 fg1 fg2 fg3.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 503
+Time: 0.002s">
+<div class="time" style="width: 4.0816326530612%"></div>
+<pre>
+    intros ab1' ab2' ab3' ab4' [f1' g1'] [f2' g2'] [f3' g3'].</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 504
+Time: 0.001s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>
+    exact (dcat_assoc f1' f2' f3', dcat_assoc g1' g2' g3').</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 505
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 506
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros ab1 ab2 ab3 ab4 fg1 fg2 fg3.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 506
+Time: 0.002s">
+<div class="time" style="width: 4.0816326530612%"></div>
+<pre>
+    intros ab1' ab2' ab3' ab4' [f1' g1'] [f2' g2'] [f3' g3'].</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 507
+Time: 0.001s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>
+    exact (dcat_assoc_opp f1' f2' f3', dcat_assoc_opp g1' g2' g3').</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 508
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 509
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros ab1 ab2 fg ab1' ab2' [f' g'].</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 509
+Time: 0.001s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>
+    exact (dcat_idl f', dcat_idl g').</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 510
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 511
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros ab1 ab2 fg ab1' ab2' [f' g'].</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 511
+Time: 0.001s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>
+    exact (dcat_idr f', dcat_idr g').</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 512
+Time: 0.018s">
+<div class="time" style="width: 36.734693877551%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Displayed.v
+Line: 514
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

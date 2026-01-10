@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>Law.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-wsp"><span class="sd">(** * Law about currying *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="law-v-chk1a" style="display: none" type="checkbox"><label class="alectryon-input" for="law-v-chk1a"><span class="kn">Require Import</span> Category.Core Functor.Core.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Functor.Paths.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Functor.Identity Functor.Composition.Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> ExponentialLaws.Law4.Functors.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> ExponentialLaws.Tactics.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Universe Polymorphism</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Implicit Arguments</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Generalizable All Variables</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Asymmetric Patterns</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> functor_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** [(C₁ × C₂ → D) ≅ (C₁ → (C₂ → D))] *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">Law4</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `{Funext}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variables</span> <span class="nv">C1</span> <span class="nv">C2</span> <span class="nv">D</span> : PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="law-v-chk1b" style="display: none" type="checkbox"><label class="alectryon-input" for="law-v-chk1b"><span class="kn">Lemma</span> <span class="nf">helper1</span> <span class="nv">c</span>
+  : functor C1 C2 D (inverse C1 C2 D c) = c.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C1, C2, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>c</var><span class="hyp-type"><b>: </b><span>Core.functor_category (Prod.prod C1 C2) D</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">((functor C1 C2 D) _0 ((inverse C1 C2 D) _0 c))%object =
+c</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="law-v-chk1c" style="display: none" type="checkbox"><label class="alectryon-input" for="law-v-chk1c"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C1, C2, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>c</var><span class="hyp-type"><b>: </b><span>Core.functor_category (Prod.prod C1 C2) D</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">((functor C1 C2 D) _0 ((inverse C1 C2 D) _0 c))%object =
+c</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="law-v-chk1d" style="display: none" type="checkbox"><label class="alectryon-input" for="law-v-chk1d">path_functor.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C1, C2, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>c</var><span class="hyp-type"><b>: </b><span>Core.functor_category (Prod.prod C1 C2) D</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport
+  (<span class="kr">fun</span> <span class="nv">GO</span> : C1 * C2 -&gt; D =&gt;
+   <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : C1 * C2,
+   morphism C1 (fst s) (fst d) *
+   morphism C2 (snd s) (snd d) -&gt;
+   morphism D (GO s) (GO d)) <span class="mi">1</span>
+  (<span class="kr">fun</span> (<span class="nv">s</span> <span class="nv">d</span> : C1 * C2)
+     (<span class="nv">m</span> : morphism C1 (fst s) (fst d) *
+          morphism C2 (snd s) (snd d)) =&gt;
+   (c _1 (<span class="mi">1</span>, snd m) o c _1 (fst m, <span class="mi">1</span>))%morphism) =
+morphism_of c</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kp">abstract</span> (
+        exp_laws_t;
+        <span class="nb">rewrite</span> &lt;- composition_of;
+        exp_laws_t
+      ).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="law-v-chk1e" style="display: none" type="checkbox"><label class="alectryon-input" for="law-v-chk1e"><span class="kn">Lemma</span> <span class="nf">helper2_helper</span> <span class="nv">c</span> <span class="nv">x</span>
+  : inverse C1 C2 D (functor C1 C2 D c) x = c x.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C1, C2, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>c</var><span class="hyp-type"><b>: </b><span>Core.functor_category C1
+  (Core.functor_category C2 D)</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>C1</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(((inverse C1 C2 D) _0 ((functor C1 C2 D) _0 c)) _0 x)%object =
+(c _0 x)%object</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="law-v-chk1f" style="display: none" type="checkbox"><label class="alectryon-input" for="law-v-chk1f"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C1, C2, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>c</var><span class="hyp-type"><b>: </b><span>Core.functor_category C1
+  (Core.functor_category C2 D)</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>C1</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(((inverse C1 C2 D) _0 ((functor C1 C2 D) _0 c)) _0 x)%object =
+(c _0 x)%object</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="law-v-chk20" style="display: none" type="checkbox"><label class="alectryon-input" for="law-v-chk20">path_functor.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C1, C2, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>c</var><span class="hyp-type"><b>: </b><span>Core.functor_category C1
+  (Core.functor_category C2 D)</span></span></span><br><span><var>x</var><span class="hyp-type"><b>: </b><span>C1</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport
+  (<span class="kr">fun</span> <span class="nv">GO</span> : C2 -&gt; D =&gt;
+   <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : C2,
+   morphism C2 s d -&gt; morphism D (GO s) (GO d)) <span class="mi">1</span>
+  (<span class="kr">fun</span> (<span class="nv">s2</span> <span class="nv">d2</span> : C2) (<span class="nv">m2</span> : morphism C2 s2 d2) =&gt;
+   ((c _0 x)%object _1 m2
+    o Core.components_of (c _1 <span class="mi">1</span>) s2)%morphism) =
+morphism_of (c _0 x)%object</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kp">abstract</span> exp_laws_t.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="law-v-chk21" style="display: none" type="checkbox"><label class="alectryon-input" for="law-v-chk21"><span class="kn">Lemma</span> <span class="nf">helper2</span> <span class="nv">c</span>
+  : inverse C1 C2 D (functor C1 C2 D c) = c.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C1, C2, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>c</var><span class="hyp-type"><b>: </b><span>Core.functor_category C1
+  (Core.functor_category C2 D)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">((inverse C1 C2 D) _0 ((functor C1 C2 D) _0 c))%object =
+c</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="law-v-chk22" style="display: none" type="checkbox"><label class="alectryon-input" for="law-v-chk22"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C1, C2, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>c</var><span class="hyp-type"><b>: </b><span>Core.functor_category C1
+  (Core.functor_category C2 D)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">((inverse C1 C2 D) _0 ((functor C1 C2 D) _0 c))%object =
+c</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="law-v-chk23" style="display: none" type="checkbox"><label class="alectryon-input" for="law-v-chk23">path_functor.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C1, C2, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>c</var><span class="hyp-type"><b>: </b><span>Core.functor_category C1
+  (Core.functor_category C2 D)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{HO
+: inverse_object_of_object_of (functor_object_of c) =
+  c &amp;
+transport
+  (<span class="kr">fun</span> <span class="nv">GO</span> : C1 -&gt; Functor C2 D =&gt;
+   <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : C1,
+   morphism C1 s d -&gt;
+   Core.NaturalTransformation (GO s) (GO d)) HO
+  (inverse_object_of_morphism_of (functor_object_of c)) =
+morphism_of c}</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="law-v-chk24" style="display: none" type="checkbox"><label class="alectryon-input" for="law-v-chk24"><span class="kr">exists</span> (<span class="nv">path_forall</span> <span class="nv">_</span> <span class="nv">_</span> (helper2_helper c)).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C1, C2, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>c</var><span class="hyp-type"><b>: </b><span>Core.functor_category C1
+  (Core.functor_category C2 D)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport
+  (<span class="kr">fun</span> <span class="nv">GO</span> : C1 -&gt; Functor C2 D =&gt;
+   <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : C1,
+   morphism C1 s d -&gt;
+   Core.NaturalTransformation (GO s) (GO d))
+  (path_forall
+     ((inverse C1 C2 D) _0 ((functor C1 C2 D) _0 c))%object
+     c (helper2_helper c))
+  (inverse_object_of_morphism_of (functor_object_of c)) =
+morphism_of c</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kp">abstract</span> (<span class="nb">unfold</span> helper2_helper; exp_laws_t).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="law-v-chk25" style="display: none" type="checkbox"><label class="alectryon-input" for="law-v-chk25"><span class="kn">Lemma</span> <span class="nf">law</span>
+  : functor C1 C2 D o inverse C1 C2 D = <span class="mi">1</span>
+    /\ inverse C1 C2 D o functor C1 C2 D = <span class="mi">1</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C1, C2, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(functor C1 C2 D o inverse C1 C2 D = <span class="mi">1</span>) *
+(inverse C1 C2 D o functor C1 C2 D = <span class="mi">1</span>)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="law-v-chk26" style="display: none" type="checkbox"><label class="alectryon-input" for="law-v-chk26"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>C1, C2, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(functor C1 C2 D o inverse C1 C2 D = <span class="mi">1</span>) *
+(inverse C1 C2 D o functor C1 C2 D = <span class="mi">1</span>)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">split</span>;
+    path_functor;
+    [ (<span class="kr">exists</span> (<span class="nv">path_forall</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">helper1</span>))
+    | (<span class="kr">exists</span> (<span class="nv">path_forall</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">helper2</span>)) ];
+    <span class="nb">unfold</span> helper1, helper2, helper2_helper;
+    exp_laws_t.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Qed</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">Law4</span>.</span></span></pre>
+</div>
+</div></body>
+</html>

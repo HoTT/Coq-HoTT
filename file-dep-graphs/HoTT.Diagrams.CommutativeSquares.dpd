@@ -1,0 +1,9 @@
+N: 5 "comm_square_comp" [body=yes, kind=cnst, prop=no, path="CommutativeSquares", ];
+N: 4 "comm_square_comp'" [body=yes, kind=cnst, prop=no, path="CommutativeSquares", ];
+N: 3 "comm_square_inverse" [body=yes, kind=cnst, prop=no, path="CommutativeSquares", ];
+N: 1 "comm_square_inverse_is_retr" [body=yes, kind=cnst, prop=no, path="CommutativeSquares", ];
+N: 2 "comm_square_inverse_is_sect" [body=yes, kind=cnst, prop=no, path="CommutativeSquares", ];
+E: 1 3 [weight=2, ];
+E: 1 5 [weight=2, ];
+E: 2 3 [weight=2, ];
+E: 2 5 [weight=2, ];

@@ -1,0 +1,30 @@
+digraph HoTT_Spaces_List_Paths {
+  graph [ratio=0.5]
+  node [style=filled]
+Paths_equiv_path_list [label="equiv_path_list", URL=<Paths.html#equiv_path_list>, peripheries=3, fillcolor="#F070D1"] ;
+Paths_encode_decode [label="encode_decode", URL=<Paths.html#encode_decode>, fillcolor="#F070D1"] ;
+Paths_istrunc_list [label="istrunc_list", URL=<Paths.html#istrunc_list>, peripheries=3, fillcolor="#F070D1"] ;
+Paths_istrunc_listeq [label="istrunc_listeq", URL=<Paths.html#istrunc_listeq>, fillcolor="#F070D1"] ;
+Paths_decode_encode [label="decode_encode", URL=<Paths.html#decode_encode>, fillcolor="#F070D1"] ;
+Paths_decode_refl [label="decode_refl", URL=<Paths.html#decode_refl>, fillcolor="#F070D1"] ;
+Paths_decode [label="decode", URL=<Paths.html#decode>, fillcolor="#F070D1"] ;
+Paths_encode [label="encode", URL=<Paths.html#encode>, fillcolor="#F070D1"] ;
+Paths_reflexive_listeq [label="reflexive_listeq", URL=<Paths.html#reflexive_listeq>, fillcolor="#F070D1"] ;
+Paths_ListEq [label="ListEq", URL=<Paths.html#ListEq>, fillcolor="#F070D1"] ;
+  Paths_equiv_path_list -> Paths_encode_decode [] ;
+  Paths_equiv_path_list -> Paths_decode_encode [] ;
+  Paths_encode_decode -> Paths_decode [] ;
+  Paths_encode_decode -> Paths_encode [] ;
+  Paths_istrunc_list -> Paths_istrunc_listeq [] ;
+  Paths_istrunc_list -> Paths_decode_encode [] ;
+  Paths_istrunc_listeq -> Paths_ListEq [] ;
+  Paths_decode_encode -> Paths_decode_refl [] ;
+  Paths_decode_encode -> Paths_encode [] ;
+  Paths_decode_refl -> Paths_decode [] ;
+  Paths_decode_refl -> Paths_reflexive_listeq [] ;
+  Paths_decode -> Paths_ListEq [] ;
+  Paths_encode -> Paths_reflexive_listeq [] ;
+  Paths_reflexive_listeq -> Paths_ListEq [] ;
+subgraph cluster_Paths { label="Paths"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Paths_ListEq; Paths_reflexive_listeq; Paths_encode; Paths_decode; Paths_decode_refl; Paths_decode_encode; Paths_istrunc_listeq; Paths_istrunc_list; Paths_encode_decode; Paths_equiv_path_list; };
+} /* END */

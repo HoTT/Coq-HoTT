@@ -1,0 +1,39 @@
+digraph HoTT_WildCat_Opposite {
+  graph [ratio=0.5]
+  node [style=filled]
+Opposite_isterminal_op_isinitial [label="isterminal_op_isinitial", URL=<Opposite.html#isterminal_op_isinitial>, peripheries=3, fillcolor="#F070D1"] ;
+Opposite_isinitial_op_isterminal [label="isinitial_op_isterminal", URL=<Opposite.html#isinitial_op_isterminal>, peripheries=3, fillcolor="#F070D1"] ;
+Opposite_hasmorext_op [label="hasmorext_op", URL=<Opposite.html#hasmorext_op>, peripheries=3, fillcolor="#F070D1"] ;
+Opposite_is1functor_op_ [label="is1functor_op'", URL=<Opposite.html#is1functor_op'>, peripheries=3, fillcolor="#F070D1"] ;
+Opposite_is0functor_op_ [label="is0functor_op'", URL=<Opposite.html#is0functor_op'>, fillcolor="#F070D1"] ;
+Opposite_is1functor_op [label="is1functor_op", URL=<Opposite.html#is1functor_op>, fillcolor="#F070D1"] ;
+Opposite_is0functor_op [label="is0functor_op", URL=<Opposite.html#is0functor_op>, fillcolor="#F070D1"] ;
+Opposite_op0gpd_fun [label="op0gpd_fun", URL=<Opposite.html#op0gpd_fun>, peripheries=3, fillcolor="#F070D1"] ;
+Opposite_is0gpd_op [label="is0gpd_op", URL=<Opposite.html#is0gpd_op>, peripheries=3, fillcolor="#F070D1"] ;
+Opposite_is1cat_strong_op [label="is1cat_strong_op", URL=<Opposite.html#is1cat_strong_op>, peripheries=3, fillcolor="#F070D1"] ;
+Opposite_is1cat_op [label="is1cat_op", URL=<Opposite.html#is1cat_op>, fillcolor="#F070D1"] ;
+Opposite_is2graph_op [label="is2graph_op", URL=<Opposite.html#is2graph_op>, fillcolor="#F070D1"] ;
+Opposite_is01cat_op [label="is01cat_op", URL=<Opposite.html#is01cat_op>, fillcolor="#F070D1"] ;
+Opposite_isgraph_op [label="isgraph_op", URL=<Opposite.html#isgraph_op>, fillcolor="#F070D1"] ;
+Opposite_op [label="op", URL=<Opposite.html#op>, fillcolor="#F070D1"] ;
+  Opposite_isterminal_op_isinitial -> Opposite_is1cat_op [] ;
+  Opposite_isinitial_op_isterminal -> Opposite_is1cat_op [] ;
+  Opposite_hasmorext_op -> Opposite_is1cat_op [] ;
+  Opposite_is1functor_op_ -> Opposite_is0functor_op_ [] ;
+  Opposite_is1functor_op_ -> Opposite_is1functor_op [] ;
+  Opposite_is0functor_op_ -> Opposite_is0functor_op [] ;
+  Opposite_is1functor_op -> Opposite_is0functor_op [] ;
+  Opposite_is1functor_op -> Opposite_is1cat_op [] ;
+  Opposite_is0functor_op -> Opposite_isgraph_op [] ;
+  Opposite_op0gpd_fun -> Opposite_isgraph_op [] ;
+  Opposite_is0gpd_op -> Opposite_is01cat_op [] ;
+  Opposite_is1cat_strong_op -> Opposite_is2graph_op [] ;
+  Opposite_is1cat_strong_op -> Opposite_is01cat_op [] ;
+  Opposite_is1cat_op -> Opposite_is2graph_op [] ;
+  Opposite_is1cat_op -> Opposite_is01cat_op [] ;
+  Opposite_is2graph_op -> Opposite_isgraph_op [] ;
+  Opposite_is01cat_op -> Opposite_isgraph_op [] ;
+  Opposite_isgraph_op -> Opposite_op [] ;
+subgraph cluster_Opposite { label="Opposite"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Opposite_op; Opposite_isgraph_op; Opposite_is01cat_op; Opposite_is2graph_op; Opposite_is1cat_op; Opposite_is1cat_strong_op; Opposite_is0gpd_op; Opposite_op0gpd_fun; Opposite_is0functor_op; Opposite_is1functor_op; Opposite_is0functor_op_; Opposite_is1functor_op_; Opposite_hasmorext_op; Opposite_isinitial_op_isterminal; Opposite_isterminal_op_isinitial; };
+} /* END */

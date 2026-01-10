@@ -1,0 +1,340 @@
+<html>
+<head>
+<title>TruncImpliesFunext.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for TruncImpliesFunext.v</h1>
+
+<div class="code" title="File: TruncImpliesFunext.v
+Line: 1
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>(** * Propositional truncation implies function extensionality *)
+
+</pre>
+</div>
+<div class="code" title="File: TruncImpliesFunext.v
+Line: 2
+Time: 0.064s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import HoTT.Basics HoTT.Truncations HoTT.Types.Bool.</pre>
+</div>
+<div class="code" title="File: TruncImpliesFunext.v
+Line: 2
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Metatheory.Core Metatheory.FunextVarieties Metatheory.ImpredicativeTruncation.</pre>
+</div>
+<div class="code" title="File: TruncImpliesFunext.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Assuming that we have a propositional truncation operation with a definitional computation rule, we can prove function extensionality.  Since we can't assume we have a definitional computation rule, we work with the propositional truncation defined as a HIT, which does have a definitional computation rule. *)
+
+(** We can construct an interval type as [Trunc -1 Bool]. *)</pre>
+</div>
+<div class="code" title="File: TruncImpliesFunext.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Definition interval := Trunc (-1) Bool.</pre>
+</div>
+<div class="code" title="File: TruncImpliesFunext.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Definition interval_rec (P : Type) (a b : P) (p : a = b)
+  : interval -&gt; P.</pre>
+</div>
+<div class="code" title="File: TruncImpliesFunext.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: TruncImpliesFunext.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* We define this map by factoring it through the type [{ x : P &amp; x = b}], which is a proposition since it is contractible. *)
+ </pre>
+</div>
+<div class="code" title="File: TruncImpliesFunext.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>refine ((pr1 : { x : P &amp; x = b } -&gt; P) o _).</pre>
+</div>
+<div class="code" title="File: TruncImpliesFunext.v
+Line: 13
+Time: 0.001s">
+<div class="time" style="width: 1.5625%"></div>
+<pre>
+  apply Trunc_rec.</pre>
+</div>
+<div class="code" title="File: TruncImpliesFunext.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [].</pre>
+</div>
+<div class="code" title="File: TruncImpliesFunext.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TruncImpliesFunext.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (a; p).</pre>
+</div>
+<div class="code" title="File: TruncImpliesFunext.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TruncImpliesFunext.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (b; idpath).</pre>
+</div>
+<div class="code" title="File: TruncImpliesFunext.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: TruncImpliesFunext.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Definition seg : tr true = tr false :&gt; interval
+  := path_ishprop _ _.</pre>
+</div>
+<div class="code" title="File: TruncImpliesFunext.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** From an interval type, and thus from truncations, we can prove function extensionality. See IntervalImpliesFunext.v for an approach that works with an interval defined as a HIT. *)</pre>
+</div>
+<div class="code" title="File: TruncImpliesFunext.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition funext_type_from_trunc : Funext_type
+  := WeakFunext_implies_Funext (NaiveFunext_implies_WeakFunext
+    (fun A P f g p =&gt;
+      let h := fun (x:interval) (a:A) =&gt;
+        interval_rec _ (f a) (g a) (p a) x
+        in ap h seg)).</pre>
+</div>
+<div class="code" title="File: TruncImpliesFunext.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Function extensionality implies an interval type *)
+
+(** Assuming [Funext] (and not propositional resizing), the construction [Trm] in ImpredicativeTruncation.v applied to [Bool] gives an interval type with definitional computation on the end points.  So we see that function extensionality is equivalent to the existence of an interval type. *)
+
+</pre>
+</div>
+<div class="code" title="File: TruncImpliesFunext.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section AssumeFunext.</pre>
+</div>
+<div class="code" title="File: TruncImpliesFunext.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{Funext}.</pre>
+</div>
+<div class="code" title="File: TruncImpliesFunext.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition finterval := Trm Bool.</pre>
+</div>
+<div class="code" title="File: TruncImpliesFunext.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition finterval_rec (P : Type) (a b : P) (p : a = b)
+    : finterval -&gt; P.</pre>
+</div>
+<div class="code" title="File: TruncImpliesFunext.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: TruncImpliesFunext.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine ((pr1 : { x : P &amp; x = b } -&gt; P) o _).</pre>
+</div>
+<div class="code" title="File: TruncImpliesFunext.v
+Line: 41
+Time: 0.001s">
+<div class="time" style="width: 1.5625%"></div>
+<pre>
+    apply Trm_rec.</pre>
+</div>
+<div class="code" title="File: TruncImpliesFunext.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros [].</pre>
+</div>
+<div class="code" title="File: TruncImpliesFunext.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: TruncImpliesFunext.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (a; p).</pre>
+</div>
+<div class="code" title="File: TruncImpliesFunext.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: TruncImpliesFunext.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (b; idpath).</pre>
+</div>
+<div class="code" title="File: TruncImpliesFunext.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: TruncImpliesFunext.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** As an example, we check that it computes on [true]. *)
+ </pre>
+</div>
+<div class="code" title="File: TruncImpliesFunext.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition finterval_rec_beta (P : Type) (a b : P) (p : a = b)
+    : finterval_rec P a b p (trm true) = a
+    := idpath.</pre>
+</div>
+<div class="code" title="File: TruncImpliesFunext.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition fseg : trm true = trm false :&gt; finterval
+    := path_ishprop _ _.</pre>
+</div>
+<div class="code" title="File: TruncImpliesFunext.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** To verify that our interval type is good enough, we use it to prove function extensionality. *)
+ </pre>
+</div>
+<div class="code" title="File: TruncImpliesFunext.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition funext_type_from_finterval : Funext_type
+    := WeakFunext_implies_Funext (NaiveFunext_implies_WeakFunext
+      (fun A P f g p =&gt;
+        let h := fun (x:finterval) (a:A) =&gt;
+          finterval_rec _ (f a) (g a) (p a) x
+          in ap h fseg)).</pre>
+</div>
+<div class="code" title="File: TruncImpliesFunext.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End AssumeFunext.</pre>
+</div>
+<div class="code" title="File: TruncImpliesFunext.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

@@ -1,0 +1,1199 @@
+<html>
+<head>
+<title>Vector.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Vector.v</h1>
+
+<div class="code" title="File: Vector.v
+Line: 1
+Time: 0.025s">
+<div class="time" style="width: 26.595744680851%"></div>
+<pre>Require Import Basics.Overture Basics.Trunc Basics.Tactics Basics.PathGroupoids.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 1
+Time: 0.004s">
+<div class="time" style="width: 4.2553191489362%"></div>
+<pre>
+Require Import Types.Sigma.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 2
+Time: 0.094s">
+<div class="time" style="width: 100%"></div>
+<pre>
+Require Import Algebra.AbGroups.AbelianGroup Algebra.Rings.Ring Algebra.Rings.Module.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Spaces.Nat.Core.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 4
+Time: 0.001s">
+<div class="time" style="width: 1.063829787234%"></div>
+<pre>
+Require Import Spaces.List.Core Spaces.List.Theory Spaces.List.Paths.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 5
+Time: 0.011s">
+<div class="time" style="width: 11.702127659574%"></div>
+<pre>
+Require Import abstract_algebra.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope mc_scope.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Set Universe Minimization ToSet.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Set Polymorphic Inductive Cumulativity.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Vectors *)
+
+(** A vector is simply a list with a specified length. This data structure has many uses, but here we will focus on lists of left module elements. *)
+
+(** ** Definition *)
+
+</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Vector@{i|} (A : Type@{i}) (n : nat) : Type@{i}
+  := { l : list A &amp; length l = n }.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Constructors *)
+
+</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Build_Vector (A : Type) (n : nat)
+  (f : forall (i : nat), (i &lt; n)%nat -&gt; A)
+  : Vector A n
+  := (Build_list n f; length_Build_list n f).</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Projections *)
+
+</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition entry {A : Type} {n : nat} (v : Vector A n) i {Hi : (i &lt; n)%nat} : A
+  := nth' (pr1 v) i ((pr2 v)^ # Hi).</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Basic properties *)
+
+</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition entry_Build_Vector {A : Type} {n}
+  (f : forall (i : nat), (i &lt; n)%nat -&gt; A) i {Hi : (i &lt; n)%nat}
+  : entry (Build_Vector A n f) i = f i Hi.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply nth'_Build_list.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance istrunc_vector@{i} (A : Type@{i}) (n : nat) k `{IsTrunc k.+2 A}
+  : IsTrunc k.+2 (Vector A n).</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 41
+Time: 0.003s">
+<div class="time" style="width: 3.1914893617021%"></div>
+<pre>
+  rapply istrunc_sigma@{i i i}.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition path_vector@{i} (A : Type@{i}) {n : nat} (v1 v2 : Vector@{i} A n)
+  (H : forall i (H : (i &lt; n)%nat), entry v1 i = entry v2 i)
+  : v1 = v2.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 48
+Time: 0.003s">
+<div class="time" style="width: 3.1914893617021%"></div>
+<pre>
+  rapply path_sigma_hprop@{i i i}.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply path_list_nth'.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact (pr2 v1 @ (pr2 v2)^).</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros i Hi.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snrefine (_ @ H i (pr2 v1 # Hi) @ _).</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1, 2: apply nth'_nth'.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 54
+Time: 0.001s">
+<div class="time" style="width: 1.063829787234%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition path_entry_vector {A : Type} {n : nat} (v : Vector A n)
+  (i j : nat) (Hi : (i &lt; n)%nat) (Hj : (j &lt; n)%nat) (p : i = j)
+  : entry v i = entry v j.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct p.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply nth'_nth'.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Operations *)
+
+</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition vector_map {A B : Type} {n} (f : A -&gt; B)
+  : Vector A n -&gt; Vector B n
+  := fun v =&gt; Build_Vector B n (fun i _ =&gt; f (entry v i)).</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition vector_map2 {A B C : Type} {n} (f : A -&gt; B -&gt; C)
+  : Vector A n -&gt; Vector B n -&gt; Vector C n
+  := fun v1 v2 =&gt; Build_Vector C n (fun i _ =&gt; f (entry v1 i) (entry v2 i)).</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Abelian group structure *)
+
+</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section VectorAddition.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context (A : AbGroup) (n : nat).</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition vector_plus : Plus (Vector A n) := vector_map2 (+).</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition vector_zero : Zero (Vector A n)
+    := Build_Vector A n (fun _ _ =&gt; 0).</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition vector_neg : Negate (Vector A n) := vector_map (-).</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition associative_vector_plus : Associative vector_plus.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros v1 v2 v3; apply path_vector; intros i Hi.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 88
+Time: 0.004s">
+<div class="time" style="width: 4.2553191489362%"></div>
+<pre>
+    rewrite 4 entry_Build_Vector.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 89
+Time: 0.003s">
+<div class="time" style="width: 3.1914893617021%"></div>
+<pre>
+    apply associativity.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  
+  Definition commutative_vector_plus : Commutative vector_plus.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 94
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros v1 v2; apply path_vector; intros i Hi.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 95
+Time: 0.001s">
+<div class="time" style="width: 1.063829787234%"></div>
+<pre>
+    rewrite 2 entry_Build_Vector.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply commutativity.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition left_identity_vector_plus : LeftIdentity vector_plus vector_zero.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros v; apply path_vector; intros i Hi.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite 2 entry_Build_Vector.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 103
+Time: 0.002s">
+<div class="time" style="width: 2.1276595744681%"></div>
+<pre>
+    apply left_identity.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition right_identity_vector_plus : RightIdentity vector_plus vector_zero.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros v; apply path_vector; intros i Hi.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 109
+Time: 0.001s">
+<div class="time" style="width: 1.063829787234%"></div>
+<pre>
+    rewrite 2 entry_Build_Vector.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 110
+Time: 0.002s">
+<div class="time" style="width: 2.1276595744681%"></div>
+<pre>
+    apply right_identity.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition left_inverse_vector_plus
+    : LeftInverse vector_plus vector_neg vector_zero.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros v; apply path_vector; intros i Hi.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 117
+Time: 0.001s">
+<div class="time" style="width: 1.063829787234%"></div>
+<pre>
+    rewrite 3 entry_Build_Vector.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 118
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply left_inverse.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition right_inverse_vector_plus
+    : RightInverse vector_plus vector_neg vector_zero.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros v; apply path_vector; intros i Hi.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 125
+Time: 0.002s">
+<div class="time" style="width: 2.1276595744681%"></div>
+<pre>
+    rewrite 3 entry_Build_Vector.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 126
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply right_inverse.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 128
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition abgroup_vector : AbGroup.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 130
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 131
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply Build_AbGroup.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: snapply Build_Group.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    5: repeat split.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 135
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (Vector A n).</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 135
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact vector_plus.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 137
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact vector_zero.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 137
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact vector_neg.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 139
+Time: 0.005s">
+<div class="time" style="width: 5.3191489361702%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact associative_vector_plus.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact left_identity_vector_plus.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact right_identity_vector_plus.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact left_inverse_vector_plus.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact right_inverse_vector_plus.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 145
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact commutative_vector_plus.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 145
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 146
+Time: 0.002s">
+<div class="time" style="width: 2.1276595744681%"></div>
+<pre>
+
+End VectorAddition.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 148
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments vector_plus {A n} v1 v2.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Module structure *)
+
+</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section VectorScale.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (** A vector of elements of an R-module is itself an R-module. A special case is when the R-module is the ring R itself. *)
+ </pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 155
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Context (M : AbGroup) (n : nat) {R : Ring} `{IsLeftModule R M}.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 155
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition vector_lact (r : R) : Vector M n -&gt; Vector M n
+    := vector_map (lact r).</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  
+  Definition left_heterodistribute_vector_lact_plus
+    : LeftHeteroDistribute vector_lact vector_plus vector_plus.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros r v1 v2; apply path_vector; intros i Hi.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 163
+Time: 0.004s">
+<div class="time" style="width: 4.2553191489362%"></div>
+<pre>
+    rewrite 5 entry_Build_Vector.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 164
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply distribute_l.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 165
+Time: 0.001s">
+<div class="time" style="width: 1.063829787234%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 166
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition right_heterodistribute_vector_lact_plus
+    : RightHeteroDistribute vector_lact (+) vector_plus.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros r1 r2 v; apply path_vector; intros i Hi.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 171
+Time: 0.003s">
+<div class="time" style="width: 3.1914893617021%"></div>
+<pre>
+    rewrite 4 entry_Build_Vector.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply distribute_r.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 174
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition heteroassociative_vector_lact_plus
+    : HeteroAssociative vector_lact vector_lact vector_lact (.*.).</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros r s v; apply path_vector; intros i Hi.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 179
+Time: 0.001s">
+<div class="time" style="width: 1.063829787234%"></div>
+<pre>
+    rewrite 3 entry_Build_Vector.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 180
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply associativity.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 181
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 182
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition left_identity_vector_lact : LeftIdentity vector_lact 1.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 184
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros v; apply path_vector; intros i Hi.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 186
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite entry_Build_Vector.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply left_identity.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 189
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition isleftmodule_isleftmodule_vector
+    : IsLeftModule R (abgroup_vector M n).</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 192
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 193
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply Build_IsLeftModule.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 194
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact vector_lact.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact left_heterodistribute_vector_lact_plus.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact right_heterodistribute_vector_lact_plus.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact heteroassociative_vector_lact_plus.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 199
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact left_identity_vector_lact.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 199
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 200
+Time: 0.002s">
+<div class="time" style="width: 2.1276595744681%"></div>
+<pre>
+
+End VectorScale.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 202
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments vector_lact {M n R _} r v.</pre>
+</div>
+<div class="code" title="File: Vector.v
+Line: 205
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

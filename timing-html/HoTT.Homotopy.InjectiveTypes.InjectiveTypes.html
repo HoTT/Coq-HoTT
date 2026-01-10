@@ -1,0 +1,2343 @@
+<html>
+<head>
+<title>InjectiveTypes.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for InjectiveTypes.v</h1>
+
+<div class="code" title="File: InjectiveTypes.v
+Line: 1
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>(** * Injective Types *)
+
+(** Formalization of the paper: Injective Types in Univalent Mathematics by Martín Escardó (with some extra results). *)
+
+</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 4
+Time: 0.038s">
+<div class="time" style="width: 100%"></div>
+<pre>From HoTT Require Import Basics Types.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 4
+Time: 0.033s">
+<div class="time" style="width: 86.842105263158%"></div>
+<pre>
+Require Import Truncations.Core Truncations.Constant.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 5
+Time: 0.001s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+Require Import Modalities.Modality.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 6
+Time: 0.002s">
+<div class="time" style="width: 5.2631578947368%"></div>
+<pre>
+Require Import HFiber.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Universes.HProp.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import ExcludedMiddle.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 9
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import InjectiveTypes.TypeFamKanExt.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Definitions of injectivity and first examples *)
+
+(** Since the universe levels are important to many of the results here, we keep track of them explicitly as much as possible. Due to our inability to use the max and successor operations within proofs, we instead construct these universes and their associated posetal relations in the arguments of the functions.
+
+In universe declarations, we use [u], [v], [w], etc. as our typical universe variables. Our convention for the max of two universes [u] and [v] is [uv], and the successor of a universe [u] is [su]. Occasionally we write [T] for a top universe which is strictly larger than all other provided universes.
+
+We hope that later versions of Coq will allow us access to the max and successor operations and much of the cumbersome universe handling here can be greatly reduced. *)
+
+</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section UniverseStructure.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Universes u v w uv uw vw.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Constraint u &lt;= uv, v &lt;= uv, u &lt;= uw, w &lt;= uw, v &lt;= vw, w &lt;= vw.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** A type [D] is said to be injective if for every embedding [j : X -&gt; Y] and every function [f : X -&gt; D], there merely exists a [f' : Y -&gt; D] such that [f' o j == f]. *)
+ </pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 24
+Time: 0.001s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>Definition IsInjectiveType@{uvw | uv &lt;= uvw, uw &lt;= uvw, vw &lt;= uvw} (D : Type@{w})
+    := forall (X : Type@{u}) (Y : Type@{v}) (j : X -&gt; Y) (isem : IsEmbedding@{u v uv} j)
+      (f : X -&gt; D), merely@{uvw} (sig@{vw uw} (fun f' =&gt; f' o j == f)).</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** A type is then algebraically injective if the same is true, but without the propositional truncation. We use a class here instead of just a sigma type to make proofs more readable. *)
+ </pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 29
+Time: 0.002s">
+<div class="time" style="width: 5.2631578947368%"></div>
+<pre>Class IsAlgebraicInjectiveType@{} (D : Type@{w}) := {
+    lift_ai {X : Type@{u}} {Y : Type@{v}} (j : X -&gt; Y) {isem : IsEmbedding@{u v uv} j} (f : X -&gt; D)
+      : Y -&gt; D;
+    is_ext_ai {X : Type@{u}} {Y : Type@{v}} (j : X -&gt; Y) {isem} f
+      : lift_ai j f o j == f;
+  }.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Contractible types are algebraically injective. *)
+ </pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export] Instance alg_inj_contr@{} (D : Type@{w}) (cD : Contr D)
+    : IsAlgebraicInjectiveType@{} D.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply Build_IsAlgebraicInjectiveType; intros X Y j isem f.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (const (center D)).</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (contr _).</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** [Empty] is not algebraically injective. *)
+ </pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition not_alg_inj_empty@{}
+    : IsAlgebraicInjectiveType@{} Empty -&gt; Empty.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros Eai.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (lift_ai (Empty_rec@{v}) idmap tt).</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply istruncmap_mapinO_tr.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 52
+Time: 0.002s">
+<div class="time" style="width: 5.2631578947368%"></div>
+<pre>
+    rapply mapinO_between_inO@{uv u v uv}.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End UniverseStructure.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [Type@{uv}] is algebraically [u],[v]-injective in at least two ways. *)</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition alg_inj_Type_sigma@{u v uv suv | u &lt;= uv, v &lt;= uv, uv &lt; suv} `{Univalence}
+  : IsAlgebraicInjectiveType@{u v suv uv suv suv} Type@{uv}.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_IsAlgebraicInjectiveType; intros X Y j isem f.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (f &lt;| j).</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 63
+Time: 0.001s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+    rapply isext_leftkanfam.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance alg_inj_Type_forall@{u v uv suv | u &lt;= uv, v &lt;= uv, uv &lt; suv} `{Univalence}
+  : IsAlgebraicInjectiveType@{u v suv uv suv suv} Type@{uv}.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_IsAlgebraicInjectiveType; intros X Y j isem f.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (f |&gt; j).</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 72
+Time: 0.001s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre> 
+    rapply isext_rightkanfam.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Constructions with algebraically injective types *)
+
+(** Retracts of algebraically injective types are algebraically injective. *)</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition alg_inj_retract
+  @{u v w w' uv uw vw uw' vw'
+  | u &lt;= uv, v &lt;= uv, u &lt;= uw, w &lt;= uw, v &lt;= vw, w &lt;= vw, u &lt;= uw', v &lt;= vw', w' &lt;= uw', w' &lt;= vw'}
+  {D' : Type@{w'}} {D : Type@{w}} (r : D -&gt; D') {s : D' -&gt; D}
+  (retr : r o s == idmap) (Dai : IsAlgebraicInjectiveType@{u v w uv uw vw} D)
+  : IsAlgebraicInjectiveType@{u v w' uv uw' vw'} D'.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_IsAlgebraicInjectiveType; intros X Y j isem f.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (r o lift_ai _ (s o f)).</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rhs_V apply (retr (f x)).</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (ap r (is_ext_ai _ (s o f) x)).</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 88
+Time: 0.001s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section UniverseStructure.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Universes u v w t uv uw vw tw utw vtw.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Constraint u &lt;= uv, u &lt;= uw, v &lt;= vw, v &lt;= uv, w &lt;= uw, w &lt;= vw, w &lt;= tw, t &lt;= tw,
+    uw &lt;= utw, vw &lt;= vtw, tw &lt;= utw, tw &lt;= vtw.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 94
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  
+  (** Dependent products are algebraically injective when all their factors are. *)
+ </pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export] Instance alg_inj_forall@{}
+    `{Funext} {A : Type@{t}} (D : A -&gt; Type@{w})
+    (Dai : forall a, IsAlgebraicInjectiveType@{u v w uv uw vw} (D a))
+    : IsAlgebraicInjectiveType@{u v tw uv utw vtw} (forall a, D a).</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply Build_IsAlgebraicInjectiveType; intros X Y j isem f.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fun y a =&gt; lift_ai _ (fun x =&gt; f x a) y).</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> funext a.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (is_ext_ai _ (fun x =&gt; f x a) x).</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** In particular, exponentials of algebraically injective types are algebraically injective. *)
+ </pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 109
+Time: 0.002s">
+<div class="time" style="width: 5.2631578947368%"></div>
+<pre>Definition alg_inj_arrow@{}
+    `{Funext} {A : Type@{t}} {D : Type@{w}}
+    (Dai : IsAlgebraicInjectiveType@{u v w uv uw vw} D)
+    : IsAlgebraicInjectiveType@{u v tw uv utw vtw} (A -&gt; D)
+    := _.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End UniverseStructure.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Algebraically injective types are retracts of any type that they embed into. *)</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 117
+Time: 0.003s">
+<div class="time" style="width: 7.8947368421053%"></div>
+<pre>Definition retract_alg_inj_embedding@{v w vw | v &lt;= vw, w &lt;= vw}
+  (D : Type@{w}) {Y : Type@{v}} (j : D -&gt; Y) (isem : IsEmbedding j)
+  (Dai : IsAlgebraicInjectiveType@{w v w vw w vw} D)
+  : { r : Y -&gt; D &amp; r o j == idmap }
+  := (lift_ai _ idmap; is_ext_ai _ idmap).</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 121
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Any algebraically [u],[su]-injective type [X : Type@{u}], is a retract of [X -&gt; Type@{u}]. *)</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 123
+Time: 0.001s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>Definition retract_power_universe_alg_usuinj@{u su | u &lt; su} `{Univalence}
+  (D : Type@{u}) (Dai : IsAlgebraicInjectiveType@{u su u su u su} D)
+  : { r : (D -&gt; Type@{u}) -&gt; D &amp; r o (@paths D) == idmap }
+  := retract_alg_inj_embedding D (@paths D) isembedding_paths Dai.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 126
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Algebraic flabbiness and resizing constructions *)
+(** If [D : Type@{u}] is algebraically [u],[su]-injective, then it is algebraically [u],[u]-injective. *)</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition alg_uuinj_alg_usu_inj
+  @{u w su uw suw
+  | u &lt; su, u &lt;= uw, w &lt;= uw, su &lt;= suw, w &lt;= suw}
+  (D : Type@{w}) (Dai : IsAlgebraicInjectiveType@{u su w su uw suw} D)
+  : IsAlgebraicInjectiveType@{u u w u uw uw} D.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_IsAlgebraicInjectiveType.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 135
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (@lift_ai D Dai).</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 137
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (@is_ext_ai D Dai).</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 137
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+(** Note that this proof is easy because of cumulativity of [Type] (which is not assumed in the original paper). *)
+
+(** Algebraic flabbiness is a variant of algebraic injectivity, but only ranging over embeddings of propositions into the unit type. *)</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 141
+Time: 0.001s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>Class IsAlgebraicFlabbyType@{u w} (D : Type@{w}) := {
+  center_af {P : HProp@{u}} (f : P -&gt; D) : D;
+  contr_af {P : HProp@{u}} (f : P -&gt; D) (p : P) : center_af f = f p;
+}.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Algebraic flabbiness of a type [D] is equivalent to the statement that all conditionally constant functions [X -&gt; D] are constant. First we give the condition, and then the two implications. *)</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition cconst_is_const_cond@{u w uw | u &lt;= uw, w &lt;= uw}
+  (D : Type@{w})
+  := forall (X : Type@{u}) (f : X -&gt; D),
+    ConditionallyConstant@{u w uw} f -&gt; sig@{uw uw} (fun d =&gt; forall x, d = f x).</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition alg_flab_cconst_is_const@{u w uw | u &lt;= uw, w &lt;= uw}
+  (D : Type@{w}) (ccond : cconst_is_const_cond@{u w uw} D)
+  : IsAlgebraicFlabbyType@{u w} D.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 154
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_IsAlgebraicFlabbyType; intros P f.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 155
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (ccond P f).</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (cconst_factors_hprop _ _ idmap f).</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    reflexivity.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (ccond P f).</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition cconst_is_const_alg_flab@{u w uw | u &lt;= uw, w &lt;= uw}
+  (D : Type@{w}) (Daf : IsAlgebraicFlabbyType@{u w} D)
+  : cconst_is_const_cond@{u w uw} D.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 164
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 165
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros X f [f' e].</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 166
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srefine (center_af f'; _).</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (contr_af f' (tr x) @ e x).</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Algebraic flabbiness is equivalent to algebraic injectivity, with appropriate choices of universes. *)</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section UniverseStructure.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Universes u v w uv uw vw.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Constraint u &lt;= uv, v &lt;= uv, u &lt;= uw, w &lt;= uw, v &lt;= vw, w &lt;= vw.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 174
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Algebraically [u],[v]-injective types are algebraically [u]-flabby. *)
+ </pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition alg_flab_alg_inj@{}
+    {D : Type@{w}} (Dai : IsAlgebraicInjectiveType@{u v w uv uw vw} D)
+    : IsAlgebraicFlabbyType@{u w} D.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 179
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 180
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply Build_IsAlgebraicFlabbyType; intros P f.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 181
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 182
+Time: 0.003s">
+<div class="time" style="width: 7.8947368421053%"></div>
+<pre> srapply (lift_ai _ f tt).</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 182
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 183
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply is_ext_ai.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 183
+Time: 0.001s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 184
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Algebraically [uv]-flabby types are algebraically [u],[v]-injective. *)
+ </pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition alg_inj_alg_flab@{}
+    {D : Type@{w}} (Daf : IsAlgebraicFlabbyType@{uv w} D)
+    : IsAlgebraicInjectiveType@{u v w uv uw vw} D.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 189
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 190
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply Build_IsAlgebraicInjectiveType; intros X Y j isem f.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 191
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 192
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros y.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 192
+Time: 0.001s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre> exact (center_af (fun x : Build_HProp (hfiber j y) =&gt; f x.1)).</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 192
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 193
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 193
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (contr_af _ (x; idpath (j x))).</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 193
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 194
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End UniverseStructure.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** By combining the above, we see that if [D] is algebraically [ut],[v]-injective, then it is algebraically [u],[t]-injective. *)</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition resize_alg_inj
+  @{u v w t ut uw vw tw uvt utw
+  | u &lt;= ut, u &lt;= uw, v &lt;= vw, v &lt;= uvt, w &lt;= uw, w &lt;= vw, w &lt;= tw,
+    t &lt;= ut, t &lt;= tw, ut &lt;= uvt, ut &lt;= utw, uw &lt;= utw, tw &lt;= utw}
+  {D : Type@{w}} (Dai : IsAlgebraicInjectiveType@{ut v w uvt utw vw} D)
+  : IsAlgebraicInjectiveType@{u t w ut uw tw} D.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 203
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 204
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply alg_inj_alg_flab.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 205
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (alg_flab_alg_inj Dai).</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 207
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We include two direct proofs of the algebraic flabbiness of [Type], instead of combining [alg_inj_alg_flab] with the previous proofs of algebraic injectivity, for better computations later. *)</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 209
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition alg_flab_Type_sigma@{u su | u &lt; su} `{Univalence}
+  : IsAlgebraicFlabbyType@{u su} Type@{u}.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 210
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 211
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_IsAlgebraicFlabbyType; intros P A.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 212
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 213
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (sig@{u u} (fun p =&gt; A p)).</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 213
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 214
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros p.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 214
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_universe_uncurried.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 215
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (@equiv_contr_sigma _ _ (contr_inhabited_hprop _ _)).</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 216
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 217
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance alg_flab_Type_forall@{u su | u &lt; su} `{Univalence}
+  : IsAlgebraicFlabbyType@{u su} Type@{u}.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 220
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 221
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_IsAlgebraicFlabbyType; intros P A.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 222
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 223
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (forall p : P, A p).</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 223
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 224
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros p.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 224
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_universe_uncurried.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (@equiv_contr_forall _ _ (contr_inhabited_hprop _ _) _).</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 226
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 227
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Algebraic flabbiness with resizing axioms *)
+
+</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 230
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section AssumePropResizing.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 230
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{PropResizing}.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 231
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Algebraic flabbiness is independent of universes under propositional resizing. *)
+ </pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 234
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition universe_independent_alg_flab@{v u w}
+    {D : Type@{w}} (Daf : IsAlgebraicFlabbyType@{v w} D)
+    : IsAlgebraicFlabbyType@{u w} D.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 236
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 237
+Time: 0.002s">
+<div class="time" style="width: 5.2631578947368%"></div>
+<pre>
+    snapply Build_IsAlgebraicFlabbyType; intros P f;
+    pose (e := (equiv_smalltype@{v u} P));
+    pose (PropQ := (@istrunc_equiv_istrunc _ _ e^-1 (-1) _)).</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 240
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 241
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (center_af (f o e)).</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 241
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 242
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros p.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 242
+Time: 0.003s">
+<div class="time" style="width: 7.8947368421053%"></div>
+<pre>
+      lhs apply (contr_af (f o e) (e^-1 p)).</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 243
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply ap.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 244
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply eisretr.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 245
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 246
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Algebraic injectivity is independent of universes under propositional resizing. *)
+ </pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 249
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition universe_independent_alg_inj
+    @{u v w u' v' uv uw vw u'v' u'w v'w
+    | u &lt;= uv, v &lt;= uv, u &lt;= uw, w &lt;= uw, v &lt;= vw, w &lt;= vw,
+      u' &lt;= u'v', v' &lt;= u'v', u' &lt;= u'w, w &lt;= u'w, v' &lt;= v'w, w &lt;= v'w}
+    {D : Type@{w}} (Dai : IsAlgebraicInjectiveType@{u v w uv uw vw} D)
+    : IsAlgebraicInjectiveType@{u' v' w u'v' u'w v'w} D.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 254
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 255
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply alg_inj_alg_flab.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 256
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply universe_independent_alg_flab@{u u'v' w}.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 257
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (alg_flab_alg_inj Dai).</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 258
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 259
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Any algebraically injective type [D : Type@{u}] is a retract of [X -&gt; Type@{u}] with [X : Type@{u}]. This is a universe independent version of [retract_power_universe_alg_usuinj]. *)
+ </pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 262
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition retract_power_universe_alg_inj@{u su | u &lt; su} `{Univalence}
+    {D : Type@{u}} (Dai : IsAlgebraicInjectiveType@{u u u u u u} D)
+    : exists (X : Type@{u}) (s : D -&gt; (X -&gt; Type@{u})) (r : (X -&gt; Type@{u}) -&gt; D), r o s == idmap.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 264
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 265
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (D; _).</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 266
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (@paths D; _).</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 267
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (retract_power_universe_alg_usuinj D).</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 268
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (universe_independent_alg_inj@{u u u u su u u u su u su} Dai).</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 269
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 270
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End AssumePropResizing.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 272
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Any retract of a type family [X -&gt; Type@{u}] is algebraically injective. This is the opposite result as above, classifying algebraically injective types, independent of universes. It should be noted that this direction of the if and only if does not depend on propositional resizing. *)</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 274
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition alg_inj_retract_power_universe@{u su | u &lt; su}
+  `{Univalence} (D : Type@{u}) {X : Type@{u}} {s : D -&gt; (X -&gt; Type@{u})}
+  (r : (X -&gt; Type@{u}) -&gt; D) (retr : r o s == idmap)
+  : IsAlgebraicInjectiveType@{u u u u u u} D.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 277
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 278
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (alg_inj_retract r retr).</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 279
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rapply alg_inj_arrow.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 280
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 281
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Injectivity in terms of algebraic injectivity in the absence of resizing *)
+
+</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 284
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section UniverseStructure.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 284
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Universes u v w uv uw vw uvw.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 285
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Constraint u &lt;= uv, v &lt;= uv, u &lt;= uw, w &lt;= uw, v &lt;= vw, w &lt;= vw,
+    uv &lt;= uvw, uw &lt;= uvw, vw &lt;= uvw.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 287
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Algebraically injective types are injective. *)
+ </pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 290
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition inj_alg_inj@{}
+    (D : Type@{w}) (Dai : IsAlgebraicInjectiveType@{u v w uv uw vw} D)
+    : IsInjectiveType@{u v w uv uw vw uvw} D.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 292
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 293
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros X Y j isem f.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 294
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply tr.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 295
+Time: 0.002s">
+<div class="time" style="width: 5.2631578947368%"></div>
+<pre>
+    exact (lift_ai _ _; is_ext_ai _ f).</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 296
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 297
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The propositional truncation of algebraic injectivity implies injectivity. *)
+ </pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 300
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition inj_merely_alg_inj@{T | uvw &lt; T}
+    `{Funext} {D : Type@{w}}
+    (mDai : merely@{T} (IsAlgebraicInjectiveType@{u v w uv uw vw} D))
+    : ((IsInjectiveType@{u v w uv uw vw uvw} D) : Type@{T}).</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 303
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 304
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    revert mDai.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 305
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    napply Trunc_rec@{T T}.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 306
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> (* Manually stripping truncations so as to control universe variables. *)
+   </pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 307
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>-</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 307
+Time: 0.006s">
+<div class="time" style="width: 15.789473684211%"></div>
+<pre> repeat (napply istrunc_forall@{T T T}; intro).</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 307
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply istrunc_truncation.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 308
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 309
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro Dai.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 309
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (inj_alg_inj@{} D Dai).</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 310
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 311
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** A retract of an injective type is injective. *)
+ </pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 314
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition inj_retract
+    @{w' uw' vw' uvw' T
+    | u &lt;= uw', v &lt;= vw', w' &lt;= uw', w' &lt;= vw', 
+    uv &lt;= uvw', uw' &lt;= uvw', vw' &lt;= uvw', uvw &lt; T, uvw' &lt; T}
+    `{Funext} {D' : Type@{w'}} {D : Type@{w}} (r : D -&gt; D') {s : D' -&gt; D}
+    (retr : r o s == idmap) (Di : IsInjectiveType@{u v w uv uw vw uvw} D)
+    : IsInjectiveType@{u v w' uv uw' vw' uvw'} D'.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 320
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 321
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros X Y j isem f.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 322
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    specialize (Di X Y j isem (s o f)).</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 323
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    revert Di.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 324
+Time: 0.001s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+    rapply Trunc_rec@{T T}.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 325
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros [g e].</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 326
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply tr.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 327
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snrefine (r o g; _).</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 328
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros x.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 329
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rhs_V apply (retr (f x)).</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 330
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (ap r (e x)).</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 331
+Time: 0.001s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 332
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End UniverseStructure.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 334
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Injective types are retracts of any type that they embed into, in an unspecified way. *)</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 336
+Time: 0.001s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>Definition merely_retract_inj_embedding@{v w vw svw | v &lt;= vw, w &lt;= vw, vw &lt; svw}
+  (D : Type@{w}) {Y : Type@{v}} (j : D -&gt; Y) (isem : IsEmbedding j)
+  (Di : IsInjectiveType@{w v w vw w vw vw} D)
+  : merely@{svw} { r : Y -&gt; D &amp; r o j == idmap }
+  := Di _ _ _ _ idmap.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 340
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The power of an injective type is injective. *)</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 342
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition inj_arrow
+  @{u v w t uv ut vt tw uvt utw vtw utvw
+  | u &lt;= uv, v &lt;= uv, u &lt;= ut, t &lt;= ut, v &lt;= vt, t &lt;= vt, t &lt;= tw, w &lt;= tw, uv &lt;= uvt, ut &lt;= uvt,
+    vt &lt;= uvt, ut &lt;= utw, tw &lt;= utw, vt &lt;= vtw, tw &lt;= vtw, uvt &lt;= utvw, utw &lt;= utvw, vtw &lt;= utvw}
+  `{Funext} {A : Type@{t}} (D : Type@{w})
+  (Di : IsInjectiveType@{ut vt w uvt utw vtw utvw} D)
+  : IsInjectiveType@{u v tw uv utw vtw utvw} (A -&gt; D).</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 348
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 349
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros X Y j isem f.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 350
+Time: 0.001s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+  assert (embId : IsEmbedding (fun a : A =&gt; a)) by rapply istruncmap_mapinO_tr.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 351
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  pose proof (mD := Di (X * A) (Y * A) (functor_prod j equiv_idmap)
+    (istruncmap_functor_prod@{u v t t ut vt uvt uvt uv t} _ _ _) (uncurry f)).</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 353
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert mD.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 354
+Time: 0.001s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+  rapply Trunc_rec@{utvw utvw}.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 355
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [g e].</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 356
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply tr.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 357
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (fun y a =&gt; g (y, a); _).</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 358
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 359
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> funext a.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 359
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (e (x, a)).</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 360
+Time: 0.001s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 361
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Any [u],[su]-injective type [X : Type@{u}], is a retract of [X -&gt; Type@{u}] in an unspecified way. *)</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 363
+Time: 0.001s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>Definition merely_retract_power_universe_inj@{u su ssu | u &lt; su, su &lt; ssu}
+  `{Univalence} (D : Type@{u}) (Di : IsInjectiveType@{u su u su u su su} D)
+  : merely@{su} (sig@{su su} (fun r =&gt; r o (@paths D) == idmap))
+  := merely_retract_inj_embedding D (@paths D) isembedding_paths Di.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 366
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Inverse of [inj_merely_alg_inj] modulo universes. *)</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 368
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition merely_alg_inj_inj@{u su ssu | u &lt; su, su &lt; ssu} `{Univalence}
+  (D : Type@{u}) (Di : IsInjectiveType@{u su u su u su su} D)
+  : merely@{su} (IsAlgebraicInjectiveType@{u u u u u u} D).</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 370
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 371
+Time: 0.001s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+  srefine (Trunc_functor (-1) _ (merely_retract_power_universe_inj D Di)).</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 372
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [r retr].</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 373
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (alg_inj_retract_power_universe D r retr).</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 374
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 375
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** The equivalence of excluded middle with the (algebraic) injectivity of pointed types *)
+
+(** Assuming excluded middle, all pointed types are algebraically flabby (and thus algebraically injective). *)</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 379
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition alg_flab_pointed_lem@{u w}
+  `{ExcludedMiddle} {D : Type@{w}} (d : D)
+  : IsAlgebraicFlabbyType@{u w} D.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 381
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 382
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_IsAlgebraicFlabbyType; intros P f.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 383
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 384
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (LEM P _) as [p | np].</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 384
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 385
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (f p).</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 385
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 386
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact d.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 386
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 387
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 387
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>  intros q.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 387
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct (LEM P _) as [p | np].</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 388
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 389
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (ap f (path_ishprop _ _)).</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 389
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 390
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (Empty_rec (np q)).</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 390
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 391
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** If the type [P + ~P + Unit] is algebraically flabby for [P] a proposition, then [P] is decidable. *)</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 393
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition decidable_alg_flab_hprop@{w} `{Funext} (P : HProp@{w})
+  (Paf : IsAlgebraicFlabbyType@{w w} ((P + ~P) + (Unit : Type@{w})))
+  : Decidable P.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 395
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 396
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  pose (inl' := inl : P + ~P -&gt; (P + ~P) + (Unit : Type@{w})).</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 397
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  assert (l : {d : (P + ~P) + (Unit : Type@{w}) &amp; forall z, d = inl' z}).</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 398
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 399
+Time: 0.005s">
+<div class="time" style="width: 13.157894736842%"></div>
+<pre> refine (center_af _; contr_af inl').</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 399
+Time: 0.001s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre> rapply ishprop_decidable_hprop@{w w}.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 399
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 399
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct l as [[s | u] l2].</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 400
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 401
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact s.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 401
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 402
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assert (np := fun p =&gt; inl_ne_inr _ _ (l2 (inl p))^).</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 402
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    assert (nnp := fun np' =&gt; inl_ne_inr _ _ (l2 (inr np'))^).</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 403
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (Empty_rec (nnp np)).</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 404
+Time: 0.001s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 405
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** If all pointed types are algebraically flabby, then excluded middle holds. *)</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 407
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition lem_pointed_types_alg_flab@{w} `{Funext}
+  (ptaf: forall (D : Type@{w}), D -&gt; IsAlgebraicFlabbyType@{w w} D)
+  : ExcludedMiddle_type@{w}.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 409
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 410
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros P PropP.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 411
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (decidable_alg_flab_hprop (Build_HProp P)).</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 412
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply ptaf.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 413
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (inr tt).</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 414
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: InjectiveTypes.v
+Line: 416
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

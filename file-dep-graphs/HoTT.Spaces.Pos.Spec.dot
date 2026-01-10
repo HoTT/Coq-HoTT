@@ -1,0 +1,56 @@
+digraph HoTT_Spaces_Pos_Spec {
+  graph [ratio=0.5]
+  node [style=filled]
+Spec_pos_mul_succ_r [label="pos_mul_succ_r", URL=<Spec.html#pos_mul_succ_r>, peripheries=3, fillcolor="#F070D1"] ;
+Spec_pos_mul_succ_l [label="pos_mul_succ_l", URL=<Spec.html#pos_mul_succ_l>, peripheries=3, fillcolor="#F070D1"] ;
+Spec_pos_mul_assoc [label="pos_mul_assoc", URL=<Spec.html#pos_mul_assoc>, peripheries=3, fillcolor="#F070D1"] ;
+Spec_pos_mul_add_distr_r [label="pos_mul_add_distr_r", URL=<Spec.html#pos_mul_add_distr_r>, fillcolor="#F070D1"] ;
+Spec_pos_mul_add_distr_l [label="pos_mul_add_distr_l", URL=<Spec.html#pos_mul_add_distr_l>, fillcolor="#F070D1"] ;
+Spec_pos_mul_comm [label="pos_mul_comm", URL=<Spec.html#pos_mul_comm>, fillcolor="#F070D1"] ;
+Spec_mul_xI_r [label="mul_xI_r", URL=<Spec.html#mul_xI_r>, fillcolor="#F070D1"] ;
+Spec_mul_xO_r [label="mul_xO_r", URL=<Spec.html#mul_xO_r>, fillcolor="#F070D1"] ;
+Spec_pos_iter_succ_r [label="pos_iter_succ_r", URL=<Spec.html#pos_iter_succ_r>, peripheries=3, fillcolor="#F070D1"] ;
+Spec_pos_iter_succ_l [label="pos_iter_succ_l", URL=<Spec.html#pos_iter_succ_l>, peripheries=3, fillcolor="#F070D1"] ;
+Spec_pos_succ_pred_double [label="pos_succ_pred_double", URL=<Spec.html#pos_succ_pred_double>, peripheries=3, fillcolor="#F070D1"] ;
+Spec_pos_pred_double_succ [label="pos_pred_double_succ", URL=<Spec.html#pos_pred_double_succ>, peripheries=3, fillcolor="#F070D1"] ;
+Spec_pos_mul_1_r [label="pos_mul_1_r", URL=<Spec.html#pos_mul_1_r>, fillcolor="#F070D1"] ;
+Spec_pos_mul_1_l [label="pos_mul_1_l", URL=<Spec.html#pos_mul_1_l>, fillcolor="#F070D1"] ;
+Spec_pos_add_assoc [label="pos_add_assoc", URL=<Spec.html#pos_add_assoc>, fillcolor="#F070D1"] ;
+Spec_pos_succ_inj [label="pos_succ_inj", URL=<Spec.html#pos_succ_inj>, peripheries=3, fillcolor="#F070D1"] ;
+Spec_pos_add_no_neutral [label="pos_add_no_neutral", URL=<Spec.html#pos_add_no_neutral>, peripheries=3, fillcolor="#F070D1"] ;
+Spec_pos_add_carry_spec_r [label="pos_add_carry_spec_r", URL=<Spec.html#pos_add_carry_spec_r>, fillcolor="#F070D1"] ;
+Spec_pos_add_carry_spec_l [label="pos_add_carry_spec_l", URL=<Spec.html#pos_add_carry_spec_l>, fillcolor="#F070D1"] ;
+Spec_pos_add_succ [label="pos_add_succ", URL=<Spec.html#pos_add_succ>, fillcolor="#F070D1"] ;
+Spec_pos_add_succ_l [label="pos_add_succ_l", URL=<Spec.html#pos_add_succ_l>, fillcolor="#F070D1"] ;
+Spec_pos_add_succ_r [label="pos_add_succ_r", URL=<Spec.html#pos_add_succ_r>, fillcolor="#F070D1"] ;
+Spec_pos_add_comm [label="pos_add_comm", URL=<Spec.html#pos_add_comm>, fillcolor="#F070D1"] ;
+Spec_pos_add_carry_spec [label="pos_add_carry_spec", URL=<Spec.html#pos_add_carry_spec>, fillcolor="#F070D1"] ;
+Spec_pos_add_1_l [label="pos_add_1_l", URL=<Spec.html#pos_add_1_l>, fillcolor="#F070D1"] ;
+Spec_pos_add_1_r [label="pos_add_1_r", URL=<Spec.html#pos_add_1_r>, fillcolor="#F070D1"] ;
+  Spec_pos_mul_succ_r -> Spec_pos_mul_add_distr_l [] ;
+  Spec_pos_mul_succ_r -> Spec_pos_mul_1_r [] ;
+  Spec_pos_mul_succ_r -> Spec_pos_add_1_l [] ;
+  Spec_pos_mul_succ_l -> Spec_pos_mul_add_distr_r [] ;
+  Spec_pos_mul_succ_l -> Spec_pos_mul_1_l [] ;
+  Spec_pos_mul_assoc -> Spec_pos_mul_add_distr_r [] ;
+  Spec_pos_mul_add_distr_r -> Spec_pos_mul_add_distr_l [] ;
+  Spec_pos_mul_add_distr_r -> Spec_pos_mul_comm [] ;
+  Spec_pos_mul_add_distr_l -> Spec_pos_add_assoc [] ;
+  Spec_pos_mul_comm -> Spec_mul_xI_r [] ;
+  Spec_pos_mul_comm -> Spec_mul_xO_r [] ;
+  Spec_pos_mul_comm -> Spec_pos_mul_1_r [] ;
+  Spec_mul_xI_r -> Spec_pos_add_assoc [] ;
+  Spec_pos_add_assoc -> Spec_pos_add_carry_spec_r [] ;
+  Spec_pos_add_assoc -> Spec_pos_add_carry_spec_l [] ;
+  Spec_pos_add_assoc -> Spec_pos_add_succ [] ;
+  Spec_pos_add_carry_spec_r -> Spec_pos_add_succ_r [] ;
+  Spec_pos_add_carry_spec_l -> Spec_pos_add_succ_l [] ;
+  Spec_pos_add_succ -> Spec_pos_add_succ_l [] ;
+  Spec_pos_add_succ_l -> Spec_pos_add_succ_r [] ;
+  Spec_pos_add_succ_l -> Spec_pos_add_comm [] ;
+  Spec_pos_add_succ_r -> Spec_pos_add_carry_spec [] ;
+  Spec_pos_add_succ_r -> Spec_pos_add_1_r [] ;
+  Spec_pos_add_comm -> Spec_pos_add_carry_spec [] ;
+subgraph cluster_Spec { label="Spec"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Spec_pos_add_1_r; Spec_pos_add_1_l; Spec_pos_add_carry_spec; Spec_pos_add_comm; Spec_pos_add_succ_r; Spec_pos_add_succ_l; Spec_pos_add_succ; Spec_pos_add_carry_spec_l; Spec_pos_add_carry_spec_r; Spec_pos_add_no_neutral; Spec_pos_succ_inj; Spec_pos_add_assoc; Spec_pos_mul_1_l; Spec_pos_mul_1_r; Spec_pos_pred_double_succ; Spec_pos_succ_pred_double; Spec_pos_iter_succ_l; Spec_pos_iter_succ_r; Spec_mul_xO_r; Spec_mul_xI_r; Spec_pos_mul_comm; Spec_pos_mul_add_distr_l; Spec_pos_mul_add_distr_r; Spec_pos_mul_assoc; Spec_pos_mul_succ_l; Spec_pos_mul_succ_r; };
+} /* END */

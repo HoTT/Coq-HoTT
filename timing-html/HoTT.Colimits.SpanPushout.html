@@ -1,0 +1,705 @@
+<html>
+<head>
+<title>SpanPushout.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for SpanPushout.v</h1>
+
+<div class="code" title="File: SpanPushout.v
+Line: 1
+Time: 0.043s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import HoTT.Basics HoTT.Colimits.Pushout.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 1
+Time: 0.006s">
+<div class="time" style="width: 13.953488372093%"></div>
+<pre>
+Require Import Types.Paths Types.Sigma Types.Prod HFiber Limits.Pullback.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 2
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Pushouts of "dependent spans". *)
+
+</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section SpanPushout.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {X Y : Type} (Q : X -&gt; Y -&gt; Type).</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 6
+Time: 0.001s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre>
+
+  Definition SPushout := @Pushout@{up _ _ up} (sig@{up _} (fun (xy : X * Y) =&gt; Q (fst xy) (snd xy))) X Y
+                                  (fst o pr1) (snd o pr1).</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 9
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition spushl : X -&gt; SPushout := pushl.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition spushr : Y -&gt; SPushout := pushr.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 11
+Time: 0.001s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre>
+  Definition spglue {x:X} {y:Y} : Q x y -&gt; spushl x = spushr y
+    := fun q =&gt; pglue ((x,y) ; q).</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition spushout_rec (R : Type)
+             (spushl' : X -&gt; R) (spushr' : Y -&gt; R)
+             (spglue' : forall x y (q : Q x y), spushl' x = spushr' y)
+    : SPushout -&gt; R.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 19
+Time: 0.004s">
+<div class="time" style="width: 9.3023255813953%"></div>
+<pre>
+    srapply (@Pushout_rec {xy:X * Y &amp; Q (fst xy) (snd xy)} X Y
+                          (fst o pr1) (snd o pr1) R spushl' spushr').</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros [[x y] q]; cbn in *.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply spglue'; assumption.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 24
+Time: 0.002s">
+<div class="time" style="width: 4.6511627906977%"></div>
+<pre>
+  
+  Definition spushout_rec_beta_spglue (R : Type)
+             (spushl' : X -&gt; R) (spushr' : Y -&gt; R)
+             (spglue' : forall x y (q : Q x y), spushl' x = spushr' y)
+             (x:X) (y:Y) (q:Q x y)
+    : ap (spushout_rec R spushl' spushr' spglue') (spglue q) = spglue' x y q
+    := Pushout_rec_beta_pglue _ _ _ _ ((x, y); q).</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition spushout_ind (R : SPushout -&gt; Type)
+             (spushl' : forall x, R (spushl x))
+             (spushr' : forall y, R (spushr y))
+             (spglue' : forall x y (q : Q x y), 
+                 transport R (spglue q) (spushl' x) = (spushr' y))
+    : forall p, R p.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 39
+Time: 0.005s">
+<div class="time" style="width: 11.627906976744%"></div>
+<pre>
+    srapply (@Pushout_ind {xy:X * Y &amp; Q (fst xy) (snd xy)} X Y
+                          (fst o pr1) (snd o pr1) R spushl' spushr').</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 41
+Time: 0.003s">
+<div class="time" style="width: 6.9767441860465%"></div>
+<pre>
+    intros [[x y] q]; cbn in *.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 42
+Time: 0.001s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre>
+    apply spglue'; assumption.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 43
+Time: 0.002s">
+<div class="time" style="width: 4.6511627906977%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 44
+Time: 0.005s">
+<div class="time" style="width: 11.627906976744%"></div>
+<pre>
+
+  Definition spushout_ind_beta_spglue (R : SPushout -&gt; Type)
+             (spushl' : forall x, R (spushl x))
+             (spushr' : forall y, R (spushr y))
+             (spglue' : forall x y (q : Q x y), 
+                 transport R (spglue q) (spushl' x) = (spushr' y))
+             (x:X) (y:Y) (q:Q x y)
+    : apD (spushout_ind R spushl' spushr' spglue') (spglue q) = spglue'  x y q
+    := Pushout_ind_beta_pglue _ _ _ _ ((x,y);q).</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 53
+Time: 0.001s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre>
+
+End SpanPushout.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition functor_spushout {X Y Z W : Type}
+  {Q : X -&gt; Y -&gt; Type} {Q' : Z -&gt; W -&gt; Type}
+  (f : X -&gt; Z) (g : Y -&gt; W) (h : forall x y, Q x y -&gt; Q' (f x) (g y))
+  : SPushout Q -&gt; SPushout Q'.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 61
+Time: 0.001s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre>
+  snapply spushout_rec.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fun x =&gt; spushl Q' (f x)).</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fun y =&gt; spushr Q' (g y)).</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y q.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 65
+Time: 0.001s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre> apply spglue.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (h x y q).</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 66
+Time: 0.003s">
+<div class="time" style="width: 6.9767441860465%"></div>
+<pre>
+
+Definition functor_spushout_compose {X Y X' Y' X'' Y'' : Type}
+  {Q : X -&gt; Y -&gt; Type} {Q' : X' -&gt; Y' -&gt; Type} {Q'' : X'' -&gt; Y'' -&gt; Type}
+  (f : X -&gt; X') (g : Y -&gt; Y') (f' : X' -&gt; X'') (g' : Y' -&gt; Y'')
+  (h : forall x y, Q x y -&gt; Q' (f x) (g y))
+  (h' : forall x y, Q' x y -&gt; Q'' (f' x) (g' y))
+  : functor_spushout f' g' h' o functor_spushout f g h
+    == functor_spushout (f' o f) (g' o g) (fun x y =&gt; h' _ _ o h x y).</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 75
+Time: 0.001s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre>
+  snapply spushout_ind.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1,2: reflexivity.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y q; cbn beta.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 78
+Time: 0.002s">
+<div class="time" style="width: 4.6511627906977%"></div>
+<pre>
+  transport_paths FFlFr.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply equiv_p1_1q.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 80
+Time: 0.001s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre>
+  lhs napply ap.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 81
+Time: 0.001s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre>
+  1: napply spushout_rec_beta_spglue.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 82
+Time: 0.004s">
+<div class="time" style="width: 9.3023255813953%"></div>
+<pre>
+  lhs napply spushout_rec_beta_spglue.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 83
+Time: 0.001s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre>
+  symmetry.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 84
+Time: 0.002s">
+<div class="time" style="width: 4.6511627906977%"></div>
+<pre>
+  napply (spushout_rec_beta_spglue Q).</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 85
+Time: 0.009s">
+<div class="time" style="width: 20.93023255814%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition functor_spushout_idmap {X Y : Type} {Q : X -&gt; Y -&gt; Type}
+  : functor_spushout idmap idmap (fun x y (q : Q x y) =&gt; q) == idmap.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 90
+Time: 0.001s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre>
+  snapply spushout_ind.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1,2: reflexivity.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y q; cbn.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 93
+Time: 0.001s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre>
+  transport_paths Flr.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 94
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply equiv_p1_1q.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 95
+Time: 0.001s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre>
+  napply spushout_rec_beta_spglue.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 96
+Time: 0.002s">
+<div class="time" style="width: 4.6511627906977%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 97
+Time: 0.003s">
+<div class="time" style="width: 6.9767441860465%"></div>
+<pre>
+
+Definition functor_spushout_homotopic {X Y Z W : Type}
+  {Q : X -&gt; Y -&gt; Type} {Q' : Z -&gt; W -&gt; Type}
+  {f g : X -&gt; Z} (h : f == g)
+  {i j : Y -&gt; W} (k : i == j)
+  (l : forall x y, Q x y -&gt; Q' (f x) (i y))
+  (m : forall x y, Q x y -&gt; Q' (g x) (j y))
+  (H : forall x y q,
+    spglue Q' (l x y q) @ ap (spushr Q') (k y)
+      = ap (spushl Q') (h x) @ spglue Q' (m x y q))
+  : functor_spushout f i l == functor_spushout g j m.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 109
+Time: 0.001s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre>
+  snapply spushout_ind.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x; cbn.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (ap (spushl Q') (h x)).</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros y; cbn.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (ap (spushr Q') (k y)).</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y q.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 115
+Time: 0.002s">
+<div class="time" style="width: 4.6511627906977%"></div>
+<pre>
+    transport_paths FlFr.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 116
+Time: 0.001s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre>
+    lhs napply whiskerR.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: apply spushout_rec_beta_spglue.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 118
+Time: 0.001s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre>
+    rhs napply whiskerL.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    2: apply spushout_rec_beta_spglue.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 120
+Time: 0.001s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre>
+    apply H.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 121
+Time: 0.005s">
+<div class="time" style="width: 11.627906976744%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 122
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Any pushout is equivalent to a span pushout. *)</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition equiv_pushout_spushout {X Y Z : Type} (f : X -&gt; Y) (g : X -&gt; Z)
+  : Pushout f g
+    &lt;~&gt; SPushout (fun (y : Y) (z : Z) =&gt; {x : X &amp; f x = y /\ g x = z}).</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 126
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 127
+Time: 0.001s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre>
+  snapply equiv_pushout.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 128
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> nrefine (equiv_sigma_prod _ oE _).</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply equiv_double_fibration_replacement.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 130
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 130
+Time: 0.001s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre>
+  1-4: reflexivity.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 131
+Time: 0.001s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** There is a natural map from the total space of [Q] to the pushout product of [Q]. *)</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 134
+Time: 0.001s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre>Definition spushout_sjoin_map {X Y : Type} (Q : X -&gt; Y -&gt; Type)
+  : {x : X &amp; {y : Y &amp; Q x y}} -&gt; Pullback (spushl Q) (spushr Q)
+  := functor_sigma idmap (fun _ =&gt; functor_sigma idmap (fun _ =&gt; spglue Q)).</pre>
+</div>
+<div class="code" title="File: SpanPushout.v
+Line: 137
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

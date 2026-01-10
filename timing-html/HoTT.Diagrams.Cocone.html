@@ -1,0 +1,1366 @@
+<html>
+<head>
+<title>Cocone.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Cocone.v</h1>
+
+<div class="code" title="File: Cocone.v
+Line: 1
+Time: 0.028s">
+<div class="time" style="width: 100%"></div>
+<pre>From HoTT Require Import Basics.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 1
+Time: 0.012s">
+<div class="time" style="width: 42.857142857143%"></div>
+<pre>
+Require Import Types.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 2
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Diagrams.Graph.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 3
+Time: 0.01s">
+<div class="time" style="width: 35.714285714286%"></div>
+<pre>
+Require Import Diagrams.Diagram.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope path_scope.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Generalizable All Variables.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Cocones *)
+
+(** A Cocone over a diagram [D] to a type [X] is a family of maps from the types of [D] to [X] making the triangles formed with the arrows of [D] commuting. *)
+
+</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 12
+Time: 0.002s">
+<div class="time" style="width: 7.1428571428571%"></div>
+<pre>Class Cocone {G : Graph} (D : Diagram G) (X : Type) := {
+  legs   : forall i, D i -&gt; X;
+  legs_comm  : forall i j (g : G i j), legs j o (D _f g) == legs i;
+}.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments Build_Cocone {G D X} legs legs_comm.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments legs {G D X} C i x : rename.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments legs_comm {G D X} C i j g x : rename.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Coercion legs : Cocone &gt;-&gt; Funclass.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 21
+Time: 0.006s">
+<div class="time" style="width: 21.428571428571%"></div>
+<pre>
+
+Definition issig_Cocone {G : Graph} (D : Diagram G) (X : Type)
+  : _ &lt;~&gt; Cocone D X := ltac:(issig).</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section Cocone.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{Funext} {G : Graph} {D : Diagram G} {X : Type}.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** [path_cocone] says when two cocones are equal (up to funext). *)
+
+ </pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 31
+Time: 0.003s">
+<div class="time" style="width: 10.714285714286%"></div>
+<pre>Definition path_cocone_naive {C1 C2 : Cocone D X}
+    (P := fun q' =&gt; forall (i j : G) (g : G i j) (x : D i),
+      q' j (D _f g x) = q' i x)
+    (path_legs : legs C1 = legs C2)
+    (path_legs_comm : transport P path_legs (legs_comm C1) = legs_comm C2)
+    : C1 = C2 :=
+    match path_legs_comm in (_ = v1)
+      return C1 = {|legs := legs C2; legs_comm := v1 |} 
+    with
+      | idpath =&gt; match path_legs in (_ = v0)
+        return C1 = {|legs := v0; legs_comm := path_legs # (legs_comm C1) |}
+      with
+        | idpath =&gt; 1
+      end
+    end.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 45
+Time: 0.001s">
+<div class="time" style="width: 3.5714285714286%"></div>
+<pre>
+
+  Definition path_cocone {C1 C2 : Cocone D X}
+    (path_legs : forall i,  C1 i == C2 i)
+    (path_legs_comm : forall i j g x,
+      legs_comm C1 i j g x @ path_legs i x
+      = path_legs j (D _f g x) @ legs_comm C2 i j g x)
+    : C1 = C2.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct C1 as [legs pp_q], C2 as [r pp_r].</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (path_cocone_naive (path_forall _ _
+      (fun i =&gt; path_forall _ _ (path_legs i))) _).</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 56
+Time: 0.001s">
+<div class="time" style="width: 3.5714285714286%"></div>
+<pre>
+    cbn; funext i j f x.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 57
+Time: 0.004s">
+<div class="time" style="width: 14.285714285714%"></div>
+<pre>
+    rewrite 4 transport_forall_constant, transport_paths_FlFr.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 58
+Time: 0.001s">
+<div class="time" style="width: 3.5714285714286%"></div>
+<pre>
+    rewrite concat_pp_p; apply moveR_Vp.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 59
+Time: 0.004s">
+<div class="time" style="width: 14.285714285714%"></div>
+<pre>
+    rewrite 2 (ap_apply_lD2 (path_forall _ _
+      (fun i =&gt; path_forall _ _ (path_legs i)))).</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 61
+Time: 0.005s">
+<div class="time" style="width: 17.857142857143%"></div>
+<pre>
+    rewrite 3 eisretr.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_legs_comm.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 63
+Time: 0.011s">
+<div class="time" style="width: 39.285714285714%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Given a cocone [C] to [X] and a map from [X] to [Y], one can postcompose each map of [C] to get a cocone to [Y]. *)
+
+ </pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition cocone_postcompose (C : Cocone D X) {Y : Type}
+    : (X -&gt; Y) -&gt; Cocone D Y.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros f.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply Build_Cocone; intro i.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: exact (f o C i).</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros j g x.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (ap f (legs_comm _ i j g x)).</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** ** Universality of a cocone. *)
+
+  (** A colimit will be the extremity of a universal cocone. *)
+
+  (** A cocone [C] over [D] to [X] is said universal when for all [Y] the map [cocone_postcompose] is an equivalence. In particular, given another cocone [C'] over [D] to [X'] the inverse of the map allows to recover a map [h] : [X] -&gt; [X'] such that [C'] is [C] postcomposed with [h]. The fact that [cocone_postcompose] is an equivalence is an elegant way of stating the usual "unique existence" of category theory. *)
+
+ </pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 84
+Time: 0.001s">
+<div class="time" style="width: 3.5714285714286%"></div>
+<pre>Class UniversalCocone (C : Cocone D X) := {
+    is_universal :: forall Y, IsEquiv (@cocone_postcompose C Y);
+  }.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Coercion is_universal : UniversalCocone &gt;-&gt; Funclass.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 87
+Time: 0.004s">
+<div class="time" style="width: 14.285714285714%"></div>
+<pre>
+
+End Cocone.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+
+(** We now prove several functoriality results, first on cocone and then on colimits. *)
+
+</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section FunctorialityCocone.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context `{Funext} {G: Graph}.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** ** Postcomposition for cocones *)
+
+  (** Identity and associativity for the postcomposition of a cocone with a map. *)
+
+ </pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition cocone_postcompose_identity {D : Diagram G} `(C : Cocone _ D X)
+    : cocone_postcompose C idmap = C.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply path_cocone; intro i.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros j g x; simpl.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply equiv_p1_1q, ap_idmap.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 108
+Time: 0.001s">
+<div class="time" style="width: 3.5714285714286%"></div>
+<pre>
+
+  Definition cocone_postcompose_comp {D : Diagram G}
+             `(f : X -&gt; Y) `(g : Y -&gt; Z) (C : Cocone D X)
+    : cocone_postcompose C (g o f)
+      = cocone_postcompose (cocone_postcompose C f) g.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply path_cocone; intro i.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros j h x; simpl.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply equiv_p1_1q, ap_compose.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 118
+Time: 0.001s">
+<div class="time" style="width: 3.5714285714286%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** ** Precomposition for cocones *)
+
+  (** Given a cocone over [D2] and a Diagram map [m] : [D1] =&gt; [D2], one can precompose each map of the cocone by the corresponding one of [m] to get a cocone over [D1]. *)
+
+ </pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 125
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition cocone_precompose {D1 D2: Diagram G} (m : DiagramMap D1 D2) {X}
+    : (Cocone D2 X) -&gt; (Cocone D1 X).</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 126
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro C.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 128
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply Build_Cocone; intro i.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: exact (C i o m i).</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 130
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros j g x; simpl.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 131
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    etransitivity.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply ap.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      symmetry.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply DiagramMap_comm.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 135
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply legs_comm.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 137
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Identity and associativity for the precomposition of a cocone with a diagram map. *)
+
+ </pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition cocone_precompose_identity (D : Diagram G) (X : Type)
+    : cocone_precompose (X:=X) (diagram_idmap D) == idmap.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 143
+Time: 0.001s">
+<div class="time" style="width: 3.5714285714286%"></div>
+<pre>
+    intro C; srapply path_cocone; simpl.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 145
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros; simpl.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply concat_p1.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 147
+Time: 0.001s">
+<div class="time" style="width: 3.5714285714286%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 148
+Time: 0.001s">
+<div class="time" style="width: 3.5714285714286%"></div>
+<pre>
+
+  Definition cocone_precompose_comp {D1 D2 D3 : Diagram G}
+    (m2 : DiagramMap D2 D3) (m1 : DiagramMap D1 D2) (X : Type)
+    : (cocone_precompose (X:=X) m1) o (cocone_precompose m2)
+      == cocone_precompose (diagram_comp m2 m1).</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 154
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro C; simpl.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 155
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply path_cocone.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 157
+Time: 0.001s">
+<div class="time" style="width: 3.5714285714286%"></div>
+<pre>
+    intros i j g x; simpl.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply equiv_p1_1q.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unfold CommutativeSquares.comm_square_comp.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (concat_p_pp _ _ _ @ _).</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 161
+Time: 0.001s">
+<div class="time" style="width: 3.5714285714286%"></div>
+<pre>
+    apply ap10, ap.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 162
+Time: 0.002s">
+<div class="time" style="width: 7.1428571428571%"></div>
+<pre>
+    rewrite 3 ap_V.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 163
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine ((inv_pp _ _)^ @ _).</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 164
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply inverse2.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 165
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite ap_pp.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 166
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply ap.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by rewrite ap_compose.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 168
+Time: 0.011s">
+<div class="time" style="width: 39.285714285714%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Associativity of a precomposition and a postcomposition. *)
+
+ </pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 173
+Time: 0.001s">
+<div class="time" style="width: 3.5714285714286%"></div>
+<pre>Definition cocone_precompose_postcompose {D1 D2 : Diagram G}
+             (m : DiagramMap D1 D2) `(f : X -&gt; Y) (C : Cocone D2 X)
+    : cocone_postcompose (cocone_precompose m C) f
+      = cocone_precompose m (cocone_postcompose C f).</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 177
+Time: 0.001s">
+<div class="time" style="width: 3.5714285714286%"></div>
+<pre>
+    srapply path_cocone; intro i.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 179
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros j g x; simpl.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 180
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply equiv_p1_1q.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 181
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    etransitivity.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 182
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 183
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply ap_pp.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 183
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 184
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply ap10, ap.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 184
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      symmetry.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply ap_compose.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 186
+Time: 0.003s">
+<div class="time" style="width: 10.714285714286%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The precomposition with a diagram equivalence is an equivalence. *)
+
+ </pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 191
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export] Instance cocone_precompose_equiv {D1 D2 : Diagram G}
+    (m : D1 ~d~ D2) (X : Type) : IsEquiv (cocone_precompose (X:=X) m).</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 192
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 193
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply isequiv_adjointify.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 194
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: exact (cocone_precompose (diagram_equiv_inv m)).</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros C.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      etransitivity.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      -</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply cocone_precompose_comp.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      -</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 199
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite diagram_inv_is_retraction.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 199
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply cocone_precompose_identity.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 201
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros C.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 201
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      etransitivity.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 202
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      -</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 203
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply cocone_precompose_comp.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 203
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      -</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 204
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite diagram_inv_is_section.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 204
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply cocone_precompose_identity.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 205
+Time: 0.001s">
+<div class="time" style="width: 3.5714285714286%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The postcomposition with an equivalence is an equivalence. *)
+
+ </pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 210
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export] Instance cocone_postcompose_equiv {D : Diagram G} `(f : X &lt;~&gt; Y)
+    : IsEquiv (fun C : Cocone D X =&gt; cocone_postcompose C f).</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 211
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 212
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply isequiv_adjointify.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 213
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: exact (fun C =&gt; cocone_postcompose C f^-1).</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 214
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 215
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros C.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 215
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      etransitivity.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 216
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      -</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 217
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> symmetry.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 217
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply cocone_postcompose_comp.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 218
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      -</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 219
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> etransitivity.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 219
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        2: apply cocone_postcompose_identity.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 220
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply ap.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 221
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        funext x; apply eisretr.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 222
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 223
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros C.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 223
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      etransitivity.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 224
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      -</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> symmetry.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply cocone_postcompose_comp.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 226
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      -</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 227
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> etransitivity.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 227
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        2: apply cocone_postcompose_identity.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply ap.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 229
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        funext x; apply eissect.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 230
+Time: 0.001s">
+<div class="time" style="width: 3.5714285714286%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 231
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** ** Universality preservation *)
+
+  (** Universality of a cocone is preserved by composition with a (diagram) equivalence. *)
+
+ </pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 237
+Time: 0.001s">
+<div class="time" style="width: 3.5714285714286%"></div>
+<pre>#[export] Instance cocone_precompose_equiv_universality {D1 D2 : Diagram G}
+    (m: D1 ~d~ D2) {X} (C : Cocone D2 X) (_ : UniversalCocone C)
+    : UniversalCocone (cocone_precompose (X:=X) m C).</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 239
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 240
+Time: 0.002s">
+<div class="time" style="width: 7.1428571428571%"></div>
+<pre>
+    srapply Build_UniversalCocone; intro.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 241
+Time: 0.001s">
+<div class="time" style="width: 3.5714285714286%"></div>
+<pre>
+    rewrite (path_forall _ _ (fun f =&gt; cocone_precompose_postcompose m f C)).</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 242
+Time: 0.001s">
+<div class="time" style="width: 3.5714285714286%"></div>
+<pre>
+    rapply isequiv_compose.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 243
+Time: 0.001s">
+<div class="time" style="width: 3.5714285714286%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 244
+Time: 0.001s">
+<div class="time" style="width: 3.5714285714286%"></div>
+<pre>
+
+  #[export] Instance cocone_postcompose_equiv_universality {D: Diagram G} `(f: X &lt;~&gt; Y)
+    (C : Cocone D X) (_ : UniversalCocone C)
+    : UniversalCocone (cocone_postcompose C f).</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 248
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 249
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply Build_UniversalCocone; intro.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 250
+Time: 0.001s">
+<div class="time" style="width: 3.5714285714286%"></div>
+<pre>
+    rewrite &lt;- (path_forall _ _ (fun g =&gt; cocone_postcompose_comp f g C)).</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 251
+Time: 0.002s">
+<div class="time" style="width: 7.1428571428571%"></div>
+<pre>
+    rapply isequiv_compose.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 252
+Time: 0.001s">
+<div class="time" style="width: 3.5714285714286%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 253
+Time: 0.016s">
+<div class="time" style="width: 57.142857142857%"></div>
+<pre>
+
+End FunctorialityCocone.</pre>
+</div>
+<div class="code" title="File: Cocone.v
+Line: 256
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+
+</pre>
+</div>
+</body>
+</html>
+

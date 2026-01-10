@@ -1,0 +1,8 @@
+digraph HoTT_Metatheory_Core {
+  graph [ratio=0.5]
+  node [style=filled]
+Core_Univalence_type [label="Univalence_type", URL=<Core.html#Univalence_type>, peripheries=3, fillcolor="#F070D1"] ;
+Core_Funext_type [label="Funext_type", URL=<Core.html#Funext_type>, peripheries=3, fillcolor="#F070D1"] ;
+subgraph cluster_Core { label="Core"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Core_Funext_type; Core_Univalence_type; };
+} /* END */

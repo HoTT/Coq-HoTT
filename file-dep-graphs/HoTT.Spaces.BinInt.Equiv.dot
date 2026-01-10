@@ -1,0 +1,15 @@
+digraph HoTT_Spaces_BinInt_Equiv {
+  graph [ratio=0.5]
+  node [style=filled]
+Equiv_iter_binint_pred_r [label="iter_binint_pred_r", URL=<Equiv.html#iter_binint_pred_r>, peripheries=3, fillcolor="#F070D1"] ;
+Equiv_iter_binint_pred_l [label="iter_binint_pred_l", URL=<Equiv.html#iter_binint_pred_l>, peripheries=3, fillcolor="#F070D1"] ;
+Equiv_binint_iter_succ_r [label="binint_iter_succ_r", URL=<Equiv.html#binint_iter_succ_r>, fillcolor="#F070D1"] ;
+Equiv_binint_iter_succ_l [label="binint_iter_succ_l", URL=<Equiv.html#binint_iter_succ_l>, fillcolor="#F070D1"] ;
+Equiv_binint_iter [label="binint_iter", URL=<Equiv.html#binint_iter>, fillcolor="#F070D1"] ;
+  Equiv_iter_binint_pred_r -> Equiv_binint_iter_succ_r [] ;
+  Equiv_iter_binint_pred_l -> Equiv_binint_iter_succ_l [] ;
+  Equiv_binint_iter_succ_r -> Equiv_binint_iter [] ;
+  Equiv_binint_iter_succ_l -> Equiv_binint_iter [] ;
+subgraph cluster_Equiv { label="Equiv"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Equiv_binint_iter; Equiv_binint_iter_succ_l; Equiv_binint_iter_succ_r; Equiv_iter_binint_pred_l; Equiv_iter_binint_pred_r; };
+} /* END */

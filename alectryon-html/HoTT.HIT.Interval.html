@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>Interval.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-wsp"><span class="sd">(** * Theorems about the homotopical interval. *)</span>
+
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="interval-v-chk0" style="display: none" type="checkbox"><label class="alectryon-input" for="interval-v-chk0"><span class="kn">Require Import</span> Basics.Overture Basics.PathGroupoids.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Types.Paths.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> path_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Module</span> <span class="nf">Export</span> Interval.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input">Private <span class="kn">Inductive</span> <span class="nf">interval</span> : Type0 :=
+  | zero : interval
+  | one : interval.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Axiom</span> <span class="nv">seg</span> : zero = one.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">interval_ind</span> (<span class="nv">P</span> : interval -&gt; <span class="kt">Type</span>)
+  (<span class="nv">a</span> : P zero) (<span class="nv">b</span> : P one) (<span class="nv">p</span> : seg # a = b)
+  : <span class="kr">forall</span> <span class="nv">x</span>:interval, P x
+  := <span class="kr">fun</span> <span class="nv">x</span> =&gt; (<span class="kr">match</span> x <span class="kr">return</span> _ -&gt; P x <span class="kr">with</span>
+                | zero =&gt; <span class="kr">fun</span> <span class="nv">_</span> =&gt; a
+                | one  =&gt; <span class="kr">fun</span> <span class="nv">_</span> =&gt; b
+              <span class="kr">end</span>) p.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Axiom</span> <span class="nv">interval_ind_beta_seg</span> : <span class="kr">forall</span> (<span class="nv">P</span> : interval -&gt; <span class="kt">Type</span>)
+  (<span class="nv">a</span> : P zero) (<span class="nv">b</span> : P one) (<span class="nv">p</span> : seg # a = b),
+  apD (interval_ind P a b p) seg = p.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">Interval</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">interval_rec</span> (<span class="nv">P</span> : <span class="kt">Type</span>) (<span class="nv">a</span> <span class="nv">b</span> : P) (<span class="nv">p</span> : a = b)
+  : interval -&gt; P
+  := interval_ind (<span class="kr">fun</span> <span class="nv">_</span> =&gt; P) a b (transport_const _ _ @ p).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="interval-v-chk1" style="display: none" type="checkbox"><label class="alectryon-input" for="interval-v-chk1"><span class="kn">Definition</span> <span class="nf">interval_rec_beta_seg</span> (<span class="nv">P</span> : <span class="kt">Type</span>) (<span class="nv">a</span> <span class="nv">b</span> : P) (<span class="nv">p</span> : a = b)
+  : ap (interval_rec P a b p) seg = p.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>a, b</var><span class="hyp-type"><b>: </b><span>P</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>a = b</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">ap (interval_rec P a b p) seg = p</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="interval-v-chk2" style="display: none" type="checkbox"><label class="alectryon-input" for="interval-v-chk2"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>a, b</var><span class="hyp-type"><b>: </b><span>P</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>a = b</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">ap (interval_rec P a b p) seg = p</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="interval-v-chk3" style="display: none" type="checkbox"><label class="alectryon-input" for="interval-v-chk3"><span class="nb">refine</span> (cancelL (transport_const seg a) _ _ _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>a, b</var><span class="hyp-type"><b>: </b><span>P</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>a = b</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport_const seg a @ ap (interval_rec P a b p) seg =
+transport_const seg a @ p</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="interval-v-chk4" style="display: none" type="checkbox"><label class="alectryon-input" for="interval-v-chk4"><span class="nb">refine</span> ((apD_const (interval_ind (<span class="kr">fun</span> <span class="nv">_</span> =&gt; P) a b _) seg)^ @ _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>P</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>a, b</var><span class="hyp-type"><b>: </b><span>P</span></span></span><br><span><var>p</var><span class="hyp-type"><b>: </b><span>a = b</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">apD
+  (interval_ind (<span class="kr">fun</span> <span class="nv">_</span> : interval =&gt; P) a b
+     (transport_const seg a @ p)) seg =
+transport_const seg a @ p</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (interval_ind_beta_seg (<span class="kr">fun</span> <span class="nv">_</span> =&gt; P) _ _ _).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** The interval is contractible. *)</span>
+
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="interval-v-chk5" style="display: none" type="checkbox"><label class="alectryon-input" for="interval-v-chk5"><span class="kn">Instance</span> <span class="nf">contr_interval</span> : Contr interval | <span class="mi">0</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">Contr interval</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="interval-v-chk6" style="display: none" type="checkbox"><label class="alectryon-input" for="interval-v-chk6"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">Contr interval</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="interval-v-chk7" style="display: none" type="checkbox"><label class="alectryon-input" for="interval-v-chk7"><span class="nb">apply</span> (Build_Contr _ zero).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="kr">forall</span> <span class="nv">y</span> : interval, zero = y</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="interval-v-chk8" style="display: none" type="checkbox"><label class="alectryon-input" for="interval-v-chk8"><span class="nb">refine</span> (interval_ind _ <span class="mi">1</span> seg _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">transport (paths zero) seg <span class="mi">1</span> = seg</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">exact</span> (transport_paths_r _ _ @ concat_1p _).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span></span></pre>
+</div>
+</div></body>
+</html>

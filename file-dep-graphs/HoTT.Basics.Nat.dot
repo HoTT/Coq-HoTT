@@ -1,0 +1,40 @@
+digraph HoTT_Basics_Nat {
+  graph [ratio=0.5]
+  node [style=filled]
+Basics_Nat_to_num_int [label="to_num_int", URL=<Basics.html#Nat.to_num_int>, peripheries=3, fillcolor="#F070D1"] ;
+Basics_Nat_to_int [label="to_int", URL=<Basics.html#Nat.to_int>, fillcolor="#F070D1"] ;
+Basics_Nat_of_num_int [label="of_num_int", URL=<Basics.html#Nat.of_num_int>, peripheries=3, fillcolor="#F070D1"] ;
+Basics_Nat_of_hex_int [label="of_hex_int", URL=<Basics.html#Nat.of_hex_int>, fillcolor="#F070D1"] ;
+Basics_Nat_of_int [label="of_int", URL=<Basics.html#Nat.of_int>, fillcolor="#F070D1"] ;
+Basics_Nat_to_num_uint [label="to_num_uint", URL=<Basics.html#Nat.to_num_uint>, peripheries=3, fillcolor="#F070D1"] ;
+Basics_Nat_to_uint [label="to_uint", URL=<Basics.html#Nat.to_uint>, fillcolor="#F070D1"] ;
+Basics_Nat_to_little_uint [label="to_little_uint", URL=<Basics.html#Nat.to_little_uint>, fillcolor="#F070D1"] ;
+Basics_Nat_of_num_uint [label="of_num_uint", URL=<Basics.html#Nat.of_num_uint>, peripheries=3, fillcolor="#F070D1"] ;
+Basics_Nat_of_hex_uint [label="of_hex_uint", URL=<Basics.html#Nat.of_hex_uint>, fillcolor="#F070D1"] ;
+Basics_Nat_of_hex_uint_acc [label="of_hex_uint_acc", URL=<Basics.html#Nat.of_hex_uint_acc>, fillcolor="#F070D1"] ;
+Basics_Nat_of_uint [label="of_uint", URL=<Basics.html#Nat.of_uint>, fillcolor="#F070D1"] ;
+Basics_Nat_of_uint_acc [label="of_uint_acc", URL=<Basics.html#Nat.of_uint_acc>, fillcolor="#F070D1"] ;
+Basics_Nat_tail_mul [label="tail_mul", URL=<Basics.html#Nat.tail_mul>, fillcolor="#F070D1"] ;
+Basics_Nat_tail_addmul [label="tail_addmul", URL=<Basics.html#Nat.tail_addmul>, fillcolor="#F070D1"] ;
+Basics_Nat_tail_add [label="tail_add", URL=<Basics.html#Nat.tail_add>, fillcolor="#F070D1"] ;
+  Basics_Nat_to_num_int -> Basics_Nat_to_int [] ;
+  Basics_Nat_to_int -> Basics_Nat_to_uint [] ;
+  Basics_Nat_of_num_int -> Basics_Nat_of_hex_int [] ;
+  Basics_Nat_of_num_int -> Basics_Nat_of_int [] ;
+  Basics_Nat_of_hex_int -> Basics_Nat_of_hex_uint [] ;
+  Basics_Nat_of_int -> Basics_Nat_of_uint [] ;
+  Basics_Nat_to_num_uint -> Basics_Nat_to_uint [] ;
+  Basics_Nat_to_uint -> Basics_Nat_to_little_uint [] ;
+  Basics_Nat_of_num_uint -> Basics_Nat_of_hex_uint [] ;
+  Basics_Nat_of_num_uint -> Basics_Nat_of_uint [] ;
+  Basics_Nat_of_hex_uint -> Basics_Nat_of_hex_uint_acc [] ;
+  Basics_Nat_of_hex_uint_acc -> Basics_Nat_tail_mul [] ;
+  Basics_Nat_of_uint -> Basics_Nat_of_uint_acc [] ;
+  Basics_Nat_of_uint_acc -> Basics_Nat_tail_mul [] ;
+  Basics_Nat_tail_mul -> Basics_Nat_tail_addmul [] ;
+  Basics_Nat_tail_addmul -> Basics_Nat_tail_add [] ;
+subgraph cluster_Basics { label="Basics"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+subgraph cluster_Basics_Nat { label="Nat"; fillcolor="#FFFFA3"; labeljust=l; style=filled 
+Basics_Nat_tail_add; Basics_Nat_tail_addmul; Basics_Nat_tail_mul; Basics_Nat_of_uint_acc; Basics_Nat_of_uint; Basics_Nat_of_hex_uint_acc; Basics_Nat_of_hex_uint; Basics_Nat_of_num_uint; Basics_Nat_to_little_uint; Basics_Nat_to_uint; Basics_Nat_to_num_uint; Basics_Nat_of_int; Basics_Nat_of_hex_int; Basics_Nat_of_num_int; Basics_Nat_to_int; Basics_Nat_to_num_int; };
+};
+} /* END */

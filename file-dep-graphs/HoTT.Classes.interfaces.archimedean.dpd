@@ -1,0 +1,6 @@
+N: 2 "ArchimedeanProperty" [body=yes, kind=cnst, prop=no, path="archimedean", ];
+N: 1 "archimedean_property" [body=yes, kind=cnst, prop=no, path="archimedean", ];
+N: 3 "qinc" [body=yes, kind=cnst, prop=no, path="archimedean", ];
+E: 1 2 [weight=2, ];
+E: 1 3 [weight=2, ];
+E: 2 3 [weight=2, ];

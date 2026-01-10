@@ -1,0 +1,32 @@
+digraph HoTT_HIT_Flattening {
+  graph [ratio=0.5]
+  node [style=filled]
+Flattening_FlattenedHIT_Wtil_ind_beta_ppt [label="Wtil_ind_beta_ppt", URL=<Flattening.html#FlattenedHIT.Wtil_ind_beta_ppt>, fillcolor="#FACDEF"] ;
+Flattening_FlattenedHIT_Wtil_ind [label="Wtil_ind", URL=<Flattening.html#FlattenedHIT.Wtil_ind>, fillcolor="#F070D1"] ;
+Flattening_FlattenedHIT_ppt [label="ppt", URL=<Flattening.html#FlattenedHIT.ppt>, fillcolor="#FACDEF"] ;
+Flattening_FlattenedHIT_cct [label="cct", URL=<Flattening.html#FlattenedHIT.cct>, fillcolor="#7FAAFF"] ;
+Flattening_FlattenedHIT_Wtil [label="Wtil", URL=<Flattening.html#FlattenedHIT.Wtil>, fillcolor="#E2CDFA"] ;
+Flattening_equiv_flattening [label="equiv_flattening", URL=<Flattening.html#equiv_flattening>, peripheries=3, fillcolor="#F070D1"] ;
+Flattening_sWtil_rec_beta_ppt [label="sWtil_rec_beta_ppt", URL=<Flattening.html#sWtil_rec_beta_ppt>, fillcolor="#F070D1"] ;
+Flattening_sWtil_rec [label="sWtil_rec", URL=<Flattening.html#sWtil_rec>, fillcolor="#F070D1"] ;
+Flattening_sWtil_ind_beta_cct [label="sWtil_ind_beta_cct", URL=<Flattening.html#sWtil_ind_beta_cct>, peripheries=3, fillcolor="#F070D1"] ;
+Flattening_sWtil_ind [label="sWtil_ind", URL=<Flattening.html#sWtil_ind>, fillcolor="#F070D1"] ;
+Flattening_Wtil_rec_beta_ppt [label="Wtil_rec_beta_ppt", URL=<Flattening.html#Wtil_rec_beta_ppt>, fillcolor="#F070D1"] ;
+Flattening_Wtil_rec [label="Wtil_rec", URL=<Flattening.html#Wtil_rec>, fillcolor="#F070D1"] ;
+  Flattening_FlattenedHIT_Wtil_ind_beta_ppt -> Flattening_FlattenedHIT_Wtil_ind [] ;
+  Flattening_FlattenedHIT_Wtil_ind -> Flattening_FlattenedHIT_ppt [] ;
+  Flattening_FlattenedHIT_ppt -> Flattening_FlattenedHIT_cct [] ;
+  Flattening_FlattenedHIT_ppt -> Flattening_FlattenedHIT_Wtil [] ;
+  Flattening_equiv_flattening -> Flattening_sWtil_rec_beta_ppt [] ;
+  Flattening_equiv_flattening -> Flattening_sWtil_ind [] ;
+  Flattening_equiv_flattening -> Flattening_Wtil_rec_beta_ppt [] ;
+  Flattening_sWtil_rec_beta_ppt -> Flattening_sWtil_rec [] ;
+  Flattening_sWtil_ind_beta_cct -> Flattening_sWtil_ind [] ;
+  Flattening_Wtil_rec_beta_ppt -> Flattening_FlattenedHIT_Wtil_ind_beta_ppt [] ;
+  Flattening_Wtil_rec_beta_ppt -> Flattening_Wtil_rec [] ;
+  Flattening_Wtil_rec -> Flattening_FlattenedHIT_Wtil_ind [] ;
+subgraph cluster_Flattening { label="Flattening"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+subgraph cluster_Flattening_FlattenedHIT { label="FlattenedHIT"; fillcolor="#FFFFA3"; labeljust=l; style=filled 
+Flattening_FlattenedHIT_Wtil; Flattening_FlattenedHIT_cct; Flattening_FlattenedHIT_ppt; Flattening_FlattenedHIT_Wtil_ind; Flattening_FlattenedHIT_Wtil_ind_beta_ppt; };
+Flattening_Wtil_rec; Flattening_Wtil_rec_beta_ppt; Flattening_sWtil_ind; Flattening_sWtil_ind_beta_cct; Flattening_sWtil_rec; Flattening_sWtil_rec_beta_ppt; Flattening_equiv_flattening; };
+} /* END */

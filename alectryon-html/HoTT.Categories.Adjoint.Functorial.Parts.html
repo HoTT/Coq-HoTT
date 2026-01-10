@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>Parts.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-wsp"><span class="sd">(** * Functoriality of the construction of adjunctions from universal morphisms *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="parts-v-chk0" style="display: none" type="checkbox"><label class="alectryon-input" for="parts-v-chk0"><span class="kn">Require Import</span> Category.Core Functor.Core NaturalTransformation.Core.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Functor.Identity Functor.Composition.Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> NaturalTransformation.Composition.Core NaturalTransformation.Composition.Laws.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Functor.Dual NaturalTransformation.Dual.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Adjoint.Core Adjoint.UnitCounit Adjoint.Dual.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Universe Polymorphism</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Implicit Arguments</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Generalizable All Variables</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Asymmetric Patterns</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> natural_transformation_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> morphism_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">left</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  <span class="sd">(** ** action on morphisms of the construction of a left adjoint to [G] *)</span>
+  <span class="sd">(** *** functoriality on [C], [D], and [G] *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">also_categories</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variables</span> <span class="nv">C</span> <span class="nv">C&#39;</span> : PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">CF</span> : Functor C C&#39;.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variables</span> <span class="nv">D</span> <span class="nv">D&#39;</span> : PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">DF</span> : Functor D D&#39;.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">G</span> : Functor D C.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">F</span> : Functor C D.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">A</span> : F -| G.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">G&#39;</span> : Functor D&#39; C&#39;.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">F&#39;</span> : Functor C&#39; D&#39;.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">A&#39;</span> : F&#39; -| G&#39;.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">T</span> : NaturalTransformation (CF o G) (G&#39; o DF).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="parts-v-chk1" style="display: none" type="checkbox"><label class="alectryon-input" for="parts-v-chk1"><span class="kn">Definition</span> <span class="nf">left_morphism_of</span>
+    : NaturalTransformation (F&#39; o CF) (DF o F).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C, C'</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>CF</var><span class="hyp-type"><b>: </b><span>Functor C C&#39;</span></span></span><br><span><var>D, D'</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>DF</var><span class="hyp-type"><b>: </b><span>Functor D D&#39;</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Functor D C</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>F -| G</span></span></span><br><span><var>G'</var><span class="hyp-type"><b>: </b><span>Functor D&#39; C&#39;</span></span></span><br><span><var>F'</var><span class="hyp-type"><b>: </b><span>Functor C&#39; D&#39;</span></span></span><br><span><var>A'</var><span class="hyp-type"><b>: </b><span>F&#39; -| G&#39;</span></span></span><br><span><var>T</var><span class="hyp-type"><b>: </b><span>NaturalTransformation (CF o G) (G&#39; o DF)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">NaturalTransformation (F&#39; o CF) (DF o F)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="parts-v-chk2" style="display: none" type="checkbox"><label class="alectryon-input" for="parts-v-chk2"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C, C'</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>CF</var><span class="hyp-type"><b>: </b><span>Functor C C&#39;</span></span></span><br><span><var>D, D'</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>DF</var><span class="hyp-type"><b>: </b><span>Functor D D&#39;</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Functor D C</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>F -| G</span></span></span><br><span><var>G'</var><span class="hyp-type"><b>: </b><span>Functor D&#39; C&#39;</span></span></span><br><span><var>F'</var><span class="hyp-type"><b>: </b><span>Functor C&#39; D&#39;</span></span></span><br><span><var>A'</var><span class="hyp-type"><b>: </b><span>F&#39; -| G&#39;</span></span></span><br><span><var>T</var><span class="hyp-type"><b>: </b><span>NaturalTransformation (CF o G) (G&#39; o DF)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">NaturalTransformation (F&#39; o CF) (DF o F)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">refine</span> ((_)
+                o (counit A&#39; oR (DF o F))
+                o _
+                o (F&#39;
+                     oL ((T oR F)
+                           o _
+                           o (CF oL unit A)
+                           o _)))%natural_transformation;
+      nt_solve_associator.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">also_categories</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** *** functoriality in [G] *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">only_functor</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variables</span> <span class="nv">C</span> <span class="nv">D</span> : PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">G</span> : Functor D C.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">F</span> : Functor C D.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">A</span> : F -| G.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">G&#39;</span> : Functor D C.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">F&#39;</span> : Functor C D.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">A&#39;</span> : F&#39; -| G&#39;.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">T</span> : NaturalTransformation G G&#39;.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="parts-v-chk3" style="display: none" type="checkbox"><label class="alectryon-input" for="parts-v-chk3"><span class="kn">Definition</span> <span class="nf">left_morphism_of_nondep</span>
+    : NaturalTransformation F&#39; F.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Functor D C</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>F -| G</span></span></span><br><span><var>G'</var><span class="hyp-type"><b>: </b><span>Functor D C</span></span></span><br><span><var>F'</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br><span><var>A'</var><span class="hyp-type"><b>: </b><span>F&#39; -| G&#39;</span></span></span><br><span><var>T</var><span class="hyp-type"><b>: </b><span>NaturalTransformation G G&#39;</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">NaturalTransformation F&#39; F</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="parts-v-chk4" style="display: none" type="checkbox"><label class="alectryon-input" for="parts-v-chk4"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>C, D</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>G</var><span class="hyp-type"><b>: </b><span>Functor D C</span></span></span><br><span><var>F</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br><span><var>A</var><span class="hyp-type"><b>: </b><span>F -| G</span></span></span><br><span><var>G'</var><span class="hyp-type"><b>: </b><span>Functor D C</span></span></span><br><span><var>F'</var><span class="hyp-type"><b>: </b><span>Functor C D</span></span></span><br><span><var>A'</var><span class="hyp-type"><b>: </b><span>F&#39; -| G&#39;</span></span></span><br><span><var>T</var><span class="hyp-type"><b>: </b><span>NaturalTransformation G G&#39;</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">NaturalTransformation F&#39; F</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">      </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">refine</span> (_ o (@left_morphism_of C C <span class="mi">1</span> D D <span class="mi">1</span> G F A G&#39; F&#39; A&#39; (_ o T o _)) o _)%natural_transformation;
+      nt_solve_associator.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">only_functor</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">left</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">right</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  <span class="sd">(** ** action on morphisms of the construction of a right adjoint to [F] *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">right_morphism_of</span>
+             <span class="nv">C</span> <span class="nv">C&#39;</span> <span class="nv">CF</span>
+             <span class="nv">D</span> <span class="nv">D&#39;</span> <span class="nv">DF</span>
+             (<span class="nv">F</span> : Functor C D) (<span class="nv">G</span> : Functor D C) (<span class="nv">A</span> : F -| G)
+             (<span class="nv">F&#39;</span> : Functor C&#39; D&#39;) (<span class="nv">G&#39;</span> : Functor D&#39; C&#39;) (<span class="nv">A&#39;</span> : F&#39; -| G&#39;)
+             (<span class="nv">T</span> : NaturalTransformation (F&#39; o CF) (DF o F))
+  : NaturalTransformation (CF o G) (G&#39; o DF)
+    := (@left_morphism_of _ _ DF^op _ _ CF^op F^op G^op A^op F&#39;^op G&#39;^op A&#39;^op T^op)^op.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">right_morphism_of_nondep</span>
+             <span class="nv">C</span> <span class="nv">D</span>
+             (<span class="nv">F</span> : Functor C D) (<span class="nv">G</span> : Functor D C) (<span class="nv">A</span> : F -| G)
+             (<span class="nv">F&#39;</span> : Functor C D) (<span class="nv">G&#39;</span> : Functor D C) (<span class="nv">A&#39;</span> : F&#39; -| G&#39;)
+             (<span class="nv">T</span> : NaturalTransformation F&#39; F)
+  : NaturalTransformation G G&#39;
+    := (@left_morphism_of_nondep _ _ F^op G^op A^op F&#39;^op G&#39;^op A&#39;^op T^op)^op.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">right</span>.</span></span></pre>
+</div>
+</div></body>
+</html>

@@ -1,0 +1,49 @@
+digraph HoTT_Classes_theory_dec_fields {
+  graph [ratio=0.5]
+  node [style=filled]
+dec_fields_dec_recip_to_recip [label="dec_recip_to_recip", URL=<dec_fields.html#dec_recip_to_recip>, peripheries=3, fillcolor="#F070D1"] ;
+dec_fields_preserves_dec_recip [label="preserves_dec_recip", URL=<dec_fields.html#preserves_dec_recip>, peripheries=3, fillcolor="#F070D1"] ;
+dec_fields_dec_field_to_domain_inj [label="dec_field_to_domain_inj", URL=<dec_fields.html#dec_field_to_domain_inj>, fillcolor="#F070D1"] ;
+dec_fields_dec_recip_correct [label="dec_recip_correct", URL=<dec_fields.html#dec_recip_correct>, peripheries=3, fillcolor="#F070D1"] ;
+dec_fields_decfield_field [label="decfield_field", URL=<dec_fields.html#decfield_field>, fillcolor="#F070D1"] ;
+dec_fields_recip_dec_field [label="recip_dec_field", URL=<dec_fields.html#recip_dec_field>, fillcolor="#F070D1"] ;
+dec_fields_dec_recip_negate [label="dec_recip_negate", URL=<dec_fields.html#dec_recip_negate>, peripheries=3, fillcolor="#F070D1"] ;
+dec_fields_dec_recip_swap_r [label="dec_recip_swap_r", URL=<dec_fields.html#dec_recip_swap_r>, peripheries=3, fillcolor="#F070D1"] ;
+dec_fields_dec_recip_swap_l [label="dec_recip_swap_l", URL=<dec_fields.html#dec_recip_swap_l>, peripheries=3, fillcolor="#F070D1"] ;
+dec_fields_dec_quotients [label="dec_quotients", URL=<dec_fields.html#dec_quotients>, peripheries=3, fillcolor="#F070D1"] ;
+dec_fields_equal_dec_quotients [label="equal_dec_quotients", URL=<dec_fields.html#equal_dec_quotients>, fillcolor="#F070D1"] ;
+dec_fields_dec_recip_involutive [label="dec_recip_involutive", URL=<dec_fields.html#dec_recip_involutive>, fillcolor="#F070D1"] ;
+dec_fields_dec_recip_inj [label="dec_recip_inj", URL=<dec_fields.html#dec_recip_inj>, peripheries=3, fillcolor="#F070D1"] ;
+dec_fields_equal_by_one_quotient [label="equal_by_one_quotient", URL=<dec_fields.html#equal_by_one_quotient>, peripheries=3, fillcolor="#F070D1"] ;
+dec_fields_dec_recip_ne_0 [label="dec_recip_ne_0", URL=<dec_fields.html#dec_recip_ne_0>, fillcolor="#F070D1"] ;
+dec_fields_dec_recip_ne_0_iff [label="dec_recip_ne_0_iff", URL=<dec_fields.html#dec_recip_ne_0_iff>, fillcolor="#F070D1"] ;
+dec_fields_dec_recip_zero [label="dec_recip_zero", URL=<dec_fields.html#dec_recip_zero>, fillcolor="#F070D1"] ;
+dec_fields_dec_recip_distr [label="dec_recip_distr", URL=<dec_fields.html#dec_recip_distr>, fillcolor="#F070D1"] ;
+dec_fields_dec_recip_1 [label="dec_recip_1", URL=<dec_fields.html#dec_recip_1>, peripheries=3, fillcolor="#F070D1"] ;
+dec_fields_decfield_integral_domain [label="decfield_integral_domain", URL=<dec_fields.html#decfield_integral_domain>, fillcolor="#F070D1"] ;
+dec_fields_decfield_zero_product [label="decfield_zero_product", URL=<dec_fields.html#decfield_zero_product>, fillcolor="#F070D1"] ;
+  dec_fields_dec_recip_to_recip -> dec_fields_decfield_field [] ;
+  dec_fields_preserves_dec_recip -> dec_fields_dec_field_to_domain_inj [] ;
+  dec_fields_preserves_dec_recip -> dec_fields_decfield_integral_domain [] ;
+  dec_fields_dec_recip_correct -> dec_fields_decfield_field [] ;
+  dec_fields_decfield_field -> dec_fields_recip_dec_field [] ;
+  dec_fields_decfield_field -> dec_fields_decfield_integral_domain [] ;
+  dec_fields_dec_recip_negate -> dec_fields_decfield_zero_product [] ;
+  dec_fields_dec_recip_swap_r -> dec_fields_dec_recip_involutive [] ;
+  dec_fields_dec_recip_swap_r -> dec_fields_dec_recip_distr [] ;
+  dec_fields_dec_recip_swap_l -> dec_fields_dec_recip_involutive [] ;
+  dec_fields_dec_recip_swap_l -> dec_fields_dec_recip_distr [] ;
+  dec_fields_dec_quotients -> dec_fields_equal_dec_quotients [] ;
+  dec_fields_equal_dec_quotients -> dec_fields_decfield_zero_product [] ;
+  dec_fields_dec_recip_involutive -> dec_fields_dec_recip_ne_0 [] ;
+  dec_fields_dec_recip_inj -> dec_fields_dec_recip_ne_0 [] ;
+  dec_fields_equal_by_one_quotient -> dec_fields_dec_recip_ne_0 [] ;
+  dec_fields_dec_recip_ne_0 -> dec_fields_dec_recip_ne_0_iff [] ;
+  dec_fields_dec_recip_ne_0_iff -> dec_fields_dec_recip_zero [] ;
+  dec_fields_dec_recip_zero -> dec_fields_decfield_integral_domain [] ;
+  dec_fields_dec_recip_distr -> dec_fields_decfield_zero_product [] ;
+  dec_fields_dec_recip_1 -> dec_fields_decfield_integral_domain [] ;
+  dec_fields_decfield_integral_domain -> dec_fields_decfield_zero_product [] ;
+subgraph cluster_dec_fields { label="dec_fields"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+dec_fields_decfield_zero_product; dec_fields_decfield_integral_domain; dec_fields_dec_recip_1; dec_fields_dec_recip_distr; dec_fields_dec_recip_zero; dec_fields_dec_recip_ne_0_iff; dec_fields_dec_recip_ne_0; dec_fields_equal_by_one_quotient; dec_fields_dec_recip_inj; dec_fields_dec_recip_involutive; dec_fields_equal_dec_quotients; dec_fields_dec_quotients; dec_fields_dec_recip_swap_l; dec_fields_dec_recip_swap_r; dec_fields_dec_recip_negate; dec_fields_recip_dec_field; dec_fields_decfield_field; dec_fields_dec_recip_correct; dec_fields_dec_field_to_domain_inj; dec_fields_preserves_dec_recip; dec_fields_dec_recip_to_recip; };
+} /* END */

@@ -1,0 +1,1014 @@
+<html>
+<head>
+<title>ChineseRemainder.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for ChineseRemainder.v</h1>
+
+<div class="code" title="File: ChineseRemainder.v
+Line: 1
+Time: 0.066s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import Classes.interfaces.canonical_names.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 1
+Time: 0.002s">
+<div class="time" style="width: 3.030303030303%"></div>
+<pre>
+From HoTT.WildCat Require Import Core Equiv.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 2
+Time: 0.001s">
+<div class="time" style="width: 1.5151515151515%"></div>
+<pre>
+Require Import Modalities.ReflectiveSubuniverse.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 3
+Time: 0.063s">
+<div class="time" style="width: 95.454545454545%"></div>
+<pre>
+Require Import Algebra.AbGroups.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 4
+Time: 0.012s">
+<div class="time" style="width: 18.181818181818%"></div>
+<pre>
+Require Import Algebra.Rings.Ring.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 5
+Time: 0.003s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>
+Require Import Algebra.Rings.Ideal.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Algebra.Rings.QuotientRing.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 7
+Time: 0.01s">
+<div class="time" style="width: 15.151515151515%"></div>
+<pre>
+Require Import Algebra.Rings.CRing.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Chinese remainder theorem *)
+
+</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Import Ideal.Notation.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope ring_scope.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope wc_iso_scope.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section ChineseRemainderTheorem.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** We assume [Univalence] in order to work with quotients. We also need it for [Funext] in a few places.*)
+ </pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Context `{Univalence}
+    (** We need two coprime ideals [I] and [J] to state the theorem. We don't introduce the coprimeness assumption as of yet in order to show something slightly stronger. *)
+    {R : Ring} (I J : Ideal R).</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** We begin with the homomorphism which will show to be a surjection. Using the first isomorphism theorem for rings we can improve this to be the isomorphism we want. *)
+  (** This is the corecursion of the two quotient maps *)
+ </pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition rng_homo_crt : R $-&gt; (R / I) × (R / J).</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply ring_product_corec.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 26
+Time: 0.003s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>
+    1,2: apply rng_quotient_map.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Since we are working with quotients, we make the following notation to make working with the proof somewhat easier. *)
+ </pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Notation "[ x ]" := (rng_quotient_map _ x).</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** We then need to prove the following lemma. The hypotheses here can be derived by coprimality of [I] and [J]. But we don't need that here. *)
+ </pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 34
+Time: 0.002s">
+<div class="time" style="width: 3.030303030303%"></div>
+<pre>Lemma issurjection_rng_homo_crt' (x y : R)
+    (q1 : rng_homo_crt x = (0, 1)) (q2 : rng_homo_crt y = (1, 0))
+    : IsSurjection rng_homo_crt.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (** In order to show that [rng_homo_crt] is a surjection, we need to show that its propositional truncation of the fiber at any point is contractible. *)
+   </pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 39
+Time: 0.002s">
+<div class="time" style="width: 3.030303030303%"></div>
+<pre>intros [a b].</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 39
+Time: 0.005s">
+<div class="time" style="width: 7.5757575757576%"></div>
+<pre>
+    revert a; srapply QuotientRing_ind_hprop; intro a.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 40
+Time: 0.005s">
+<div class="time" style="width: 7.5757575757576%"></div>
+<pre>
+    revert b; srapply QuotientRing_ind_hprop; intro b.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (** We can think of [a] and [b] as the pair [(a mod I, b mod J)]. We need to show that there merely exists some element in [R] that gets mapped by  [rng_homo_crt] to the pair. *)
+   </pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 43
+Time: 0.026s">
+<div class="time" style="width: 39.393939393939%"></div>
+<pre>snapply Build_Contr; [|intros z; strip_truncations; apply path_ishprop].</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (** We make this choice and show it maps as desired. *)
+   </pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>apply tr; exists (b * x + a * y).</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (** Finally using some simple ring laws we can show it maps to our pair. *)
+   </pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>rewrite rng_homo_plus.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 47
+Time: 0.001s">
+<div class="time" style="width: 1.5151515151515%"></div>
+<pre>
+    rewrite 2 rng_homo_mult.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite q1, q2.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_prod.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 51
+Time: 0.001s">
+<div class="time" style="width: 1.5151515151515%"></div>
+<pre> change ([b] * 0 + [a] * 1 = [a] :&gt; R / I).</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 51
+Time: 0.001s">
+<div class="time" style="width: 1.5151515151515%"></div>
+<pre>
+      by rewrite rng_mult_one_r, rng_mult_zero_r, rng_plus_zero_l.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 53
+Time: 0.001s">
+<div class="time" style="width: 1.5151515151515%"></div>
+<pre> change ([b] * 1 + [a] * 0 = [b] :&gt; R / J).</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 53
+Time: 0.001s">
+<div class="time" style="width: 1.5151515151515%"></div>
+<pre>
+      by rewrite rng_mult_one_r, rng_mult_zero_r, rng_plus_zero_r.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 54
+Time: 0.035s">
+<div class="time" style="width: 53.030303030303%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Now we show that if [x + y = 1] for [I x] and [J y] then we can satisfy the hypotheses of the previous lemma. *)
+ </pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section rng_homo_crt_beta.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+    Context (x y : R) (ix : I x) (iy : J y) (p : x + y = 1).</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+    Lemma rng_homo_crt_beta_left : rng_homo_crt x = (0, 1).</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    Proof.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply rng_moveR_Mr in p.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite rng_plus_comm in p.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 65
+Time: 0.001s">
+<div class="time" style="width: 1.5151515151515%"></div>
+<pre>
+      apply path_prod; apply qglue.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      -</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> change (I (-x + 0)).</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply ideal_in_negate_plus.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        1: assumption.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply ideal_in_zero.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      -</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> change (J (-x + 1)).</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        rewrite rng_plus_comm.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        by rewrite &lt;- p.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    Defined.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+    Lemma rng_homo_crt_beta_right : rng_homo_crt y = (1, 0).</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    Proof.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply rng_moveR_rM in p.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite rng_plus_comm in p.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 79
+Time: 0.001s">
+<div class="time" style="width: 1.5151515151515%"></div>
+<pre>
+      apply path_prod; apply qglue.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      -</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> change (I (-y + 1)).</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        by rewrite &lt;- p.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      -</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> change (J (-y + 0)).</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply ideal_in_negate_plus.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        1: assumption.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply ideal_in_zero.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    Defined.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  End rng_homo_crt_beta.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** We can now show the map is surjective from coprimality of [I] and [J]. *)
+ </pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export] Instance issurjection_rng_homo_crt
+    : Coprime I J -&gt; IsSurjection rng_homo_crt.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 94
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros c.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (** First we turn the coprimality assumption into an equivalent assumption about the mere existence of two elements of each ideal which sum to one. *)
+   </pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>apply equiv_coprime_sum in c.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (** Since the goal is a hprop we may strip the truncations. *)
+   </pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 99
+Time: 0.01s">
+<div class="time" style="width: 15.151515151515%"></div>
+<pre>strip_truncations.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (** Now we can break apart the data of this witness. *)
+   </pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 101
+Time: 0.001s">
+<div class="time" style="width: 1.5151515151515%"></div>
+<pre>destruct c as [[[x ix] [y jy]] p];
+    change (x + y = 1) in p.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (** Now we apply all our previous lemmas *)
+   </pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>apply (issurjection_rng_homo_crt' x y).</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: exact (rng_homo_crt_beta_left x y ix jy p).</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (rng_homo_crt_beta_right x y ix jy p).</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 106
+Time: 0.001s">
+<div class="time" style="width: 1.5151515151515%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Now suppose [I] and [J] are coprime. *)
+ </pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Context (c : Coprime I J).</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The Chinese Remainder Theorem *)
+ </pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Theorem chinese_remainder : R / (I ∩ J)%ideal ≅ (R / I) × (R / J).</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (** We use the first isomorphism theorem. Coq can already infer which map we wish to use, so for clarity we tell it not to do so. *)
+   </pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 116
+Time: 0.001s">
+<div class="time" style="width: 1.5151515151515%"></div>
+<pre>snapply rng_first_iso'.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: exact rng_homo_crt.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 117
+Time: 0.002s">
+<div class="time" style="width: 3.030303030303%"></div>
+<pre>
+    1: exact _.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 118
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (** Finally we must show the ideal of this map is the intersection. *)
+   </pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>apply pred_subset_antisymm.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 121
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros r [i j].</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 121
+Time: 0.002s">
+<div class="time" style="width: 3.030303030303%"></div>
+<pre>
+      apply path_prod; apply qglue.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 122
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      1: change (I (- r + 0)).</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      2: change (J (- r + 0)).</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      1,2: rewrite rng_plus_comm.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 125
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      1,2: apply ideal_in_plus_negate.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 126
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      1,3: apply ideal_in_zero.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      1,2: assumption.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 128
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros i p.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 129
+Time: 0.001s">
+<div class="time" style="width: 1.5151515151515%"></div>
+<pre>
+      apply equiv_path_prod in p.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 130
+Time: 0.001s">
+<div class="time" style="width: 1.5151515151515%"></div>
+<pre>
+      destruct p as [p q].</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 131
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply ideal_in_negate'.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite &lt;- rng_plus_zero_r.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      (** Here we need to derive the relation from paths in the quotient. This is what requires univalence. *)
+     </pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 135
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>split.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 135
+Time: 0.014s">
+<div class="time" style="width: 21.212121212121%"></div>
+<pre>
+      1: exact (related_quotient_paths _ _ _ p).</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 136
+Time: 0.003s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>
+      1: exact (related_quotient_paths _ _ _ q).</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 137
+Time: 0.002s">
+<div class="time" style="width: 3.030303030303%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 138
+Time: 0.011s">
+<div class="time" style="width: 16.666666666667%"></div>
+<pre>
+
+End ChineseRemainderTheorem.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We also have the same for products of ideals when in a commutative ring. *)</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 142
+Time: 0.001s">
+<div class="time" style="width: 1.5151515151515%"></div>
+<pre>Theorem chinese_remainder_prod `{Univalence}
+  {R : CRing} (I J : Ideal R) (c : Coprime I J)
+  : R / (I ⋅ J)%ideal ≅ (R / I) × (R / J).</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 145
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  etransitivity.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 147
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rapply rng_quotient_invar.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 147
+Time: 0.001s">
+<div class="time" style="width: 1.5151515151515%"></div>
+<pre>
+    symmetry.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 148
+Time: 0.001s">
+<div class="time" style="width: 1.5151515151515%"></div>
+<pre>
+    rapply ideal_intersection_is_product.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 149
+Time: 0.001s">
+<div class="time" style="width: 1.5151515151515%"></div>
+<pre>
+  rapply chinese_remainder.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: ChineseRemainder.v
+Line: 152
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

@@ -1,0 +1,1134 @@
+<html>
+<head>
+<title>Fracture.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Fracture.v</h1>
+
+<div class="code" title="File: Fracture.v
+Line: 1
+Time: 0.036s">
+<div class="time" style="width: 19.565217391304%"></div>
+<pre>Require Import HoTT.Basics HoTT.Types.</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 1
+Time: 0.026s">
+<div class="time" style="width: 14.130434782609%"></div>
+<pre>
+Require Import Extensions Limits.Pullback.</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 2
+Time: 0.034s">
+<div class="time" style="width: 18.478260869565%"></div>
+<pre>
+Require Import Modality Lex Open Closed Nullification.</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope path_scope.</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+
+(** * The lex-modal fracture theorem *)
+
+(** The fracture theorem for two modalities [O1] and [O2] and a type [A], when it holds, states that the naturality square
+
+&lt;&lt;
+ A   --&gt;   O1 A
+ |          |
+ |          |
+ V          V
+O2 A --&gt; O2 (O1 A)
+&gt;&gt;
+
+is a pullback.  This says in a certain precise sense that [A] can be recovered from its [O1]- and [O2]-reflections together with some information about how they fit together.  If we think of [O1] and [O2] as subuniverses or subtoposes, then the fracture theorem says that their "union", or more precisely their *gluing*, is the whole universe.
+
+We will prove the fracture theorem holds under the assumptions that [O2] is lex, and that [O1]-connected types are [O2]-modal.  Note that like lex-ness, the latter is also a "large" hypothesis.  But also as with lex-ness, rather than hypothesize it polymorphically with a module type, we just hypothesize it in the obvious way and allow the polymorphism of the resulting theorem to be computed automatically.  This actually gives more precise information: the fracture theorem for a particular type [A] only depends on this hypothesis for types [B] lying in the same universe as [A].  (In fact, as we will see, it only needs the special cases of the fibers of [to O1 A], but in examples it seems no harder to verify the general case.)
+
+It may sometimes happen that in addition, the "intersection" of [O1] and [O2] is trivial.  This is naturally expressed in the context of the fracture theorem by saying that [O2]-modal types are [O1]-connected, i.e. the converse of the second hypothesis of our fracture theorem.  When this also holds, we can show that the universe [Type] can actually be reconstructed, up to equivalence, from the universes of [O1]- and [O2]-modal types and the [O2]-reflection from the first to the second, using the "Artin gluing construction" from topos theory.  *)
+
+  (** ** The fracture theorem *)
+
+ </pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section FractureTheorem.</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    Context (O1 O2 : Modality).</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 29
+Time: 0.001s">
+<div class="time" style="width: 0.54347826086957%"></div>
+<pre>
+
+    Definition fracture_square (A : Type)
+    : O_functor O2 (to O1 A) o to O2 A == to O2 (O1 A) o to O1 A
+    := to_O_natural O2 (to O1 A).</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+    (** Here are the hypotheses of the fracture theorem *)
+   </pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Context `{Lex O2}.</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+    Definition Gluable : Type
+      := forall (A : Type), IsConnected O1 A -&gt; In O2 A.</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    Context (ino2_isconnectedo1 : Gluable).</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+    (** The fracture theorem. *)
+   </pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ispullback_fracture_square A
+    : IsPullback (fracture_square A).</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    Proof.</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply ispullback_symm.</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      nrefine (ispullback_connmap_mapino_commsq O2 _).</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 47
+Time: 0.001s">
+<div class="time" style="width: 0.54347826086957%"></div>
+<pre>
+      1-3:exact _.</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 48
+Time: 0.002s">
+<div class="time" style="width: 1.0869565217391%"></div>
+<pre>
+      2:rapply mapinO_between_inO.</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 49
+Time: 0.001s">
+<div class="time" style="width: 0.54347826086957%"></div>
+<pre>
+      intros x; exact (ino2_isconnectedo1 _ _).</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    Defined.</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+    (** ** The fracture gluing theorem *)
+
+    (** We now also assume the converse of the second hypothesis *)
+   </pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Disjoint : Type
+      := forall (A : Type), In O2 A -&gt; IsConnected O1 A.</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    Context (isconnectedo1_ino2 : Disjoint).</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+    (** This implies that the universe decomposes into an [O1]-part, an [O2]-part, and a gluing map.  We define these pieces separately in order to make the maps transparent but the homotopies opaque. *)
+   </pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 61
+Time: 0.001s">
+<div class="time" style="width: 0.54347826086957%"></div>
+<pre>Definition fracture_glue_uncurried
+    : { B : Type_ O1 &amp; { C : Type_ O2 &amp; C -&gt; O2 B }} -&gt; Type
+      := fun BCf =&gt; Pullback BCf.2.2 (to O2 BCf.1).</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 63
+Time: 0.001s">
+<div class="time" style="width: 0.54347826086957%"></div>
+<pre>
+
+    Definition fracture_glue
+      (B C : Type) `{HB: In O1 B} `{HC: In O2 C} (f : C -&gt; O2 B)
+    : Type
+      := fracture_glue_uncurried ((B;HB);((C;HC);f)).</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 68
+Time: 0.002s">
+<div class="time" style="width: 1.0869565217391%"></div>
+<pre>
+
+    Definition fracture_unglue
+    : Type -&gt; { B : Type_ O1 &amp; { C : Type_ O2 &amp; C -&gt; O2 B }}
+    := fun A =&gt; ((O1 A ; O_inO A) ; ((O2 A ; O_inO A) ; O_functor O2 (to O1 A))).</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+    Definition fracture_unglue_isretr `{Univalence}
+               (BCf : { B : Type_ O1 &amp; { C : Type_ O2 &amp; C -&gt; O2 B }})
+    : fracture_unglue (fracture_glue_uncurried BCf) = BCf.</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    Proof.</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      destruct BCf as [B [C f]].</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      (** The first two components of our path will be applications of univalence.  We begin by observing that maps we will use are equivalences. *)
+     </pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>assert (IsEquiv (O_rec ((to O2 B)^*' f))).</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      {</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply isequiv_O_rec_O_inverts.</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply O_inverts_conn_map, conn_map_pullback'.</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        intros ob; apply isconnectedo1_ino2.</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 83
+Time: 0.002s">
+<div class="time" style="width: 1.0869565217391%"></div>
+<pre>
+        rapply mapinO_between_inO.</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      assert (IsEquiv (O_rec (f^* (to O2 B)))).</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      {</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply isequiv_O_rec_O_inverts.</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply O_inverts_conn_map, conn_map_pullback; exact _.</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      (** Now we start building the path. *)
+     </pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>simple refine (path_sigma' _ _ _).</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      {</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply path_TypeO; unfold ".1", ".2".</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 90
+Time: 0.001s">
+<div class="time" style="width: 0.54347826086957%"></div>
+<pre>
+        exact (path_universe (O_rec ((to O2 B)^*' f))).</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 91
+Time: 0.001s">
+<div class="time" style="width: 0.54347826086957%"></div>
+<pre>
+      refine (transport_sigma' _ _ @ _); unfold ".1", ".2".</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      simple refine (path_sigma' _ _ _).</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      {</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 94
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply path_TypeO; unfold ".1", ".2".</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 94
+Time: 0.001s">
+<div class="time" style="width: 0.54347826086957%"></div>
+<pre>
+        exact (path_universe (O_rec (f^* (to O2 B)))).</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      (** It remains to identify the induced function with the given [f].  We begin with some boilerplate. *)
+     </pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 97
+Time: 0.001s">
+<div class="time" style="width: 0.54347826086957%"></div>
+<pre>apply path_arrow; intros c.</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 97
+Time: 0.001s">
+<div class="time" style="width: 0.54347826086957%"></div>
+<pre>
+      refine (transport_arrow_toconst _ _ _ @ _).</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 98
+Time: 0.001s">
+<div class="time" style="width: 0.54347826086957%"></div>
+<pre>
+      refine (transport_arrow_fromconst
+                (C := fun X:Type_ O1 =&gt; O2 X) _ _ _ @ _).</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 100
+Time: 0.001s">
+<div class="time" style="width: 0.54347826086957%"></div>
+<pre>
+      refine (transport_compose O2 (TypeO_pr1 O1) _ _ @ _).</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 101
+Time: 0.001s">
+<div class="time" style="width: 0.54347826086957%"></div>
+<pre>
+      refine (transport_compose idmap O2 _ _ @ _).</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      (** Now we have to compute through the action of [ap] and [transport] on paths in sigmas and the universe.  In applying these it helps to specify a couple of intermediate steps explicitly. *)
+     </pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 104
+Time: 0.015s">
+<div class="time" style="width: 8.1521739130435%"></div>
+<pre>transitivity (transport idmap
+                     (ap O2 (path_universe (O_rec ((to O2 B)^*' f))))
+                     (O_functor O2 (to O1 (Pullback f (to O2 B)))
+                                ((O_rec (f^* (to O2 B)))^-1 c)));
+        [ apply ap11; repeat apply ap
+        | transitivity (O_functor O2 (O_rec ((to O2 B)^*' f))
+                          (O_functor O2 (to O1 (Pullback f (to O2 B)))
+                                     ((O_rec (f^* (to O2 B)))^-1 c))) ].</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 112
+Time: 0.001s">
+<div class="time" style="width: 0.54347826086957%"></div>
+<pre> exact (pr1_path_sigma_uncurried _ @ eisretr pr1 _).</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 113
+Time: 0.002s">
+<div class="time" style="width: 1.0869565217391%"></div>
+<pre> refine (transport_compose idmap (TypeO_pr1 O2)
+                  (path_TypeO O2 (O2 (Pullback f (to O2 B)); _) C _)^
+                  c @ _).</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 115
+Time: 0.001s">
+<div class="time" style="width: 0.54347826086957%"></div>
+<pre>
+        refine (ap (fun p =&gt; transport idmap p c) (ap_V _ _) @ _).</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 116
+Time: 0.002s">
+<div class="time" style="width: 1.0869565217391%"></div>
+<pre>
+        refine (ap (fun p =&gt; transport idmap p^ c)
+                   (pr1_path_sigma_uncurried _ @ eisretr pr1 _) @ _).</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 118
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        exact (transport_path_universe_V _ _).</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 120
+Time: 0.001s">
+<div class="time" style="width: 0.54347826086957%"></div>
+<pre> refine (ap (fun p =&gt; transport idmap p _)
+                   (ap_O_path_universe O2 _) @ _).</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 121
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        exact (transport_path_universe _ _).</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 122
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      (** Now we're down to the real point. *)
+     </pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>+</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> refine ((O_functor_compose O2 _ _ _)^ @ _).</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        refine (O_functor_homotopy O2 _ _ (O_rec_beta _) _ @ _).</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 125
+Time: 0.001s">
+<div class="time" style="width: 0.54347826086957%"></div>
+<pre>
+        revert c; equiv_intro (O_rec (f^* (to O2 B))) x.</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 126
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        refine (ap _ (eissect _ _) @ _).</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 127
+Time: 0.001s">
+<div class="time" style="width: 0.54347826086957%"></div>
+<pre>
+        revert x; apply O_indpaths; intros x.</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 128
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        refine (to_O_natural O2 _ x @ _).</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        refine (_ @ ap f (O_rec_beta _ _)^).</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 130
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        destruct x as [a [b q]]; exact (q^).</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 131
+Time: 0.184s">
+<div class="time" style="width: 100%"></div>
+<pre>
+    Qed.</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+    Definition fracture_unglue_issect `{Univalence} (A : Type)
+    : fracture_glue_uncurried (fracture_unglue A) = A.</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 135
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    Proof.</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply path_universe_uncurried, equiv_inverse.</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 137
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (Build_Equiv _ _ (pullback_corec (fracture_square A))
+                        (ispullback_fracture_square A)).</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    Qed.</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 140
+Time: 0.001s">
+<div class="time" style="width: 0.54347826086957%"></div>
+<pre>
+
+    Definition isequiv_fracture_unglue `{Univalence}
+    : IsEquiv fracture_unglue
+      := isequiv_adjointify
+           fracture_unglue
+           fracture_glue_uncurried
+           fracture_unglue_isretr
+           fracture_unglue_issect.</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 148
+Time: 0.001s">
+<div class="time" style="width: 0.54347826086957%"></div>
+<pre>
+
+    Definition equiv_fracture_unglue `{Univalence}
+    : Type &lt;~&gt; { B : Type_ O1 &amp; { C : Type_ O2 &amp; C -&gt; O2 B }}
+      := Build_Equiv _ _ fracture_unglue isequiv_fracture_unglue.</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 152
+Time: 0.001s">
+<div class="time" style="width: 0.54347826086957%"></div>
+<pre>
+
+  End FractureTheorem.</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 154
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** The propositional fracture theorem *)
+
+(** An easy example of the lex-modal fracture theorem is supplied by the open and closed modalities for an hprop [U]. *)
+
+</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition gluable_open_closed `{Funext} (U : HProp)
+: Gluable (Op U) (Cl U).</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros A.</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  change (Contr (U -&gt; A) -&gt; (U -&gt; Contr A)); intros ? u.</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 163
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (Build_Contr _ (center (U -&gt; A) u)); intros a.</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 164
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (ap10 (path_contr _ (fun _ =&gt; a)) u).</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 165
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 166
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition disjoint_open_closed `{Funext} (U : HProp)
+: Disjoint (Op U) (Cl U).</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros A.</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  change ((U -&gt; Contr A) -&gt; Contr (U -&gt; A)); intros uc.</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (Build_Contr _ (fun u =&gt; let i := uc u in center A)).</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros f; apply path_arrow; intros u.</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 174
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  pose (uc u); apply path_contr.</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 175
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We can also prove the same thing without funext if we use the nullification versions of these modalities. *)
+
+</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 179
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition gluable_open_closed' (U : HProp)
+: Gluable (Op' U) (Cl' U).</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 180
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 181
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros A ? u; simpl in *.</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 182
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  pose proof (contr_inhabited_hprop U u).</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 183
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  assert (Contr A).</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 184
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 185
+Time: 0.001s">
+<div class="time" style="width: 0.54347826086957%"></div>
+<pre> simple refine (contr_equiv (Op' U A) _).</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 186
+Time: 0.002s">
+<div class="time" style="width: 1.0869565217391%"></div>
+<pre> refine (O_rec idmap).</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 186
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      intros []; simpl.</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply ooextendable_equiv.</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (equiv_isequiv (@equiv_contr_contr U Unit _ _)).</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 189
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 190
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> refine (isequiv_adjointify _ (to (Op' U) A) _ _).</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 190
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 191
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a; apply O_rec_beta.</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 191
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 192
+Time: 0.001s">
+<div class="time" style="width: 0.54347826086957%"></div>
+<pre> apply O_indpaths; cbn.</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 192
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 192
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 192
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply ooextendable_contr; exact _.</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 193
+Time: 0.002s">
+<div class="time" style="width: 1.0869565217391%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 194
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition disjoint_open_closed' (U : HProp)
+: Disjoint (Op' U) (Cl' U).</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros A An.</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 199
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply isconnected_from_elim; intros C Cn f.</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simple refine (@local_rec _ C Cn tt _ tt ; _); simpl.</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 201
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 202
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros u.</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 202
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (f (@local_rec _ A An u Empty_rec tt)).</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 203
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 204
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a; simpl.</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 204
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (@local_indpaths _ C Cn tt (fun _ =&gt; f a) _ _ tt);
+      intros u; simpl in *.</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (_ @ (@local_rec_beta _ C Cn tt _ u)^).</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 207
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply ap.</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (@local_indpaths _ A An u (fun _ =&gt; a) _ (Empty_ind _) tt).</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 209
+Time: 0.002s">
+<div class="time" style="width: 1.0869565217391%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Fracture.v
+Line: 211
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

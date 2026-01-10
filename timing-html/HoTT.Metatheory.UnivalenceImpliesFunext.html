@@ -1,0 +1,399 @@
+<html>
+<head>
+<title>UnivalenceImpliesFunext.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for UnivalenceImpliesFunext.v</h1>
+
+<div class="code" title="File: UnivalenceImpliesFunext.v
+Line: 1
+Time: 0.027s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import HoTT.Basics.</pre>
+</div>
+<div class="code" title="File: UnivalenceImpliesFunext.v
+Line: 1
+Time: 0.005s">
+<div class="time" style="width: 18.518518518519%"></div>
+<pre>
+Require Import Types.Universe.</pre>
+</div>
+<div class="code" title="File: UnivalenceImpliesFunext.v
+Line: 2
+Time: 0.003s">
+<div class="time" style="width: 11.111111111111%"></div>
+<pre>
+Require Import Metatheory.Core Metatheory.FunextVarieties.</pre>
+</div>
+<div class="code" title="File: UnivalenceImpliesFunext.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Generalizable All Variables.</pre>
+</div>
+<div class="code" title="File: UnivalenceImpliesFunext.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Univalence Implies Functional Extensionality *)
+
+</pre>
+</div>
+<div class="code" title="File: UnivalenceImpliesFunext.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section UnivalenceImpliesFunext.</pre>
+</div>
+<div class="code" title="File: UnivalenceImpliesFunext.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{ua : Univalence_type}.</pre>
+</div>
+<div class="code" title="File: UnivalenceImpliesFunext.v
+Line: 9
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Exponentiation preserves equivalences, i.e., if [e] is an equivalence then so is post-composition by [e]. *)
+
+  (* Should this go somewhere else? *)
+
+ </pre>
+</div>
+<div class="code" title="File: UnivalenceImpliesFunext.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Theorem univalence_isequiv_postcompose `{H0 : IsEquiv A B w} C : IsEquiv (fun (g:C-&gt;A) =&gt; w o g).</pre>
+</div>
+<div class="code" title="File: UnivalenceImpliesFunext.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: UnivalenceImpliesFunext.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unfold Univalence_type in *.</pre>
+</div>
+<div class="code" title="File: UnivalenceImpliesFunext.v
+Line: 17
+Time: 0.003s">
+<div class="time" style="width: 11.111111111111%"></div>
+<pre>
+    refine (isequiv_adjointify
+              (fun (g:C-&gt;A) =&gt; w o g)
+              (fun (g:C-&gt;B) =&gt; w^-1 o g)
+              _
+              _);
+    intro;
+    pose (Build_Equiv _ _ w _) as w';
+    change H0 with (@equiv_isequiv _ _ w');
+    change w with (@equiv_fun _ _ w');
+    clearbody w'; clear H0 w;
+    rewrite &lt;- (@eisretr _ _ (@equiv_path A B) (ua A B) w');
+    generalize ((@equiv_inv _ _ (equiv_path A B) (ua A B)) w');
+    intro p;
+    clear w';
+    destruct p;
+    reflexivity.</pre>
+</div>
+<div class="code" title="File: UnivalenceImpliesFunext.v
+Line: 33
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: UnivalenceImpliesFunext.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** We are ready to prove functional extensionality, starting with the naive non-dependent version. *)
+
+ </pre>
+</div>
+<div class="code" title="File: UnivalenceImpliesFunext.v
+Line: 38
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>Local Instance isequiv_src_compose A B
+  : @IsEquiv (A -&gt; {xy : B * B &amp; fst xy = snd xy})
+             (A -&gt; B)
+             (fun g =&gt; (fst o pr1) o g).</pre>
+</div>
+<div class="code" title="File: UnivalenceImpliesFunext.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: UnivalenceImpliesFunext.v
+Line: 42
+Time: 0.002s">
+<div class="time" style="width: 7.4074074074074%"></div>
+<pre>
+    rapply @univalence_isequiv_postcompose.</pre>
+</div>
+<div class="code" title="File: UnivalenceImpliesFunext.v
+Line: 43
+Time: 0.003s">
+<div class="time" style="width: 11.111111111111%"></div>
+<pre>
+    refine (isequiv_adjointify
+              (fst o pr1) (fun x =&gt; ((x, x); idpath))
+              (fun _ =&gt; idpath)
+              _);
+      let p := fresh in
+      intros [[? ?] p];
+        simpl in p; destruct p;
+        reflexivity.</pre>
+</div>
+<div class="code" title="File: UnivalenceImpliesFunext.v
+Line: 51
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: UnivalenceImpliesFunext.v
+Line: 52
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+
+
+  Local Instance isequiv_tgt_compose A B
+  : @IsEquiv (A -&gt; {xy : B * B &amp; fst xy = snd xy})
+             (A -&gt; B)
+             (fun g =&gt; (snd o pr1) o g).</pre>
+</div>
+<div class="code" title="File: UnivalenceImpliesFunext.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: UnivalenceImpliesFunext.v
+Line: 59
+Time: 0.002s">
+<div class="time" style="width: 7.4074074074074%"></div>
+<pre>
+    rapply @univalence_isequiv_postcompose.</pre>
+</div>
+<div class="code" title="File: UnivalenceImpliesFunext.v
+Line: 60
+Time: 0.002s">
+<div class="time" style="width: 7.4074074074074%"></div>
+<pre>
+    refine (isequiv_adjointify
+              (snd o pr1) (fun x =&gt; ((x, x); idpath))
+              (fun _ =&gt; idpath)
+              _);
+      let p := fresh in
+      intros [[? ?] p];
+        simpl in p; destruct p;
+        reflexivity.</pre>
+</div>
+<div class="code" title="File: UnivalenceImpliesFunext.v
+Line: 68
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: UnivalenceImpliesFunext.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Theorem Univalence_implies_FunextNondep : NaiveNondepFunext.</pre>
+</div>
+<div class="code" title="File: UnivalenceImpliesFunext.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: UnivalenceImpliesFunext.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros A B f g p.</pre>
+</div>
+<div class="code" title="File: UnivalenceImpliesFunext.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (** Consider the following maps. *)
+   </pre>
+</div>
+<div class="code" title="File: UnivalenceImpliesFunext.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>pose (d := fun x : A =&gt; exist (fun xy =&gt; fst xy = snd xy) (f x, f x) (idpath (f x))).</pre>
+</div>
+<div class="code" title="File: UnivalenceImpliesFunext.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    pose (e := fun x : A =&gt; exist (fun xy =&gt; fst xy = snd xy) (f x, g x) (p x)).</pre>
+</div>
+<div class="code" title="File: UnivalenceImpliesFunext.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (** If we compose [d] and [e] with [free_path_target], we get [f] and [g], respectively. So, if we had a path from [d] to [e], we would get one from [f] to [g]. *)
+   </pre>
+</div>
+<div class="code" title="File: UnivalenceImpliesFunext.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>change f with ((snd o pr1) o d).</pre>
+</div>
+<div class="code" title="File: UnivalenceImpliesFunext.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    change g with ((snd o pr1) o e).</pre>
+</div>
+<div class="code" title="File: UnivalenceImpliesFunext.v
+Line: 79
+Time: 0.007s">
+<div class="time" style="width: 25.925925925926%"></div>
+<pre>
+    rapply (ap (fun g =&gt; snd o pr1 o g)).</pre>
+</div>
+<div class="code" title="File: UnivalenceImpliesFunext.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (** Since composition with [src] is an equivalence, we can freely compose with [src]. *)
+   </pre>
+</div>
+<div class="code" title="File: UnivalenceImpliesFunext.v
+Line: 82
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>pose (fun A B x y=&gt; @equiv_inv _ _ _ (@isequiv_ap _ _ _ (@isequiv_src_compose A B) x y)) as H'.</pre>
+</div>
+<div class="code" title="File: UnivalenceImpliesFunext.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply H'.</pre>
+</div>
+<div class="code" title="File: UnivalenceImpliesFunext.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    reflexivity.</pre>
+</div>
+<div class="code" title="File: UnivalenceImpliesFunext.v
+Line: 84
+Time: 0.002s">
+<div class="time" style="width: 7.4074074074074%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: UnivalenceImpliesFunext.v
+Line: 85
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+
+End UnivalenceImpliesFunext.</pre>
+</div>
+<div class="code" title="File: UnivalenceImpliesFunext.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Now we use this to prove strong dependent funext.  Again only the codomain universe must be univalent, but the domain universe must be no larger than it is.  Thus practically speaking this means that a univalent universe satisfies funext only for functions between two types in that same universe. *)
+
+</pre>
+</div>
+<div class="code" title="File: UnivalenceImpliesFunext.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Univalence_implies_WeakFunext : Univalence_type -&gt; WeakFunext
+  := NaiveNondepFunext_implies_WeakFunext o @Univalence_implies_FunextNondep.</pre>
+</div>
+<div class="code" title="File: UnivalenceImpliesFunext.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition Univalence_type_implies_Funext_type
+           `{ua : Univalence_type@{j jplusone} }
+  : Funext_type@{i j j}
+  := NaiveNondepFunext_implies_Funext
+       (@Univalence_implies_FunextNondep ua).</pre>
+</div>
+<div class="code" title="File: UnivalenceImpliesFunext.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The above proof justifies assuming [Univalence -&gt; Funext], which we did axiomatically in [Types/Universe.v]. *)
+
+</pre>
+</div>
+</body>
+</html>
+

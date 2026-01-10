@@ -1,0 +1,5229 @@
+<html>
+<head>
+<title>Core.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Core.v</h1>
+
+<div class="code" title="File: Core.v
+Line: 1
+Time: 0.039s">
+<div class="time" style="width: 30.232558139535%"></div>
+<pre>From HoTT Require Import Basics Types.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 1
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+Require Import Cubical.DPath Cubical.PathSquare.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 2
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Homotopy.NullHomotopy.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 3
+Time: 0.023s">
+<div class="time" style="width: 17.829457364341%"></div>
+<pre>
+Require Import Extensions.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Colimits.Pushout.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 5
+Time: 0.012s">
+<div class="time" style="width: 9.3023255813953%"></div>
+<pre>
+Require Import Truncations.Core Truncations.Connectedness.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 6
+Time: 0.018s">
+<div class="time" style="width: 13.953488372093%"></div>
+<pre>
+Require Import Pointed.Core.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 7
+Time: 0.007s">
+<div class="time" style="width: 5.4263565891473%"></div>
+<pre>
+From HoTT.WildCat Require Import Core Universe Equiv EquivGpd
+  ZeroGroupoid Yoneda FunctorCat NatTrans Bifunctor Monoidal.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 9
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+Require Import Spaces.Nat.Core.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope pointed_scope.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope path_scope.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Joins *)
+
+(** The join is the pushout of two types under their product. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section Join.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition Join (A : Type@{i}) (B : Type@{j})
+    := Pushout@{k i j k} (@fst A B) (@snd A B).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition joinl {A B} : A -&gt; Join A B
+    := fun a =&gt; @pushl (A*B) A B fst snd a.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition joinr {A B} : B -&gt; Join A B
+    := fun b =&gt; @pushr (A*B) A B fst snd b.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 26
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+
+  Definition jglue {A B} a b : joinl a = joinr b
+    := @pglue (A*B) A B fst snd (a , b).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 29
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+
+  Definition Join_ind {A B : Type} (P : Join A B -&gt; Type)
+    (P_A : forall a, P (joinl a)) (P_B : forall b, P (joinr b))
+    (P_g : forall a b, transport P (jglue a b) (P_A a) = P_B b)
+    : forall (x : Join A B), P x.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (Pushout_ind P P_A P_B).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (fun ab =&gt; P_g (fst ab) (snd ab)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 38
+Time: 0.003s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre>
+
+  Definition Join_ind_beta_jglue {A B : Type} (P : Join A B -&gt; Type)
+    (P_A : forall a, P (joinl a)) (P_B : forall b, P (joinr b))
+    (P_g : forall a b, transport P (jglue a b) (P_A a) = (P_B b)) a b
+    : apD (Join_ind P P_A P_B P_g) (jglue a b) = P_g a b
+    := Pushout_ind_beta_pglue _ _ _ _ _.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** A version of [Join_ind] specifically for proving that two functions defined on a [Join] are homotopic. *)
+ </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 47
+Time: 0.002s">
+<div class="time" style="width: 1.5503875968992%"></div>
+<pre>Definition Join_ind_FlFr {A B P : Type} (f g : Join A B -&gt; P)
+    (Hl : forall a, f (joinl a) = g (joinl a))
+    (Hr : forall b, f (joinr b) = g (joinr b))
+    (Hglue : forall a b, ap f (jglue a b) @ Hr b = Hl a @ ap g (jglue a b))
+    : f == g.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply (Join_ind _ Hl Hr).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros a b.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 54
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+    transport_paths FlFr.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply Hglue.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 57
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+
+  Definition Join_ind_Flr {A B : Type} (f : Join A B -&gt; Join A B)
+    (Hl : forall a, f (joinl a) = joinl a)
+    (Hr : forall b, f (joinr b) = joinr b)
+    (Hglue : forall a b, ap f (jglue a b) @ Hr b = Hl a @ jglue a b)
+    : forall x, f x = x.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply (Join_ind _ Hl Hr).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros a b.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 66
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+    transport_paths Flr.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply Hglue.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** And a version for showing that a composite is homotopic to the identity. *)
+ </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 72
+Time: 0.002s">
+<div class="time" style="width: 1.5503875968992%"></div>
+<pre>Definition Join_ind_FFlr {A B P : Type} (f : Join A B -&gt; P) (g : P -&gt; Join A B)
+    (Hl : forall a, g (f (joinl a)) = joinl a)
+    (Hr : forall b, g (f (joinr b)) = joinr b)
+    (Hglue : forall a b, ap g (ap f (jglue a b)) @ Hr b = Hl a @ jglue a b)
+    : forall x, g (f x) = x.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply (Join_ind _ Hl Hr).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros a b.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 79
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+    transport_paths FFlr.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply Hglue.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 81
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 82
+Time: 0.002s">
+<div class="time" style="width: 1.5503875968992%"></div>
+<pre>
+  
+  Definition Join_ind_FFlFr {A B C P : Type}
+    (f : Join A B -&gt; C) (g : C -&gt; P) (h : Join A B -&gt; P)
+    (Hl : forall a, g (f (joinl a)) = h (joinl a))
+    (Hr : forall b, g (f (joinr b)) = h (joinr b))
+    (Hglue : forall a b, ap g (ap f (jglue a b)) @ Hr b = Hl a @ ap h (jglue a b))
+    : g o f == h.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply (Join_ind _ Hl Hr).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros a b; cbn beta.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 92
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+    transport_paths FFlFr.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply Hglue.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 94
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 95
+Time: 0.002s">
+<div class="time" style="width: 1.5503875968992%"></div>
+<pre>
+  
+  Definition Join_ind_FlFFr {A B C P : Type}
+    (f : Join A B -&gt; C) (g : C -&gt; P) (h : Join A B -&gt; P)
+    (Hl : forall a, h (joinl a) = g (f (joinl a)))
+    (Hr : forall b, h (joinr b) = g (f (joinr b)))
+    (Hglue : forall a b, ap h (jglue a b) @ Hr b = Hl a @ ap g (ap f (jglue a b)))
+    : h == g o f.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply (Join_ind _ Hl Hr).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros a b; cbn beta.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 105
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+    transport_paths FlFFr.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply Hglue.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 107
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 108
+Time: 0.003s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre>
+  
+  Definition Join_ind_FFlFFr {A B C D P : Type}
+    (f : Join A B -&gt; C) (g : C -&gt; P) (h : Join A B -&gt; D) (i : D -&gt; P)
+    (Hl : forall a, i (h (joinl a)) = g (f (joinl a)))
+    (Hr : forall b, i (h (joinr b)) = g (f (joinr b)))
+    (Hglue : forall a b, ap i (ap h (jglue a b)) @ Hr b = Hl a @ ap g (ap f (jglue a b)))
+    : i o h == g o f.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply (Join_ind _ Hl Hr).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros a b; cbn beta.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 118
+Time: 0.002s">
+<div class="time" style="width: 1.5503875968992%"></div>
+<pre>
+    transport_paths FFlFFr.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply Hglue.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 120
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 121
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition Join_rec {A B P : Type} (P_A : A -&gt; P) (P_B : B -&gt; P)
+    (P_g : forall a b, P_A a = P_B b) : Join A B -&gt; P.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 125
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (Pushout_rec P P_A P_B).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 126
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (fun ab =&gt; P_g (fst ab) (snd ab)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 128
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+
+  Definition Join_rec_beta_jglue {A B P : Type} (P_A : A -&gt; P)
+    (P_B : B -&gt; P) (P_g : forall a b, P_A a = P_B b) a b
+    : ap (Join_rec P_A P_B P_g) (jglue a b) = P_g a b.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (Pushout_rec_beta_pglue _ _ _ _ (a, b)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 135
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** If [A] is pointed, so is [Join A B]. *)
+ </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition pjoin (A : pType) (B : Type) : pType
+    := [Join A B, joinl pt].</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 139
+Time: 0.002s">
+<div class="time" style="width: 1.5503875968992%"></div>
+<pre>
+
+End Join.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments joinl {A B}%_type_scope _ , [A] B _.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments joinr {A B}%_type_scope _ , A [B] _.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Zigzags in joins *)
+
+(** These paths are very common, so we give them names and prove a few results about them. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 148
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition zigzag {A B : Type} (a a' : A) (b : B)
+  : joinl a = joinl a'
+  := jglue a b @ (jglue a' b)^.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition zagzig {A B : Type} (a : A) (b b' : B)
+  : joinr b = joinr b'
+  := (jglue a b)^ @ jglue a b'.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 154
+Time: 0.003s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre>
+
+Definition zigzag_zigzag {A B : Type} (a a' : A) (b : B)
+  : zigzag a a' b @ zigzag a' a b = 1
+  := concat_pp_p _ _ _ @ (1 @@ concat_V_pp _ _) @ concat_pV _.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 158
+Time: 0.002s">
+<div class="time" style="width: 1.5503875968992%"></div>
+<pre>
+
+Definition zigzag_inv {A B : Type} (a a' : A) (b : B)
+  : (zigzag a a' b)^ = zigzag a' a b
+  := inv_pp _ _ @ (inv_V _ @@ 1).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** And we give a beta rule for zigzags. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 164
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>Definition Join_rec_beta_zigzag {A B P : Type} (P_A : A -&gt; P)
+  (P_B : B -&gt; P) (P_g : forall a b, P_A a = P_B b) a a' b
+  : ap (Join_rec P_A P_B P_g) (zigzag a a' b) = P_g a b @ (P_g a' b)^.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 166
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 167
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+  lhs napply ap_pV.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 168
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+  exact (Join_rec_beta_jglue _ _ _ a b @@ inverse2 (Join_rec_beta_jglue _ _ _ a' b)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 169
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * [Join_rec] gives an equivalence of 0-groupoids
+
+  We now prove many things about [Join_rec], for example, that it is an equivalence of 0-groupoids from the [JoinRecData] that we define next.  The framework we use is a bit elaborate, but it parallels the framework used in TriJoin.v, where careful organization is essential. *)
+
+</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 175
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>Record JoinRecData {A B P : Type} := {
+    jl : A -&gt; P;
+    jr : B -&gt; P;
+    jg : forall a b, jl a = jr b;
+  }.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 179
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments JoinRecData : clear implicits.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 181
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments Build_JoinRecData {A B P}%_type_scope (jl jr jg)%_function_scope.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 182
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We use the name [join_rec] for the version of [Join_rec] defined on this data. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 184
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>Definition join_rec {A B P : Type} (f : JoinRecData A B P)
+  : Join A B $-&gt; P
+  := Join_rec (jl f) (jr f) (jg f).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 186
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+
+Definition join_rec_beta_jg {A B P : Type} (f : JoinRecData A B P) (a : A) (b : B)
+  : ap (join_rec f) (jglue a b) = jg f a b
+  := Join_rec_beta_jglue _ _ _ a b.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 190
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We're next going to define a map in the other direction.  We do it via showing that [JoinRecData] is a 0-coherent 1-functor to [Type]. We'll later show that it is a 1-functor to 0-groupoids. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 192
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition joinrecdata_fun {A B P Q : Type} (g : P -&gt; Q) (f : JoinRecData A B P)
+  : JoinRecData A B Q.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 193
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 194
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_JoinRecData.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (g o jl f).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (g o jr f).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fun a b =&gt; ap g (jg f a b)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 199
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The join itself has canonical [JoinRecData]. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 201
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition joinrecdata_join (A B : Type) : JoinRecData A B (Join A B)
+  := Build_JoinRecData joinl joinr jglue.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 202
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Combining these gives a function going in the opposite direction to [join_rec]. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 204
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition join_rec_inv {A B P : Type} (f : Join A B -&gt; P)
+  : JoinRecData A B P
+  := joinrecdata_fun f (joinrecdata_join A B).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Under [Funext], [join_rec] and [join_rec_inv] should be inverse equivalences.  We'll avoid [Funext] and show that they are equivalences of 0-groupoids, where we choose the path structures carefully. *)
+
+(** ** The graph structure on [JoinRecData A B P]
+
+  Under [Funext], this type will be equivalent to the identity type.  But without [Funext], this definition will be more useful. *)
+
+</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 213
+Time: 0.003s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre>Record JoinRecPath {A B P : Type} {f g : JoinRecData A B P} := {
+    hl : forall a, jl f a = jl g a;
+    hr : forall b, jr f b = jr g b;
+    hg : forall a b, jg f a b @ hr b = hl a @ jg g a b;
+  }.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 217
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments JoinRecPath {A B P} f g.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 219
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** In the special case where the first two components of [f] and [g] agree definitionally, [hl] and [hr] can be identity paths, and [hg] simplifies slightly. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 221
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>Definition bundle_joinrecpath {A B P : Type} {jl' : A -&gt; P} {jr' : B -&gt; P}
+  {f g : forall a b, jl' a = jr' b}
+  (h : forall a b, f a b = g a b)
+  : JoinRecPath (Build_JoinRecData jl' jr' f) (Build_JoinRecData jl' jr' g).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 224
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 225
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+  snapply Build_JoinRecPath.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 226
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1, 2: reflexivity.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 227
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros; apply equiv_p1_1q, h.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 229
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A tactic that helps us apply the previous result. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 231
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Ltac bundle_joinrecpath :=
+  hnf;
+  match goal with |- JoinRecPath ?F ?G =&gt;
+    refine (bundle_joinrecpath (f:=jg F) (g:=jg G) _) end.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 234
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Using [JoinRecPath], we can restate the beta rule for [join_rec]. This says that [join_rec_inv] is split surjective. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 236
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>Definition join_rec_beta {A B P : Type} (f : JoinRecData A B P)
+  : JoinRecPath (join_rec_inv (join_rec f)) f
+  := bundle_joinrecpath (join_rec_beta_jg f).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 238
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [join_rec_inv] is essentially injective, as a map between 0-groupoids. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 240
+Time: 0.003s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre>Definition isinj_join_rec_inv {A B P : Type} {f g : Join A B -&gt; P}
+  (h : JoinRecPath (join_rec_inv f) (join_rec_inv g))
+  : f == g
+  := Join_ind_FlFr _ _ (hl h) (hr h) (hg h).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 243
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Lemmas and tactics about intervals and squares
+
+  We now introduce several lemmas and tactics that will dispense with some routine goals. The idea is that a generic interval can be assumed to be trivial on the first vertex, and a generic square can be assumed to be the identity on the domain edge. In order to apply the [paths_ind] and [square_ind] lemmas that make this precise, we need to generalize various terms in the goal. *)
+
+(** This destructs a three component term [f], generalizes each piece evaluated appropriately, and clears all pieces. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 249
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Ltac generalize_three f a b :=
+  let fg := fresh in let fr := fresh in let fl := fresh in
+  destruct f as [fl fr fg]; cbn;
+  generalize (fg a b); clear fg;
+  generalize (fr b); clear fr;
+  generalize (fl a); clear fl.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 254
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** For [f : JoinRecData A B P], if we have [a] and [b] and are trying to prove a statement only involving [jl f a], [jr f b] and [jg f a b], we can assume [jr f b] is [jl f a] and that [jg f a b] is reflexivity.  This is just path induction, but it requires generalizing the goal appropriately. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 256
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Ltac interval_ind f a b :=
+  generalize_three f a b;
+  intro f; (* We really only wanted two of them generalized here, so we intro one. *)
+  apply paths_ind.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 259
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Similarly, for [h : JoinRecPath f g], if we have [a] and [b] and are trying to prove a goal only involving [h] and [g] evaluated at those points, we can assume that [g] is [f] and that [h] is "reflexivity".  For this, we first define a lemma that is like "path induction on h", and then a tactic that uses it. *)
+
+</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 262
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>Definition square_ind {P : Type} (a b : P) (ab : a = b)
+  (Q : forall (a' b' : P) (ab' : a' = b') (ha : a = a') (hb : b = b') (k : ab @ hb = ha @ ab'), Type)
+  (s : Q a b ab idpath idpath (equiv_p1_1q idpath))
+  : forall a' b' ab' ha hb k, Q a' b' ab' ha hb k.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 265
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 266
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 267
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct ha, hb.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 268
+Time: 0.002s">
+<div class="time" style="width: 1.5503875968992%"></div>
+<pre>
+  revert k; equiv_intro (equiv_p1_1q (p:=ab) (q:=ab')) k'; destruct k'.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 269
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct ab.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 270
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact s.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 271
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 272
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* [g] should be the codomain of [h]. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 274
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Global Ltac square_ind g h a b :=
+  generalize_three h a b;
+  generalize_three g a b;
+  apply square_ind.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 277
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Use the WildCat library to organize things *)
+
+(** We begin by showing that [JoinRecData A B P] is a 0-groupoid, one piece at a time. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 281
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isgraph_joinrecdata (A B P : Type) : IsGraph (JoinRecData A B P)
+  := {| Hom := JoinRecPath |}.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 282
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance is01cat_joinrecdata (A B P : Type) : Is01Cat (JoinRecData A B P).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 284
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 285
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply Build_Is01Cat.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 286
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 287
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro f.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 287
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    bundle_joinrecpath.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 288
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    reflexivity.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 289
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 290
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros f1 f2 f3 h2 h1.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 290
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+    snapply Build_JoinRecPath; intros; cbn beta.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 291
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 292
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (hl h1 a @ hl h2 a).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 292
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 293
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (hr h1 b @ hr h2 b).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 293
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 294
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> (* Some simple path algebra works as well. *)
+     </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 295
+Time: 0.002s">
+<div class="time" style="width: 1.5503875968992%"></div>
+<pre>square_ind f3 h2 a b.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 295
+Time: 0.002s">
+<div class="time" style="width: 1.5503875968992%"></div>
+<pre>
+      square_ind f2 h1 a b.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 296
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      by interval_ind f1 a b.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 297
+Time: 0.003s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 298
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance is0gpd_joinrecdata (A B P : Type) : Is0Gpd (JoinRecData A B P).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 300
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 301
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply Build_Is0Gpd.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 302
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros f g h.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 303
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+  snapply Build_JoinRecPath; intros; cbn beta.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 304
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 305
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (hl h a)^.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 305
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 306
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (hr h b)^.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 306
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 307
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> (* Some simple path algebra works as well. *)
+   </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 308
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>square_ind g h a b.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 308
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by interval_ind f a b.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 309
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 310
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition joinrecdata_0gpd (A B P : Type) : ZeroGpd
+  := Build_ZeroGpd (JoinRecData A B P) _ _ _.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 313
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** [joinrecdata_0gpd A B] is a 1-functor from [Type] to [ZeroGpd]
+
+  It's a 1-functor that lands in [ZeroGpd], and the morphisms of [ZeroGpd] are 0-functors, so it's easy to get confused about the levels. *)
+
+(** First we need to show that the induced map is a morphism in [ZeroGpd], i.e. that it is a 0-functor. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 319
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance is0functor_joinrecdata_fun {A B P Q : Type} (g : P -&gt; Q)
+  : Is0Functor (@joinrecdata_fun A B P Q g).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 320
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 321
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply Build_Is0Functor.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 322
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros f1 f2 h.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 323
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+  snapply Build_JoinRecPath; intros; cbn.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 324
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 325
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (ap g (hl h a)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 325
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 326
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (ap g (hr h b)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 326
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 327
+Time: 0.018s">
+<div class="time" style="width: 13.953488372093%"></div>
+<pre> square_ind f2 h a b.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 327
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+    by interval_ind f1 a b.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 328
+Time: 0.002s">
+<div class="time" style="width: 1.5503875968992%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 329
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [joinrecdata_0gpd A B] is a 0-functor from [Type] to [ZeroGpd] (one level up). *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 331
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance is0functor_joinrecdata_0gpd (A B : Type) : Is0Functor (joinrecdata_0gpd A B).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 331
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 332
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply Build_Is0Functor.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 333
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros P Q g.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 334
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (Build_Fun01 (joinrecdata_fun g)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 335
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 336
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [joinrecdata_0gpd A B] is a 1-functor from [Type] to [ZeroGpd]. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 338
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>Instance is1functor_joinrecdata_0gpd (A B : Type) : Is1Functor (joinrecdata_0gpd A B).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 338
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 339
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply Build_Is1Functor.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 340
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* If [g1 g2 : P -&gt; Q] are homotopic, then the induced maps are homotopic: *)
+ </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 342
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>-</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 342
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros P Q g1 g2 h f; cbn in *.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 342
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+    snapply Build_JoinRecPath; intros; cbn.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 343
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1, 2: apply h.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 344
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    interval_ind f a b; cbn.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 345
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply concat_1p_p1.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 346
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* The identity map [P -&gt; P] is sent to a map homotopic to the identity. *)
+ </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 348
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>-</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 348
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros P f; cbn.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 348
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    bundle_joinrecpath; intros; cbn.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 349
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply ap_idmap.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 350
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* It respects composition. *)
+ </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 352
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>-</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 352
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros P Q R g1 g2 f; cbn.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 352
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    bundle_joinrecpath; intros; cbn.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 353
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply ap_compose.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 354
+Time: 0.002s">
+<div class="time" style="width: 1.5503875968992%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 355
+Time: 0.002s">
+<div class="time" style="width: 1.5503875968992%"></div>
+<pre>
+
+Definition joinrecdata_0gpd_fun (A B : Type) : Fun11 Type ZeroGpd
+  := Build_Fun11 _ _ (joinrecdata_0gpd A B).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 358
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** By the Yoneda lemma, it follows from [JoinRecData] being a 1-functor that given [JoinRecData] in [J], we get a map [(J -&gt; P) $-&gt; (JoinRecData A B P)] of 0-groupoids which is natural in [P]. Below we will specialize to the case where [J] is [Join A B] with the canonical [JoinRecData]. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 360
+Time: 0.002s">
+<div class="time" style="width: 1.5503875968992%"></div>
+<pre>Definition join_nattrans_recdata {A B J : Type} (f : JoinRecData A B J)
+  : NatTrans (opyon_0gpd J) (joinrecdata_0gpd_fun A B).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 361
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 362
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> 
+  snapply Build_NatTrans.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 363
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+  1: rapply opyoneda_0gpd.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 364
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  2: exact _.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 365
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact f.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 366
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 367
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Thus we get a map [(Join A B -&gt; P) $-&gt; (JoinRecData A B P)] of 0-groupoids, natural in [P]. The underlying map is [join_rec_inv A B P]. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 369
+Time: 0.002s">
+<div class="time" style="width: 1.5503875968992%"></div>
+<pre>Definition join_rec_inv_nattrans (A B : Type)
+  : NatTrans (opyon_0gpd (Join A B)) (joinrecdata_0gpd_fun A B)
+  := join_nattrans_recdata (joinrecdata_join A B).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 371
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** This natural transformation is in fact a natural equivalence of 0-groupoids. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 373
+Time: 0.002s">
+<div class="time" style="width: 1.5503875968992%"></div>
+<pre>Definition join_rec_inv_natequiv (A B : Type)
+  : NatEquiv (opyon_0gpd (Join A B)) (joinrecdata_0gpd_fun A B).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 374
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 375
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_NatEquiv'.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 376
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: apply join_rec_inv_nattrans.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 377
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro P.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 378
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply isequiv_0gpd_issurjinj.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 379
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply Build_IsSurjInj.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 380
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 381
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros f; cbn in f.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 381
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists (join_rec f).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 382
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply join_rec_beta.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 383
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 384
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (@isinj_join_rec_inv A B P).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 384
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 385
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** It will be handy to name the inverse natural equivalence. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 387
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition join_rec_natequiv (A B : Type)
+  := natequiv_inverse (join_rec_inv_natequiv A B).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 388
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [join_rec_natequiv A B P] is an equivalence of 0-groupoids whose underlying function is definitionally [join_rec]. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 390
+Time: 0.002s">
+<div class="time" style="width: 1.5503875968992%"></div>
+<pre>Local Definition join_rec_natequiv_check (A B P : Type)
+  : equiv_fun_0gpd (join_rec_natequiv A B P) = @join_rec A B P
+  := idpath.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 392
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** It follows that [join_rec A B P] is a 0-functor. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 394
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>Instance is0functor_join_rec (A B P : Type) : Is0Functor (@join_rec A B P).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 394
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 395
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+  change (Is0Functor (equiv_fun_0gpd (join_rec_natequiv A B P))).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 396
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+  exact _.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 397
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 398
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** And that [join_rec A B] is natural.   The [$==] in the statement is just [==], but we use WildCat notation so that we can invert and compose these with WildCat notation. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 400
+Time: 0.002s">
+<div class="time" style="width: 1.5503875968992%"></div>
+<pre>Definition join_rec_nat (A B : Type) {P Q : Type} (g : P -&gt; Q) (f : JoinRecData A B P)
+  : join_rec (joinrecdata_fun g f) $== g o join_rec f.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 401
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 402
+Time: 0.003s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre>
+  exact (isnat (join_rec_natequiv A B) g f).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 403
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 404
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We restate the previous two results using [Join_rec] for convenience. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 406
+Time: 0.005s">
+<div class="time" style="width: 3.8759689922481%"></div>
+<pre>Definition Join_rec_homotopic (A B : Type) {P : Type}
+  (fl  : A -&gt; P) (fr  : B -&gt; P) (fg  : forall a b, fl  a = fr  b)
+  (fl' : A -&gt; P) (fr' : B -&gt; P) (fg' : forall a b, fl' a = fr' b)
+  (hl : forall a, fl a = fl' a)
+  (hr : forall b, fr b = fr' b)
+  (hg : forall a b, fg a b @ hr b = hl a @ fg' a b)
+  : Join_rec fl fr fg == Join_rec fl' fr' fg'
+  := fmap join_rec (Build_JoinRecPath _ _ _
+      {| jl:=fl; jr:=fr; jg:=fg |} {| jl:=fl'; jr:=fr'; jg:=fg' |} hl hr hg).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 414
+Time: 0.015s">
+<div class="time" style="width: 11.627906976744%"></div>
+<pre>
+
+Definition Join_rec_nat (A B : Type) {P Q : Type} (g : P -&gt; Q)
+  (fl : A -&gt; P) (fr : B -&gt; P) (fg : forall a b, fl a = fr b)
+  : Join_rec (g o fl) (g o fr) (fun a b =&gt; ap g (fg a b)) == g o Join_rec fl fr fg
+  := join_rec_nat _ _ g {| jl:=fl; jr:=fr; jg:=fg |}.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 419
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Various types of equalities between paths in joins *)
+
+(** Naturality squares for given paths in [A] and [B]. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 423
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section JoinNatSq.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 423
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+
+  Definition join_natsq {A B : Type} {a a' : A} {b b' : B}
+    (p : a = a') (q : b = b')
+    : (ap joinl p) @ (jglue a' b') = (jglue a b) @ (ap joinr q).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 427
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 428
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct p, q.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 429
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply concat_1p_p1.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 430
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 431
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+
+  Definition join_natsq_v {A B : Type} {a a' : A} {b b' : B}
+    (p : a = a') (q : b = b')
+    : PathSquare (ap joinl p) (ap joinr q) (jglue a b) (jglue a' b').</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 435
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 436
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct p, q.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 437
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply sq_refl_v.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 438
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 439
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition join_natsq_h {A B : Type} {a a' : A} {b b' : B}
+    (p : a = a') (q : b = b')
+    : PathSquare (jglue a b) (jglue a' b') (ap joinl p) (ap joinr q).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 443
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 444
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct p, q.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 445
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply sq_refl_h.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 446
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 447
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End JoinNatSq.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 449
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The triangles that arise when one of the given paths is reflexivity. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 451
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section Triangle.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 451
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {A B : Type}.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 453
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition triangle_h {a a' : A} (b : B) (p : a = a')
+    : ap joinl p @ (jglue a' b) = jglue a b.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 456
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 457
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct p.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 458
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply concat_1p.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 459
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 460
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition triangle_h' {a a' : A} (b : B) (p : a = a')
+    : zigzag a a' b = ap joinl p.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 463
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 464
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct p.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 465
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply concat_pV.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 466
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 467
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition triangle_v (a : A) {b b' : B} (p : b = b')
+    : jglue a b @ ap joinr p = jglue a b'.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 470
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 471
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct p.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 472
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply concat_p1.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 473
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 474
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition triangle_v' (a : A) {b b' : B} (p : b = b')
+    : zagzig a b b' = ap joinr p.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 477
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 478
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct p.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 479
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply concat_Vp.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 480
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 481
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** For just one of the above, we give a rule for how it behaves on inverse paths. *)
+ </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 484
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>Definition triangle_v_V (a : A) {b b' : B} (p : b = b')
+    : triangle_v a p^ = (1 @@ ap_V joinr p) @ moveR_pV _ _ _ (triangle_v a p)^.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 485
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 486
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+    destruct p; cbn.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 487
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rhs napply concat_1p.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 488
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    symmetry; apply concat_pV_p.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 489
+Time: 0.003s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 490
+Time: 0.002s">
+<div class="time" style="width: 1.5503875968992%"></div>
+<pre>
+
+End Triangle.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 492
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Diamond lemmas for Join *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 494
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section Diamond.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 494
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {A B : Type}.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 496
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition Diamond (a a' : A) (b b' : B)
+    := PathSquare (jglue a b) (jglue a' b')^ (jglue a b') (jglue a' b)^.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 499
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition diamond_h {a a' : A} (b b' : B) (p : a = a')
+    : zigzag a a' b = zigzag a a' b'.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 502
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 503
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct p.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 504
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (concat_pV _ @ (concat_pV _)^).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 505
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 506
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition diamond_h_sq {a a' : A} (b b' : B) (p : a = a')
+    : Diamond a a' b b'.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 509
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 510
+Time: 0.002s">
+<div class="time" style="width: 1.5503875968992%"></div>
+<pre>
+    by apply sq_path, diamond_h.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 511
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 512
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition diamond_v (a a' : A) {b b' : B} (p : b = b')
+    : zigzag a a' b = zigzag a a' b'
+    := ap (zigzag a a') p.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 516
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition diamond_v_sq (a a' : A) {b b' : B} (p : b = b')
+    : Diamond a a' b b'.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 519
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 520
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by apply sq_path, diamond_v.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 521
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 522
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma diamond_symm (a : A) (b : B)
+    : diamond_v_sq a a 1 = diamond_h_sq b b 1.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 525
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 526
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unfold diamond_v_sq, diamond_h_sq, diamond_v, diamond_h.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 527
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+    symmetry; apply ap, concat_pV.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 528
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 529
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+
+End Diamond.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 531
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition diamond_twist {A : Type} {a a' : A} (p : a = a')
+  : DPath (fun x =&gt; Diamond a' x a x) p
+    (diamond_v_sq a' a 1) (diamond_h_sq a a' 1).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 535
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 536
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct p.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 537
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+  apply diamond_symm.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 538
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 539
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Functoriality of Join. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 541
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section FunctorJoin.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 541
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** In some cases, we'll need to refer to the recursion data that defines [functor_join], so we make it a separate definition. *)
+ </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 544
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>Definition functor_join_recdata {A B C D} (f : A -&gt; C) (g : B -&gt; D)
+    : JoinRecData A B (Join C D)
+    := {| jl := joinl o f; jr := joinr o g; jg := fun a b =&gt; jglue (f a) (g b); |}.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 546
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition functor_join {A B C D} (f : A -&gt; C) (g : B -&gt; D)
+    : Join A B -&gt; Join C D
+    := join_rec (functor_join_recdata f g).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 550
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+
+  Definition functor_join_beta_jglue {A B C D : Type} (f : A -&gt; C) (g : B -&gt; D)
+    (a : A) (b : B)
+    : ap (functor_join f g) (jglue a b) = jglue (f a) (g b)
+    := join_rec_beta_jg _ a b.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 555
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+
+  Definition functor_join_beta_zigzag {A B C D : Type} (f : A -&gt; C) (g : B -&gt; D)
+    (a a' : A) (b : B)
+    : ap (functor_join f g) (zigzag a a' b) = zigzag (f a) (f a') (g b)
+    := Join_rec_beta_zigzag _ _ _ a a' b.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 560
+Time: 0.002s">
+<div class="time" style="width: 1.5503875968992%"></div>
+<pre>
+
+  Definition functor_join_compose {A B C D E F}
+    (f : A -&gt; C) (g : B -&gt; D) (h : C -&gt; E) (i : D -&gt; F)
+    : functor_join (h o f) (i o g) == functor_join h i o functor_join f g.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 564
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 565
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+    snapply Join_ind_FlFFr.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 566
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1,2: reflexivity.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 567
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros a b.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 568
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+    simpl.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 569
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply equiv_p1_1q.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 570
+Time: 0.002s">
+<div class="time" style="width: 1.5503875968992%"></div>
+<pre>
+    lhs napply functor_join_beta_jglue; symmetry.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 571
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+    lhs nrefine (ap _ (functor_join_beta_jglue _ _ _ _)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 572
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    napply (functor_join_beta_jglue _ _ (f a) (g b)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 573
+Time: 0.008s">
+<div class="time" style="width: 6.2015503875969%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 574
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition functor_join_idmap {A B}
+    : functor_join idmap idmap == (idmap : Join A B -&gt; Join A B).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 577
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 578
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+    snapply Join_ind_FlFr.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 579
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1,2: reflexivity.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 580
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros a b.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 581
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    simpl.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 582
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply equiv_p1_1q.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 583
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+    lhs napply functor_join_beta_jglue.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 584
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    symmetry; apply ap_idmap.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 585
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 586
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition functor2_join {A B C D} {f f' : A -&gt; C} {g g' : B -&gt; D}
+    (h : f == f') (k : g == g')
+    : functor_join f g == functor_join f' g'.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 590
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 591
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+    srapply Join_ind_FlFr.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 592
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 593
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl; intros; apply ap, h.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 593
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 594
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl; intros; apply ap, k.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 594
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 595
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a b; cbn beta.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 595
+Time: 0.002s">
+<div class="time" style="width: 1.5503875968992%"></div>
+<pre>
+      lhs napply (functor_join_beta_jglue _ _ _ _ @@ 1).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 596
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      symmetry.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 597
+Time: 0.002s">
+<div class="time" style="width: 1.5503875968992%"></div>
+<pre>
+      lhs napply (1 @@ functor_join_beta_jglue _ _ _ _).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 598
+Time: 0.129s">
+<div class="time" style="width: 100%"></div>
+<pre>
+      apply join_natsq.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 599
+Time: 0.002s">
+<div class="time" style="width: 1.5503875968992%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 600
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance isequiv_functor_join {A B C D}
+    (f : A -&gt; C) `{!IsEquiv f} (g : B -&gt; D) `{!IsEquiv g}
+    : IsEquiv (functor_join f g).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 604
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 605
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply isequiv_adjointify.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 606
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 607
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (functor_join f^-1 g^-1).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 607
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 608
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> etransitivity.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 608
+Time: 0.005s">
+<div class="time" style="width: 3.8759689922481%"></div>
+<pre>
+      1: symmetry; apply functor_join_compose.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 609
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      etransitivity.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 610
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      1: exact (functor2_join (eisretr f) (eisretr g)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 611
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact functor_join_idmap.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 612
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 613
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> etransitivity.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 613
+Time: 0.003s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre>
+      1: symmetry; apply functor_join_compose.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 614
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      etransitivity.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 615
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      1: exact (functor2_join (eissect f) (eissect g)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 616
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply functor_join_idmap.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 617
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 618
+Time: 0.005s">
+<div class="time" style="width: 3.8759689922481%"></div>
+<pre>
+
+  Definition equiv_functor_join {A B C D} (f : A &lt;~&gt; C) (g : B &lt;~&gt; D)
+    : Join A B &lt;~&gt; Join C D := Build_Equiv _ _ (functor_join f g) _.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 621
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance is0bifunctor_join : Is0Bifunctor Join.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 623
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 624
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply Build_Is0Bifunctor'.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 625
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1,2: exact _.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 626
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply Build_Is0Functor.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 627
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros A B [f g].</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 628
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (functor_join f g).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 629
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 630
+Time: 0.002s">
+<div class="time" style="width: 1.5503875968992%"></div>
+<pre>
+
+  #[export] Instance is1bifunctor_join : Is1Bifunctor Join.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 632
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 633
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply Build_Is1Bifunctor'.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 634
+Time: 0.002s">
+<div class="time" style="width: 1.5503875968992%"></div>
+<pre>
+    napply Build_Is1Functor.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 635
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 636
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros A B f g [p q].</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 636
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (functor2_join p q).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 637
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 638
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros A; exact functor_join_idmap.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 638
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 639
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros A B C [f g] [h k].</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 639
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (functor_join_compose f g h k).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 640
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 641
+Time: 0.003s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre>
+
+End FunctorJoin.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 643
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Symmetry of Join
+
+  We'll use the recursion equivalence above to prove the symmetry of Join, using the Yoneda lemma.  The idea is that [Join A B -&gt; P] is equivalent (as a 0-groupoid) to [JoinRecData A B P], and the latter is very symmetrical by construction, which makes it easy to show that it is equivalent to [JoinRecData B A P].  Going back along the first equivalence gets us to [Join B A -&gt; P].  These equivalences are natural in [P], so the symmetry equivalence follows from the Yoneda lemma.  This is mainly meant as a warm-up to proving the associativity of the join. *)
+
+</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 648
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section JoinSym.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 648
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition joinrecdata_sym (A B P : Type)
+    : joinrecdata_0gpd A B P $-&gt; joinrecdata_0gpd B A P.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 651
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 652
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply Build_Fun01'.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 653
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (* The map of types [JoinRecData A B P -&gt; JoinRecData B A P]: *)
+   </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 655
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>-</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 655
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [fl fr fg].</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 655
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      snapply (Build_JoinRecData fr fl).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 656
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      intros b a; exact (fg a b)^.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 657
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (* It respects the paths. *)
+   </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 659
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>-</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 659
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros f g h; simpl.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 659
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+      snapply Build_JoinRecPath; simpl.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 660
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      1, 2: intros; apply h.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 661
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      intros b a.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 662
+Time: 0.002s">
+<div class="time" style="width: 1.5503875968992%"></div>
+<pre>
+      square_ind g h a b.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 663
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      by interval_ind f a b.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 664
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 665
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** This map is its own inverse in the 1-category of 0-groupoids. *)
+ </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 668
+Time: 0.003s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre>Definition joinrecdata_sym_inv (A B P : Type)
+    : joinrecdata_sym B A P $o joinrecdata_sym A B P $== Id _.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 669
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 670
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro f; simpl.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 671
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    bundle_joinrecpath.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 672
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros a b; simpl.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 673
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply inv_V.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 674
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 675
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** We get the symmetry natural equivalence on [TriJoinRecData]. *)
+ </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 678
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>Definition joinrecdata_sym_natequiv (A B : Type)
+    : NatEquiv (joinrecdata_0gpd_fun A B) (joinrecdata_0gpd_fun B A).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 679
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 680
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply Build_NatEquiv.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 681
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (* An equivalence of 0-groupoids for each [P]: *)
+   </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 683
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>-</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 683
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro P.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 683
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+      snapply cate_adjointify.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 684
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      1, 2: apply joinrecdata_sym.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 685
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      1, 2: apply joinrecdata_sym_inv.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 686
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (* Naturality: *)
+   </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 688
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>-</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 688
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> snapply Build_Is1Natural.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 688
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      intros P Q g f; simpl.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 689
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      bundle_joinrecpath.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 690
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      intros b a; simpl.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 691
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      symmetry; apply ap_V.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 692
+Time: 0.002s">
+<div class="time" style="width: 1.5503875968992%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 693
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Combining with the recursion equivalence [join_rec_inv_natequiv] and its inverse gives the symmetry natural equivalence between the representable functors. *)
+ </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 696
+Time: 0.004s">
+<div class="time" style="width: 3.1007751937984%"></div>
+<pre>Definition joinrecdata_fun_sym (A B : Type)
+    : NatEquiv (opyon_0gpd (Join A B)) (opyon_0gpd (Join B A))
+    := natequiv_compose (join_rec_natequiv B A)
+        (natequiv_compose (joinrecdata_sym_natequiv A B) (join_rec_inv_natequiv A B)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 699
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The Yoneda lemma for 0-groupoid valued functors therefore gives us an equivalence between the representing objects.  We mark this with a prime, since we'll use a homotopic map with a slightly simpler definition. *)
+ </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 702
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition equiv_join_sym' (A B : Type)
+    : Join A B &lt;~&gt; Join B A.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 703
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 704
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+    tapply (opyon_equiv_0gpd (A:=Type)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 705
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+    apply joinrecdata_fun_sym.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 706
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 707
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** It has the nice property that the underlying function of the inverse is again [equiv_join_sym'], with arguments permuted. *)
+ </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 710
+Time: 0.008s">
+<div class="time" style="width: 6.2015503875969%"></div>
+<pre>Local Definition equiv_join_sym_check1 (A B : Type)
+    : (equiv_join_sym' A B)^-1 = equiv_fun (equiv_join_sym' B A)
+    := idpath.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 712
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The definition we end up with is almost the same as the obvious one, but has an extra [ap idmap] in it. *)
+ </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 715
+Time: 0.002s">
+<div class="time" style="width: 1.5503875968992%"></div>
+<pre>Local Definition equiv_join_sym_check2 (A B : Type)
+    : equiv_fun (equiv_join_sym' A B) = Join_rec (fun a : A =&gt; joinr a) (fun b : B =&gt; joinl b)
+                                          (fun (a : A) (b : B) =&gt; (ap idmap (jglue b a))^)
+    := idpath.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 718
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The next two give the obvious definition. *)
+ </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 721
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition join_sym_recdata (A B : Type)
+    : JoinRecData A B (Join B A)
+    := Build_JoinRecData joinr joinl (fun a b =&gt; (jglue b a)^).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 723
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition join_sym (A B : Type)
+    : Join A B -&gt; Join B A
+    := join_rec (join_sym_recdata A B).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 727
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+
+  Definition join_sym_beta_jglue {A B} (a : A) (b : B)
+    : ap (join_sym A B) (jglue a b) = (jglue b a)^
+    := Join_rec_beta_jglue _ _ _ _ _.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 731
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The obvious definition is homotopic to the definition via the Yoneda lemma. *)
+ </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 734
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition join_sym_homotopic (A B : Type)
+    : join_sym A B == equiv_join_sym' A B.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 735
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 736
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    symmetry.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 737
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (** Both sides are [join_rec] applied to [JoinRecData]: *)
+   </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 739
+Time: 0.003s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre>tapply (fmap join_rec).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 739
+Time: 0.003s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre>
+    bundle_joinrecpath; intros; cbn.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 740
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (ap inverse _).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 741
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply ap_idmap.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 742
+Time: 0.003s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 743
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Therefore the obvious definition is also an equivalence, and the inverse function can also be chosen to be [join_sym]. *)
+ </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 746
+Time: 0.002s">
+<div class="time" style="width: 1.5503875968992%"></div>
+<pre>Definition equiv_join_sym (A B : Type) : Join A B &lt;~&gt; Join B A
+    := equiv_homotopic_inverse (equiv_join_sym' A B)
+                              (join_sym_homotopic A B)
+                              (join_sym_homotopic B A).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 749
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+
+  #[export] Instance isequiv_join_sym A B : IsEquiv (join_sym A B)
+    := equiv_isequiv (equiv_join_sym A B).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 752
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** It's also straightforward to directly prove that [join_sym] is an equivalence.  The above approach is meant to illustrate the Yoneda lemma.  In the case of [equiv_trijoin_twist], the Yoneda approach seems to be more straightforward. *)
+ </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 755
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition join_sym_inv A B : join_sym A B o join_sym B A == idmap.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 755
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 756
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+    snapply (Join_ind_FFlr (join_sym B A)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 757
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 758
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 758
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 759
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 759
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 760
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a b; cbn beta.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 760
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply equiv_p1_1q.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 761
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+      refine (ap _ (join_rec_beta_jg _ a b) @ _); cbn.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 762
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      refine (ap_V _ (jglue b a) @ _).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 763
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      refine (ap inverse (join_rec_beta_jg _ b a) @ _).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 764
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply inv_V.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 765
+Time: 0.002s">
+<div class="time" style="width: 1.5503875968992%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 766
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Finally, one can also prove that the join is symmetric using [pushout_sym] and [equiv_prod_symm], but this results in an equivalence whose inverse isn't of the same form. *)
+
+  (** We give a direct proof that [join_sym] is natural. *)
+ </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 771
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>Definition join_sym_nat {A B A' B'} (f : A -&gt; A') (g : B -&gt; B')
+    : join_sym A' B' o functor_join f g == functor_join g f o join_sym A B.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 772
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 773
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+    snapply Join_ind_FFlFFr.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 774
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1, 2: reflexivity.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 775
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros a b; cbn beta.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 776
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply equiv_p1_1q.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 777
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+    lhs nrefine (ap _ (functor_join_beta_jglue _ _ _ _)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 778
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+    lhs napply join_sym_beta_jglue.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 779
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    symmetry.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 780
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    lhs nrefine (ap _ (join_sym_beta_jglue a b)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 781
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+    refine (ap_V _ (jglue b a) @ ap inverse _).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 782
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply functor_join_beta_jglue.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 783
+Time: 0.004s">
+<div class="time" style="width: 3.1007751937984%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 784
+Time: 0.009s">
+<div class="time" style="width: 6.9767441860465%"></div>
+<pre>
+
+End JoinSym.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 786
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Other miscellaneous results about joins *)
+
+(** Relationship to truncation levels and connectedness. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 790
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section JoinTrunc.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 790
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Joining with a contractible type produces a contractible type *)
+ </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 793
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export] Instance contr_join A B `{Contr A} : Contr (Join A B).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 793
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 794
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (Build_Contr _ (joinl (center A))).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 795
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply Join_ind.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 796
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 797
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a; apply ap, contr.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 797
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 798
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros b; apply jglue.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 798
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 799
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a b; cbn.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 799
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      lhs napply transport_paths_r.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 800
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply triangle_h.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 801
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 802
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The join of hprops is an hprop *)
+ </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 805
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export] Instance ishprop_join `{Funext} A B `{IsHProp A} `{IsHProp B} : IsHProp (Join A B).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 805
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 806
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply hprop_inhabited_contr.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 807
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply Join_rec.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 808
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 809
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a; apply contr_join.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 809
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (contr_inhabited_hprop A a).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 810
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 811
+Time: 0.003s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre> intros b; refine (contr_equiv (Join B A) (equiv_join_sym B A)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 811
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply contr_join.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 812
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (contr_inhabited_hprop B b).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 813
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (* The two proofs of contractibility are equal because [Contr] is an [HProp].  This uses [Funext]. *)
+   </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 815
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>-</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 815
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a b; apply path_ishprop.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 815
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 816
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma equiv_into_hprop `{Funext} {A B P : Type} `{IsHProp P} (f : A -&gt; P)
+    : (Join A B -&gt; P) &lt;~&gt; (B -&gt; P).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 819
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 820
+Time: 0.002s">
+<div class="time" style="width: 1.5503875968992%"></div>
+<pre>
+    apply equiv_iff_hprop.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 821
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: exact (fun f =&gt; f o joinr).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 822
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros g.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 823
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply Join_rec.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 824
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1,2: assumption.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 825
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros a b.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 826
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_ishprop.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 827
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 828
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** And coincides with their disjunction *)
+ </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 831
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition equiv_join_hor `{Funext} A B `{IsHProp A} `{IsHProp B}
+    : Join A B &lt;~&gt; hor A B.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 832
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 833
+Time: 0.003s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre>
+    apply equiv_iff_hprop.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 834
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 835
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre> exact (Join_rec (fun a =&gt; tr (inl a)) (fun b =&gt; tr (inr b)) (fun _ _ =&gt; path_ishprop _ _)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 835
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 836
+Time: 0.004s">
+<div class="time" style="width: 3.1007751937984%"></div>
+<pre> apply Trunc_rec, push.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 836
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 837
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Joins add connectivity *)
+ </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 840
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export] Instance isconnected_join `{Funext} {m n : trunc_index}
+         (A B : Type) `{IsConnected m A} `{IsConnected n B}
+    : IsConnected (m +2+ n) (Join A B).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 842
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 843
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply isconnected_from_elim; intros C ? k.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 844
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    transparent assert (f : (A -&gt; {s : Unit -&gt; C &amp;
+                                   forall x, s tt = k (joinr x)})).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 846
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 847
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a; exists (fun _ =&gt; k (joinl a)); intros b.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 847
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (ap k (jglue a b)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 848
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 848
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    assert (h : NullHomotopy f).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 849
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 850
+Time: 0.041s">
+<div class="time" style="width: 31.782945736434%"></div>
+<pre> rapply (isconnected_elim m).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 850
+Time: 0.006s">
+<div class="time" style="width: 4.6511627906977%"></div>
+<pre>
+      rapply (istrunc_extension_along_conn (n:=n)).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 851
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 851
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unfold NullHomotopy in *; destruct h as [[c g] h].</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 852
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists (c tt).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 853
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+    snapply Join_ind.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 854
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 855
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a; cbn beta.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 855
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (ap10 (h a)..1 tt).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 855
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 856
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros b; cbn beta.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 856
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (g b)^.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 856
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 857
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a b.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 857
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+      transport_paths Fl.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 858
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply moveL_pV, moveR_Mp.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 859
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+      lhs_V napply (apD10 (h a)..2 b); simpl.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 860
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+      lhs napply transport_forall_constant.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 861
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      napply transport_paths_Fl.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 862
+Time: 0.003s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 863
+Time: 0.003s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre>
+
+End JoinTrunc.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 865
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Join with Empty *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 867
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section JoinEmpty.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 867
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition equiv_join_empty_right A : Join A Empty &lt;~&gt; A.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 869
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 870
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply equiv_adjointify.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 871
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 872
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply join_rec; snapply (Build_JoinRecData idmap); contradiction.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 872
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 873
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact joinl.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 873
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 874
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 874
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 875
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre> snapply Join_ind; [reflexivity| |]; contradiction.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 875
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 876
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition equiv_join_empty_left A : Join Empty A &lt;~&gt; A
+    := equiv_join_empty_right _ oE equiv_join_sym _ _.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 879
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+
+  #[export] Instance join_right_unitor : RightUnitor Join Empty.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 881
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 882
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+    snapply Build_NatEquiv.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 883
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 884
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact equiv_join_empty_right.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 884
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 885
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> snapply Build_Is1Natural.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 885
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      intros A B f.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 886
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      cbn -[equiv_join_empty_right].</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 887
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+      snapply Join_ind_FlFr.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 888
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 889
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro a.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 889
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        reflexivity.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 890
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 891
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [].</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 891
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 892
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a [].</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 892
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 893
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+
+  #[export] Instance join_left_unitor : LeftUnitor Join Empty.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 895
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 896
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply Build_NatEquiv.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 897
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 898
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact equiv_join_empty_left.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 898
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 899
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> snapply Build_Is1Natural.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 899
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      intros A B f x.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 900
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      cbn -[equiv_join_empty_right].</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 901
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+      rhs_V rapply (isnat_natequiv join_right_unitor).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 902
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      cbn -[equiv_join_empty_right].</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 903
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply ap, join_sym_nat.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 904
+Time: 0.006s">
+<div class="time" style="width: 4.6511627906977%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 905
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+
+End JoinEmpty.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 907
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments equiv_join_empty_right : simpl never.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 909
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Iterated Join powers of a type. *)</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 911
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section JoinPower.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 911
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The join of [n.+1] copies of a type. This is convenient because it produces [A] definitionally when [n] is [0]. We annotate the universes to reduce universe variables. *)
+ </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 914
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition iterated_join (A : Type@{u}) (n : nat) : Type@{u}
+    := nat_iter n (Join A) A.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 915
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The join of [n] copies of a type. This is sometimes convenient for proofs by induction as it gives a trivial base case. *)
+ </pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 918
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition join_power (A : Type@{u}) (n : nat) : Type@{u}
+    := nat_iter n (Join A) (Empty : Type@{u}).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 919
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition equiv_join_powers (A : Type) (n : nat) : join_power A n.+1 &lt;~&gt; iterated_join A n.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 921
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 922
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    induction n as [|n IHn]; simpl.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 923
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 924
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (equiv_join_empty_right A).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 924
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 925
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (equiv_functor_join equiv_idmap IHn).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 925
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 926
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End JoinPower.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 928
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Double recursion for Join *)
+
+</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 931
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section Rec2.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 931
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+  Context {A B C D : Type} (P : Type)
+    (P_AC : A -&gt; C -&gt; P) (P_AD : A -&gt; D -&gt; P) (P_BC : B -&gt; C -&gt; P) (P_BD : B -&gt; D -&gt; P)
+    (P_gAx : forall a c d, P_AC a c = P_AD a d)
+    (P_gBx : forall b c d, P_BC b c = P_BD b d)
+    (P_gxC : forall c a b, P_AC a c = P_BC b c)
+    (P_gxD : forall d a b, P_AD a d = P_BD b d)
+    (P_g : forall a b c d, P_gAx a c d @ P_gxD d a b = P_gxC c a b @ P_gBx b c d).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 938
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition Join_rec2 : Join A B -&gt; Join C D -&gt; P.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 940
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 941
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros x y; revert x.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 942
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply Join_rec.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 943
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: intros a; exact (Join_rec (P_AC a) (P_AD a) (P_gAx a) y).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 944
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: intros b; exact (Join_rec (P_BC b) (P_BD b) (P_gBx b) y).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 945
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros a b.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 946
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    revert y.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 947
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+    snapply Join_ind_FlFr.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 948
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: intros c; exact (P_gxC c a b).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 949
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: intros d; exact (P_gxD d a b).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 950
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros c d.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 951
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    simpl.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 952
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    lhs napply whiskerR.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 953
+Time: 0.005s">
+<div class="time" style="width: 3.8759689922481%"></div>
+<pre>
+    1: apply Join_rec_beta_jglue.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 954
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+    rhs napply whiskerL.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 955
+Time: 0.005s">
+<div class="time" style="width: 3.8759689922481%"></div>
+<pre>
+    2: apply Join_rec_beta_jglue.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 956
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (P_g a b c d).</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 957
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 958
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End Rec2.</pre>
+</div>
+<div class="code" title="File: Core.v
+Line: 961
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

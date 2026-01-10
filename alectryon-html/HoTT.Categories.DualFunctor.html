@@ -1,0 +1,695 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>DualFunctor.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-wsp"><span class="sd">(** * The functor [ᵒᵖ : cat → cat] *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="dualfunctor-v-chk0" style="display: none" type="checkbox"><label class="alectryon-input" for="dualfunctor-v-chk0"><span class="kn">Require Import</span> Category.Core Functor.Core.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Category.Dual Functor.Dual.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Functor.Composition.Core Functor.Identity.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Cat.Core Functor.Paths.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Basics.Trunc Types.Sigma HoTT.Tactics Types.Forall.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Universe Polymorphism</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Implicit Arguments</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Generalizable All Variables</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Asymmetric Patterns</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> category_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">opposite</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `{Funext}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">P</span> : PreCategory -&gt; <span class="kt">Type</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `{<span class="kr">forall</span> <span class="nv">C</span>, IsHProp (P C)}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> `{HF : <span class="kr">forall</span> <span class="nv">C</span> <span class="nv">D</span>, P C -&gt; P D -&gt; IsHSet (Functor C D)}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Let</span> <span class="nf">cat</span> := (@sub_pre_cat _ P HF).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Hypothesis</span> <span class="nv">has_op</span> : <span class="kr">forall</span> <span class="nv">C</span> : cat, P C.<span class="mi">1</span>^op.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">opposite_functor</span> : Functor cat cat
+    := Build_Functor
+         cat cat
+         (<span class="kr">fun</span> <span class="nv">C</span> =&gt; (C.<span class="mi">1</span>^op; has_op _))
+         (<span class="kr">fun</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">F</span> =&gt; F^op)%functor
+         (<span class="kr">fun</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> =&gt; idpath)
+         (<span class="kr">fun</span> <span class="nv">_</span> =&gt; idpath).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Let</span> <span class="nf">opposite_functor_involutive_helper</span> (<span class="nv">x</span> : cat)
+  : (x.<span class="mi">1</span>^op^op; has_op (_; has_op _)) = x
+    := path_sigma_uncurried
+         P
+         (((x.<span class="mi">1</span>^op)^op)%category;
+          has_op ((x.<span class="mi">1</span>^op)%category;
+                  has_op x))
+         x
+         (Category.Dual.opposite_involutive x.<span class="mi">1</span>;
+          path_ishprop _ _).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> functor_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Arguments</span> path_sigma_uncurried : <span class="nb">simpl</span> never.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="dualfunctor-v-chk1" style="display: none" type="checkbox"><label class="alectryon-input" for="dualfunctor-v-chk1"><span class="kn">Definition</span> <span class="nf">opposite_functor_involutive</span>
+  : opposite_functor o opposite_functor = <span class="mi">1</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>PreCategory -&gt; <span class="kt">Type</span></span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> : PreCategory, IsHProp (P C)</span></span></span><br><span><var>HF</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> <span class="nv">D</span> : PreCategory,
+P C -&gt; P D -&gt; IsHSet (Functor C D)</span></span></span><br><span><var>cat</var><span><span class="hyp-body"><b>:= </b><span>sub_pre_cat P</span></span><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span></span><br><span><var>has_op</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> : cat, P (C.<span class="mi">1</span>)^op</span></span></span><br><span><var>opposite_functor_involutive_helper</var><span><span class="hyp-body"><b>:= </b><span><span class="kr">fun</span> <span class="nv">x</span> : cat =&gt;
+path_sigma_uncurried
+  P
+  (((x.<span class="mi">1</span>)^op)^op%category;
+  has_op
+    ((x.<span class="mi">1</span>)^op%category;
+    has_op x)) x
+  (Category.Dual.opposite_involutive
+     x.<span class="mi">1</span>;
+  path_ishprop
+    (transport P
+       (Category.Dual.opposite_involutive
+         x.<span class="mi">1</span>)
+       (((x.<span class="mi">1</span>)^op)^op%category;
+       has_op
+         (
+         (x.<span class="mi">1</span>)^op%category;
+         has_op x)).<span class="mi">2</span>)
+    x.<span class="mi">2</span>)</span></span><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> : cat,
+(((x.<span class="mi">1</span>)^op)^op%category;
+has_op
+  ((x.<span class="mi">1</span>)^op%category;
+  has_op x)) = x</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">opposite_functor o opposite_functor = <span class="mi">1</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="dualfunctor-v-chk2" style="display: none" type="checkbox"><label class="alectryon-input" for="dualfunctor-v-chk2"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>PreCategory -&gt; <span class="kt">Type</span></span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> : PreCategory, IsHProp (P C)</span></span></span><br><span><var>HF</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> <span class="nv">D</span> : PreCategory,
+P C -&gt; P D -&gt; IsHSet (Functor C D)</span></span></span><br><span><var>cat</var><span><span class="hyp-body"><b>:= </b><span>sub_pre_cat P</span></span><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span></span><br><span><var>has_op</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> : cat, P (C.<span class="mi">1</span>)^op</span></span></span><br><span><var>opposite_functor_involutive_helper</var><span><span class="hyp-body"><b>:= </b><span><span class="kr">fun</span> <span class="nv">x</span> : cat =&gt;
+path_sigma_uncurried
+  P
+  (((x.<span class="mi">1</span>)^op)^op%category;
+  has_op
+    ((x.<span class="mi">1</span>)^op%category;
+    has_op x)) x
+  (Category.Dual.opposite_involutive
+     x.<span class="mi">1</span>;
+  path_ishprop
+    (transport P
+       (Category.Dual.opposite_involutive
+         x.<span class="mi">1</span>)
+       (((x.<span class="mi">1</span>)^op)^op%category;
+       has_op
+         (
+         (x.<span class="mi">1</span>)^op%category;
+         has_op x)).<span class="mi">2</span>)
+    x.<span class="mi">2</span>)</span></span><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> : cat,
+(((x.<span class="mi">1</span>)^op)^op%category;
+has_op
+  ((x.<span class="mi">1</span>)^op%category;
+  has_op x)) = x</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">opposite_functor o opposite_functor = <span class="mi">1</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="dualfunctor-v-chk3" style="display: none" type="checkbox"><label class="alectryon-input" for="dualfunctor-v-chk3">path_functor.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>PreCategory -&gt; <span class="kt">Type</span></span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> : PreCategory, IsHProp (P C)</span></span></span><br><span><var>HF</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> <span class="nv">D</span> : PreCategory,
+P C -&gt; P D -&gt; IsHSet (Functor C D)</span></span></span><br><span><var>cat</var><span><span class="hyp-body"><b>:= </b><span>sub_pre_cat P</span></span><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span></span><br><span><var>has_op</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> : cat, P (C.<span class="mi">1</span>)^op</span></span></span><br><span><var>opposite_functor_involutive_helper</var><span><span class="hyp-body"><b>:= </b><span><span class="kr">fun</span> <span class="nv">x</span> : cat =&gt;
+path_sigma_uncurried
+  P
+  (((x.<span class="mi">1</span>)^op)^op%category;
+  has_op
+    ((x.<span class="mi">1</span>)^op%category;
+    has_op x)) x
+  (Category.Dual.opposite_involutive
+     x.<span class="mi">1</span>;
+  path_ishprop
+    (transport P
+       (Category.Dual.opposite_involutive
+         x.<span class="mi">1</span>)
+       (((x.<span class="mi">1</span>)^op)^op%category;
+       has_op
+         (
+         (x.<span class="mi">1</span>)^op%category;
+         has_op x)).<span class="mi">2</span>)
+    x.<span class="mi">2</span>)</span></span><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> : cat,
+(((x.<span class="mi">1</span>)^op)^op%category;
+has_op
+  ((x.<span class="mi">1</span>)^op%category;
+  has_op x)) = x</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">{HO
+: (<span class="kr">fun</span> <span class="nv">c</span> : {C : PreCategory &amp; P C} =&gt;
+   (((c.<span class="mi">1</span>)^op)^op%category;
+   has_op ((c.<span class="mi">1</span>)^op%category; has_op c))) = idmap &amp;
+transport
+  (<span class="kr">fun</span>
+     <span class="nv">GO</span> : {C : PreCategory &amp; P C} -&gt;
+          {C : PreCategory &amp; P C} =&gt;
+   <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : {C : PreCategory &amp; P C},
+   Functor s.<span class="mi">1</span> d.<span class="mi">1</span> -&gt; Functor (GO s).<span class="mi">1</span> (GO d).<span class="mi">1</span>) HO
+  (<span class="kr">fun</span> (<span class="nv">s</span> <span class="nv">d</span> : {C : PreCategory &amp; P C})
+     (<span class="nv">m</span> : Functor s.<span class="mi">1</span> d.<span class="mi">1</span>) =&gt; (m^op)^op) =
+(<span class="kr">fun</span> <span class="nv">s</span> <span class="nv">d</span> : {C : PreCategory &amp; P C} =&gt; idmap)}</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="dualfunctor-v-chk4" style="display: none" type="checkbox"><label class="alectryon-input" for="dualfunctor-v-chk4"><span class="nb">refine</span> (path_forall _ _ opposite_functor_involutive_helper; _).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>PreCategory -&gt; <span class="kt">Type</span></span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> : PreCategory, IsHProp (P C)</span></span></span><br><span><var>HF</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> <span class="nv">D</span> : PreCategory,
+P C -&gt; P D -&gt; IsHSet (Functor C D)</span></span></span><br><span><var>cat</var><span><span class="hyp-body"><b>:= </b><span>sub_pre_cat P</span></span><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span></span><br><span><var>has_op</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> : cat, P (C.<span class="mi">1</span>)^op</span></span></span><br><span><var>opposite_functor_involutive_helper</var><span><span class="hyp-body"><b>:= </b><span><span class="kr">fun</span> <span class="nv">x</span> : cat =&gt;
+path_sigma_uncurried
+  P
+  (((x.<span class="mi">1</span>)^op)^op%category;
+  has_op
+    ((x.<span class="mi">1</span>)^op%category;
+    has_op x)) x
+  (Category.Dual.opposite_involutive
+     x.<span class="mi">1</span>;
+  path_ishprop
+    (transport P
+       (Category.Dual.opposite_involutive
+         x.<span class="mi">1</span>)
+       (((x.<span class="mi">1</span>)^op)^op%category;
+       has_op
+         (
+         (x.<span class="mi">1</span>)^op%category;
+         has_op x)).<span class="mi">2</span>)
+    x.<span class="mi">2</span>)</span></span><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> : cat,
+(((x.<span class="mi">1</span>)^op)^op%category;
+has_op
+  ((x.<span class="mi">1</span>)^op%category;
+  has_op x)) = x</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport
+  (<span class="kr">fun</span>
+     <span class="nv">GO</span> : {C : PreCategory &amp; P C} -&gt;
+          {C : PreCategory &amp; P C} =&gt;
+   <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : {C : PreCategory &amp; P C},
+   Functor s.<span class="mi">1</span> d.<span class="mi">1</span> -&gt; Functor (GO s).<span class="mi">1</span> (GO d).<span class="mi">1</span>)
+  (path_forall
+     (<span class="kr">fun</span> <span class="nv">x</span> : cat =&gt;
+      (((x.<span class="mi">1</span>)^op)^op%category;
+      has_op ((x.<span class="mi">1</span>)^op%category; has_op x))) idmap
+     opposite_functor_involutive_helper)
+  (<span class="kr">fun</span> (<span class="nv">s</span> <span class="nv">d</span> : {C : PreCategory &amp; P C})
+     (<span class="nv">m</span> : Functor s.<span class="mi">1</span> d.<span class="mi">1</span>) =&gt; (m^op)^op) =
+(<span class="kr">fun</span> <span class="nv">s</span> <span class="nv">d</span> : {C : PreCategory &amp; P C} =&gt; idmap)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="dualfunctor-v-chk5" style="display: none" type="checkbox"><label class="alectryon-input" for="dualfunctor-v-chk5"><span class="kp">repeat</span> (<span class="nb">apply</span> path_forall; <span class="nb">intro</span>).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>PreCategory -&gt; <span class="kt">Type</span></span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> : PreCategory, IsHProp (P C)</span></span></span><br><span><var>HF</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> <span class="nv">D</span> : PreCategory,
+P C -&gt; P D -&gt; IsHSet (Functor C D)</span></span></span><br><span><var>cat</var><span><span class="hyp-body"><b>:= </b><span>sub_pre_cat P</span></span><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span></span><br><span><var>has_op</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> : cat, P (C.<span class="mi">1</span>)^op</span></span></span><br><span><var>opposite_functor_involutive_helper</var><span><span class="hyp-body"><b>:= </b><span><span class="kr">fun</span> <span class="nv">x</span> : cat =&gt;
+path_sigma_uncurried
+  P
+  (((x.<span class="mi">1</span>)^op)^op%category;
+  has_op
+    ((x.<span class="mi">1</span>)^op%category;
+    has_op x)) x
+  (Category.Dual.opposite_involutive
+     x.<span class="mi">1</span>;
+  path_ishprop
+    (transport P
+       (Category.Dual.opposite_involutive
+         x.<span class="mi">1</span>)
+       (((x.<span class="mi">1</span>)^op)^op%category;
+       has_op
+         (
+         (x.<span class="mi">1</span>)^op%category;
+         has_op x)).<span class="mi">2</span>)
+    x.<span class="mi">2</span>)</span></span><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> : cat,
+(((x.<span class="mi">1</span>)^op)^op%category;
+has_op
+  ((x.<span class="mi">1</span>)^op%category;
+  has_op x)) = x</span></span></span></span><br><span><var>x, x0</var><span class="hyp-type"><b>: </b><span>{C : PreCategory &amp; P C}</span></span></span><br><span><var>x1</var><span class="hyp-type"><b>: </b><span>Functor x.<span class="mi">1</span> x0.<span class="mi">1</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport
+  (<span class="kr">fun</span>
+     <span class="nv">GO</span> : {C : PreCategory &amp; P C} -&gt;
+          {C : PreCategory &amp; P C} =&gt;
+   <span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : {C : PreCategory &amp; P C},
+   Functor s.<span class="mi">1</span> d.<span class="mi">1</span> -&gt; Functor (GO s).<span class="mi">1</span> (GO d).<span class="mi">1</span>)
+  (path_forall
+     (<span class="kr">fun</span> <span class="nv">x</span> : cat =&gt;
+      (((x.<span class="mi">1</span>)^op)^op%category;
+      has_op ((x.<span class="mi">1</span>)^op%category; has_op x))) idmap
+     opposite_functor_involutive_helper)
+  (<span class="kr">fun</span> (<span class="nv">s</span> <span class="nv">d</span> : {C : PreCategory &amp; P C})
+     (<span class="nv">m</span> : Functor s.<span class="mi">1</span> d.<span class="mi">1</span>) =&gt; (m^op)^op) x x0 x1 = x1</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="dualfunctor-v-chk6" style="display: none" type="checkbox"><label class="alectryon-input" for="dualfunctor-v-chk6"><span class="nb">rewrite</span> !transport_forall_constant.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>PreCategory -&gt; <span class="kt">Type</span></span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> : PreCategory, IsHProp (P C)</span></span></span><br><span><var>HF</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> <span class="nv">D</span> : PreCategory,
+P C -&gt; P D -&gt; IsHSet (Functor C D)</span></span></span><br><span><var>cat</var><span><span class="hyp-body"><b>:= </b><span>sub_pre_cat P</span></span><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span></span><br><span><var>has_op</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> : cat, P (C.<span class="mi">1</span>)^op</span></span></span><br><span><var>opposite_functor_involutive_helper</var><span><span class="hyp-body"><b>:= </b><span><span class="kr">fun</span> <span class="nv">x</span> : cat =&gt;
+path_sigma_uncurried
+  P
+  (((x.<span class="mi">1</span>)^op)^op%category;
+  has_op
+    ((x.<span class="mi">1</span>)^op%category;
+    has_op x)) x
+  (Category.Dual.opposite_involutive
+     x.<span class="mi">1</span>;
+  path_ishprop
+    (transport P
+       (Category.Dual.opposite_involutive
+         x.<span class="mi">1</span>)
+       (((x.<span class="mi">1</span>)^op)^op%category;
+       has_op
+         (
+         (x.<span class="mi">1</span>)^op%category;
+         has_op x)).<span class="mi">2</span>)
+    x.<span class="mi">2</span>)</span></span><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> : cat,
+(((x.<span class="mi">1</span>)^op)^op%category;
+has_op
+  ((x.<span class="mi">1</span>)^op%category;
+  has_op x)) = x</span></span></span></span><br><span><var>x, x0</var><span class="hyp-type"><b>: </b><span>{C : PreCategory &amp; P C}</span></span></span><br><span><var>x1</var><span class="hyp-type"><b>: </b><span>Functor x.<span class="mi">1</span> x0.<span class="mi">1</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport
+  (<span class="kr">fun</span>
+     <span class="nv">x1</span> : {C : PreCategory &amp; P C} -&gt;
+          {C : PreCategory &amp; P C} =&gt;
+   Functor (x1 x).<span class="mi">1</span> (x1 x0).<span class="mi">1</span>)
+  (path_forall
+     (<span class="kr">fun</span> <span class="nv">x</span> : cat =&gt;
+      (((x.<span class="mi">1</span>)^op)^op%category;
+      has_op ((x.<span class="mi">1</span>)^op%category; has_op x))) idmap
+     opposite_functor_involutive_helper) (x1^op)^op =
+x1</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="dualfunctor-v-chk7" style="display: none" type="checkbox"><label class="alectryon-input" for="dualfunctor-v-chk7">transport_path_forall_hammer.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>PreCategory -&gt; <span class="kt">Type</span></span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> : PreCategory, IsHProp (P C)</span></span></span><br><span><var>HF</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> <span class="nv">D</span> : PreCategory,
+P C -&gt; P D -&gt; IsHSet (Functor C D)</span></span></span><br><span><var>cat</var><span><span class="hyp-body"><b>:= </b><span>sub_pre_cat P</span></span><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span></span><br><span><var>has_op</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> : cat, P (C.<span class="mi">1</span>)^op</span></span></span><br><span><var>opposite_functor_involutive_helper</var><span><span class="hyp-body"><b>:= </b><span><span class="kr">fun</span> <span class="nv">x</span> : cat =&gt;
+path_sigma_uncurried
+  P
+  (((x.<span class="mi">1</span>)^op)^op%category;
+  has_op
+    ((x.<span class="mi">1</span>)^op%category;
+    has_op x)) x
+  (Category.Dual.opposite_involutive
+     x.<span class="mi">1</span>;
+  path_ishprop
+    (transport P
+       (Category.Dual.opposite_involutive
+         x.<span class="mi">1</span>)
+       (((x.<span class="mi">1</span>)^op)^op%category;
+       has_op
+         (
+         (x.<span class="mi">1</span>)^op%category;
+         has_op x)).<span class="mi">2</span>)
+    x.<span class="mi">2</span>)</span></span><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> : cat,
+(((x.<span class="mi">1</span>)^op)^op%category;
+has_op
+  ((x.<span class="mi">1</span>)^op%category;
+  has_op x)) = x</span></span></span></span><br><span><var>x, x0</var><span class="hyp-type"><b>: </b><span>{C : PreCategory &amp; P C}</span></span></span><br><span><var>x1</var><span class="hyp-type"><b>: </b><span>Functor x.<span class="mi">1</span> x0.<span class="mi">1</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport
+  (<span class="kr">fun</span> <span class="nv">y</span> : {C : PreCategory &amp; P C} =&gt; Functor x.<span class="mi">1</span> y.<span class="mi">1</span>)
+  (opposite_functor_involutive_helper x0)
+  (transport
+     (<span class="kr">fun</span> <span class="nv">y</span> : {C : PreCategory &amp; P C} =&gt;
+      Functor y.<span class="mi">1</span>
+        (((x0.<span class="mi">1</span>)^op)^op%category;
+        has_op ((x0.<span class="mi">1</span>)^op%category; has_op x0)).<span class="mi">1</span>)
+     (opposite_functor_involutive_helper x) (x1^op)^op) =
+x1</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="dualfunctor-v-chk8" style="display: none" type="checkbox"><label class="alectryon-input" for="dualfunctor-v-chk8"><span class="nb">unfold</span> opposite_functor_involutive_helper.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>PreCategory -&gt; <span class="kt">Type</span></span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> : PreCategory, IsHProp (P C)</span></span></span><br><span><var>HF</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> <span class="nv">D</span> : PreCategory,
+P C -&gt; P D -&gt; IsHSet (Functor C D)</span></span></span><br><span><var>cat</var><span><span class="hyp-body"><b>:= </b><span>sub_pre_cat P</span></span><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span></span><br><span><var>has_op</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> : cat, P (C.<span class="mi">1</span>)^op</span></span></span><br><span><var>opposite_functor_involutive_helper</var><span><span class="hyp-body"><b>:= </b><span><span class="kr">fun</span> <span class="nv">x</span> : cat =&gt;
+path_sigma_uncurried
+  P
+  (((x.<span class="mi">1</span>)^op)^op%category;
+  has_op
+    ((x.<span class="mi">1</span>)^op%category;
+    has_op x)) x
+  (Category.Dual.opposite_involutive
+     x.<span class="mi">1</span>;
+  path_ishprop
+    (transport P
+       (Category.Dual.opposite_involutive
+         x.<span class="mi">1</span>)
+       (((x.<span class="mi">1</span>)^op)^op%category;
+       has_op
+         (
+         (x.<span class="mi">1</span>)^op%category;
+         has_op x)).<span class="mi">2</span>)
+    x.<span class="mi">2</span>)</span></span><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> : cat,
+(((x.<span class="mi">1</span>)^op)^op%category;
+has_op
+  ((x.<span class="mi">1</span>)^op%category;
+  has_op x)) = x</span></span></span></span><br><span><var>x, x0</var><span class="hyp-type"><b>: </b><span>{C : PreCategory &amp; P C}</span></span></span><br><span><var>x1</var><span class="hyp-type"><b>: </b><span>Functor x.<span class="mi">1</span> x0.<span class="mi">1</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport
+  (<span class="kr">fun</span> <span class="nv">y</span> : {C : PreCategory &amp; P C} =&gt; Functor x.<span class="mi">1</span> y.<span class="mi">1</span>)
+  (path_sigma_uncurried P
+     (((x0.<span class="mi">1</span>)^op)^op%category;
+     has_op ((x0.<span class="mi">1</span>)^op%category; has_op x0)) x0
+     (Category.Dual.opposite_involutive x0.<span class="mi">1</span>;
+     path_ishprop
+       (transport P
+          (Category.Dual.opposite_involutive x0.<span class="mi">1</span>)
+          (((x0.<span class="mi">1</span>)^op)^op%category;
+          has_op ((x0.<span class="mi">1</span>)^op%category; has_op x0)).<span class="mi">2</span>)
+       x0.<span class="mi">2</span>))
+  (transport
+     (<span class="kr">fun</span> <span class="nv">y</span> : {C : PreCategory &amp; P C} =&gt;
+      Functor y.<span class="mi">1</span>
+        (((x0.<span class="mi">1</span>)^op)^op%category;
+        has_op ((x0.<span class="mi">1</span>)^op%category; has_op x0)).<span class="mi">1</span>)
+     (path_sigma_uncurried P
+        (((x.<span class="mi">1</span>)^op)^op%category;
+        has_op ((x.<span class="mi">1</span>)^op%category; has_op x)) x
+        (Category.Dual.opposite_involutive x.<span class="mi">1</span>;
+        path_ishprop
+          (transport P
+             (Category.Dual.opposite_involutive x.<span class="mi">1</span>)
+             (((x.<span class="mi">1</span>)^op)^op%category;
+             has_op ((x.<span class="mi">1</span>)^op%category; has_op x)).<span class="mi">2</span>)
+          x.<span class="mi">2</span>)) (x1^op)^op) = x1</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="dualfunctor-v-chk9" style="display: none" type="checkbox"><label class="alectryon-input" for="dualfunctor-v-chk9"><span class="nb">rewrite</span> !transport_pr1_path_sigma_uncurried.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>PreCategory -&gt; <span class="kt">Type</span></span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> : PreCategory, IsHProp (P C)</span></span></span><br><span><var>HF</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> <span class="nv">D</span> : PreCategory,
+P C -&gt; P D -&gt; IsHSet (Functor C D)</span></span></span><br><span><var>cat</var><span><span class="hyp-body"><b>:= </b><span>sub_pre_cat P</span></span><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span></span><br><span><var>has_op</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> : cat, P (C.<span class="mi">1</span>)^op</span></span></span><br><span><var>opposite_functor_involutive_helper</var><span><span class="hyp-body"><b>:= </b><span><span class="kr">fun</span> <span class="nv">x</span> : cat =&gt;
+path_sigma_uncurried
+  P
+  (((x.<span class="mi">1</span>)^op)^op%category;
+  has_op
+    ((x.<span class="mi">1</span>)^op%category;
+    has_op x)) x
+  (Category.Dual.opposite_involutive
+     x.<span class="mi">1</span>;
+  path_ishprop
+    (transport P
+       (Category.Dual.opposite_involutive
+         x.<span class="mi">1</span>)
+       (((x.<span class="mi">1</span>)^op)^op%category;
+       has_op
+         (
+         (x.<span class="mi">1</span>)^op%category;
+         has_op x)).<span class="mi">2</span>)
+    x.<span class="mi">2</span>)</span></span><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> : cat,
+(((x.<span class="mi">1</span>)^op)^op%category;
+has_op
+  ((x.<span class="mi">1</span>)^op%category;
+  has_op x)) = x</span></span></span></span><br><span><var>x, x0</var><span class="hyp-type"><b>: </b><span>{C : PreCategory &amp; P C}</span></span></span><br><span><var>x1</var><span class="hyp-type"><b>: </b><span>Functor x.<span class="mi">1</span> x0.<span class="mi">1</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport (Functor x.<span class="mi">1</span>)
+  (Category.Dual.opposite_involutive x0.<span class="mi">1</span>;
+  path_ishprop
+    (transport P
+       (Category.Dual.opposite_involutive x0.<span class="mi">1</span>)
+       (((x0.<span class="mi">1</span>)^op)^op%category;
+       has_op ((x0.<span class="mi">1</span>)^op%category; has_op x0)).<span class="mi">2</span>) x0.<span class="mi">2</span>).<span class="mi">1</span>
+  (transport
+     (<span class="kr">fun</span> <span class="nv">y</span> : {C : PreCategory &amp; P C} =&gt;
+      Functor y.<span class="mi">1</span>
+        (((x0.<span class="mi">1</span>)^op)^op%category;
+        has_op ((x0.<span class="mi">1</span>)^op%category; has_op x0)).<span class="mi">1</span>)
+     (path_sigma_uncurried P
+        (((x.<span class="mi">1</span>)^op)^op%category;
+        has_op ((x.<span class="mi">1</span>)^op%category; has_op x)) x
+        (Category.Dual.opposite_involutive x.<span class="mi">1</span>;
+        path_ishprop
+          (transport P
+             (Category.Dual.opposite_involutive x.<span class="mi">1</span>)
+             (((x.<span class="mi">1</span>)^op)^op%category;
+             has_op ((x.<span class="mi">1</span>)^op%category; has_op x)).<span class="mi">2</span>)
+          x.<span class="mi">2</span>)) (x1^op)^op) = x1</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="dualfunctor-v-chka" style="display: none" type="checkbox"><label class="alectryon-input" for="dualfunctor-v-chka"><span class="nb">simpl</span> <span class="kr">in</span> *.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>PreCategory -&gt; <span class="kt">Type</span></span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> : PreCategory, IsHProp (P C)</span></span></span><br><span><var>HF</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> <span class="nv">D</span> : PreCategory,
+P C -&gt; P D -&gt; IsHSet (Functor C D)</span></span></span><br><span><var>cat</var><span><span class="hyp-body"><b>:= </b><span>sub_pre_cat P</span></span><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span></span><br><span><var>has_op</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> : {C : PreCategory &amp; P C},
+P (C.<span class="mi">1</span>)^op</span></span></span><br><span><var>opposite_functor_involutive_helper</var><span><span class="hyp-body"><b>:= </b><span><span class="kr">fun</span>
+  <span class="nv">x</span> : {C
+      : PreCategory
+      &amp; P C} =&gt;
+path_sigma_uncurried
+  P
+  (((x.<span class="mi">1</span>)^op)^op%category;
+  has_op
+    ((x.<span class="mi">1</span>)^op%category;
+    has_op x)) x
+  (Category.Dual.opposite_involutive
+     x.<span class="mi">1</span>;
+  path_ishprop
+    (has_op
+       ((x.<span class="mi">1</span>)^op%category;
+       has_op x))
+    x.<span class="mi">2</span>)</span></span><span class="hyp-type"><b>: </b><span><span class="kr">forall</span>
+<span class="nv">x</span> : {C
+    : PreCategory
+    &amp; P C},
+(((x.<span class="mi">1</span>)^op)^op%category;
+has_op
+  ((x.<span class="mi">1</span>)^op%category;
+  has_op x)) = x</span></span></span></span><br><span><var>x, x0</var><span class="hyp-type"><b>: </b><span>{C : PreCategory &amp; P C}</span></span></span><br><span><var>x1</var><span class="hyp-type"><b>: </b><span>Functor x.<span class="mi">1</span> x0.<span class="mi">1</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport
+  (<span class="kr">fun</span> <span class="nv">y</span> : {C : PreCategory &amp; P C} =&gt;
+   Functor y.<span class="mi">1</span> ((x0.<span class="mi">1</span>)^op)^op)
+  (path_sigma_uncurried P
+     (((x.<span class="mi">1</span>)^op)^op%category;
+     has_op ((x.<span class="mi">1</span>)^op%category; has_op x)) x
+     (Category.Dual.opposite_involutive x.<span class="mi">1</span>;
+     path_ishprop
+       (has_op ((x.<span class="mi">1</span>)^op%category; has_op x)) x.<span class="mi">2</span>))
+  (x1^op)^op = x1</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="dualfunctor-v-chkb" style="display: none" type="checkbox"><label class="alectryon-input" for="dualfunctor-v-chkb"><span class="kp">repeat</span> <span class="kp">progress</span> <span class="nb">change</span> (<span class="kr">fun</span> <span class="nv">x</span> =&gt; <span class="nl">?f</span> x) <span class="kr">with</span> f <span class="kr">in</span> *.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>PreCategory -&gt; <span class="kt">Type</span></span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> : PreCategory, IsHProp (P C)</span></span></span><br><span><var>HF</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> <span class="nv">D</span> : PreCategory,
+P C -&gt; P D -&gt; IsHSet (Functor C D)</span></span></span><br><span><var>cat</var><span><span class="hyp-body"><b>:= </b><span>sub_pre_cat P</span></span><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span></span><br><span><var>has_op</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> : {x : _ &amp; P x}, P (C.<span class="mi">1</span>)^op</span></span></span><br><span><var>opposite_functor_involutive_helper</var><span><span class="hyp-body"><b>:= </b><span><span class="kr">fun</span>
+  <span class="nv">x</span> : {x : _ &amp;
+      P x} =&gt;
+path_sigma_uncurried
+  P
+  (((x.<span class="mi">1</span>)^op)^op%category;
+  has_op
+    ((x.<span class="mi">1</span>)^op%category;
+    has_op x)) x
+  (Category.Dual.opposite_involutive
+     x.<span class="mi">1</span>;
+  path_ishprop
+    (has_op
+       ((x.<span class="mi">1</span>)^op%category;
+       has_op x))
+    x.<span class="mi">2</span>)</span></span><span class="hyp-type"><b>: </b><span><span class="kr">forall</span>
+<span class="nv">x</span> : {x : _ &amp; P x},
+(((x.<span class="mi">1</span>)^op)^op%category;
+has_op
+  ((x.<span class="mi">1</span>)^op%category;
+  has_op x)) = x</span></span></span></span><br><span><var>x, x0</var><span class="hyp-type"><b>: </b><span>{x : _ &amp; P x}</span></span></span><br><span><var>x1</var><span class="hyp-type"><b>: </b><span>Functor x.<span class="mi">1</span> x0.<span class="mi">1</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport
+  (<span class="kr">fun</span> <span class="nv">y</span> : {x : _ &amp; P x} =&gt; Functor y.<span class="mi">1</span> ((x0.<span class="mi">1</span>)^op)^op)
+  (path_sigma_uncurried P
+     (((x.<span class="mi">1</span>)^op)^op%category;
+     has_op ((x.<span class="mi">1</span>)^op%category; has_op x)) x
+     (Category.Dual.opposite_involutive x.<span class="mi">1</span>;
+     path_ishprop
+       (has_op ((x.<span class="mi">1</span>)^op%category; has_op x)) x.<span class="mi">2</span>))
+  (x1^op)^op = x1</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="dualfunctor-v-chkc" style="display: none" type="checkbox"><label class="alectryon-input" for="dualfunctor-v-chkc"><span class="kr">match goal with</span>
+      | [ |- <span class="kp">context</span>[transport
+                          (<span class="kr">fun</span> <span class="nv">x&#39;</span> =&gt; <span class="nl">?f</span> x&#39;.<span class="mi">1</span> <span class="nl">?y</span>)
+                          (@path_sigma_uncurried <span class="nl">?A</span> <span class="nl">?P</span> <span class="nl">?u</span> <span class="nl">?v</span> <span class="nl">?pq</span>)] ]
+        =&gt; <span class="nb">rewrite</span> (@transport_pr1_path_sigma_uncurried
+                      A P u v pq
+                      (<span class="kr">fun</span> <span class="nv">x</span> =&gt; f x y))
+    <span class="kr">end</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>PreCategory -&gt; <span class="kt">Type</span></span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> : PreCategory, IsHProp (P C)</span></span></span><br><span><var>HF</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> <span class="nv">D</span> : PreCategory,
+P C -&gt; P D -&gt; IsHSet (Functor C D)</span></span></span><br><span><var>cat</var><span><span class="hyp-body"><b>:= </b><span>sub_pre_cat P</span></span><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span></span><br><span><var>has_op</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> : {x : _ &amp; P x}, P (C.<span class="mi">1</span>)^op</span></span></span><br><span><var>opposite_functor_involutive_helper</var><span><span class="hyp-body"><b>:= </b><span><span class="kr">fun</span>
+  <span class="nv">x</span> : {x : _ &amp;
+      P x} =&gt;
+path_sigma_uncurried
+  P
+  (((x.<span class="mi">1</span>)^op)^op%category;
+  has_op
+    ((x.<span class="mi">1</span>)^op%category;
+    has_op x)) x
+  (Category.Dual.opposite_involutive
+     x.<span class="mi">1</span>;
+  path_ishprop
+    (has_op
+       ((x.<span class="mi">1</span>)^op%category;
+       has_op x))
+    x.<span class="mi">2</span>)</span></span><span class="hyp-type"><b>: </b><span><span class="kr">forall</span>
+<span class="nv">x</span> : {x : _ &amp; P x},
+(((x.<span class="mi">1</span>)^op)^op%category;
+has_op
+  ((x.<span class="mi">1</span>)^op%category;
+  has_op x)) = x</span></span></span></span><br><span><var>x, x0</var><span class="hyp-type"><b>: </b><span>{x : _ &amp; P x}</span></span></span><br><span><var>x1</var><span class="hyp-type"><b>: </b><span>Functor x.<span class="mi">1</span> x0.<span class="mi">1</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport
+  (<span class="kr">fun</span> <span class="nv">x</span> : PreCategory =&gt; Functor x ((x0.<span class="mi">1</span>)^op)^op)
+  (Category.Dual.opposite_involutive x.<span class="mi">1</span>;
+  path_ishprop (has_op ((x.<span class="mi">1</span>)^op%category; has_op x))
+    x.<span class="mi">2</span>).<span class="mi">1</span> (x1^op)^op = x1</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="dualfunctor-v-chkd" style="display: none" type="checkbox"><label class="alectryon-input" for="dualfunctor-v-chkd"><span class="nb">simpl</span> <span class="kr">in</span> *.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>PreCategory -&gt; <span class="kt">Type</span></span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> : PreCategory, IsHProp (P C)</span></span></span><br><span><var>HF</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> <span class="nv">D</span> : PreCategory,
+P C -&gt; P D -&gt; IsHSet (Functor C D)</span></span></span><br><span><var>cat</var><span><span class="hyp-body"><b>:= </b><span>sub_pre_cat P</span></span><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span></span><br><span><var>has_op</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> : {x : _ &amp; P x}, P (C.<span class="mi">1</span>)^op</span></span></span><br><span><var>opposite_functor_involutive_helper</var><span><span class="hyp-body"><b>:= </b><span><span class="kr">fun</span>
+  <span class="nv">x</span> : {x : _ &amp;
+      P x} =&gt;
+path_sigma_uncurried
+  P
+  (((x.<span class="mi">1</span>)^op)^op%category;
+  has_op
+    ((x.<span class="mi">1</span>)^op%category;
+    has_op x)) x
+  (Category.Dual.opposite_involutive
+     x.<span class="mi">1</span>;
+  path_ishprop
+    (has_op
+       ((x.<span class="mi">1</span>)^op%category;
+       has_op x))
+    x.<span class="mi">2</span>)</span></span><span class="hyp-type"><b>: </b><span><span class="kr">forall</span>
+<span class="nv">x</span> : {x : _ &amp; P x},
+(((x.<span class="mi">1</span>)^op)^op%category;
+has_op
+  ((x.<span class="mi">1</span>)^op%category;
+  has_op x)) = x</span></span></span></span><br><span><var>x, x0</var><span class="hyp-type"><b>: </b><span>{x : _ &amp; P x}</span></span></span><br><span><var>x1</var><span class="hyp-type"><b>: </b><span>Functor x.<span class="mi">1</span> x0.<span class="mi">1</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(x1^op)^op = x1</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="dualfunctor-v-chke" style="display: none" type="checkbox"><label class="alectryon-input" for="dualfunctor-v-chke"><span class="nb">hnf</span> <span class="kr">in</span> *.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>PreCategory -&gt; <span class="kt">Type</span></span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> : PreCategory, IsHProp (P C)</span></span></span><br><span><var>HF</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> <span class="nv">D</span> : PreCategory,
+P C -&gt; P D -&gt; IsHSet (Functor C D)</span></span></span><br><span><var>cat</var><span><span class="hyp-body"><b>:= </b><span>{|
+  object := {C : PreCategory &amp; P C};
+  morphism :=
+    <span class="kr">fun</span> (<span class="nv">C</span> : {C : PreCategory &amp; P C})
+      (<span class="nv">D</span> : {C0 : PreCategory &amp; P C0}) =&gt;
+    Functor C.<span class="mi">1</span> D.<span class="mi">1</span>;
+  Core.identity :=
+    <span class="kr">fun</span> <span class="nv">C</span> : {C : PreCategory &amp; P C} =&gt; <span class="mi">1</span>;
+  Category.Core.compose :=
+    <span class="kr">fun</span> (<span class="nv">s</span> <span class="nv">d</span> <span class="nv">d&#39;</span> : {C : PreCategory &amp; P C})
+      (<span class="nv">F</span> : Functor d.<span class="mi">1</span> d&#39;.<span class="mi">1</span>)
+      (<span class="nv">G</span> : Functor s.<span class="mi">1</span> d.<span class="mi">1</span>) =&gt; F o G;
+  associativity :=
+    <span class="kr">fun</span> (<span class="nv">x1</span> <span class="nv">x2</span> <span class="nv">x3</span> <span class="nv">x4</span> : {C : PreCategory &amp; P C})
+      (<span class="nv">m1</span> : Functor x1.<span class="mi">1</span> x2.<span class="mi">1</span>)
+      (<span class="nv">m2</span> : Functor x2.<span class="mi">1</span> x3.<span class="mi">1</span>)
+      (<span class="nv">m3</span> : Functor x3.<span class="mi">1</span> x4.<span class="mi">1</span>) =&gt;
+    Laws.associativity m1 m2 m3;
+  associativity_sym :=
+    <span class="kr">fun</span> (<span class="nv">x1</span> <span class="nv">x2</span> <span class="nv">x3</span> <span class="nv">x4</span> : {C : PreCategory &amp; P C})
+      (<span class="nv">m1</span> : Functor x1.<span class="mi">1</span> x2.<span class="mi">1</span>)
+      (<span class="nv">m2</span> : Functor x2.<span class="mi">1</span> x3.<span class="mi">1</span>)
+      (<span class="nv">m3</span> : Functor x3.<span class="mi">1</span> x4.<span class="mi">1</span>) =&gt;
+    <span class="nb">symmetry</span> (m3 o m2 o m1) (m3 o (m2 o m1))
+      (Laws.associativity m1 m2 m3);
+  left_identity :=
+    <span class="kr">fun</span> (<span class="nv">a</span> <span class="nv">b</span> : {C : PreCategory &amp; P C})
+      (<span class="nv">f</span> : Functor a.<span class="mi">1</span> b.<span class="mi">1</span>) =&gt;
+    Laws.left_identity f;
+  right_identity :=
+    <span class="kr">fun</span> (<span class="nv">a</span> <span class="nv">b</span> : {C : PreCategory &amp; P C})
+      (<span class="nv">f</span> : Functor a.<span class="mi">1</span> b.<span class="mi">1</span>) =&gt;
+    Laws.right_identity f;
+  identity_identity :=
+    <span class="kr">fun</span> <span class="nv">x</span> : {C : PreCategory &amp; P C} =&gt;
+    Laws.left_identity <span class="mi">1</span>;
+  trunc_morphism :=
+    <span class="kr">fun</span> <span class="nv">s</span> <span class="nv">d</span> : {C : PreCategory &amp; P C} =&gt;
+    HF s.<span class="mi">2</span> d.<span class="mi">2</span>
+|}</span></span><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span></span><br><span><var>has_op</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> : {x : _ &amp; P x}, P (C.<span class="mi">1</span>)^op</span></span></span><br><span><var>opposite_functor_involutive_helper</var><span><span class="hyp-body"><b>:= </b><span><span class="kr">fun</span>
+  <span class="nv">x</span> : {x : _ &amp;
+      P x} =&gt;
+path_sigma_uncurried
+  P
+  (((x.<span class="mi">1</span>)^op)^op%category;
+  has_op
+    ((x.<span class="mi">1</span>)^op%category;
+    has_op x)) x
+  (Category.Dual.opposite_involutive
+     x.<span class="mi">1</span>;
+  path_ishprop
+    (has_op
+       ((x.<span class="mi">1</span>)^op%category;
+       has_op x))
+    x.<span class="mi">2</span>)</span></span><span class="hyp-type"><b>: </b><span><span class="kr">forall</span>
+<span class="nv">x</span> : {x : _ &amp; P x},
+(((x.<span class="mi">1</span>)^op)^op%category;
+has_op
+  ((x.<span class="mi">1</span>)^op%category;
+  has_op x)) = x</span></span></span></span><br><span><var>x, x0</var><span class="hyp-type"><b>: </b><span>{x : _ &amp; P x}</span></span></span><br><span><var>x1</var><span class="hyp-type"><b>: </b><span>Functor x.<span class="mi">1</span> x0.<span class="mi">1</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(x1^op)^op = x1</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="dualfunctor-v-chkf" style="display: none" type="checkbox"><label class="alectryon-input" for="dualfunctor-v-chkf">subst_body.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>PreCategory -&gt; <span class="kt">Type</span></span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> : PreCategory, IsHProp (P C)</span></span></span><br><span><var>HF</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> <span class="nv">D</span> : PreCategory,
+P C -&gt; P D -&gt; IsHSet (Functor C D)</span></span></span><br><span><var>has_op</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> : {x : _ &amp; P x}, P (C.<span class="mi">1</span>)^op</span></span></span><br><span><var>x, x0</var><span class="hyp-type"><b>: </b><span>{x : _ &amp; P x}</span></span></span><br><span><var>x1</var><span class="hyp-type"><b>: </b><span>Functor x.<span class="mi">1</span> x0.<span class="mi">1</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(x1^op)^op = x1</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="dualfunctor-v-chk10" style="display: none" type="checkbox"><label class="alectryon-input" for="dualfunctor-v-chk10">destruct_head @sig.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>PreCategory -&gt; <span class="kt">Type</span></span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> : PreCategory, IsHProp (P C)</span></span></span><br><span><var>HF</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> <span class="nv">D</span> : PreCategory,
+P C -&gt; P D -&gt; IsHSet (Functor C D)</span></span></span><br><span><var>has_op</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> : {x : _ &amp; P x}, P (C.<span class="mi">1</span>)^op</span></span></span><br><span><var>proj0</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>proj3</var><span class="hyp-type"><b>: </b><span>P proj0</span></span></span><br><span><var>proj1</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>proj2</var><span class="hyp-type"><b>: </b><span>P proj1</span></span></span><br><span><var>x1</var><span class="hyp-type"><b>: </b><span>Functor proj0 proj1</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(x1^op)^op = x1</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="dualfunctor-v-chk11" style="display: none" type="checkbox"><label class="alectryon-input" for="dualfunctor-v-chk11">destruct_head @Functor.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>PreCategory -&gt; <span class="kt">Type</span></span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> : PreCategory, IsHProp (P C)</span></span></span><br><span><var>HF</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> <span class="nv">D</span> : PreCategory,
+P C -&gt; P D -&gt; IsHSet (Functor C D)</span></span></span><br><span><var>has_op</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> : {x : _ &amp; P x}, P (C.<span class="mi">1</span>)^op</span></span></span><br><span><var>proj0</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>proj3</var><span class="hyp-type"><b>: </b><span>P proj0</span></span></span><br><span><var>proj1</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>proj2</var><span class="hyp-type"><b>: </b><span>P proj1</span></span></span><br><span><var>object_of</var><span class="hyp-type"><b>: </b><span>proj0 -&gt; proj1</span></span></span><br><span><var>morphism_of</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : proj0,
+morphism proj0 s d -&gt;
+morphism proj1 (object_of s)
+  (object_of d)</span></span></span><br><span><var>composition_of</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">s</span> <span class="nv">d</span> <span class="nv">d&#39;</span> : proj0)
+(<span class="nv">m1</span> : morphism proj0 s d)
+(<span class="nv">m2</span> : morphism proj0 d d&#39;),
+morphism_of s d&#39; (m2 o m1)%morphism =
+(morphism_of d d&#39; m2
+ o morphism_of s d m1)%morphism</span></span></span><br><span><var>identity_of</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> : proj0,
+morphism_of x x <span class="mi">1</span>%morphism = <span class="mi">1</span>%morphism</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">({|
+   object_of := object_of;
+   morphism_of := morphism_of;
+   composition_of := composition_of;
+   identity_of := identity_of
+ |}^op)^op =
+{|
+  object_of := object_of;
+  morphism_of := morphism_of;
+  composition_of := composition_of;
+  identity_of := identity_of
+|}</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="dualfunctor-v-chk12" style="display: none" type="checkbox"><label class="alectryon-input" for="dualfunctor-v-chk12">destruct_head @PreCategory.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>PreCategory -&gt; <span class="kt">Type</span></span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> : PreCategory, IsHProp (P C)</span></span></span><br><span><var>HF</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> <span class="nv">D</span> : PreCategory,
+P C -&gt; P D -&gt; IsHSet (Functor C D)</span></span></span><br><span><var>has_op</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">C</span> : {x : _ &amp; P x}, P (C.<span class="mi">1</span>)^op</span></span></span><br><span><var>object0</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>morphism0</var><span class="hyp-type"><b>: </b><span>object0 -&gt; object0 -&gt; <span class="kt">Type</span></span></span></span><br><span><var>identity0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> : object0, morphism0 x x</span></span></span><br><span><var>compose0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> <span class="nv">d&#39;</span> : object0,
+morphism0 d d&#39; -&gt;
+morphism0 s d -&gt; morphism0 s d&#39;</span></span></span><br><span><var>associativity0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">x1</span> <span class="nv">x2</span> <span class="nv">x3</span> <span class="nv">x4</span> : object0)
+(<span class="nv">m1</span> : morphism0 x1 x2)
+(<span class="nv">m2</span> : morphism0 x2 x3)
+(<span class="nv">m3</span> : morphism0 x3 x4),
+compose0 x1 x2 x4
+  (compose0 x2 x3 x4 m3 m2) m1 =
+compose0 x1 x3 x4 m3
+  (compose0 x1 x2 x3 m2 m1)</span></span></span><br><span><var>associativity_sym0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">x1</span> <span class="nv">x2</span> <span class="nv">x3</span> <span class="nv">x4</span> : object0)
+(<span class="nv">m1</span> : morphism0 x1 x2)
+(<span class="nv">m2</span> : morphism0 x2 x3)
+(<span class="nv">m3</span> : morphism0 x3 x4),
+compose0 x1 x3 x4 m3
+  (compose0 x1 x2 x3 m2 m1) =
+compose0 x1 x2 x4
+  (compose0 x2 x3 x4 m3 m2) m1</span></span></span><br><span><var>left_identity0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">a</span> <span class="nv">b</span> : object0)
+(<span class="nv">f</span> : morphism0 a b),
+compose0 a b b (identity0 b) f = f</span></span></span><br><span><var>right_identity0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">a</span> <span class="nv">b</span> : object0)
+(<span class="nv">f</span> : morphism0 a b),
+compose0 a a b f (identity0 a) = f</span></span></span><br><span><var>identity_identity0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> : object0,
+compose0 x x x (identity0 x)
+  (identity0 x) = identity0 x</span></span></span><br><span><var>trunc_morphism0</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : object0,
+IsHSet (morphism0 s d)</span></span></span><br><span><var>proj3</var><span class="hyp-type"><b>: </b><span>P
+  {|
+    object := object0;
+    morphism := morphism0;
+    Core.identity := identity0;
+    Category.Core.compose := compose0;
+    associativity := associativity0;
+    associativity_sym := associativity_sym0;
+    left_identity := left_identity0;
+    right_identity := right_identity0;
+    identity_identity := identity_identity0;
+    trunc_morphism := trunc_morphism0
+  |}</span></span></span><br><span><var>object</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>morphism</var><span class="hyp-type"><b>: </b><span>object -&gt; object -&gt; <span class="kt">Type</span></span></span></span><br><span><var>identity</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> : object, morphism x x</span></span></span><br><span><var>compose</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> <span class="nv">d&#39;</span> : object,
+morphism d d&#39; -&gt;
+morphism s d -&gt; morphism s d&#39;</span></span></span><br><span><var>associativity</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">x1</span> <span class="nv">x2</span> <span class="nv">x3</span> <span class="nv">x4</span> : object)
+(<span class="nv">m1</span> : morphism x1 x2)
+(<span class="nv">m2</span> : morphism x2 x3)
+(<span class="nv">m3</span> : morphism x3 x4),
+compose x1 x2 x4
+  (compose x2 x3 x4 m3 m2) m1 =
+compose x1 x3 x4 m3
+  (compose x1 x2 x3 m2 m1)</span></span></span><br><span><var>associativity_sym</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">x1</span> <span class="nv">x2</span> <span class="nv">x3</span> <span class="nv">x4</span> : object)
+(<span class="nv">m1</span> : morphism x1 x2)
+(<span class="nv">m2</span> : morphism x2 x3)
+(<span class="nv">m3</span> : morphism x3 x4),
+compose x1 x3 x4 m3
+  (compose x1 x2 x3 m2 m1) =
+compose x1 x2 x4
+  (compose x2 x3 x4 m3 m2) m1</span></span></span><br><span><var>left_identity</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">a</span> <span class="nv">b</span> : object)
+(<span class="nv">f</span> : morphism a b),
+compose a b b (identity b) f = f</span></span></span><br><span><var>right_identity</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">a</span> <span class="nv">b</span> : object)
+(<span class="nv">f</span> : morphism a b),
+compose a a b f (identity a) = f</span></span></span><br><span><var>identity_identity</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> : object,
+compose x x x (identity x)
+  (identity x) = identity x</span></span></span><br><span><var>trunc_morphism</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : object,
+IsHSet (morphism s d)</span></span></span><br><span><var>proj2</var><span class="hyp-type"><b>: </b><span>P
+  {|
+    object := object;
+    morphism := morphism;
+    Core.identity := identity;
+    Category.Core.compose := compose;
+    associativity := associativity;
+    associativity_sym := associativity_sym;
+    left_identity := left_identity;
+    right_identity := right_identity;
+    identity_identity := identity_identity;
+    trunc_morphism := trunc_morphism
+  |}</span></span></span><br><span><var>object_of</var><span class="hyp-type"><b>: </b><span>object0 -&gt; object</span></span></span><br><span><var>morphism_of</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">s</span> <span class="nv">d</span> : object0,
+morphism0 s d -&gt;
+morphism (object_of s) (object_of d)</span></span></span><br><span><var>composition_of</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> (<span class="nv">s</span> <span class="nv">d</span> <span class="nv">d&#39;</span> : object0)
+(<span class="nv">m1</span> : morphism0 s d)
+(<span class="nv">m2</span> : morphism0 d d&#39;),
+morphism_of s d&#39;
+  (compose0 s d d&#39; m2 m1) =
+compose (object_of s) (object_of d)
+  (object_of d&#39;)
+  (morphism_of d d&#39; m2)
+  (morphism_of s d m1)</span></span></span><br><span><var>identity_of</var><span class="hyp-type"><b>: </b><span><span class="kr">forall</span> <span class="nv">x</span> : object0,
+morphism_of x x (identity0 x) =
+identity (object_of x)</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">({|
+   object_of := object_of;
+   morphism_of := morphism_of;
+   composition_of := composition_of;
+   identity_of := identity_of
+ |}^op)^op =
+{|
+  object_of := object_of;
+  morphism_of := morphism_of;
+  composition_of := composition_of;
+  identity_of := identity_of
+|}</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">reflexivity</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Qed</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">opposite</span>.</span></span></pre>
+</div>
+</div></body>
+</html>

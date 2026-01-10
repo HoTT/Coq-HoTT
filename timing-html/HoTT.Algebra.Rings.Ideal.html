@@ -1,0 +1,6147 @@
+<html>
+<head>
+<title>Ideal.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Ideal.v</h1>
+
+<div class="code" title="File: Ideal.v
+Line: 1
+Time: 0.038s">
+<div class="time" style="width: 45.238095238095%"></div>
+<pre>From HoTT Require Import Basics Types.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1
+Time: 0.011s">
+<div class="time" style="width: 13.095238095238%"></div>
+<pre>
+Require Import Spaces.Finite.Fin.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 2
+Time: 0.031s">
+<div class="time" style="width: 36.904761904762%"></div>
+<pre>
+Require Import Classes.interfaces.canonical_names.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 3
+Time: 0.045s">
+<div class="time" style="width: 53.571428571429%"></div>
+<pre>
+Require Import Algebra.Rings.Ring.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Algebra.Groups.Subgroup.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 5
+Time: 0.008s">
+<div class="time" style="width: 9.5238095238095%"></div>
+<pre>
+Require Import Algebra.AbGroups.AbelianGroup.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 6
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>
+Require Import WildCat.Core.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Declare Scope ideal_scope.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 9
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Delimit Scope ideal_scope with ideal.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope ideal_scope.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope predicate_scope.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Left, Right and Two-sided Ideals *)
+
+(** ** Definition of Ideals *)
+
+(** An additive subgroup [I] of a ring [R] is a left ideal when it is closed under multiplication on the left. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 18
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>Class IsLeftIdeal {R : Ring} (I : Subgroup R) :=
+  isleftideal (r x : R) : I x -&gt; I (r * x).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** An additive subgroup [I] of a ring [R] is a right ideal when it is closed under multiplication on the right. We define this using the opposite ring allowing us to reduce redundancy between left and right ideals. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Class IsRightIdeal {R : Ring} (I : Subgroup R) :=
+  isrightideal_isleftideal_op :: IsLeftIdeal (R := rng_op R) I.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 22
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>
+
+Definition isrightideal {R : Ring} (I : Subgroup R) (x r : R)
+  : IsRightIdeal I -&gt; I x -&gt; I (x * r)
+  := fun _ =&gt; isleftideal (R := rng_op R) r x.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** An additive subgroup [I] of a ring [R] is a two-sided ideal when it is both a left and right ideal. In this case we just call it an ideal. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 28
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>Class IsIdeal {R : Ring} (I : Subgroup R) := {
+  ideal_isleftideal :: IsLeftIdeal I;
+  ideal_isrightideal :: IsRightIdeal I;
+}.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 31
+Time: 0.005s">
+<div class="time" style="width: 5.952380952381%"></div>
+<pre>
+Definition issig_IsIdeal {R : Ring} (I : Subgroup R) : _ &lt;~&gt; IsIdeal I := ltac:(issig).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Hint Immediate Build_IsIdeal : typeclass_instances.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Any two-sided ideal is also a two-sided ideal of the opposite ring. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isideal_op {R : Ring} (I : Subgroup R)
+  : IsIdeal I -&gt; IsIdeal (R := rng_op R) I.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [? ?]; exact _.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A left ideal of a ring [R] is a subgroup [I] of [R] which is closed under left multiplication. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 41
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>Record LeftIdeal (R : Ring) := {
+  leftideal_subgroup :&gt; Subgroup R;
+  leftideal_isleftideal :: IsLeftIdeal leftideal_subgroup;
+}.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 44
+Time: 0.004s">
+<div class="time" style="width: 4.7619047619048%"></div>
+<pre>
+Definition issig_LeftIdeal (R : Ring) : _ &lt;~&gt; LeftIdeal R := ltac:(issig).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A right ideal of a ring [R] is a subgroup [I] of [R] which is closed under right multiplication. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition RightIdeal (R : Ring) := LeftIdeal (rng_op R).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance isrightdeal_rightideal {R} (I : RightIdeal R)
+  : IsRightIdeal (R:=R) I
+  := leftideal_isleftideal _ I.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition Build_RightIdeal (R : Ring) (I : Subgroup R) (H : IsRightIdeal I)
+  : RightIdeal R
+  := Build_LeftIdeal (rng_op R) I H.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 55
+Time: 0.005s">
+<div class="time" style="width: 5.952380952381%"></div>
+<pre>
+
+Definition issig_RightIdeal (R : Ring)
+  : {I : Subgroup R&amp; IsRightIdeal (R:=R) I} &lt;~&gt; RightIdeal R
+  := ltac:(issig).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A two-sided ideal of a ring [R], or just an ideal, is a subgroup [I] of [R] which is closed under both left and right multiplication. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 61
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>Record Ideal (R : Ring) := {
+  ideal_subgroup :&gt; Subgroup R;
+  ideal_isideal :: IsIdeal ideal_subgroup;
+}.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 64
+Time: 0.004s">
+<div class="time" style="width: 4.7619047619048%"></div>
+<pre>
+Definition issig_Ideal (R : Ring) : _ &lt;~&gt; Ideal R := ltac:(issig).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition ideal_op (R : Ring) : Ideal R -&gt; Ideal (rng_op R)
+  := fun I =&gt; Build_Ideal (rng_op R) I _.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Coercion ideal_op : Ideal &gt;-&gt; Ideal.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition rightideal_op (R : Ring) : LeftIdeal R -&gt; RightIdeal (rng_op R)
+  := idmap.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition leftideal_op (R : Ring) : RightIdeal R -&gt; LeftIdeal (rng_op R)
+  := idmap.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Truncatedness properties *)
+
+</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section IdealTrunc.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (** Assuming [Funext] we can show that the ideal predicates are propositions. *) 
+ </pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Context `{Funext}.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Being a left ideal is a proposition. *)
+ </pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 83
+Time: 0.005s">
+<div class="time" style="width: 5.952380952381%"></div>
+<pre>#[export] Instance ishprop_isleftideal {R : Ring} (I : Subgroup R)
+    : IsHProp (IsLeftIdeal I) := ltac:(unfold IsLeftIdeal; exact _).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Being a right ideal is a proposition. *)
+ </pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export] Instance ishprop_isrightideal `{Funext} {R : Ring} (I : Subgroup R)
+    : IsHProp (IsRightIdeal I) :=  ishprop_isleftideal _.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Being a two-sided ideal is a proposition. *)
+ </pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 91
+Time: 0.002s">
+<div class="time" style="width: 2.3809523809524%"></div>
+<pre>#[export] Instance ishprop_isideal {R : Ring} (I : Subgroup R)
+    : IsHProp (IsIdeal I)
+    := istrunc_equiv_istrunc _ (issig_IsIdeal I).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Assuming [Univalence] we can show that the ideal types are sets. Note that univalence is only used to prove that the type of [Subgroup]s is a set. *)
+ </pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Context `{Univalence}.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The type of left ideals is a set. *)
+ </pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 99
+Time: 0.009s">
+<div class="time" style="width: 10.714285714286%"></div>
+<pre>#[export] Instance ishset_leftideal {R : Ring} : IsHSet (LeftIdeal R)
+    := istrunc_equiv_istrunc _ (issig_LeftIdeal R).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  
+  (** The type of right ideals is a set. *)
+ </pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export] Instance ishset_rightideal {R : Ring} : IsHSet (RightIdeal R)
+    := _.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The type of ideals is a set. *)
+ </pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 107
+Time: 0.009s">
+<div class="time" style="width: 10.714285714286%"></div>
+<pre>#[export] Instance ishset_ideal {R : Ring} : IsHSet (Ideal R)
+    := istrunc_equiv_istrunc _ (issig_Ideal R).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End IdealTrunc.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Conversion between Ideals *)
+
+(** Every ideal is a left ideal. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition leftideal_of_ideal {R : Ring} : Ideal R -&gt; LeftIdeal R
+  := fun I =&gt; Build_LeftIdeal R I _.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Coercion leftideal_of_ideal : Ideal &gt;-&gt; LeftIdeal.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Every ideal is a right ideal. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 118
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition rightideal_of_ideal {R : Ring} : Ideal R -&gt; RightIdeal R
+  := fun I =&gt; Build_RightIdeal R I _.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Coercion rightideal_of_ideal : Ideal &gt;-&gt; RightIdeal.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Easy properties of ideals *)
+
+(** Here are some lemmas for proving certain elements are in an ideal. They are just special cases of the underlying subgroup lemmas. We write them out for clarity. Note that [I] isn't actually assumed to be an ideal but only a subgroup. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section IdealElements.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {R : Ring} (I : Subgroup R) (a b : R).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 125
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition ideal_in_zero : I ring_zero := subgroup_in_unit I.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 126
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition ideal_in_plus : I a -&gt; I b -&gt; I (a + b) := subgroup_in_op I a b.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition ideal_in_negate  : I a -&gt; I (- a) := subgroup_in_inv  I a.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 128
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition ideal_in_negate' : I (- a) -&gt; I a := subgroup_in_inv' I a.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition ideal_in_plus_negate : I a -&gt; I b -&gt; I (a - b) := subgroup_in_op_inv I a b.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 130
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition ideal_in_negate_plus : I a -&gt; I b -&gt; I (-a + b) := subgroup_in_inv_op I a b.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 131
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition ideal_in_plus_l : I (a + b) -&gt; I b -&gt; I a := subgroup_in_op_l I a b.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition ideal_in_plus_r : I (a + b) -&gt; I a -&gt; I b := subgroup_in_op_r I a b.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+End IdealElements.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Ideal equality *)
+
+(** With univalence we can characterize equality of ideals. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition equiv_path_ideal `{Univalence} {R : Ring} {I J : Ideal R}
+  : (I ↔ J) &lt;~&gt; I = J.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine ((equiv_ap' (issig_Ideal R)^-1 _ _)^-1 oE _).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 141
+Time: 0.002s">
+<div class="time" style="width: 2.3809523809524%"></div>
+<pre>
+  refine (equiv_path_sigma_hprop _ _ oE _).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 142
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>
+  rapply equiv_path_subgroup'.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 143
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Under funext, ideal equality is a proposition. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 146
+Time: 0.013s">
+<div class="time" style="width: 15.47619047619%"></div>
+<pre>Instance ishprop_ideal_eq `{Funext} {R : Ring} (I J : Ideal R)
+  : IsHProp (I ↔ J) := _.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 147
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Invariance under subgroup equality *)
+
+(** Being a left ideal is invariant under subgroup equality. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 151
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>Definition isleftideal_eq {R : Ring} (I J : Subgroup R) (p : I ↔ J)
+  : IsLeftIdeal I -&gt; IsLeftIdeal J.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 152
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros i r x j.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 154
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply p in j.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 155
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply p.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by apply i.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Being a right ideal is invariant under subgroup equality. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 160
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>Definition isrightideal_eq {R : Ring} (I J : Subgroup R) (p : I ↔ J)
+  : IsRightIdeal I -&gt; IsRightIdeal J
+  := isleftideal_eq (R := rng_op R) I J p.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Constructions of ideals *)
+
+(** *** Zero Ideal *)
+
+(** The trivial subgroup is a left ideal. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isleftideal_trivial_subgroup (R : Ring)
+  : IsLeftIdeal (trivial_subgroup R).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros r x p.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rhs_V napply (rng_mult_zero_r).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  f_ap.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 174
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The trivial subgroup is a right ideal. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isrightideal_trivial_subgroup (R : Ring)
+  : IsRightIdeal (trivial_subgroup R)
+  := isleftideal_trivial_subgroup _.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The trivial subgroup is an ideal. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 180
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isideal_trivial_subgroup (R : Ring)
+  : IsIdeal (trivial_subgroup R)
+  := {}.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 182
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We call the trivial subgroup the "zero ideal". *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 184
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ideal_zero (R : Ring) : Ideal R := Build_Ideal R (trivial_subgroup R) _.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 184
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** The unit ideal *)
+
+(** The maximal subgroup is a left ideal. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isleftideal_maximal_subgroup (R : Ring)
+  : IsLeftIdeal (maximal_subgroup R)
+  := ltac:(done).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 190
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The maximal subgroup is a right ideal. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 192
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isrightideal_maximal_subgroup (R : Ring)
+  : IsRightIdeal (maximal_subgroup R)
+  := isleftideal_maximal_subgroup _.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 194
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The maximal subgroup is an ideal.  *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isideal_maximal_subgroup (R : Ring)
+  : IsIdeal (maximal_subgroup R)
+  := {}.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We call the maximal subgroup the "unit ideal". *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ideal_unit (R : Ring) : Ideal R
+  := Build_Ideal R _ (isideal_maximal_subgroup R).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 201
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Intersection of two ideals *)
+
+(** Intersections of underlying subgroups of left ideals are again left ideals. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 205
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isleftideal_subgroup_intersection (R : Ring) (I J : Subgroup R)
+  `{IsLeftIdeal R I, IsLeftIdeal R J}
+  : IsLeftIdeal (subgroup_intersection I J).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 207
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros r x [a b]; split; by apply isleftideal.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 209
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 210
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Intersections of underlying subgroups of right ideals are again right ideals. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 212
+Time: 0.003s">
+<div class="time" style="width: 3.5714285714286%"></div>
+<pre>Instance isrightideal_subgroup_intersection (R : Ring) (I J : Subgroup R)
+  `{IsRightIdeal R I, IsRightIdeal R J}
+  : IsRightIdeal (subgroup_intersection I J)
+  := isleftideal_subgroup_intersection _ _ _.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 215
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Intersections of underlying subgroups of ideals are again ideals. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 217
+Time: 0.021s">
+<div class="time" style="width: 25%"></div>
+<pre>Instance isideal_subgroup_intersection (R : Ring) (I J : Subgroup R)
+  `{IsIdeal R I, IsIdeal R J}
+  : IsIdeal (subgroup_intersection I J)
+  := {}.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 220
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Intersection of left ideals. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 222
+Time: 0.002s">
+<div class="time" style="width: 2.3809523809524%"></div>
+<pre>Definition leftideal_intersection {R : Ring}
+  : LeftIdeal R -&gt; LeftIdeal R -&gt; LeftIdeal R
+  := fun I J =&gt; Build_LeftIdeal R (subgroup_intersection I J) _.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 224
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Intersection of right ideals. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 226
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition rightideal_intersection {R : Ring}
+  : RightIdeal R -&gt; RightIdeal R -&gt; RightIdeal R
+  := leftideal_intersection.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Intersection of ideals. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 230
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>Definition ideal_intersection {R : Ring}
+  : Ideal R -&gt; Ideal R -&gt; Ideal R
+  := fun I J =&gt; Build_Ideal R (subgroup_intersection I J) _.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 232
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Intersection of a family of ideals *)
+
+(** Intersections of underlying subgroups of left ideals are again left ideals. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 236
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isleftideal_subgroup_intersection_family (R : Ring) (I : Type) (J : I -&gt; Subgroup R)
+  {h : forall i, IsLeftIdeal (J i)}
+  : IsLeftIdeal (subgroup_intersection_family I J).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 238
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 239
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros r x; cbn.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 240
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply Trunc_functor.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 241
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros Jix i;  by apply isleftideal.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 242
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 243
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Intersections of underlying subgroups of right ideals are again right ideals. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 245
+Time: 0.002s">
+<div class="time" style="width: 2.3809523809524%"></div>
+<pre>Instance isrightideal_subgroup_intersection_family (R : Ring) (I : Type) (J : I -&gt; Subgroup R)
+  {h : forall i, IsRightIdeal (J i)}
+  : IsRightIdeal (subgroup_intersection_family I J)
+  := isleftideal_subgroup_intersection_family _ _ _.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 248
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Intersections of underlying subgroups of ideals are again ideals. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 250
+Time: 0.002s">
+<div class="time" style="width: 2.3809523809524%"></div>
+<pre>Instance isideal_subgroup_intersection_family (R : Ring) (I : Type) (J : I -&gt; Subgroup R)
+  {h : forall i, IsIdeal (J i)}
+  : IsIdeal (subgroup_intersection_family I J)
+  := {}.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 253
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Intersection of left ideals. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 255
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>Definition leftideal_intersection_family {R : Ring} (I : Type) (J : I -&gt; LeftIdeal R)
+  : LeftIdeal R
+  := Build_LeftIdeal R (subgroup_intersection_family I J) _.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 257
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Intersection of right ideals. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 259
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition rightideal_intersection_family {R : Ring} (I : Type) (J : I -&gt; RightIdeal R)
+  : RightIdeal R
+  := leftideal_intersection_family I J.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 261
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Intersection of ideals. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 263
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>Definition ideal_intersection_family {R : Ring} (I : Type) (J : I -&gt; Ideal R)
+  : Ideal R
+  := Build_Ideal R (subgroup_intersection_family I J) _.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 265
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Sum of ideals *)
+
+(** The subgroup product of left ideals is again an ideal. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 269
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isleftideal_subgroup_product (R : Ring) (I J : Subgroup R)
+  `{IsLeftIdeal R I, IsLeftIdeal R J}
+  : IsLeftIdeal (subgroup_product I J).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 271
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 272
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros r.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 273
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>
+  napply (subgroup_product_smallest I J
+            (subgroup_preimage (grp_homo_rng_left_mult r) (subgroup_product I J))).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 275
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  all: cbn -[subgroup_generated].</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 276
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 277
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x p.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 277
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>
+    by apply subgroup_product_incl_l, isleftideal.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 278
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 279
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x p.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 279
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>
+    by apply subgroup_product_incl_r, isleftideal.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 280
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 281
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The subgroup product of right ideals is again an ideal. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 283
+Time: 0.003s">
+<div class="time" style="width: 3.5714285714286%"></div>
+<pre>Instance isrightideal_subgroup_product (R : Ring) (I J : Subgroup R)
+  `{IsRightIdeal R I, IsRightIdeal R J}
+  : IsRightIdeal (subgroup_product I J)
+  := isleftideal_subgroup_product _ _ _.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 286
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The subgroup product of ideals is again an ideal. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 288
+Time: 0.006s">
+<div class="time" style="width: 7.1428571428571%"></div>
+<pre>Instance isideal_subgroup_product (R : Ring) (I J : Subgroup R)
+  `{IsIdeal R I, IsIdeal R J}
+  : IsIdeal (subgroup_product I J)
+  := {}.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 291
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Sum of left ideals. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 293
+Time: 0.004s">
+<div class="time" style="width: 4.7619047619048%"></div>
+<pre>Definition leftideal_sum {R : Ring}
+  : LeftIdeal R -&gt; LeftIdeal R -&gt; LeftIdeal R
+  := fun I J =&gt; Build_LeftIdeal R (subgroup_product I J) _.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 295
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Sum of right ideals. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 297
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition rightideal_sum {R : Ring}
+  : RightIdeal R -&gt; RightIdeal R -&gt; RightIdeal R
+  := leftideal_sum.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 299
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Sum of ideals. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 301
+Time: 0.002s">
+<div class="time" style="width: 2.3809523809524%"></div>
+<pre>Definition ideal_sum {R : Ring}
+  : Ideal R -&gt; Ideal R -&gt; Ideal R
+  := fun I J =&gt; Build_Ideal R (subgroup_product I J) _.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 303
+Time: 0.006s">
+<div class="time" style="width: 7.1428571428571%"></div>
+<pre>
+
+Definition ideal_sum_ind {R : Ring} (I J : Ideal R)
+  (P : forall x, ideal_sum I J x -&gt; Type)
+  (P_I_in : forall x y, P x (tr (sgt_in (inl y))))
+  (P_J_in : forall x y, P x (tr (sgt_in (inr y))))
+  (P_unit : P mon_unit (tr sgt_unit))
+  (P_op : forall x y h k, P x (tr h) -&gt; P y (tr k) -&gt; P (x - y) (tr (sgt_op h k)))
+  `{forall x y, IsHProp (P x y)}
+  : forall x (p : ideal_sum I J x), P x p
+  := subgroup_product_ind I J P P_I_in P_J_in P_unit P_op.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 313
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Product of ideals *)
+
+(** First we form the "naive" product of ideals { a * b | a ∈ I /\ b ∈ J }. Note that this is not an ideal, but we can fix this. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 317
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>Inductive ideal_product_naive_type {R : Ring} (I J : Subgroup R) : R -&gt; Type :=
+| ipn_in : forall x y, I x -&gt; J y -&gt; ideal_product_naive_type I J (x * y).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 318
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We instead consider the subgroup generated by this naive product and later prove it happens to be an ideal. Note that the subgroup generated by a set and the ideal generated by a set are not the same in general. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 320
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ideal_product_type {R : Ring} (I J : Subgroup R) : Subgroup R
+  := subgroup_generated (G := R) (ideal_product_naive_type I J).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 321
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> 
+
+(** The product ideal swapped is just the product ideal of the opposite ring. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 323
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ideal_product_type_op {R : Ring} (I J : Subgroup R)
+  : ideal_product_type (R:=R) I J ↔ ideal_product_type (R:=rng_op R) J I.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 324
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 325
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (subgroup_eq_functor_subgroup_generated _ _ grp_iso_id).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 326
+Time: 0.002s">
+<div class="time" style="width: 2.3809523809524%"></div>
+<pre>
+  apply pred_subset_antisymm; cbn; intros _ []; by napply ipn_in.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 327
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 328
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The product of left ideals is a left ideal. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 330
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isleftideal_ideal_product_type {R : Ring} (I J : Subgroup R)
+  `{IsLeftIdeal R I, IsLeftIdeal R J}
+  : IsLeftIdeal (ideal_product_type I J).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 332
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 333
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro r.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 334
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  napply (functor_subgroup_generated _ _ (grp_homo_rng_left_mult r)).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 335
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros s [s1 s2 p1 p2]; cbn.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 336
+Time: 0.007s">
+<div class="time" style="width: 8.3333333333333%"></div>
+<pre>
+  rewrite simple_associativity.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 337
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  nrefine (ipn_in I J (r * s1) s2 _ p2).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 338
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by apply isleftideal.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 339
+Time: 0.012s">
+<div class="time" style="width: 14.285714285714%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 340
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The product of right ideals is a right ideal. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 342
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isrightideal_ideal_product_type {R : Ring} (I J : Subgroup R)
+  `{IsRightIdeal R I, IsRightIdeal R J}
+  : IsRightIdeal (ideal_product_type I J).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 344
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 345
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>
+  napply isrightideal_eq.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 346
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>
+  1: symmetry; rapply ideal_product_type_op.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 347
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by apply isleftideal_ideal_product_type.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 348
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 349
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The product of ideals is an ideal. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 351
+Time: 0.007s">
+<div class="time" style="width: 8.3333333333333%"></div>
+<pre>Instance isideal_ideal_product_type {R : Ring} (I J : Subgroup R)
+  `{IsIdeal R I, IsIdeal R J}
+  : IsIdeal (ideal_product_type I J)
+  := {}.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 354
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> 
+
+(** Product of left ideals. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 356
+Time: 0.004s">
+<div class="time" style="width: 4.7619047619048%"></div>
+<pre>Definition leftideal_product {R : Ring}
+  : LeftIdeal R -&gt; LeftIdeal R -&gt; LeftIdeal R
+  := fun I J =&gt; Build_LeftIdeal R (ideal_product_type I J) _.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 358
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Product of right ideals. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 360
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition rightideal_product {R : Ring}
+  : RightIdeal R -&gt; RightIdeal R -&gt; RightIdeal R
+  := leftideal_product.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 362
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition leftideal_product_op {R : Ring} (I J : RightIdeal R)
+  : leftideal_product (leftideal_op R I) (leftideal_op R J)
+    = rightideal_product I J
+  := idpath.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 367
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition rightideal_product_op {R : Ring} (I J : LeftIdeal R)
+  : rightideal_product (rightideal_op R I) (rightideal_op R J)
+    = leftideal_product I J
+  := idpath.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 372
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Product of ideals. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 374
+Time: 0.002s">
+<div class="time" style="width: 2.3809523809524%"></div>
+<pre>Definition ideal_product {R : Ring}
+  : Ideal R -&gt; Ideal R -&gt; Ideal R
+  := fun I J =&gt; Build_Ideal R (ideal_product_type I J) _.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 376
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** The kernel of a ring homomorphism *)
+
+(** The kernel of the underlying group homomorphism of a ring homomorphism is a left ideal. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 380
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isleftideal_grp_kernel {R S : Ring} (f : RingHomomorphism R S)
+  : IsLeftIdeal (grp_kernel f).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 381
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 382
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros r x p.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 383
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lhs napply rng_homo_mult.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 384
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rhs_V napply (rng_mult_zero_r (f r)).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 385
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by apply ap.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 386
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 387
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The kernel of the underlying group homomorphism of a ring homomorphism is a right ideal. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 389
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>Instance isrightideal_grp_kernel {R S : Ring} (f : RingHomomorphism R S)
+  : IsRightIdeal (grp_kernel f)
+  := isleftideal_grp_kernel (fmap rng_op f).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 391
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The kernel of the underlying group homomorphism of a ring homomorphism is an ideal. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 393
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isideal_grp_kernel {R S : Ring} (f : RingHomomorphism R S)
+  : IsIdeal (grp_kernel f)
+  := {}.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 395
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The kernel of a ring homomorphism is an ideal. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 397
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ideal_kernel {R S : Ring} (f : RingHomomorphism R S) : Ideal R
+  := Build_Ideal R (grp_kernel f) _.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 398
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Ideal generated by a subset *)
+
+(** It seems tempting to define ideals generated by a subset in terms of subgroups generated by a subset but this does not work. Left ideals also have to be closed under left multiplication by ring elements, and similarly for right and two sided ideals. Therefore we will do an analogous construction to the one done in Subgroup.v. *)
+
+(** Underlying type family of a left ideal generated by subset. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 404
+Time: 0.003s">
+<div class="time" style="width: 3.5714285714286%"></div>
+<pre>Inductive leftideal_generated_type (R : Ring) (X : R -&gt; Type) : R -&gt; Type :=
+(** It should contain all elements of the original family. *)
+| ligt_in (r : R) : X r -&gt; leftideal_generated_type R X r
+(** It should contain zero. *)
+| ligt_zero : leftideal_generated_type R X ring_zero
+(** It should be closed under negation and addition. *)
+| ligt_add_neg (r s : R)
+  : leftideal_generated_type R X r
+  -&gt; leftideal_generated_type R X s
+  -&gt; leftideal_generated_type R X (r - s)
+(** And finally, it should be closed under left multiplication. *)
+| ligt_mul (r s : R)
+  : leftideal_generated_type R X s
+  -&gt; leftideal_generated_type R X (r * s)
+.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 418
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments leftideal_generated_type {R} X r.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 420
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments ligt_in {R X r}.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 421
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments ligt_zero {R X}.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 422
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments ligt_add_neg {R X r s}.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 423
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments ligt_mul {R X r s}.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 424
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Left ideal generated by a subset. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 426
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition leftideal_generated@{u v} {R : Ring@{u}} (X : R -&gt; Type@{v}) : LeftIdeal@{u v} R.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 426
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 427
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_LeftIdeal.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 428
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 429
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> snapply Build_Subgroup'.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 429
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 430
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fun x =&gt; merely (leftideal_generated_type X x)).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 430
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 431
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 431
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 432
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr, ligt_zero.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 432
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 433
+Time: 0.015s">
+<div class="time" style="width: 17.857142857143%"></div>
+<pre> intros x y p q; strip_truncations.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 433
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      by apply tr, ligt_add_neg.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 434
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 435
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros r x; apply Trunc_functor.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 435
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact ligt_mul.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 436
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 437
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Right ideal generated by a subset. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 439
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>Definition rightideal_generated@{u v} {R : Ring@{u}} (X : R -&gt; Type@{v}) : RightIdeal@{u v} R
+  := Build_RightIdeal R (leftideal_generated (R:=rng_op R) X) _.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 440
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Underlying type family of a two-sided ideal generated by subset. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 442
+Time: 0.004s">
+<div class="time" style="width: 4.7619047619048%"></div>
+<pre>Inductive ideal_generated_type (R : Ring) (X : R -&gt; Type) : R -&gt; Type :=
+(** It should contain all elements of the original family. *)
+| igt_in (r : R) : X r -&gt; ideal_generated_type R X r
+(** It should contain zero. *)
+| igt_zero : ideal_generated_type R X ring_zero
+(** It should be closed under negation and addition. *)
+| igt_add_neg (r s : R)
+  : ideal_generated_type R X r
+  -&gt; ideal_generated_type R X s
+  -&gt; ideal_generated_type R X (r - s)
+(** And finally, it should be closed under left and right multiplication. *)
+| igt_mul_l (r s : R)
+  : ideal_generated_type R X s
+  -&gt; ideal_generated_type R X (r * s)
+| igt_mul_r (r s : R)
+  : ideal_generated_type R X r
+  -&gt; ideal_generated_type R X (r * s)
+.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 459
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments ideal_generated_type {R} X r.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 461
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments igt_in {R X r}.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 462
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments igt_zero {R X}.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 463
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments igt_add_neg {R X r s}.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 464
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments igt_mul_l {R X r s}.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 465
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments igt_mul_r {R X r s}.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 466
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Two-sided ideal generated by a subset. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 468
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ideal_generated {R : Ring} (X : R -&gt; Type) : Ideal R.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 468
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 469
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_Ideal; [|split].</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 470
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 471
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> snapply Build_Subgroup'.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 471
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 472
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fun x =&gt; merely (ideal_generated_type X x)).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 472
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 473
+Time: 0.005s">
+<div class="time" style="width: 5.952380952381%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 473
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 474
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr, igt_zero.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 474
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 475
+Time: 0.014s">
+<div class="time" style="width: 16.666666666667%"></div>
+<pre> intros x y p q; strip_truncations.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 475
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      by apply tr, igt_add_neg.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 476
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 477
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros r x; apply Trunc_functor.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 477
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact igt_mul_l.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 478
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 479
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x r; apply Trunc_functor.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 479
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact igt_mul_r.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 480
+Time: 0.002s">
+<div class="time" style="width: 2.3809523809524%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 481
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> 
+
+Definition ideal_generated_rec {R : Ring} {X : R -&gt; Type} {I : Ideal R}
+  (p : X ⊆ I)
+  : ideal_generated X ⊆ I.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 485
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 486
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>
+  intros x; apply Trunc_rec; intros q.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 487
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction q.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 488
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 489
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by apply p.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 489
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 490
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply ideal_in_zero.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 490
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 491
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by apply ideal_in_plus_negate.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 491
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 492
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by apply isleftideal.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 492
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 493
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre> by rapply isrightideal.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 493
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 494
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Finitely generated ideal *)
+
+(** Finitely generated ideals *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 498
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ideal_generated_finite {R : Ring} {n : nat} (X : Fin n -&gt; R) : Ideal R.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 498
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 499
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply ideal_generated.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 500
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (hfiber X).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 501
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 502
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Principal ideals *)
+
+(** A principal ideal is an ideal generated by a single element. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 506
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ideal_principal {R : Ring} (x : R) : Ideal R
+  := ideal_generated (fun r =&gt; x = r).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 507
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Quotient (a.k.a colon) ideals *)
+
+(** The definitions here are not entirely standard, but will become so when considering only commutative rings. For the non-commutative case there isn't a lot written about ideal quotients. *)
+
+(** The subgroup corresponding to the left ideal quotient [I :: J] consists of the elements [r] in [R] such that [J x -&gt; I (r * x)] for every [x] in [R]. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 513
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition subgroup_leftideal_quotient {R : Ring} (I : Subgroup R) (J : R -&gt; Type)
+  : Subgroup R.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 514
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 515
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_Subgroup.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 516
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* We insert [merely] here to avoid needing [Funext]. *)
+ </pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 518
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>-</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 518
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fun r =&gt; merely (J ⊆ subgroup_preimage (grp_homo_rng_left_mult r) I)).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 518
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* This predicate is a subgroup, since it is equivalent to an intersection of a family of subgroups indexed by [sig J]. *)
+ </pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 520
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>-</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 520
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre> rapply (issubgroup_equiv
+              (H:=subgroup_intersection_family (sig J)
+                    (fun x =&gt; subgroup_preimage (grp_homo_rng_right_mult x.1) I))).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 522
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro r; cbn.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 523
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply Trunc_functor_equiv.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 524
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    symmetry; napply equiv_sig_ind.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 525
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 526
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The left ideal quotient of a left ideal is a left ideal. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 528
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isleftideal_subgroup_leftideal_quotient {R : Ring}
+  (I : Subgroup R) `{IsLeftIdeal R I} (J : R -&gt; Type)
+  : IsLeftIdeal (subgroup_leftideal_quotient I J).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 530
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 531
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros r x p.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 532
+Time: 0.013s">
+<div class="time" style="width: 15.47619047619%"></div>
+<pre>
+  strip_truncations; apply tr.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 533
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros s j; simpl.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 534
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite &lt;- rng_mult_assoc.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 535
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply isleftideal.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 536
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by napply p.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 537
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 538
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The left ideal quotient by a left ideal is a right ideal. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 540
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isrightideal_subgroup_leftideal_quotient {R : Ring}
+  (I J : Subgroup R) `{IsLeftIdeal R J}
+  : IsRightIdeal (subgroup_leftideal_quotient I J).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 542
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 543
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros r x p.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 544
+Time: 0.015s">
+<div class="time" style="width: 17.857142857143%"></div>
+<pre>
+  strip_truncations; apply tr.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 545
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros s j.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 546
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  cbn in *.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 547
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite &lt;- rng_mult_assoc.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 548
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply p.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 549
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by rapply isleftideal.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 550
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 551
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We define the left ideal quotient as a left ideal. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 553
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>Definition leftideal_quotient {R : Ring}
+  : LeftIdeal R -&gt; (R -&gt; Type) -&gt; LeftIdeal R
+  := fun I J =&gt; Build_LeftIdeal R (subgroup_leftideal_quotient I J) _.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 555
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  
+Definition subgroup_rightideal_quotient {R : Ring} (I : Subgroup R) (J : R -&gt; Type)
+  : Subgroup R
+  := subgroup_leftideal_quotient (R:=rng_op R) I J.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 559
+Time: 0.003s">
+<div class="time" style="width: 3.5714285714286%"></div>
+<pre> 
+
+Instance isrightideal_subgroup_rightideal_quotient {R : Ring}
+  (I : Subgroup R) `{IsRightIdeal R I} (J : R -&gt; Type)
+  : IsRightIdeal (subgroup_rightideal_quotient I J)
+  := isleftideal_subgroup_leftideal_quotient (R:=rng_op R) I J.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 564
+Time: 0.003s">
+<div class="time" style="width: 3.5714285714286%"></div>
+<pre>
+
+Instance isleftideal_subgroup_rightideal_quotient {R : Ring}
+  (I J : Subgroup R) `{IsRightIdeal R J}
+  : IsLeftIdeal (subgroup_rightideal_quotient I J)
+  := isrightideal_subgroup_leftideal_quotient (R:=rng_op R) I J.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 569
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We define the right ideal quotient as a right ideal. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 571
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>Definition rightideal_quotient {R : Ring}
+  : RightIdeal R -&gt; (R -&gt; Type) -&gt; RightIdeal R
+  := fun I J =&gt; Build_RightIdeal R (subgroup_rightideal_quotient (R:=R) I J) _.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 573
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The ideal quotient is then the intersection of a left and right quotient of both two sided ideals. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 575
+Time: 0.04s">
+<div class="time" style="width: 47.619047619048%"></div>
+<pre>Definition ideal_quotient {R : Ring}
+  : Ideal R -&gt; Ideal R -&gt; Ideal R
+  := fun I J =&gt;
+    Build_Ideal R
+      (subgroup_intersection
+        (leftideal_quotient I J)
+        (rightideal_quotient I J))
+      (Build_IsIdeal _ _ _ _).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 582
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Annihilator *)
+
+(** The left annihilator of a subset is the set of elements that annihilate the subgroup with left multiplication. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 586
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition subgroup_ideal_left_annihilator {R : Ring} (S : R -&gt; Type)
+  : Subgroup R.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 587
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 588
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_Subgroup'.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 589
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (** If we assume [Funext], then it isn't necessary to use [merely] here. *)
+ </pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 591
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>-</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 591
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fun r =&gt; merely (forall x, S x -&gt; r * x = ring_zero)).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 591
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 592
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 592
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 593
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 593
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> 
+    intros r p.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 594
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply rng_mult_zero_l.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 595
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 596
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y p q.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 596
+Time: 0.016s">
+<div class="time" style="width: 19.047619047619%"></div>
+<pre>
+    strip_truncations; apply tr.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 597
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros r s.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 598
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    lhs rapply rng_dist_r.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 599
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite (p r s).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 600
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite rng_mult_negate_l.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 601
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite (q r s).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 602
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite &lt;- rng_mult_negate.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 603
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite rng_mult_zero_r.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 604
+Time: 0.002s">
+<div class="time" style="width: 2.3809523809524%"></div>
+<pre>
+    apply left_identity.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 605
+Time: 0.002s">
+<div class="time" style="width: 2.3809523809524%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 606
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The left annihilator of a subgroup of a ring is a left ideal of the ring. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 608
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isleftideal_ideal_left_annihilator {R : Ring} (I : R -&gt; Type)
+  : IsLeftIdeal (subgroup_ideal_left_annihilator I).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 609
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 610
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros r x p.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 611
+Time: 0.011s">
+<div class="time" style="width: 13.095238095238%"></div>
+<pre>
+  strip_truncations; apply tr.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 612
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros s i.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 613
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite &lt;- rng_mult_assoc, (p s i).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 614
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply rng_mult_zero_r.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 615
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 616
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The left annihilator of a left ideal also happens to be a right ideal. In fact, left ideal could be weakened to subset closed under multiplication, however we don't need this generality currently. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 618
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isrightideal_ideal_left_annihilator {R : Ring} (I : Subgroup R)
+  `{IsLeftIdeal R I}
+  : IsRightIdeal (subgroup_ideal_left_annihilator I).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 620
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 621
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros r x p.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 622
+Time: 0.013s">
+<div class="time" style="width: 15.47619047619%"></div>
+<pre>
+  strip_truncations; apply tr.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 623
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros s i; cbn.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 624
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite &lt;- rng_mult_assoc.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 625
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by apply p, isleftideal.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 626
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 627
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Therefore the annihilator of a left ideal is an ideal. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 629
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>Instance isideal_ideal_left_annihilator {R : Ring} (I : Subgroup R)
+  `{IsLeftIdeal R I}
+  : IsIdeal (subgroup_ideal_left_annihilator I)
+  := {}.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 632
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The left annihilator of a left ideal. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 634
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>Definition ideal_left_annihilator {R : Ring} (I : LeftIdeal R) : Ideal R
+  := Build_Ideal R (subgroup_ideal_left_annihilator I) _.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 635
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The right annihilator of a subset of a ring is the set of elements that annihilate the elements of the subset with right multiplication. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 637
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition subgroup_ideal_right_annihilator {R : Ring} (I : R -&gt; Type)
+  : Subgroup R
+  := subgroup_ideal_left_annihilator (R:=rng_op R) I.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 639
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** When the subset is a right ideal the right annihilator is a left ideal of the ring. This can be strengthened. See the comment in the left ideal version of this lemma above. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 641
+Time: 0.003s">
+<div class="time" style="width: 3.5714285714286%"></div>
+<pre>Instance isleftideal_ideal_right_annihilator {R : Ring} (I : Subgroup R)
+  `{IsRightIdeal R I}
+  : IsLeftIdeal (subgroup_ideal_right_annihilator I)
+  := isrightideal_ideal_left_annihilator (R:=rng_op R) I.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 644
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The right annihilator is a right ideal of the ring. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 646
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>Instance isrightideal_ideal_right_annihilator {R : Ring} (I : R -&gt; Type)
+  : IsRightIdeal (subgroup_ideal_right_annihilator (R:=R) I)
+  := isleftideal_ideal_left_annihilator (R:=rng_op R) I.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 648
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Therefore the annihilator of a right ideal is an ideal. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 650
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>Instance isideal_ideal_right_annihilator {R : Ring} (I : Subgroup R)
+  `{IsRightIdeal R I}
+  : IsIdeal (subgroup_ideal_right_annihilator (R:=R) I)
+  := {}.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 653
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The right annihilator of a right ideal. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 655
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ideal_right_annihilator {R : Ring} (I : RightIdeal R) : Ideal R
+  := Build_Ideal R (subgroup_ideal_right_annihilator (R:=R) I)
+     (isideal_ideal_right_annihilator (R:=R) I).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 657
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The annihilator of an ideal is the intersection of the left and right annihilators. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 659
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ideal_annihilator {R : Ring} (I : Ideal R) : Ideal R
+  := ideal_intersection (ideal_left_annihilator I) (ideal_right_annihilator I).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 660
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Properties of ideals *)
+
+(** *** Coprime ideals *)
+
+(** Two ideals are coprime if their sum is the unit ideal. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 666
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Coprime {R : Ring} (I J : Ideal R) : Type
+  := ideal_sum I J ↔ ideal_unit R.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 667
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Existing Class Coprime.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 668
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance ishprop_coprime `{Funext} {R : Ring}
+  (I J : Ideal R) : IsHProp (Coprime I J).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 671
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 672
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unfold Coprime.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 673
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact _.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 674
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 675
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>
+
+Definition equiv_coprime_sum `{Funext} {R : Ring} (I J : Ideal R)
+  : Coprime I J
+  &lt;~&gt; hexists (fun '(((i ; p) , (j ; q)) : sig I * sig J)
+      =&gt; i + j = ring_one).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 680
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 681
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simpl.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 682
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>
+  srapply equiv_iff_hprop.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 683
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 684
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros c.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 684
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    pose (snd (c ring_one) tt) as d; clearbody d; clear c.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 685
+Time: 0.008s">
+<div class="time" style="width: 9.5238095238095%"></div>
+<pre>
+    strip_truncations.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 686
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply tr.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 687
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    induction d.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 688
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 689
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct x.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 689
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 690
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists ((g ; s), (ring_zero; ideal_in_zero _)).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 690
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply rng_plus_zero_r.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 691
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 692
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists ((ring_zero; ideal_in_zero _), (g ; s)).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 692
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply rng_plus_zero_l.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 693
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 694
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists ((ring_zero; ideal_in_zero _), (ring_zero; ideal_in_zero _)).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 694
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply rng_plus_zero_l.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 695
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 696
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct IHd1 as [[[x xi] [y yj]] p].</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 696
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      destruct IHd2 as [[[w wi] [z zj]] q].</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 697
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      srefine (((_;_),(_;_));_).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 698
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 699
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (x - w).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 699
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 700
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by apply ideal_in_plus_negate.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 700
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 701
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (y - z).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 701
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 702
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by apply ideal_in_plus_negate.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 702
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 703
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 703
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>
+        rhs_V exact (ap011 (fun x y =&gt; x - y) p q).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 704
+Time: 0.003s">
+<div class="time" style="width: 3.5714285714286%"></div>
+<pre>
+        lhs_V napply rng_plus_assoc.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 705
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        rhs_V napply rng_plus_assoc.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 706
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        f_ap.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 707
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        rewrite rng_negate_plus.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 708
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        rhs_V napply rng_plus_comm.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 709
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        rhs_V napply rng_plus_assoc.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 710
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        f_ap.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 711
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply commutativity.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 712
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 713
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro x.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 713
+Time: 0.009s">
+<div class="time" style="width: 10.714285714286%"></div>
+<pre>
+    strip_truncations.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 714
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros r.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 715
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    split;[intro; exact tt|].</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 716
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros _.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 717
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct x as [[[x xi] [y yj]] p].</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 718
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite &lt;- rng_mult_one_r.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 719
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    change (x + y = 1) in p.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 720
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite &lt;- p.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 721
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite rng_dist_l.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 722
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply tr.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 723
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rapply sgt_op'.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 724
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 725
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply sgt_in.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 725
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      left.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 726
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>
+      by apply isleftideal.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 727
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 728
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply sgt_in.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 728
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      right.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 729
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>
+      by apply isleftideal.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 730
+Time: 0.007s">
+<div class="time" style="width: 8.3333333333333%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 731
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Ideal notations *)
+
+(** We declare and import a module for various (Unicode) ideal notations. These exist in their own special case, and can be imported and used in other files when needing to reason about ideals. *)
+
+</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 736
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Module Import Notation.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 736
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Infix "+" := ideal_sum          : ideal_scope.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 737
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Infix "⋅" := ideal_product      : ideal_scope.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 738
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Infix "∩" := ideal_intersection : ideal_scope.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 739
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Infix "::" := ideal_quotient    : ideal_scope.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 740
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Notation "〈 X 〉" := (ideal_generated X)  : ideal_scope.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 741
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Notation Ann := ideal_annihilator.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 742
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+End Notation.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 743
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Ideal Lemmas *)
+
+(** The zero ideal is contained in all ideals. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 747
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ideal_zero_subset {R : Ring} (I : Subgroup R) : ideal_zero R ⊆ I
+  := trivial_subgroup_rec _.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 748
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The unit ideal contains all ideals. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 750
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ideal_unit_subset {R : Ring} (I : Subgroup R) : I ⊆ ideal_unit R
+  := pred_unit_subset I.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 751
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Intersection includes into the left *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 753
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ideal_intersection_subset_l {R : Ring} (I J : Ideal R) : I ∩ J ⊆ I
+  := pred_and_subset_l I J.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 754
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Intersection includes into the right *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 756
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ideal_intersection_subset_r {R : Ring} (I J : Ideal R) : I ∩ J ⊆ J
+  := pred_and_subset_r I J.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 757
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Subsets of intersections *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 759
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>Definition ideal_intersection_subset {R : Ring} (I J K : Ideal R)
+  : K ⊆ I -&gt; K ⊆ J -&gt; K ⊆ I ∩ J
+  := pred_and_is_meet I J K.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 761
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Intersections are commutative *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 763
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ideal_intersection_comm {R : Ring} (I J : Ideal R)
+  : I ∩ J ↔ J ∩ I
+  := pred_and_comm I J.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 765
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Ideals include into their sum on the left *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 767
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ideal_sum_subset_l {R : Ring} (I J : Ideal R) : I ⊆ (I + J)
+  := subgroup_product_incl_l.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 768
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Ideals include into their sum on the right *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 770
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ideal_sum_subset_r {R : Ring} (I J : Ideal R) : J ⊆ (I + J)
+  := subgroup_product_incl_r.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 771
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+#[local] Hint Extern 4 =&gt; progress (cbv beta iota) : typeclass_instances.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 773
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Products of ideals are included in their left factor *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 775
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ideal_product_subset_l {R : Ring} (I J : Ideal R) : I ⋅ J ⊆ I.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 775
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 776
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>
+  napply subgroup_generated_rec.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 777
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros _ [].</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 778
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>
+  by rapply isrightideal.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 779
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 780
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Products of ideals are included in their right factor. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 782
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ideal_product_subset_r {R : Ring} (I J : Ideal R) : I ⋅ J ⊆ J.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 782
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 783
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  napply subgroup_generated_rec.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 784
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros _ [].</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 785
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>
+  by rapply isleftideal.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 786
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 787
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Products of ideals preserve subsets on the left *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 789
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ideal_product_subset_pres_l {R : Ring} (I J K : Ideal R)
+  : I ⊆ J -&gt; I ⋅ K ⊆ J ⋅ K.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 790
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 791
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros p.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 792
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (functor_subgroup_generated _ _ grp_iso_id).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 793
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros _ [].</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 794
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply ipn_in.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 795
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: apply p.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 796
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1,2: assumption.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 797
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 798
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Products of ideals preserve subsets on the right *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 800
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ideal_product_subset_pres_r {R : Ring} (I J K : Ideal R)
+  : I ⊆ J -&gt; K ⋅ I ⊆ K ⋅ J.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 801
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 802
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros p.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 803
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (functor_subgroup_generated _ _ grp_iso_id).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 804
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros _ [].</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 805
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply ipn_in.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 806
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  2: apply p.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 807
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1,2: assumption.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 808
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 809
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The product of opposite ideals is the opposite of the reversed product. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 811
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ideal_product_op {R : Ring} (I J : Ideal R)
+  : (ideal_op R I) ⋅ (ideal_op R J)
+    ↔ ideal_op R (J ⋅ I).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 813
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 814
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>
+  rapply ideal_product_type_op.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 815
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 816
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>
+
+Definition ideal_product_op_triple {R : Ring} (I J K : Ideal R)
+  : ideal_op R ((K ⋅ J) ⋅ I)
+      ⊆ (ideal_op R I) ⋅ ((ideal_op R J) ⋅ (ideal_op R K)).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 820
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 821
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x i.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 822
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>
+  apply (ideal_product_op (R:=rng_op R)).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 823
+Time: 0.004s">
+<div class="time" style="width: 4.7619047619048%"></div>
+<pre>
+  napply (ideal_product_subset_pres_l (R:=R)).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 824
+Time: 0.006s">
+<div class="time" style="width: 7.1428571428571%"></div>
+<pre>
+  1: napply (ideal_product_op (R:=rng_op R)).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 825
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply i.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 826
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 827
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The product of ideals is an associative operation. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 829
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>Definition ideal_product_assoc {R : Ring} (I J K : Ideal R)
+  : I ⋅ (J ⋅ K) ↔ (I ⋅ J) ⋅ K.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 830
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 831
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  assert (f : forall (R : Ring) (I J K : Ideal R), I ⋅ (J ⋅ K) ⊆ (I ⋅ J) ⋅ K).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 832
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 833
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> clear R I J K; intros R I J K.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 833
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>
+    napply subgroup_generated_rec.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 834
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros _ [r s IHr IHs].</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 835
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    revert IHs.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 836
+Time: 0.002s">
+<div class="time" style="width: 2.3809523809524%"></div>
+<pre>
+    rapply (functor_subgroup_generated _ _ (grp_homo_rng_left_mult r)); clear s.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 837
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros _ [s t IHs IHt]; cbn.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 838
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite rng_mult_assoc.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 839
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by apply ipn_in; [ apply tr, sgt_in, ipn_in | ].</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 840
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 841
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply pred_subset_antisymm; only 1: apply f.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 841
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros x i.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 842
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (ideal_product_op_triple (R:=rng_op R) I J K).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 843
+Time: 0.004s">
+<div class="time" style="width: 4.7619047619048%"></div>
+<pre>
+    napply f.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 844
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply ideal_product_op_triple.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 845
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact i.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 846
+Time: 0.002s">
+<div class="time" style="width: 2.3809523809524%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 847
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Products of ideals are subsets of their intersection. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 849
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ideal_product_subset_intersection {R : Ring} (I J : Ideal R)
+  : I ⋅ J ⊆ I ∩ J.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 850
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 851
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply ideal_intersection_subset.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 852
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 853
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply ideal_product_subset_l.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 853
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 854
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply ideal_product_subset_r.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 854
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 855
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Sums of ideals are the smallest ideal containing the summands. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 857
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>Definition ideal_sum_smallest {R : Ring} (I J K : Ideal R)
+  : I ⊆ K -&gt; J ⊆ K -&gt; (I + J) ⊆ K
+  := subgroup_product_smallest I J K.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 859
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Ideals absorb themselves under sum. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 861
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ideal_sum_self {R : Ring} (I : Ideal R)
+  : I + I ↔ I
+  := subgroup_product_self I.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 863
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Sums preserve inclusions in the left summand. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 865
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>Definition ideal_sum_subset_pres_l {R : Ring} (I J K : Ideal R)
+  : I ⊆ J -&gt; (I + K) ⊆ (J + K)
+  := subgroup_product_subset_pres_l I J K.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 867
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Sums preserve inclusions in the right summand. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 869
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>Definition ideal_sum_subset_pres_r {R : Ring} (I J K : Ideal R)
+  : I ⊆ J -&gt; (K + I) ⊆ (K + J)
+  := subgroup_product_subset_pres_r I J K.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 871
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Sums preserve inclusions in both summands. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 873
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>Definition ideal_sum_subset_pres {R : Ring} (I J K L : Ideal R)
+  : I ⊆ J -&gt; K ⊆ L -&gt; (I + K) ⊆ (J + L)
+  := subgroup_product_subset_pres I J K L.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 875
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Sums preserve ideal equality in both summands. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 877
+Time: 0.002s">
+<div class="time" style="width: 2.3809523809524%"></div>
+<pre>Definition ideal_sum_eq {R : Ring} (I J K L : Ideal R)
+  : I ↔ J -&gt; K ↔ L -&gt; (I + K) ↔ (J + L)
+  := subgroup_product_eq I J K L.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 879
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The sum of two opposite ideals is the opposite of their sum. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 881
+Time: 0.002s">
+<div class="time" style="width: 2.3809523809524%"></div>
+<pre>Definition ideal_sum_op {R : Ring} (I J : Ideal R)
+  : ideal_op R I + ideal_op R J ↔ ideal_op R (I + J)
+  := reflexivity _.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 883
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Products left distribute over sums. Note that this follows from left adjoints preserving colimits. The product of ideals is a functor whose right adjoint is the quotient ideal. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 885
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>Definition ideal_dist_l {R : Ring} (I J K : Ideal R)
+  : I ⋅ (J + K) ↔ I ⋅ J + I ⋅ K.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 886
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 887
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (** We split into two directions. *)
+ </pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 889
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>apply pred_subset_antisymm.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 889
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (** We deal with the difficult inclusion first. The proof comes down to breaking down the definition and reassembling into the right. *)
+ </pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 891
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>{</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 891
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply subgroup_generated_rec.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 891
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros _ [r s p q].</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 892
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    revert s q.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 893
+Time: 0.003s">
+<div class="time" style="width: 3.5714285714286%"></div>
+<pre>
+    napply (subgroup_product_smallest J K
+              (subgroup_preimage (grp_homo_rng_left_mult r) (I ⋅ J + I ⋅ K))).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 895
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    all: cbn -[subgroup_generated ideal_product].</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 896
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 897
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x j.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 897
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply subgroup_product_incl_l.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 898
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      by apply tr, sgt_in, ipn_in.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 899
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 900
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x k.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 900
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply subgroup_product_incl_r.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 901
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      by apply tr, sgt_in, ipn_in.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 902
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 902
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (** This is the easy direction which can use previous lemmas. *)
+ </pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 904
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>apply ideal_sum_smallest.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 904
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1,2: apply ideal_product_subset_pres_r.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 905
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: apply ideal_sum_subset_l.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 906
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply ideal_sum_subset_r.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 907
+Time: 0.002s">
+<div class="time" style="width: 2.3809523809524%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 908
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Products distribute over sums on the right. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 910
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>Definition ideal_dist_r {R : Ring} (I J K : Ideal R)
+  : (I + J) ⋅ K ↔ I ⋅ K + J ⋅ K.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 911
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 912
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  change I with (ideal_op _ (ideal_op R I)).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 913
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  change J with (ideal_op _ (ideal_op R J)).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 914
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  change K with (ideal_op _ (ideal_op R K)).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 915
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>
+  etransitivity.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 916
+Time: 0.004s">
+<div class="time" style="width: 4.7619047619048%"></div>
+<pre>
+  2: rapply ideal_sum_eq; symmetry; apply (ideal_product_op (R:=rng_op R)).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 917
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>
+  etransitivity.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 918
+Time: 0.004s">
+<div class="time" style="width: 4.7619047619048%"></div>
+<pre>
+  2: apply (ideal_dist_l (R:=rng_op R)).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 919
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>
+  etransitivity.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 920
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>
+  2: apply (ideal_product_op (R:=rng_op R)).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 921
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>
+  reflexivity.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 922
+Time: 0.003s">
+<div class="time" style="width: 3.5714285714286%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 923
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Ideal sums are commutative *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 925
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>Definition ideal_sum_comm {R : Ring} (I J : Ideal R) : I + J ↔ J + I
+  := subgroup_product_comm I J.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 926
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Zero ideal is left additive identity. *) </pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 928
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ideal_sum_zero_l {R : Ring} I : ideal_zero R + I ↔ I
+  := subgroup_product_trivial_l I.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 929
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Zero ideal is right additive identity. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 931
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ideal_sum_zero_r {R : Ring} I : I + ideal_zero R ↔ I
+  := subgroup_product_trivial_r I.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 932
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Unit ideal is left multiplicative identity. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 934
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ideal_product_unit_l {R : Ring} I : ideal_unit R ⋅ I ↔ I.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 934
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 935
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply pred_subset_antisymm.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 936
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: apply ideal_product_subset_r.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 937
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros r p.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 938
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite &lt;- rng_mult_one_l.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 939
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by apply tr, sgt_in, ipn_in.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 940
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 941
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Unit ideal is right multiplicative identity. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 943
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ideal_product_unit_r {R : Ring} I : I ⋅ ideal_unit R ↔ I.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 943
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 944
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply pred_subset_antisymm.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 945
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: apply ideal_product_subset_l.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 946
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros r p.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 947
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite &lt;- rng_mult_one_r.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 948
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by apply tr, sgt_in, ipn_in.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 949
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 950
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Intersecting with unit ideal on the left does nothing. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 952
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ideal_intresection_unit_l {R : Ring} I : ideal_unit R ∩ I ↔ I
+  := pred_and_unit_l I.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 953
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Intersecting with unit ideal on right does nothing. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 955
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ideal_intersection_unit_r {R : Ring} I : I ∩ ideal_unit R ↔ I
+  := pred_and_unit_r I.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 956
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Product of intersection and sum is subset of sum of products *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 958
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>Definition ideal_product_intersection_sum_subset {R : Ring} (I J : Ideal R)
+  : (I ∩ J) ⋅ (I + J) ⊆ (I ⋅ J + J ⋅ I).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 959
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 960
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>
+  etransitivity.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 961
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>
+  1: rapply ideal_dist_l.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 962
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  etransitivity.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 963
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>
+  1: rapply ideal_sum_subset_pres_r.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 964
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>
+  1: rapply ideal_product_subset_pres_l.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 965
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: apply ideal_intersection_subset_l.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 966
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>
+  etransitivity.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 967
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>
+  1: rapply ideal_sum_subset_pres_l.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 968
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>
+  1: rapply ideal_product_subset_pres_l.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 969
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: apply ideal_intersection_subset_r.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 970
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rapply ideal_sum_comm.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 971
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 972
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Ideals are subsets of their ideal quotients *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 974
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ideal_quotient_subset {R : Ring} (I J : Ideal R) : I ⊆ (I :: J).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 974
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 975
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x i; split; apply tr; intros r j; cbn.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 976
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 977
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre> by rapply isrightideal.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 977
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 978
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre> by rapply isleftideal.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 978
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 979
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>
+
+Definition leftideal_quotient_subset_l {R : Ring} (I J K : Ideal R) (p : I ⊆ J)
+  : leftideal_quotient I K ⊆ leftideal_quotient J K.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 982
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 983
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (pred_subset_postcomp merely (@Trunc_functor _)).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 984
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros r q.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 985
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>
+  rapply (transitivity q).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 986
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by apply functor_subgroup_preimage.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 987
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 988
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>
+
+Definition ideal_quotient_subset_l {R : Ring} (I J K : Ideal R) (p : I ⊆ J)
+  : (I :: K) ⊆ (J :: K).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 991
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 992
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>
+  napply pred_and_is_meet.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 993
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 994
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre> rapply (transitivity (pred_and_subset_l _ _)).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 994
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by apply leftideal_quotient_subset_l.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 995
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 996
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre> rapply (transitivity (pred_and_subset_r _ _)).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 996
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (leftideal_quotient_subset_l (R:=rng_op R) I J K p).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 997
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 998
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** If [J] divides [I] then the ideal quotient of [J] by [I] is trivial. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1000
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ideal_quotient_trivial {R : Ring} (I J : Ideal R)
+  : I ⊆ J -&gt; J :: I ↔ ideal_unit R.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1001
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1002
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros p.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1003
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply pred_subset_antisymm.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1004
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>
+  1: cbv; trivial.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1005
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros r _; split; apply tr; intros x q; cbn.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1006
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1007
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre> by apply isleftideal, p.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1007
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> 
+  -</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1008
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre> rapply isrightideal.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1008
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by apply p.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1009
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1010
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The ideal quotient of [I] by the unit ideal is [I]. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1012
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ideal_quotient_unit_bottom {R : Ring} (I : Ideal R)
+  : (I :: ideal_unit R) ↔ I.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1013
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1014
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply pred_subset_antisymm.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1015
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1016
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros r [p q].</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1016
+Time: 0.02s">
+<div class="time" style="width: 23.809523809524%"></div>
+<pre>
+    strip_truncations.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1017
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite &lt;- rng_mult_one_r.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1018
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (p ring_one tt).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1019
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1020
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply ideal_quotient_subset.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1020
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1021
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The ideal quotient of the unit ideal by [I] is the unit ideal. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1023
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ideal_quotient_unit_top {R : Ring} (I : Ideal R)
+  : (ideal_unit R :: I) ↔ ideal_unit R.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1024
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1025
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  split.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1026
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1027
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn; trivial.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1027
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1028
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros ?; split; apply tr;
+    cbn; split; trivial.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1029
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre> 
+Defined.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1030
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The ideal quotient by a sum is an intersection of ideal quotients. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1032
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>Definition ideal_quotient_sum {R : Ring} (I J K : Ideal R)
+  : (I :: (J + K)) ↔ (I :: J) ∩ (I :: K).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1033
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1034
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply pred_subset_antisymm.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1035
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1036
+Time: 0.021s">
+<div class="time" style="width: 25%"></div>
+<pre> intros r [p q]; strip_truncations; split; split; apply tr; intros x jk.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1036
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1037
+Time: 0.003s">
+<div class="time" style="width: 3.5714285714286%"></div>
+<pre> by rapply p; rapply ideal_sum_subset_l.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1037
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1038
+Time: 0.003s">
+<div class="time" style="width: 3.5714285714286%"></div>
+<pre> by rapply q; rapply ideal_sum_subset_l.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1038
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1039
+Time: 0.003s">
+<div class="time" style="width: 3.5714285714286%"></div>
+<pre> by rapply p; rapply ideal_sum_subset_r.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1039
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1040
+Time: 0.022s">
+<div class="time" style="width: 26.190476190476%"></div>
+<pre> by rapply q; rapply ideal_sum_subset_r.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1040
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1040
+Time: 0.059s">
+<div class="time" style="width: 70.238095238095%"></div>
+<pre>
+  intros r [[p q] [u v]]; strip_truncations; split; apply tr.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1041
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1042
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre> napply subgroup_generated_rec.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1042
+Time: 0.002s">
+<div class="time" style="width: 2.3809523809524%"></div>
+<pre>
+    by napply pred_or_is_join.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1043
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1044
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre> napply subgroup_generated_rec.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1044
+Time: 0.003s">
+<div class="time" style="width: 3.5714285714286%"></div>
+<pre>
+    by napply pred_or_is_join.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1045
+Time: 0.006s">
+<div class="time" style="width: 7.1428571428571%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1046
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Ideal quotients distribute over intersections. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1048
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>Definition ideal_quotient_intersection {R : Ring} (I J K : Ideal R)
+  : (I ∩ J :: K) ↔ (I :: K) ∩ (J :: K).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1049
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1050
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply pred_subset_antisymm.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1051
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1052
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre> napply pred_and_is_meet.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1052
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1053
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre> napply ideal_quotient_subset_l.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1053
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply pred_and_subset_l.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1054
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1055
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre> napply ideal_quotient_subset_l.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1055
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply pred_and_subset_r.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1056
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1057
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros r [[p q] [u v]].</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1057
+Time: 0.084s">
+<div class="time" style="width: 100%"></div>
+<pre>
+    strip_truncations; split; apply tr; by napply pred_and_is_meet.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1058
+Time: 0.005s">
+<div class="time" style="width: 5.952380952381%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1059
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Annihilators reverse the order of inclusion. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1061
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ideal_annihilator_subset {R : Ring} (I J : Ideal R)
+  : I ⊆ J -&gt; Ann J ⊆ Ann I.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1062
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1063
+Time: 0.023s">
+<div class="time" style="width: 27.380952380952%"></div>
+<pre>
+  intros p x [q q']; hnf in q, q'; strip_truncations;
+    split; apply tr; intros y i.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1065
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1066
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by apply q, p.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1066
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1067
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by apply q', p.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1067
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1068
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The annihilator of an ideal is equal to a quotient of zero. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1070
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ideal_annihilator_zero_quotient {R : Ring} (I : Ideal R)
+  : Ann I ↔ ideal_zero R :: I.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1071
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1072
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x; split.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1073
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1074
+Time: 0.027s">
+<div class="time" style="width: 32.142857142857%"></div>
+<pre> intros [p q]; strip_truncations; split; apply tr; intros y i.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1074
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1075
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (p y i).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1075
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1076
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (q y i).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1076
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1077
+Time: 0.019s">
+<div class="time" style="width: 22.619047619048%"></div>
+<pre> intros [p q]; strip_truncations; split; apply tr; intros y i.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1077
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1078
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (p y i).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1078
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1079
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (q y i).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1079
+Time: 0.003s">
+<div class="time" style="width: 3.5714285714286%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1080
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Preimage of ideals under ring homomorphisms *)
+
+(** The preimage of an ideal under a ring homomorphism is also itself an ideal. This is also known as the contraction of an ideal. *)
+
+</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1085
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isleftideal_preimage {R S : Ring} (f : R $-&gt; S)
+  (I : Subgroup S) `{IsLeftIdeal S I}
+  : IsLeftIdeal (subgroup_preimage f I).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1087
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1088
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros r x Ifx.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1089
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>
+  nrefine (transport I (rng_homo_mult f _ _)^ _).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1090
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rapply isleftideal.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1091
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact Ifx.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1092
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1093
+Time: 0.006s">
+<div class="time" style="width: 7.1428571428571%"></div>
+<pre>
+
+Instance isrightideal_preimage {R S : Ring} (f : R $-&gt; S)
+  (I : Subgroup S) `{IsRightIdeal S I}
+  : IsRightIdeal (subgroup_preimage f I)
+  := isleftideal_preimage (R:=rng_op R) (S:=rng_op S)
+      (fmap rng_op f) I.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1099
+Time: 0.003s">
+<div class="time" style="width: 3.5714285714286%"></div>
+<pre>
+
+Instance isideal_preimage {R S : Ring} (f : R $-&gt; S)
+  (I : Subgroup S) `{IsIdeal S I}
+  : IsIdeal (subgroup_preimage f I)
+  := {}.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1104
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>
+
+Definition ideal_preimage {R S : Ring} (f : R $-&gt; S) (I : Ideal S)
+  : Ideal R
+  := Build_Ideal R (subgroup_preimage f I) _.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Extensions of ideals *)
+
+(** The extension of an ideal under a ring homomorphism is the ideal generated by the image of the ideal. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1112
+Time: 0.001s">
+<div class="time" style="width: 1.1904761904762%"></div>
+<pre>Definition ideal_extension {R S : Ring} (f : R $-&gt; S) (I : Ideal R) : Ideal S
+  := ideal_generated (fun s =&gt; exists r, I r /\ f r = s).</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The extension of a preimage is always a subset of the original ideal. *)</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ideal_subset_extension_preimage {R S : Ring} (f : R $-&gt; S)
+  (I : Ideal S)
+  : ideal_extension f (ideal_preimage f I) ⊆ I.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1118
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply ideal_generated_rec.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros s [r [p q]].</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct q.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1121
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact p.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1122
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ideal.v
+Line: 1124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** TODO: Maximal ideals *)
+(** TODO: Principal ideal *)
+(** TODO: Prime ideals *)
+(** TODO: Radical ideals *)
+(** TODO: Minimal ideals *)
+(** TODO: Primary ideals *)
+
+</pre>
+</div>
+</body>
+</html>
+

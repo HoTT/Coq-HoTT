@@ -1,0 +1,829 @@
+<html>
+<head>
+<title>EMSpace.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for EMSpace.v</h1>
+
+<div class="code" title="File: EMSpace.v
+Line: 1
+Time: 0.038s">
+<div class="time" style="width: 77.551020408163%"></div>
+<pre>From HoTT Require Import Basics Types.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 1
+Time: 0.014s">
+<div class="time" style="width: 28.571428571429%"></div>
+<pre>
+From HoTT.WildCat Require Import Core Universe Equiv.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 2
+Time: 0.049s">
+<div class="time" style="width: 100%"></div>
+<pre>
+Require Import Pointed.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Cubical.DPath.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 4
+Time: 0.023s">
+<div class="time" style="width: 46.938775510204%"></div>
+<pre>
+Require Import Algebra.AbGroups.AbelianGroup.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Homotopy.Suspension.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 6
+Time: 0.002s">
+<div class="time" style="width: 4.0816326530612%"></div>
+<pre>
+Require Import Homotopy.ClassifyingSpace.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Homotopy.HSpace.Coherent.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Homotopy.HomotopyGroup.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 9
+Time: 0.01s">
+<div class="time" style="width: 20.408163265306%"></div>
+<pre>
+Require Import Homotopy.Hopf.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 10
+Time: 0.002s">
+<div class="time" style="width: 4.0816326530612%"></div>
+<pre>
+Require Import Truncations.Core Truncations.Connectedness.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Eilenberg-Mac Lane spaces *)
+
+</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Open Scope pointed_scope.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope nat_scope.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope mc_mult_scope.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The definition of the Eilenberg-Mac Lane spaces.  Note that while we allow [G] to be non-abelian for [n &gt; 1], later results will need to assume that [G] is abelian. *)</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 18
+Time: 0.001s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>Fixpoint EilenbergMacLane@{u v | u &lt;= v} (G : Group@{u}) (n : nat) : pType@{v}
+  := match n with
+      | 0    =&gt; G
+      | 1    =&gt; pClassifyingSpace@{u v} G
+      | m.+1 =&gt; pTr m.+1 (psusp (EilenbergMacLane G m))
+     end.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation "'K(' G , n )" := (EilenbergMacLane G n).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section EilenbergMacLane.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{Univalence}.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance istrunc_em {G : Group} {n : nat} : IsTrunc n K(G, n).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 31
+Time: 0.008s">
+<div class="time" style="width: 16.326530612245%"></div>
+<pre>
+    destruct n as [|[]]; exact _.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** This is subsumed by the next result, but Coq doesn't always find the next result when it should. *)
+ </pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export] Instance isconnected_em {G : Group} (n : nat)
+    : IsConnected n K(G, n.+1).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 38
+Time: 0.01s">
+<div class="time" style="width: 20.408163265306%"></div>
+<pre>
+    induction n; exact _.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance isconnected_em' {G : Group} (n : nat)
+    : IsConnected n.-1 K(G, n).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct n.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: exact (is_minus_one_connected_pointed _).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply isconnected_em.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance is0connected_em {G : Group} (n : nat)
+    : IsConnected 0 K(G, n.+1).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 52
+Time: 0.001s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>
+    rapply (is0connected_isconnected n.-2).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Open Scope trunc_scope.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** This is a variant of [pequiv_ptr_loop_psusp] from pSusp.v. All we are really using is that [n.+2 &lt;= n +2+ n], but because of the use of [isconnmap_pred_add], the proof is a bit more specific to this case. *)
+ </pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Lemma pequiv_ptr_loop_psusp' (X : pType) (n : nat) `{IsConnected n.+1 X}
+    : pTr n.+2 X &lt;~&gt;* pTr n.+2 (loops (psusp X)).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply Build_pEquiv.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 62
+Time: 0.001s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>
+    1: exact (fmap (pTr _) (loop_susp_unit _)).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 63
+Time: 0.001s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>
+    napply O_inverts_conn_map.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 64
+Time: 0.001s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>
+    napply (isconnmap_pred_add n.-2).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite 2 trunc_index_add_succ.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (conn_map_loop_susp_unit n X).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma pequiv_loops_em_em (G : AbGroup) (n : nat)
+    : K(G, n) &lt;~&gt;* loops K(G, n.+1).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct n.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: exact pequiv_g_loops_bg.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    change (K(G, n.+1) &lt;~&gt;* loops (pTr n.+2 (psusp (K(G, n.+1))))).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (ptr_loops _ _ o*E _).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct n.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 77
+Time: 0.001s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>
+    1: srapply (licata_finster (m:=-2)).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (_ o*E pequiv_ptr (n:=n.+2)).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 79
+Time: 0.015s">
+<div class="time" style="width: 30.612244897959%"></div>
+<pre>
+    rapply pequiv_ptr_loop_psusp'.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 80
+Time: 0.001s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition pequiv_loops_em_g (G : AbGroup) (n : nat)
+    : G &lt;~&gt;* iterated_loops n K(G, n).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    induction n.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact pequiv_pmap_idmap.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> refine ((unfold_iterated_loops' _ _)^-1* o*E _ o*E IHn).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 88
+Time: 0.002s">
+<div class="time" style="width: 4.0816326530612%"></div>
+<pre>
+      exact (emap (iterated_loops n) (pequiv_loops_em_em _ _)).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** For positive indices, we in fact get a group isomorphism. *)
+ </pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition equiv_g_pi_n_em (G : AbGroup) (n : nat)
+    : GroupIsomorphism G (Pi n.+1 K(G, n.+1)).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 94
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    induction n.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact grp_iso_g_pi1_bg.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> nrefine (grp_iso_compose _ IHn).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      nrefine (grp_iso_compose _ (groupiso_pi_functor _ (pequiv_loops_em_em _ _))).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      symmetry; exact (groupiso_pi_loops _ _).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition iscohhspace_em {G : AbGroup} (n : nat)
+    : IsCohHSpace K(G, n).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    napply iscohhspace_equiv_cohhspace.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    2: apply pequiv_loops_em_em.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact iscohhspace_loops.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** If [G] and [G'] are isomorphic, then [K(G,n)] and [K(G',n)] are equivalent.  TODO:  We should show that [K(-,n)] is a functor, which implies this. *)
+ </pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 112
+Time: 0.001s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>Definition pequiv_em_group_iso {G G' : Group} (n : nat)
+    (e : G $&lt;~&gt; G')
+    : K(G, n) &lt;~&gt;* K(G', n).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 115
+Time: 0.001s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>
+    by destruct (equiv_path_group e).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Every pointed (n-1)-connected n-type is an Eilenberg-Mac Lane space. *)
+ </pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition pequiv_em_connected_truncated (X : pType)
+    (n : nat) `{IsConnected n X} `{IsTrunc n.+1 X}
+    : K(Pi n.+1 X, n.+1) &lt;~&gt;* X.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 122
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    generalize dependent X; induction n; intros X isC isT.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 124
+Time: 0.003s">
+<div class="time" style="width: 6.1224489795918%"></div>
+<pre>
+    1: rapply pequiv_pclassifyingspace_pi1.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 125
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (* The equivalence will be the composite
+&lt;&lt;
+      K( (Pi n.+2 X) n.+2)
+   &lt;~&gt;* K( (Pi n.+1 (loops X)), n.+2)
+   = pTr n.+2 (psusp K( (Pi n.+1 (loops X)), n.+1))  [by definition]
+   &lt;~&gt;* pTr n.+2 (psusp (loops X))
+   &lt;~&gt;* pTr n.+2 X
+   &lt;~&gt;* X
+&gt;&gt;
+    and we'll work from right to left.
+*)
+   </pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 137
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>refine ((pequiv_ptr (n:=n.+2))^-1* o*E _).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 137
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (pequiv_ptr_psusp_loops X n o*E _).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    change (K(?G, n.+2)) with (pTr n.+2 (psusp K( G, n.+1 ))).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 139
+Time: 0.005s">
+<div class="time" style="width: 10.204081632653%"></div>
+<pre>
+    refine (emap (pTr n.+2 o psusp) _).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 140
+Time: 0.046s">
+<div class="time" style="width: 93.877551020408%"></div>
+<pre>
+    refine ((IHn (loops X) _ _) o*E _).</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply pequiv_em_group_iso.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply groupiso_pi_loops.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 143
+Time: 0.001s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 144
+Time: 0.002s">
+<div class="time" style="width: 4.0816326530612%"></div>
+<pre>
+
+End EilenbergMacLane.</pre>
+</div>
+<div class="code" title="File: EMSpace.v
+Line: 147
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

@@ -1,0 +1,2420 @@
+<html>
+<head>
+<title>QuotientGroup.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for QuotientGroup.v</h1>
+
+<div class="code" title="File: QuotientGroup.v
+Line: 1
+Time: 0.037s">
+<div class="time" style="width: 34.259259259259%"></div>
+<pre>From HoTT Require Import Basics Types.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 1
+Time: 0.031s">
+<div class="time" style="width: 28.703703703704%"></div>
+<pre>
+Require Import Truncations.Core.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 2
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+Require Import Algebra.Congruence.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 3
+Time: 0.031s">
+<div class="time" style="width: 28.703703703704%"></div>
+<pre>
+Require Import Algebra.Groups.Group.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 4
+Time: 0.002s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+Require Import Algebra.Groups.Subgroup.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Export Colimits.Quotient.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 6
+Time: 0.002s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+Require Import HSet.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 7
+Time: 0.007s">
+<div class="time" style="width: 6.4814814814815%"></div>
+<pre>
+Require Import Spaces.Finite.Finite.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 8
+Time: 0.002s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+From HoTT.WildCat Require Import Core Equiv.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 9
+Time: 0.002s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+Require Import Modalities.Modality.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Quotient groups *)
+
+</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Open Scope mc_scope.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope mc_mult_scope.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope wc_iso_scope.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Congruence quotients *)
+
+</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section GroupCongruenceQuotient.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** A congruence on a group is a relation satisfying [R x x' -&gt; R y y' -&gt; R (x * y) (x' * y')].  Because we also require that [R] is reflexive, we also know that [R y y' -&gt; R (x * y) (x * y')] for any [x], and similarly for multiplication on the right by [x].  We don't need to assume that [R] is symmetric or transitive. *)
+ </pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Context {G : Group} {R : Relation G} `{!IsCongruence R, !Reflexive R}.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The type underlying the quotient group is [Quotient R]. *)
+ </pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition CongruenceQuotient := G / R.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance congquot_sgop : SgOp CongruenceQuotient.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 27
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+    srapply Quotient_rec2.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (class_of _ (x * y)).</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x x' y p.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply qglue.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by apply iscong.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y y' q.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply qglue.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by apply iscong.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance congquot_mon_unit : MonUnit CongruenceQuotient.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply class_of, mon_unit.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance congquot_inverse : Inverse CongruenceQuotient.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply Quotient_rec.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: exact (class_of R o (^)).</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros x y p; cbn beta.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 44
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+    transitivity (class_of R (y^ * (y * x^))).</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite grp_assoc.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite grp_inv_l.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite grp_unit_l.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      reflexivity.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 50
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre> transitivity (class_of R (y^ * (x * x^))).</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 51
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre> symmetry; apply qglue; repeat apply iscong.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        1,3: reflexivity.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        exact p.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite grp_inv_r.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        rewrite grp_unit_r.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        reflexivity.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 56
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance congquot_sgop_associative : Associative congquot_sgop.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 60
+Time: 0.006s">
+<div class="time" style="width: 5.5555555555556%"></div>
+<pre>
+    srapply Quotient_ind3_hprop; intros x y z.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 61
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+    snapply (ap (class_of R)).</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 62
+Time: 0.002s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+    rapply associativity.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Global Opaque congquot_sgop_associative.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance issemigroup_congquot : IsSemiGroup CongruenceQuotient := {}.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance congquot_leftidentity : LeftIdentity (.*.) mon_unit.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 70
+Time: 0.004s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+    srapply Quotient_ind_hprop; intro x.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 71
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+    snapply (ap (class_of R)).</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 72
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+    rapply left_identity.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Global Opaque congquot_leftidentity.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance congquot_rightidentity : RightIdentity (.*.) mon_unit.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 78
+Time: 0.004s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+    srapply Quotient_ind_hprop; intro x.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 79
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+    snapply (ap (class_of R)).</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 80
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+    rapply right_identity.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Global Opaque congquot_rightidentity.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance ismonoid_quotientgroup : IsMonoid CongruenceQuotient := {}.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance quotientgroup_leftinverse : LeftInverse (.*.) (^) mon_unit.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 88
+Time: 0.004s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+    srapply Quotient_ind_hprop; intro x; cbn beta.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 89
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+    snapply (ap (class_of R)).</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rapply left_inverse.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Global Opaque quotientgroup_leftinverse.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance quotientgroup_rightinverse : RightInverse (.*.) (^) mon_unit.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 96
+Time: 0.004s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+    srapply Quotient_ind_hprop; intro x; cbn beta.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 97
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+    snapply (ap (class_of R)).</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rapply right_inverse.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Global Opaque quotientgroup_rightinverse.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance isgroup_quotientgroup : IsGroup CongruenceQuotient := {}.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 103
+Time: 0.002s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+
+End GroupCongruenceQuotient.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Sets of cosets *)
+
+</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section Cosets.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context (G : Group) (H : Subgroup G).</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition LeftCoset := G / in_cosetL H.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** TODO: Way too many universes, needs fixing *)
+  (** The set of left cosets of a finite subgroup of a finite group is finite. *)
+ </pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export] Instance finite_leftcoset `{Univalence, Finite G, Finite H}
+    : Finite LeftCoset.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 118
+Time: 0.003s">
+<div class="time" style="width: 2.7777777777778%"></div>
+<pre>
+    napply finite_quotient.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 119
+Time: 0.003s">
+<div class="time" style="width: 2.7777777777778%"></div>
+<pre>
+    1-5: exact _.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros x y.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 121
+Time: 0.002s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+    apply (detachable_finite_subset H).</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 122
+Time: 0.002s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The index of a subgroup is the number of cosets of the subgroup. *)
+ </pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 126
+Time: 0.008s">
+<div class="time" style="width: 7.4074074074074%"></div>
+<pre>Definition subgroup_index `{Univalence, Finite G, Finite H} : nat
+    := fcard LeftCoset.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition RightCoset := G / in_cosetR H.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The set of left cosets is equivalent to the set of right coset. *)
+ </pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition equiv_leftcoset_rightcoset
+    : LeftCoset &lt;~&gt; RightCoset.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 134
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+    snapply equiv_quotient_functor.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 135
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact inv.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 137
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 137
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y; simpl.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 138
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+      by rewrite grp_inv_inv.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The set of right cosets of a finite subgroup of a finite group is finite since it is equivalent to the set of left cosets. *)
+ </pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export] Instance finite_rightcoset `{Univalence, Finite G, Finite H}
+    : Finite RightCoset.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 145
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    napply finite_equiv'.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: exact equiv_leftcoset_rightcoset.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 147
+Time: 0.005s">
+<div class="time" style="width: 4.6296296296296%"></div>
+<pre>
+    exact _.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 148
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 149
+Time: 0.002s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+
+End Cosets.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Quotient groups *)
+
+(** Now we can define the quotient group by a normal subgroup. *)
+
+</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section QuotientGroup.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context (G : Group) (N : NormalSubgroup G).</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance iscongruence_in_cosetL : IsCongruence (in_cosetL N).</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply Build_IsCongruence.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros; by apply in_cosetL_cong.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 163
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 164
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance iscongruence_in_cosetR: IsCongruence (in_cosetR N).</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 166
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply Build_IsCongruence.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros; by apply in_cosetR_cong.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Now we have to make a choice whether to pick the left or right cosets. Due to existing convention we shall pick left cosets but we note that we could equally have picked right. *)
+ </pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 173
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>Definition QuotientGroup : Group
+    := Build_Group (LeftCoset G N) _ _ _ _.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 174
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition grp_quotient_map : G $-&gt; QuotientGroup.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply Build_GroupHomomorphism.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: exact (class_of _).</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 179
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros ??; reflexivity.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 180
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 181
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+
+  Definition grp_quotient_rec {A : Group} (f : G $-&gt; A)
+             (h : forall n : G, N n -&gt; f n = mon_unit)
+    : QuotientGroup $-&gt; A.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 186
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply Build_GroupHomomorphism.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 188
+Time: 0.022s">
+<div class="time" style="width: 20.37037037037%"></div>
+<pre> srapply Quotient_rec.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 189
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact f.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 189
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 190
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn; intros x y n.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 190
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply grp_moveR_M1.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 191
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+        rhs_V napply (ap (.* f y) (grp_homo_inv _ _)).</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 192
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        rhs_V napply grp_homo_op.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 193
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        symmetry; apply h; assumption.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 194
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro x.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 195
+Time: 0.009s">
+<div class="time" style="width: 8.3333333333333%"></div>
+<pre>
+      refine (Quotient_ind_hprop _ _ _).</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      intro y.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> revert x.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 197
+Time: 0.009s">
+<div class="time" style="width: 8.3333333333333%"></div>
+<pre>
+      refine (Quotient_ind_hprop _ _ _).</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      intro x; simpl.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 199
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply grp_homo_op.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 200
+Time: 0.004s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 201
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition grp_quotient_ind_hprop (P : QuotientGroup -&gt; Type)
+    `{forall x, IsHProp (P x)}
+    (H1 : forall x, P (grp_quotient_map x))
+    : forall x, P x.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 207
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply Quotient_ind_hprop.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact H1.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 209
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 210
+Time: 0.004s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+
+End QuotientGroup.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 212
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments QuotientGroup G N : simpl never.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 214
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments grp_quotient_map {_ _}.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 215
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation "G / N" := (QuotientGroup G N) : group_scope.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 217
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Rephrasing that lets you specify the normality proof *)</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 219
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition QuotientGroup' (G : Group) (N : Subgroup G) (H : IsNormalSubgroup N)
+  := QuotientGroup G (Build_NormalSubgroup G N H).</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 220
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope group_scope.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 222
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Computation rule for [grp_quotient_rec]. *)</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 224
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>Corollary grp_quotient_rec_beta `{F : Funext} {G : Group}
+          (N : NormalSubgroup G) (H : Group)
+          {A : Group} (f : G $-&gt; A)
+          (h : forall n:G, N n -&gt; f n = mon_unit)
+  : (grp_quotient_rec G N f h) $o grp_quotient_map = f.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 229
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply equiv_path_grouphomomorphism; reflexivity.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 230
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 231
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Computation rule for [grp_quotient_rec]. *)</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 233
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>Definition grp_quotient_rec_beta' {G : Group}
+          (N : NormalSubgroup G) (H : Group)
+          {A : Group} (f : G $-&gt; A)
+          (h : forall n:G, N n -&gt; f n = mon_unit)
+  : (grp_quotient_rec G N f h) $o grp_quotient_map == f
+    := fun _ =&gt; idpath.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 238
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The proof of normality is irrelevant up to equivalence. It is unfortunate that it doesn't hold definitionally. *)</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 240
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition grp_iso_quotient_normal (G : Group) (H : Subgroup G)
+  {k k' : IsNormalSubgroup H}
+  : QuotientGroup' G H k ≅ QuotientGroup' G H k'.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 242
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 243
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_GroupIsomorphism'.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 244
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: reflexivity.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 245
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro x.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 246
+Time: 0.004s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+  srapply Quotient_ind_hprop; intro y; revert x.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 247
+Time: 0.004s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+  srapply Quotient_ind_hprop; intro x.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 248
+Time: 0.017s">
+<div class="time" style="width: 15.740740740741%"></div>
+<pre>
+  reflexivity.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 249
+Time: 0.007s">
+<div class="time" style="width: 6.4814814814815%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 250
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The universal mapping property for groups *)</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 252
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>Theorem equiv_grp_quotient_ump {F : Funext} {G : Group} (N : NormalSubgroup G) (H : Group)
+  : {f : G $-&gt; H &amp; forall (n : G), N n -&gt; f n = mon_unit}
+    &lt;~&gt; (G / N $-&gt; H).</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 254
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 255
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply equiv_adjointify.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 256
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 257
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [f p].</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 257
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (grp_quotient_rec _ _ f p).</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 258
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 259
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro f.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 259
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists (f $o grp_quotient_map).</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 260
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros n h; cbn.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 261
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (_ @ grp_homo_unit f).</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 262
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply ap.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 263
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply qglue; cbn.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 264
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+    rewrite right_identity;
+      by apply issubgroup_in_inv.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 266
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 267
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros f.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 267
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+    rapply equiv_path_grouphomomorphism.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 268
+Time: 0.009s">
+<div class="time" style="width: 8.3333333333333%"></div>
+<pre>
+      by srapply Quotient_ind_hprop.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 269
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 270
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [f p].</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 270
+Time: 0.01s">
+<div class="time" style="width: 9.2592592592593%"></div>
+<pre>
+    srapply path_sigma_hprop; simpl.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 271
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (grp_quotient_rec_beta N H f p).</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 272
+Time: 0.005s">
+<div class="time" style="width: 4.6296296296296%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 273
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section FirstIso.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 275
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context `{Funext} {A B : Group} (phi : A $-&gt; B).</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 277
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** First we define a map from the quotient by the kernel of phi into the image of phi *)
+ </pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 280
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition grp_image_quotient
+    : A / grp_kernel phi $-&gt; grp_image phi.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 281
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 282
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply grp_quotient_rec.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 283
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 284
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> srapply grp_homo_image_in.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 284
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 285
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros n x.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 285
+Time: 0.003s">
+<div class="time" style="width: 2.7777777777778%"></div>
+<pre>
+      by apply path_sigma_hprop.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 286
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 287
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The underlying map of this homomorphism is an equivalence *)
+ </pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 290
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export] Instance isequiv_grp_image_quotient
+    : IsEquiv grp_image_quotient.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 291
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 292
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply isequiv_surj_emb.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 293
+Time: 0.004s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+    1: srapply cancelR_conn_map.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 294
+Time: 0.108s">
+<div class="time" style="width: 100%"></div>
+<pre>
+    srapply isembedding_isinj_hset.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 295
+Time: 0.006s">
+<div class="time" style="width: 5.5555555555556%"></div>
+<pre>
+    srapply Quotient_ind2_hprop.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 296
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros x y h; simpl in h.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 297
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply qglue; cbn.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 298
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+    apply (equiv_path_sigma_hprop _ _)^-1%equiv in h; cbn in h.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 299
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    cbn.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 300
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite grp_homo_op, grp_homo_inv, h.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 300
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply grp_inv_l.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 301
+Time: 0.002s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 302
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** First isomorphism theorem for groups *)
+ </pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 305
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Theorem grp_first_iso : A / grp_kernel phi ≅ grp_image phi.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 305
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 306
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (Build_GroupIsomorphism _ _ grp_image_quotient _).</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 307
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 308
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+
+End FirstIso.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 310
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Quotient groups are finite. *)
+(** Note that we cannot constructively conclude that the normal subgroup [H] must be finite since [G] is, therefore we keep it as an assumption. *)</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 313
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance finite_quotientgroup {U : Univalence} (G : Group) (H : NormalSubgroup G)
+  (fin_G : Finite G) (fin_H : Finite H)
+  : Finite (QuotientGroup G H).</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 315
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 316
+Time: 0.002s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+  napply finite_quotient.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 317
+Time: 0.005s">
+<div class="time" style="width: 4.6296296296296%"></div>
+<pre>
+  1-5: exact _.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 318
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 319
+Time: 0.002s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+  pose (dec_H := detachable_finite_subset H).</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 320
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply dec_H.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 321
+Time: 0.002s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 322
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition grp_kernel_quotient_iso `{Univalence} {G : Group} (N : NormalSubgroup G)
+  : GroupIsomorphism N (grp_kernel (@grp_quotient_map G N)).</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 325
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 326
+Time: 0.02s">
+<div class="time" style="width: 18.518518518519%"></div>
+<pre>
+  srapply Build_GroupIsomorphism.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 327
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 328
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre> srapply (grp_kernel_corec (subgroup_incl N)).</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 328
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro x; cbn.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 329
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply qglue.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 330
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply issubgroup_in_op.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 331
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 332
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (issubgroup_in_inv _ x.2).</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 332
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 333
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact issubgroup_in_unit.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 333
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 334
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply isequiv_surj_emb.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 334
+Time: 0.024s">
+<div class="time" style="width: 22.222222222222%"></div>
+<pre>
+    2: exact (cancelL_isembedding (g:=pr1)).</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 335
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros [g p].</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 336
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+    rapply contr_inhabited_hprop.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 337
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srefine (tr ((g; _); _)).</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 338
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 339
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite &lt;- grp_unit_l, &lt;- inverse_mon_unit.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 339
+Time: 0.003s">
+<div class="time" style="width: 2.7777777777778%"></div>
+<pre>
+      apply (related_quotient_paths (fun x y =&gt; N (x^ * y))).</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 340
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact p^%path.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 341
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 342
+Time: 0.004s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre> srapply path_sigma_hprop.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 342
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      reflexivity.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 343
+Time: 0.003s">
+<div class="time" style="width: 2.7777777777778%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 344
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** When the normal subgroup [N] is trivial, the inclusion map [G $-&gt; G / N] is an isomorphism. *)</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 346
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance catie_grp_quotient_map_trivial {G : Group} (N : NormalSubgroup G)
+  (triv : IsTrivialGroup N)
+  : CatIsEquiv (@grp_quotient_map G N).</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 348
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 349
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+  snapply catie_adjointify.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 350
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 351
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> srapply (grp_quotient_rec _ _ (Id _)).</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 351
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact triv.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 352
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 353
+Time: 0.005s">
+<div class="time" style="width: 4.6296296296296%"></div>
+<pre> by srapply grp_quotient_ind_hprop.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 353
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 354
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 354
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 355
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The group quotient by a trivial group is isomorphic to the original group. *)</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 357
+Time: 0.001s">
+<div class="time" style="width: 0.92592592592593%"></div>
+<pre>Definition grp_quotient_trivial (G : Group) (N : NormalSubgroup G)
+  (triv : IsTrivialGroup N)
+  : G $&lt;~&gt; G / N
+  := Build_CatEquiv grp_quotient_map.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 360
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A quotient by a maximal subgroup is trivial. *)</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 362
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance istrivial_grp_quotient_maximal
+  (G : Group) (N : NormalSubgroup G)
+  : IsMaximalSubgroup N -&gt; IsTrivialGroup (G / N).</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 364
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 365
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros max x _; revert x.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 366
+Time: 0.003s">
+<div class="time" style="width: 2.7777777777778%"></div>
+<pre>
+  rapply grp_quotient_ind_hprop.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 367
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 368
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply qglue, max.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 369
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 370
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Conversely, a trivial quotient means the subgroup is maximal. *)</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 372
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ismaximalsubgroup_istrivial_grp_quotient `{Univalence}
+  (G : Group) (N : NormalSubgroup G)
+  : IsTrivialGroup (G / N) -&gt; IsMaximalSubgroup N.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 374
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 375
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros triv x.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 376
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  specialize (triv (grp_quotient_map x) tt).</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 377
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simpl in triv.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 378
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply related_quotient_paths in triv.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 379
+Time: 0.002s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+  2-5: exact _.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 380
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply equiv_subgroup_inv.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 381
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  napply (subgroup_in_op_l _ _ 1 triv) .</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 382
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply subgroup_in_unit.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 383
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: QuotientGroup.v
+Line: 385
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

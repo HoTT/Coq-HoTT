@@ -1,0 +1,27 @@
+digraph HoTT_Universes_Automorphisms {
+  graph [ratio=0.5]
+  node [style=filled]
+Automorphisms_lem_beers [label="lem_beers", URL=<Automorphisms.html#lem_beers>, peripheries=3, fillcolor="#F070D1"] ;
+Automorphisms_zero_beers [label="zero_beers", URL=<Automorphisms.html#zero_beers>, fillcolor="#F070D1"] ;
+Automorphisms_lem_from_aut_type_inhabited_empty [label="lem_from_aut_type_inhabited_empty", URL=<Automorphisms.html#lem_from_aut_type_inhabited_empty>, fillcolor="#F070D1"] ;
+Automorphisms_equiv_hprop_idprod [label="equiv_hprop_idprod", URL=<Automorphisms.html#equiv_hprop_idprod>, fillcolor="#F070D1"] ;
+Automorphisms_lem_from_aut_type_unit_empty [label="lem_from_aut_type_unit_empty", URL=<Automorphisms.html#lem_from_aut_type_unit_empty>, peripheries=3, fillcolor="#F070D1"] ;
+Automorphisms_equiv_swap_prod_rigid [label="equiv_swap_prod_rigid", URL=<Automorphisms.html#equiv_swap_prod_rigid>, peripheries=3, fillcolor="#F070D1"] ;
+Automorphisms_equiv_swap_rigid_swaps [label="equiv_swap_rigid_swaps", URL=<Automorphisms.html#equiv_swap_rigid_swaps>, peripheries=3, fillcolor="#F070D1"] ;
+Automorphisms_equiv_swap_empty_unit [label="equiv_swap_empty_unit", URL=<Automorphisms.html#equiv_swap_empty_unit>, peripheries=3, fillcolor="#F070D1"] ;
+Automorphisms_equiv_swap_rigid [label="equiv_swap_rigid", URL=<Automorphisms.html#equiv_swap_rigid>, fillcolor="#F070D1"] ;
+Automorphisms_equiv_swap_types_not_id [label="equiv_swap_types_not_id", URL=<Automorphisms.html#equiv_swap_types_not_id>, peripheries=3, fillcolor="#F070D1"] ;
+Automorphisms_equiv_swap_types_swaps [label="equiv_swap_types_swaps", URL=<Automorphisms.html#equiv_swap_types_swaps>, fillcolor="#F070D1"] ;
+Automorphisms_equiv_swap_types [label="equiv_swap_types", URL=<Automorphisms.html#equiv_swap_types>, fillcolor="#F070D1"] ;
+  Automorphisms_lem_beers -> Automorphisms_zero_beers [] ;
+  Automorphisms_zero_beers -> Automorphisms_lem_from_aut_type_inhabited_empty [] ;
+  Automorphisms_lem_from_aut_type_inhabited_empty -> Automorphisms_equiv_hprop_idprod [] ;
+  Automorphisms_equiv_swap_prod_rigid -> Automorphisms_equiv_swap_types [] ;
+  Automorphisms_equiv_swap_rigid_swaps -> Automorphisms_equiv_swap_rigid [] ;
+  Automorphisms_equiv_swap_empty_unit -> Automorphisms_equiv_swap_rigid [] ;
+  Automorphisms_equiv_swap_rigid -> Automorphisms_equiv_swap_types [] ;
+  Automorphisms_equiv_swap_types_not_id -> Automorphisms_equiv_swap_types_swaps [] ;
+  Automorphisms_equiv_swap_types_swaps -> Automorphisms_equiv_swap_types [] ;
+subgraph cluster_Automorphisms { label="Automorphisms"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Automorphisms_equiv_swap_types; Automorphisms_equiv_swap_types_swaps; Automorphisms_equiv_swap_types_not_id; Automorphisms_equiv_swap_rigid; Automorphisms_equiv_swap_empty_unit; Automorphisms_equiv_swap_rigid_swaps; Automorphisms_equiv_swap_prod_rigid; Automorphisms_lem_from_aut_type_unit_empty; Automorphisms_equiv_hprop_idprod; Automorphisms_lem_from_aut_type_inhabited_empty; Automorphisms_zero_beers; Automorphisms_lem_beers; };
+} /* END */

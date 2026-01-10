@@ -1,0 +1,30 @@
+digraph HoTT_Homotopy_EMSpace {
+  graph [ratio=0.5]
+  node [style=filled]
+EMSpace_pequiv_em_connected_truncated [label="pequiv_em_connected_truncated", URL=<EMSpace.html#pequiv_em_connected_truncated>, peripheries=3, fillcolor="#F070D1"] ;
+EMSpace_pequiv_em_group_iso [label="pequiv_em_group_iso", URL=<EMSpace.html#pequiv_em_group_iso>, fillcolor="#F070D1"] ;
+EMSpace_iscohhspace_em [label="iscohhspace_em", URL=<EMSpace.html#iscohhspace_em>, peripheries=3, fillcolor="#F070D1"] ;
+EMSpace_equiv_g_pi_n_em [label="equiv_g_pi_n_em", URL=<EMSpace.html#equiv_g_pi_n_em>, peripheries=3, fillcolor="#F070D1"] ;
+EMSpace_pequiv_loops_em_g [label="pequiv_loops_em_g", URL=<EMSpace.html#pequiv_loops_em_g>, peripheries=3, fillcolor="#F070D1"] ;
+EMSpace_pequiv_loops_em_em [label="pequiv_loops_em_em", URL=<EMSpace.html#pequiv_loops_em_em>, fillcolor="#F070D1"] ;
+EMSpace_pequiv_ptr_loop_psusp_ [label="pequiv_ptr_loop_psusp'", URL=<EMSpace.html#pequiv_ptr_loop_psusp'>, fillcolor="#F070D1"] ;
+EMSpace_is0connected_em [label="is0connected_em", URL=<EMSpace.html#is0connected_em>, fillcolor="#F070D1"] ;
+EMSpace_isconnected_em_ [label="isconnected_em'", URL=<EMSpace.html#isconnected_em'>, peripheries=3, fillcolor="#F070D1"] ;
+EMSpace_isconnected_em [label="isconnected_em", URL=<EMSpace.html#isconnected_em>, fillcolor="#F070D1"] ;
+EMSpace_istrunc_em [label="istrunc_em", URL=<EMSpace.html#istrunc_em>, fillcolor="#F070D1"] ;
+EMSpace_EilenbergMacLane [label="EilenbergMacLane", URL=<EMSpace.html#EilenbergMacLane>, fillcolor="#F070D1"] ;
+  EMSpace_pequiv_em_connected_truncated -> EMSpace_pequiv_em_group_iso [] ;
+  EMSpace_pequiv_em_group_iso -> EMSpace_EilenbergMacLane [] ;
+  EMSpace_iscohhspace_em -> EMSpace_pequiv_loops_em_em [] ;
+  EMSpace_equiv_g_pi_n_em -> EMSpace_pequiv_loops_em_em [] ;
+  EMSpace_pequiv_loops_em_g -> EMSpace_pequiv_loops_em_em [] ;
+  EMSpace_pequiv_loops_em_em -> EMSpace_pequiv_ptr_loop_psusp_ [] ;
+  EMSpace_pequiv_loops_em_em -> EMSpace_is0connected_em [] ;
+  EMSpace_pequiv_loops_em_em -> EMSpace_istrunc_em [] ;
+  EMSpace_is0connected_em -> EMSpace_isconnected_em [] ;
+  EMSpace_isconnected_em_ -> EMSpace_isconnected_em [] ;
+  EMSpace_isconnected_em -> EMSpace_EilenbergMacLane [] ;
+  EMSpace_istrunc_em -> EMSpace_EilenbergMacLane [] ;
+subgraph cluster_EMSpace { label="EMSpace"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+EMSpace_EilenbergMacLane; EMSpace_istrunc_em; EMSpace_isconnected_em; EMSpace_isconnected_em_; EMSpace_is0connected_em; EMSpace_pequiv_ptr_loop_psusp_; EMSpace_pequiv_loops_em_em; EMSpace_pequiv_loops_em_g; EMSpace_equiv_g_pi_n_em; EMSpace_iscohhspace_em; EMSpace_pequiv_em_group_iso; EMSpace_pequiv_em_connected_truncated; };
+} /* END */

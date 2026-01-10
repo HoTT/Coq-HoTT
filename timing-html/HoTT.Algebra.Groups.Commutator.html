@@ -1,0 +1,2702 @@
+<html>
+<head>
+<title>Commutator.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Commutator.v</h1>
+
+<div class="code" title="File: Commutator.v
+Line: 1
+Time: 0.028s">
+<div class="time" style="width: 31.111111111111%"></div>
+<pre>Require Import Basics.Overture Basics.Tactics Basics.PathGroupoids Basics.Trunc
+  Basics.Iff Basics.Equivalences Basics.Predicate.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 2
+Time: 0.004s">
+<div class="time" style="width: 4.4444444444444%"></div>
+<pre>
+Require Import Types.Sigma Types.Paths.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 3
+Time: 0.089s">
+<div class="time" style="width: 98.888888888889%"></div>
+<pre>
+Require Import Groups.Group AbGroups.Abelianization AbGroups.AbelianGroup
+  Groups.QuotientGroup.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 5
+Time: 0.002s">
+<div class="time" style="width: 2.2222222222222%"></div>
+<pre>
+Require Import WildCat.Core WildCat.Equiv WildCat.EquivGpd.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Truncations.Core.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope predicate_scope.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 9
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope mc_scope.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope mc_mult_scope.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Set Universe Minimization ToSet.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Commutators in groups *)
+
+(** ** Commutators of group elements *)
+
+(** Note that this convention is chosen due to the convention we chose for group conjugation elsewhere. *)</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 19
+Time: 0.001s">
+<div class="time" style="width: 1.1111111111111%"></div>
+<pre>Definition grp_commutator {G : Group} (x y : G) : G := x * y * x^ * y^.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation "[ x , y ]" := (grp_commutator x y) : mc_mult_scope.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments grp_commutator {G} x y : simpl never.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Easy properties of commutators *)
+
+(** Commuting elements of a group have trivial commutator. *)</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 27
+Time: 0.001s">
+<div class="time" style="width: 1.1111111111111%"></div>
+<pre>Definition grp_commutator_commutes {G : Group} (x y : G) (p : x * y = y * x)
+  : [x, y] = 1.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold grp_commutator.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite p, grp_inv_gg_V.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply grp_inv_r.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A commutator of an element with itself is the unit. *)</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition grp_commutator_cancel {G : Group} (x y : G)
+  : [x, x] = 1.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by apply grp_commutator_commutes.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A commutator of a group element with unit on the left is the unit. *)</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition grp_commutator_unit_l {G : Group} (x : G)
+  : [1, x] = 1.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by apply grp_commutator_commutes, grp_1g_g1.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A commutator of a group element with unit on the right is the unit. *)</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition grp_commutator_unit_r {G : Group} (x : G)
+  : [x, 1] = 1.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by apply grp_commutator_commutes, grp_g1_1g.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Commutators in abelian groups are trivial. *)</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ab_commutator (A : AbGroup) (x y : A)
+  : [x, y] = 1.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply grp_commutator_commutes, commutativity.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The commutator can be thought of as the "error" in the commutativity of two elements of a group. *)</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition grp_commutator_swap_op {G : Group} (x y : G)
+  : x * y = [x, y] * y * x.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold grp_commutator.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by rewrite !grp_inv_gV_g.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Inverting a commutator reverses the order. *)</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition grp_commutator_inv {G : Group} (x y : G)
+  : [x, y]^ = [y, x].</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold grp_commutator.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 69
+Time: 0.002s">
+<div class="time" style="width: 2.2222222222222%"></div>
+<pre>
+  by rewrite 3 grp_inv_op, 2 grp_inv_inv, 2 grp_assoc.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 70
+Time: 0.001s">
+<div class="time" style="width: 1.1111111111111%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Group homomorphisms commute with commutators. *)</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition grp_homo_commutator {G H : Group} (f : G $-&gt; H) (x y : G)
+  : f [x, y] = [f x, f y].</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold grp_commutator.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 76
+Time: 0.003s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+  by rewrite !grp_homo_op, !grp_homo_inv.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 77
+Time: 0.001s">
+<div class="time" style="width: 1.1111111111111%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A commutator with a product on the left side can be expanded as the product of a conjugated commutator and another commutator. *)</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 80
+Time: 0.001s">
+<div class="time" style="width: 1.1111111111111%"></div>
+<pre>Definition grp_commutator_op_l {G : Group} (x y z : G)
+  : [x * y, z] = grp_conj x [y, z] * [x, z].</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold grp_commutator, grp_conj, grp_homo_map.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 83
+Time: 0.009s">
+<div class="time" style="width: 10%"></div>
+<pre>
+  by rewrite grp_inv_op, !grp_assoc, !grp_inv_gV_g.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 84
+Time: 0.004s">
+<div class="time" style="width: 4.4444444444444%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A commutator with a product on the right side can be expanded as the product of a conjugated commutator and another commutator. *)</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 87
+Time: 0.001s">
+<div class="time" style="width: 1.1111111111111%"></div>
+<pre>Definition grp_commutator_op_r {G : Group} (x y z : G)
+  : [x, y * z] = [x, y] * grp_conj y [x, z].</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold grp_commutator, grp_conj, grp_homo_map.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 90
+Time: 0.008s">
+<div class="time" style="width: 8.8888888888889%"></div>
+<pre>
+  by rewrite grp_inv_op, !grp_assoc, !grp_inv_gV_g.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 91
+Time: 0.004s">
+<div class="time" style="width: 4.4444444444444%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A commutator with the element on the right being multiplied on the right gives a conjugation. *)</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 94
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition grp_op_l_commutator {G : Group} (x y : G)
+  : [x, y] * y = grp_conj x y.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold grp_commutator, grp_conj, grp_homo_map.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by rewrite grp_inv_gV_g.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A commutator with the inverse element on the left being multiplied on the left gives a conjugation. *)</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 101
+Time: 0.001s">
+<div class="time" style="width: 1.1111111111111%"></div>
+<pre>Definition grp_op_r_commutator {G : Group} (x y : G)
+  : x^ * [x, y] = grp_conj y x^.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold grp_commutator, grp_conj, grp_homo_map.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 104
+Time: 0.002s">
+<div class="time" style="width: 2.2222222222222%"></div>
+<pre>
+  by rewrite &lt;- !grp_assoc, grp_inv_V_gg.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 105
+Time: 0.001s">
+<div class="time" style="width: 1.1111111111111%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Commutators with inverted left sides are conjugated commutators. *)</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition grp_commutator_inv_l {G : Group} (x y : G)
+  : [x^, y] = grp_conj x^ [y, x].</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold grp_commutator, grp_conj, grp_homo_map.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 111
+Time: 0.003s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+  by rewrite !grp_assoc, grp_inv_inv, grp_inv_gV_g.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 112
+Time: 0.001s">
+<div class="time" style="width: 1.1111111111111%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Commutators with inverted right sides are conjugated commutators. *)</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition grp_commutator_inv_r {G : Group} (x y : G)
+  : [x, y^] = grp_conj y^ [y, x].</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold grp_commutator, grp_conj, grp_homo_map.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 118
+Time: 0.004s">
+<div class="time" style="width: 4.4444444444444%"></div>
+<pre>
+  by rewrite &lt;- !grp_assoc, grp_inv_inv, grp_inv_V_gg.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 119
+Time: 0.003s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition grp_conj_commutator_inv_l {G : Group} (x y : G)
+  : grp_conj x [x^, y] = [y, x].</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold grp_commutator, grp_conj, grp_homo_map.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 125
+Time: 0.004s">
+<div class="time" style="width: 4.4444444444444%"></div>
+<pre>
+  by rewrite !grp_inv_inv, &lt;- !grp_assoc, grp_inv_g_Vg.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 126
+Time: 0.002s">
+<div class="time" style="width: 2.2222222222222%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition grp_conj_commutator_inv_r {G : Group} (x y : G)
+  : grp_conj y [x, y^] = [y, x].</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 130
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 131
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold grp_commutator, grp_conj, grp_homo_map.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 132
+Time: 0.003s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+  by rewrite grp_inv_inv, !grp_assoc, grp_inv_gg_V.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 133
+Time: 0.001s">
+<div class="time" style="width: 1.1111111111111%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Hall-Witt identity *)
+
+(** The Hall-Witt identity is a Jacobi-like identity for groups. It states that the different commutators of 3 elements (with one conjugated) assemble into an identity. The proof is purely mechanical and simply cancels all the terms. This is a rare instance where a mechanized proof is much shorter than an on-paper proof. *)</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 138
+Time: 0.001s">
+<div class="time" style="width: 1.1111111111111%"></div>
+<pre>Definition grp_hall_witt {G : Group} (x y z : G)
+  : [[x, y], grp_conj y z] * [[y, z], grp_conj z x] * [[z, x], grp_conj x y] = 1.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold grp_commutator, grp_conj, grp_homo_map.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 141
+Time: 0.09s">
+<div class="time" style="width: 100%"></div>
+<pre>
+  rewrite !grp_inv_op, !grp_inv_inv, !grp_assoc.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 142
+Time: 0.024s">
+<div class="time" style="width: 26.666666666667%"></div>
+<pre>
+  do 3 rewrite !grp_inv_gV_g, !grp_inv_gg_V.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply grp_inv_r.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 144
+Time: 0.071s">
+<div class="time" style="width: 78.888888888889%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 145
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** This variant of the Hall-Witt identity is useful later for proving the three subgroups lemma. *)</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 147
+Time: 0.001s">
+<div class="time" style="width: 1.1111111111111%"></div>
+<pre>Definition grp_hall_witt' {G : Group} (x y z : G)
+  : grp_conj x [[x^, y], z] * grp_conj z [[z^, x], y] * grp_conj y [[y^, z], x] = 1.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 148
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 149
+Time: 0.001s">
+<div class="time" style="width: 1.1111111111111%"></div>
+<pre>
+  rewrite 3 (grp_homo_commutator _ [_^, _]).</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite 3 grp_conj_commutator_inv_l.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply grp_hall_witt.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 152
+Time: 0.001s">
+<div class="time" style="width: 1.1111111111111%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Precomposing normal subgroups with commutators *)
+
+</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance issubgroup_precomp_commutator_l {G : Group} (H : Subgroup G)
+  `{!IsNormalSubgroup H} (y : G)
+  : IsSubgroup (fun x =&gt; H [x, y]).</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_IsSubgroup; cbn beta.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 161
+Time: 0.001s">
+<div class="time" style="width: 1.1111111111111%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite grp_commutator_unit_l.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply subgroup_in_unit.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 163
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 164
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x z Hxy Hzy.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 164
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite grp_commutator_op_l.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 165
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply subgroup_in_op.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 166
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 167
+Time: 0.001s">
+<div class="time" style="width: 1.1111111111111%"></div>
+<pre> by rapply isnormal_conj.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assumption.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x Hxy.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite grp_commutator_inv_l.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 170
+Time: 0.001s">
+<div class="time" style="width: 1.1111111111111%"></div>
+<pre>
+    rapply isnormal_conj.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite &lt;- grp_commutator_inv.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by apply subgroup_in_inv.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 174
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The condition [H [x, y]] is equivalent to the condition [H [y, x]]. *)</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition issubgroup_precomp_commutator_agree {G : Group} (H : Subgroup G)
+  (x y : G)
+  : H [x, y] &lt;~&gt; H [y, x].</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 179
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_ oE equiv_subgroup_inv _ _).</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 180
+Time: 0.001s">
+<div class="time" style="width: 1.1111111111111%"></div>
+<pre>
+  by rewrite grp_commutator_inv.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 181
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 182
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** So we get this symmetrical version as well. *)</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 184
+Time: 0.001s">
+<div class="time" style="width: 1.1111111111111%"></div>
+<pre>Instance issubgroup_precomp_commutator_r {G : Group} (H : Subgroup G)
+  `{!IsNormalSubgroup H} (x : G)
+  : IsSubgroup (fun y =&gt; H [x, y])
+  := issubgroup_equiv (fun y =&gt; issubgroup_precomp_commutator_agree H y x) _.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition subgroup_precomp_commutator_l {G : Group} (H : Subgroup G) (y : G)
+  `{!IsNormalSubgroup H}
+  : Subgroup G
+  := Build_Subgroup _ (fun x =&gt; H [x, y]) _.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 192
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition subgroup_precomp_commutator_r {G : Group} (H : Subgroup G) (x : G)
+  `{!IsNormalSubgroup H}
+  : Subgroup G
+  := Build_Subgroup _ (fun y =&gt; H [x, y]) _.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Commutator subgroups *)
+
+</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 200
+Time: 0.001s">
+<div class="time" style="width: 1.1111111111111%"></div>
+<pre>Definition subgroup_commutator {G : Group@{i}} (H K : Subgroup@{i i} G)
+  : Subgroup@{i i} G
+  := subgroup_generated (fun g =&gt; exists (x : H) (y : K), [x.1, y.1] = g).</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 202
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation "[ H , K ]" := (subgroup_commutator H K) : group_scope.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 204
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope group_scope.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [subgroup_commutator H K] is the smallest subgroup containing the commutators of elements of [H] with elements of [K]. *)</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition subgroup_commutator_rec {G : Group} {H K : Subgroup G} (J : Subgroup G)
+  (i : forall x y, H x -&gt; K y -&gt; J (grp_commutator x y))
+  : [H, K] ⊆ J.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 210
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 211
+Time: 0.002s">
+<div class="time" style="width: 2.2222222222222%"></div>
+<pre>
+  rapply subgroup_generated_rec; intros x [[y Hy] [[z Kz] p]];
+    destruct p; simpl.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 213
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by apply i.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 214
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 215
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Doubly iterated [subgroup_commutator]s of [H], [J] and [K] are the smallest of the normal subgroups containing the doubly iterated commutators of elements of [H], [J] and [K]. *)</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 217
+Time: 0.001s">
+<div class="time" style="width: 1.1111111111111%"></div>
+<pre>Definition subgroup_commutator_2_rec {G : Group} {H J K : Subgroup G}
+  (N : Subgroup G) `{!IsNormalSubgroup N}
+  (i : forall x y z, H x -&gt; J y -&gt; K z -&gt; N (grp_commutator (grp_commutator x y) z))
+  : [[H, J], K] ⊆ N.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 220
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 221
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply subgroup_commutator_rec.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 222
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x z HJx Kz; revert x HJx.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 223
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  change (N (grp_commutator ?x z)) with (subgroup_precomp_commutator_l N z x).</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 224
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rapply subgroup_commutator_rec.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by intros; apply i.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 226
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 227
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A commutator of elements from each respective subgroup is in the commutator subgroup. *)</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 229
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition subgroup_commutator_in {G : Group} {H J : Subgroup G} {x y : G}
+  (Hx : H x) (Jy : J y)
+  : subgroup_commutator H J (grp_commutator x y).</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 231
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 232
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply tr, sgt_in.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 233
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by exists (x; Hx), (y; Jy).</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 234
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 235
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Commutator subgroups are functorial. *)</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 237
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition functor_subgroup_commutator {G : Group} {H J K L : Subgroup G}
+  (f : H ⊆ K) (g : J ⊆ L)
+  : [H, J] ⊆ [K, L].</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 239
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 240
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply subgroup_commutator_rec.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 241
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y Hx Jx.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 242
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (subgroup_commutator_in (f _ Hx) (g _ Jx)).</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 243
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 244
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition subgroup_eq_commutator {G : Group} {H J K L : Subgroup G}
+  (f : H ↔ K) (g : J ↔ L)
+  : [H, J] ↔ [K, L].</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 248
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 249
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply pred_subset_antisymm; apply functor_subgroup_commutator.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 250
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  3,4: apply pred_subset_pred_eq'.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 251
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1,3: exact f.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 252
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1,2: exact g.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 253
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 254
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition subgroup_incl_commutator_symm {G : Group} (H J : Subgroup G)
+  : [H, J] ⊆ [J, H].</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 257
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 258
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply subgroup_commutator_rec.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 259
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y Hx Jy.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 260
+Time: 0.001s">
+<div class="time" style="width: 1.1111111111111%"></div>
+<pre>
+  napply subgroup_in_inv'.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 261
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite grp_commutator_inv.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 262
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by apply subgroup_commutator_in.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 263
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 264
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Commutator subgroups are symmetric in their arguments. *)</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 266
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition subgroup_commutator_symm {G : Group} (H J : Subgroup G)
+  : [H, J] ↔ [J, H].</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 267
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 268
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply pred_subset_antisymm; apply subgroup_incl_commutator_symm.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 269
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 270
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The opposite subgroup of a commutator subgroup is the commutator subgroup of the opposite subgroups. *)</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 272
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition subgroup_eq_commutator_grp_op {G : Group} (H J : Subgroup G)
+  : subgroup_grp_op [H, J] ↔ [subgroup_grp_op J, subgroup_grp_op H].</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 273
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 274
+Time: 0.001s">
+<div class="time" style="width: 1.1111111111111%"></div>
+<pre>
+  napply (subgroup_eq_subgroup_generated_op (G:=G)).</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 275
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro x.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 276
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (iff_compose _ (equiv_sigma_symm _)).</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 277
+Time: 0.003s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+  do 2 (snapply (equiv_functor_sigma'
+    (grp_iso_subgroup_group (grp_op_iso_inv G)
+      (equiv_subgroup_inv (G:=grp_op G) (subgroup_grp_op _)))); intro).</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 280
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simpl.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 281
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply equiv_concat_l; symmetry.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 282
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lhs_V napply grp_commutator_inv.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 283
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (grp_homo_commutator (grp_op_iso_inv _) a0.1 a.1).</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 284
+Time: 0.002s">
+<div class="time" style="width: 2.2222222222222%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 285
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A commutator subgroup of an abelian group is always trivial. *)</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 287
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition istrivial_commutator_subgroup_ab {A : AbGroup} (H K : Subgroup A)
+  : IsTrivialGroup [H, K].</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 288
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 289
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rapply subgroup_commutator_rec; intros.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 290
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rapply ab_commutator.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 291
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 292
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A commutator of normal subgroups is normal. *)</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 294
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isnormal_subgroup_commutator {G : Group} (H J : Subgroup G)
+  `{!IsNormalSubgroup H, !IsNormalSubgroup J}
+  : IsNormalSubgroup [H, J].</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 296
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 297
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_IsNormalSubgroup'.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 298
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y; revert x.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 299
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (functor_subgroup_generated _ _ (grp_conj y)).</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 300
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 301
+Time: 0.002s">
+<div class="time" style="width: 2.2222222222222%"></div>
+<pre>
+  do 2 (rapply (functor_sigma (grp_iso_normal_conj _ y)); intro).</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 302
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros p.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 303
+Time: 0.001s">
+<div class="time" style="width: 1.1111111111111%"></div>
+<pre>
+  lhs_V napply (grp_homo_commutator (grp_conj y)).</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 304
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (ap (grp_conj y) p).</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 305
+Time: 0.001s">
+<div class="time" style="width: 1.1111111111111%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 306
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Commutator subgroups distribute over products of normal subgroups on the left. *)</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 308
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition subgroup_commutator_normal_prod_l {G : Group}
+  (H K L : NormalSubgroup G)
+  : [subgroup_product H K, L] ↔ subgroup_product [H, L] [K, L].</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 310
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 311
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x; split.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 312
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 313
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> revert x; snapply subgroup_commutator_rec.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 313
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros x y HKx Ly; revert x HKx.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 314
+Time: 0.003s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+    change (subgroup_product ?H ?J (grp_commutator ?x y))
+      with (subgroup_precomp_commutator_l (subgroup_product H J) y x).</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 316
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply subgroup_generated_rec.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 317
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros x [Hx | Kx].</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 318
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 319
+Time: 0.002s">
+<div class="time" style="width: 2.2222222222222%"></div>
+<pre> apply subgroup_product_incl_l.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 319
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      by apply subgroup_commutator_in.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 320
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 321
+Time: 0.002s">
+<div class="time" style="width: 2.2222222222222%"></div>
+<pre> apply subgroup_product_incl_r.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 321
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      by apply subgroup_commutator_in.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 322
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 323
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> revert x; snapply subgroup_generated_rec.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 323
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros x [HLx | KLx].</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 324
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 325
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> revert x HLx.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 325
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply functor_subgroup_commutator.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 326
+Time: 0.005s">
+<div class="time" style="width: 5.5555555555556%"></div>
+<pre>
+      2: reflexivity.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 327
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply subgroup_product_incl_l.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 328
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 329
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> revert x KLx.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 329
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply functor_subgroup_commutator.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 330
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      2: reflexivity.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 331
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply subgroup_product_incl_r.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 332
+Time: 0.001s">
+<div class="time" style="width: 1.1111111111111%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 333
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Commutator subgroups distribute over products of normal subgroups on the right. *)</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 335
+Time: 0.001s">
+<div class="time" style="width: 1.1111111111111%"></div>
+<pre>Definition subgroup_commutator_normal_prod_r {G : Group}
+  (H K L : NormalSubgroup G)
+  : [H, subgroup_product K L] ↔ subgroup_product [H, K] [H, L].</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 337
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 338
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 339
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  etransitivity.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 340
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: symmetry; apply subgroup_commutator_symm.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 341
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  etransitivity.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 342
+Time: 0.001s">
+<div class="time" style="width: 1.1111111111111%"></div>
+<pre>
+  2: napply (subgroup_eq_functor_subgroup_product grp_iso_id
+    (subgroup_commutator_symm _ _) (subgroup_commutator_symm _ _)).</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 344
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (subgroup_commutator_normal_prod_l K L H x).</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 345
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 346
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The subgroup image of a commutator is included in the commutator of the subgroup images. The converse only generally holds for a normal [J] and [K] and a surjective [f]. *)</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 348
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition subgroup_image_commutator_incl {G H : Group}
+  (f : G $-&gt; H) (J K : Subgroup G)
+  : subgroup_image f [J, K] ⊆ [subgroup_image f J, subgroup_image f K].</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 350
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 351
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply subgroup_image_rec.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 352
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply subgroup_commutator_rec.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 353
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y Jx Ky.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 354
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  change (subgroup_preimage f [?G, ?H] ?x) with ([G, H] (f x)).</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 355
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite grp_homo_commutator.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 356
+Time: 0.001s">
+<div class="time" style="width: 1.1111111111111%"></div>
+<pre>
+  apply subgroup_commutator_in;
+    by apply subgroup_image_in.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 358
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 359
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Derived subgroup *)
+
+(** The commutator subgroup of the maximal subgroup with itself is called the derived subgroup. It is the subgroup generated by all commutators. *)</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 363
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition normalsubgroup_derived G : NormalSubgroup G
+  := Build_NormalSubgroup G [G, G] _.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 364
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We can quotient a group by its derived subgroup. *)</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 366
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition grp_derived_quotient (G : Group) : Group
+  := QuotientGroup G (normalsubgroup_derived G).</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 367
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We can show that the multiplication then becomes commutative. *)</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 369
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance commutative_grp_derived_quotient (G : Group)
+  : Commutative (A:=grp_derived_quotient G) (.*.).</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 370
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 371
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 372
+Time: 0.003s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+  srapply grp_quotient_ind_hprop; intros y; revert x.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 373
+Time: 0.003s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+  srapply grp_quotient_ind_hprop; intros x; cbn beta.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 374
+Time: 0.011s">
+<div class="time" style="width: 12.222222222222%"></div>
+<pre>
+  apply qglue, tr, sgt_in; exists (y^; tt), (x^; tt).</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 375
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold grp_commutator; simpl.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 376
+Time: 0.003s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+  by rewrite !grp_inv_op, !grp_inv_inv, !grp_assoc.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 377
+Time: 0.002s">
+<div class="time" style="width: 2.2222222222222%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 378
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Hence we have a way of producing abelian groups from groups. *)</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 380
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition abgroup_derived_quotient (G : Group) : AbGroup
+  := Build_AbGroup (grp_derived_quotient G) _.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 381
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We get a recursion principle into abelian groups. *)</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 383
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition abgroup_derived_quotient_rec {G : Group} {A : AbGroup} (f : G $-&gt; A)
+  : abgroup_derived_quotient G $-&gt; A.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 384
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 385
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply (grp_quotient_rec _ _ f).</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 386
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  change (f ?n = 1) with (subgroup_preimage f (trivial_subgroup A) n).</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 387
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply subgroup_commutator_rec.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 388
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y _ _.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 389
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lhs napply grp_homo_commutator.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 390
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply ab_commutator.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 391
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 392
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Furthermore, this construction is an abelianization. *)</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 394
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition isabelianization_derived_quotient (G : Group)
+  : IsAbelianization (abgroup_derived_quotient G) grp_quotient_map.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 395
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 396
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros A.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 397
+Time: 0.001s">
+<div class="time" style="width: 1.1111111111111%"></div>
+<pre>
+  snapply Build_IsSurjInj.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 398
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 399
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros f.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 399
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    nrefine (abgroup_derived_quotient_rec f; _).</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 400
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    hnf; reflexivity.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 401
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 402
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros f g p.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 402
+Time: 0.009s">
+<div class="time" style="width: 10%"></div>
+<pre>
+    srapply grp_quotient_ind_hprop; intros x; cbn beta.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 403
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (p x).</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 404
+Time: 0.001s">
+<div class="time" style="width: 1.1111111111111%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 405
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Three subgroups lemma *)
+
+</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 408
+Time: 0.001s">
+<div class="time" style="width: 1.1111111111111%"></div>
+<pre>Definition three_subgroups_lemma (G : Group) (H J K N : Subgroup G)
+  `{!IsNormalSubgroup N}
+  (T1 : [[H, J], K] ⊆ N) (T2 : [[J, K], H] ⊆ N)
+  : [[K, H], J] ⊆ N.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 411
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 412
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rapply subgroup_commutator_2_rec.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 413
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Local Close Scope group_scope.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 414
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros z x y Kz Hx Jy.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 415
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  pose proof (grp_hall_witt' x y z^) as p.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 416
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite grp_inv_inv in p.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 417
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply grp_moveL_1V in p.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 418
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply grp_moveL_Vg in p.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 419
+Time: 0.004s">
+<div class="time" style="width: 4.4444444444444%"></div>
+<pre>
+  apply (isnormal_conj _ (y:=z^))^-1.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 420
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  change (N (grp_conj z^ [[z, x], y])).</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 421
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite p.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 422
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply subgroup_in_op.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 423
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 424
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply subgroup_in_inv.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 424
+Time: 0.001s">
+<div class="time" style="width: 1.1111111111111%"></div>
+<pre>
+    rapply isnormal_conj.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 425
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply T1.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 426
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply tr, sgt_in.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 427
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unshelve eexists.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 428
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 429
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists [x^, y].</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 429
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply subgroup_commutator_in; trivial.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 430
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      by apply subgroup_in_inv.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 431
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 432
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by exists (z^; subgroup_in_inv _ _ Kz).</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 432
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 433
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply subgroup_in_inv.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 433
+Time: 0.001s">
+<div class="time" style="width: 1.1111111111111%"></div>
+<pre>
+    rapply isnormal_conj.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 434
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply T2.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 435
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply tr, sgt_in.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 436
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unshelve eexists.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 437
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 438
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists [y^, z^].</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 438
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply subgroup_commutator_in;
+        by apply subgroup_in_inv.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 440
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 441
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by exists (x; Hx).</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 441
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Local Open Scope group_scope.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 442
+Time: 0.003s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 443
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition three_trivial_commutators (G : Group) (H J K : Subgroup G)
+  : IsTrivialGroup [[H, J], K]
+    -&gt; IsTrivialGroup [[J, K], H]
+    -&gt; IsTrivialGroup [[K, H], J].</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 448
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 449
+Time: 0.001s">
+<div class="time" style="width: 1.1111111111111%"></div>
+<pre>
+  rapply three_subgroups_lemma.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 450
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Commutator.v
+Line: 452
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

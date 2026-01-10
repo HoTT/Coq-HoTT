@@ -1,0 +1,1928 @@
+<html>
+<head>
+<title>Prod.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Prod.v</h1>
+
+<div class="code" title="File: Prod.v
+Line: 1
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>(** * Theorems about cartesian products *)
+
+</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 2
+Time: 0.026s">
+<div class="time" style="width: 81.25%"></div>
+<pre>Require Import Basics.Overture Basics.Equivalences Basics.PathGroupoids
+               Basics.Tactics Basics.Trunc Basics.Decidable Basics.Iff.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Types.Empty.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope path_scope.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Set Universe Minimization ToSet.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Generalizable Variables X A B f g n.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 9
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* TODO: ": rename" is needed because the default names changed in Rocq 9.2.0.  When the minimum supported version is &gt;= 9.2.0, the ": rename" can be removed. *)</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Scheme prod_ind := Induction for prod Sort Type.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments prod_ind {A B} P f p : rename.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Unpacking *)
+
+(** Sometimes we would like to prove [Q u] where [u : A * B] by writing [u] as a pair [(fst u ; snd u)]. This is accomplished by [unpack_prod]. We want tight control over the proof, so we just write it down even though is looks a bit scary. *)
+
+</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition unpack_prod `{P : A * B -&gt; Type} (u : A * B) :
+  P (fst u, snd u) -&gt; P u
+  := idmap.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments unpack_prod / .</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Now we write down the reverse. *)</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition pack_prod `{P : A * B -&gt; Type} (u : A * B) :
+  P u -&gt; P (fst u, snd u)
+  := idmap.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments pack_prod / .</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Eta conversion *)
+
+</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition eta_prod `(z : A * B) : (fst z, snd z) = z
+  := 1.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments eta_prod / .</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Paths *)
+
+(** With this version of the function, we often have to give [z] and [z'] explicitly, so we make them explicit arguments. *)</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition path_prod_uncurried {A B : Type} (z z' : A * B)
+  (pq : (fst z = fst z') * (snd z = snd z'))
+  : (z = z').</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  change ((fst z, snd z) = (fst z', snd z')).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  case (fst pq).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> case (snd pq).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  reflexivity.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** This is the curried one you usually want to use in practice.  We define it in terms of the uncurried one, since it's the uncurried one that is proven below to be an equivalence. *)</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 46
+Time: 0.001s">
+<div class="time" style="width: 3.125%"></div>
+<pre>Definition path_prod {A B : Type} (z z' : A * B) :
+  (fst z = fst z') -&gt; (snd z = snd z') -&gt; (z = z')
+  := fun p q =&gt; path_prod_uncurried z z' (p,q).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** This version produces only paths between pairs, as opposed to paths between arbitrary inhabitants of product types.  But it has the advantage that the components of those pairs can more often be inferred. *)</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition path_prod' {A B : Type} {x x' : A} {y y' : B}
+  : (x = x') -&gt; (y = y') -&gt; ((x,y) = (x',y'))
+  := fun p q =&gt; path_prod (x,y) (x',y') p q.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Now we show how these things compute. *)
+
+</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ap_fst_path_prod {A B : Type} {z z' : A * B}
+  (p : fst z = fst z') (q : snd z = snd z') :
+  ap fst (path_prod _ _ p q) = p.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  change z with (fst z, snd z).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  change z' with (fst z', snd z').</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct p, q.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  reflexivity.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition ap_fst_path_prod' {A B : Type} {x x' : A} {y y' : B}
+  (p : x = x') (q : y = y')
+  : ap fst (path_prod' p q) = p.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply ap_fst_path_prod.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 70
+Time: 0.001s">
+<div class="time" style="width: 3.125%"></div>
+<pre>
+
+Definition ap_snd_path_prod {A B : Type} {z z' : A * B}
+  (p : fst z = fst z') (q : snd z = snd z') :
+  ap snd (path_prod _ _ p q) = q.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  change z with (fst z, snd z).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  change z' with (fst z', snd z').</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct p, q.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  reflexivity.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition ap_snd_path_prod' {A B : Type} {x x' : A} {y y' : B}
+  (p : x = x') (q : y = y')
+  : ap snd (path_prod' p q) = q.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply ap_snd_path_prod.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition eta_path_prod {A B : Type} {z z' : A * B} (p : z = z') :
+  path_prod _ _(ap fst p) (ap snd p) = p.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct p.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 93
+Time: 0.001s">
+<div class="time" style="width: 3.125%"></div>
+<pre>
+
+Definition ap_path_prod {A B C : Type} (f : A -&gt; B -&gt; C)
+           {z z' : A * B} (p : fst z = fst z') (q : snd z = snd z')
+: ap (fun z =&gt; f (fst z) (snd z)) (path_prod _ _ p q)
+  = ap011 f p q.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 99
+Time: 0.001s">
+<div class="time" style="width: 3.125%"></div>
+<pre>
+  destruct z, z'; simpl in *; destruct p, q; reflexivity.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Now we show how these compute with transport. *)
+
+</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 104
+Time: 0.001s">
+<div class="time" style="width: 3.125%"></div>
+<pre>Lemma transport_path_prod_uncurried {A B} (P : A * B -&gt; Type) {x y : A * B}
+      (H : (fst x = fst y) * (snd x = snd y))
+      (Px : P x)
+: transport P (path_prod_uncurried _ _ H) Px
+  = transport (fun x =&gt; P (x, snd y))
+              (fst H)
+              (transport (fun y =&gt; P (fst x, y))
+                         (snd H)
+                         Px).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct x, y, H; simpl in *.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  path_induction.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  reflexivity.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 116
+Time: 0.001s">
+<div class="time" style="width: 3.125%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 117
+Time: 0.002s">
+<div class="time" style="width: 6.25%"></div>
+<pre>
+
+Definition transport_path_prod {A B} (P : A * B -&gt; Type) {x y : A * B}
+           (HA : fst x = fst y)
+           (HB : snd x = snd y)
+           (Px : P x)
+: transport P (path_prod _ _ HA HB) Px
+  = transport (fun x =&gt; P (x, snd y))
+              HA
+              (transport (fun y =&gt; P (fst x, y))
+                         HB
+                         Px)
+  := transport_path_prod_uncurried P (HA, HB) Px.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 129
+Time: 0.002s">
+<div class="time" style="width: 6.25%"></div>
+<pre>
+
+Definition transport_path_prod'
+           {A B} (P : A * B -&gt; Type)
+           {x y : A}
+           {x' y' : B}
+           (HA : x = y)
+           (HB : x' = y')
+           (Px : P (x,x'))
+: transport P (path_prod' HA HB) Px
+  = transport (fun x =&gt; P (x, y'))
+              HA
+              (transport (fun y =&gt; P (x, y))
+                         HB
+                         Px)
+  := @transport_path_prod _ _ P (x, x') (y, y') HA HB Px.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** This lets us identify the path space of a product type, up to equivalence. *)
+
+</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 147
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isequiv_path_prod {A B : Type} {z z' : A * B}
+: IsEquiv (path_prod_uncurried z z') | 0.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 148
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 149
+Time: 0.003s">
+<div class="time" style="width: 9.375%"></div>
+<pre>
+  refine (Build_IsEquiv _ _ _
+            (fun r =&gt; (ap fst r, ap snd r))
+            eta_path_prod
+            (fun pq =&gt; path_prod'
+                         (ap_fst_path_prod (fst pq) (snd pq))
+                         (ap_snd_path_prod (fst pq) (snd pq)))
+            _).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 156
+Time: 0.002s">
+<div class="time" style="width: 6.25%"></div>
+<pre>
+  destruct z as [x y], z' as [x' y'].</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 157
+Time: 0.001s">
+<div class="time" style="width: 3.125%"></div>
+<pre>
+  intros [p q]; simpl in p, q.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 158
+Time: 0.005s">
+<div class="time" style="width: 15.625%"></div>
+<pre>
+  destruct p, q; reflexivity.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 159
+Time: 0.006s">
+<div class="time" style="width: 18.75%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 160
+Time: 0.001s">
+<div class="time" style="width: 3.125%"></div>
+<pre>
+
+Definition equiv_path_prod {A B : Type} (z z' : A * B)
+  : (fst z = fst z') * (snd z = snd z')  &lt;~&gt;  (z = z')
+  := Build_Equiv _ _ (path_prod_uncurried z z') _.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 164
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Path algebra *)
+
+(** Composition.  The next three lemma are displayed equations in section 2.6 of the book, but they have no numbers so we can't put them into [HoTTBook.v]. *)</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 168
+Time: 0.001s">
+<div class="time" style="width: 3.125%"></div>
+<pre>Definition path_prod_pp {A B : Type} (z z' z'' : A * B)
+           (p : fst z = fst z') (p' : fst z' = fst z'')
+           (q : snd z = snd z') (q' : snd z' = snd z'')
+: path_prod z z'' (p @ p') (q @ q') = path_prod z z' p q @ path_prod z' z'' p' q'.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 172
+Time: 0.002s">
+<div class="time" style="width: 6.25%"></div>
+<pre>
+  destruct z, z', z''; simpl in *; destruct p, p', q, q'.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  reflexivity.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 174
+Time: 0.001s">
+<div class="time" style="width: 3.125%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 175
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Associativity *)</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 177
+Time: 0.006s">
+<div class="time" style="width: 18.75%"></div>
+<pre>Definition path_prod_pp_p  {A B : Type} (u v z w : A * B)
+           (p : fst u = fst v) (q : fst v = fst z) (r : fst z = fst w)
+           (p' : snd u = snd v) (q' : snd v = snd z) (r' : snd z = snd w)
+: path_prod_pp u z w (p @ q) r (p' @ q') r'
+  @ whiskerR (path_prod_pp u v z p q p' q') (path_prod z w r r')
+  @ concat_pp_p (path_prod u v p p') (path_prod v z q q') (path_prod z w r r')
+  = ap011 (path_prod u w) (concat_pp_p p q r) (concat_pp_p p' q' r')
+    @ path_prod_pp u v w p (q @ r) p' (q' @ r')
+    @ whiskerL (path_prod u v p p') (path_prod_pp v z w q r q' r').</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 186
+Time: 0.03s">
+<div class="time" style="width: 93.75%"></div>
+<pre>
+  destruct u, v, z, w; simpl in *; destruct p, p', q, q', r, r'.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  reflexivity.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 188
+Time: 0.032s">
+<div class="time" style="width: 100%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 189
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Inversion *)</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 191
+Time: 0.001s">
+<div class="time" style="width: 3.125%"></div>
+<pre>Definition path_prod_V {A B : Type} (u v: A * B)
+           (p : fst u = fst v)
+           (q : snd u = snd v)
+  : path_prod v u p^ q^ = (path_prod u v p q)^.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 194
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 195
+Time: 0.001s">
+<div class="time" style="width: 3.125%"></div>
+<pre>
+  destruct u, v; simpl in *; destruct p, q.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  reflexivity.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Transport *)
+
+</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 201
+Time: 0.002s">
+<div class="time" style="width: 6.25%"></div>
+<pre>Definition transport_prod {A : Type} {P Q : A -&gt; Type} {a a' : A} (p : a = a')
+  (z : P a * Q a)
+  : transport (fun a =&gt; P a * Q a) p z  =  (p # (fst z), p # (snd z))
+  := match p with idpath =&gt; 1 end.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 204
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Functorial action *)
+
+</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 207
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition functor_prod {A A' B B' : Type} (f:A-&gt;A') (g:B-&gt;B')
+  : A * B -&gt; A' * B'
+  := fun z =&gt; (f (fst z), g (snd z)).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 209
+Time: 0.001s">
+<div class="time" style="width: 3.125%"></div>
+<pre>
+
+Definition ap_functor_prod {A A' B B' : Type} (f:A-&gt;A') (g:B-&gt;B')
+  (z z' : A * B) (p : fst z = fst z') (q : snd z = snd z')
+  : ap (functor_prod f g) (path_prod _ _ p q)
+  = path_prod (functor_prod f g z) (functor_prod f g z') (ap f p) (ap g q).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 214
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 215
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct z as [a b]; destruct z' as [a' b'].</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 216
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simpl in p, q.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 217
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct p, q.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 217
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 217
+Time: 0.001s">
+<div class="time" style="width: 3.125%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 218
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Equivalences *)
+
+</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 221
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isequiv_functor_prod `{IsEquiv A A' f} `{IsEquiv B B' g}
+: IsEquiv (functor_prod f g) | 1000.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 222
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 223
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_IsEquiv.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 224
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (functor_prod f^-1 g^-1).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 226
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro z.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 226
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (path_prod' (eisretr f _) (eisretr g _)).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 227
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro w.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (path_prod' (eissect f _) (eissect g _)).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 229
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 230
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [a b]; simpl.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 230
+Time: 0.001s">
+<div class="time" style="width: 3.125%"></div>
+<pre>
+    lhs napply (ap (fun p =&gt; path_prod' p _) (eisadj f _)).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 231
+Time: 0.002s">
+<div class="time" style="width: 6.25%"></div>
+<pre>
+    rhs napply ap_functor_prod.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 232
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (ap _ (eisadj g _)).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 233
+Time: 0.002s">
+<div class="time" style="width: 6.25%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 234
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition equiv_functor_prod `{IsEquiv A A' f} `{IsEquiv B B' g}
+  : A * B &lt;~&gt; A' * B'.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 237
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 238
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exists (functor_prod f g).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 239
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact _.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 240
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> (* i.e., search the context for instances *)</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 240
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Defined.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 240
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition equiv_functor_prod' {A A' B B' : Type} (f : A &lt;~&gt; A') (g : B &lt;~&gt; B')
+  : A * B &lt;~&gt; A' * B'.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 243
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 244
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exists (functor_prod f g).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 245
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact _.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 246
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 247
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation "f *E g" := (equiv_functor_prod' f g) : equiv_scope.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 249
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition equiv_functor_prod_l {A B B' : Type} (g : B &lt;~&gt; B')
+  : A * B &lt;~&gt; A * B'
+  := 1 *E g.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 253
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition equiv_functor_prod_r {A A' B : Type} (f : A &lt;~&gt; A')
+  : A * B &lt;~&gt; A' * B
+  := f *E 1.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 257
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Logical equivalences *)
+
+</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 260
+Time: 0.001s">
+<div class="time" style="width: 3.125%"></div>
+<pre>Definition iff_functor_prod {A A' B B' : Type} (f : A &lt;-&gt; A') (g : B &lt;-&gt; B')
+  : A * B &lt;-&gt; A' * B'
+  := (functor_prod (fst f) (fst g) , functor_prod (snd f) (snd g)).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 262
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Symmetry *)
+
+(** This is a special property of [prod], of course, not an instance of a general family of facts about types. *)
+
+</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 267
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition equiv_prod_symm (A B : Type) : A * B &lt;~&gt; B * A.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 267
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 268
+Time: 0.001s">
+<div class="time" style="width: 3.125%"></div>
+<pre>
+  make_equiv.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 269
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 270
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Associativity *)
+
+(** This, too, is a special property of [prod], of course, not an instance of a general family of facts about types. *)</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 274
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition equiv_prod_assoc (A B C : Type) : A * (B * C) &lt;~&gt; (A * B) * C.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 274
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 275
+Time: 0.002s">
+<div class="time" style="width: 6.25%"></div>
+<pre>
+  make_equiv.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 276
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 277
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Unit and annihilation *)
+
+</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 280
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition prod_empty_r@{u} (X : Type@{u}) : X * Empty &lt;~&gt; Empty
+  := (Build_Equiv@{u u} _ _ snd _).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 281
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition prod_empty_l@{u} (X : Type@{u}) : Empty * X &lt;~&gt; Empty
+  := (Build_Equiv@{u u} _ _ fst _).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 284
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition prod_unit_r X : X * Unit &lt;~&gt; X.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 286
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 287
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (Build_Equiv _ _ fst _).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 288
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simple refine (Build_IsEquiv _ _ _ (fun x =&gt; (x,tt)) _ _ _).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 289
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 290
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x; reflexivity.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 290
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 291
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [x []]; reflexivity.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 291
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 292
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [x []]; reflexivity.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 292
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 293
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition prod_unit_l X : Unit * X &lt;~&gt; X.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 295
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 296
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (Build_Equiv _ _ snd _).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 297
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simple refine (Build_IsEquiv _ _ _ (fun x =&gt; (tt,x)) _ _ _).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 298
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 299
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x; reflexivity.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 299
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 300
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [[] x]; reflexivity.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 300
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 301
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [[] x]; reflexivity.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 301
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 302
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Universal mapping properties *)
+
+(** Ordinary universal mapping properties are expressed as equivalences of sets or spaces of functions.  In type theory, we can go beyond this and express an equivalence of types of *dependent* functions.  Moreover, because the product type can expressed both positively and negatively, it has both a left universal property and a right one. *)
+
+(* First the positive universal property. *)</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 308
+Time: 0.001s">
+<div class="time" style="width: 3.125%"></div>
+<pre>Instance isequiv_prod_ind `(P : A * B -&gt; Type)
+: IsEquiv (prod_ind P) | 0
+  := Build_IsEquiv
+       _ _
+       (prod_ind P)
+       (fun f x y =&gt; f (x, y))
+       (fun _ =&gt; 1)
+       (fun _ =&gt; 1)
+       (fun _ =&gt; 1).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 316
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition equiv_prod_ind `(P : A * B -&gt; Type)
+  : (forall (a : A) (b : B), P (a, b)) &lt;~&gt; (forall p : A * B, P p)
+  := Build_Equiv _ _ (prod_ind P) _.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 320
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* The non-dependent version, which is a special case, is the currying equivalence. *)</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 322
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition equiv_uncurry (A B C : Type)
+  : (A -&gt; B -&gt; C) &lt;~&gt; (A * B -&gt; C)
+  := equiv_prod_ind (fun _ =&gt; C).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 324
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* Now the negative universal property. *)</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 326
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition prod_coind_uncurried `{A : X -&gt; Type} `{B : X -&gt; Type}
+  : (forall x, A x) * (forall x, B x) -&gt; (forall x, A x * B x)
+  := fun fg x =&gt; (fst fg x, snd fg x).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 328
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition prod_coind `(f : forall x:X, A x) `(g : forall x:X, B x)
+  : forall x, A x * B x
+  := prod_coind_uncurried (f, g).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 332
+Time: 0.002s">
+<div class="time" style="width: 6.25%"></div>
+<pre>
+
+Instance isequiv_prod_coind `(A : X -&gt; Type) (B : X -&gt; Type)
+: IsEquiv (@prod_coind_uncurried X A B) | 0
+  := Build_IsEquiv
+       _ _
+       (@prod_coind_uncurried X A B)
+       (fun h =&gt; (fun x =&gt; fst (h x), fun x =&gt; snd (h x)))
+       (fun _ =&gt; 1)
+       (fun _ =&gt; 1)
+       (fun _ =&gt; 1).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 342
+Time: 0.001s">
+<div class="time" style="width: 3.125%"></div>
+<pre>
+
+Definition equiv_prod_coind `(A : X -&gt; Type) (B : X -&gt; Type)
+  : ((forall x, A x) * (forall x, B x)) &lt;~&gt; (forall x, A x * B x)
+  := Build_Equiv _ _ (@prod_coind_uncurried X A B) _.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 346
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Products preserve truncation *)
+
+</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 349
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance istrunc_prod `{IsTrunc n A} `{IsTrunc n B} : IsTrunc n (A * B) | 100.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 349
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 350
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  generalize dependent B; generalize dependent A.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 351
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simple_induction n n IH; simpl; (intros A ? B ?).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 352
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 353
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (Build_Contr _ (center A, center B)).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 353
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros z; apply path_prod; apply contr.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 354
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 354
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply istrunc_S.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 355
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 356
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (istrunc_equiv_istrunc _ (equiv_path_prod x y)).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 357
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 358
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance contr_prod `{CA : Contr A} `{CB : Contr B} : Contr (A * B) | 100
+  := istrunc_prod.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 361
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Decidability *)
+
+</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 364
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance decidable_prod {A B : Type}
+       `{Decidable A} `{Decidable B}
+: Decidable@{k} (A * B).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 366
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 367
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct (dec A) as [x1|y1]; destruct (dec B) as [x2|y2].</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 368
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 369
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (inl@{k k} (x1,x2)).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 369
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 370
+Time: 0.003s">
+<div class="time" style="width: 9.375%"></div>
+<pre> apply inr@{k k}; intros [_ x2]; exact (y2 x2).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 370
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 371
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply inr@{k k}; intros [x1 _]; exact (y1 x1).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 371
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 372
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply inr@{k k}; intros [x1 _]; exact (y1 x1).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 372
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 373
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Interaction of [ap] and uncurry *)
+
+(** The function in [ap011] can be uncurried *)</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 377
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ap_uncurry {A B C} (f : A -&gt; B -&gt; C) {a a' : A} (p : a = a')
+  {b b' : B} (q : b = b')
+  : ap (uncurry f) (path_prod' p q) = ap011 f p q.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 379
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 380
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by destruct q, p.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 381
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 382
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Fibers *)
+
+(** ** Fibers of [functor_prod] *)</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 386
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition hfiber_functor_prod {A B C D : Type} (f : A -&gt; B) (g : C -&gt; D) y
+  : hfiber (functor_prod f g) y &lt;~&gt; (hfiber f (fst y) * hfiber g (snd y)).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 387
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 388
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold functor_prod.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 389
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snrefine (equiv_adjointify _ _ _ _).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 390
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 391
+Time: 0.001s">
+<div class="time" style="width: 3.125%"></div>
+<pre> exact (fun x =&gt; ((fst x.1; ap fst x.2), (snd x.1; ap snd x.2))).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 391
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 392
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> refine (fun xs =&gt; (((fst xs).1, (snd xs).1); _)).</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 392
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply Prod.path_prod;simpl.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 393
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 394
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fst xs).2.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 394
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 395
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (snd xs).2.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 395
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 396
+Time: 0.006s">
+<div class="time" style="width: 18.75%"></div>
+<pre> destruct y as [y1 y2]; intros [[x1 p1] [x2 p2]].</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 396
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    simpl in *.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 397
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct p1,p2.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 397
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 397
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 398
+Time: 0.004s">
+<div class="time" style="width: 12.5%"></div>
+<pre> intros [[x1 x2] p].</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 398
+Time: 0.003s">
+<div class="time" style="width: 9.375%"></div>
+<pre> destruct p;cbn.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 398
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 398
+Time: 0.017s">
+<div class="time" style="width: 53.125%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 399
+Time: 0.002s">
+<div class="time" style="width: 6.25%"></div>
+<pre>
+
+Instance istruncmap_functor_prod (n : trunc_index) {A B C D : Type}
+  (f : A -&gt; B) (g : C -&gt; D) `{!IsTruncMap n f} `{!IsTruncMap n g}
+  : IsTruncMap n (Prod.functor_prod f g)
+  := fun y =&gt; istrunc_equiv_istrunc _ (hfiber_functor_prod _ _ _)^-1.</pre>
+</div>
+<div class="code" title="File: Prod.v
+Line: 405
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

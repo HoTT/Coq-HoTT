@@ -1,0 +1,724 @@
+<html>
+<head>
+<title>Induced.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Induced.v</h1>
+
+<div class="code" title="File: Induced.v
+Line: 1
+Time: 0.021s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import Basics.Overture Basics.Tactics.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 1
+Time: 0.002s">
+<div class="time" style="width: 9.5238095238095%"></div>
+<pre>
+Require Import WildCat.Core.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 2
+Time: 0.004s">
+<div class="time" style="width: 19.047619047619%"></div>
+<pre>
+Require Import WildCat.Equiv.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Induced wild categories *)
+
+(** A map [A -&gt; B] of types, where [B] is some type of wild category, induces the same level of structure on [A], via taking everything to be defined on the image.
+
+This needs to be separate from Core because of [HasEquivs] usage.  We don't make these definitions (exported) [Instance]s because we only want to apply them manually, but we make them [Local Instance]s so that subsequent ones can pick up the previous ones automatically. *)
+
+(** In most of the proofs, we only want to use [intro] on variables of type [A], so this will be handy. *)</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 11
+Time: 0.001s">
+<div class="time" style="width: 4.7619047619048%"></div>
+<pre>Ltac intros_of_type A :=
+  repeat match goal with |- forall (a : A), _ =&gt; intro a end.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section Induced_category.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {A B : Type} (f : A -&gt; B).</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Instance isgraph_induced `{IsGraph B} : IsGraph A.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    napply Build_IsGraph.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros a1 a2.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> 
+    exact (f a1 $-&gt; f a2).</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Instance is01cat_induced `{Is01Cat B} : Is01Cat A.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    napply Build_Is01Cat; intros_of_type A; cbn.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply Id.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact cat_comp.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Instance is0gpd_induced `{Is0Gpd B} : Is0Gpd A.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    napply Build_Is0Gpd; intros_of_type A; cbn.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact gpd_rev.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The structure map along which we induce the category structure becomes a functor with respect to the induced structure. *)
+ </pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Instance is0functor_induced `{IsGraph B} : Is0Functor f.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    napply Build_Is0Functor; intros_of_type A; cbn.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact idmap.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Instance is2graph_induced `{Is2Graph B} : Is2Graph A.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    constructor; cbn.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply isgraph_hom.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Instance is1cat_induced `{Is1Cat B} : Is1Cat A.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 50
+Time: 0.003s">
+<div class="time" style="width: 14.285714285714%"></div>
+<pre>
+    snapply Build_Is1Cat; intros_of_type A; cbn.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rapply is01cat_hom.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> napply is0gpd_hom.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 54
+Time: 0.001s">
+<div class="time" style="width: 4.7619047619048%"></div>
+<pre> rapply is0functor_postcomp.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 55
+Time: 0.001s">
+<div class="time" style="width: 4.7619047619048%"></div>
+<pre> rapply is0functor_precomp.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact cat_assoc.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact cat_assoc_opp.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact cat_idl.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact cat_idr.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 59
+Time: 0.001s">
+<div class="time" style="width: 4.7619047619048%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 60
+Time: 0.001s">
+<div class="time" style="width: 4.7619047619048%"></div>
+<pre>
+
+  Local Instance is1functor_induced `{Is1Cat B} : Is1Functor f.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 63
+Time: 0.002s">
+<div class="time" style="width: 9.5238095238095%"></div>
+<pre>
+    srapply Build_Is1Functor; intros_of_type A; cbn.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros g h.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact idmap.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (Id _).</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros g h.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (Id _).</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Instance hasmorext_induced `{HasMorExt B} : HasMorExt A.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros a b; cbn.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 72
+Time: 0.001s">
+<div class="time" style="width: 4.7619047619048%"></div>
+<pre> rapply isequiv_Htpy_path.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition hasequivs_induced `{HasEquivs B} : HasEquivs A.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 76
+Time: 0.002s">
+<div class="time" style="width: 9.5238095238095%"></div>
+<pre>
+    srapply Build_HasEquivs; intros a b; cbn.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (f a $&lt;~&gt; f b).</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply CatIsEquiv'.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact cate_fun.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply cate_isequiv'.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply cate_buildequiv'.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> napply cate_buildequiv_fun'.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply cate_inv'.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> napply cate_issect'.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> napply cate_isretr'.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> napply catie_adjointify'.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 87
+Time: 0.001s">
+<div class="time" style="width: 4.7619047619048%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 88
+Time: 0.001s">
+<div class="time" style="width: 4.7619047619048%"></div>
+<pre>
+
+End Induced_category.</pre>
+</div>
+<div class="code" title="File: Induced.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

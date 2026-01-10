@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>Nameless.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="nameless-v-chk0" style="display: none" type="checkbox"><label class="alectryon-input" for="nameless-v-chk0"><span class="kn">Require Import</span> Basics.Overture.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="sd">(** * Building blocks for a globally nameless style of tactic reasoning *)</span>
+
+<span class="sd">(** ** [hyp] returns any hypothesis, with subsequent failures backtracking through all hypotheses *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Ltac</span> <span class="nf">hyp</span> := <span class="kr">multimatch goal with</span> H : _ |- _ =&gt; <span class="kp">constr</span>:(H) <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** [enforce foo] ensures that [foo] is well-typed *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;enforce&quot;</span> open_constr(term) := <span class="kp">idtac</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** [syntax_enforce [ H := body ]] ensures that [H] has a body which is syntactically equal to [body] *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;syntax_enforce&quot;</span> <span class="s2">&quot;[&quot;</span> <span class="kp">constr</span>(H) <span class="s2">&quot;:=&quot;</span> open_constr(body) <span class="s2">&quot;]&quot;</span> := <span class="kr">let</span> <span class="nv">H&#39;</span> := (<span class="kp">eval</span> <span class="nb">unfold</span> H <span class="kr">in</span> H) <span class="kr">in</span> <span class="nb">constr_eq</span> H&#39; body.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** [enforce [ x = y ]] ensures that two terms, possibly containing holes, are judgmentally equal *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Tactic Notation</span> <span class="s2">&quot;enforce&quot;</span> <span class="s2">&quot;[&quot;</span> open_constr(x) <span class="s2">&quot;=&quot;</span> open_constr(y) <span class="s2">&quot;]&quot;</span> := <span class="nb">unify</span> x y.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** An example *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="nameless-v-chk1" style="display: none" type="checkbox"><label class="alectryon-input" for="nameless-v-chk1"><span class="kn">Goal</span> Empty -&gt; <span class="kr">let</span> <span class="nv">X0</span> := tt <span class="kr">in</span> Empty -&gt; Unit.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">Empty -&gt; <span class="kr">let</span> <span class="nv">X0</span> := tt <span class="kr">in</span> Empty -&gt; Unit</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="nameless-v-chk2" style="display: none" type="checkbox"><label class="alectryon-input" for="nameless-v-chk2"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><span class="goal-separator"><hr></span><div class="goal-conclusion">Empty -&gt; <span class="kr">let</span> <span class="nv">X0</span> := tt <span class="kr">in</span> Empty -&gt; Unit</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="nameless-v-chk3" style="display: none" type="checkbox"><label class="alectryon-input" for="nameless-v-chk3"><span class="nb">intros</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Empty</span></span></span><br><span><var>X0</var><span><span class="hyp-body"><b>:= </b><span>tt</span></span><span class="hyp-type"><b>: </b><span>Unit</span></span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span>Empty</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Unit</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="nameless-v-chk4" style="display: none" type="checkbox"><label class="alectryon-input" for="nameless-v-chk4"><span class="kr">let</span> <span class="nv">H</span> := hyp <span class="kr">in</span>
+  enforce (H : Unit);
+    syntax_enforce [ H := tt ];
+    enforce [ H = _ ];
+    enforce [ _ = H ];
+    enforce [ H = tt ].</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>H</var><span class="hyp-type"><b>: </b><span>Empty</span></span></span><br><span><var>X0</var><span><span class="hyp-body"><b>:= </b><span>tt</span></span><span class="hyp-type"><b>: </b><span>Unit</span></span></span></span><br><span><var>H0</var><span class="hyp-type"><b>: </b><span>Empty</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">Unit</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Abort</span>.</span></span></pre>
+</div>
+</div></body>
+</html>

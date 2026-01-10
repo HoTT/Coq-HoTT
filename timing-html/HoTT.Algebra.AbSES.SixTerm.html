@@ -1,0 +1,1387 @@
+<html>
+<head>
+<title>SixTerm.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for SixTerm.v</h1>
+
+<div class="code" title="File: SixTerm.v
+Line: 1
+Time: 0.038s">
+<div class="time" style="width: 44.705882352941%"></div>
+<pre>From HoTT Require Import Basics Types.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 1
+Time: 0.017s">
+<div class="time" style="width: 20%"></div>
+<pre>
+From HoTT.WildCat Require Import Core Opposite Equiv Bifunctor.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 2
+Time: 0.085s">
+<div class="time" style="width: 100%"></div>
+<pre>
+Require Import Pointed.Core Pointed.pTrunc Pointed.pEquiv
+  Modalities.ReflectiveSubuniverse Truncations.Core Truncations.SeparatedTrunc
+  AbGroups Homotopy.ExactSequence Spaces.Int Spaces.FreeInt.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 5
+Time: 0.006s">
+<div class="time" style="width: 7.0588235294118%"></div>
+<pre>
+From HoTT.Algebra.AbSES Require Import Core Pullback Pushout BaerSum
+  Ext PullbackFiberSequence.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import HSet.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * The contravariant six-term sequence of Ext *)
+
+(** We construct the contravariant six-term exact sequence of Ext groups associated to any short exact sequence [A -&gt; E -&gt; B] and coefficient group [G]. The existence of this exact sequence follows from the final result in [PullbackFiberSequence]. However, with that definition it becomes a bit tricky to show that the connecting map is given by pushing out [E]. Instead, we give a direct proof.
+
+  As an application, we use the six-term exact sequence to show that [Ext Z/n A] is isomorphic to [A/n], for nonzero natural numbers [n]. (See [ext_cyclic_ab].) *)
+
+(** Exactness of [0 -&gt; ab_hom B G -&gt; ab_hom E G] follows from the rightmost map being an embedding. *)</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 16
+Time: 0.004s">
+<div class="time" style="width: 4.7058823529412%"></div>
+<pre>Definition isexact_abses_sixterm_i `{Funext}
+  {B A G : AbGroup} (E : AbSES B A)
+  : IsExact (Tr (-1))
+      (pconst : pUnit -&gt;* ab_hom B G)
+      (fmap10 (A:=Group^op) ab_hom (projection E) G).</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 21
+Time: 0.001s">
+<div class="time" style="width: 1.1764705882353%"></div>
+<pre>
+  apply isexact_purely_O.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 22
+Time: 0.004s">
+<div class="time" style="width: 4.7058823529412%"></div>
+<pre>
+  rapply isexact_homotopic_i.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 23
+Time: 0.001s">
+<div class="time" style="width: 1.1764705882353%"></div>
+<pre>
+  2: apply iff_grp_isexact_isembedding.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 24
+Time: 0.003s">
+<div class="time" style="width: 3.5294117647059%"></div>
+<pre>
+  1: by apply phomotopy_homotopy_hset.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 25
+Time: 0.003s">
+<div class="time" style="width: 3.5294117647059%"></div>
+<pre>
+  exact _.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> (* [isembedding_precompose_surjection_ab] *)</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 26
+Time: 0.005s">
+<div class="time" style="width: 5.8823529411765%"></div>
+<pre>Defined.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Exactness of [ab_hom B G -&gt; ab_hom E G -&gt; ab_hom A G]. One can also deduce this from [isexact_abses_pullback]. *)</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 28
+Time: 0.003s">
+<div class="time" style="width: 3.5294117647059%"></div>
+<pre>Definition isexact_ext_contra_sixterm_ii `{Funext}
+  {B A G : AbGroup} (E : AbSES B A)
+  : IsExact (Tr (-1))
+      (fmap10 (A:=Group^op) ab_hom (projection E) G)
+      (fmap10 (A:=Group^op) ab_hom (inclusion E) G).</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 33
+Time: 0.001s">
+<div class="time" style="width: 1.1764705882353%"></div>
+<pre>
+  snapply Build_IsExact.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 35
+Time: 0.001s">
+<div class="time" style="width: 1.1764705882353%"></div>
+<pre> apply phomotopy_homotopy_hset; intro f.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 35
+Time: 0.001s">
+<div class="time" style="width: 1.1764705882353%"></div>
+<pre>
+    apply equiv_path_grouphomomorphism; intro b; cbn.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 36
+Time: 0.001s">
+<div class="time" style="width: 1.1764705882353%"></div>
+<pre>
+    refine (ap f _ @ grp_homo_unit f).</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 37
+Time: 0.001s">
+<div class="time" style="width: 1.1764705882353%"></div>
+<pre>
+    apply isexact_inclusion_projection.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  hnf.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 39
+Time: 0.004s">
+<div class="time" style="width: 4.7058823529412%"></div>
+<pre> intros [f q]; rapply contr_inhabited_hprop.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srefine (tr (_; _)).</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 41
+Time: 0.006s">
+<div class="time" style="width: 7.0588235294118%"></div>
+<pre> refine (grp_homo_compose _ (abses_cokernel_iso (inclusion E) (projection E))^-1$).</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (quotient_abgroup_rec _ _ f).</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 42
+Time: 0.014s">
+<div class="time" style="width: 16.470588235294%"></div>
+<pre>
+    intros e; rapply Trunc_ind.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros [b r].</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 44
+Time: 0.001s">
+<div class="time" style="width: 1.1764705882353%"></div>
+<pre>
+    refine (ap f r^ @ _).</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 45
+Time: 0.003s">
+<div class="time" style="width: 3.5294117647059%"></div>
+<pre>
+    exact (equiv_path_grouphomomorphism^-1 q _).</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lazy beta.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 47
+Time: 0.008s">
+<div class="time" style="width: 9.4117647058824%"></div>
+<pre>
+  apply path_sigma_hprop.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 48
+Time: 0.001s">
+<div class="time" style="width: 1.1764705882353%"></div>
+<pre>
+  apply equiv_path_grouphomomorphism; unfold pr1.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro x.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 50
+Time: 0.057s">
+<div class="time" style="width: 67.058823529412%"></div>
+<pre>
+  exact (ap (quotient_abgroup_rec _ _ f _)
+            (abses_cokernel_iso_inv_beta _ _ _)).</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 52
+Time: 0.038s">
+<div class="time" style="width: 44.705882352941%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Exactness of [ab_hom E G -&gt; ab_hom A G -&gt; Ext B G] *)
+
+(** If a pushout [abses_pushout alpha E] is trivial, then [alpha] factors through [inclusion E]. *)</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 57
+Time: 0.001s">
+<div class="time" style="width: 1.1764705882353%"></div>
+<pre>Lemma abses_pushout_trivial_factors_inclusion `{Univalence}
+  {B A A' : AbGroup} (alpha : A $-&gt; A') (E : AbSES B A)
+  : abses_pushout alpha E = pt -&gt; exists phi, alpha = phi $o inclusion E.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 60
+Time: 0.017s">
+<div class="time" style="width: 20%"></div>
+<pre>
+  equiv_intros (equiv_path_abses (E:=abses_pushout alpha E) (F:=pt)) p.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct p as [phi [p q]].</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 62
+Time: 0.003s">
+<div class="time" style="width: 3.5294117647059%"></div>
+<pre>
+  exists (ab_biprod_pr1 $o phi $o ab_pushout_inr).</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply equiv_path_grouphomomorphism; intro a.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* We embed into the biproduct and prove equality there. *)
+ </pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 66
+Time: 0.001s">
+<div class="time" style="width: 1.1764705882353%"></div>
+<pre>apply (isinj_embedding (@ab_biprod_inl A' B) _).</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine ((p (alpha a))^ @ _).</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (ap phi _ @ _).</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 68
+Time: 0.001s">
+<div class="time" style="width: 1.1764705882353%"></div>
+<pre>
+  1: exact (left_square (abses_pushout_morphism E alpha) a).</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (path_prod' idpath).</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine ((q _)^ @ _).</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 71
+Time: 0.007s">
+<div class="time" style="width: 8.2352941176471%"></div>
+<pre>
+  refine (right_square (abses_pushout_morphism E alpha) _ @ _); cbn.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 72
+Time: 0.001s">
+<div class="time" style="width: 1.1764705882353%"></div>
+<pre>
+  apply isexact_inclusion_projection.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 73
+Time: 0.005s">
+<div class="time" style="width: 5.8823529411765%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 74
+Time: 0.002s">
+<div class="time" style="width: 2.3529411764706%"></div>
+<pre>
+
+Instance isexact_ext_contra_sixterm_iii@{u v +} `{Univalence}
+  {B A G : AbGroup@{u}} (E : AbSES@{u v} B A)
+  : IsExact (Tr (-1))
+      (fmap10 (A:=Group^op) ab_hom (inclusion E) G)
+      (abses_pushout_ext E).</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 81
+Time: 0.001s">
+<div class="time" style="width: 1.1764705882353%"></div>
+<pre>
+  snapply Build_IsExact.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 83
+Time: 0.006s">
+<div class="time" style="width: 7.0588235294118%"></div>
+<pre> apply phomotopy_homotopy_hset; intro g; cbn.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (* this equation holds purely *)
+   </pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>apply (ap tr@{v}).</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 85
+Time: 0.002s">
+<div class="time" style="width: 2.3529411764706%"></div>
+<pre>
+    refine (abses_pushout_compose _ _ _ @ ap _ _ @ _).</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: apply abses_pushout_inclusion.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 87
+Time: 0.001s">
+<div class="time" style="width: 1.1764705882353%"></div>
+<pre>
+    apply abses_pushout_point.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [F p].</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (* since we are proving a proposition, we may convert [p] to an actual path *)
+   </pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 91
+Time: 0.003s">
+<div class="time" style="width: 3.5294117647059%"></div>
+<pre>pose proof (p' := (equiv_path_Tr _ _)^-1 p).</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (* slightly faster than [strip_truncations]: *)
+   </pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 93
+Time: 0.001s">
+<div class="time" style="width: 1.1764705882353%"></div>
+<pre>revert p'; apply Trunc_rec; intro p'.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 93
+Time: 0.002s">
+<div class="time" style="width: 2.3529411764706%"></div>
+<pre>
+    rapply contr_inhabited_hprop; apply tr.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 94
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (* now we construct a preimage *)
+   </pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 96
+Time: 0.01s">
+<div class="time" style="width: 11.764705882353%"></div>
+<pre>pose (g := abses_pushout_trivial_factors_inclusion _ E p');
+      destruct g as [g k].</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists g.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 98
+Time: 0.007s">
+<div class="time" style="width: 8.2352941176471%"></div>
+<pre>
+    apply path_sigma_hprop; cbn.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact k^.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 100
+Time: 0.027s">
+<div class="time" style="width: 31.764705882353%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Exactness of [ab_hom A G -&gt; Ext1 B G -&gt; Ext1 E G]. *)
+
+(** We construct a morphism which witnesses exactness. *)</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition isexact_ext_contra_sixterm_iv_mor `{Univalence}
+  {B A G : AbGroup} (E : AbSES B A)
+  (F : AbSES B G) (p : abses_pullback (projection E) F = pt)
+  : AbSESMorphism E F.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 109
+Time: 0.006s">
+<div class="time" style="width: 7.0588235294118%"></div>
+<pre>
+  pose (p' := equiv_path_abses^-1 p^);
+    destruct p' as [p' [pl pr]].</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srefine (Build_AbSESMorphism _ _ grp_homo_id _ _).</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 113
+Time: 0.001s">
+<div class="time" style="width: 1.1764705882353%"></div>
+<pre> refine (grp_homo_compose
+              (grp_iso_inverse
+                 (abses_kernel_iso (inclusion F) (projection F))) _).</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (* now it's easy to construct map into the kernel *)
+   </pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 117
+Time: 0.001s">
+<div class="time" style="width: 1.1764705882353%"></div>
+<pre>snapply grp_kernel_corec.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 117
+Time: 0.001s">
+<div class="time" style="width: 1.1764705882353%"></div>
+<pre>
+    1: exact (grp_pullback_pr1 _ _ $o p' $o ab_biprod_inr $o inclusion E).</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 118
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro x.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (right_square (abses_pullback_morphism F _) _ @ _).</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (ap (projection E) (pr _)^ @ _); cbn.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 121
+Time: 0.001s">
+<div class="time" style="width: 1.1764705882353%"></div>
+<pre>
+    apply isexact_inclusion_projection.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 122
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 123
+Time: 0.001s">
+<div class="time" style="width: 1.1764705882353%"></div>
+<pre> exact (grp_pullback_pr1 _ _ $o p' $o ab_biprod_inr).</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro a.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 124
+Time: 0.049s">
+<div class="time" style="width: 57.647058823529%"></div>
+<pre>
+    napply abses_kernel_iso_inv_beta.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 125
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 126
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro e.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 126
+Time: 0.001s">
+<div class="time" style="width: 1.1764705882353%"></div>
+<pre>
+    refine (right_square (abses_pullback_morphism F _) _
+              @ ap (projection E) _).</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 128
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (pr _)^.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 129
+Time: 0.009s">
+<div class="time" style="width: 10.588235294118%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 130
+Time: 0.003s">
+<div class="time" style="width: 3.5294117647059%"></div>
+<pre>
+
+Instance isexact_ext_contra_sixterm_iv `{Univalence}
+  {B A G : AbGroup@{u}} (E : AbSES@{u v} B A)
+  : IsExact (Tr (-1)) (abses_pushout_ext E)
+      (fmap (pTr 0) (abses_pullback_pmap (A:=G) (projection E))).</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 135
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 136
+Time: 0.001s">
+<div class="time" style="width: 1.1764705882353%"></div>
+<pre>
+  snapply Build_IsExact.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 137
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 138
+Time: 0.004s">
+<div class="time" style="width: 4.7058823529412%"></div>
+<pre> apply phomotopy_homotopy_hset; intro g; cbn.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (* this equation holds purely *)
+   </pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>apply (ap tr@{v}).</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 140
+Time: 0.003s">
+<div class="time" style="width: 3.5294117647059%"></div>
+<pre>
+    refine ((abses_pushout_pullback_reorder _ _ _)^
+              @ ap _ _ @ _).</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: exact (abses_pullback_projection _)^.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 143
+Time: 0.001s">
+<div class="time" style="width: 1.1764705882353%"></div>
+<pre>
+    apply abses_pushout_point.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* since we are proving a proposition, we may convert [p] to an actual path *)
+ </pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>-</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [F p].</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 146
+Time: 0.008s">
+<div class="time" style="width: 9.4117647058824%"></div>
+<pre>
+    revert dependent F; napply (Trunc_ind (n:=0) (A:=AbSES B G)).</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 147
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (* [exact _.] works here, but is slow. *)
+   </pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>{</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro x; napply istrunc_forall.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 149
+Time: 0.001s">
+<div class="time" style="width: 1.1764705882353%"></div>
+<pre>
+      intro y; exact (istrunc_leq (trunc_index_leq_succ _)).</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro F.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 151
+Time: 0.004s">
+<div class="time" style="width: 4.7058823529412%"></div>
+<pre>
+    equiv_intros (equiv_path_Tr (n:=-1) (abses_pullback (projection E) F) pt) p.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 152
+Time: 0.011s">
+<div class="time" style="width: 12.941176470588%"></div>
+<pre>
+    strip_truncations.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 153
+Time: 0.002s">
+<div class="time" style="width: 2.3529411764706%"></div>
+<pre>
+    rapply contr_inhabited_hprop; apply tr.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 154
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    pose (g := isexact_ext_contra_sixterm_iv_mor E F p).</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 155
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists (component1 g).</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 156
+Time: 0.015s">
+<div class="time" style="width: 17.647058823529%"></div>
+<pre>
+    apply path_sigma_hprop, (ap tr).</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 157
+Time: 0.006s">
+<div class="time" style="width: 7.0588235294118%"></div>
+<pre>
+    by rapply (abses_pushout_component3_id g).</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 158
+Time: 0.03s">
+<div class="time" style="width: 35.294117647059%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Exactness of [Ext B G -&gt; Ext E G -&gt; Ext A G] *)
+
+(** This is an immediate consequence of [isexact_abses_pullback]. *)</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 163
+Time: 0.002s">
+<div class="time" style="width: 2.3529411764706%"></div>
+<pre>Instance isexact_ext_contra_sixterm_v `{Univalence}
+  {B A G : AbGroup} (E : AbSES B A)
+  : IsExact (Tr (-1))
+      (fmap (pTr 0) (abses_pullback_pmap (A:=G) (projection E)))
+      (fmap (pTr 0) (abses_pullback_pmap (A:=G) (inclusion E))).</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 168
+Time: 0.002s">
+<div class="time" style="width: 2.3529411764706%"></div>
+<pre>
+  rapply isexact_ptr.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rapply isexact_purely_O.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** [Ext Z/n A] is isomorphic to [A/n] *)
+
+(** An easy consequence of the contravariant six-term exact sequence is that [Ext Z/n A] is isomorphic to the cokernel of the multiplication-by-n endomorphism [A -&gt; A], for any abelian group [A]. This falls out of the six-term exact sequence associated to [Z -&gt; Z -&gt; Z/n] and projectivity of [Z]. A minor point is that the library does not currently contain a proof that multiplication by a nonzero natural number is a self-injection of [Z]. Thus we work directly with the assumption that [Z1_mul_nat n] is an embedding. *)
+
+(** We define our own cyclic groups using [ab_cokernel_embedding] under the assumption that [Z1_mul_nat n] is an embedding. *)</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 177
+Time: 0.001s">
+<div class="time" style="width: 1.1764705882353%"></div>
+<pre>Definition cyclic' `{Funext} (n : nat) `{IsEmbedding (Z1_mul_nat n)}
+  : AbGroup := ab_cokernel_embedding (Z1_mul_nat n).</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We first show that [ab_hom Z A -&gt; ab_hom Z A -&gt; Ext (cyclic n) A] is exact. We could inline the proof below, but factoring it out is faster. *)</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 180
+Time: 0.007s">
+<div class="time" style="width: 8.2352941176471%"></div>
+<pre>Local Definition isexact_ext_cyclic_ab_iii@{u v w | u &lt; v, v &lt; w} `{Univalence}
+  (n : nat) `{IsEmbedding (Z1_mul_nat n)} {A : AbGroup@{u}}
+  : IsExact (Tr (-1))
+      (fmap10 (A:=Group^op) ab_hom (Z1_mul_nat n) A)
+      (abses_pushout_ext (abses_from_inclusion (Z1_mul_nat n)))
+  := isexact_ext_contra_sixterm_iii
+       (abses_from_inclusion (Z1_mul_nat n)).</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 186
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We show exactness of [A -&gt; A -&gt; Ext Z/n A] where the first map is multiplication by [n], but considered in universe [v]. *)</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 188
+Time: 0.002s">
+<div class="time" style="width: 2.3529411764706%"></div>
+<pre>Local Definition ext_cyclic_exact@{u v w} `{Univalence}
+  (n : nat) `{IsEmbedding (Z1_mul_nat n)} {A : AbGroup@{u}}
+  : IsExact@{v v v v v} (Tr (-1))
+      (ab_mul (A:=A) n)
+      (abses_pushout_ext@{u w v} (abses_from_inclusion (Z1_mul_nat n))
+         o* (pequiv_groupisomorphism (equiv_Z1_hom A))^-1*).</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 193
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 194
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* we first move [equiv_Z1_hom] across the total space *)
+ </pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>apply moveL_isexact_equiv.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* now we change the left map so as to apply exactness at iii from above *)
+ </pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 198
+Time: 0.001s">
+<div class="time" style="width: 1.1764705882353%"></div>
+<pre>snapply (isexact_homotopic_i (Tr (-1))).</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 198
+Time: 0.004s">
+<div class="time" style="width: 4.7058823529412%"></div>
+<pre>
+  1: exact (fmap10 (A:=Group^op) ab_hom (Z1_mul_nat n) A o*
+              (pequiv_inverse
+                 (pequiv_groupisomorphism (equiv_Z1_hom A)))).</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 201
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 202
+Time: 0.002s">
+<div class="time" style="width: 2.3529411764706%"></div>
+<pre> apply phomotopy_homotopy_hset.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 202
+Time: 0.002s">
+<div class="time" style="width: 2.3529411764706%"></div>
+<pre>
+    rapply (equiv_ind (equiv_Z1_hom A)); intro f.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 203
+Time: 0.003s">
+<div class="time" style="width: 3.5294117647059%"></div>
+<pre>
+    refine (_ @ ap _ (eissect _ _)^).</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 204
+Time: 0.003s">
+<div class="time" style="width: 3.5294117647059%"></div>
+<pre>
+    apply moveR_equiv_V; symmetry.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 205
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (ap f _ @ _).</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: apply Z1_rec_beta.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 207
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (ab_mul_natural f n Z1_gen).</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 209
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> (* we get rid of [equiv_Z1_hom] *)
+   </pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 210
+Time: 0.01s">
+<div class="time" style="width: 11.764705882353%"></div>
+<pre>apply isexact_equiv_fiber.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 210
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply isexact_ext_cyclic_ab_iii.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 211
+Time: 0.019s">
+<div class="time" style="width: 22.352941176471%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 212
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The main result of this section. *)</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 214
+Time: 0.001s">
+<div class="time" style="width: 1.1764705882353%"></div>
+<pre>Theorem ext_cyclic_ab@{u v w | u &lt; v, v &lt; w} `{Univalence}
+  (n : nat) `{emb : IsEmbedding (Z1_mul_nat n)} {A : AbGroup@{u}}
+  : ab_cokernel@{v w} (ab_mul (A:=A) n)
+      $&lt;~&gt; ab_ext@{u v} (cyclic'@{u v} n) A.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 217
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* We take a large cokernel in order to apply [abses_cokernel_iso]. *)</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 218
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Proof.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 218
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  pose (E := abses_from_inclusion (Z1_mul_nat n)).</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 219
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snrefine (abses_cokernel_iso (ab_mul n) _).</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 220
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 221
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (grp_homo_compose
+             (abses_pushout_ext E)
+             (grp_iso_inverse (equiv_Z1_hom A))).</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 223
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 224
+Time: 0.001s">
+<div class="time" style="width: 1.1764705882353%"></div>
+<pre> apply (conn_map_compose _ (grp_iso_inverse (equiv_Z1_hom A))).</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 224
+Time: 0.003s">
+<div class="time" style="width: 3.5294117647059%"></div>
+<pre>
+    1: rapply conn_map_isequiv.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (* Coq knows that [Ext Z1 A] is contractible since [Z1] is projective, so exactness at spot iv gives us this: *)
+   </pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 227
+Time: 0.013s">
+<div class="time" style="width: 15.294117647059%"></div>
+<pre>exact (isconnmap_O_isexact_base_contr _ _
+             (fmap (pTr 0)
+                (abses_pullback_pmap (A:=A)
+                   (projection E)))).</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 230
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 231
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> (* we change [grp_homo_compose] to [o*] *)
+   </pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 232
+Time: 0.003s">
+<div class="time" style="width: 3.5294117647059%"></div>
+<pre>srapply isexact_homotopic_f.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 232
+Time: 0.001s">
+<div class="time" style="width: 1.1764705882353%"></div>
+<pre>
+    1: exact (abses_pushout_ext (abses_from_inclusion (Z1_mul_nat n))
+                o* (pequiv_groupisomorphism (equiv_Z1_hom A))^-1*).</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 234
+Time: 0.007s">
+<div class="time" style="width: 8.2352941176471%"></div>
+<pre>
+    1: by apply phomotopy_homotopy_hset.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 235
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply ext_cyclic_exact.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 236
+Time: 0.006s">
+<div class="time" style="width: 7.0588235294118%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: SixTerm.v
+Line: 238
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

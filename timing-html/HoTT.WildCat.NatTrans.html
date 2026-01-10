@@ -1,0 +1,1569 @@
+<html>
+<head>
+<title>NatTrans.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for NatTrans.v</h1>
+
+<div class="code" title="File: NatTrans.v
+Line: 1
+Time: 0.021s">
+<div class="time" style="width: 91.304347826087%"></div>
+<pre>Require Import Basics.Overture Basics.Tactics.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 1
+Time: 0.002s">
+<div class="time" style="width: 8.695652173913%"></div>
+<pre>
+Require Import WildCat.Core.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 2
+Time: 0.005s">
+<div class="time" style="width: 21.739130434783%"></div>
+<pre>
+Require Import WildCat.Equiv.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import WildCat.Square.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import WildCat.Opposite.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Wild Natural Transformations *)
+
+(** ** Transformations *)
+
+(** *** Definition *)
+
+(** A transformation is simply a family of 1-cells over some base type [A] between the sections of two dependent functions [F] and [G]. In most cases [F] and [G] will be non-dependent functors. *)</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 13
+Time: 0.001s">
+<div class="time" style="width: 4.3478260869565%"></div>
+<pre>Definition Transformation {A : Type} {B : A -&gt; Type} `{forall x, IsGraph (B x)}
+  (F G : forall (x : A), B x)
+  := forall (a : A), F a $-&gt; G a.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** This lets us apply transformations to things. Identity Coercion tells Coq that this coercion is in fact definitionally the identity map so it doesn't need to insert it, but merely rewrite definitionally when typechecking. *)</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Identity Coercion fun_trans : Transformation &gt;-&gt; Funclass.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation "F $=&gt; G" := (Transformation F G).</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The identity transformation between a functor and itself is the identity function at the section. *)</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition trans_id {A B : Type} `{Is01Cat B} (F : A -&gt; B)
+  : F $=&gt; F
+  := fun a =&gt; Id (F a).</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Transformations can be composed pointwise. *)</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 25
+Time: 0.001s">
+<div class="time" style="width: 4.3478260869565%"></div>
+<pre>Definition trans_comp {A B : Type} `{Is01Cat B}
+           {F G K : A -&gt; B} (gamma : G $=&gt; K) (alpha : F $=&gt; G)
+  : F $=&gt; K
+  := fun a =&gt; gamma a $o alpha a.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Transformations can be prewhiskered by a function. This means we precompose both sides of the transformation with a function. *)</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 30
+Time: 0.002s">
+<div class="time" style="width: 8.695652173913%"></div>
+<pre>Definition trans_prewhisker {A B : Type} {C : B -&gt; Type} {F G : forall x, C x}
+  `{Is01Cat B} `{!forall x, IsGraph (C x)}
+  `{!forall x, Is01Cat (C x)} (gamma : F $=&gt; G) (K : A -&gt; B) 
+  : F o K $=&gt; G o K
+  := gamma o K.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Transformations can be postwhiskered by a function. This means we postcompose both sides of the transformation with a function. *)</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 36
+Time: 0.002s">
+<div class="time" style="width: 8.695652173913%"></div>
+<pre>Definition trans_postwhisker {A B C : Type} {F G : A -&gt; B}
+  (K : B -&gt; C) `{Is01Cat B, Is01Cat C, !Is0Functor K} (gamma : F $=&gt; G)
+  : K o F $=&gt; K o G
+  := fun a =&gt; fmap K (gamma a).</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A transformation in the opposite category is simply a transformation in the original category with the direction swapped. *)</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 41
+Time: 0.001s">
+<div class="time" style="width: 4.3478260869565%"></div>
+<pre>Definition trans_op {A} {B} `{Is01Cat B}
+  (F : A -&gt; B) (G : A -&gt; B) (alpha : F $=&gt; G)
+  : Transformation (A:=A^op) (B:=fun _ =&gt; B^op) G (F : A^op -&gt; B^op)
+  := alpha.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Naturality *)
+
+(** A transformation is 1-natural if there exists a 2-cell witnessing the naturality square. The codomain of the transformation must be a wild 1-category. *)</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 48
+Time: 0.008s">
+<div class="time" style="width: 34.782608695652%"></div>
+<pre>Class Is1Natural {A B : Type} `{IsGraph A, Is1Cat B}
+  (F : A -&gt; B) `{!Is0Functor F} (G : A -&gt; B) `{!Is0Functor G}
+  (alpha : F $=&gt; G) := Build_Is1Natural' {
+  isnat {a a'} (f : a $-&gt; a') : alpha a' $o fmap F f $== fmap G f $o alpha a;
+  (** We also include the transposed naturality square in the definition so that opposite natural transformations are definitionally involutive. In most cases, this will be constructed to be the inverse of the [isnat] field. *)
+  isnat_tr {a a'} (f : a $-&gt; a') : fmap G f $o alpha a $== alpha a' $o fmap F f;
+}.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments Is1Natural {A B} {isgraph_A}
+  {isgraph_B} {is2graph_B} {is01cat_B} {is1cat_B}
+  F {is0functor_F} G {is0functor_G} alpha : rename.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments isnat {_ _ _ _ _ _ _ _ _ _ _} alpha {alnat _ _} f : rename.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments isnat_tr {_ _ _ _ _ _ _ _ _ _ _} alpha {alnat _ _} f : rename.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We coerce naturality proofs to their naturality square as the [isnat] projection can be unwieldy in certain situations where the transformation is difficult to write down. This allows for the naturality proof to be used directly. *)</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Coercion isnat : Is1Natural &gt;-&gt; Funclass.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 62
+Time: 0.003s">
+<div class="time" style="width: 13.04347826087%"></div>
+<pre>
+
+Definition Build_Is1Natural {A B : Type} `{IsGraph A} `{Is1Cat B}
+  {F G : A -&gt; B} `{!Is0Functor F, !Is0Functor G} (alpha : F $=&gt; G)
+  (isnat : forall a a' (f : a $-&gt; a'), alpha a' $o fmap F f $== fmap G f $o alpha a)
+  : Is1Natural F G alpha.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 68
+Time: 0.002s">
+<div class="time" style="width: 8.695652173913%"></div>
+<pre>
+  snapply Build_Is1Natural'.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact isnat.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a a' f.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (isnat a a' f)^$.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The identity transformation is 1-natural. *)</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 75
+Time: 0.001s">
+<div class="time" style="width: 4.3478260869565%"></div>
+<pre>Instance is1natural_id {A B : Type} `{IsGraph A} `{Is1Cat B}
+  (F : A -&gt; B) `{!Is0Functor F}
+  : Is1Natural F F (trans_id F).</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_Is1Natural.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros a b f; cbn.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 80
+Time: 0.001s">
+<div class="time" style="width: 4.3478260869565%"></div>
+<pre>
+  exact (cat_idl _ $@ (cat_idr _)^$).</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The composite of 1-natural transformations is 1-natural. *)</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 84
+Time: 0.005s">
+<div class="time" style="width: 21.739130434783%"></div>
+<pre>Instance is1natural_comp {A B : Type} `{IsGraph A} `{Is1Cat B}
+  {F G K : A -&gt; B} `{!Is0Functor F} `{!Is0Functor G} `{!Is0Functor K}
+  (gamma : G $=&gt; K) `{!Is1Natural G K gamma}
+  (alpha : F $=&gt; G) `{!Is1Natural F G alpha}
+  : Is1Natural F K (trans_comp gamma alpha).</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_Is1Natural.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros a b f; unfold trans_comp; cbn.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 91
+Time: 0.001s">
+<div class="time" style="width: 4.3478260869565%"></div>
+<pre>
+  refine (cat_assoc _ _ _ $@ (_ $@L isnat alpha f) $@ _).</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 92
+Time: 0.001s">
+<div class="time" style="width: 4.3478260869565%"></div>
+<pre>
+  refine (cat_assoc_opp _ _ _ $@ (isnat gamma f $@R _) $@ _).</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply cat_assoc.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 94
+Time: 0.002s">
+<div class="time" style="width: 8.695652173913%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Prewhiskering a transformation preserves naturality. *)</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 97
+Time: 0.006s">
+<div class="time" style="width: 26.086956521739%"></div>
+<pre>Instance is1natural_prewhisker {A B C : Type} {F G : B -&gt; C} (K : A -&gt; B)
+  `{IsGraph A, Is01Cat B, Is1Cat C, !Is0Functor F, !Is0Functor G, !Is0Functor K}
+  (gamma : F $=&gt; G) `{L : !Is1Natural F G gamma}
+  : Is1Natural (F o K) (G o K) (trans_prewhisker gamma K).</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_Is1Natural.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y f; unfold trans_prewhisker; cbn.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (isnat gamma _).</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 104
+Time: 0.001s">
+<div class="time" style="width: 4.3478260869565%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Postwhiskering a transformation preserves naturality. *)</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 107
+Time: 0.008s">
+<div class="time" style="width: 34.782608695652%"></div>
+<pre>Instance is1natural_postwhisker {A B C : Type} {F G : A -&gt; B} (K : B -&gt; C)
+  `{IsGraph A, Is1Cat B, Is1Cat C, !Is0Functor F, !Is0Functor G,
+    !Is0Functor K, !Is1Functor K}
+  (gamma : F $=&gt; G) `{L : !Is1Natural F G gamma}
+  : Is1Natural (K o F) (K o G) (trans_postwhisker K gamma).</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_Is1Natural.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y f; unfold trans_postwhisker; cbn.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 114
+Time: 0.001s">
+<div class="time" style="width: 4.3478260869565%"></div>
+<pre>
+  refine (_^$ $@ _ $@ _).</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 115
+Time: 0.005s">
+<div class="time" style="width: 21.739130434783%"></div>
+<pre>
+  1,3: rapply fmap_comp.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 116
+Time: 0.003s">
+<div class="time" style="width: 13.04347826087%"></div>
+<pre>
+  rapply fmap2.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (isnat gamma _).</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 118
+Time: 0.002s">
+<div class="time" style="width: 8.695652173913%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Modifying a transformation to something pointwise equal preserves naturality. *)</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 121
+Time: 0.003s">
+<div class="time" style="width: 13.04347826087%"></div>
+<pre>Definition is1natural_homotopic {A B : Type} `{Is01Cat A} `{Is1Cat B}
+  {F : A -&gt; B} `{!Is0Functor F} {G : A -&gt; B} `{!Is0Functor G}
+  {alpha : F $=&gt; G} (gamma : F $=&gt; G) `{!Is1Natural F G gamma}
+  (p : forall a, alpha a $== gamma a)
+  : Is1Natural F G alpha.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 125
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 126
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_Is1Natural.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros a b f.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 128
+Time: 0.001s">
+<div class="time" style="width: 4.3478260869565%"></div>
+<pre>
+  exact ((p b $@R _) $@ isnat gamma f $@ (_ $@L (p a)^$)).</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 129
+Time: 0.001s">
+<div class="time" style="width: 4.3478260869565%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 130
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The opposite of a natural transformation is natural. *)</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 132
+Time: 0.004s">
+<div class="time" style="width: 17.391304347826%"></div>
+<pre>Instance is1natural_op A B `{Is01Cat A} `{Is1Cat B}
+  (F : A -&gt; B) `{!Is0Functor F} (G : A -&gt; B) `{!Is0Functor G}
+  (alpha : F $=&gt; G) `{!Is1Natural F G alpha}
+  : Is1Natural (G : A^op -&gt; B^op) (F : A^op -&gt; B^op) (trans_op F G alpha).</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 135
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold op.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 137
+Time: 0.002s">
+<div class="time" style="width: 8.695652173913%"></div>
+<pre>
+  snapply Build_Is1Natural'.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a b.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 139
+Time: 0.001s">
+<div class="time" style="width: 4.3478260869565%"></div>
+<pre>
+    exact (isnat_tr alpha).</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a b.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 141
+Time: 0.001s">
+<div class="time" style="width: 4.3478260869565%"></div>
+<pre>
+    exact (isnat alpha).</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 142
+Time: 0.001s">
+<div class="time" style="width: 4.3478260869565%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Natural transformations *)
+
+(** Here we give the bundled definition of a natural transformation which can be more convenient to work with in certain situations. It forms the Hom type of the functor category. *)
+
+</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 148
+Time: 0.003s">
+<div class="time" style="width: 13.04347826087%"></div>
+<pre>Record NatTrans {A B : Type} `{IsGraph A} `{Is1Cat B} {F G : A -&gt; B}
+  {ff : Is0Functor F} {fg : Is0Functor G} := {
+  #[reversible=no]
+  trans_nattrans :&gt; F $=&gt; G;
+  is1natural_nattrans :: Is1Natural F G trans_nattrans;
+}.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments NatTrans {A B} {isgraph_A}
+  {isgraph_B} {is2graph_B} {is01cat_B} {is1cat_B}
+  F G {is0functor_F} {is0functor_G} : rename.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments Build_NatTrans {A B isgraph_A isgraph_B is2graph_B is01cat_B is1cat_B
+  F G is0functor_F is0functor_G} alpha isnat_alpha : rename.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 159
+Time: 0.009s">
+<div class="time" style="width: 39.130434782609%"></div>
+<pre>
+
+Definition issig_NatTrans {A B : Type} `{IsGraph A} `{Is1Cat B} (F G : A -&gt; B)
+  {ff : Is0Functor F} {fg : Is0Functor G}
+  : _ &lt;~&gt; NatTrans F G := ltac:(issig).</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 163
+Time: 0.001s">
+<div class="time" style="width: 4.3478260869565%"></div>
+<pre>
+
+Definition nattrans_id {A B : Type} (F : A -&gt; B)
+  `{IsGraph A, Is1Cat B, !Is0Functor F}
+  : NatTrans F F
+  := Build_NatTrans (trans_id F) _.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 168
+Time: 0.004s">
+<div class="time" style="width: 17.391304347826%"></div>
+<pre>
+
+Definition nattrans_comp {A B : Type} {F G K : A -&gt; B}
+  `{IsGraph A, Is1Cat B, !Is0Functor F, !Is0Functor G, !Is0Functor K}
+  : NatTrans G K -&gt; NatTrans F G -&gt; NatTrans F K
+  := fun alpha beta =&gt; Build_NatTrans (trans_comp alpha beta) _.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 173
+Time: 0.007s">
+<div class="time" style="width: 30.434782608696%"></div>
+<pre>
+
+Definition nattrans_prewhisker {A B C : Type} {F G : B -&gt; C}
+  `{IsGraph A, Is1Cat B, Is1Cat C, !Is0Functor F, !Is0Functor G}
+  (alpha : NatTrans F G) (K : A -&gt; B) `{!Is0Functor K} 
+  : NatTrans (F o K) (G o K)
+  := Build_NatTrans (trans_prewhisker alpha K) _.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 179
+Time: 0.023s">
+<div class="time" style="width: 100%"></div>
+<pre>
+
+Definition nattrans_postwhisker {A B C : Type} {F G : A -&gt; B} (K : B -&gt; C)
+  `{IsGraph A, Is1Cat B, Is1Cat C, !Is0Functor F, !Is0Functor G,
+    !Is0Functor K, !Is1Functor K} 
+  : NatTrans F G -&gt; NatTrans (K o F) (K o G)
+  := fun alpha =&gt; Build_NatTrans (trans_postwhisker K alpha) _.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 185
+Time: 0.004s">
+<div class="time" style="width: 17.391304347826%"></div>
+<pre>
+
+Definition nattrans_op {A B : Type} `{Is01Cat A} `{Is1Cat B}
+  {F G : A -&gt; B} `{!Is0Functor F, !Is0Functor G}
+  : NatTrans F G
+    -&gt; NatTrans (A:=A^op) (B:=B^op) (G : A^op -&gt; B^op) (F : A^op -&gt; B^op)
+  := fun alpha =&gt; Build_NatTrans (trans_op F G alpha) _.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 191
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Natural equivalences *)
+
+(** Natural equivalences are families of equivalences that are natural. *)</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 195
+Time: 0.003s">
+<div class="time" style="width: 13.04347826087%"></div>
+<pre>Record NatEquiv {A B : Type} `{IsGraph A} `{HasEquivs B}
+  {F G : A -&gt; B} `{!Is0Functor F, !Is0Functor G} := {
+  #[reversible=no]
+  cat_equiv_natequiv :&gt; forall a, F a $&lt;~&gt; G a ;
+  is1natural_natequiv :: Is1Natural F G (fun a =&gt; cat_equiv_natequiv a) ;
+}.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments NatEquiv {A B} {isgraph_A}
+  {isgraph_B} {is2graph_B} {is01cat_B} {is1cat_B} {hasequivs_B}
+  F G {is0functor_F} {is0functor_G} : rename.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 204
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments Build_NatEquiv {A B} {isgraph_A}
+  {isgraph_B} {is2graph_B} {is01cat_B} {is1cat_B} {hasequivs_B}
+  F G {is0functor_F} {is0functor_G} e isnat_e: rename.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 207
+Time: 0.008s">
+<div class="time" style="width: 34.782608695652%"></div>
+<pre>
+
+Definition issig_NatEquiv {A B : Type} `{IsGraph A} `{HasEquivs B}
+  (F G : A -&gt; B) `{!Is0Functor F, !Is0Functor G}
+  : _ &lt;~&gt; NatEquiv F G := ltac:(issig).</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 211
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** From a given natural equivalence, we can get the underlying natural transformation. *)</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 213
+Time: 0.001s">
+<div class="time" style="width: 4.3478260869565%"></div>
+<pre>Lemma nattrans_natequiv {A B : Type} `{IsGraph A} `{HasEquivs B}
+  {F G : A -&gt; B} `{!Is0Functor F, !Is0Functor G}
+  : NatEquiv F G -&gt; NatTrans F G.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 215
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 216
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros alpha.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 217
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  napply Build_NatTrans.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 218
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (is1natural_natequiv alpha).</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 219
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 220
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Throws a warning, but can probably be ignored. *)</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 222
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Global Set Warnings "-ambiguous-paths".</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 222
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Coercion nattrans_natequiv : NatEquiv &gt;-&gt; NatTrans.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 223
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The above coercion sometimes doesn't trigger when it should, so we add the following. *)</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 225
+Time: 0.002s">
+<div class="time" style="width: 8.695652173913%"></div>
+<pre>Definition isnat_natequiv {A B : Type} `{IsGraph A} `{HasEquivs B}
+  {F G : A -&gt; B} `{!Is0Functor F, !Is0Functor G} (alpha : NatEquiv F G)
+  {a a' : A} (f : a $-&gt; a')
+  := isnat (nattrans_natequiv alpha) f.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Often we wish to build a natural equivalence from a natural transformation and a pointwise proof that it is an equivalence. *)</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 230
+Time: 0.002s">
+<div class="time" style="width: 8.695652173913%"></div>
+<pre>Definition Build_NatEquiv' {A B : Type} `{IsGraph A} `{HasEquivs B}
+  {F G : A -&gt; B} `{!Is0Functor F, !Is0Functor G}
+  (alpha : NatTrans F G) `{forall a, CatIsEquiv (alpha a)}
+  : NatEquiv F G.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 233
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 234
+Time: 0.001s">
+<div class="time" style="width: 4.3478260869565%"></div>
+<pre>
+  snapply Build_NatEquiv.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 235
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 236
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro a.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 236
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (Build_CatEquiv (alpha a)).</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 237
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 238
+Time: 0.002s">
+<div class="time" style="width: 8.695652173913%"></div>
+<pre> snapply Build_Is1Natural'.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 238
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 239
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a a' f.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 239
+Time: 0.002s">
+<div class="time" style="width: 8.695652173913%"></div>
+<pre>
+      refine ((cate_buildequiv_fun _ $@R _) $@ _ $@ (_ $@L cate_buildequiv_fun _)^$).</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 240
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (isnat alpha _).</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 241
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 242
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a a' f.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 242
+Time: 0.001s">
+<div class="time" style="width: 4.3478260869565%"></div>
+<pre>
+      refine ((_ $@L cate_buildequiv_fun _) $@ _ $@ (cate_buildequiv_fun _ $@R _)^$).</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 243
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (isnat_tr alpha _).</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 244
+Time: 0.001s">
+<div class="time" style="width: 4.3478260869565%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 245
+Time: 0.001s">
+<div class="time" style="width: 4.3478260869565%"></div>
+<pre>
+
+Definition natequiv_id {A B : Type} `{IsGraph A} `{HasEquivs B}
+  {F : A -&gt; B} `{!Is0Functor F}
+  : NatEquiv F F
+  := Build_NatEquiv' (nattrans_id F).</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 250
+Time: 0.004s">
+<div class="time" style="width: 17.391304347826%"></div>
+<pre>
+
+Definition natequiv_compose {A B} {F G H : A -&gt; B} `{IsGraph A} `{HasEquivs B}
+  `{!Is0Functor F, !Is0Functor G, !Is0Functor H}
+  (alpha : NatEquiv G H) (beta : NatEquiv F G)
+  : NatEquiv F H
+  := Build_NatEquiv' (nattrans_comp alpha beta).</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 256
+Time: 0.009s">
+<div class="time" style="width: 39.130434782609%"></div>
+<pre>
+
+Definition natequiv_prewhisker {A B C} {H K : B -&gt; C}
+  `{IsGraph A, HasEquivs B, HasEquivs C, !Is0Functor H, !Is0Functor K}
+  (alpha : NatEquiv H K) (F : A -&gt; B) `{!Is0Functor F}
+  : NatEquiv (H o F) (K o F)
+  := Build_NatEquiv' (nattrans_prewhisker alpha F).</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 262
+Time: 0.004s">
+<div class="time" style="width: 17.391304347826%"></div>
+<pre>
+
+Definition natequiv_postwhisker {A B C} {F G : A -&gt; B}
+  `{IsGraph A, HasEquivs B, HasEquivs C, !Is0Functor F, !Is0Functor G}
+   (K : B -&gt; C) (alpha : NatEquiv F G) `{!Is0Functor K, !Is1Functor K}
+  : NatEquiv (K o F) (K o G).</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 267
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 268
+Time: 0.001s">
+<div class="time" style="width: 4.3478260869565%"></div>
+<pre>
+  srefine (Build_NatEquiv' (nattrans_postwhisker K alpha)).</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 269
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  2: unfold nattrans_postwhisker, trans_postwhisker; cbn.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 270
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  all: exact _.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 271
+Time: 0.001s">
+<div class="time" style="width: 4.3478260869565%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 272
+Time: 0.002s">
+<div class="time" style="width: 8.695652173913%"></div>
+<pre>
+
+Lemma natequiv_op {A B : Type} `{Is01Cat A} `{HasEquivs B}
+  {F G : A -&gt; B} `{!Is0Functor F, !Is0Functor G}
+  : NatEquiv F G -&gt; NatEquiv (G : A^op -&gt; B^op) F.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 276
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 277
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [a n].</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 278
+Time: 0.001s">
+<div class="time" style="width: 4.3478260869565%"></div>
+<pre>
+  snapply Build_NatEquiv.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 279
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact a.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 280
+Time: 0.003s">
+<div class="time" style="width: 13.04347826087%"></div>
+<pre>
+  by rapply is1natural_op.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 281
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 282
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We can form the inverse natural equivalence by inverting each map in the family. The naturality proof follows from standard lemmas about inverses. *)</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 284
+Time: 0.001s">
+<div class="time" style="width: 4.3478260869565%"></div>
+<pre>Definition natequiv_inverse {A B : Type} `{IsGraph A} `{HasEquivs B}
+  {F G : A -&gt; B} `{!Is0Functor F, !Is0Functor G}
+  : NatEquiv F G -&gt; NatEquiv G F.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 286
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 287
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [alpha I].</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 288
+Time: 0.001s">
+<div class="time" style="width: 4.3478260869565%"></div>
+<pre>
+  snapply Build_NatEquiv.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 289
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact (fun a =&gt; (alpha a)^-1$).</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 290
+Time: 0.001s">
+<div class="time" style="width: 4.3478260869565%"></div>
+<pre>
+  snapply Build_Is1Natural'.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 291
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 292
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros X Y f.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 292
+Time: 0.001s">
+<div class="time" style="width: 4.3478260869565%"></div>
+<pre>
+    apply vinverse, I.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 293
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 294
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros X Y f.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 294
+Time: 0.001s">
+<div class="time" style="width: 4.3478260869565%"></div>
+<pre>
+    apply hinverse, I.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 295
+Time: 0.001s">
+<div class="time" style="width: 4.3478260869565%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 296
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** This lemma might seem unnecessary since as functions ((F o G) o K) and (F o (G o K)) are definitionally equal. But the functor instances of both sides are different. This can be a nasty trap since you cannot see this difference clearly. *)</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 298
+Time: 0.006s">
+<div class="time" style="width: 26.086956521739%"></div>
+<pre>Definition natequiv_functor_assoc_ff_f {A B C D : Type}
+  `{IsGraph A, HasEquivs B, HasEquivs C, HasEquivs D} 
+  (F : C -&gt; D) (G : B -&gt; C) (K : A -&gt; B)
+  `{!Is0Functor F, !Is0Functor G, !Is0Functor K}
+  : NatEquiv ((F o G) o K) (F o (G o K)).</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 302
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 303
+Time: 0.001s">
+<div class="time" style="width: 4.3478260869565%"></div>
+<pre>
+  snapply Build_NatEquiv.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 304
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: intro; reflexivity.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 305
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_Is1Natural.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 306
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros X Y f.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 307
+Time: 0.002s">
+<div class="time" style="width: 8.695652173913%"></div>
+<pre>
+  refine (cat_prewhisker (id_cate_fun _) _ $@ cat_idl _ $@ _^$).</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 308
+Time: 0.001s">
+<div class="time" style="width: 4.3478260869565%"></div>
+<pre>
+  exact (cat_postwhisker _ (id_cate_fun _) $@ cat_idr _).</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 309
+Time: 0.002s">
+<div class="time" style="width: 8.695652173913%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 310
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Pointed natural transformations *)
+
+</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 313
+Time: 0.004s">
+<div class="time" style="width: 17.391304347826%"></div>
+<pre>Definition PointedTransformation {B C : Type} `{Is1Cat B, Is1Gpd C}
+  `{IsPointed B, IsPointed C} (F G : B --&gt;* C)
+  := {eta : F $=&gt; G &amp; eta (point _) $== bp_pointed F $@ (bp_pointed G)^$}.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 315
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation "F $=&gt;* G" := (PointedTransformation F G) (at level 70).</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 317
+Time: 0.002s">
+<div class="time" style="width: 8.695652173913%"></div>
+<pre>
+
+Definition ptransformation_inverse {B C : Type} `{Is1Cat B, Is1Gpd C}
+  `{IsPointed B, IsPointed C} (F G : B --&gt;* C)
+  : (F $=&gt;* G) -&gt; (G $=&gt;* F).</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 321
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 322
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+intros [h p].</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 323
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exists (fun x =&gt; (h x)^$).</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 324
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (gpd_rev2 p $@ _).</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 325
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (gpd_rev_pp _ _ $@ _).</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 326
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_ $@L _).</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 327
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply gpd_rev_rev.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 328
+Time: 0.001s">
+<div class="time" style="width: 4.3478260869565%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 329
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation "h ^*$" := (ptransformation_inverse _ _ h) (at level 5).</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 331
+Time: 0.003s">
+<div class="time" style="width: 13.04347826087%"></div>
+<pre>
+
+Definition ptransformation_compose {B C : Type} `{Is1Cat B, Is1Gpd C}
+  `{IsPointed B, IsPointed C} {F0 F1 F2 : B --&gt;* C}
+  : (F0 $=&gt;* F1) -&gt; (F1 $=&gt;* F2) -&gt; (F0 $=&gt;* F2).</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 335
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 336
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [h0 p0] [h1 p1].</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 337
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exists (trans_comp h1 h0).</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 338
+Time: 0.001s">
+<div class="time" style="width: 4.3478260869565%"></div>
+<pre>
+  refine ((p1 $@R _) $@ (_ $@L p0) $@ _);
+    unfold gpd_comp; cbn.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 340
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (cat_assoc _ _ _ $@ _).</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 341
+Time: 0.001s">
+<div class="time" style="width: 4.3478260869565%"></div>
+<pre>
+  rapply (fmap _).</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 342
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply gpd_h_Vh.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 343
+Time: 0.003s">
+<div class="time" style="width: 13.04347826087%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 344
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation "h $@* k" := (ptransformation_compose h k) (at level 40).</pre>
+</div>
+<div class="code" title="File: NatTrans.v
+Line: 347
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* TODO: *)
+(* Morphisms of natural transformations - Modifications *)
+(* Since [Transformation] is dependent, we can define a modification to be a transformation together with a cylinder condition. This doesn't seem to be too useful as of yet however. We would also need better ways to write down cylinders. *)
+
+
+</pre>
+</div>
+</body>
+</html>
+

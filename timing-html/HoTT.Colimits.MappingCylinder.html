@@ -1,0 +1,958 @@
+<html>
+<head>
+<title>MappingCylinder.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for MappingCylinder.v</h1>
+
+<div class="code" title="File: MappingCylinder.v
+Line: 1
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>(** * Mapping Cylinders *)
+
+</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 2
+Time: 0.032s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import HoTT.Basics Cubical.DPath Cubical.PathSquare.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 2
+Time: 0.011s">
+<div class="time" style="width: 34.375%"></div>
+<pre>
+Require Import Colimits.Pushout.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope path_scope.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** As in topology, the mapping cylinder of a function [f : A -&gt; B] is a way to replace it with an equivalent cofibration (dually to how [hfiber] replaces it with an equivalent fibration).  We can't talk *internally* in type theory about cofibrations, but we can say metatheoretically what they are: functions with the isomorphism extension property.  So while we can't literally say "let [f] be a cofibration" we can do a mostly equivalent thing and say "let [f] be a map and consider its mapping cylinder".  Replacing a map by a cofibration can be useful because it allows us to make more equalities true definitionally. *)
+
+(** ** Definitions *)
+
+(** We define the mapping cylinder as the pushout of [f] and an identity map.  Peter Lumsdaine has given a definition of HIT mapping cylinders that are dependent on the codomain, so that the second factor is not just an equivalence but a trivial fibration.  However, at the moment we don't have a need for that.  *)
+
+</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Cyl {A B : Type} (f : A -&gt; B) : Type
+  := Pushout idmap f.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section MappingCylinder.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {A B : Type} {f : A -&gt; B}.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition cyl (a : A) : Cyl f
+    := pushl a.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition cyr (b : B) : Cyl f
+    := pushr b.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition cyglue (a : A)
+    : cyl a = cyr (f a)
+    := pglue a.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Section CylInd.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    Context (P : Cyl f -&gt; Type)
+            (cyla : forall a, P (cyl a))
+            (cylb : forall b, P (cyr b))
+            (cylg : forall a, DPath P (cyglue a) (cyla a) (cylb (f a))).</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+    Definition Cyl_ind : forall c, P c
+      := Pushout_ind _ cyla cylb cylg.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 33
+Time: 0.001s">
+<div class="time" style="width: 3.125%"></div>
+<pre>
+
+    Definition Cyl_ind_beta_cyglue (a : A)
+      : apD Cyl_ind (cyglue a) = cylg a
+      := Pushout_ind_beta_pglue _ _ _ _ _.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  End CylInd.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Section CylRec.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    Context {P : Type} (cyla : A -&gt; P) (cylb : B -&gt; P) (cylg : cyla == cylb o f).</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+    Definition Cyl_rec : Cyl f -&gt; P
+      := Pushout_rec _ cyla cylb cylg.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+    Definition Cyl_rec_beta_cyglue (a : A)
+      : ap Cyl_rec (cyglue a) = cylg a
+      := Pushout_rec_beta_pglue _ _ _ _ _.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  End CylRec.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition pr_cyl : Cyl f &lt;~&gt; B.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (** Rather than adjointifying, we give all parts of the equivalence explicitly, so we can be sure of retaining the computational behavior of [eissect] and [eisretr].  However, it's easier to prove [eisadj] on the other side, so we reverse the equivalence first. *)
+   </pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>symmetry.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 56
+Time: 0.001s">
+<div class="time" style="width: 3.125%"></div>
+<pre>
+    srapply Build_Equiv.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1:exact cyr.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply Build_IsEquiv.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> srapply Cyl_rec.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact f.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact idmap.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> srapply Cyl_ind.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a; cbn.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        symmetry; apply cyglue.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros b; reflexivity.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a; cbn.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply dp_paths_FFlr.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 69
+Time: 0.001s">
+<div class="time" style="width: 3.125%"></div>
+<pre>
+        rewrite Cyl_rec_beta_cyglue.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply concat_pV_p.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros b; reflexivity.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros b; reflexivity.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 73
+Time: 0.002s">
+<div class="time" style="width: 6.25%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 74
+Time: 0.001s">
+<div class="time" style="width: 3.125%"></div>
+<pre>
+
+  Definition ap_pr_cyl_cyglue (a : A)
+    : ap pr_cyl (cyglue a) = 1
+    := Cyl_rec_beta_cyglue _ _ _ a.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The original map [f] factors definitionally through [Cyl f]. *)
+ </pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition pr_cyl_cyl (a : A) : pr_cyl (cyl a) = f a
+    := 1.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 82
+Time: 0.001s">
+<div class="time" style="width: 3.125%"></div>
+<pre>
+
+End MappingCylinder.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Sometimes we have to specify the map explicitly. *)</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition cyl' {A B} (f : A -&gt; B) : A -&gt; Cyl f := cyl.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Definition pr_cyl' {A B} (f : A -&gt; B) : Cyl f -&gt; B := pr_cyl.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Functoriality *)
+
+</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section FunctorCyl.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 90
+Time: 0.001s">
+<div class="time" style="width: 3.125%"></div>
+<pre>
+  Context {A B A' B': Type} {f : A -&gt; B} {f' : A' -&gt; B'}
+          {ga : A -&gt; A'} {gb : B -&gt; B'}
+          (g : f' o ga == gb o f).</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition functor_cyl : Cyl f -&gt; Cyl f'.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply Cyl_rec.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (cyl o ga).</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (cyr o gb).</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      refine (_ @ ap cyr (g a)).</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (cyglue (ga a)).</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 103
+Time: 0.001s">
+<div class="time" style="width: 3.125%"></div>
+<pre>
+
+  Definition ap_functor_cyl_cyglue (a : A)
+    : ap functor_cyl (cyglue a) = cyglue (ga a) @ ap cyr (g a)
+    := Cyl_rec_beta_cyglue _ _ _ a.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The benefit of passing to the mapping cylinder is that it makes a square commute definitionally. *)
+ </pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition functor_cyl_cyl (a : A) : cyl (ga a) = functor_cyl (cyl a)
+    := 1.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The other square also commutes, though not definitionally. *)
+ </pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 114
+Time: 0.003s">
+<div class="time" style="width: 9.375%"></div>
+<pre>Definition pr_functor_cyl (c : Cyl f)
+    : pr_cyl (functor_cyl c) = gb (pr_cyl c)
+    := ap (pr_cyl o functor_cyl) (eissect pr_cyl c)^.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      
+  Definition pr_functor_cyl_cyl (a : A)
+    : pr_functor_cyl (cyl a) = g a.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (** Here we need [eissect pr_cyl (cyl a)] to compute. *)
+   </pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 122
+Time: 0.008s">
+<div class="time" style="width: 25%"></div>
+<pre>refine (ap _ (inv_V _) @ _).</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 122
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (ap_compose functor_cyl pr_cyl (cyglue a) @ _).</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (ap _ (ap_functor_cyl_cyglue a) @ _).</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (ap_pp _ _ _ @ _).</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 125
+Time: 0.013s">
+<div class="time" style="width: 40.625%"></div>
+<pre>
+    refine (whiskerR (ap_pr_cyl_cyglue (ga a)) _ @ concat_1p _ @ _).</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 126
+Time: 0.002s">
+<div class="time" style="width: 6.25%"></div>
+<pre>
+    refine ((ap_compose cyr _ (g a))^ @ _).</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply ap_idmap.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 128
+Time: 0.004s">
+<div class="time" style="width: 12.5%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 129
+Time: 0.002s">
+<div class="time" style="width: 6.25%"></div>
+<pre>
+
+End FunctorCyl.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 131
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Coequalizers *)
+
+(** A particularly useful application is to replace a map of coequalizers with one where both squares commute definitionally. *)
+
+</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section CylCoeq.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 136
+Time: 0.001s">
+<div class="time" style="width: 3.125%"></div>
+<pre>
+  Context {B A f g B' A' f' g'}
+          {h : B -&gt; B'} {k : A -&gt; A'}
+          (p : k o f == f' o h) (q : k o g == g' o h).</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition CylCoeq : Type
+    := Coeq (functor_cyl p) (functor_cyl q).</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 142
+Time: 0.001s">
+<div class="time" style="width: 3.125%"></div>
+<pre>
+
+  Definition cyl_cylcoeq : Coeq f g -&gt; CylCoeq
+    := functor_coeq cyl cyl (functor_cyl_cyl p) (functor_cyl_cyl q).</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 145
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition ap_cyl_cylcoeq_cglue (b : B)
+    : ap cyl_cylcoeq (cglue b) = cglue (cyl b).</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 148
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 149
+Time: 0.001s">
+<div class="time" style="width: 3.125%"></div>
+<pre>
+    etransitivity.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 150
+Time: 0.002s">
+<div class="time" style="width: 6.25%"></div>
+<pre>
+    1:rapply functor_coeq_beta_cglue.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (concat_p1 _ @ concat_1p _).</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 152
+Time: 0.002s">
+<div class="time" style="width: 6.25%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 153
+Time: 0.003s">
+<div class="time" style="width: 9.375%"></div>
+<pre>
+
+  Definition pr_cylcoeq : CylCoeq &lt;~&gt; Coeq f' g'
+    := equiv_functor_coeq pr_cyl pr_cyl (pr_functor_cyl p) (pr_functor_cyl q).</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 156
+Time: 0.003s">
+<div class="time" style="width: 9.375%"></div>
+<pre>
+
+  Definition ap_pr_cylcoeq_cglue (x : Cyl h)
+    : PathSquare (ap pr_cylcoeq (cglue x)) (cglue (pr_cyl x))
+                 (ap coeq (pr_functor_cyl p x))
+                 (ap coeq (pr_functor_cyl q x)).</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply sq_path.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 163
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply moveR_pM.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 164
+Time: 0.002s">
+<div class="time" style="width: 6.25%"></div>
+<pre>
+    rewrite &lt;- (ap_V coeq).</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 165
+Time: 0.003s">
+<div class="time" style="width: 9.375%"></div>
+<pre>
+    rapply functor_coeq_beta_cglue.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 166
+Time: 0.004s">
+<div class="time" style="width: 12.5%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition pr_cyl_cylcoeq
+    : functor_coeq h k p q == pr_cylcoeq o cyl_cylcoeq.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros c.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 172
+Time: 0.003s">
+<div class="time" style="width: 9.375%"></div>
+<pre>
+    refine (_ @ functor_coeq_compose cyl cyl (functor_cyl_cyl p) (functor_cyl_cyl q)
+              pr_cyl pr_cyl (pr_functor_cyl p) (pr_functor_cyl q) c).</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 174
+Time: 0.004s">
+<div class="time" style="width: 12.5%"></div>
+<pre>
+    srapply functor_coeq_homotopy.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 175
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1-2:reflexivity.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 176
+Time: 0.016s">
+<div class="time" style="width: 50%"></div>
+<pre>
+    all:intros b; cbn.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 177
+Time: 0.001s">
+<div class="time" style="width: 3.125%"></div>
+<pre>
+    all:refine (concat_1p _ @ concat_1p _ @ _ @ (concat_p1 _)^).</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 178
+Time: 0.017s">
+<div class="time" style="width: 53.125%"></div>
+<pre>
+    all:apply pr_functor_cyl_cyl.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 179
+Time: 0.004s">
+<div class="time" style="width: 12.5%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 180
+Time: 0.003s">
+<div class="time" style="width: 9.375%"></div>
+<pre>
+
+End CylCoeq.</pre>
+</div>
+<div class="code" title="File: MappingCylinder.v
+Line: 183
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

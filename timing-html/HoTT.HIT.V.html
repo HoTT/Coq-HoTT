@@ -1,0 +1,6238 @@
+<html>
+<head>
+<title>V.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for V.v</h1>
+
+<div class="code" title="File: V.v
+Line: 1
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>(** * The cumulative hierarchy [V]. *)
+
+</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 2
+Time: 0.037s">
+<div class="time" style="width: 14.509803921569%"></div>
+<pre>Require Import HoTT.Basics HoTT.Types.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 2
+Time: 0.004s">
+<div class="time" style="width: 1.5686274509804%"></div>
+<pre>
+Require Import HSet TruncType.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 3
+Time: 0.021s">
+<div class="time" style="width: 8.2352941176471%"></div>
+<pre>
+Require Import Colimits.SpanPushout.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 4
+Time: 0.011s">
+<div class="time" style="width: 4.3137254901961%"></div>
+<pre>
+Require Import HoTT.Truncations.Core Colimits.Quotient.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope nat_scope.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope path_scope.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Bitotal relation *)
+
+</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 10
+Time: 0.001s">
+<div class="time" style="width: 0.3921568627451%"></div>
+<pre>Definition bitotal {A B : Type} (R : A -&gt; B -&gt; HProp) :=
+   (forall a : A, hexists (fun (b : B) =&gt; R a b))
+ * (forall b : B, hexists (fun (a : A) =&gt; R a b)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** The cumulative hierarchy V *)
+
+</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Module Export CumulativeHierarchy.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Private Inductive V@{U' U | U &lt; U'} : Type@{U'} :=
+| set {A : Type@{U}} (f : A -&gt; V) : V.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 18
+Time: 0.001s">
+<div class="time" style="width: 0.3921568627451%"></div>
+<pre>
+
+Axiom setext : forall {A B : Type} (R : A -&gt; B -&gt; HProp)
+  (bitot_R : bitotal R) (h : SPushout R -&gt; V),
+set (h o (spushl R)) = set (h o (spushr R)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Axiom ishset_V : IsHSet V.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Existing Instance ishset_V.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The induction principle.  Annotating the universes here greatly reduces the number of universe variables later in the file.  For example, [function] below went from 279 to 3.  If [V_ind] needs to be generalized in the future, check [function] to make sure things haven't exploded again. *)</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 27
+Time: 0.006s">
+<div class="time" style="width: 2.3529411764706%"></div>
+<pre>Fixpoint V_ind@{U' U u | U &lt; U'} (P : V@{U' U} -&gt; Type@{u})
+  (H_0trunc : forall v : V@{U' U}, IsTrunc 0 (P v))
+  (H_set : forall (A : Type@{U}) (f : A -&gt; V) (H_f : forall a : A, P (f a)), P (set f))
+  (H_setext : forall (A B : Type@{U}) (R : A -&gt; B -&gt; HProp@{U}) (bitot_R : bitotal R)
+    (h : SPushout R -&gt; V) (H_h : forall x : SPushout R, P (h x)),
+    transport@{U' u} _ (setext R bitot_R h) (H_set A (h o spushl R) (H_h oD spushl R))
+      = H_set B (h o spushr R) (H_h oD spushr R) )
+  (v : V)
+: P v
+:= (match v with
+     | set A f =&gt; fun _ _ =&gt; H_set A f (fun a =&gt; V_ind P H_0trunc H_set H_setext (f a))
+    end) H_setext H_0trunc.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We don't need to axiomatize the computation rule because we get it for free thanks to 0-truncation *)
+
+</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>End CumulativeHierarchy.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 41
+Time: 0.006s">
+<div class="time" style="width: 2.3529411764706%"></div>
+<pre>
+
+Definition V_comp_setext (P : V -&gt; Type)
+  (H_0trunc : forall v : V, IsTrunc 0 (P v))
+  (H_set : forall (A : Type) (f : A -&gt; V) (H_f : forall a : A, P (f a)), P (set f))
+  (H_setext : forall (A B : Type) (R : A -&gt; B -&gt; HProp) (bitot_R : bitotal R)
+    (h : SPushout R -&gt; V) (H_h : forall x : SPushout R, P (h x)),
+    (setext R bitot_R h) # (H_set A (h o spushl R) (H_h oD spushl R))
+      = H_set B (h o spushr R) (H_h oD spushr R) )
+  (A B : Type) (R : A -&gt; B -&gt; HProp) (bitot_R : bitotal R) (h : SPushout R -&gt; V)
+: apD (V_ind P H_0trunc H_set H_setext) (setext R bitot_R h)
+  = H_setext A B R bitot_R h ((V_ind P H_0trunc H_set H_setext) oD h).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 53
+Time: 0.003s">
+<div class="time" style="width: 1.1764705882353%"></div>
+<pre>
+  apply path_ishprop.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 54
+Time: 0.003s">
+<div class="time" style="width: 1.1764705882353%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The non-dependent eliminator *)
+
+</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 58
+Time: 0.003s">
+<div class="time" style="width: 1.1764705882353%"></div>
+<pre>Definition V_rec (P : Type)
+  (H_0trunc : IsTrunc 0 P)
+  (H_set : forall (A : Type), (A -&gt; V) -&gt; (A -&gt; P) -&gt; P)
+  (H_setext : forall (A B : Type) (R : A -&gt; B -&gt; HProp) (bitot_R : bitotal R)
+    (h : SPushout R -&gt; V) (H_h : SPushout R -&gt; P),
+    H_set A (h o spushl R) (H_h o spushl R) = H_set B (h o spushr R) (H_h o spushr R) )
+: V -&gt; P.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (V_ind _ _ H_set _).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (transport_const _ _ @ H_setext A B R bitot_R h H_h).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 67
+Time: 0.001s">
+<div class="time" style="width: 0.3921568627451%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 68
+Time: 0.006s">
+<div class="time" style="width: 2.3529411764706%"></div>
+<pre>
+
+Definition V_comp_nd_setext (P : Type)
+  (H_0trunc : IsTrunc 0 P)
+  (H_set : forall (A : Type), (A -&gt; V) -&gt; (A -&gt; P) -&gt; P)
+  (H_setext : forall (A B : Type) (R : A -&gt; B -&gt; HProp) (bitot_R : bitotal R)
+    (h : SPushout R -&gt; V) (H_h : SPushout R -&gt; P),
+    H_set A (h o spushl R) (H_h o spushl R) = H_set B (h o spushr R) (H_h o spushr R) )
+  (A B : Type) (R : A -&gt; B -&gt; HProp) (bitot_R : bitotal R) (h : SPushout R -&gt; V)
+: ap (V_rec P H_0trunc H_set H_setext) (setext R bitot_R h)
+  = H_setext A B R bitot_R h ((V_rec P H_0trunc H_set H_setext) o h).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 79
+Time: 0.002s">
+<div class="time" style="width: 0.7843137254902%"></div>
+<pre>
+  apply path_ishprop.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 80
+Time: 0.002s">
+<div class="time" style="width: 0.7843137254902%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+
+(** ** Alternative induction principle (This is close to the one from the book) *)
+
+</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 85
+Time: 0.001s">
+<div class="time" style="width: 0.3921568627451%"></div>
+<pre>Definition equal_img {A B C : Type} (f : A -&gt; C) (g : B -&gt; C) :=
+   (forall a : A, hexists (fun (b : B) =&gt; f a = g b))
+ * (forall b : B, hexists (fun (a : A) =&gt; f a = g b)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition setext' {A B : Type} (f : A -&gt; V) (g : B -&gt; V) (eq_img : equal_img f g)
+: set f = set g.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 91
+Time: 0.001s">
+<div class="time" style="width: 0.3921568627451%"></div>
+<pre>
+  pose (R := fun a b =&gt; Build_HProp (f a = g b)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  pose (h := spushout_rec R V f g (fun _ _ r =&gt; r)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (setext R eq_img h).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 94
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 95
+Time: 0.001s">
+<div class="time" style="width: 0.3921568627451%"></div>
+<pre>
+
+Definition V_rec' (P : Type)
+  (H_0trunc : IsTrunc 0 P)
+  (H_set : forall (A : Type), (A -&gt; V) -&gt; (A -&gt; P) -&gt; P)
+  (H_setext' : forall (A B : Type) (f : A -&gt; V) (g : B -&gt; V), (equal_img f g) -&gt;
+    forall (H_f : A -&gt; P) (H_g : B -&gt; P), (equal_img H_f H_g) -&gt;
+    (H_set A f H_f) = (H_set B g H_g) )
+: V -&gt; P.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (V_rec _ _ H_set _).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros A B R bitot_R h H_h.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply H_setext'.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro a.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> generalize (fst bitot_R a).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (Trunc_functor (-1)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      intros [b r].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists b.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (ap h (spglue R r)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro b.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> generalize (snd bitot_R b).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (Trunc_functor (-1)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      intros [a r].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists a.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (ap h (spglue R r)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro a.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> generalize (fst bitot_R a).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (Trunc_functor (-1)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      intros [b r].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists b.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (ap H_h (spglue R r)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro b.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> generalize (snd bitot_R b).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (Trunc_functor (-1)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      intros [a r].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists a.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (ap H_h (spglue R r)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 117
+Time: 0.002s">
+<div class="time" style="width: 0.7843137254902%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 118
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Note that the hypothesis H_setext' differs from the one given in section 10.5 of the HoTT book. *)</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 120
+Time: 0.003s">
+<div class="time" style="width: 1.1764705882353%"></div>
+<pre>Definition V_ind' (P : V -&gt; Type)
+  (H_0trunc : forall v : V, IsTrunc 0 (P v))
+  (H_set : forall (A : Type) (f : A -&gt; V) (H_f : forall a : A, P (f a)), P (set f))
+  (H_setext' : forall (A B : Type) (f : A -&gt; V) (g : B -&gt; V)
+    (eq_img: equal_img f g)
+    (H_f : forall a : A, P (f a)) (H_g : forall b : B, P (g b))
+    (H_eqimg : (forall a : A, hexists (fun (b : B) =&gt;
+                  hexists (fun (p:f a = g b) =&gt; p # (H_f a) = H_g b)))
+             * (forall b : B, hexists (fun (a : A) =&gt;
+                  hexists (fun (p:f a = g b) =&gt; p # (H_f a) = H_g b))) ),
+    (setext' f g eq_img) # (H_set A f H_f) = (H_set B g H_g)
+  )
+: forall v : V, P v.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply V_ind with H_set; try assumption.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros A B R bitot_R h H_h.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 135
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  pose (f := h o spushl R : A -&gt; V ).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  pose (g := h o spushr R : B -&gt; V ).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 137
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  pose (H_f := H_h oD spushl R : forall a : A, P (f a)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  pose (H_g := H_h oD spushr R : forall b : B, P (g b)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  assert (eq_img : equal_img f g).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro a.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> generalize (fst bitot_R a).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (Trunc_functor (-1)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      intros [b r].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists b.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (ap h (spglue R r)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro b.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> generalize (snd bitot_R b).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (Trunc_functor (-1)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      intros [a r].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 145
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists a.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 145
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (ap h (spglue R r)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 145
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 145
+Time: 0.002s">
+<div class="time" style="width: 0.7843137254902%"></div>
+<pre>
+  transitivity (transport P (setext' (h o spushl R) (h o spushr R) eq_img)
+      (H_set A (h o spushl R) (H_h oD spushl R))).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 147
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 148
+Time: 0.001s">
+<div class="time" style="width: 0.3921568627451%"></div>
+<pre> apply (ap (fun p =&gt; transport P p (H_set A (h o spushl R) (H_h oD spushl R)))).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 148
+Time: 0.001s">
+<div class="time" style="width: 0.3921568627451%"></div>
+<pre>
+    apply path_ishprop.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (H_setext' A B f g eq_img H_f H_g).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>  split.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro a.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    set (truncb := fst bitot_R a).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 152
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> generalize truncb.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 152
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (Trunc_functor (-1)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros [b Rab].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 154
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists b.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 154
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply tr.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 155
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists (ap h (spglue R Rab)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rhs_V napply (apD H_h (spglue R Rab)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply inverse.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> unfold f, g.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply transport_compose.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros b.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    set (trunca := snd bitot_R b).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> generalize trunca.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (Trunc_functor (-1)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros [a Rab].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists a.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply tr.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 163
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists (ap h (spglue R Rab)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 164
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rhs_V napply (apD H_h (spglue R Rab)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 165
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply inverse.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 166
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> unfold f, g.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 166
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply transport_compose.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 166
+Time: 0.006s">
+<div class="time" style="width: 2.3529411764706%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+
+(** Simpler induction principle when the goal is an hprop *)
+
+</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition V_ind_hprop (P : V -&gt; Type)
+  (H_set : forall (A : Type) (f : A -&gt; V) (H_f : forall a : A, P (f a)), P (set f))
+  (isHProp_P : forall v : V, IsHProp (P v))
+  : forall v : V, P v.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 174
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 175
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (V_ind _ _ H_set _).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply path_ishprop.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+
+Section AssumingUA.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 181
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Context `{ua : Univalence}.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 182
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Membership relation *)
+
+</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition mem (x : V) : V -&gt; HProp.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 186
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simple refine (V_rec' _ _ _ _).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros A f _.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (hexists (fun a : A =&gt; f a = x)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 189
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 190
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 190
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros A B f g eqimg _ _ _.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 191
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_iff_hprop; simpl.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 192
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 193
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro H.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 193
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> refine (Trunc_rec _ H).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 193
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros [a p].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 194
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> generalize (fst eqimg a).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 194
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (Trunc_functor (-1)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 194
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros [b p'].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists b.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> transitivity (f a); auto with path_hints.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro H.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> refine (Trunc_rec _ H).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      intros [b p].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> generalize (snd eqimg b).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (Trunc_functor (-1)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      intros [a p'].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists a.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> transitivity (g b); auto with path_hints.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 198
+Time: 0.001s">
+<div class="time" style="width: 0.3921568627451%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 199
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Declare Scope set_scope.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 201
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Notation "x ∈ v" := (mem x v) : set_scope.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 202
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Open Scope set_scope.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 203
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Subset relation *)
+
+</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 206
+Time: 0.012s">
+<div class="time" style="width: 4.7058823529412%"></div>
+<pre>Definition subset (x : V) (y : V) : HProp
+:= Build_HProp (forall z : V, z ∈ x -&gt; z ∈ y).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 207
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation "x ⊆ y" := (subset x y) : set_scope.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 209
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+
+(** ** Bisimulation relation *)
+(** The equality in [V] lives in [Type@{U'}]. We define the bisimulation relation which is a [U]-small resizing of the equality in [V]: it must live in [HProp_U : Type{U'}], hence the codomain is [HProp@{U}]. We then prove that bisimulation is equality ([bisim_equals_id]), then use it to prove the key lemma [monic_set_present]. *)
+
+(* We define [bisimulation] by double induction on [V]. We first fix the first argument as set(A,f) and define [bisim_aux : V -&gt; HProp], by induction. This is the inner of the two inductions. *)</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 215
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Definition bisim_aux (A : Type) (f : A -&gt; V) (H_f : A -&gt; V -&gt; HProp) : V -&gt; HProp.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 215
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 216
+Time: 0.005s">
+<div class="time" style="width: 1.9607843137255%"></div>
+<pre>
+  apply V_rec' with
+    (fun B g _ =&gt; Build_HProp ( (forall a, hexists (fun b =&gt; H_f a (g b)))
+                               * forall b, hexists (fun a =&gt; H_f a (g b)) )
+    ).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 220
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 221
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 221
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 222
+Time: 0.004s">
+<div class="time" style="width: 1.5686274509804%"></div>
+<pre> intros B B' g g' eq_img H_g H_g' H_img; simpl.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 222
+Time: 0.003s">
+<div class="time" style="width: 1.1764705882353%"></div>
+<pre>
+    apply path_iff_hprop; simpl.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 223
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 224
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [H1 H2]; split.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 224
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro a.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> refine (Trunc_rec _ (H1 a)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        intros [b H3].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 226
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> generalize (fst eq_img b).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 226
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        unfold hexists.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 227
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> refine (@Trunc_functor (-1) {b0 : B' &amp; g b = g' b0} {b0 : B' &amp; H_f a (g' b0)} _).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 227
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        intros [b' p].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists b'.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (transport (fun x =&gt; H_f a x) p H3).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 229
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro b'.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 229
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> refine (Trunc_rec _ (snd eq_img b')).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 229
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        intros [b p].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 230
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> generalize (H2 b).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 230
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (Trunc_functor (-1)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 230
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        intros [a H3].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 231
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists a.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 231
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (transport (fun x =&gt; H_f a x) p H3).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 231
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 232
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [H1 H2]; split.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 232
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 233
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro a.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 233
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> refine (Trunc_rec _ (H1 a)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 233
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        intros [b' H3].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 234
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> generalize (snd eq_img b').</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 234
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (Trunc_functor (-1)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 234
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        intros [b p].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 235
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists b.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 235
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (transport (fun x =&gt; H_f a x) p^ H3).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 235
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 236
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro b.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 236
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> refine (Trunc_rec _ (fst eq_img b)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 236
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        intros [b' p].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 237
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> generalize (H2 b').</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 237
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (Trunc_functor (-1)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 237
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        intros [a H3].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 238
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists a.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 238
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (transport (fun x =&gt; H_f a x) p^ H3).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 238
+Time: 0.03s">
+<div class="time" style="width: 11.764705882353%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 239
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* Then we define [bisimulation : V -&gt; (V -&gt; HProp)] by induction again *)</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 241
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition bisimulation : V@{U' U} -&gt; V@{U' U} -&gt; HProp@{U}.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 241
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 242
+Time: 0.001s">
+<div class="time" style="width: 0.3921568627451%"></div>
+<pre>
+  refine (V_rec' (V -&gt; HProp) _ bisim_aux _).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 243
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros A B f g eq_img H_f H_g H_img.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 244
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply path_forall.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 245
+Time: 0.001s">
+<div class="time" style="width: 0.3921568627451%"></div>
+<pre>
+  refine (V_ind_hprop _ _ _).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 246
+Time: 0.001s">
+<div class="time" style="width: 0.3921568627451%"></div>
+<pre>
+  intros C h _; simpl.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 247
+Time: 0.005s">
+<div class="time" style="width: 1.9607843137255%"></div>
+<pre>
+  apply path_iff_hprop; simpl.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 248
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 249
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [H1 H2]; split.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 249
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 250
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro b.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 250
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> refine (Trunc_rec _ (snd H_img b)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 250
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      intros [a p].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 251
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> generalize (H1 a).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 251
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (Trunc_functor (-1)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 251
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      intros [c H3].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 252
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists c.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 252
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact ((ap10 p (h c)) # H3).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 252
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 253
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro c.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 253
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> refine (Trunc_rec _ (H2 c)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 253
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      intros [a H3].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 254
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> generalize (fst H_img a).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 254
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (Trunc_functor (-1)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 254
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      intros [b p].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 255
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists b.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 255
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact ((ap10 p (h c)) # H3).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 255
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 256
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [H1 H2]; split.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 256
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 257
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro a.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 257
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> refine (Trunc_rec _ (fst H_img a)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 257
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      intros [b p].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 258
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> generalize (H1 b).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 258
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (Trunc_functor (-1)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 258
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      intros [c H3].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 259
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists c.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 259
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact ((ap10 p^ (h c)) # H3).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 259
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 260
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro c.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 260
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> refine (Trunc_rec _ (H2 c)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 260
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      intros [b H3].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 261
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> generalize (snd H_img b).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 261
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (Trunc_functor (-1)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 261
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      intros [a p].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 262
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists a.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 262
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact ((ap10 p^ (h c)) # H3).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 262
+Time: 0.002s">
+<div class="time" style="width: 0.7843137254902%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 263
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation "u ~~ v" := (bisimulation u v) : set_scope.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 265
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+#[export] Instance reflexive_bisimulation : Reflexive bisimulation.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 267
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 268
+Time: 0.013s">
+<div class="time" style="width: 5.0980392156863%"></div>
+<pre>
+  refine (V_ind_hprop _ _ _).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 269
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros A f H_f.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 270
+Time: 0.042s">
+<div class="time" style="width: 16.470588235294%"></div>
+<pre> split.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 270
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 271
+Time: 0.004s">
+<div class="time" style="width: 1.5686274509804%"></div>
+<pre> intro a; apply tr; exists a; auto.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 271
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 272
+Time: 0.004s">
+<div class="time" style="width: 1.5686274509804%"></div>
+<pre> intro a; apply tr; exists a; auto.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 272
+Time: 0.031s">
+<div class="time" style="width: 12.156862745098%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 273
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma bisimulation_equiv_id : forall u v : V, (u = v) &lt;~&gt; (u ~~ v).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 275
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 276
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros u v.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 277
+Time: 0.009s">
+<div class="time" style="width: 3.5294117647059%"></div>
+<pre>
+  apply equiv_iff_hprop.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 278
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 279
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro p; exact (transport (fun x =&gt; u ~~ x) p (reflexive_bisimulation u)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 279
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 280
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> generalize u v.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 280
+Time: 0.004s">
+<div class="time" style="width: 1.5686274509804%"></div>
+<pre>
+    refine (V_ind_hprop _ _ _); intros A f H_f.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 281
+Time: 0.131s">
+<div class="time" style="width: 51.372549019608%"></div>
+<pre>
+    refine (V_ind_hprop _ _ _); intros B g _.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 282
+Time: 0.255s">
+<div class="time" style="width: 100%"></div>
+<pre>
+    intros [H1 H2].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 283
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply setext'.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 284
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 284
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 285
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro a.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 285
+Time: 0.003s">
+<div class="time" style="width: 1.1764705882353%"></div>
+<pre> generalize (H1 a).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 285
+Time: 0.001s">
+<div class="time" style="width: 0.3921568627451%"></div>
+<pre> apply (Trunc_functor (-1)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 285
+Time: 0.001s">
+<div class="time" style="width: 0.3921568627451%"></div>
+<pre>
+      intros [b h].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 286
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists b; exact (H_f a (g b) h).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 286
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 287
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro b.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 287
+Time: 0.003s">
+<div class="time" style="width: 1.1764705882353%"></div>
+<pre> generalize (H2 b).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 287
+Time: 0.001s">
+<div class="time" style="width: 0.3921568627451%"></div>
+<pre> apply (Trunc_functor (-1)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 287
+Time: 0.001s">
+<div class="time" style="width: 0.3921568627451%"></div>
+<pre>
+      intros [a h].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 288
+Time: 0.006s">
+<div class="time" style="width: 2.3529411764706%"></div>
+<pre> exists a; exact (H_f a (g b) h).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 288
+Time: 0.026s">
+<div class="time" style="width: 10.196078431373%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 289
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+
+(** ** Canonical presentation of V-sets (Lemma 10.5.6) *)
+
+(** Using the regular kernel would lead to a universe inconsistency in the [monic_set_present] lemma later. *)</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 294
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ker_bisim {A} (f : A -&gt; V) (x y : A) := (f x ~~ f y).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 294
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition ker_bisim_is_ker {A} (f : A -&gt; V)
+  : forall (x y : A), f x = f y &lt;~&gt; ker_bisim f x y.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 297
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 298
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros; apply bisimulation_equiv_id.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 299
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 300
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section MonicSetPresent_Uniqueness.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 302
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+(** Given [u : V], we want to show that the representation [u = @set Au mu], where [Au] is an hSet and [mu] is monic, is unique. *)
+
+</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 304
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Context {u : V} {Au Au': Type} {h : IsHSet Au} {h' : IsHSet Au'} {mu : Au -&gt; V} {mono : IsEmbedding mu}
+  {mu' : Au' -&gt; V} {mono' : IsEmbedding mu'} {p : u = set mu} {p' : u = set mu'}.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 305
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma eq_img_untrunc : (forall a : Au, {a' : Au' &amp; mu' a' = mu a})
+                     * (forall a' : Au', {a : Au &amp; mu a = mu' a'}).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 308
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 309
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  split.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 310
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 311
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro a.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 311
+Time: 0.001s">
+<div class="time" style="width: 0.3921568627451%"></div>
+<pre> exact (@untrunc_istrunc (-1) _ (mono' (mu a)) (transport (fun x =&gt; mu a ∈ x) (p^ @ p') (tr (a; 1)))).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 311
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 312
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro a'.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 312
+Time: 0.001s">
+<div class="time" style="width: 0.3921568627451%"></div>
+<pre> exact (@untrunc_istrunc (-1) _ (mono (mu' a')) (transport (fun x =&gt; mu' a' ∈ x) (p'^ @ p) (tr (a'; 1)))).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 312
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 313
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Let e : Au -&gt; Au' := fun a =&gt; pr1 (fst eq_img_untrunc a).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 315
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Let inv_e : Au' -&gt; Au := fun a' =&gt; pr1 (snd eq_img_untrunc a').</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 316
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Let hom1 : e o inv_e == idmap.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 318
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 319
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro a'.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 320
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (isinj_embedding mu' mono').</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 321
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  transitivity (mu (inv_e a')).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 322
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 323
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (pr2 (fst eq_img_untrunc (inv_e a'))).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 323
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 324
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (pr2 (snd eq_img_untrunc a')).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 324
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 325
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Let hom2 : inv_e o e == idmap.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 327
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 328
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro a.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 329
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (isinj_embedding mu mono).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 330
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  transitivity (mu' (e a)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 331
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 332
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (pr2 (snd eq_img_untrunc (e a))).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 332
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 333
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (pr2 (fst eq_img_untrunc a)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 333
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 334
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Let path : Au' = Au.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 336
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 337
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply path_universe_uncurried.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 338
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (equiv_adjointify inv_e e hom2 hom1).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 339
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 340
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma mu_eq_mu' : transport (fun A : Type =&gt; A -&gt; V) path^ mu = mu'.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 342
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 343
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply path_forall.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 344
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro a'.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 344
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  transitivity (transport (fun X =&gt; V) path^ (mu (transport (fun X : Type =&gt; X) path^^ a'))).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 345
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 346
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (@transport_arrow Type (fun X : Type =&gt; X) (fun X =&gt; V) Au Au' path^ mu a').</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 346
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 347
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> transitivity (mu (transport idmap path^^ a')).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 347
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 348
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply transport_const.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 348
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 349
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> transitivity (mu (inv_e a')).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 349
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      2: exact (pr2 (snd eq_img_untrunc a')).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 350
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      refine (ap mu _).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 351
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      transitivity (transport idmap path a').</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 352
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 353
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (ap (fun x =&gt; transport idmap x a') (inv_V path)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 353
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 354
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply transport_path_universe.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 354
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 355
+Time: 0.001s">
+<div class="time" style="width: 0.3921568627451%"></div>
+<pre>
+
+Lemma monic_set_present_uniqueness : (Au; (mu; (h, mono, p))) = (Au'; (mu'; (h', mono', p'))) :&gt; {A : Type &amp; {m : A -&gt; V &amp; IsHSet A * IsEmbedding m * (u = set m)}}.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 357
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 358
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply path_sigma_uncurried; simpl.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 359
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exists path^.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 360
+Time: 0.001s">
+<div class="time" style="width: 0.3921568627451%"></div>
+<pre>
+  transitivity (path^ # mu; transportD (fun A =&gt; A -&gt; V) (fun A m =&gt; IsHSet A * IsEmbedding m * (u = set m)) path^ mu (h, mono, p)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 361
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 362
+Time: 0.001s">
+<div class="time" style="width: 0.3921568627451%"></div>
+<pre> exact (@transport_sigma Type (fun A =&gt; A -&gt; V) (fun A m =&gt; IsHSet A * IsEmbedding m * (u = set m)) Au Au' path^ (mu; (h, mono, p))).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 362
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 363
+Time: 0.004s">
+<div class="time" style="width: 1.5686274509804%"></div>
+<pre> apply path_sigma_hprop; simpl.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 363
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact mu_eq_mu'.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 364
+Time: 0.003s">
+<div class="time" style="width: 1.1764705882353%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 365
+Time: 0.001s">
+<div class="time" style="width: 0.3921568627451%"></div>
+<pre>
+
+End MonicSetPresent_Uniqueness.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 367
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** This lemma actually says a little more than 10.5.6, i.e., that Au is a hSet *)</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 369
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma monic_set_present : forall u : V, exists (Au : Type) (m : Au -&gt; V),
+  (IsHSet Au) * (IsEmbedding m) * (u = set m).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 370
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 371
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply V_ind_hprop.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 372
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 373
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros A f _.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 373
+Time: 0.001s">
+<div class="time" style="width: 0.3921568627451%"></div>
+<pre>
+    destruct (quotient_kernel_factor_general f (ker_bisim f) (ker_bisim_is_ker f))
+      as [Au [eu [mu (((hset_Au, epi_eu), mono_mu), factor)]]].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 375
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists Au, mu.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 376
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split;[exact (hset_Au, mono_mu)|].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 376
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply setext'; split.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 377
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 378
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro a.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 378
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr; exists (eu a).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 378
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (ap10 factor a).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 378
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 379
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro a'.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 379
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> generalize (epi_eu a').</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 379
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      intro IC; refine (Trunc_functor (-1) _ (@center _ IC)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 380
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      intros [a p].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 381
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists a.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 381
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> transitivity (mu (eu a)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 381
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 382
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (ap10 factor a).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 382
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 383
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (ap mu p).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 383
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 384
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro v.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 384
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply hprop_allpath.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 384
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros [Au [mu ((hset, mono), p)]].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 385
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros [Au' [mu' ((hset', mono'), p')]].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 386
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact monic_set_present_uniqueness.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 387
+Time: 0.001s">
+<div class="time" style="width: 0.3921568627451%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 388
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition type_of_members (u : V) : Type := pr1 (monic_set_present u).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 390
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation "[ u ]" := (type_of_members u) : set_scope.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 392
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition func_of_members {u : V} : [u] -&gt; V := pr1 (pr2 (monic_set_present u)) : [u] -&gt; V.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 394
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition is_hset_typeofmembers {u : V} : IsHSet ([u]) := fst (fst (pr2 (pr2 (monic_set_present u)))).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 396
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition IsEmbedding_funcofmembers {u : V} : IsEmbedding func_of_members := snd (fst (pr2 (pr2 (monic_set_present u)))).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 398
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition is_valid_presentation (u : V) : u = set func_of_members := snd (pr2 (pr2 (monic_set_present u))).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 400
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+
+(** ** Lemmas 10.5.8 (i) &amp; (vii), we put them here because they are useful later *)</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 403
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma extensionality : forall {x y : V}, (x ⊆ y * y ⊆ x) &lt;-&gt; x = y.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 403
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 404
+Time: 0.007s">
+<div class="time" style="width: 2.7450980392157%"></div>
+<pre>
+  refine (V_ind_hprop _ _ _).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 405
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros A f _.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 405
+Time: 0.006s">
+<div class="time" style="width: 2.3529411764706%"></div>
+<pre>
+  refine (V_ind_hprop _ _ _).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 406
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros B g _.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 406
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  split.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 407
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 408
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [H1 H2].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 408
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply setext'.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 408
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 408
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 409
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 409
+Time: 0.001s">
+<div class="time" style="width: 0.3921568627451%"></div>
+<pre> refine (Trunc_rec _ (H1 (f a) (tr (a;1)))).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 409
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      intros [b p].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 410
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 410
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists b.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 410
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact p^.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 410
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 411
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 411
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (H2 (g b)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 411
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr; exists b; reflexivity.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 411
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 412
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro p; split.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 412
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 413
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros z Hz.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 413
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (transport (fun x =&gt; z ∈ x) p Hz).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 413
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 414
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros z Hz.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 414
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (transport (fun x =&gt; z ∈ x) p^ Hz).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 414
+Time: 0.002s">
+<div class="time" style="width: 0.7843137254902%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 415
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma mem_induction (C : V -&gt; HProp)
+: (forall v, (forall x, x ∈ v -&gt; C x) -&gt; C v) -&gt; forall v, C v.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 418
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 419
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro H.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 420
+Time: 0.001s">
+<div class="time" style="width: 0.3921568627451%"></div>
+<pre>
+  refine (V_ind_hprop _ _ _).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 421
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros A f H_f.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 422
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply H.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 422
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x Hx.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 422
+Time: 0.001s">
+<div class="time" style="width: 0.3921568627451%"></div>
+<pre>
+  generalize Hx; apply Trunc_rec.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 423
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [a p].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 424
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (transport C p (H_f a)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 424
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 425
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Two useful lemmas *)
+
+</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 428
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export] Instance irreflexive_mem : Irreflexive mem.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 428
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 429
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  assert (forall v, IsHProp (complement (fun x x0 : V =&gt; x ∈ x0) v v)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 430
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> (* https://coq.inria.fr/bugs/show_bug.cgi?id=3854 *)
+ </pre>
+</div>
+<div class="code" title="File: V.v
+Line: 431
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>{</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 431
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 431
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unfold complement.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 432
+Time: 0.002s">
+<div class="time" style="width: 0.7843137254902%"></div>
+<pre>
+    exact _.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 433
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 433
+Time: 0.001s">
+<div class="time" style="width: 0.3921568627451%"></div>
+<pre>
+  refine (mem_induction (fun x =&gt; Build_HProp (~ x ∈ x)) _); simpl in *.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 434
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros v H.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 435
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro Hv.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 435
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (H v Hv Hv).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 436
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 437
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma path_V_eqimg {A B} {f : A -&gt; V} {g : B -&gt; V} : set f = set g -&gt; equal_img f g.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 439
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 440
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro p.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 441
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 441
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 442
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro a.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 442
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    assert (H : f a ∈ set g).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 443
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 444
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (snd extensionality p).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 444
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply tr; exists a; reflexivity.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 445
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 445
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    generalize H; apply (Trunc_functor (-1)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 446
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [b p'].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 446
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists b; exact p'^.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 446
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 447
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro b.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 447
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    assert (H : g b ∈ set f).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 448
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 449
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (snd extensionality p^).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 449
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply tr; exists b; reflexivity.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 450
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 450
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    generalize H; apply (Trunc_functor (-1)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 451
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [a p'].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 451
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists a; exact p'.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 451
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 452
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+
+(** ** Definitions of particular sets in V *)
+
+(** The empty set *)</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 457
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition V_empty : V := set (Empty_ind (fun _ =&gt; V)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 457
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The singleton {u} *)</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 459
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition V_singleton (u : V) : V@{U' U} := set (Unit_ind u).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 459
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+#[export] Instance isequiv_ap_V_singleton {u v : V}
+: IsEquiv (@ap _ _ V_singleton u v).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 462
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 463
+Time: 0.004s">
+<div class="time" style="width: 1.5686274509804%"></div>
+<pre>
+  simple refine (Build_IsEquiv _ _ _ _ _ _ _); try solve [ intro; apply path_ishprop ].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 464
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 465
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro H.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 465
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> specialize (path_V_eqimg H).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 465
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros (H1, H2).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 465
+Time: 0.005s">
+<div class="time" style="width: 1.9607843137255%"></div>
+<pre>
+    refine (Trunc_rec _ (H1 tt)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 466
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [t p].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 466
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct t; exact p.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 466
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 466
+Time: 0.003s">
+<div class="time" style="width: 1.1764705882353%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 467
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The pair {u,v} *)</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 469
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition V_pair (u : V) (v : V) : V@{U' U} := set (fun b : Bool =&gt; if b then u else v).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 469
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma path_pair {u v u' v' : V@{U' U}} : (u = u') * (v = v') -&gt; V_pair u v = V_pair u' v'.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 471
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 472
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros (H1, H2).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 473
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply setext'.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 473
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 473
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 474
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply Bool_ind.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 474
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    *</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 475
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr; exists true.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 475
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assumption.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 475
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    *</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 476
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr; exists false; assumption.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 476
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 477
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply Bool_ind.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 477
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    *</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 478
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr; exists true; assumption.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 478
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    *</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 479
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr; exists false; assumption.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 479
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 480
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma pair_eq_singleton {u v w : V} : V_pair u v = V_singleton w &lt;-&gt; (u = w) * (v = w).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 482
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 483
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  split.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 484
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 485
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro H.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 485
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (path_V_eqimg H) as (H1, H2).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 485
+Time: 0.002s">
+<div class="time" style="width: 0.7843137254902%"></div>
+<pre>
+    refine (Trunc_rec _ (H1 true)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 486
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [t p]; destruct t.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 486
+Time: 0.002s">
+<div class="time" style="width: 0.7843137254902%"></div>
+<pre>
+    refine (Trunc_rec _ (H1 false)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 487
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [t p']; destruct t.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 487
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    split; [exact p| exact p'].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 488
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 489
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros (p1, p2).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 489
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply setext'; split.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 489
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    *</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 490
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro a; apply tr; exists tt.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 490
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct a; [exact p1 | exact p2].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 490
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    *</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 491
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro t; apply tr; exists true.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 491
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct t; exact p1.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 491
+Time: 0.001s">
+<div class="time" style="width: 0.3921568627451%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 492
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The ordered pair (u,v) *)</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 494
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition V_pair_ord (u : V) (v : V) : V := V_pair (V_singleton u) (V_pair u v).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 494
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation " [ u , v ] " := (V_pair_ord u v) : set_scope.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 496
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma path_pair_ord {a b c d : V} : [a, b] = [c, d] &lt;-&gt; (a = c) * (b = d).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 498
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 499
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  split.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 500
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 501
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro p.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 501
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assert (p1 : a = c).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 501
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 502
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assert (H : V_singleton a ∈ [c, d]).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 502
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      {</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 503
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (snd extensionality p).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 503
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 503
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply tr; exists true; reflexivity.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 504
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 504
+Time: 0.001s">
+<div class="time" style="width: 0.3921568627451%"></div>
+<pre>
+      refine (Trunc_rec _ H).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 505
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [t p']; destruct t.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 505
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 506
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact ((ap V_singleton)^-1 p'^).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 506
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 507
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> symmetry; apply (fst pair_eq_singleton p').</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 507
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 508
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 508
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 509
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact p1.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 509
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 510
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assert (H : hor (b = c) (b = d)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 510
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        {</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 511
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assert (H' : V_pair a b ∈ [c, d]).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 511
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          {</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 512
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (snd extensionality p).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 512
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+            apply tr; exists false; reflexivity.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 513
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 513
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          refine (Trunc_rec _ H').</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 514
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [t p']; destruct t.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 514
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          -</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 515
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr; left.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 515
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (fst pair_eq_singleton p'^).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 515
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          -</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 516
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (path_V_eqimg p') as (H1, H2).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 516
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+            generalize (H2 false); apply (Trunc_functor (-1)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 517
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+            intros [t p'']; destruct t.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 518
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+            +</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 519
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> left; exact p''^.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 519
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+            +</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 520
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> right; exact p''^.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 520
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 520
+Time: 0.001s">
+<div class="time" style="width: 0.3921568627451%"></div>
+<pre>
+        refine (Trunc_rec _ H).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 521
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro case; destruct case as [p'| p'].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 521
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        2: assumption.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 522
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        assert (H' : [a, b] = V_singleton (V_singleton b)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 523
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        {</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 524
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (snd pair_eq_singleton).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 524
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          split.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 525
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          -</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 526
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply ap; exact (p1 @ p'^).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 526
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          -</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 527
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (snd pair_eq_singleton).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 527
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+            split; [exact (p1 @ p'^) | reflexivity].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 528
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 528
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        assert (H'' : V_pair c d = V_singleton b)
+          by apply (fst pair_eq_singleton (p^ @ H')).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 530
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        symmetry; apply (fst pair_eq_singleton H'').</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 531
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 532
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros (p, p').</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 532
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_pair.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 533
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 533
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 534
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply ap; exact p.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 534
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 535
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply path_pair.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 535
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split; assumption; assumption.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 535
+Time: 0.003s">
+<div class="time" style="width: 1.1764705882353%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 536
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The cartesian product a × b *)</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 538
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition V_cart_prod (a : V) (b : V) : V
+:= set (fun x : [a] * [b] =&gt; [func_of_members (fst x), func_of_members (snd x)]).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 539
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation " a × b " := (V_cart_prod a b) : set_scope.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 541
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** f is a function with domain a and codomain b *)</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 543
+Time: 0.001s">
+<div class="time" style="width: 0.3921568627451%"></div>
+<pre>Definition V_is_func (a : V) (b : V) (f : V) := f ⊆ (a × b)
+ * (forall x, x ∈ a -&gt; hexists (fun y =&gt; y ∈ b * [x,y] ∈ f))
+ * (forall x y y', [x,y] ∈ f * [x,y'] ∈ f -&gt; y = y').</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 545
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The set of functions from a to b *)</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 547
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition V_func (a : V) (b : V) : V
+:= @set ([a] -&gt; [b]) (fun f =&gt; set (fun x =&gt; [func_of_members x, func_of_members (f x)] )).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 548
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The union of a set Uv *)</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 550
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition V_union (v : V) :=
+  @set ({x : [v] &amp; [func_of_members x]}) (fun z =&gt; func_of_members (pr2 z)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 551
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The ordinal successor x ∪ {x} *)</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 553
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition V_succ : V -&gt; V.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 553
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 554
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simple refine (V_rec' _ _ _ _).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 555
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 556
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros A f _.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 556
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (set (fun (x : A + Unit) =&gt; match x with inl a =&gt; f a
+                                           | inr tt =&gt; set f end)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 558
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 559
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl; intros A B f g eq_img _ _ _.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 559
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply setext'.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 559
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 559
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 560
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 560
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct a.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 560
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 561
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> generalize (fst eq_img a).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 561
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (Trunc_functor (-1)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 561
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        intros [b p].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 562
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists (inl b); exact p.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 562
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 563
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr; exists (inr tt).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 563
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct u.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 563
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply setext'; auto.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 563
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 564
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 564
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct b.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 564
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 565
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> generalize (snd eq_img b).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 565
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (Trunc_functor (-1)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 565
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        intros [a p].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 566
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists (inl a); exact p.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 566
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 567
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr; exists (inr tt).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 567
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct u.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 567
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply setext'; auto.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 567
+Time: 0.001s">
+<div class="time" style="width: 0.3921568627451%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 568
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The set of finite ordinals *)</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 570
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition V_omega : V
+:= set (fix I n := match n with 0   =&gt; V_empty
+                              | S n =&gt; V_succ (I n) end).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 572
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+
+(** ** Axioms of set theory (theorem 10.5.8) *)
+
+</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 576
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma not_mem_Vempty : forall x, ~ (x ∈ V_empty).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 576
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 577
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x Hx.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 578
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> generalize Hx; apply Trunc_rec.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 578
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [ff _].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 579
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact ff.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 579
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 580
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma pairing : forall u v, hexists (fun w =&gt; forall x, x ∈ w &lt;-&gt; hor (x = u) (x = v)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 582
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 583
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros u v.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 584
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 584
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists (V_pair u v).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 584
+Time: 0.001s">
+<div class="time" style="width: 0.3921568627451%"></div>
+<pre>
+  intro; split; apply (Trunc_functor (-1)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 585
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 586
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [[|] p]; [left|right]; exact p^.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 586
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 587
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [p | p]; [exists true | exists false]; exact p^.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 587
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 588
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma infinity : (V_empty ∈ V_omega) * (forall x, x ∈ V_omega -&gt; V_succ x ∈ V_omega).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 590
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 591
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  split.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 592
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 593
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr; exists 0; auto.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 593
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 594
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 594
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (Trunc_functor (-1)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 594
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros [n p].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 595
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists (S n).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 595
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite p; auto.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 595
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 596
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma union : forall v, hexists (fun w =&gt; forall x, x ∈ w &lt;-&gt; hexists (fun u =&gt; x ∈ u * u ∈ v)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 598
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 599
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro v.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 600
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr; exists (V_union v).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 600
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro x; split.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 601
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 602
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro H.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 602
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl in H.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 602
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> generalize H; apply (Trunc_functor (-1)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 602
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros [[u' x'] p]; simpl in p.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 603
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists (func_of_members u'); split.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 604
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 605
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> refine (transport (fun z =&gt; x ∈ z) (is_valid_presentation (func_of_members u'))^ _).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 605
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      simpl.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 606
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr; exists x'.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 606
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact p.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 606
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 607
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> refine (transport (fun z =&gt; func_of_members u' ∈ z) (is_valid_presentation v)^ _).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 607
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      simpl.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 608
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr; exists u'; reflexivity.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 608
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 609
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply Trunc_rec.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 609
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [u (Hx, Hu)].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 609
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    generalize (transport (fun z =&gt; u ∈ z) (is_valid_presentation v) Hu).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 610
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply Trunc_rec.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 611
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [u' pu].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 611
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    generalize (transport (fun z =&gt; x ∈ z) (is_valid_presentation (func_of_members u')) (transport (fun z =&gt; x ∈ z) pu^ Hx)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 612
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply Trunc_rec.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 613
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [x' px].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 613
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply tr.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 614
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists (u'; x').</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 614
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact px.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 614
+Time: 0.002s">
+<div class="time" style="width: 0.7843137254902%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 615
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma function : forall u v, hexists (fun w =&gt; forall x, x ∈ w &lt;-&gt; V_is_func u v x).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 617
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 618
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros u v.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 619
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr; exists (V_func u v).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 619
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  assert (memb_u : u = set (@func_of_members u)) by exact (is_valid_presentation u).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 620
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  assert (memb_v : v = set (@func_of_members v)) by exact (is_valid_presentation v).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 621
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro phi; split.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 622
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 623
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro H.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 623
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split;[split|].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 623
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 624
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros z Hz.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 624
+Time: 0.003s">
+<div class="time" style="width: 1.1764705882353%"></div>
+<pre> simpl in *.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 624
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> generalize H.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 624
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply Trunc_rec.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 624
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      intros [h p_phi].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 625
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> generalize (transport (fun x =&gt; z ∈ x) p_phi^ Hz).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 625
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (Trunc_functor (-1)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 625
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      intros [a p].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 626
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists (a, h a).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 626
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assumption.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 626
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 627
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x Hx.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 627
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> generalize (transport (fun y =&gt; x ∈ y) memb_u Hx).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 627
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply Trunc_rec.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 628
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [a p].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 628
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> generalize H; apply (Trunc_functor (-1)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 628
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      intros [h p_phi].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 629
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists (func_of_members (h a)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 629
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 629
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 630
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (transport (fun z =&gt; func_of_members (h a) ∈ z) memb_v^ (tr (h a; 1))).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 630
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 631
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (transport (fun y =&gt; [x, func_of_members (h a)] ∈ y) p_phi).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 631
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply tr; exists a.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 632
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite p; reflexivity.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 632
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 633
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y y' (Hy, Hy').</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 633
+Time: 0.002s">
+<div class="time" style="width: 0.7843137254902%"></div>
+<pre> generalize H; apply Trunc_rec.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 633
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [h p_phi].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 633
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      generalize (transport (fun z =&gt; [x, y] ∈ z) p_phi^ Hy).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 634
+Time: 0.002s">
+<div class="time" style="width: 0.7843137254902%"></div>
+<pre> apply Trunc_rec.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 634
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [a p].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 634
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      generalize (transport (fun z =&gt; [x, y'] ∈ z) p_phi^ Hy').</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 635
+Time: 0.002s">
+<div class="time" style="width: 0.7843137254902%"></div>
+<pre> apply Trunc_rec.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 635
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [a' p'].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 635
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      destruct (fst path_pair_ord p) as (px, py).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 636
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (fst path_pair_ord p') as (px', py').</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 636
+Time: 0.003s">
+<div class="time" style="width: 1.1764705882353%"></div>
+<pre>
+      transitivity (func_of_members (h a)); auto with path_hints.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 637
+Time: 0.003s">
+<div class="time" style="width: 1.1764705882353%"></div>
+<pre> transitivity (func_of_members (h a'));auto with path_hints.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 637
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      refine (ap func_of_members _).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 638
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> refine (ap h _).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 638
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (isinj_embedding func_of_members IsEmbedding_funcofmembers a a' (px @ px'^)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 639
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 640
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros ((H1, H2), H3).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 640
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 640
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    assert (h : forall a : [u], {b : [v] &amp; [func_of_members a, func_of_members b] ∈ phi}).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 641
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 642
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro a.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 642
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> pose (x := func_of_members a).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 642
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      transparent assert (H : {y : V &amp; y ∈ v * [x, y] ∈ phi}).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 643
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      -</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 644
+Time: 0.006s">
+<div class="time" style="width: 2.3529411764706%"></div>
+<pre> refine (@untrunc_istrunc (-1) {y : V &amp; y ∈ v * [x, y] ∈ phi} _
+                                 (H2 x (transport (fun z =&gt; x ∈ z) memb_u^ (tr (a; 1))))).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 645
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply hprop_allpath.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 646
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [y (H1_y, H2_y)] [y' (H1_y', H2_y')].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 646
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply path_sigma_uncurried; simpl.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 647
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        exists (H3 x y y' (H2_y, H2_y')).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 648
+Time: 0.016s">
+<div class="time" style="width: 6.2745098039216%"></div>
+<pre>
+        apply path_ishprop.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 649
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      -</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 650
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct H as [y (H1_y, H2_y)].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 650
+Time: 0.001s">
+<div class="time" style="width: 0.3921568627451%"></div>
+<pre>
+        destruct (@untrunc_istrunc (-1) _ (IsEmbedding_funcofmembers y) (transport (fun z =&gt; y ∈ z) memb_v H1_y)) as [b Hb].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 651
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        exists b.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 652
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (transport (fun z =&gt; [x, z] ∈ phi) Hb^ H2_y).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 652
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 652
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply tr; exists (fun a =&gt; pr1 (h a)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 653
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply extensionality.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 653
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 653
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 654
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros z Hz.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 654
+Time: 0.008s">
+<div class="time" style="width: 3.1372549019608%"></div>
+<pre> generalize Hz; apply Trunc_rec.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 654
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [a Ha].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 654
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (transport (fun w =&gt; w ∈ phi) Ha (pr2 (h a))).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 655
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 656
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros z Hz.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 656
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 656
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      generalize (H1 z Hz).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 657
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (Trunc_functor (-1)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 657
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [(a,b) p].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 657
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl in p.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 657
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exists a.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 658
+Time: 0.002s">
+<div class="time" style="width: 0.7843137254902%"></div>
+<pre> transitivity ([func_of_members a, func_of_members b]); auto with path_hints.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 658
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply ap.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 659
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply H3 with (func_of_members a).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 660
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 660
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 661
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (pr2 (h a)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 661
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 662
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (transport (fun w =&gt; w ∈ phi) p^ Hz).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 662
+Time: 0.014s">
+<div class="time" style="width: 5.4901960784314%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 663
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma replacement : forall (r : V -&gt; V) (x : V),
+  hexists (fun w =&gt; forall y, y ∈ w &lt;-&gt; hexists (fun z =&gt; z ∈ x * (r z = y))).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 666
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 667
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro r.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 668
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> refine (V_ind_hprop _ _ _).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 668
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros A f _.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 669
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 669
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists (set (r o f)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 669
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 669
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 670
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (Trunc_functor (-1)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 670
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros [a p].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 671
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists (f a).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 671
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 671
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 672
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr; exists a; auto.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 672
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 673
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assumption.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 673
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 674
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply Trunc_rec.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 674
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros [z [h p]].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 675
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> generalize h.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 675
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (Trunc_functor (-1)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 675
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros [a p'].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 676
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists a.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 676
+Time: 0.001s">
+<div class="time" style="width: 0.3921568627451%"></div>
+<pre> transitivity (r z); auto with path_hints.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 676
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (ap r p').</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 676
+Time: 0.001s">
+<div class="time" style="width: 0.3921568627451%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 677
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma separation (C : V -&gt; HProp) : forall a : V,
+  hexists (fun w =&gt; forall x, x ∈ w &lt;-&gt; x ∈ a * (C x)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 680
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 681
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (V_ind_hprop _ _ _).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 682
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros A f _.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 683
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 683
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists (set (fun z : {a : A &amp; C (f a)} =&gt; f (pr1 z))).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 683
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 683
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 684
+Time: 0.002s">
+<div class="time" style="width: 0.7843137254902%"></div>
+<pre> apply Trunc_rec.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 684
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros [[a h] p].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 685
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 685
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> +</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 685
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr; exists a; assumption.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 685
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> +</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 685
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (transport C p h).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 685
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 686
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [H1 H2].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 686
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> generalize H1.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 686
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (Trunc_functor (-1)).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 686
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros [a p].</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 687
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists (a; transport C p^ H2).</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 687
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact p.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 687
+Time: 0.001s">
+<div class="time" style="width: 0.3921568627451%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 688
+Time: 0.033s">
+<div class="time" style="width: 12.941176470588%"></div>
+<pre>
+
+End AssumingUA.</pre>
+</div>
+<div class="code" title="File: V.v
+Line: 691
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

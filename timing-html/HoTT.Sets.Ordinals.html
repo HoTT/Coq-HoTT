@@ -1,0 +1,7001 @@
+<html>
+<head>
+<title>Ordinals.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Ordinals.v</h1>
+
+<div class="code" title="File: Ordinals.v
+Line: 1
+Time: 0.074s">
+<div class="time" style="width: 100%"></div>
+<pre>From HoTT Require Import TruncType ExcludedMiddle Modalities.ReflectiveSubuniverse abstract_algebra.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 1
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+From HoTT Require Import Universes.Smallness.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 2
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+From HoTT Require Import Colimits.Quotient.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+From HoTT Require Import HSet.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Close Scope trunc_scope.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope hprop_scope.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** This file contains a definition of ordinals and some fundamental results,
+    roughly following the presentation in the HoTT book. *)
+
+
+(** * Well-foundedness *)
+
+</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 14
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>Inductive Accessible {A} (R : Lt A) (a : A) :=
+  acc : (forall b, b &lt; a -&gt; Accessible R b) -&gt; Accessible R a.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance ishprop_Accessible `{Funext} {A} (R : Lt A) (a : A) :
+  IsHProp (Accessible R a).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply hprop_allpath.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros acc1.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> induction acc1 as [a acc1' IH].</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [acc2'].</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply ap.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply path_forall; intros b.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply path_forall; intros Hb.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply IH.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Class WellFounded {A} (R : Relation A) :=
+  well_foundedness : forall a : A, Accessible R a.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance ishprop_WellFounded `{Funext} {A} (R : Relation A) :
+  IsHProp (WellFounded R).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply hprop_allpath; intros H1 H2.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply path_forall; intros a.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply path_ishprop.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Extensionality *)
+
+</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 39
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>Class Extensional {A} (R : Lt A) :=
+  extensionality : forall a b : A, (forall c : A, c &lt; a &lt;-&gt; c &lt; b) -&gt; a = b.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance ishprop_Extensional `{Funext} {A} `{IsHSet A} (R : Relation A)
+  : IsHProp (Extensional R).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> unfold Extensional.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 44
+Time: 0.005s">
+<div class="time" style="width: 6.7567567567568%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> Qed.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Ordinals *)
+
+</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 47
+Time: 0.002s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>Class IsOrdinal@{carrier relation} (A : Type@{carrier}) (R : Relation@{carrier relation} A) := {
+  ordinal_is_hset :: IsHSet A ;
+  ordinal_relation_is_mere :: is_mere_relation A R ;
+  ordinal_extensionality :: Extensional R ;
+  ordinal_well_foundedness :: WellFounded R ;
+  ordinal_transitivity :: Transitive R ;
+}.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance ishprop_IsOrdinal `{Funext} A R
+  : IsHProp (IsOrdinal A R).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  eapply istrunc_equiv_istrunc.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> {</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 58
+Time: 0.011s">
+<div class="time" style="width: 14.864864864865%"></div>
+<pre>
+    issig.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  }</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold Transitive.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 61
+Time: 0.02s">
+<div class="time" style="width: 27.027027027027%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 61
+Time: 0.005s">
+<div class="time" style="width: 6.7567567567568%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 62
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+
+Record Ordinal@{carrier relation +} :=
+  { ordinal_carrier : Type@{carrier}
+    ; ordinal_relation :: Lt@{carrier relation} ordinal_carrier
+    ; ordinal_property :: IsOrdinal@{carrier relation} ordinal_carrier (&lt;)
+  }.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 68
+Time: 0.003s">
+<div class="time" style="width: 4.0540540540541%"></div>
+<pre>
+
+Coercion ordinal_as_hset (A : Ordinal) : HSet
+  := Build_HSet (ordinal_carrier A).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance irreflexive_ordinal_relation A R
+  : IsOrdinal A R -&gt; Irreflexive R.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros is_ordinal a H.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction (well_foundedness a) as [a _ IH].</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (IH a); assumption.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition TypeWithRelation
+  := { A : Type &amp; Relation A }.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Coercion ordinal_as_type_with_relation (A : Ordinal) : TypeWithRelation
+  := (A : Type; (&lt;)).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Paths in Ordinal *)
+
+</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition equiv_Ordinal_to_sig
+  : Ordinal &lt;~&gt; { R : { A : Type &amp; Relation A } &amp; IsOrdinal _ R.2 }.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  transitivity { A : Type &amp; { R : Relation A &amp; IsOrdinal A R } }.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> {</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    symmetry.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 92
+Time: 0.005s">
+<div class="time" style="width: 6.7567567567568%"></div>
+<pre> issig.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  }</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply equiv_sigma_assoc'.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 94
+Time: 0.002s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 95
+Time: 0.002s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+
+Definition Isomorphism : TypeWithRelation -&gt; TypeWithRelation -&gt; Type
+  := fun '(A; R__A) '(B; R__B) =&gt;
+       { f : A &lt;~&gt; B &amp; forall a a', R__A a a' &lt;-&gt; R__B (f a) (f a') }.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance isomorphism_id : Reflexive Isomorphism.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros A.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists equiv_idmap.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a a'.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> Qed.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma isomorphism_inverse
+  : forall A B, Isomorphism A B -&gt; Isomorphism B A.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [A R__A] [B R__B] [f H].</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exists (equiv_inverse f).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros b b'.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  cbn.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 110
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+  rewrite &lt;- (eisretr f b).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> set (a := f^-1 b).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite eissect.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite &lt;- (eisretr f b').</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> set (a' := f^-1 b').</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite eissect.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* We don't apply the symmetry tactic because that would introduce bad universe constraints *)
+ </pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>split; apply H.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 114
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We state this first without using [Transitive] to allow more general universe variables. *)</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma transitive_Isomorphism
+  : forall A B C, Isomorphism A B -&gt; Isomorphism B C -&gt; Isomorphism A C.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 118
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [A R__A] [B R__B] [C R__C].</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [f Hf] [g Hg].</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 121
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exists (equiv_compose' g f).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 122
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros a a'.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  split.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 125
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a_a'.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 125
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply Hg.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 125
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply Hf.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 125
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact a_a'.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 125
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 126
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros gfa_gfa'.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 126
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply Hf.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 126
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply Hg.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 126
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact gfa_gfa'.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 126
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance isomorphism_compose_backwards : Transitive Isomorphism
+  := transitive_Isomorphism.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 130
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition equiv_path_Ordinal `{Univalence} (A B : Ordinal)
+  : Isomorphism A B &lt;~&gt; A = B.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold Isomorphism.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 135
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rapply symmetric_equiv.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 135
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+  transitivity (equiv_Ordinal_to_sig A = equiv_Ordinal_to_sig B).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> {</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply equiv_ap'.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 137
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  }</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 138
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+  transitivity ((equiv_Ordinal_to_sig A).1 = (equiv_Ordinal_to_sig B).1).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> {</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists pr1_path.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 140
+Time: 0.002s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre> exact (isequiv_pr1_path_hprop _ _).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  }</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 141
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+  transitivity (exist Relation A (&lt;) = exist Relation B (&lt;)).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> {</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    reflexivity.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  }</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 144
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+  transitivity { p : A = B :&gt; Type &amp; p # (&lt;) = (&lt;) }.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 145
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> {</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 145
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    symmetry.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 146
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+    exact (equiv_path_sigma Relation
+                            (exist Relation A (&lt;))
+                            (exist Relation B (&lt;))).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  }</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply equiv_functor_sigma'.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 152
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (equiv_equiv_path A B).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 152
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros p.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    napply equiv_iff_hprop.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 154
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 155
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (istrunc_equiv_istrunc (forall b b' : B, (p # (&lt;)) b b' = (b &lt; b'))).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 155
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> {</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 155
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+        transitivity (forall b : B, (p # lt) b = lt b).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> {</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          apply equiv_functor_forall_id; intros b.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply equiv_path_arrow.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        }</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply equiv_path_arrow.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      }</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 160
+Time: 0.034s">
+<div class="time" style="width: 45.945945945946%"></div>
+<pre>
+      exact _.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 162
+Time: 0.01s">
+<div class="time" style="width: 13.513513513514%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> 
+    +</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 163
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros &lt;- a a'.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 163
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite transport_arrow.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 164
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite transport_arrow_toconst.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 164
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      repeat rewrite transport_Vp.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 165
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 165
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 166
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros H0.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 166
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      by_extensionality b.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by_extensionality b'.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite transport_arrow.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite transport_arrow_toconst.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 168
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+      apply path_iff_ishprop_uncurried.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      specialize (H0 (transport idmap p^ b) (transport idmap p^ b')).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 170
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+      repeat rewrite transport_pV in H0.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact H0.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 171
+Time: 0.007s">
+<div class="time" style="width: 9.4594594594595%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 172
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+
+Lemma path_Ordinal `{Univalence} (A B : Ordinal)
+  : forall f : A &lt;~&gt; B,
+    (forall a a' : A, a &lt; a' &lt;-&gt; f a &lt; f a')
+    -&gt; A = B.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros f H0.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 179
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply equiv_path_Ordinal.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 179
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists f.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 179
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact H0.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 179
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 180
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma trichotomy_ordinal `{ExcludedMiddle} {A : Ordinal} (a b : A)
+  : a &lt; b \/ a = b \/ b &lt; a.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 183
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 184
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert b.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> induction (well_foundedness a) as [a _ IHa].</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros b.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction (well_foundedness b) as [b _ IHb].</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 186
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+  destruct (LEM (merely (exists b', b' &lt; b /\ (a = b' \/ a &lt; b')))) as [H1 | H1]; try exact _.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> revert H1.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 188
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre> rapply Trunc_rec.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [b' [b'_b Hb']].</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    revert Hb'.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 189
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre> rapply Trunc_rec.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 189
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [a_b' | b'_a].</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 189
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 190
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 190
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> left.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 190
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite a_b'.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 190
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact b'_b.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 190
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 191
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 191
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> left.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 191
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> transitivity b'; assumption.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 191
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 192
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre> destruct (LEM (merely (exists a', a' &lt; a /\ (a' = b \/ b &lt; a')))) as [H2 | H2]; try exact _.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 192
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 193
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> revert H2.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 193
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre> rapply Trunc_rec.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 193
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [a' [a'_a Ha']].</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 193
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      revert Ha'.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 194
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre> rapply Trunc_rec.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 194
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [a'_b | b_a'].</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 194
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> right.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> right.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite &lt;- a'_b.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact a'_a.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> right.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> right.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> transitivity a'; assumption.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> right.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> left.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply extensionality.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros c.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 199
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros c_a.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 199
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply LEM_to_DNE; try exact _.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 199
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros not_c_b.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 199
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply H2.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists c.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        --</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 201
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact c_a.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 201
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        --</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 202
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> refine (Trunc_rec _ (IHa c c_a b)).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 202
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [c_b | H3].</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 202
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+           ++</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 203
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply Empty_rec.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 203
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (not_c_b c_b).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 203
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+           ++</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 204
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact H3.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 204
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 205
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros c_b.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 205
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply LEM_to_DNE; try exact _.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 205
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros not_c_a.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 205
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply H1.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists c.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        --</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 207
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact c_b.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 207
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        --</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> refine (Trunc_rec _ (IHb c c_b)).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [a_c | H3].</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+           ++</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 209
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 209
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> right.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 209
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact a_c.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 209
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+           ++</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 210
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> refine (Trunc_rec _ H3).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 210
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [a_c | c_a].</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 210
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+              **</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 211
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 211
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> left.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 211
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact a_c.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 211
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+              **</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 212
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 212
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> right.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 212
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply Empty_rec.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 212
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (not_c_a c_a).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 212
+Time: 0.014s">
+<div class="time" style="width: 18.918918918919%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 213
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+
+Lemma ordinal_has_minimal_hsolutions {lem : ExcludedMiddle} (A : Ordinal) (P : A -&gt; HProp)
+  : merely (exists a, P a) -&gt; merely (exists a, P a /\ forall b, P b -&gt; a &lt; b \/ a = b).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 216
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 217
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros H'.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 218
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> eapply merely_destruct; try exact H'.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 218
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [a Ha].</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 219
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> induction (well_foundedness a) as [a _ IH].</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 219
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+  destruct (LEM (merely (exists b, P b /\ b &lt; a)) _) as [H|H].</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 220
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 221
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> eapply merely_destruct; try apply H.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 221
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [b Hb].</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 221
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (IH b); apply Hb.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 221
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 222
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 222
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists a.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 222
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split; try exact Ha.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 222
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros b Hb.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 222
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    specialize (trichotomy_ordinal a b).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 223
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros H1.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 223
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    eapply merely_destruct; try exact H1.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 224
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros [H2|H2].</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> {</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by left.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    eapply merely_destruct; try exact H2.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 226
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros [H3|H3].</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 227
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> {</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 227
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 227
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by right.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 227
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 227
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply Empty_rec, H, tr.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists b.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by split.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 228
+Time: 0.003s">
+<div class="time" style="width: 4.0540540540541%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 229
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Simulations *)
+
+(** We define the notion of simulations between arbitrary relations. For simplicity, most lemmas about simulations are formulated for ordinals only, even if they do not need all properties of ordinals. The only exception is [isordinal_simulation] which can be used to prove that a relation is an ordinal. *)
+
+</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 234
+Time: 0.002s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>Class IsSimulation {A B : Type} {R__A : Lt A} {R__B : Lt B} (f : A -&gt; B) :=
+  { simulation_is_hom {a a'}
+    : a &lt; a' -&gt; f a &lt; f a'
+    ; simulation_is_merely_minimal {a b}
+      : b &lt; f a -&gt; hexists (fun a' =&gt; a' &lt; a /\ f a' = b)
+  }.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 239
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments simulation_is_hom {_ _ _ _} _ {_ _ _}.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 240
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance ishprop_IsSimulation `{Funext}
+         {A B : Ordinal} (f : A -&gt; B) :
+  IsHProp (IsSimulation f).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 244
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 245
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  eapply istrunc_equiv_istrunc.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 246
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 247
+Time: 0.005s">
+<div class="time" style="width: 6.7567567567568%"></div>
+<pre> issig.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 247
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 248
+Time: 0.01s">
+<div class="time" style="width: 13.513513513514%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 248
+Time: 0.005s">
+<div class="time" style="width: 6.7567567567568%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 249
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance isinjective_simulation
+         {A : Type} {R : Lt A} `{IsOrdinal A R}
+         {B : Type} {Q : Lt B} `{IsOrdinal B Q}
+         (f : A -&gt; B) {is_simulation : IsSimulation f}
+  : IsInjective f.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 255
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 256
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros a.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 257
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> induction (well_foundedness a) as [a _ IHa].</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 257
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros b.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 258
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert a IHa.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 259
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> induction (well_foundedness b) as [b _ IHb].</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 259
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a IHa.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 259
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros fa_fb.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 260
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply extensionality; intros c.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 260
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 260
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 261
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros c_a.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 261
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    assert (fc_fa : f c &lt; f a)
+      by exact (simulation_is_hom f c_a).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 263
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    assert (fc_fb : f c &lt; f b)
+      by (rewrite &lt;- fa_fb; exact fc_fa).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 265
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    assert (H1 : hexists (fun c' =&gt; c' &lt; b /\ f c' = f c))
+      by exact (simulation_is_merely_minimal fc_fb).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 267
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+    refine (Trunc_rec _ H1).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 268
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros (c' &amp; c'_b &amp; fc'_fc).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 268
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    assert (c = c') as -&gt;.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 269
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> {</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 269
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply IHa.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 270
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 271
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact c_a.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 271
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 272
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> symmetry.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 272
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact fc'_fc.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 272
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    }</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 273
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact c'_b.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 274
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 275
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros c_b.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 275
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    assert (fc_fb : f c &lt; f b)
+      by exact (simulation_is_hom f c_b).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 277
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    assert (fc_fa : f c &lt; f a)
+      by (rewrite fa_fb; exact fc_fb).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 279
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    assert (H1 : hexists (fun c' =&gt; c' &lt; a /\ f c' = f c))
+      by exact (simulation_is_merely_minimal fc_fa).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 281
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+    refine (Trunc_rec _ H1).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 282
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros (c' &amp; c'_a &amp; fc'_fc).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 282
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    assert (c' = c) as &lt;-.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 283
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 284
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply IHb.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 284
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 285
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact c_b.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 285
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 286
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a' a'_c'.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 286
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply IHa.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 286
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (transitivity a'_c' c'_a).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 286
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 287
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact fc'_fc.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 287
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 288
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact c'_a.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 288
+Time: 0.002s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 289
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+
+
+Lemma simulation_is_minimal
+      {A : Type} {R : Lt A} `{IsOrdinal A R}
+      {B : Type} {Q : Lt B} `{IsOrdinal B Q}
+      (f : A -&gt; B) {is_simulation : IsSimulation f}
+  : forall {a b}, b &lt; f a -&gt; exists a', a' &lt; a /\ f a' = b.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 296
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 297
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros a b H1.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 298
+Time: 0.006s">
+<div class="time" style="width: 8.1081081081081%"></div>
+<pre>
+  refine (Trunc_rec _ (simulation_is_merely_minimal H1)).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 299
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> {</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 299
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply hprop_allpath.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 300
+Time: 0.005s">
+<div class="time" style="width: 6.7567567567568%"></div>
+<pre> intros (a1 &amp; ? &amp; p) (a2 &amp; ? &amp; &lt;-).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 300
+Time: 0.006s">
+<div class="time" style="width: 8.1081081081081%"></div>
+<pre>
+    apply path_sigma_hprop; cbn.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 301
+Time: 0.02s">
+<div class="time" style="width: 27.027027027027%"></div>
+<pre> apply (injective f).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 301
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact p.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 301
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  }</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 302
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact idmap.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 303
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 304
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+
+
+Lemma path_simulation `{Funext}
+      {A B : Ordinal}
+      (f : A -&gt; B) {is_simulation_f : IsSimulation f}
+      (g : A -&gt; B) {is_simulation_g : IsSimulation g}
+  : f = g.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 311
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 312
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply path_forall; intros a.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 313
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction (well_foundedness a) as [a _ IH].</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 314
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (extensionality (f a) (g a)).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 315
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros b.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 316
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  split.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 317
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 318
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros b_fa.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 318
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+    destruct (simulation_is_minimal f b_fa) as (a' &amp; a'_a &amp; &lt;-).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 319
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite (IH _ a'_a).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 320
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (simulation_is_hom g).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 320
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact a'_a.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 320
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 321
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros b_ga.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 321
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+    destruct (simulation_is_minimal g b_ga) as (a' &amp; a'_a &amp; &lt;-).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 322
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite &lt;- (IH _ a'_a).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 323
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (simulation_is_hom f).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 323
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact a'_a.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 323
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 324
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+
+
+Instance is_simulation_isomorphism
+         {A : Type} {R__A : Lt A}
+         {B : Type} {R__B : Lt B}
+         (f : Isomorphism (A; R__A) (B; R__B))
+  : IsSimulation f.1.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 331
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 332
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  constructor.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 333
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 334
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a a' a_a'.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 334
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply f.2.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 334
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact a_a'.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 334
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 335
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a b b_fa.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 335
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 335
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists (f.1^-1 b).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 335
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 335
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 336
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply f.2.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 336
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite eisretr.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 336
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact b_fa.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 336
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 337
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply eisretr.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 337
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 338
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+
+Instance ishprop_Isomorphism `{Funext} (A B : Ordinal)
+  : IsHProp (Isomorphism A B).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 342
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 343
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply hprop_allpath; intros f g.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 344
+Time: 0.013s">
+<div class="time" style="width: 17.567567567568%"></div>
+<pre> apply path_sigma_hprop; cbn.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 344
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply path_equiv.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 345
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre> apply path_simulation; exact _.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 345
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 346
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+
+Instance ishset_Ordinal `{Univalence}
+  : IsHSet Ordinal.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 350
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 351
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply istrunc_S.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 352
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros A B.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 353
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (istrunc_equiv_istrunc (Isomorphism A B)).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 354
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> {</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 354
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply equiv_path_Ordinal.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 355
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  }</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 356
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact _.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 357
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 358
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+
+
+Lemma isordinal_simulation
+      {A : Type}
+     `{IsHSet A}
+
+      {R : Lt A}
+      {mere : is_mere_relation _ R}
+
+      {B : Type}
+      {Q : Lt B}
+     `{IsOrdinal B Q}
+
+      (f : A -&gt; B)
+     `{IsInjective _ _ f}
+      {is_simulation : IsSimulation f}
+
+  : IsOrdinal A R.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 377
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 378
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  constructor.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 379
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 380
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 380
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 381
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 381
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 382
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a a' H1.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 382
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (injective f).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 382
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply extensionality.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 382
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros b.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 383
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 383
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 384
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros b_fa.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 384
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre> refine (Trunc_rec _ (simulation_is_merely_minimal b_fa)).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 384
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      intros [a0 [a0_a &lt;-]].</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 385
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply (simulation_is_hom f).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 386
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply H1.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 386
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact a0_a.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 386
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 387
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros b_fa'.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 387
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre> refine (Trunc_rec _ (simulation_is_merely_minimal b_fa')).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 387
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      intros [a0 [a0_a' &lt;-]].</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 388
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply (simulation_is_hom f).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 389
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply H1.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 389
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact a0_a'.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 389
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 390
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 390
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> remember (f a) as b eqn: fa_b.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 390
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    revert a fa_b.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 391
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> induction (well_foundedness b) as [b _ IH].</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 391
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a &lt;-.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 391
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    constructor; intros a' a'_a.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 392
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (IH (f a')).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 392
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 393
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (simulation_is_hom f).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 393
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact a'_a.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 393
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 394
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 394
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 395
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a b c a_b b_c.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 395
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    assert (fa_fc : f a &lt; f c).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 396
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> {</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 396
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      transitivity (f b).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 397
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> {</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 397
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply (simulation_is_hom f).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 398
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact a_b.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 398
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      }</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 399
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply (simulation_is_hom f).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 400
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact b_c.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 400
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    }</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 401
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (Trunc_rec _ (simulation_is_merely_minimal fa_fc)).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 402
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros [a' [a'_c fa'_fa]].</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 403
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (injective f) in fa'_fa.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 403
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> subst a'.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 403
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact a'_c.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 404
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 405
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+
+
+
+
+(** * Initial segments *)
+
+</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 412
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition initial_segment `{PropResizing}
+           {A : Type} {R : Lt A} `{IsOrdinal A R} (a : A)
+  : Ordinal.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 414
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 415
+Time: 0.008s">
+<div class="time" style="width: 10.810810810811%"></div>
+<pre>
+  srefine {| ordinal_carrier := {b : A &amp; smalltype (b &lt; a)}
+           ; ordinal_relation := fun x y =&gt; x.1 &lt; y.1
+           |};
+    try exact _.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 419
+Time: 0.037s">
+<div class="time" style="width: 50%"></div>
+<pre>
+  srapply (isordinal_simulation pr1).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 420
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 421
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> unfold lt.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 421
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 421
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 422
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 422
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 423
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 423
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 424
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> constructor.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 424
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 425
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y x_y.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 425
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact x_y.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 425
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 426
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros b a' a'_b; cbn in *.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 426
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 426
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      assert (b_a : b.1 &lt; a).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 427
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> {</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 427
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        exact ((equiv_smalltype _) b.2).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 428
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      }</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 429
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      srapply exist.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 430
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> {</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 430
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        exists a'.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 431
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply equiv_smalltype.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 432
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (transitivity a'_b b_a).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 432
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      }</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 433
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      cbn.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 434
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 434
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 435
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact a'_b.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 435
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 436
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 436
+Time: 0.002s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 437
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Declare Scope Ordinals.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 439
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Open Scope Ordinals.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 440
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation "↓ a" := (initial_segment a) (at level 4, format "↓ a") : Ordinals.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 442
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+(* 3 is the level of most unary postfix operators in the standard lib, e.g. f^-1 *)
+
+</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 444
+Time: 0.003s">
+<div class="time" style="width: 4.0540540540541%"></div>
+<pre>Definition in_
+          `{PropResizing}
+           {A : Ordinal} {a : A}
+           (x : A) (H : x &lt; a)
+  : ↓a
+  := (x; (equiv_smalltype _)^-1 H).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 449
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+
+Definition out
+           `{PropResizing}
+           {A : Ordinal} {a : A}
+  : ↓a -&gt; A
+  := pr1.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 455
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition initial_segment_property `{PropResizing}
+  {A : Ordinal} {a : A}
+  : forall x : ↓a, out x &lt; a.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 459
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 460
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 461
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (equiv_smalltype _ (proj2 x)).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 461
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 462
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+
+Instance is_simulation_out `{PropResizing}
+  {A : Ordinal} (a : A)
+  : IsSimulation (out : ↓a -&gt; A).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 467
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 468
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold out.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 469
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  constructor.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 470
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 471
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> auto.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 471
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 472
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x a' a'_x.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 472
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 472
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    assert (a'_a : a' &lt; a).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 473
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> {</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 473
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      transitivity (out x).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 474
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> {</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 474
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        assumption.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 475
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      }</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 476
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply initial_segment_property.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 477
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>  (* TODO: Rename? *)
+   </pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 478
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>}</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 478
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists (in_ a' a'_a); cbn.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 479
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> auto.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 479
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 480
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+
+Instance isinjective_initial_segment `{Funext} `{PropResizing}
+  (A : Ordinal)
+  : IsInjective (initial_segment : A -&gt; Ordinal).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 485
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 486
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+  enough (H1 : forall a1 a2 : A, ↓a1 = ↓a2 -&gt; forall b : ↓a1, out b &lt; a2).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 487
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> {</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 487
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros a1 a2 p.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 488
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply extensionality; intros b.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 488
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 488
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 489
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros b_a1.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 489
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (H1 a1 a2 p (in_ b b_a1)).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 489
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 490
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros b_a2.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 490
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (H1 a2 a1 p^ (in_ b b_a2)).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 490
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  }</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 491
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  intros a1 a2 p b.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 493
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+  assert (out = transport (fun B : Ordinal =&gt; B -&gt; A) p^ out)
+    as -&gt;.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 495
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> {</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 495
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_simulation.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 496
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 497
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 497
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 498
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply transportD.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 498
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 498
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  }</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 499
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite transport_arrow_toconst.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 500
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite inv_V.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 500
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply initial_segment_property.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 500
+Time: 0.002s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 501
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+
+Lemma equiv_initial_segment_simulation
+      `{PropResizing}
+      {A : Type@{A}} {R : Lt@{_ R} A} `{IsOrdinal A R}
+      {B : Type@{B}} {Q : Lt@{_ Q} B} `{IsOrdinal B Q}
+      (f : A -&gt; B) {is_simulation : IsSimulation f} (a : A)
+  : Isomorphism ↓(f a) ↓a.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 508
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 509
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply isomorphism_inverse.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 510
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply exist.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 511
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 512
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> srapply equiv_adjointify.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 512
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 513
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 513
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists (f x.1).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 513
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre> apply (equiv_smalltype _)^-1.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 513
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+      rapply simulation_is_hom.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 514
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre> apply (equiv_smalltype _).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 514
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact x.2.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 514
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 515
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 515
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      assert (x_fa : x.1 &lt; f a).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 516
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> {</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 516
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        exact ((equiv_smalltype _) x.2).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 517
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      }</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 518
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+      destruct (simulation_is_minimal f x_fa) as (a' &amp; a'_a &amp; _).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 519
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+      exact (a'; (equiv_smalltype _)^-1 a'_a).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 520
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 521
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 521
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 521
+Time: 0.004s">
+<div class="time" style="width: 5.4054054054054%"></div>
+<pre> apply path_sigma_hprop; cbn.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 521
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      transparent assert (x_fa : (x.1 &lt; f a)).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 522
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> {</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 522
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        exact (equiv_smalltype _ x.2).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 523
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      }</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 524
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (snd (simulation_is_minimal f x_fa).2).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 525
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 526
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 526
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 526
+Time: 0.002s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre> apply path_sigma_hprop; cbn.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 526
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      transparent assert (x_a : (x.1 &lt; a)).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 527
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> {</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 527
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        exact (equiv_smalltype _ x.2).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 528
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      }</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 529
+Time: 0.025s">
+<div class="time" style="width: 33.783783783784%"></div>
+<pre>
+      apply (injective f).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 530
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      cbn.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 531
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> unfold initial_segment_property.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 531
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 531
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite eisretr.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 532
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (snd (simulation_is_minimal f (simulation_is_hom f x_a)).2).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 533
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 534
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre> cbn.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 534
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [x x_a] [y y_a]; cbn.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 534
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 534
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 535
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (simulation_is_hom f).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 535
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 536
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros fx_fy.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 536
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+      destruct (simulation_is_minimal f fx_fy) as (a' &amp; a'_y &amp; p).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 537
+Time: 0.027s">
+<div class="time" style="width: 36.486486486486%"></div>
+<pre>
+      apply injective in p; try exact _.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 538
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> subst a'.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 538
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact a'_y.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 538
+Time: 0.013s">
+<div class="time" style="width: 17.567567567568%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 539
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+
+Lemma path_initial_segment_simulation `{Univalence}
+      `{PropResizing}
+      {A : Type} {R : Lt A} `{IsOrdinal A R}
+      {B : Type} {Q : Lt B} `{IsOrdinal B Q}
+      (f : A -&gt; B) {is_simulation : IsSimulation f} (a : A)
+  : ↓(f a) = ↓a.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 546
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 547
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply equiv_path_Ordinal.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 548
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (equiv_initial_segment_simulation f).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 548
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 549
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * `Ordinal` is an ordinal *)
+
+</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 552
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance lt_Ordinal@{carrier relation +} `{PropResizing}
+  : Lt Ordinal@{carrier relation}
+  := fun A B =&gt; exists b : B, A = ↓b.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 554
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance is_mere_relation_lt_on_Ordinal `{Univalence} `{PropResizing}
+  : is_mere_relation Ordinal lt_Ordinal.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 557
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 558
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros A B.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 559
+Time: 0.002s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+  apply ishprop_sigma_disjoint.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 560
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros b b' -&gt; p.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 561
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (injective initial_segment).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 561
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact p.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 561
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 562
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition bound `{PropResizing}
+  {A B : Ordinal} (H : A &lt; B)
+  : B
+  := H.1.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 567
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* We use this notation to hide the proof of A &lt; B that `bound` takes as an argument *)</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 569
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Notation "A ◁ B" := (@bound A B _) (at level 70) : Ordinals.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 569
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+
+Definition bound_property `{PropResizing}
+  {A B : Ordinal} (H : A &lt; B)
+  : A = ↓(bound H)
+  := H.2.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 574
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+
+Lemma isembedding_initial_segment `{PropResizing} `{Univalence}
+  {A : Ordinal} (a b : A)
+  : a &lt; b &lt;-&gt; ↓a &lt; ↓b.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 578
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 579
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  split.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 580
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 581
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a_b.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 581
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists (in_ a a_b).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 581
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+    exact (path_initial_segment_simulation out (in_ a a_b)).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 582
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 583
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a_b.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 583
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    assert (a = out (bound a_b))
+           as -&gt;.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 585
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> {</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 585
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply (injective initial_segment).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 586
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+      rewrite (path_initial_segment_simulation out).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 587
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply bound_property.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 588
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    }</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 589
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply initial_segment_property.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 590
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 591
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance Ordinal_is_ordinal `{PropResizing} `{Univalence}
+  : IsOrdinal Ordinal (&lt;).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 594
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 595
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  constructor.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 596
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 597
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 597
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 598
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact is_mere_relation_lt_on_Ordinal.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 598
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 599
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros A B H1.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 599
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply path_Ordinal.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 600
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 601
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> srapply equiv_adjointify.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 601
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 602
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assert (lt_B : forall a : A, ↓a &lt; B).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 602
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> {</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 602
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          intros a.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 603
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply H1.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 603
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists a.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 603
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 603
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        }</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 604
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        exact (fun a =&gt; bound (lt_B a)).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 605
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 606
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assert (lt_A : forall b : B, ↓b &lt; A).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 606
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> {</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 606
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          intros b.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 607
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply H1.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 607
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists b.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 607
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 607
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        }</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 608
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        exact (fun b =&gt; bound (lt_A b)).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 609
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 610
+Time: 0.003s">
+<div class="time" style="width: 4.0540540540541%"></div>
+<pre> cbn.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 610
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros b.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 610
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (injective initial_segment).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 610
+Time: 0.005s">
+<div class="time" style="width: 6.7567567567568%"></div>
+<pre>
+        repeat rewrite &lt;- bound_property.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 611
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 611
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 612
+Time: 0.007s">
+<div class="time" style="width: 9.4594594594595%"></div>
+<pre> cbn.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 612
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 612
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre> apply (injective initial_segment).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 612
+Time: 0.005s">
+<div class="time" style="width: 6.7567567567568%"></div>
+<pre>
+        repeat rewrite &lt;- bound_property.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 613
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 613
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 614
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre> cbn.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 614
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a a'.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 614
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 614
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 615
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a_a'.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 615
+Time: 0.002s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+        apply isembedding_initial_segment.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 616
+Time: 0.004s">
+<div class="time" style="width: 5.4054054054054%"></div>
+<pre>
+        repeat rewrite &lt;- bound_property.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 617
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply isembedding_initial_segment.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 618
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        assumption.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 619
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 620
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a_a'.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 620
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply isembedding_initial_segment in a_a'.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 621
+Time: 0.004s">
+<div class="time" style="width: 5.4054054054054%"></div>
+<pre>
+        repeat rewrite &lt;- bound_property in a_a'.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 622
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+        apply isembedding_initial_segment in a_a'.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 623
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        assumption.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 624
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 625
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros A.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 625
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    constructor.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 626
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros ? [a -&gt;].</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 626
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    induction (well_foundedness a) as [a _ IH].</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 627
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    constructor.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 628
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros ? [x -&gt;].</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 628
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+    rewrite &lt;- (path_initial_segment_simulation out).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 629
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply IH.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 630
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply initial_segment_property.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 630
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 631
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros ? ? A [x -&gt;] [a -&gt;].</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 631
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists (out x).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 631
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+    rewrite (path_initial_segment_simulation out).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 632
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    reflexivity.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 633
+Time: 0.034s">
+<div class="time" style="width: 45.945945945946%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 634
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+
+(* This is analogous to the set-theoretic statement that an ordinal is the set of all smaller ordinals. *)</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 637
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>Lemma isomorphism_to_initial_segment `{PropResizing} `{Univalence}
+  (B : Ordinal@{A _})
+  : Isomorphism B ↓B.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 639
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 640
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply exist.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 641
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 642
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> srapply equiv_adjointify.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 642
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 643
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros b.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 643
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists ↓b.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 643
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply equiv_smalltype.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 644
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exists b.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 645
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 645
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 646
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [C HC].</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 646
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> eapply equiv_smalltype in HC.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 646
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (bound HC).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 647
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 648
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre> cbn.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 648
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [C HC].</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 648
+Time: 0.003s">
+<div class="time" style="width: 4.0540540540541%"></div>
+<pre> apply path_sigma_hprop; cbn.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 648
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      symmetry.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 649
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply bound_property.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 649
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 650
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre> cbn.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 650
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 650
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite eisretr.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 650
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 650
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 651
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 651
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros b b'.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 651
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply isembedding_initial_segment.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 651
+Time: 0.011s">
+<div class="time" style="width: 14.864864864865%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 652
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** But an ordinal isn't isomorphic to any initial segment of itself. *)</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 654
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>Lemma ordinal_initial `{PropResizing} `{Univalence} (O : Ordinal) (a : O)
+  : Isomorphism O ↓a -&gt; Empty.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 655
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 656
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros p % equiv_path_Ordinal.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 657
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  enough (HO : O &lt; O) by exact (irreflexive_ordinal_relation _ _ _ _ HO).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 658
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exists a.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 659
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact p.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 659
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 660
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Ordinal successor *)
+
+</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 663
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition successor (A : Ordinal) : Ordinal.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 663
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 664
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  set (carrier := (A + Unit)%type).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 665
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+  set (relation (x y : carrier) :=
+         match x, y with
+         | inl x, inl y =&gt; x &lt; y
+         | inl x, inr _ =&gt; Unit
+         | inr _, inl y =&gt; Empty
+         | inr _, inr _ =&gt; Empty
+         end).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 672
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exists carrier relation.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 673
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> constructor.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 673
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 674
+Time: 0.006s">
+<div class="time" style="width: 8.1081081081081%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 674
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 675
+Time: 0.002s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre> intros [x | ?] [y | ?]; cbn; exact _.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 675
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 676
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [x | []] [y | []] H.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 676
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 677
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> f_ap.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 677
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply extensionality.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 677
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros z.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 677
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (H (inl z)).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 677
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 678
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> enough (H0 : relation (inl x) (inl x)).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 678
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> {</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 678
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        cbn in H0.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 679
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (irreflexivity _ _ H0).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 679
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      }</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 680
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply H.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 681
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 681
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact tt.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 681
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 682
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> enough (H0 : relation (inl y) (inl y)).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 682
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> {</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 682
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        cbn in H0.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 683
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (irreflexivity _ _ H0).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 683
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      }</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 684
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply H.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 685
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 685
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact tt.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 685
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 686
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 686
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 687
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assert (H : forall a, Accessible relation (inl a)).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 687
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> {</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 687
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      intros a.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 688
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> induction (well_foundedness a) as [a _ IH].</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 688
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      constructor; intros [b | []]; cbn; intros H.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 689
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 690
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply IH.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 690
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact H.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 690
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 691
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct H.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 691
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    }</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 692
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros [x | []].</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 693
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 694
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply H.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 694
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 695
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> constructor; intros [b | []]; cbn; intros H0.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 695
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 696
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply H.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 696
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 697
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct H0.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 697
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 698
+Time: 0.002s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre> intros [x | []] [y | []] [z | []]; cbn; auto.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 698
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros _ [].</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 699
+Time: 0.005s">
+<div class="time" style="width: 6.7567567567568%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 700
+Time: 0.002s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+
+
+Lemma lt_successor `{PropResizing} `{Univalence} (A : Ordinal)
+  : A &lt; successor A.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 704
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 705
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exists (inr tt).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 706
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply path_Ordinal.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 707
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 708
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> srapply equiv_adjointify.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 708
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 709
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 709
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre> srapply in_.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 709
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 710
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (inl a).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 710
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 711
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact tt.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 711
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 712
+Time: 0.002s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre> intros [[a | []] Ha]; cbn in *.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 712
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 713
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact a.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 713
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 714
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply equiv_smalltype in Ha.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 714
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct Ha.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 714
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 715
+Time: 0.003s">
+<div class="time" style="width: 4.0540540540541%"></div>
+<pre> intros [[a | []] Ha].</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 715
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 716
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> unfold in_.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 716
+Time: 0.004s">
+<div class="time" style="width: 5.4054054054054%"></div>
+<pre> cbn.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 716
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre> f_ap.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 716
+Time: 0.002s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+        assert (IsHProp (smalltype Unit)) by exact _.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 717
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply path_ishprop.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 718
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 719
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre> destruct (equiv_smalltype _ Ha).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 719
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 720
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 720
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 720
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 721
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 721
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a a'.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 721
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 721
+Time: 0.023s">
+<div class="time" style="width: 31.081081081081%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 722
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Ordinal limit *)
+
+</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 725
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section Image.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 725
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Universes i j.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 727
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (** In the following, there are no constraints between [i] and [j]. *)
+ </pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 729
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Context `{PropResizing} `{Funext} {A : Type@{i}} {B : HSet@{j}} (f : A -&gt; B).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 729
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Definition qkfs := quotient_kernel_factor_small f.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 731
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Local Definition image : Type@{i} := qkfs.1.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 732
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Local Definition factor1 : A -&gt; image := qkfs.2.1.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 733
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Local Definition factor2 : image -&gt; B := qkfs.2.2.1.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 734
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Local Definition isinjective_factor2 : IsInjective factor2
+    := isinj_embedding _ (snd (fst qkfs.2.2.2)).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 736
+Time: 0.002s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+  Local Definition image_ind_prop (P : image -&gt; Type@{k}) `{forall x, IsHProp (P x)}
+    (step : forall a : A, P (factor1 a))
+    : forall x : image, P x
+    := Quotient_ind_hprop _ P step.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 740
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (** [factor2 o factor1 == f] is definitional, so we don't state that. *)
+
+</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 742
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>End Image.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 742
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition limit `{Univalence} `{PropResizing}
+           {X : Type} (F : X -&gt; Ordinal) : Ordinal.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 745
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 746
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  set (f := fun x : {i : X &amp; F i} =&gt; ↓x.2).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 747
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  set (carrier := image f : Type@{i}).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 748
+Time: 0.012s">
+<div class="time" style="width: 16.216216216216%"></div>
+<pre>
+  set (relation := fun A B : carrier =&gt;
+                     smalltype (factor2 f A &lt; factor2 f B)
+                     : Type@{i}).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 751
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exists carrier relation.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 752
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+  snapply (isordinal_simulation (factor2 f)).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 753
+Time: 0.026s">
+<div class="time" style="width: 35.135135135135%"></div>
+<pre>
+  1-4: exact _.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 754
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 755
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply isinjective_factor2.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 755
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 756
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> constructor.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 756
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 757
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x x' x_x'.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 757
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      unfold lt, relation.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 758
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply equiv_smalltype in x_x'.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 758
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact x_x'.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 758
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 759
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> nrefine (image_ind_prop f _ _).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 759
+Time: 0.005s">
+<div class="time" style="width: 6.7567567567568%"></div>
+<pre> 1: exact _.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 759
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      intros a.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 760
+Time: 0.002s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+      change (factor2 f (class_of _ a)) with (f a).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 761
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      intros B B_fa.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 762
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 762
+Time: 0.003s">
+<div class="time" style="width: 4.0540540540541%"></div>
+<pre>
+      exists (factor1 f (a.1; out (bound B_fa))).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 763
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      unfold lt, relation.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 764
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      change (factor2 f (factor1 f ?A)) with (f A).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 765
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      unfold f.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 766
+Time: 0.004s">
+<div class="time" style="width: 5.4054054054054%"></div>
+<pre>
+      assert (↓(out (bound B_fa)) = B) as -&gt;.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 767
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> {</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 767
+Time: 0.002s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+        rewrite (path_initial_segment_simulation out).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 768
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        symmetry.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 769
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre> apply bound_property.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 769
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      }</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 770
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      split.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 771
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 772
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply equiv_smalltype.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 772
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact B_fa.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 772
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 773
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 773
+Time: 0.014s">
+<div class="time" style="width: 18.918918918919%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 774
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+
+Instance le_on_Ordinal : Le Ordinal :=
+  fun A B =&gt; exists f : A -&gt; B, IsSimulation f.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 777
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition limit_is_upper_bound `{Univalence} `{PropResizing}
+           {X : Type} (F : X -&gt; Ordinal)
+  : forall x, F x &lt;= limit F.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 781
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 782
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  set (f := fun x : {i : X &amp; F i} =&gt; ↓x.2).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 783
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 784
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> unfold le, le_on_Ordinal.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 784
+Time: 0.017s">
+<div class="time" style="width: 22.972972972973%"></div>
+<pre>
+  exists (fun u =&gt; factor1 f (x; u)).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 785
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  split.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 786
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 787
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros u v u_v.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 787
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+    change (smalltype (f (x; u) &lt; f (x; v))).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 788
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply equiv_smalltype.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 789
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+    apply isembedding_initial_segment.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 790
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact u_v.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 790
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 791
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros u.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 791
+Time: 0.012s">
+<div class="time" style="width: 16.216216216216%"></div>
+<pre>
+    nrefine (image_ind_prop f _ _).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 792
+Time: 0.005s">
+<div class="time" style="width: 6.7567567567568%"></div>
+<pre> 1: exact _.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 792
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros a a_u.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 793
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+    change (smalltype (f a &lt; f (x; u))) in a_u.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 794
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply equiv_smalltype in a_u.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 795
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply tr.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 796
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre> exists (out (bound a_u)).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 796
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 796
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 797
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply initial_segment_property.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 797
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 798
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre> apply (isinjective_factor2 f); simpl.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 798
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      change (factor2 f (factor1 f ?A)) with (f A).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 799
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      unfold f.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 800
+Time: 0.003s">
+<div class="time" style="width: 4.0540540540541%"></div>
+<pre>
+      rewrite (path_initial_segment_simulation out).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 801
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      symmetry.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 802
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply bound_property.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 802
+Time: 0.012s">
+<div class="time" style="width: 16.216216216216%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 803
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Any type equivalent to an ordinal is an ordinal, and we can change the universe that the relation takes values in. *)
+
+(* TODO: Should factor this into two results:  (1) Anything equivalent to an ordinal is an ordinal (with the relation landing in the same universe for both).  (2) Under PropResizing, the universe that the relation takes values in can be changed. *)</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 807
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition resize_ordinal@{i j +} `{PropResizing} (B : Ordinal@{i _}) (C : Type@{j}) (g : C &lt;~&gt; B)
+  : Ordinal@{j _}.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 808
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 809
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+  exists C (fun c1 c2 : C =&gt; smalltype (g c1 &lt; g c2)).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 810
+Time: 0.006s">
+<div class="time" style="width: 8.1081081081081%"></div>
+<pre>
+  snapply (isordinal_simulation g); only 2, 3, 4, 5: exact _.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 811
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 812
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (istrunc_equiv_istrunc B (equiv_inverse g)).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 812
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 813
+Time: 0.013s">
+<div class="time" style="width: 17.567567567568%"></div>
+<pre> constructor.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 813
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 814
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a a' a_a'.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 814
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre> apply (equiv_smalltype _).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 814
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact a_a'.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 814
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 815
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a b b_fa.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 815
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 815
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists (g^-1 b).</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 815
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 815
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 816
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply equiv_smalltype.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 816
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite eisretr.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 816
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact b_fa.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 816
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 817
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply eisretr.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 817
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 818
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma resize_ordinal_iso@{i j +} `{PropResizing} (B : Ordinal@{i _}) (C : Type@{j}) (g : C &lt;~&gt; B)
+  : Isomorphism (resize_ordinal B C g) B.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 821
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 822
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exists g.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 823
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a a'.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 823
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 823
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split; apply equiv_smalltype.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 823
+Time: 0.001s">
+<div class="time" style="width: 1.3513513513514%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: Ordinals.v
+Line: 825
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

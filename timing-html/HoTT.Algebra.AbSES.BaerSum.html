@@ -1,0 +1,1501 @@
+<html>
+<head>
+<title>BaerSum.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for BaerSum.v</h1>
+
+<div class="code" title="File: BaerSum.v
+Line: 1
+Time: 0.038s">
+<div class="time" style="width: 100%"></div>
+<pre>From HoTT Require Import Basics Types.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 1
+Time: 0.017s">
+<div class="time" style="width: 44.736842105263%"></div>
+<pre>
+From HoTT.WildCat Require Import Core Universe Opposite Bifunctor.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 2
+Time: 0.032s">
+<div class="time" style="width: 84.210526315789%"></div>
+<pre>
+Require Import Pointed.Core.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 3
+Time: 0.028s">
+<div class="time" style="width: 73.684210526316%"></div>
+<pre>
+Require Import AbGroups.AbelianGroup AbGroups.Biproduct AbGroups.AbHom.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 4
+Time: 0.015s">
+<div class="time" style="width: 39.473684210526%"></div>
+<pre>
+Require Import AbSES.Core AbSES.Pullback AbSES.Pushout AbSES.DirectSum.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Homotopy.HSpace.Core.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope mc_scope.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope mc_add_scope.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 9
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * The Baer sum of two short exact sequences, lemmas and consequences. *)
+
+(** The Baer sum of two short exact sequences is obtained from the pointwise direct sum by pushing forward along the codiagonal and then pulling back along the diagonal. (Swapping the order of pushing forward and pulling back produces an isomorphic short exact sequence.) *)</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 13
+Time: 0.001s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>Definition abses_baer_sum `{Univalence} {B A : AbGroup@{u}} (E F : AbSES B A)
+  : AbSES B A
+  := abses_pullback ab_diagonal (abses_pushout ab_codiagonal (abses_direct_sum E F)).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+
+(** ** [AbSES'] is a bifunctor *)
+
+(** Given a morphism [f] of short exact sequences, the pushout of the domain along [f_1] equals the pullback of the codomain along [f_3]. *)</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 20
+Time: 0.001s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>Lemma abses_pushout_is_pullback' `{Univalence} {A A' B B' : AbGroup@{u}}
+      {E : AbSES B A} {E' : AbSES B' A'} (f : AbSESMorphism E E')
+  : abses_pushout (component1 f) E $== abses_pullback (component3 f) E'.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* The morphism [f : E -&gt; E'] factors as [E -&gt; f_1 E -&gt; E'], where the first map is the map defining the pushout [f_1 E] and the second map is denoted [abses_pushout_morphism_rec f] below.  This second map is the identity on the first component, so it presents its domain as the pullback of [E'] along [f_3]. *)
+ </pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 25
+Time: 0.003s">
+<div class="time" style="width: 7.8947368421053%"></div>
+<pre>exact (abses_pullback_component1_id' (abses_pushout_morphism_rec f) (fun _ =&gt; idpath)).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Given a morphism [f] of short exact sequences, the pushout of the domain along [f_1] equals the pullback of the codomain along [f_3]. *)</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 28
+Time: 0.018s">
+<div class="time" style="width: 47.368421052632%"></div>
+<pre>Definition abses_pushout_is_pullback `{Univalence} {A A' B B' : AbGroup}
+      {E : AbSES B A} {E' : AbSES B' A'} (f : AbSESMorphism E E')
+  : abses_pushout (component1 f) E = abses_pullback (component3 f) E'
+  := equiv_path_abses_iso (abses_pushout_is_pullback' f).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 31
+Time: 0.001s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+
+Definition abses_pushout_pullback_reorder' `{Univalence} {A A' B B' : AbGroup}
+  (E : AbSES B A) (f : A $-&gt; A') (g : B' $-&gt; B)
+  : abses_pushout f (abses_pullback g E) $== abses_pullback g (abses_pushout f E).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* There are morphisms [Eg -&gt; E] and [E -&gt; fE] by definition of the pullback and pushout. We define [F : Eg -&gt; fE] to be the composite. Its first and third components are [f o id] and [id o g]. *)
+ </pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>pose (F := absesmorphism_compose (abses_pushout_morphism E f) (abses_pullback_morphism E g)).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* We change [F] to a morphism that is the same except that the first and third components are [f] and [g]. Then [abses_pushout_is_pullback] shows that the pushout of [Eg] along [f] is equal to the pullback of [fE] along [g]. *)
+ </pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 40
+Time: 0.009s">
+<div class="time" style="width: 23.684210526316%"></div>
+<pre>refine (abses_pushout_is_pullback' (Build_AbSESMorphism f (component2 F) g _ _)); apply F.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 40
+Time: 0.001s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** This is the statement that [AbSES'] is a bifunctor, but we state it separately because Coq is slow to unify [IsBifunctor AbSES'] against goals written in this form. *)</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 43
+Time: 0.001s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>Definition abses_pushout_pullback_reorder `{Univalence} {A A' B B' : AbGroup}
+  (E : AbSES B A) (f : A $-&gt; A') (g : B' $-&gt; B)
+  : abses_pushout f (abses_pullback g E) = abses_pullback g (abses_pushout f E).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply equiv_path_abses_iso.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 47
+Time: 0.001s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+  apply abses_pushout_pullback_reorder'.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 49
+Time: 0.003s">
+<div class="time" style="width: 7.8947368421053%"></div>
+<pre>
+
+Instance is0bifunctor_abses' `{Univalence}
+  : Is0Bifunctor (AbSES' : AbGroup^op -&gt; AbGroup -&gt; Type)
+  := Build_Is0Bifunctor'' _.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 53
+Time: 0.003s">
+<div class="time" style="width: 7.8947368421053%"></div>
+<pre>
+
+Instance is1bifunctor_abses' `{Univalence}
+  : Is1Bifunctor (AbSES' : AbGroup^op -&gt; AbGroup -&gt; Type).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 57
+Time: 0.002s">
+<div class="time" style="width: 5.2631578947368%"></div>
+<pre>
+  snapply Build_Is1Bifunctor''.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 58
+Time: 0.002s">
+<div class="time" style="width: 5.2631578947368%"></div>
+<pre>
+  1,2: exact _.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 59
+Time: 0.006s">
+<div class="time" style="width: 15.789473684211%"></div>
+<pre>
+  intros ? ? g ? ? f E; cbn.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 60
+Time: 0.002s">
+<div class="time" style="width: 5.2631578947368%"></div>
+<pre>
+  exact (abses_pushout_pullback_reorder E f g).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 61
+Time: 0.002s">
+<div class="time" style="width: 5.2631578947368%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Given a short exact sequence [A -&gt; E -&gt; B] and maps [f : A -&gt; A'], [g : B' -&gt; B], we can change the order of pushing out along [f] and pulling back along [g]. *)</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 64
+Time: 0.001s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>Lemma abses_reorder_pullback_pushout `{Univalence} {A A' B B' : AbGroup}
+      (E : AbSES B A) (f : A $-&gt; A') (g : B' $-&gt; B)
+  : abses_pushout f (abses_pullback g E) = abses_pullback g (abses_pushout f E).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* There are morphisms [Eg -&gt; E] and [E -&gt; fE] by definition of the pullback and pushout. We define [F : Eg -&gt; fE] to be the composite. Its first and third components are [f o id] and [id o g]. *)
+ </pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>pose (F := absesmorphism_compose (abses_pushout_morphism E f) (abses_pullback_morphism E g)).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* We change [F] to a morphism that is the same except that the first and third components are [f] and [g]. Then [abses_pushout_is_pullback] shows that the pushout of [Eg] along [f] is equal to the pullback of [fE] along [g]. *)
+ </pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 71
+Time: 0.008s">
+<div class="time" style="width: 21.052631578947%"></div>
+<pre>refine (abses_pushout_is_pullback (Build_AbSESMorphism f (component2 F) g _ _)); apply F.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 71
+Time: 0.001s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The Baer sum distributes over pullbacks. *)</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 74
+Time: 0.001s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>Lemma baer_sum_distributive_pullbacks `{Univalence} {A B B' : AbGroup}
+  {E : AbSES B A} (f g : ab_hom B' B)
+  : abses_pullback (f + g) E = abses_baer_sum (abses_pullback f E) (abses_pullback g E).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold abses_baer_sum.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine ((abses_pullback_compose (B1:=ab_biprod B B) _ _ E)^ @ _).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 79
+Time: 0.002s">
+<div class="time" style="width: 5.2631578947368%"></div>
+<pre>
+  refine (ap (abses_pullback _) (abses_pushout_is_pullback (abses_codiagonal E))^ @ _).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold abses_codiagonal, component1.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_^ @ _ @ _).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1,3: apply abses_reorder_pullback_pushout.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 83
+Time: 0.003s">
+<div class="time" style="width: 7.8947368421053%"></div>
+<pre>
+  refine (ap (abses_pushout _) _).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 84
+Time: 0.001s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+  refine (ap (fun h =&gt; abses_pullback h _) (ab_biprod_corec_diagonal _ _) @ _).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 85
+Time: 0.001s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+  refine ((abses_pullback_compose _ _ (abses_direct_sum E E))^ @ _).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 86
+Time: 0.001s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+  exact (ap (abses_pullback _) (abses_directsum_distributive_pullbacks f g)).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 87
+Time: 0.004s">
+<div class="time" style="width: 10.526315789474%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The Baer sum is commutative. *)</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma baer_sum_commutative `{Univalence} {A B : AbGroup} (E F : AbSES B A)
+  : abses_baer_sum E F = abses_baer_sum F E.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold abses_baer_sum.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* The next line uses that [direct_sum_swap $o ab_diagonal] is definitionally equal to [ab_diagonal]: *)
+ </pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 95
+Time: 0.002s">
+<div class="time" style="width: 5.2631578947368%"></div>
+<pre>refine (_ @ abses_pullback_compose ab_diagonal direct_sum_swap _).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 95
+Time: 0.001s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+  refine (ap (abses_pullback ab_diagonal) _).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 96
+Time: 0.002s">
+<div class="time" style="width: 5.2631578947368%"></div>
+<pre>
+  refine (ap (fun f =&gt; abses_pushout f _) ab_codiagonal_swap^ @ _).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 97
+Time: 0.002s">
+<div class="time" style="width: 5.2631578947368%"></div>
+<pre>
+  refine ((abses_pushout_compose _ _ _) @ _).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 98
+Time: 0.021s">
+<div class="time" style="width: 55.263157894737%"></div>
+<pre>
+  refine (ap _ (abses_pushout_is_pullback (abses_swap_morphism E F)) @ _).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold abses_swap_morphism, component3.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply abses_pushout_pullback_reorder.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 101
+Time: 0.003s">
+<div class="time" style="width: 7.8947368421053%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The right unit law for the Baer sum says that for all [E : AbSES B A], [E + E_0 = E], where [E_0] is the split short exact sequence. *)</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma baer_sum_unit_r `{Univalence} {A B : AbGroup} (E : AbSES B A)
+  : abses_baer_sum E (point (AbSES B A)) = E.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (ap (abses_baer_sum E) _ @ _).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (abses_pullback_const E).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> refine (ap (fun F =&gt; abses_baer_sum F (abses_pullback grp_homo_const E)) (abses_pullback_id E)^ @ _).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine ((baer_sum_distributive_pullbacks grp_homo_id grp_homo_const)^ @ _).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 110
+Time: 0.001s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+    refine (ap (fun f =&gt; abses_pullback f E) (grp_unit_r (G := ab_hom _ _) _) @ _).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply abses_pullback_id.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 112
+Time: 0.001s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The left unit law for the Baer sum is analogous. *)</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 115
+Time: 0.001s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>Definition baer_sum_unit_l `{Univalence} {A B : AbGroup} (E : AbSES B A)
+  : abses_baer_sum (point (AbSES B A)) E = E
+  := baer_sum_commutative _ _ @ baer_sum_unit_r _.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** For any [E : AbSES B A], the pullback of [E] along [-id_B] acts as an additive inverse for [E] with respect to the Baer sum. *)</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma baer_sum_inverse_l `{Univalence} {A B : AbGroup} (E : AbSES B A)
+  : abses_baer_sum E (abses_pullback (- grp_homo_id) E) = point (AbSES B A).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 121
+Time: 0.001s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+  refine (ap (fun F =&gt; abses_baer_sum F (abses_pullback _ E)) (abses_pullback_id E)^ @ _).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 122
+Time: 0.001s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+  refine ((baer_sum_distributive_pullbacks grp_homo_id (-grp_homo_id))^ @ _).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 123
+Time: 0.001s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+  refine (ap (fun f =&gt; abses_pullback f _) (grp_inv_r (G := ab_hom _ _) _) @ _).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 124
+Time: 0.002s">
+<div class="time" style="width: 5.2631578947368%"></div>
+<pre>
+  symmetry; apply abses_pullback_const.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 125
+Time: 0.001s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 126
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The right inverse law follows by commutativity. *)</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 128
+Time: 0.002s">
+<div class="time" style="width: 5.2631578947368%"></div>
+<pre>Definition baer_sum_inverse_r `{Univalence} {A B : AbGroup} (E : AbSES B A)
+  : abses_baer_sum (abses_pullback (-grp_homo_id) E) E = point (AbSES B A)
+  := baer_sum_commutative _ _ @ baer_sum_inverse_l _.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 130
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The Baer sum distributes over pushouts. *)</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 132
+Time: 0.001s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>Lemma baer_sum_distributive_pushouts `{Univalence}
+      {A A' B : AbGroup} {E : AbSES B A'} (f g : ab_hom A' A)
+  : abses_pushout (f + g) E = abses_baer_sum (abses_pushout f E) (abses_pushout g E).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 135
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold abses_baer_sum.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 136
+Time: 0.002s">
+<div class="time" style="width: 5.2631578947368%"></div>
+<pre>
+  refine (abses_pushout_compose (A1 := ab_biprod A A) _ _ E @ _).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 137
+Time: 0.002s">
+<div class="time" style="width: 5.2631578947368%"></div>
+<pre>
+  refine (_ @ abses_pushout_pullback_reorder _ _ _).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 138
+Time: 0.003s">
+<div class="time" style="width: 7.8947368421053%"></div>
+<pre>
+  refine (ap (abses_pushout ab_codiagonal) _).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 139
+Time: 0.002s">
+<div class="time" style="width: 5.2631578947368%"></div>
+<pre>
+  refine (ap (fun f =&gt; abses_pushout f E) (ab_biprod_corec_diagonal f g) @ _).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 140
+Time: 0.001s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+  refine (abses_pushout_compose _ _ E @ _).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 141
+Time: 0.003s">
+<div class="time" style="width: 7.8947368421053%"></div>
+<pre>
+  refine (ap (abses_pushout _) (abses_pushout_is_pullback (abses_diagonal E)) @ _).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 142
+Time: 0.002s">
+<div class="time" style="width: 5.2631578947368%"></div>
+<pre>
+  refine (abses_pushout_pullback_reorder _ _ _ @ _).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 143
+Time: 0.002s">
+<div class="time" style="width: 5.2631578947368%"></div>
+<pre>
+  exact (ap (abses_pullback _) (abses_directsum_distributive_pushouts f g)).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 144
+Time: 0.003s">
+<div class="time" style="width: 7.8947368421053%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 145
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Our next goal is to prove that the Baer sum is associative.  Rather than showing this directly, we first prove [baer_sum_twist], which says that [abses_baer_sum (abses_baer_sum E F) G = abses_baer_sum (abses_baer_sum G F) E].  The proof of this mimics the proof of commutativity above.  Then we prove associativity by combining this with commutativity. *)
+
+(** The trinary Baer sum of three short exact sequences. *)</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 149
+Time: 0.001s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>Definition abses_trinary_baer_sum `{Univalence}
+  {A B : AbGroup@{u}} (E F G : AbSES B A)
+  : AbSES B A
+  := abses_pullback ab_triagonal
+       (abses_pushout ab_cotriagonal
+          (abses_direct_sum (abses_direct_sum E F) G)).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 154
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** For [E, F, G : AbSES B A], the Baer sum of [E], [F] and [G] (associated left) is equal to the trinary Baer sum of [E], [F] and [G]. *)</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma baer_sum_is_trinary `{Univalence} {A B : AbGroup@{u}} (E F G : AbSES B A)
+  : abses_baer_sum (abses_baer_sum E F) G = abses_trinary_baer_sum E F G.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold abses_baer_sum, abses_trinary_baer_sum, ab_triagonal, ab_cotriagonal.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 159
+Time: 0.002s">
+<div class="time" style="width: 5.2631578947368%"></div>
+<pre>
+  refine (ap (abses_pullback _ o abses_pushout _) _^ @ _).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> refine (_ @ ap (abses_direct_sum _) (abses_pullback_id G)).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 161
+Time: 0.001s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+    refine (_ @ abses_directsum_distributive_pullbacks _ _).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (ap (abses_pullback _) _).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 163
+Time: 0.012s">
+<div class="time" style="width: 31.578947368421%"></div>
+<pre>
+    refine (_ @ ap (abses_direct_sum _) (abses_pushout_id G)).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 164
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply abses_directsum_distributive_pushouts.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 165
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 166
+Time: 0.002s">
+<div class="time" style="width: 5.2631578947368%"></div>
+<pre> refine (ap (abses_pullback _) (abses_pushout_pullback_reorder _ _ _) @ _).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 166
+Time: 0.001s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+    refine (abses_pullback_compose _ _ _ @ _).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (ap (abses_pullback _) _^).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply abses_pushout_compose.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 169
+Time: 0.004s">
+<div class="time" style="width: 10.526315789474%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** For [E, F, G : AbSES B A], we can "twist" the order of the trinary Baer sum as follows. *)</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma twist_trinary_baer_sum `{Univalence}
+  {A B : AbGroup@{u}} (E F G : AbSES B A)
+  : abses_trinary_baer_sum E F G = abses_trinary_baer_sum G F E.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 174
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 175
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold abses_trinary_baer_sum.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* The next line uses the fact that [ab_triagonal] is definitionally equal to [ab_biprod_twist $o ab_triagonal]: *)
+ </pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 178
+Time: 0.001s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>refine (_ @ abses_pullback_compose ab_triagonal ab_biprod_twist _).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (ap (abses_pullback _) _).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 179
+Time: 0.002s">
+<div class="time" style="width: 5.2631578947368%"></div>
+<pre>
+  refine (ap (fun f =&gt; abses_pushout f _) ab_cotriagonal_twist^ @ _).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 180
+Time: 0.001s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+  refine (abses_pushout_compose _ _ _ @ _).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 181
+Time: 0.003s">
+<div class="time" style="width: 7.8947368421053%"></div>
+<pre>
+  refine (ap _ (abses_pushout_is_pullback (abses_twist_directsum E F G)) @ _).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 182
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold abses_twist_directsum, component3.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 183
+Time: 0.002s">
+<div class="time" style="width: 5.2631578947368%"></div>
+<pre>
+  exact (abses_pushout_pullback_reorder _ _ _).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 184
+Time: 0.003s">
+<div class="time" style="width: 7.8947368421053%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** It now follows that we can twist the order of the summands in the Baer sum. *)</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma baer_sum_twist `{Univalence} {A B : AbGroup@{u}} (E F G : AbSES B A)
+  : abses_baer_sum (abses_baer_sum E F) G = abses_baer_sum (abses_baer_sum G F) E.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 189
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine ((baer_sum_is_trinary E F G) @ _ @ (baer_sum_is_trinary G F E)^).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 190
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply twist_trinary_baer_sum.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 191
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 192
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** From these results, it finally follows that the Baer sum is associative. *)</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 194
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma baer_sum_associative `{Univalence}
+  {A B : AbGroup@{u}} (E F G : AbSES B A)
+  : abses_baer_sum (abses_baer_sum E F) G = abses_baer_sum E (abses_baer_sum F G).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine ((baer_sum_twist _ _ _)^ @ _).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (baer_sum_commutative _ _ @ _).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 199
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply ap.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply baer_sum_commutative.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 201
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 202
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The Baer sum makes [AbSES B A] into an H-space. (In fact, a coherent H-space, but we leave that for now.) *)</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 204
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance ishspace_abses `{Univalence} {B A : AbGroup}
+  : IsHSpace (AbSES B A).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 205
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_IsHSpace.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 207
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact abses_baer_sum.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 209
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro; apply baer_sum_unit_l.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 209
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 210
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro; apply baer_sum_unit_r.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 210
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 211
+Time: 0.003s">
+<div class="time" style="width: 7.8947368421053%"></div>
+<pre>
+
+Instance is0bifunctor_abses `{Univalence}
+  : Is0Bifunctor (AbSES : AbGroup^op -&gt; AbGroup -&gt; pType)
+  := Build_Is0Bifunctor'' _.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 215
+Time: 0.004s">
+<div class="time" style="width: 10.526315789474%"></div>
+<pre>
+
+Instance is1bifunctor_abses `{Univalence}
+  : Is1Bifunctor (AbSES : AbGroup^op -&gt; AbGroup -&gt; pType).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 218
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 219
+Time: 0.001s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+  snapply Build_Is1Bifunctor''.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 220
+Time: 0.001s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+  1,2: exact _.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 221
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros ? ? f ? ? g.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 222
+Time: 0.001s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+  rapply hspace_phomotopy_from_homotopy.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 223
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact ishspace_abses.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 224
+Time: 0.004s">
+<div class="time" style="width: 10.526315789474%"></div>
+<pre>
+  intro E; cbn.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply abses_pushout_pullback_reorder.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 226
+Time: 0.002s">
+<div class="time" style="width: 5.2631578947368%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 227
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Pushouts and pullbacks respect the Baer sum *)
+
+</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 230
+Time: 0.001s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>Definition baer_sum_pushout `{Univalence}
+  {A A' B : AbGroup} (f : A $-&gt; A') (E F : AbSES B A)
+  : abses_pushout f (abses_baer_sum E F)
+    = abses_baer_sum (abses_pushout f E) (abses_pushout f F).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 233
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 234
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold abses_baer_sum.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 235
+Time: 0.002s">
+<div class="time" style="width: 5.2631578947368%"></div>
+<pre>
+  refine (abses_pushout_pullback_reorder _ _ _
+            @ ap _ _).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 237
+Time: 0.003s">
+<div class="time" style="width: 7.8947368421053%"></div>
+<pre>
+  refine ((abses_pushout_compose _ _ _)^ @ _).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 238
+Time: 0.006s">
+<div class="time" style="width: 15.789473684211%"></div>
+<pre>
+  refine (abses_pushout_homotopic _ _ _ _ @ _).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 239
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: apply ab_codiagonal_natural.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 240
+Time: 0.004s">
+<div class="time" style="width: 10.526315789474%"></div>
+<pre>
+  refine (abses_pushout_compose _ _ _ @ ap _ _).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 241
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply abses_directsum_distributive_pushouts.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 242
+Time: 0.002s">
+<div class="time" style="width: 5.2631578947368%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 243
+Time: 0.001s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+
+Definition baer_sum_pullback `{Univalence}
+  {A B B' : AbGroup} (f : B' $-&gt; B) (E F : AbSES B A)
+  : abses_pullback f (abses_baer_sum E F)
+    = abses_baer_sum (abses_pullback f E) (abses_pullback f F).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 248
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 249
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold abses_baer_sum.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 250
+Time: 0.001s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+  refine (abses_pullback_compose _ _ _ @ _).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 251
+Time: 0.006s">
+<div class="time" style="width: 15.789473684211%"></div>
+<pre>
+  refine ((abses_pushout_pullback_reorder _ _ _)^
+            @ ap _ _
+              @ abses_pushout_pullback_reorder _ _ _).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 254
+Time: 0.001s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+  refine (abses_pullback_homotopic
+            _ (functor_ab_biprod f f $o ab_diagonal) _ _ @ _).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 256
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: reflexivity.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 257
+Time: 0.001s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+  refine ((abses_pullback_compose _ _ _)^ @ ap _ _).</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 258
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply abses_directsum_distributive_pullbacks.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 259
+Time: 0.002s">
+<div class="time" style="width: 5.2631578947368%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: BaerSum.v
+Line: 261
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

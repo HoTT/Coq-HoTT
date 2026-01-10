@@ -1,0 +1,496 @@
+<html>
+<head>
+<title>FiniteSum.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for FiniteSum.v</h1>
+
+<div class="code" title="File: FiniteSum.v
+Line: 1
+Time: 0.021s">
+<div class="time" style="width: 48.837209302326%"></div>
+<pre>Require Import Basics.Overture Basics.Tactics.</pre>
+</div>
+<div class="code" title="File: FiniteSum.v
+Line: 1
+Time: 0.013s">
+<div class="time" style="width: 30.232558139535%"></div>
+<pre>
+Require Import Spaces.Nat.Core Spaces.Int.</pre>
+</div>
+<div class="code" title="File: FiniteSum.v
+Line: 2
+Time: 0.031s">
+<div class="time" style="width: 72.093023255814%"></div>
+<pre>
+Require Export Classes.interfaces.canonical_names (Commutative).</pre>
+</div>
+<div class="code" title="File: FiniteSum.v
+Line: 3
+Time: 0.001s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre>
+Require Export Classes.interfaces.abstract_algebra (IsAbGroup(..), abgroup_group, abgroup_commutative).</pre>
+</div>
+<div class="code" title="File: FiniteSum.v
+Line: 4
+Time: 0.043s">
+<div class="time" style="width: 100%"></div>
+<pre>
+Require Import AbelianGroup.</pre>
+</div>
+<div class="code" title="File: FiniteSum.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope mc_scope.</pre>
+</div>
+<div class="code" title="File: FiniteSum.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope mc_add_scope.</pre>
+</div>
+<div class="code" title="File: FiniteSum.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Finite Sums *)
+
+(** Indexed finite sum of abelian group elements. *)</pre>
+</div>
+<div class="code" title="File: FiniteSum.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ab_sum {A : AbGroup} (n : nat) (f : forall k, (k &lt; n)%nat -&gt; A) : A.</pre>
+</div>
+<div class="code" title="File: FiniteSum.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: FiniteSum.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction n as [|n IHn].</pre>
+</div>
+<div class="code" title="File: FiniteSum.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: FiniteSum.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact 0.</pre>
+</div>
+<div class="code" title="File: FiniteSum.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: FiniteSum.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> refine (f n _ + IHn _).</pre>
+</div>
+<div class="code" title="File: FiniteSum.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros k Hk.</pre>
+</div>
+<div class="code" title="File: FiniteSum.v
+Line: 17
+Time: 0.002s">
+<div class="time" style="width: 4.6511627906977%"></div>
+<pre>
+    exact (f k _).</pre>
+</div>
+<div class="code" title="File: FiniteSum.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: FiniteSum.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** If the function is constant in the range of a finite sum then the sum is equal to the constant times [n]. This is a group power in the underlying group. *)</pre>
+</div>
+<div class="code" title="File: FiniteSum.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ab_sum_const {A : AbGroup} (n : nat) (a : A)
+  (f : forall k, (k &lt; n)%nat -&gt; A) (p : forall k Hk, f k Hk = a)
+  : ab_sum n f = ab_mul n a.</pre>
+</div>
+<div class="code" title="File: FiniteSum.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: FiniteSum.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction n as [|n IHn] in f, p |- *.</pre>
+</div>
+<div class="code" title="File: FiniteSum.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: FiniteSum.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: FiniteSum.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: FiniteSum.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rhs_V napply (ap@{Set _} _ (int_nat_succ n)).</pre>
+</div>
+<div class="code" title="File: FiniteSum.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rhs napply grp_pow_succ.</pre>
+</div>
+<div class="code" title="File: FiniteSum.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    simpl.</pre>
+</div>
+<div class="code" title="File: FiniteSum.v
+Line: 29
+Time: 0.001s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre> f_ap.</pre>
+</div>
+<div class="code" title="File: FiniteSum.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply IHn.</pre>
+</div>
+<div class="code" title="File: FiniteSum.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros.</pre>
+</div>
+<div class="code" title="File: FiniteSum.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply p.</pre>
+</div>
+<div class="code" title="File: FiniteSum.v
+Line: 31
+Time: 0.001s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: FiniteSum.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** If the function is zero in the range of a finite sum then the sum is zero. *)</pre>
+</div>
+<div class="code" title="File: FiniteSum.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ab_sum_zero {A : AbGroup} (n : nat)
+  (f : forall k, (k &lt; n)%nat -&gt; A) (p : forall k Hk, f k Hk = 0)
+  : ab_sum n f = 0.</pre>
+</div>
+<div class="code" title="File: FiniteSum.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: FiniteSum.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lhs exact (ab_sum_const _ 0 f p).</pre>
+</div>
+<div class="code" title="File: FiniteSum.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply grp_pow_unit.</pre>
+</div>
+<div class="code" title="File: FiniteSum.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: FiniteSum.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Finite sums distribute over addition. *)</pre>
+</div>
+<div class="code" title="File: FiniteSum.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ab_sum_plus {A : AbGroup} (n : nat) (f g : forall k, (k &lt; n)%nat -&gt; A)
+  : ab_sum n (fun k Hk =&gt; f k Hk + g k Hk)
+    = ab_sum n (fun k Hk =&gt; f k Hk) + ab_sum n (fun k Hk =&gt; g k Hk).</pre>
+</div>
+<div class="code" title="File: FiniteSum.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: FiniteSum.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction n as [|n IHn].</pre>
+</div>
+<div class="code" title="File: FiniteSum.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: by rewrite grp_unit_l.</pre>
+</div>
+<div class="code" title="File: FiniteSum.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simpl.</pre>
+</div>
+<div class="code" title="File: FiniteSum.v
+Line: 48
+Time: 0.002s">
+<div class="time" style="width: 4.6511627906977%"></div>
+<pre>
+  rewrite &lt;- !grp_assoc; f_ap.</pre>
+</div>
+<div class="code" title="File: FiniteSum.v
+Line: 49
+Time: 0.001s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre>
+  rewrite IHn, abgroup_commutative, &lt;- grp_assoc; f_ap.</pre>
+</div>
+<div class="code" title="File: FiniteSum.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by rewrite abgroup_commutative.</pre>
+</div>
+<div class="code" title="File: FiniteSum.v
+Line: 51
+Time: 0.003s">
+<div class="time" style="width: 6.9767441860465%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: FiniteSum.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Double finite sums commute. *)</pre>
+</div>
+<div class="code" title="File: FiniteSum.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ab_sum_sum {A : AbGroup} (m n : nat)
+  (f : forall i j, (i &lt; m)%nat -&gt; (j &lt; n)%nat -&gt; A)
+  : ab_sum m (fun i Hi =&gt; ab_sum n (fun j Hj =&gt; f i j Hi Hj))
+   = ab_sum n (fun j Hj =&gt; ab_sum m (fun i Hi =&gt; f i j Hi Hj)).</pre>
+</div>
+<div class="code" title="File: FiniteSum.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: FiniteSum.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction n as [|n IHn] in m, f |- *.</pre>
+</div>
+<div class="code" title="File: FiniteSum.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: by napply ab_sum_zero.</pre>
+</div>
+<div class="code" title="File: FiniteSum.v
+Line: 60
+Time: 0.002s">
+<div class="time" style="width: 4.6511627906977%"></div>
+<pre>
+  lhs napply ab_sum_plus; cbn; f_ap.</pre>
+</div>
+<div class="code" title="File: FiniteSum.v
+Line: 61
+Time: 0.002s">
+<div class="time" style="width: 4.6511627906977%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: FiniteSum.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Finite sums are equal if the functions are equal in the range. *)</pre>
+</div>
+<div class="code" title="File: FiniteSum.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition path_ab_sum {A : AbGroup} {n : nat} {f g : forall k, (k &lt; n)%nat -&gt; A}
+  (p : forall k Hk, f k Hk = g k Hk)
+  : ab_sum n f = ab_sum n g.</pre>
+</div>
+<div class="code" title="File: FiniteSum.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: FiniteSum.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction n as [|n IHn].</pre>
+</div>
+<div class="code" title="File: FiniteSum.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: reflexivity.</pre>
+</div>
+<div class="code" title="File: FiniteSum.v
+Line: 69
+Time: 0.002s">
+<div class="time" style="width: 4.6511627906977%"></div>
+<pre>
+  cbn; f_ap.</pre>
+</div>
+<div class="code" title="File: FiniteSum.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by apply IHn.</pre>
+</div>
+<div class="code" title="File: FiniteSum.v
+Line: 71
+Time: 0.001s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: FiniteSum.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

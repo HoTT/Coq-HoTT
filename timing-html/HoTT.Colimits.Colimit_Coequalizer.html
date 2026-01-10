@@ -1,0 +1,589 @@
+<html>
+<head>
+<title>Colimit_Coequalizer.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Colimit_Coequalizer.v</h1>
+
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 1
+Time: 0.027s">
+<div class="time" style="width: 72.972972972973%"></div>
+<pre>From HoTT Require Import Basics.</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 1
+Time: 0.013s">
+<div class="time" style="width: 35.135135135135%"></div>
+<pre>
+Require Import Types.</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 2
+Time: 0.01s">
+<div class="time" style="width: 27.027027027027%"></div>
+<pre>
+Require Import Diagrams.ParallelPair.</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Diagrams.Cocone.</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 4
+Time: 0.008s">
+<div class="time" style="width: 21.621621621622%"></div>
+<pre>
+Require Import Colimits.Colimit.</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Colimits.Coeq.</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Generalizable All Variables.</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Coequalizer as a colimit *)
+
+(** In this file, we define [Coequalizer] the coequalizer of two maps as the colimit of a particular diagram, and then show that it is equivalent to [Coeq] the primitive coequalizer defined as an HIT. *)
+
+
+(** ** [Coequalizer] *)
+
+</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section Coequalizer.</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {A B : Type}.</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition IsCoequalizer (f g : B -&gt; A)
+    := IsColimit (parallel_pair f g).</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition Coequalizer (f g : B -&gt; A)
+    := Colimit (parallel_pair f g).</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** ** Equivalence with [Coeq] *)
+
+ </pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Context {f g : B -&gt; A}.</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition cocone_Coeq : Cocone (parallel_pair f g) (Coeq f g).</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply Build_Cocone.</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros []; [exact (coeq o g)| exact coeq].</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 34
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre> intros i j phi x; destruct i, j, phi; simpl;
+      [ exact (cglue x) | reflexivity ].</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 35
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma iscoequalizer_Coeq `{Funext}
+    : IsColimit (parallel_pair f g) (Coeq f g).</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 40
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+    srapply (Build_IsColimit cocone_Coeq).</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 41
+Time: 0.003s">
+<div class="time" style="width: 8.1081081081081%"></div>
+<pre>
+    srapply Build_UniversalCocone.</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros X.</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply isequiv_adjointify.</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros C.</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      srapply Coeq_rec.</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (legs C false).</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros b.</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        etransitivity.</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        *</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (legs_comm C true false true b).</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        *</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (legs_comm C true false false b)^.</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros C.</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      srapply path_cocone.</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros i x; destruct i; simpl.</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        *</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (legs_comm C true false false x).</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        *</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 57
+Time: 0.009s">
+<div class="time" style="width: 24.324324324324%"></div>
+<pre> intros i j phi x; destruct i, j, phi; simpl.</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        *</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 58
+Time: 0.037s">
+<div class="time" style="width: 100%"></div>
+<pre> hott_simpl.</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 58
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+          match goal with
+          | [|- ap (Coeq_rec ?a ?b ?c) _ @ _ = _ ]
+            =&gt; rewrite (Coeq_rec_beta_cglue a b c)
+          end.</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 62
+Time: 0.023s">
+<div class="time" style="width: 62.162162162162%"></div>
+<pre>
+          hott_simpl.</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        *</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros F.</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply path_forall.</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      match goal with
+        | [|- ?G == _ ] =&gt; simple refine (Coeq_ind (fun w =&gt; G w = F w) _ _)
+      end.</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros b.</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 71
+Time: 0.003s">
+<div class="time" style="width: 8.1081081081081%"></div>
+<pre>
+        transport_paths FlFr; simpl.</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply equiv_p1_1q.</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        refine (Coeq_rec_beta_cglue _ _ _ _ @ _).</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply concat_p1.</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 75
+Time: 0.024s">
+<div class="time" style="width: 64.864864864865%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition equiv_Coeq_Coequalizer `{Funext}
+    : Coeq f g &lt;~&gt; Coequalizer f g.</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 80
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+    srapply colimit_unicity.</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    3: eapply iscoequalizer_Coeq.</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    eapply iscolimit_colimit.</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 84
+Time: 0.012s">
+<div class="time" style="width: 32.432432432432%"></div>
+<pre>
+
+End Coequalizer.</pre>
+</div>
+<div class="code" title="File: Colimit_Coequalizer.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

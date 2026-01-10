@@ -1,0 +1,2151 @@
+<html>
+<head>
+<title>Descent.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Descent.v</h1>
+
+<div class="code" title="File: Descent.v
+Line: 1
+Time: 0.037s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import HoTT.Basics HoTT.Types.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 1
+Time: 0.026s">
+<div class="time" style="width: 70.27027027027%"></div>
+<pre>
+Require Import HFiber Extensions Limits.Pullback.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 2
+Time: 0.005s">
+<div class="time" style="width: 13.513513513514%"></div>
+<pre>
+Require Import Modality Accessible Modalities.Localization.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope path_scope.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope subuniverse_scope.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Descent between subuniverses *)
+
+(** We study here a strengthening of the relation [O &lt;&lt; O'] saying that [O]-modal type families descend along [O']-equivalences.  Pairs of reflective subuniverses with this relation share nearly all the properties of a reflective subuniverse [O] paired with its subuniverse [Sep O] of separated types (see [Separated.v]) and also many of those of a single left exact modality (see [Lex.v]).  Thus, many of the results herein generalize those of RSS for lex modalities and those of CORS for separated subuniverses.
+
+Note that this kind of descent is not the same as the "modal descent" of Cherubini and Rijke.  When we get around to formalizing that, we may need to worry about disambiguating the names. *)
+
+(** ** Definitions *)
+
+(** This definition is an analogue of the statement of Lemma 2.19 of CORS, and of Theorem 3.1(xiii) of RSS.  Note that CORS Lemma 2.19 includes uniqueness of the extension, which we don't assert explicitly.  However, uniqueness follows from the [ReflectsD] parameter -- see [ooextendable_TypeO_lex_leq] below. *)</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 16
+Time: 0.003s">
+<div class="time" style="width: 8.1081081081081%"></div>
+<pre>Class Descends@{i} (O' O : Subuniverse@{i}) (T : Type@{i})
+      `{ReflectsD@{i} O' O T} :=
+{
+  OO_descend :
+    forall (P : T -&gt; Type@{i}) {P_inO : forall x, In O (P x)},
+      O_reflector O' T -&gt; Type@{i} ;
+  OO_descend_inO ::
+    forall (P : T -&gt; Type@{i}) {P_inO : forall x, In O (P x)} (x : O_reflector O' T),
+      In O (OO_descend P x) ;
+  OO_descend_beta :
+    forall (P : T -&gt; Type@{i}) {P_inO : forall x, In O (P x)} (x : T),
+      OO_descend P (to O' T x) &lt;~&gt; P x ;
+}.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments OO_descend O' O {T _ _ _} P {P_inO} x.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments OO_descend_inO O' O {T _ _ _} P {P_inO} x.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments OO_descend_beta O' O {T _ _ _} P {P_inO} x.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Class O_lex_leq (O1 O2 : ReflectiveSubuniverse) `{O1 &lt;&lt; O2} :=
+  O_lex_leq_descends :: forall A, Descends O2 O1 A.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Infix "&lt;&lt;&lt;" := O_lex_leq : subuniverse_scope.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Unfortunately, it seems that generalizing binders don't work on notations: writing [`{O &lt;&lt;&lt; O'}] doesn't automatically add the precondition [O &lt;&lt; O'], although writing [`{O_lex_leq O O'}] does. *)
+
+</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition O_lex_leq_eq {O1 O2 O3 : ReflectiveSubuniverse}
+           `{O1 &lt;=&gt; O2} `{O2 &lt;&lt; O3, O2 &lt;&lt;&lt; O3}
+           (Hstrong := O_strong_leq_trans_l O1 O2 O3)
+  : O1 &lt;&lt;&lt; O3.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros A; unshelve econstructor; intros P P_inO1.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 45
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+  all:pose (P_inO2 := fun x =&gt; inO_leq O1 O2 _ (P_inO1 x)).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (OO_descend O3 O2 P).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x; apply (inO_leq O2 O1), (OO_descend_inO O3 O2 P).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (OO_descend_beta O3 O2 P).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Left exactness properties *)
+
+(** We prove analogues of the properties in section 2.4 of CORS and Theorem 3.1 of RSS, but in a different order, with different proofs, to increase the generality.  The proofs in CORS use Proposition 2.26 for everything else, but it seems that most of the other results are true in the generality of two reflective subuniverses with [O &lt;&lt;&lt; O'], so we give different proofs for some of them.  (To show that this generality is non-spurious, note that a lex modality [O] satisfies [O &lt;&lt;&lt; O], but does not generally coincide with [Sep O].)
+
+In the case of a single modality, most of these statements are equivalent to lex-ness (as stated in Theorem 3.1 of RSS).  We do not know if anything similar is true more generally. *)
+
+</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section LeftExactness.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Universe i.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Context (O' O : ReflectiveSubuniverse@{i}) `{O &lt;&lt; O', O &lt;&lt;&lt; O'}.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Proposition 2.30 of CORS and Theorem 3.1(xii) of RSS: any [O']-equivalence is [O]-connected.  The special case when [f = to O' A] requires only [O &lt;&lt; O'], but the general case seems to require [O &lt;&lt;&lt; O']. It is convenient to have this as an instance in this file, but we don't make it global, as it requires that Coq guess [O']. *)</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Instance conn_map_OO_inverts
+       {A B : Type} (f : A -&gt; B) `{O_inverts O' f}
+  : IsConnMap O f.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply conn_map_from_extension_elim.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros P P_inO.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  assert (E : ExtendableAlong 1%nat f P); [ | exact (fst E) ].</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  assert (Qp := OO_descend_beta O' O P).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  assert (Q_inO := OO_descend_inO O' O P).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  set (Q := OO_descend O' O P) in *.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (extendable_postcompose' _ (Q o to O' B) P f Qp _).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (cancelL_extendable _ Q f (to O' B) _ _).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 72
+Time: 0.002s">
+<div class="time" style="width: 5.4054054054054%"></div>
+<pre>
+  1:srapply (extendable_conn_map_inO O).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (extendable_homotopic _ _ (O_functor O' f o to O' A) (to_O_natural O' f) _).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 74
+Time: 0.002s">
+<div class="time" style="width: 5.4054054054054%"></div>
+<pre>
+  srapply extendable_compose.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 75
+Time: 0.002s">
+<div class="time" style="width: 5.4054054054054%"></div>
+<pre>
+  1:srapply extendable_equiv.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 76
+Time: 0.002s">
+<div class="time" style="width: 5.4054054054054%"></div>
+<pre>
+  srapply (extendable_conn_map_inO O).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 77
+Time: 0.002s">
+<div class="time" style="width: 5.4054054054054%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A generalization of Lemma 2.27 of CORS: [functor_sigma] of a family of [O]-equivalences over an [O']-equivalence is an [O]-equivalence.  CORS Lemma 2.27 is the case when [f = to O' A] and [g] is a family of identities. *)</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 80
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>Definition OO_inverts_functor_sigma 
+       {A B : Type} {P : A -&gt; Type} {Q : B -&gt; Type}
+       (f : A -&gt; B) (g : forall a, P a -&gt; Q (f a))
+       `{O_inverts O' f} `{forall a, O_inverts O (g a)}
+  : O_inverts O (functor_sigma f g).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply isequiv_homotopic'.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> refine (equiv_O_sigma_O O _ oE _ oE (equiv_O_sigma_O O _)^-1).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 87
+Time: 0.029s">
+<div class="time" style="width: 78.378378378378%"></div>
+<pre>
+    exact (Build_Equiv _ _ (O_functor O (functor_sigma f (fun x =&gt; O_functor O (g x)))) _).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply O_indpaths.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 89
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre> intros [x u]; cbn.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 89
+Time: 0.007s">
+<div class="time" style="width: 18.918918918919%"></div>
+<pre>
+    rewrite !to_O_natural, O_rec_beta; cbn.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 90
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+    rewrite !to_O_natural, O_rec_beta.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    reflexivity.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 92
+Time: 0.006s">
+<div class="time" style="width: 16.216216216216%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Families of [O]-modal types descend along all [O']-equivalences (not just the [O']-units, as asserted in the definition of [&lt;&lt;&lt;]. *)</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition OO_descend_O_inverts
+           {A B : Type} (f : A -&gt; B) `{O_inverts O' f}
+           (P : A -&gt; Type) {P_inO : forall x, In O (P x)}
+  : B -&gt; Type.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros b.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  pose (Q := OO_descend O' O P).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (Q ((O_functor O' f)^-1 (to O' B b))).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 103
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+
+#[export] Instance OO_descend_O_inverts_inO
+       {A B : Type} (f : A -&gt; B) `{O_inverts O' f}
+       (P : A -&gt; Type) {P_inO : forall x, In O (P x)} (b : B)
+  : In O (OO_descend_O_inverts f P b)
+  := _.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition OO_descend_O_inverts_beta
+           {A B : Type} (f : A -&gt; B) `{O_inverts O' f}
+           (P : A -&gt; Type) {P_inO : forall x, In O (P x)} (a : A)
+  : (OO_descend_O_inverts f P (f a)) &lt;~&gt; P a.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold OO_descend_O_inverts.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (OO_descend_beta O' O P a oE _).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  assert (p := (to_O_natural O' f a)^).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 118
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply moveR_equiv_V in p.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (equiv_transport _ p).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 121
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Morally, an equivalent way of saying [O &lt;&lt;&lt; O'] is that the universe of [O]-modal types is [O']-modal.  We can't say this directly since this type lives in a higher universe, but here is a rephrasing of it. *)</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ooextendable_TypeO_lex_leq `{Univalence}
+           {A B : Type} (f : A -&gt; B) `{O_inverts O' f}
+  : ooExtendableAlong f (fun _ =&gt; Type_ O).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 125
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 126
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+  rapply ooextendable_TypeO_from_extension; intros P.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 127
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+  exists (fun x =&gt; (OO_descend_O_inverts f P x ;
+                    OO_descend_O_inverts_inO f P x)).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x; apply path_TypeO, path_universe_uncurried; cbn.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 130
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (OO_descend_O_inverts_beta f P x).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 131
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We can also state it in terms of belonging to a subuniverse if we lift [O'] accessibly (an analogue of Theorem 3.11(iii) of RSS). *)</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 134
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>#[export] Instance inO_TypeO_lex_leq `{Univalence} `{IsAccRSU O'}
+  : In (lift_accrsu O') (Type_ O)
+  := fun i =&gt; ooextendable_TypeO_lex_leq (acc_lgen O' i).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** If [f] is an [O']-equivalence, then [ap f] is an [O]-equivalence. *)</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export] Instance OO_inverts_ap@{}
+       {A B : Type@{i}} (f : A -&gt; B) `{O_inverts O' f} (x y : A)
+  : O_inverts O (@ap _ _ f x y).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 141
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+  assert (Pb := OO_descend_O_inverts_beta f (fun y:A =&gt; O (x = y))).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 142
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+  assert (P_inO := OO_descend_O_inverts_inO f (fun y:A =&gt; O (x = y))).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 143
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+  set (P := OO_descend_O_inverts f (fun y:A =&gt; O (x = y))) in *.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  clearbody P; cbn in *.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 145
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply isequiv_adjointify.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 147
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros q.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 147
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+    pose (t := fun p =&gt; @transport B P (f x) (f y) p ((Pb x)^-1 (to O (x = x) 1))).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 148
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (Pb y (O_rec t q)).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 150
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre> apply O_indpaths; intros p; cbn.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite O_rec_beta.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 151
+Time: 0.037s">
+<div class="time" style="width: 100%"></div>
+<pre>
+    assert (g := extension_conn_map_elim O (functor_sigma f (fun (a:A) (p:P (f a)) =&gt; p))
+                                         (fun bp =&gt; O (f x = bp.1)) (fun u =&gt; O_functor O (ap f) (Pb u.1 u.2))).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> 
+    pose (g1 b p := g.1 (b;p)).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 154
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn in g1.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 154
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    assert (e : (fun u =&gt; g1 u.1 u.2) == g.1).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 155
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> 
+    1:intros [a b]; reflexivity.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 156
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+    assert (g2 := fun a p =&gt; e _ @ g.2 (a;p)); cbn in g2.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine ((g2 y _)^ @ _).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite (ap_transport p g1).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite (g2 x ((Pb x)^-1 (to O (x = x) 1))).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 160
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+    rewrite eisretr, to_O_natural; cbn.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 161
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+    rewrite &lt;- (ap_transport p (fun b =&gt; to O (f x = b))).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply ap.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 163
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite transport_paths_r.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 164
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply concat_1p.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 165
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 166
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre> apply O_indpaths; intros p; cbn.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 166
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+    rewrite to_O_natural, O_rec_beta.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct p; cbn.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply eisretr.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 169
+Time: 0.006s">
+<div class="time" style="width: 16.216216216216%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 170
+Time: 0.003s">
+<div class="time" style="width: 8.1081081081081%"></div>
+<pre>
+
+Definition equiv_O_functor_ap_OO_inverts
+       {A B : Type} (f : A -&gt; B) `{O_inverts O' f} (x y : A)
+  : O (x = y) &lt;~&gt; O (f x = f y)
+  := Build_Equiv _ _ (O_functor O (ap f)) _.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 175
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Theorem 3.1(i) of RSS: path-spaces of [O']-connected types are [O]-connected. *)</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition OO_isconnected_paths
+           {A : Type} `{IsConnected O' A} (x y : A)
+  : IsConnected O (x = y).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 179
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 180
+Time: 0.003s">
+<div class="time" style="width: 8.1081081081081%"></div>
+<pre>
+  exact (contr_equiv' _ (equiv_O_functor_ap_OO_inverts (const_tt _) x y)^-1).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 181
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 182
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Proposition 2.26 of CORS and Theorem 3.1(ix) of RSS; also generalizes Theorem 7.3.12 of the book.  Here we need to add the extra assumption that [O' &lt;= Sep O], which is satisfied when [O' = Sep O] but also when [O] is lex and [O' = O].  That some such extra hypothesis is necessary can be seen from the fact that [Tr (-2) &lt;&lt;&lt; O'] for any [O'], whereas this statement is certainly not true in that generality. *)</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 184
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition path_OO `{O' &lt;= Sep O}
+           {X : Type@{i}} (x y : X)
+  : O (x = y) -&gt; (to O' X x = to O' X y).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 186
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  nrefine (O_rec (O := O) (@ap X (O' X) (to O' X) x y)).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 189
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre> rapply (@inO_leq O' (Sep O)).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 189
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 190
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 190
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 191
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+#[export] Instance isequiv_path_OO `{O' &lt;= Sep O}
+       {X : Type@{i}} (x y : X)
+  : IsEquiv (path_OO x y).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  nrefine (isequiv_O_rec_O_inverts O _).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (** Typeclass search can find this, but it's quicker (and may help the reader) to give it explicitly. *)
+ </pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 199
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>apply (OO_inverts_ap (to O' X)).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 199
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 200
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+
+Definition equiv_path_OO `{O' &lt;= Sep O}
+           {X : Type@{i}} (x y : X)
+  : O (x = y) &lt;~&gt; (to O' X x = to O' X y)
+  := Build_Equiv _ _ (path_OO x y) _.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 205
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [functor_hfiber] on a pair of [O']-equivalences is an [O]-equivalence. *)</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 207
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>#[export] Instance OO_inverts_functor_hfiber
+       {A B C D : Type} {f : A -&gt; B} {g : C -&gt; D} {h : A -&gt; C} {k : B -&gt; D}
+       (p : k o f == g o h) (b : B)
+       `{O_inverts O' h, O_inverts O' k}
+  : O_inverts O (functor_hfiber p b).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 211
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 212
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold functor_hfiber.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 213
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snrefine (OO_inverts_functor_sigma _ _).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 214
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1:exact _.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 215
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros a; cbn.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 216
+Time: 0.015s">
+<div class="time" style="width: 40.540540540541%"></div>
+<pre>
+  refine (isequiv_homotopic (O_functor O (concat (p a)^) o O_functor O (@ap _ _ k (f a) b)) _).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 217
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+  symmetry; apply O_functor_compose.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 218
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 219
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Corollary 2.29 of CORS: [O'] preserves fibers up to [O]-equivalence. *)</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 221
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>#[export] Instance OO_inverts_functor_hfiber_to_O
+       {Y X : Type} (f : Y -&gt; X) (x : X)
+  : O_inverts O (functor_hfiber (fun a =&gt; (to_O_natural O' f a)^) x).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 223
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 224
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (** Typeclass search can find this, but it's faster to give it explicitly. *)
+ </pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 226
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>exact (OO_inverts_functor_hfiber _ _).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 226
+Time: 0.011s">
+<div class="time" style="width: 29.72972972973%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 227
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+
+Definition equiv_OO_functor_hfiber_to_O
+           {Y X : Type@{i} } (f : Y -&gt; X) (x : X)
+  : O (hfiber f x) &lt;~&gt; O (hfiber (O_functor O' f) (to O' X x))
+  := Build_Equiv _ _ _ (OO_inverts_functor_hfiber_to_O f x).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 232
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Theorem 3.1(iii) of RSS: any map between [O']-connected types is [O]-connected.  (Part (ii) is just the version for dependent projections.) *)</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 234
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition OO_conn_map_isconnected
+       {Y X : Type} `{IsConnected O' Y, IsConnected O' X} (f : Y -&gt; X)
+  : IsConnMap O f.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 236
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 237
+Time: 0.009s">
+<div class="time" style="width: 24.324324324324%"></div>
+<pre>
+  intros x; exact (contr_equiv' _ (equiv_OO_functor_hfiber_to_O f x)^-1).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 238
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 239
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition OO_isconnected_hfiber
+       {Y X : Type} `{IsConnected O' Y, IsConnected O' X} (f : Y -&gt; X) (x : X)
+  : IsConnected O (hfiber f x)
+  := OO_conn_map_isconnected f x.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 244
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Theorem 3.1(iv) of RSS: an [O]-modal map between [O']-connected types is an equivalence. *)</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 246
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition OO_isequiv_mapino_isconnected
+       {Y X : Type} `{IsConnected O' Y, IsConnected O' X} (f : Y -&gt; X) `{MapIn O _ _ f}
+  : IsEquiv f.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 248
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 249
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (isequiv_conn_ino_map O).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 250
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 251
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply OO_conn_map_isconnected.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 251
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 252
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assumption.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 252
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 253
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Theorem 3.1(vi) of RSS (and part (v) is just the analogue for dependent projections). *)</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 255
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>Definition OO_conn_map_functor_hfiber {A B C D : Type}
+           {f : A -&gt; B} {g : C -&gt; D} {h : A -&gt; C} {k : B -&gt; D}
+           `{IsConnMap O' _ _ h, IsConnMap O' _ _ k}
+           (p : k o f == g o h) (b : B)
+  : IsConnMap O (functor_hfiber p b).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 259
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 260
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [c q].</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 261
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  nrefine (isconnected_equiv' O _ (hfiber_functor_hfiber p b c q)^-1 _).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 262
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+  apply OO_isconnected_hfiber.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 263
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 264
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** An enhancement of Corollary 2.29 of CORS, corresponding to Theorem 3.1(viii) of RSS: when [O'] is a modality, the map between fibers is not just an O-equivalence but is O-connected. *)</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 266
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export] Instance OO_conn_map_functor_hfiber_to_O `{IsModality O'}
+       {Y X : Type} (f : Y -&gt; X) (x : X)
+  : IsConnMap O (functor_hfiber (fun y =&gt; (to_O_natural O' f y)^) x).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 268
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 269
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply OO_conn_map_functor_hfiber.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 270
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 271
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Theorem 3.1(vii) of RSS *)</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 273
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>Definition OO_ispullback_connmap_mapino
+           {A B C D : Type} {f : A -&gt; B} {g : C -&gt; D} {h : A -&gt; C} {k : B -&gt; D}
+           (p : k o f == g o h)
+           `{O_inverts O' h, O_inverts O' k, MapIn O _ _ f, MapIn O _ _ g}
+  : IsPullback p.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 277
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 278
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply ispullback_isequiv_functor_hfiber; intros b.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 279
+Time: 0.008s">
+<div class="time" style="width: 21.621621621622%"></div>
+<pre>
+  apply (isequiv_O_inverts O).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 280
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+  apply OO_inverts_functor_hfiber; exact _.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 281
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 282
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [functor_pullback] on a triple of [O']-equivalences is an [O]-equivalence. *)</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 284
+Time: 0.003s">
+<div class="time" style="width: 8.1081081081081%"></div>
+<pre>#[export] Instance OO_inverts_functor_pullback
+       {A1 B1 C1 A2 B2 C2 : Type}
+       (f1 : B1 -&gt; A1) (g1 : C1 -&gt; A1)
+       (f2 : B2 -&gt; A2) (g2 : C2 -&gt; A2)
+       (h : A1 -&gt; A2) (k : B1 -&gt; B2) (l : C1 -&gt; C2)
+       (p : f2 o k == h o f1) (q : g2 o l == h o g1)
+       `{O_inverts O' h, O_inverts O' k, O_inverts O' l}
+  : O_inverts O (functor_pullback f1 g1 f2 g2 h k l p q).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 291
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 292
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold functor_pullback.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 293
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snrefine (OO_inverts_functor_sigma _ _).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 294
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1:exact _.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 295
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros b1; cbn.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 296
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snrefine (OO_inverts_functor_sigma _ _).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 297
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1:exact _.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 298
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros c1; cbn.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 299
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  pose @isequiv_compose.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 300
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> (* Speed up typeclass search. *)
+ </pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 301
+Time: 0.027s">
+<div class="time" style="width: 72.972972972973%"></div>
+<pre>refine (isequiv_homotopic (O_functor O (fun r =&gt; r @ (q c1)^) o O_functor O (concat (p b1)) o O_functor O (@ap _ _ h (f1 b1) (g1 c1))) _).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 301
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros r; symmetry.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 302
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> 
+  refine (_ @ _).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 303
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  2:apply O_functor_compose.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 304
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+  cbn; srapply O_functor_compose.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 305
+Time: 0.004s">
+<div class="time" style="width: 10.810810810811%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 306
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Proposition 2.28 of CORS, and Theorem 3.1(x) of RSS: the functor [O'] preserves pullbacks up to [O]-equivalence. *)</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 308
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>#[export] Instance OO_inverts_functor_pullback_to_O
+       {A B C : Type} (f : B -&gt; A) (g : C -&gt; A)
+  : O_inverts O (functor_pullback f g (O_functor O' f) (O_functor O' g)
+                                  (to O' A) (to O' B) (to O' C)
+                                  (to_O_natural O' f) (to_O_natural O' g)).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 312
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 313
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+  apply OO_inverts_functor_pullback; exact _.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 314
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 315
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+
+Definition equiv_OO_pullback {A B C : Type} (f : B -&gt; A) (g : C -&gt; A)
+  : O (Pullback f g) &lt;~&gt; O (Pullback (O_functor O' f) (O_functor O' g))
+  := Build_Equiv _ _ _ (OO_inverts_functor_pullback_to_O f g).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 319
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The "if" direction of CORS Proposition 2.31, and the nontrivial part of Theorem 3.1(xi) of RSS.  Note that we could also deduce Theorem 3.1(iii) of RSS from this. *)</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 321
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition OO_cancelL_conn_map
+           {Y X Z : Type} (f : Y -&gt; X) (g : X -&gt; Z)
+           `{IsConnMap O' _ _ (g o f)} `{IsConnMap O' _ _ g}
+  : IsConnMap O f.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 324
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 325
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply conn_map_OO_inverts.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 326
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  napply (cancelL_isequiv (O_functor O' g)).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 327
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+  1:exact _.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 328
+Time: 0.002s">
+<div class="time" style="width: 5.4054054054054%"></div>
+<pre>
+  exact (isequiv_homotopic _ (O_functor_compose O' f g)).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 329
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 330
+Time: 0.01s">
+<div class="time" style="width: 27.027027027027%"></div>
+<pre>
+
+End LeftExactness.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 332
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Here's the "only if" direction of CORS Proposition 2.31.  Note that the hypotheses are different from those of the "if" direction, and the proof is shorter than the one given in CORS. *)</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 334
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>Definition OO_cancelR_conn_map
+       (O' O : ReflectiveSubuniverse@{u}) `{O_leq@{u u u} O O', O' &lt;= Sep O}
+       {Y X Z : Type} (f : Y -&gt; X) (g : X -&gt; Z)
+       `{IsConnMap O' _ _ (g o f)} `{IsConnMap O _ _ f}
+  : IsConnMap O' g.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 338
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 339
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply conn_map_from_extension_elim.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 340
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros P P_inO h.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 341
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exists (conn_map_elim O' (g o f) P (h o f)).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 342
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  nrefine (conn_map_elim O f _ _); [ exact _ | .. ].</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 343
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 344
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 344
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    pose proof (fun z =&gt; inO_leq O' (Sep O) (P z) (P_inO z)).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 345
+Time: 0.002s">
+<div class="time" style="width: 5.4054054054054%"></div>
+<pre>
+    exact _.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 346
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 347
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros y.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 347
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (conn_map_comp O' (g o f)).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 348
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 349
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition OO_isconnected_from_conn_map
+       (O' O : ReflectiveSubuniverse) `{O &lt;= O', O' &lt;= Sep O}
+       {Y X : Type} (f : Y -&gt; X)
+       `{IsConnected O' Y} `{IsConnMap O _ _ f}
+  : IsConnected O' X.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 355
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 356
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply isconnected_conn_map_to_unit.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 357
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (OO_cancelR_conn_map O' O f (const_tt _)).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 358
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 359
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** An interesting scholium to Proposition 2.31. *)</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 361
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre>Definition OO_inverts_conn_map_factor_conn_map
+       (O' O : ReflectiveSubuniverse) `{O &lt;&lt; O', O &lt;&lt;&lt; O', O' &lt;= Sep O}
+       {Y X Z : Type} (f : Y -&gt; X) (g : X -&gt; Z)
+       `{IsConnMap O' _ _ (g o f)} `{IsConnMap O _ _ f}
+  : O_inverts O' f.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 365
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 366
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  napply (cancelL_isequiv (O_functor O' g)).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 367
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 368
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply O_inverts_conn_map.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 368
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (OO_cancelR_conn_map O' O f g).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 369
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 370
+Time: 0.002s">
+<div class="time" style="width: 5.4054054054054%"></div>
+<pre> exact (isequiv_homotopic _ (O_functor_compose O' f g)).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 370
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 371
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition OO_inverts_conn_map_isconnected_domain
+       (O' O : ReflectiveSubuniverse) `{O &lt;&lt; O', O &lt;&lt;&lt; O', O' &lt;= Sep O}
+       {Y X : Type} (f : Y -&gt; X)
+       `{IsConnected O' Y} `{IsConnMap O _ _ f}
+  : O_inverts O' f.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 377
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 378
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (OO_inverts_conn_map_factor_conn_map O' O f (const_tt _)).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 379
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 380
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Here is the converse of [ooextendable_TypeO_lex_leq]. *)</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 382
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition O_lex_leq_extendable_TypeO
+           (O' O : ReflectiveSubuniverse) `{O &lt;&lt; O'}
+           (e : forall (A:Type) (g:A-&gt;Type_ O), ExtensionAlong (to O' A) (fun _ =&gt; Type_ O) g)
+  : O &lt;&lt;&lt; O'.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 385
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 386
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros A; unshelve econstructor; intros P' P_inO; pose (P := fun x =&gt; (P' x ; P_inO x) : Type_ O).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 387
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 388
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fun x =&gt; ((e A P).1 x).1).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 388
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 389
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fun x =&gt; ((e A P).1 x).2).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 389
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 390
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 390
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply equiv_path.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 391
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (((e A P).2 x)..1).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 392
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 393
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** And a version for the accessible case. *)</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 395
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition O_lex_leq_inO_TypeO
+           (O' O : ReflectiveSubuniverse) `{O &lt;&lt; O'}
+           `{IsAccRSU O'} `{In (lift_accrsu O') (Type_ O)}
+  : O &lt;&lt;&lt; O'.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 398
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 399
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply O_lex_leq_extendable_TypeO.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 400
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros A g.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 401
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  assert (O_inverts (lift_accrsu O') (to O' A)).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 402
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 403
+Time: 0.001s">
+<div class="time" style="width: 2.7027027027027%"></div>
+<pre> rapply (O_inverts_O_leq' (lift_accrsu O') O').</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 403
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 404
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fst (ooextendable_O_inverts (lift_accrsu O') (to O' A) (Type_ O) 1%nat) g).</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 404
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Descent.v
+Line: 406
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

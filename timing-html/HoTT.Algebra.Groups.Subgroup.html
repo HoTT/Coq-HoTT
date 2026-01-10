@@ -1,0 +1,7215 @@
+<html>
+<head>
+<title>Subgroup.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Subgroup.v</h1>
+
+<div class="code" title="File: Subgroup.v
+Line: 1
+Time: 0.044s">
+<div class="time" style="width: 100%"></div>
+<pre>From HoTT Require Import Basics Types HFiber WildCat.Core WildCat.Equiv.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1
+Time: 0.021s">
+<div class="time" style="width: 47.727272727273%"></div>
+<pre>
+Require Import Truncations.Core Modalities.Modality.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 2
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Export Modalities.Modality (conn_map_factor1_image).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 3
+Time: 0.035s">
+<div class="time" style="width: 79.545454545455%"></div>
+<pre>
+Require Import Algebra.Groups.Group Universes.TruncType Universes.HSet.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope predicate_scope.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope mc_scope.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope mc_mult_scope.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Generalizable Variables G H A B C N f g.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Subgroups *)
+
+(** ** Definition of being a subgroup *)
+
+(** A subgroup H of a group G is a predicate (i.e. an hProp-valued type family) on G which is closed under the group operations. The group underlying H is given by the total space { g : G &amp; H g }, defined in [subgroup_group] below. *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 16
+Time: 0.002s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>Class IsSubgroup {G : Group} (H : G -&gt; Type) := {
+  issubgroup_predicate :: forall x, IsHProp (H x) ;
+  issubgroup_in_unit : H mon_unit ;
+  issubgroup_in_op : forall x y, H x -&gt; H y -&gt; H (x * y) ;
+  issubgroup_in_inv : forall x, H x -&gt; H x^ ;
+}.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 21
+Time: 0.016s">
+<div class="time" style="width: 36.363636363636%"></div>
+<pre>
+
+Definition issig_issubgroup {G : Group} (H : G -&gt; Type) : _ &lt;~&gt; IsSubgroup H
+  := ltac:(issig).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Basic properties of subgroups *)
+
+(** Smart constructor for subgroups.  *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 28
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>Definition Build_IsSubgroup' {G : Group}
+  (H : G -&gt; Type) `{forall x, IsHProp (H x)}
+  (unit : H mon_unit)
+  (c : forall x y, H x -&gt; H y -&gt; H (x * y^))
+  : IsSubgroup H.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (Build_IsSubgroup G H _ unit _ _).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros hx hy.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    pose (c' := c mon_unit y).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    specialize (c' unit).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    specialize (c x y^).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite (grp_inv_inv y) in c.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 40
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+    rewrite left_identity in c'.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply c.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: assumption.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (c' hy).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro g.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    specialize (c _ g unit).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 46
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+    rewrite left_identity in c.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    assumption.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Additional lemmas about being elements in a subgroup *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section IsSubgroupElements.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context  {G : Group} {H : G -&gt; Type} `{IsSubgroup G H}.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition issubgroup_in_op_inv (x y : G) : H x -&gt; H y -&gt; H (x * y^).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros p q.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply issubgroup_in_op.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: assumption.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by apply issubgroup_in_inv.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition issubgroup_in_inv' (x : G) : H x^ -&gt; H x.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros p; rewrite &lt;- (inverse_involutive x); revert p.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply issubgroup_in_inv.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition issubgroup_in_inv_op (x y : G) : H x -&gt; H y -&gt; H (x^ * y).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros p q.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite &lt;- (inverse_involutive y).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply issubgroup_in_op_inv.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1,2: by apply issubgroup_in_inv.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition issubgroup_in_op_l (x y : G) : H (x * y) -&gt; H y -&gt; H x.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros p q.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite &lt;- (grp_unit_r x).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    revert p q.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite &lt;- (grp_inv_r y).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite grp_assoc.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply issubgroup_in_op_inv.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition issubgroup_in_op_r (x y : G) : H (x * y) -&gt; H x -&gt; H y.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros p q.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite &lt;- (grp_unit_l y).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    revert q p.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite &lt;- (grp_inv_l x).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite &lt;- grp_assoc.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply issubgroup_in_inv_op.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 94
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End IsSubgroupElements.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Given a predicate H on a group G, being a subgroup is a property. *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance ishprop_issubgroup `{F : Funext} {G : Group} {H : G -&gt; Type}
+  : IsHProp (IsSubgroup H).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 100
+Time: 0.016s">
+<div class="time" style="width: 36.363636363636%"></div>
+<pre>
+  exact (istrunc_equiv_istrunc _ (issig_issubgroup H)).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 101
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Transporting being a subgroup across a pointwise equivalence. *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition issubgroup_equiv {G : Group} {H K : G -&gt; Type}
+  (p : forall g, H g &lt;~&gt; K g)
+  : IsSubgroup H -&gt; IsSubgroup K.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros H1.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_IsSubgroup.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 110
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+    rapply (istrunc_equiv_istrunc (H x)).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply p.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply p, issubgroup_in_unit.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y inx iny.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 114
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+    apply (p _)^-1 in inx, iny.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (p _ (issubgroup_in_op x y inx iny)).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x inx.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (p _)^-1 in inx.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 118
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (p _ (issubgroup_in_inv x inx)).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Definition of subgroup *) 
+
+(** The type (set) of subgroups of a group G. *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 124
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>Record Subgroup (G : Group) := {
+  subgroup_pred : G -&gt; Type ;
+  subgroup_issubgroup :: IsSubgroup subgroup_pred ;
+}.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Coercion subgroup_pred : Subgroup &gt;-&gt; Funclass.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 129
+Time: 0.004s">
+<div class="time" style="width: 9.0909090909091%"></div>
+<pre>
+
+Definition issig_subgroup {G : Group} : _ &lt;~&gt; Subgroup G
+  := ltac:(issig).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Basics properties of subgroups *)
+
+</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 135
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>Definition Build_Subgroup' {G : Group}
+  (H : G -&gt; Type) `{forall x, IsHProp (H x)}
+  (unit : H mon_unit)
+  (c : forall x y, H x -&gt; H y -&gt; H (x * y^))
+  : Subgroup G.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (Build_Subgroup G H _).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rapply Build_IsSubgroup'; assumption.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section SubgroupElements.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 145
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {G : Group} (H : Subgroup G) (x y : G).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition subgroup_in_unit : H 1 := issubgroup_in_unit.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 147
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition subgroup_in_inv : H x -&gt; H x^ := issubgroup_in_inv x.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 148
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition subgroup_in_inv' : H x^ -&gt; H x := issubgroup_in_inv' x.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition subgroup_in_op : H x -&gt; H y -&gt; H (x * y) := issubgroup_in_op x y.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition subgroup_in_op_inv : H x -&gt; H y -&gt; H (x * y^) := issubgroup_in_op_inv x y.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition subgroup_in_inv_op : H x -&gt; H y -&gt; H (x^ * y) := issubgroup_in_inv_op x y.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 152
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition subgroup_in_op_l : H (x * y) -&gt; H y -&gt; H x := issubgroup_in_op_l x y.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition subgroup_in_op_r : H (x * y) -&gt; H x -&gt; H y := issubgroup_in_op_r x y.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 154
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+End SubgroupElements.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 155
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance isequiv_subgroup_in_inv `(H : Subgroup G) (x : G)
+  : IsEquiv (subgroup_in_inv H x).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 159
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+  srapply isequiv_iff_hprop.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply subgroup_in_inv'.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 162
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+
+Definition equiv_subgroup_inv {G : Group} (H : Subgroup G) (x : G)
+  : H x &lt;~&gt; H x^ := Build_Equiv _ _ (subgroup_in_inv H x) _.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 165
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition equiv_subgroup_op_inv {G : Group} (H : Subgroup G) (x y : G)
+  : H (x * y^) &lt;~&gt; H (y * x^).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  nrefine (_ oE equiv_subgroup_inv _ _).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 170
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+  by rewrite grp_inv_op, grp_inv_inv.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Paths between subgroups correspond to homotopies between the underlying predicates. *) </pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 174
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Proposition equiv_path_subgroup `{F : Funext} {G : Group} (H K : Subgroup G)
+  : (H == K) &lt;~&gt; (H = K).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 175
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine ((equiv_ap' issig_subgroup^-1%equiv _ _)^-1%equiv oE _); cbn.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 177
+Time: 0.002s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>
+  refine (equiv_path_sigma_hprop _ _ oE _); cbn.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply equiv_path_arrow.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 179
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 180
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Proposition equiv_path_subgroup' `{U : Univalence} {G : Group} (H K : Subgroup G)
+  : (pred_eq H K) &lt;~&gt; (H = K).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 183
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 184
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (equiv_path_subgroup _ _ oE _).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply equiv_functor_forall_id; intro g.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 186
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+  exact equiv_path_iff_ishprop.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance ishset_subgroup `{Univalence} {G : Group} : IsHSet (Subgroup G).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 190
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 191
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  nrefine (istrunc_equiv_istrunc _ issig_subgroup).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 192
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  nrefine (istrunc_equiv_istrunc _ (equiv_functor_sigma_id _)).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 193
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 194
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro P; apply issig_issubgroup.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 194
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> nrefine (istrunc_equiv_istrunc _ (equiv_sigma_assoc' _ _)^-1%equiv).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    napply istrunc_sigma.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 196
+Time: 0.037s">
+<div class="time" style="width: 84.090909090909%"></div>
+<pre>
+    2: intros []; apply istrunc_hprop.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    nrefine (istrunc_equiv_istrunc
+               _ (equiv_sig_coind (fun g:G =&gt; Type) (fun g x =&gt; IsHProp x))^-1%equiv).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 199
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply istrunc_forall.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 200
+Time: 0.003s">
+<div class="time" style="width: 6.8181818181818%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 201
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Underlying group of a subgroup *)
+
+(** The group given by a subgroup *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 205
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition subgroup_group {G : Group} (H : Subgroup G) : Group.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 205
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 206
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+  apply (Build_Group (sig H)
+      (fun x y =&gt; (x.1 * y.1 ; issubgroup_in_op x.1 y.1 x.2 y.2))
+      (1; issubgroup_in_unit)
+      (fun x =&gt; (- x.1 ; issubgroup_in_inv _ x.2))).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 210
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: repeat split.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 211
+Time: 0.014s">
+<div class="time" style="width: 31.818181818182%"></div>
+<pre>
+  1: exact _.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 212
+Time: 0.013s">
+<div class="time" style="width: 29.545454545455%"></div>
+<pre>
+  1-5: grp_auto.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 213
+Time: 0.003s">
+<div class="time" style="width: 6.8181818181818%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 214
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Coercion subgroup_group : Subgroup &gt;-&gt; Group.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 216
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Equal subgroups have isomorphic underlying groups. *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 218
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>Definition equiv_subgroup_group {G : Group} (H1 H2 : Subgroup G)
+  : H1 = H2 -&gt; GroupIsomorphism H1 H2
+  := ltac:(intros []; exact grp_iso_id).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 220
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The underlying group of a subgroup of [G] has an inclusion map into [G]. *) </pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 222
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition subgroup_incl {G : Group} (H : Subgroup G)
+  : subgroup_group H $-&gt; G.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 223
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 224
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_GroupHomomorphism.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact pr1.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 226
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  hnf; reflexivity.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 227
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The inclusion map is an embedding. *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 230
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>Instance isembedding_subgroup_incl {G : Group} (H : Subgroup G)
+  : IsEmbedding (subgroup_incl H)
+  := fun _ =&gt; istrunc_equiv_istrunc _ (hfiber_fibration _ _).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 232
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Restriction of a group homomorphism to a subgroup. *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 234
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>Definition grp_homo_restr {G H : Group} (f : G $-&gt; H) (K : Subgroup G)
+  : subgroup_group K $-&gt; H
+  := f $o subgroup_incl _.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 236
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Corestriction of a group homomorphism to a subgroup. *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 238
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition subgroup_corec {G H : Group} {K : Subgroup H}
+  (f : G $-&gt; H) (g : forall x, K (f x))
+  : G $-&gt; subgroup_group K.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 240
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 241
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_GroupHomomorphism.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 242
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 243
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fun x =&gt; (f x; g x)).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 243
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 244
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 244
+Time: 0.002s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>
+    rapply path_sigma_hprop.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 245
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply grp_homo_op.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 246
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 247
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Corestriction is an equivalence on group homomorphisms. *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 249
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>Definition equiv_subgroup_corec {F : Funext}
+  (G : Group) {H : Group} (K : Subgroup H)
+  : {f : G $-&gt; H &amp; forall x, K (f x)} &lt;~&gt; (G $-&gt; subgroup_group K).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 251
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 252
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply equiv_adjointify.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 253
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 254
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (sig_rec subgroup_corec).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 254
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 255
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros g.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 255
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists (subgroup_incl _ $o g).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 256
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros x.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 257
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (g x).2.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 258
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 259
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros g.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 259
+Time: 0.01s">
+<div class="time" style="width: 22.727272727273%"></div>
+<pre>
+    by snapply equiv_path_grouphomomorphism.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 260
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 261
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [f p].</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 261
+Time: 0.005s">
+<div class="time" style="width: 11.363636363636%"></div>
+<pre>
+    rapply path_sigma_hprop.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 262
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+    by snapply equiv_path_grouphomomorphism.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 263
+Time: 0.002s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 264
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Functoriality on subgroups. *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 266
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>Definition functor_subgroup_group {G H : Group} {J : Subgroup G} {K : Subgroup H}
+  (f : G $-&gt; H) (g : forall x, J x -&gt; K (f x))
+  : subgroup_group J $-&gt; subgroup_group K
+  := subgroup_corec (grp_homo_restr f J) (sig_ind _ g).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 269
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+
+Definition grp_iso_subgroup_group {G H : Group@{i}}
+  {J : Subgroup@{i i} G} {K : Subgroup@{i i} H}
+  (e : G $&lt;~&gt; H) (f : forall x, J x &lt;-&gt; K (e x))
+  : subgroup_group J $&lt;~&gt; subgroup_group K.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 274
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 275
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+  snapply cate_adjointify.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 276
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 277
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (functor_subgroup_group e (fun x =&gt; fst (f x))).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 277
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 278
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> nrefine (functor_subgroup_group e^-1$ _).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 278
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    equiv_intro e x.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 279
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> 
+    intros k.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 280
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    nrefine ((eissect e _)^ # _).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 281
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (snd (f x) k).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 282
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 283
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 283
+Time: 0.002s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>
+    rapply path_sigma_hprop.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 284
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+    napply eisretr.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 285
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 286
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 286
+Time: 0.003s">
+<div class="time" style="width: 6.8181818181818%"></div>
+<pre>
+    rapply path_sigma_hprop.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 287
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    napply eissect.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 288
+Time: 0.002s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 289
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Cosets of subgroups *)
+
+</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 292
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section Cosets.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 292
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Left and right cosets give equivalence relations. *)
+
+ </pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 296
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Context {G : Group} (H : Subgroup G).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 296
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The relation of being in a left coset represented by an element. *)
+ </pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 299
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition in_cosetL : Relation G := fun x y =&gt; H (x^ * y).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 299
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (** The relation of being in a right coset represented by an element. *)
+ </pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 301
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition in_cosetR : Relation G := fun x y =&gt; H (x * y^).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 301
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Hint Extern 4 =&gt; progress unfold in_cosetL : typeclass_instances.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 303
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Hint Extern 4 =&gt; progress unfold in_cosetR : typeclass_instances.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 304
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Global Arguments in_cosetL /.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 306
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Global Arguments in_cosetR /.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 307
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** These are props *)
+ </pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 310
+Time: 0.003s">
+<div class="time" style="width: 6.8181818181818%"></div>
+<pre>#[export] Instance ishprop_in_cosetL : is_mere_relation G in_cosetL := _.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 310
+Time: 0.003s">
+<div class="time" style="width: 6.8181818181818%"></div>
+<pre>
+  #[export] Instance ishprop_in_cosetR : is_mere_relation G in_cosetR := _.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 311
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** In fact, they are both equivalence relations. *)
+ </pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 314
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export] Instance reflexive_in_cosetL : Reflexive in_cosetL.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 314
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 315
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro x; hnf.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 316
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite left_inverse.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 317
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact issubgroup_in_unit.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 318
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 319
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance reflexive_in_cosetR : Reflexive in_cosetR.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 321
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 322
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro x; hnf.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 323
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite right_inverse.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 324
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact issubgroup_in_unit.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 325
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 326
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance symmetric_in_cosetL : Symmetric in_cosetL.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 328
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 329
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros x y h; cbn; cbn in h.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 330
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite &lt;- (grp_inv_inv x).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 331
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite &lt;- grp_inv_op.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 332
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply issubgroup_in_inv; assumption.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 333
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 334
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance symmetric_in_cosetR : Symmetric in_cosetR.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 336
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 337
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros x y h; cbn; cbn in h.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 338
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite &lt;- (grp_inv_inv y).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 339
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite &lt;- grp_inv_op.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 340
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply issubgroup_in_inv; assumption.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 341
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 342
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance transitive_in_cosetL : Transitive in_cosetL.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 344
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 345
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros x y z h k; cbn; cbn in h; cbn in k.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 346
+Time: 0.002s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>
+    rewrite &lt;- (right_identity x^).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 347
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+    rewrite &lt;- (right_inverse y : y * y^ = mon_unit).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 348
+Time: 0.004s">
+<div class="time" style="width: 9.0909090909091%"></div>
+<pre>
+    rewrite (associativity x^ _ _).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 349
+Time: 0.004s">
+<div class="time" style="width: 9.0909090909091%"></div>
+<pre>
+    rewrite &lt;- simple_associativity.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 350
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply issubgroup_in_op; assumption.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 351
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 352
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance transitive_in_cosetR : Transitive in_cosetR.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 354
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 355
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros x y z h k; cbn; cbn in h; cbn in k.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 356
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+    rewrite &lt;- (right_identity x).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 357
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite &lt;- (left_inverse y : y^ * y = mon_unit).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 358
+Time: 0.002s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>
+    rewrite (simple_associativity x).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 359
+Time: 0.006s">
+<div class="time" style="width: 13.636363636364%"></div>
+<pre>
+    rewrite &lt;- (associativity _ _ z^).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 360
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply issubgroup_in_op; assumption.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 361
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 362
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+
+End Cosets.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 364
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Properties of left and right cosets *)
+
+</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 367
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition in_cosetL_unit {G : Group} {N : Subgroup G}
+  : forall x y, in_cosetL N (x^ * y) mon_unit &lt;~&gt; in_cosetL N x y.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 368
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 369
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y; cbn.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 370
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+  rewrite (right_identity _^).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 371
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite (inverse_sg_op _).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 372
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite (inverse_involutive _).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 373
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+  apply equiv_iff_hprop; apply symmetric_in_cosetL.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 374
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 375
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition in_cosetR_unit {G : Group} {N : Subgroup G}
+  : forall x y, in_cosetR N (x * y^) mon_unit &lt;~&gt; in_cosetR N x y.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 378
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 379
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y; cbn.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 380
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite inverse_mon_unit.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 381
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+  rewrite (right_identity (x * y^)).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 382
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  reflexivity.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 383
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 384
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Symmetry is an equivalence. *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 386
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition equiv_in_cosetL_symm {G : Group} {N : Subgroup G}
+  : forall x y, in_cosetL N x y &lt;~&gt; in_cosetL N y x.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 387
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 388
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 389
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply equiv_iff_hprop.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 390
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  all: by intro.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 391
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 392
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition equiv_in_cosetR_symm {G : Group} {N : Subgroup G}
+  : forall x y, in_cosetR N x y &lt;~&gt; in_cosetR N y x.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 395
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 396
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 397
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply equiv_iff_hprop.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 398
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  all: by intro.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 399
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 400
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The sigma type of a left coset is equivalent to the sigma type of the subgroup. *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 402
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition equiv_sigma_in_cosetL_subgroup (G : Group) (H : Subgroup G) (x : G)
+  : sig (in_cosetL H x) &lt;~&gt; sig H.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 403
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 404
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply equiv_functor_sigma'.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 405
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 406
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rapply (Build_Equiv _ _ (x^ *.)).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 406
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 407
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 407
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 408
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The sigma type of a right coset is equivalent to the sigma type of the subgroup. *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 410
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition equiv_sigma_in_cosetR_subgroup (G : Group) (H : Subgroup G) (x : G)
+  : sig (in_cosetR H x) &lt;~&gt; sig H.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 411
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 412
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply equiv_functor_sigma'.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 413
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 414
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rapply (Build_Equiv _ _ (.* x ^)).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 414
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 415
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl; intros y.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 415
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply equiv_subgroup_op_inv.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 416
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 417
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Normal subgroups *)
+
+(** A normal subgroup is a subgroup closed under conjugation. *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 421
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>Class IsNormalSubgroup {G : Group} (N : Subgroup G)
+  := isnormal : forall {x y}, N (x * y) -&gt; N (y * x).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 422
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Record NormalSubgroup (G : Group) := {
+  normalsubgroup_subgroup : Subgroup G ;
+  normalsubgroup_isnormal :: IsNormalSubgroup normalsubgroup_subgroup ;
+}.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 427
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments Build_NormalSubgroup G N _ : rename.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 429
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Coercion normalsubgroup_subgroup : NormalSubgroup &gt;-&gt; Subgroup.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 431
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition equiv_symmetric_in_normalsubgroup {G : Group}
+  (N : Subgroup G) `{!IsNormalSubgroup N}
+  : forall x y, N (x * y) &lt;~&gt; N (y * x).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 435
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 436
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 437
+Time: 0.002s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>
+  rapply equiv_iff_hprop.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 438
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  all: exact isnormal.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 439
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 440
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Our definition of normal subgroup implies the usual definition of invariance under conjugation. *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 442
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition isnormal_conj {G : Group} (N : Subgroup G)
+  `{!IsNormalSubgroup N} {x y : G}
+  : N x &lt;~&gt; N (y * x * y^).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 444
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 445
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srefine (equiv_symmetric_in_normalsubgroup N _ _ oE _).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 446
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+  by rewrite grp_inv_V_gg.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 447
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 448
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We can show a subgroup is normal if it is invariant under conjugation. *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 450
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Build_IsNormalSubgroup' (G : Group) (N : Subgroup G)
+  (isnormal : forall x y, N x -&gt; N (y * x * y^))
+  : IsNormalSubgroup N.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 452
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 453
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y n.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 454
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  nrefine (transport N (grp_unit_r _) _).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 455
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  nrefine (transport (fun z =&gt; N (_ * z)) (grp_inv_r y) _).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 456
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  nrefine (transport N (grp_assoc _ _ _)^ _).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 457
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  nrefine (transport (fun z =&gt; N (z * _)) (grp_assoc _ _ _) _).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 458
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by apply isnormal.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 459
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 460
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Under funext, being a normal subgroup is a hprop. *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 462
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance ishprop_isnormalsubgroup `{Funext} {G : Group} (N : Subgroup G)
+  : IsHProp (IsNormalSubgroup N).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 463
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 464
+Time: 0.004s">
+<div class="time" style="width: 9.0909090909091%"></div>
+<pre> 
+  unfold IsNormalSubgroup; exact _.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 465
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 466
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Our definition of normal subgroup and the usual definition are therefore equivalent. *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 468
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition equiv_isnormal_conjugate `{Funext} {G : Group} (N : Subgroup G)
+  : IsNormalSubgroup N &lt;~&gt; (forall x y, N x -&gt; N (y * x * y^)).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 469
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 470
+Time: 0.004s">
+<div class="time" style="width: 9.0909090909091%"></div>
+<pre>
+  rapply equiv_iff_hprop.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 471
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 472
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros is_normal x y.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 472
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rapply isnormal_conj.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 473
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 474
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros is_normal'.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 474
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by snapply Build_IsNormalSubgroup'.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 475
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 476
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Inner automorphisms of a group [G] restrict to automorphisms of normal subgroups. *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 478
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition grp_iso_normal_conj {G : Group} (N : Subgroup G)
+  `{!IsNormalSubgroup N} (x : G)
+  : subgroup_group N $&lt;~&gt; subgroup_group N.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 480
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 481
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply grp_iso_subgroup_group.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 482
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 483
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (grp_iso_conj x).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 483
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 484
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros y.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 484
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+    rapply isnormal_conj.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 485
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 486
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Left and right cosets are equivalent in normal subgroups. *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 488
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>Definition equiv_in_cosetL_in_cosetR_normalsubgroup {G : Group}
+  (N : NormalSubgroup G) (x y : G)
+  : in_cosetL N x y &lt;~&gt; in_cosetR N x y
+  := equiv_in_cosetR_symm _ _ oE equiv_symmetric_in_normalsubgroup _ _ _.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 491
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Inverses are then respected *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 493
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition in_cosetL_inverse {G : Group} {N : NormalSubgroup G} (x y : G)
+  : in_cosetL N x^ y^ &lt;~&gt; in_cosetL N x y.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 494
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 495
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_ oE equiv_in_cosetL_in_cosetR_normalsubgroup _ _ _); cbn.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 496
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+  by rewrite inverse_involutive.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 497
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 498
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition in_cosetR_inverse {G : Group} {N : NormalSubgroup G} (x y : G)
+  : in_cosetR N x^ y^ &lt;~&gt; in_cosetR N x y.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 501
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 502
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_ oE equiv_in_cosetL_in_cosetR_normalsubgroup _ _ _); cbn.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 503
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+  by rewrite grp_inv_inv.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 504
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 505
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** This lets us prove that left and right coset relations are congruences. *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 507
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition in_cosetL_cong {G : Group} {N : NormalSubgroup G}
+  (x x' y y' : G)
+  : in_cosetL N x y -&gt; in_cosetL N x' y' -&gt; in_cosetL N (x * x') (y * y').</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 509
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 510
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  cbn; intros p q.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 511
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (** rewrite goal before applying subgroup_op *)
+ </pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 513
+Time: 0.003s">
+<div class="time" style="width: 6.8181818181818%"></div>
+<pre>rewrite inverse_sg_op, &lt;- simple_associativity.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 513
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply isnormal.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 514
+Time: 0.006s">
+<div class="time" style="width: 13.636363636364%"></div>
+<pre>
+  rewrite simple_associativity, &lt;- simple_associativity.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 515
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply subgroup_in_op.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 516
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact p.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 517
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply isnormal.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 518
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact q.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 519
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 520
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition in_cosetR_cong  {G : Group} {N : NormalSubgroup G}
+  (x x' y y' : G)
+  : in_cosetR N x y -&gt; in_cosetR N x' y' -&gt; in_cosetR N (x * x') (y * y').</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 524
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 525
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  cbn; intros p q.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 526
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (** rewrite goal before applying subgroup_op *)
+ </pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 528
+Time: 0.003s">
+<div class="time" style="width: 6.8181818181818%"></div>
+<pre>rewrite inverse_sg_op, simple_associativity.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 528
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply isnormal.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 529
+Time: 0.006s">
+<div class="time" style="width: 13.636363636364%"></div>
+<pre>
+  rewrite &lt;- simple_associativity, simple_associativity.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 530
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply subgroup_in_op.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 531
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  2: exact q.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 532
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply isnormal.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 533
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact p.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 534
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 535
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Trivial subgroup *)
+
+(** The trivial subgroup of a group [G]. *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 539
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition trivial_subgroup G : Subgroup G.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 539
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 540
+Time: 0.008s">
+<div class="time" style="width: 18.181818181818%"></div>
+<pre>
+  rapply (Build_Subgroup' (fun x =&gt; x = 1)).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 541
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 542
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y p q.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 543
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct p^%path, q^%path.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 544
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+  lhs apply left_identity.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 545
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply grp_inv_unit.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 546
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 547
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The trivial subgroup is always included in any subgroup. *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 549
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition trivial_subgroup_rec {G : Group} (H : Subgroup G)
+  : forall x, trivial_subgroup G x -&gt; H x.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 550
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 551
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  napply paths_ind_r; cbn beta.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 552
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact issubgroup_in_unit.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 553
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 554
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The trivial subgroup is a normal subgroup. *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 556
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isnormal_trivial_subgroup {G : Group}
+  : IsNormalSubgroup (trivial_subgroup G).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 557
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 558
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y p; cbn in p |- *.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 559
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply grp_moveL_1V in p.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 560
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by apply grp_moveL_V1.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 561
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 562
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The property of being the trivial subgroup. Note that any group can be automatically coerced to its maximal subgroup, so it makes sense for this predicate to be applied to groups in general. *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 564
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Class IsTrivialGroup@{i} {G : Group@{i}} (H : Subgroup@{i i} G) :=
+  istrivialgroup : forall x, H x -&gt; trivial_subgroup G x.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 565
+Time: 0.005s">
+<div class="time" style="width: 11.363636363636%"></div>
+<pre>
+
+Instance ishprop_istrivialgroup `{F : Funext} {G : Group} (H : Subgroup G)
+  : IsHProp (IsTrivialGroup H)
+  := istrunc_forall.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 569
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance istrivial_trivial_subgroup {G : Group}
+  : IsTrivialGroup (trivial_subgroup G)
+  := fun x =&gt; idmap.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 573
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Trivial groups are isomorphic to the trivial group. *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 575
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition istrivial_iff_grp_iso_trivial {G : Group} (H : Subgroup G)
+  : IsTrivialGroup H &lt;-&gt; (subgroup_group H $&lt;~&gt; grp_trivial).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 576
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 577
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  split.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 578
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 579
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros triv.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 579
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+    snapply cate_adjointify.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 580
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1,2: exact grp_homo_const.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 581
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 582
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by intros [].</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 582
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 583
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [x Hx]; simpl.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 583
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+      apply path_sigma_hprop.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 584
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      symmetry.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 585
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      by apply triv.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 586
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 587
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros e x Hx.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 587
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    change ((x; Hx).1 = (1; idpath).1).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 588
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply (pr1_path (u:=(_;_)) (v:=(_;_))).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 589
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: apply subgroup_in_unit.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 590
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rhs_V exact (grp_homo_unit e^-1$).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 591
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply moveL_equiv_V.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 592
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_contr.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 593
+Time: 0.002s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 594
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** All trivial subgroups are isomorphic as groups. *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 596
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition grp_iso_trivial_subgroup (G H : Group)
+  : subgroup_group (trivial_subgroup G)
+    $&lt;~&gt; subgroup_group (trivial_subgroup H).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 598
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 599
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snrefine (_^-1$ $oE _).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 600
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact grp_trivial.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 601
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1,2: apply istrivial_iff_grp_iso_trivial; exact _.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 602
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 603
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition istrivial_grp_iso {G H : Group} (J : Subgroup G) (K : Subgroup H)
+  (e : subgroup_group J $&lt;~&gt; subgroup_group K)
+  : IsTrivialGroup J -&gt; IsTrivialGroup K.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 607
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 608
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros triv.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 609
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply istrivial_iff_grp_iso_trivial in triv.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 610
+Time: 0.002s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>
+  apply istrivial_iff_grp_iso_trivial.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 611
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (triv $oE e^-1$).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 612
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 613
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Maximal Subgroups *)
+
+(** Every group is a (maximal) subgroup of itself. *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 617
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition maximal_subgroup G : Subgroup G.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 617
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 618
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rapply (Build_Subgroup G (fun x =&gt; Unit)).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 619
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+  split; auto; exact _.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 620
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 621
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We wish to coerce a group to its maximal subgroup. However, if we don't explicitly print [maximal_subgroup] things can get confusing, so we mark it as a coercion to be printed. *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 623
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Coercion maximal_subgroup : Group &gt;-&gt; Subgroup.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 623
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Add Printing Coercion maximal_subgroup.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 624
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The group associated to the maximal subgroup is the original group. Note that this equivalence does not characterize the maximal subgroup, as a proper subgroup can be isomorphic to the whole group. For example, the even integers are isomorphic to the integers. *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 626
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition grp_iso_subgroup_group_maximal (G : Group)
+  : subgroup_group (maximal_subgroup G) $&lt;~&gt; G.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 627
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 628
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_GroupIsomorphism'.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 629
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 630
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre> rapply equiv_sigma_contr.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 630
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 631
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> hnf; reflexivity.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 631
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 632
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The maximal subgroup (the group itself) is a normal subgroup. *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 634
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isnormal_maximal_subgroup {G : Group}
+  : IsNormalSubgroup (maximal_subgroup G).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 635
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 636
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y p; exact tt.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 637
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 638
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The property of being a maximal subgroup of a group [G]. *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 640
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Class IsMaximalSubgroup {G : Group} (H : Subgroup G) :=
+  ismaximalsubgroup : forall (x : G), H x.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 641
+Time: 0.007s">
+<div class="time" style="width: 15.909090909091%"></div>
+<pre>
+
+Instance ishprop_ismaximalsubgroup `{Funext}
+  {G : Group} (H : Subgroup G)
+  : IsHProp (IsMaximalSubgroup H)
+  := istrunc_forall.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 646
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance ismaximalsubgroup_maximalsubgroup {G : Group}
+  : IsMaximalSubgroup (maximal_subgroup G)
+  := fun g =&gt; tt.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 650
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Subgroups in opposite group *)
+
+</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 653
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance issubgroup_grp_op {G : Group} (H : G -&gt; Type)
+  : IsSubgroup H -&gt; IsSubgroup (G:=grp_op G) H.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 654
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 655
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros H1.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 656
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_IsSubgroup'.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 657
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 658
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 658
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 659
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn; exact issubgroup_in_unit.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 659
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 660
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y Hx Hy; cbn.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 660
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by apply issubgroup_in_inv_op.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 661
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 662
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Note that [grp_op] is definitionally involutive, so the next result also gives us a map [Subgroup (grp_op G) -&gt; Subgroup G]. *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 664
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition subgroup_grp_op {G : Group} (H : Subgroup G)
+  : Subgroup (grp_op G)
+  := Build_Subgroup (grp_op G) H _.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 666
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance isnormal_subgroup_grp_op {G : Group} (H : Subgroup G)
+  : IsNormalSubgroup H -&gt; IsNormalSubgroup (subgroup_grp_op H).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 669
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 670
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros n x y; cbn.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 671
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact isnormal.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 672
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 673
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition normalsubgroup_grp_op {G : Group}
+  : NormalSubgroup G -&gt; NormalSubgroup (grp_op G)
+  := fun N =&gt; Build_NormalSubgroup (grp_op G) (subgroup_grp_op N) _.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 677
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Subgroup intersection *)
+
+(** Intersection of two subgroups *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 681
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition subgroup_intersection {G : Group} (H K : Subgroup G) : Subgroup G.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 681
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 682
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply (Build_Subgroup' (pred_and H K)).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 683
+Time: 0.005s">
+<div class="time" style="width: 11.363636363636%"></div>
+<pre>
+  1: exact _.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 684
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: split; apply subgroup_in_unit.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 685
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y [] [].</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 686
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  split; by apply subgroup_in_op_inv.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 687
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 688
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Intersection of a family of subgroups *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 690
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition subgroup_intersection_family {G : Group} (I : Type) (H : I -&gt; Subgroup G)
+  : Subgroup G.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 691
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 692
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* We insert [merely] to avoid needing [Funext]. *)
+ </pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 694
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>snapply (Build_Subgroup' (fun g =&gt; merely (forall i, H i g))).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 694
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 695
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 695
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 696
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 696
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro i; apply subgroup_in_unit.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 697
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 698
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 698
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros x y Hx Hy.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 699
+Time: 0.013s">
+<div class="time" style="width: 29.545454545455%"></div>
+<pre>
+    strip_truncations; apply tr.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 700
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro i; by apply subgroup_in_op_inv.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 701
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 702
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Preimage subgroup *)
+
+(** The preimage of a subgroup under a group homomorphism is a subgroup. *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 706
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance issubgroup_preimage {G H : Group} (f : G $-&gt; H) (S : H -&gt; Type)
+  : IsSubgroup S -&gt; IsSubgroup (S o f).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 707
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 708
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros H1.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 709
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_IsSubgroup'.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 710
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 711
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> hnf; exact _.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 711
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 712
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> nrefine (transport S (grp_homo_unit f)^ _).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 712
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact issubgroup_in_unit.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 713
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 714
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> hnf; intros x y Sfx Sfy.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 714
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    nrefine (transport S (grp_homo_op f _ _)^ _).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 715
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rapply issubgroup_in_op; only 1: assumption.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 716
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    nrefine (transport S (grp_homo_inv f _)^ _).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 717
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by apply issubgroup_in_inv.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 718
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 719
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+
+Definition subgroup_preimage {G H : Group} (f : G $-&gt; H) (S : Subgroup H)
+  : Subgroup G
+  := Build_Subgroup G (S o f) _.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 723
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The preimage of a normal subgroup is again normal. *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 725
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isnormal_subgroup_preimage {G H : Group} (f : G $-&gt; H)
+  (N : Subgroup H) `{!IsNormalSubgroup N}
+  : IsNormalSubgroup (subgroup_preimage f N).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 727
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 728
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y Nfxy; simpl.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 729
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  nrefine (transport N (grp_homo_op _ _ _)^ _).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 730
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply isnormal.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 731
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (transport N (grp_homo_op _ _ _) Nfxy).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 732
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 733
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+
+Definition functor_subgroup_preimage {G H : Group} (f : G $-&gt; H)
+  {S T : Subgroup H} (p : S ⊆ T)
+  : subgroup_preimage f S ⊆ subgroup_preimage f T
+  := p o f.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 738
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The preimage of an intersection is the intersection of preimages. *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 740
+Time: 0.002s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>Definition subgroup_preimage_intersection {G H : Group} (f : G $-&gt; H)
+  (S T : Subgroup H)
+  : subgroup_preimage f (subgroup_intersection S T)
+    ↔ subgroup_intersection (subgroup_preimage f S) (subgroup_preimage f T)
+  := reflexivity _.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 744
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Simple groups *)
+
+</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 747
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Class IsSimpleGroup (G : Group)
+  := is_simple_group : forall (N : Subgroup G) `{IsNormalSubgroup G N},
+    IsTrivialGroup N + IsMaximalSubgroup N.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 749
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** The subgroup generated by a subset *)
+
+(** Underlying type family of a subgroup generated by subset *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 753
+Time: 0.002s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>Inductive subgroup_generated_type {G : Group} (X : G -&gt; Type) : G -&gt; Type :=
+(** The subgroup should contain all elements of the original family. *)
+| sgt_in (g : G) : X g -&gt; subgroup_generated_type X g
+(** It should contain the unit. *)
+| sgt_unit : subgroup_generated_type X mon_unit
+(** Finally, it should be closed under inverses and operation. *)
+| sgt_op (g h : G)
+  : subgroup_generated_type X g
+  -&gt; subgroup_generated_type X h
+  -&gt; subgroup_generated_type X (g * h^)
+.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 763
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments sgt_in {G X g}.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 765
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments sgt_unit {G X}.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 766
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments sgt_op {G X g h}.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 767
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Note that [subgroup_generated_type] will not automatically land in [HProp]. For example, if [X] already "contains" the unit of the group, then there are at least two different inhabitants of this family at the unit (given by [sgt_unit] and [sgt_in group_unit _]). Therefore, we propositionally truncate in [subgroup_generated] below. *)
+
+(** Subgroups are closed under inverses. *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 771
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition sgt_inv {G : Group} {X} {g : G}
+  : subgroup_generated_type X g -&gt; subgroup_generated_type X g^.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 772
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 773
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros p.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 774
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+  rewrite &lt;- left_identity.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 775
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (sgt_op sgt_unit p).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 776
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 777
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition sgt_inv' {G : Group} {X} {g : G}
+  : subgroup_generated_type X g^ -&gt; subgroup_generated_type X g.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 780
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 781
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros p.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 782
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite &lt;- grp_inv_inv.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 783
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by apply sgt_inv.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 784
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 785
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition sgt_op' {G : Group} {X} {g h : G}
+  : subgroup_generated_type X g
+    -&gt; subgroup_generated_type X h
+    -&gt; subgroup_generated_type X (g * h).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 790
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 791
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros p q.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 792
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite &lt;- (inverse_involutive h).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 793
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (sgt_op p (sgt_inv q)).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 794
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 795
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The subgroup generated by a subset *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 797
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition subgroup_generated {G : Group} (X : G -&gt; Type) : Subgroup G.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 797
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 798
+Time: 0.002s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>
+  refine (Build_Subgroup' (merely o subgroup_generated_type X)
+            (tr sgt_unit) _).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 800
+Time: 0.017s">
+<div class="time" style="width: 38.636363636364%"></div>
+<pre>
+  intros x y p q; strip_truncations.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 801
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (tr (sgt_op p q)).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 802
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 803
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+
+Definition subgroup_generated_in {G : Group} {X : G -&gt; Type}
+  : X ⊆ subgroup_generated X
+  := fun _ =&gt; (tr o sgt_in).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 807
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The inclusion of generators into the generated subgroup. *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 809
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>Definition subgroup_generated_gen_incl {G : Group} {X : G -&gt; Type} (g : G) (H : X g)
+  : subgroup_generated X
+  := (g; tr (sgt_in H)).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 811
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The generated subgroup is the smallest subgroup containing the generating set. *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 813
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition subgroup_generated_rec {G : Group} (X : G -&gt; Type) (S : Subgroup G)
+  (i : X ⊆ S)
+  : subgroup_generated X ⊆ S.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 815
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 816
+Time: 0.002s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>
+  intros g; rapply Trunc_rec; intros p.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 817
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction p as [g Xg | | g h p1 IHp1 p2 IHp2].</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 818
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 819
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by apply i.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 819
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 820
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply subgroup_in_unit.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 820
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 821
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by apply subgroup_in_op_inv.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 821
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 822
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** If [f : G $-&gt; H] is a group homomorphism and [X] and [Y] are subsets of [G] and [H] such that [f] maps [X] into [Y], then [f] sends the subgroup generated by [X] into the subgroup generated by [Y]. *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 824
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>Definition functor_subgroup_generated {G H : Group}
+  (X : G -&gt; Type) (Y : H -&gt; Type) (f : G $-&gt; H) (preserves : X ⊆ (Y o f))
+  : subgroup_generated X ⊆ (subgroup_generated Y o f).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 826
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 827
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (subgroup_generated_rec _ (subgroup_preimage f (subgroup_generated Y))).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 828
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+  transitivity (Y o f).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 829
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: apply preserves.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 830
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (pred_subset_precomp f).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 831
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply subgroup_generated_in.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 832
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 833
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+
+Definition functor_subgroup_generated' {G : Group}
+  (X : G -&gt; Type) (Y : G -&gt; Type) (preserves : pred_subset X Y)
+  : subgroup_generated X ⊆ subgroup_generated Y
+  := functor_subgroup_generated X Y (Id _) preserves.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 838
+Time: 0.002s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>
+
+Definition subgroup_eq_functor_subgroup_generated {G H : Group}
+  (X : G -&gt; Type) (Y : H -&gt; Type) (f : G $&lt;~&gt; H) (preserves : X ↔ (Y o f))
+  : subgroup_generated X ↔ (subgroup_generated Y o f).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 842
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 843
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply pred_subset_antisymm.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 844
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 845
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply functor_subgroup_generated.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 845
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact preserves.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 846
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 847
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (pred_subset_moveR_equiv f).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 847
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (functor_subgroup_generated _ _ f^-1$).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 848
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (pred_subset_moveL_equiv f^-1$); cbn.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 849
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply pred_subset_pred_eq.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 850
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+    by symmetry.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 851
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 852
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A similar result is true if we replace one group by its opposite, i.e. if [f] is an anti-homomorphism.  For simplicity, we state this only for the case in which [f] is the identity isomorphism.  It's also useful in the special case where [X] and [Y] are the same. *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 854
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition subgroup_eq_subgroup_generated_op {G : Group}
+  (X : G -&gt; Type) (Y : G -&gt; Type) (preserves : X ↔ Y)
+  : subgroup_generated X ↔ subgroup_generated (G:=grp_op G) Y.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 856
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 857
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro g; split.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 858
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: change (subgroup_generated X g -&gt; subgroup_grp_op (subgroup_generated (G:=grp_op G) Y) g).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 859
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  2: change (subgroup_generated (G:=grp_op G) Y g -&gt; subgroup_grp_op (subgroup_generated X) g).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 860
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+  all: apply subgroup_generated_rec.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 861
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  all: intros x Xx.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 862
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+  all: apply (tr o sgt_in).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 863
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  all: by apply (preserves x).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 864
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 865
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Subgroups generated by propositionally truncated predicates *)
+
+(** Propositionally truncating the predicate determining a generating subset does not change the subgroup it generates. *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 869
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition subgroup_generated_merely {G : Group} (X : G -&gt; Type)
+  : subgroup_generated X ↔ subgroup_generated (merely o X).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 870
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 871
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply pred_subset_antisymm.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 872
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 873
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply functor_subgroup_generated'.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 873
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (fun g =&gt; tr).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 874
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 875
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro g.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 875
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro ing.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 876
+Time: 0.006s">
+<div class="time" style="width: 13.636363636364%"></div>
+<pre>
+    strip_truncations.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 877
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    induction ing as [g x| |g h Xg IHYg Xh IHYh].</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 878
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 879
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (Trunc_functor (-1) sgt_in x).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 879
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 880
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (tr sgt_unit).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 880
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 881
+Time: 0.026s">
+<div class="time" style="width: 59.090909090909%"></div>
+<pre> strip_truncations.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 881
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      by apply tr, sgt_op.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 882
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 883
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** If the truncated predicates are related by [pred_subset], then so are the generated subgroups. *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 885
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>Definition functor_subgroup_generated_merely {G : Group} (X Y : G -&gt; Type)
+  (K : (merely o X) ⊆ (merely o Y))
+  : subgroup_generated X ⊆ subgroup_generated Y.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 887
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 888
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+  transitivity (subgroup_generated (merely o X)).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 889
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: apply pred_subset_pred_eq, subgroup_generated_merely.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 890
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+  transitivity (subgroup_generated (merely o Y)).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 891
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: by apply functor_subgroup_generated'.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 892
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply pred_subset_pred_eq', subgroup_generated_merely.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 893
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 894
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+
+Definition subgroup_eq_functor_subgroup_generated_merely {G : Group}
+  (X Y : G -&gt; Type) (K : (merely o X) ↔ (merely o Y))
+  : subgroup_generated X ↔ subgroup_generated Y.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 898
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 899
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply pred_subset_antisymm; apply functor_subgroup_generated_merely.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 900
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 901
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply pred_subset_pred_eq, K.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 901
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 902
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply pred_subset_pred_eq', K.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 902
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 903
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** If the predicates selecting the generators are merely equivalent, then the generated subgroups are isomorphic. *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 905
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>Definition grp_iso_subgroup_generated_merely  {G : Group} (X Y : G -&gt; Type)
+  (K : (merely o X) ↔ (merely o Y))
+  : subgroup_group (subgroup_generated X) $&lt;~&gt; subgroup_group (subgroup_generated Y).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 907
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 908
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (grp_iso_subgroup_group grp_iso_id).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 909
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by apply subgroup_eq_functor_subgroup_generated_merely.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 910
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 911
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** If the predicates selecting the generators are merely equivalent, then the generated subgroups are equal. *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 913
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>Definition path_subgroup_generated `{Univalence} {G : Group}
+  (X Y : G -&gt; Type) (K : (merely o X) ↔ (merely o Y))
+  : subgroup_generated X = subgroup_generated Y.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 915
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 916
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+  rapply equiv_path_subgroup'.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 917
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> (* Uses Univalence. *)
+ </pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 918
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>by apply subgroup_eq_functor_subgroup_generated_merely.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 918
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 919
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Product of subgroups *)
+
+(** The product of two subgroups. *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 923
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition subgroup_product {G : Group} (H K : Subgroup G) : Subgroup G
+  := subgroup_generated (pred_or H K).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 924
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+
+Definition subgroup_product_incl_l {G : Group} {H K : Subgroup G}
+  : H ⊆ subgroup_product H K
+  := fun x =&gt; subgroup_generated_in _ o inl.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 928
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+
+Definition subgroup_product_incl_r {G : Group} {H K : Subgroup G}
+  : K ⊆ subgroup_product H K
+  := fun x =&gt; subgroup_generated_in _ o inr.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 932
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The induction principle for the product. *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 934
+Time: 0.003s">
+<div class="time" style="width: 6.8181818181818%"></div>
+<pre>Definition subgroup_product_ind {G : Group} (H K : Subgroup G)
+  (P : forall x, subgroup_product H K x -&gt; Type)
+  (P_H_in : forall x y, P x (subgroup_product_incl_l _ y))
+  (P_K_in : forall x y, P x (subgroup_product_incl_r _ y))
+  (P_unit : P mon_unit (tr sgt_unit))
+  (P_op : forall x y h k, P x (tr h) -&gt; P y (tr k)
+    -&gt; P (x * y^) (tr (sgt_op h k)))
+  `{forall x y, IsHProp (P x y)}
+  : forall x (p : subgroup_product H K x), P x p.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 942
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 943
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x p.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 944
+Time: 0.029s">
+<div class="time" style="width: 65.909090909091%"></div>
+<pre>
+  strip_truncations.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 945
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction p as [x s | | x y h IHh k IHk].</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 946
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 947
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct s.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 947
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 948
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply P_H_in.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 948
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 949
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply P_K_in.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 949
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 950
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact P_unit.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 950
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 951
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by apply P_op.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 951
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 952
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The product subgroup is the smallest subgroup containing the factors. *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 954
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>Definition subgroup_product_smallest {G : Group} (H K L : Subgroup G)
+  : H ⊆ L -&gt; K ⊆ L -&gt; subgroup_product H K ⊆ L.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 955
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 956
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros p q.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 957
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  napply subgroup_generated_rec.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 958
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x [h | k].</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 959
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 960
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by apply p.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 960
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 961
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by apply q.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 961
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 962
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Subgroup products are commutative *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 964
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition subgroup_product_comm {G : Group} (H K : Subgroup G)
+  : subgroup_product H K ↔ subgroup_product K H.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 965
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 966
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply pred_subset_antisymm; apply subgroup_product_smallest.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 967
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1,3: apply subgroup_product_incl_r.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 968
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1,2: apply subgroup_product_incl_l.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 969
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 970
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The trivial subgroup is a left identity. *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 972
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition subgroup_product_trivial_l {G : Group} (H : Subgroup G)
+  : subgroup_product (trivial_subgroup G) H ↔ H.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 973
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 974
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply pred_subset_antisymm.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 975
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 976
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply subgroup_product_smallest.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 976
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 977
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> napply trivial_subgroup_rec.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 977
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 978
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 978
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 978
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply subgroup_product_incl_r.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 979
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 980
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The trivial subgroup is a right identity. *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 982
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition subgroup_product_trivial_r {G : Group} (H : Subgroup G)
+  : subgroup_product H (trivial_subgroup G) ↔ H.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 983
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 984
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply pred_subset_antisymm.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 985
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 986
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply subgroup_product_smallest.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 986
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 987
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 987
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 988
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> napply trivial_subgroup_rec.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 988
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 988
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply subgroup_product_incl_l.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 989
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 990
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Subgroups absorb themselves under products. *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 992
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition subgroup_product_self {G : Group} (H : Subgroup G)
+  : subgroup_product H H ↔ H.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 993
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 994
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply pred_subset_antisymm.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 995
+Time: 0.006s">
+<div class="time" style="width: 13.636363636364%"></div>
+<pre>
+  1: by rapply subgroup_product_smallest.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 996
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply subgroup_product_incl_l.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 997
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 998
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Products preserve inclusions in the left summand. *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1000
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition subgroup_product_subset_pres_l {G : Group} (H K L : Subgroup G)
+  : H ⊆ K -&gt; subgroup_product H L ⊆ subgroup_product K L.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1001
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1002
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros p.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1003
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply subgroup_product_smallest.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1004
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+  1: exact (transitivity p subgroup_product_incl_l).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1005
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply subgroup_product_incl_r.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1006
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1007
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Products preserve inclusions in the right summand. *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1009
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition subgroup_product_subset_pres_r {G : Group} (H K L : Subgroup G)
+  : H ⊆ K -&gt; subgroup_product L H ⊆ subgroup_product L K.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1010
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1011
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros p.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1012
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply subgroup_product_smallest.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1013
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: apply subgroup_product_incl_l.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1014
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+  1: exact (transitivity p subgroup_product_incl_r).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1015
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1016
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Products preserve inclusions in both summands. *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1018
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>Definition subgroup_product_subset_pres {G : Group} (H K L M : Subgroup G)
+  (p : H ⊆ K) (q : L ⊆ M)
+  : subgroup_product H L ⊆ subgroup_product K M.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1020
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1021
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+  transitivity (subgroup_product K L).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1022
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: by apply subgroup_product_subset_pres_l.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1023
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by apply subgroup_product_subset_pres_r.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1024
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1025
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Products preserve subgroup equality in both summands. *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1027
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>Definition subgroup_product_eq {G : Group} (H K L M : Subgroup G)
+  (p : H ↔ K) (q : L ↔ M)
+  : subgroup_product H L ↔ subgroup_product K M.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1029
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1030
+Time: 0.003s">
+<div class="time" style="width: 6.8181818181818%"></div>
+<pre>
+  by apply pred_subset_antisymm; apply subgroup_product_subset_pres;
+    apply pred_subset_pred_eq.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1032
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1033
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A product of normal subgroups is normal. *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1035
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isnormal_subgroup_product {G : Group} (H K : Subgroup G)
+  `{!IsNormalSubgroup H, !IsNormalSubgroup K}
+  : IsNormalSubgroup (subgroup_product H K).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1037
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1038
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_IsNormalSubgroup'.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1039
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y; revert x.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1040
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  napply (functor_subgroup_generated _ _ (grp_conj y)).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1041
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1042
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+  apply functor_sum; rapply isnormal_conj.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1043
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1044
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+
+Definition normalsubgroup_product {G : Group} (H K : NormalSubgroup G)
+  : NormalSubgroup G
+  := Build_NormalSubgroup G (subgroup_product H K) _.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1048
+Time: 0.002s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>
+
+Definition functor_subgroup_product {G H : Group}
+  {J K : Subgroup G} {L M : Subgroup H}
+  (f : G $-&gt; H) (l : J ⊆ (L o f)) (r : K ⊆ (M o f))
+  : subgroup_product J K ⊆ (subgroup_product L M o f).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1053
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1054
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+  snapply functor_subgroup_generated.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1055
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (fun x =&gt; functor_sum (l x) (r x)).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1056
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1057
+Time: 0.002s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>
+
+Definition subgroup_eq_functor_subgroup_product {G H : Group}
+  {J K : Subgroup G} {L M : Subgroup H}
+  (f : G $&lt;~&gt; H) (l : J ↔ (L o f)) (r : K ↔ (M o f))
+  : subgroup_product J K ↔ (subgroup_product L M o f).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1062
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1063
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+  snapply subgroup_eq_functor_subgroup_generated.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1064
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (fun x =&gt; iff_functor_sum (l x) (r x)).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1065
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1066
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition subgroup_eq_product_grp_op {G : Group} (H K : Subgroup G)
+  : subgroup_grp_op (subgroup_product H K)
+    ↔ subgroup_product (subgroup_grp_op H) (subgroup_grp_op K).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1070
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1071
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro x.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1072
+Time: 0.006s">
+<div class="time" style="width: 13.636363636364%"></div>
+<pre>
+  apply subgroup_eq_subgroup_generated_op.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1073
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+  reflexivity.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1074
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1075
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Image of a group homomorphism *)
+
+(** The image of a group homomorphism between groups is a subgroup. *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1079
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition grp_image {G H : Group} (f : G $-&gt; H) : Subgroup H.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1079
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1080
+Time: 0.002s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>
+  srapply (Build_Subgroup' (fun y =&gt; hexists (fun x =&gt; f x = y))); cbn beta.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1081
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1082
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tr.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1082
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists 1.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1083
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply grp_homo_unit.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1084
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1085
+Time: 0.015s">
+<div class="time" style="width: 34.090909090909%"></div>
+<pre> intros x y p q; strip_truncations; apply tr.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1085
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct p as [a p], q as [b q].</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1086
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists (a * b^).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1087
+Time: 0.002s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>
+    lhs napply grp_homo_op; f_ap.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1088
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    lhs napply grp_homo_inv; f_ap.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1089
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1090
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+
+Definition grp_image_in {G H : Group} (f : G $-&gt; H)
+  : forall x, grp_image f (f x)
+  := fun x =&gt; tr (x; idpath).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1094
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition grp_homo_image_in {G H : Group} (f : G $-&gt; H)
+  : G $-&gt; grp_image f
+  := subgroup_corec f (grp_image_in f).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1098
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Image of a group embedding *)
+
+(** When the homomorphism is an embedding, we don't need to truncate. *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition grp_image_embedding {G H : Group} (f : G $-&gt; H) `{IsEmbedding f}
+  : Subgroup H.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply (Build_Subgroup _ (hfiber f)).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  repeat split.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1107
+Time: 0.002s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (mon_unit; grp_homo_unit f).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y [a []] [b []].</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists (a * b).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply grp_homo_op.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros b [a []].</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists a^.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply grp_homo_inv.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition grp_image_in_embedding {G H : Group} (f : G $-&gt; H) `{IsEmbedding f}
+  : GroupIsomorphism G (grp_image_embedding f).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1118
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_GroupIsomorphism.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1121
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> snapply (subgroup_corec f).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1121
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (fun x =&gt; (x; idpath)).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1122
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply isequiv_surj_emb.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1123
+Time: 0.04s">
+<div class="time" style="width: 90.909090909091%"></div>
+<pre>
+    2: exact (cancelL_isembedding (g:=pr1)).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1124
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+    intros [b [a p]]; cbn.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1125
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+    rapply contr_inhabited_hprop.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1126
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (tr (a; _)).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply path_sigma'.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1128
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: exact p.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (transport_sigma' _ _ @ _).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1130
+Time: 0.007s">
+<div class="time" style="width: 15.909090909091%"></div>
+<pre>
+    by apply path_sigma_hprop.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1131
+Time: 0.017s">
+<div class="time" style="width: 38.636363636364%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The image of a surjective group homomorphism is the maximal subgroup. *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance ismaximal_image_issurj {G H : Group}
+  (f : G $-&gt; H) `{IsSurjection f}
+  : IsMaximalSubgroup (grp_image f).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1137
+Time: 0.002s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>
+  rapply conn_map_elim.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply grp_image_in.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Image of a subgroup under a group homomorphism *)
+
+(** The image of a subgroup under group homomorphism. *) </pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition subgroup_image {G H : Group} (f : G $-&gt; H)
+  : Subgroup G -&gt; Subgroup H
+  := fun K =&gt; grp_image (grp_homo_restr f K).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** By definition, values of [f x] where [x] is in a subgroup [J] are in the image of [J] under [f]. *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1148
+Time: 0.002s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>Definition subgroup_image_in {G H : Group} (f : G $-&gt; H) (J : Subgroup G)
+  : J ⊆ (subgroup_image f J o f)
+  := fun x Jx =&gt; tr ((x; Jx); idpath).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Converting the subgroups to groups, we get the expected surjective (epi) restriction homomorphism. *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1152
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>Definition grp_homo_subgroup_image_in {G H : Group}
+  (f : G $-&gt; H) (J : Subgroup G)
+  : subgroup_group J $-&gt; subgroup_group (subgroup_image f J)
+  := functor_subgroup_group f (subgroup_image_in _ _).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1155
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The restriction map from the subgroup to the image is surjective as expected, by [conn_map_factor1_image]. *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1157
+Time: 0.002s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>Definition issurj_grp_homo_subgroup_image_in {G H : Group}
+  (f : G $-&gt; H) (J : Subgroup G)
+  : IsSurjection (grp_homo_subgroup_image_in f J)
+  := _.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** An image of a subgroup [J] is included in a subgroup [K] if (and only if) [J] is included in the preimage of the subgroup [K]. *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1162
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>Definition subgroup_image_rec {G H : Group}
+  (f : G $-&gt; H) {J : Subgroup G} {K : Subgroup H}
+  (g : J ⊆ subgroup_preimage f K)
+  : subgroup_image f J ⊆ K.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1165
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1166
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+  intros x; apply Trunc_rec; intros [[j Jj] p].</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct p.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (g j Jj).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The image functor is adjoint to the preimage functor. *) </pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1172
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>Definition iff_subgroup_image_rec {G H : Group}
+  (f : G $-&gt; H) {J : Subgroup G} {K : Subgroup H}
+  : (subgroup_image f J ⊆ K) &lt;-&gt; (J ⊆ subgroup_preimage f K).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1174
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> 
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1175
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  split.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros rec x Jx.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply rec, tr.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by exists (x; Jx).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1179
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1180
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> snapply subgroup_image_rec.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1180
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1181
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [subgroup_image] preserves normal subgroups when the group homomorphism is surjective. *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1183
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isnormal_subgroup_image {G H : Group} (f : G $-&gt; H)
+  (J : Subgroup G) `{!IsNormalSubgroup J} `{!IsSurjection f}
+  : IsNormalSubgroup (subgroup_image f J).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1186
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_IsNormalSubgroup'.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y; revert x.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  change (subgroup_image f J (y * ?x * y^))
+    with (subgroup_preimage (grp_conj y) (subgroup_image f J) x).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1190
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply subgroup_image_rec.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1191
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x Jx.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1192
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  change (subgroup_image f J ((grp_conj y $o f) x)).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1193
+Time: 0.002s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>
+  revert y; rapply (conn_map_elim (Tr (-1)) f); intros y.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1194
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite &lt;- grp_homo_conj.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1195
+Time: 0.003s">
+<div class="time" style="width: 6.8181818181818%"></div>
+<pre>
+  napply subgroup_image_in.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1196
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+  by rapply isnormal_conj.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1197
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Kernels of group homomorphisms *)
+
+</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1201
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>Definition grp_kernel {G H : Group} (f : G $-&gt; H)
+  : NormalSubgroup G
+  := Build_NormalSubgroup G (subgroup_preimage f (trivial_subgroup _)) _.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1203
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Corecursion principle for group kernels *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1205
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>Definition grp_kernel_corec {A B G : Group} {f : A $-&gt; B}
+  (g : G $-&gt; A) (h : f $o g == grp_homo_const)
+  : G $-&gt; grp_kernel f
+  := subgroup_corec (K:=grp_kernel f) g h.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1208
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+
+Definition equiv_grp_kernel_corec `{Funext} {A B G : Group} {f : A $-&gt; B}
+  : {g : G $-&gt; A &amp; f $o g == grp_homo_const} &lt;~&gt; (G $-&gt; grp_kernel f)
+  := equiv_subgroup_corec G (grp_kernel f).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1212
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The underlying map of a group homomorphism with a trivial kernel is an embedding. *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1214
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isembedding_istrivial_kernel {G H : Group} (f : G $-&gt; H)
+  (triv : IsTrivialGroup (grp_kernel f))
+  : IsEmbedding f.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1216
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1217
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros h.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1218
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply hprop_allpath.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1219
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [x p] [y q].</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1220
+Time: 0.007s">
+<div class="time" style="width: 15.909090909091%"></div>
+<pre>
+  srapply path_sigma_hprop; unfold pr1.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1221
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply grp_moveL_1M.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1222
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply triv; simpl.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1223
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rhs_V exact (grp_inv_r h).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1224
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lhs napply grp_homo_op.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  napply (ap011 (.*.) p).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1226
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lhs napply grp_homo_inv.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1227
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (ap (^) q).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1228
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1229
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** If the underlying map of a group homomorphism is an embedding then the kernel is trivial. *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1231
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition istrivial_kernel_isembedding {G H : Group} (f : G $-&gt; H)
+  (emb : IsEmbedding f)
+  : IsTrivialGroup (grp_kernel f).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1233
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1234
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros g p.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1235
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+  rapply (isinj_embedding f).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1236
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (p @ (grp_homo_unit f)^).</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1237
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1238
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Global Hint Immediate istrivial_kernel_isembedding : typeclass_instances.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1239
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Characterisation of group embeddings *)</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1241
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Proposition equiv_istrivial_kernel_isembedding `{F : Funext}
+  {G H : Group} (f : G $-&gt; H)
+  : IsTrivialGroup (grp_kernel f) &lt;~&gt; IsEmbedding f.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1243
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1244
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+  apply equiv_iff_hprop_uncurried.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1245
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+  split; exact _.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1246
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Subgroup.v
+Line: 1248
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

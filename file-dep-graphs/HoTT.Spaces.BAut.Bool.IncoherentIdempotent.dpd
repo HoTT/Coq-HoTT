@@ -1,0 +1,5 @@
+N: 3 "nontrivial_qidem_baut_baut_bool" [body=yes, kind=cnst, prop=no, path="IncoherentIdempotent", ];
+N: 1 "not_all_coherent_qidem_baut_baut_bool" [body=yes, kind=cnst, prop=no, path="IncoherentIdempotent", ];
+N: 2 "splitting_preidem_notequiv_qidem_baut_baut_bool" [body=yes, kind=cnst, prop=no, path="IncoherentIdempotent", ];
+E: 1 2 [weight=1, ];
+E: 2 3 [weight=11, ];

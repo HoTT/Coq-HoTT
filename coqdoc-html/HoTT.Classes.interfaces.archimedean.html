@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Classes.interfaces.archimedean</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Classes.interfaces.archimedean</h1>
+
+<div class="code">
+<span class="id" title="keyword">From</span> <span class="id" title="var">HoTT.Classes</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Classes.interfaces.abstract_algebra.html#"><span class="id" title="library">interfaces.abstract_algebra</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Classes.interfaces.rationals.html#"><span class="id" title="library">interfaces.rationals</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Classes.interfaces.orders.html#"><span class="id" title="library">interfaces.orders</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="property" class="idref" href="#property"><span class="id" title="section">property</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> (<a id="Q:1" class="idref" href="#Q:1"><span class="id" title="binder">Q</span></a> : <span class="id" title="keyword">Type</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> `{<a id="Qrats:12" class="idref" href="#Qrats:12"><span class="id" title="binder">Qrats</span></a> : <a class="idref" href="HoTT.Classes.interfaces.rationals.html#Rationals"><span class="id" title="class">Rationals</span></a> <a class="idref" href="HoTT.Classes.interfaces.archimedean.html#property.Q"><span class="id" title="variable">Q</span></a>}.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> (<a id="F:13" class="idref" href="#F:13"><span class="id" title="binder">F</span></a> : <span class="id" title="keyword">Type</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> `{<a id="Aorderedfield:25" class="idref" href="#Aorderedfield:25"><span class="id" title="binder">Aorderedfield</span></a> : <a class="idref" href="HoTT.Classes.interfaces.orders.html#OrderedField"><span class="id" title="class">OrderedField</span></a> <a class="idref" href="HoTT.Classes.interfaces.archimedean.html#property.F"><span class="id" title="variable">F</span></a>}.<br/>
+&nbsp;&nbsp;<span class="comment">(*&nbsp;We&nbsp;are&nbsp;assuming&nbsp;`A`&nbsp;to&nbsp;be&nbsp;of&nbsp;characteristic&nbsp;0&nbsp;because&nbsp;this&nbsp;is<br/>
+&nbsp;&nbsp;what&nbsp;`rationals_to_field`&nbsp;requires.&nbsp;But&nbsp;this&nbsp;requirement&nbsp;should<br/>
+&nbsp;&nbsp;eventually&nbsp;simply&nbsp;be&nbsp;implemented&nbsp;by&nbsp;the&nbsp;fact&nbsp;that&nbsp;F&nbsp;is&nbsp;an&nbsp;ordered<br/>
+&nbsp;&nbsp;field.&nbsp;*)</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> {<a id="Achar:26" class="idref" href="#Achar:26"><span class="id" title="binder">Achar</span></a> : <a class="idref" href="HoTT.Classes.interfaces.abstract_algebra.html#FieldCharacteristic"><span class="id" title="class">FieldCharacteristic</span></a> <a class="idref" href="HoTT.Classes.interfaces.archimedean.html#property.F"><span class="id" title="variable">F</span></a> 0}.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="qinc" class="idref" href="#qinc"><span class="id" title="definition">qinc</span></a> : <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Cast"><span class="id" title="class">Cast</span></a> <a class="idref" href="HoTT.Classes.interfaces.archimedean.html#property.Q"><span class="id" title="variable">Q</span></a> <a class="idref" href="HoTT.Classes.interfaces.archimedean.html#property.F"><span class="id" title="variable">F</span></a> := <a class="idref" href="HoTT.Classes.interfaces.rationals.html#rationals_to_field"><span class="id" title="definition">rationals_to_field</span></a> <a class="idref" href="HoTT.Classes.interfaces.archimedean.html#property.Q"><span class="id" title="variable">Q</span></a> <a class="idref" href="HoTT.Classes.interfaces.archimedean.html#property.F"><span class="id" title="variable">F</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Existing Instance</span> <a class="idref" href="HoTT.Classes.interfaces.archimedean.html#qinc"><span class="id" title="definition">qinc</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Class</span> <a id="ArchimedeanProperty" class="idref" href="#ArchimedeanProperty"><span class="id" title="inductive, record"><span id="ArchimedeanProperty" class="id">ArchimedeanProperty</span></span></a> := <a id="archimedean_property" class="idref" href="#archimedean_property"><span class="id" title="constructor, projection"><span id="archimedean_property" class="id">archimedean_property</span></span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="x:28" class="idref" href="#x:28"><span class="id" title="binder">x</span></a> <a id="y:29" class="idref" href="#y:29"><span class="id" title="binder">y</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Classes.interfaces.archimedean.html#x:28"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#::mc_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="HoTT.Classes.interfaces.archimedean.html#y:29"><span class="id" title="variable">y</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Truncations.Core.html#hexists"><span class="id" title="definition">hexists</span></a> (<span class="id" title="keyword">fun</span> <a id="q:30" class="idref" href="#q:30"><span class="id" title="binder">q</span></a> ⇒ <a class="idref" href="HoTT.Classes.interfaces.archimedean.html#x:28"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#::mc_scope:x_'&lt;'_x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#::mc_scope:''''_x"><span class="id" title="notation">'</span></a> <a class="idref" href="HoTT.Classes.interfaces.archimedean.html#q:30"><span class="id" title="variable">q</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#::mc_scope:x_'&lt;'_x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="HoTT.Classes.interfaces.archimedean.html#y:29"><span class="id" title="variable">y</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Classes.interfaces.archimedean.html#property"><span class="id" title="section">property</span></a>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

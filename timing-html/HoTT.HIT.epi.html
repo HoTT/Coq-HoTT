@@ -1,0 +1,1241 @@
+<html>
+<head>
+<title>epi.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for epi.v</h1>
+
+<div class="code" title="File: epi.v
+Line: 1
+Time: 0.04s">
+<div class="time" style="width: 48.192771084337%"></div>
+<pre>From HoTT Require Import Basics.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 1
+Time: 0.019s">
+<div class="time" style="width: 22.89156626506%"></div>
+<pre>
+Require Import Types.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 2
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>
+Require Import TruncType.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 3
+Time: 0.034s">
+<div class="time" style="width: 40.963855421687%"></div>
+<pre>
+Require Import ReflectiveSubuniverse.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 4
+Time: 0.009s">
+<div class="time" style="width: 10.843373493976%"></div>
+<pre>
+Require Import Colimits.Pushout Truncations.Core HIT.SetCone.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope path_scope.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section AssumingUA.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 9
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Context `{ua:Univalence}.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We will now prove that for sets, epis and surjections are equivalent.*)</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 12
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>Definition isepi {X Y} `(f:X-&gt;Y) := forall Z: HSet,
+  forall g h: Y -&gt; Z, g o f = h o f -&gt; g = h.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 13
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>
+
+Definition isepi_funext {X Y : Type} (f : X -&gt; Y)
+  := forall Z : HSet, forall g0 g1 : Y -&gt; Z, g0 o f == g1 o f -&gt; g0 == g1.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 16
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>
+
+Definition isepi' {X Y} `(f : X -&gt; Y) :=
+  forall (Z : HSet) (g : Y -&gt; Z), Contr { h : Y -&gt; Z | g o f = h o f }.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma equiv_isepi_isepi' {X Y} f : @isepi X Y f &lt;~&gt; @isepi' X Y f.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold isepi, isepi'.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (@equiv_functor_forall' _ _ _ _ _ (equiv_idmap _)); intro Z.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (@equiv_functor_forall' _ _ _ _ _ (equiv_idmap _)); intro g.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold equiv_idmap; simpl.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 26
+Time: 0.002s">
+<div class="time" style="width: 2.4096385542169%"></div>
+<pre>
+  refine (transitivity (@equiv_sig_ind _ (fun h : Y -&gt; Z =&gt; g o f = h o f) (fun h =&gt; g = h.1)) _).</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (** TODO(JasonGross): Can we do this entirely by chaining equivalences? *)
+ </pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 29
+Time: 0.007s">
+<div class="time" style="width: 8.433734939759%"></div>
+<pre>apply equiv_iff_hprop.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro hepi.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    napply (Build_Contr _ (g; idpath)).</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro xy; specialize (hepi xy).</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_sigma_uncurried.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists hepi.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 34
+Time: 0.004s">
+<div class="time" style="width: 4.8192771084337%"></div>
+<pre>
+    apply path_ishprop.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros hepi xy.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 36
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>
+    exact (ap pr1 ((contr (g; 1))^ @ contr xy)).</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 37
+Time: 0.006s">
+<div class="time" style="width: 7.2289156626506%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition equiv_isepi_isepi_funext {X Y : Type} (f : X -&gt; Y)
+  : isepi f &lt;~&gt; isepi_funext f.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 42
+Time: 0.028s">
+<div class="time" style="width: 33.734939759036%"></div>
+<pre>
+  apply equiv_iff_hprop.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros e ? g0 g1 h.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply equiv_path_arrow.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply e.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by apply path_arrow.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros e ? g0 g1 p.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_arrow.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply e.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by apply equiv_path_arrow.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 51
+Time: 0.002s">
+<div class="time" style="width: 2.4096385542169%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section cones.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Lemma isepi'_contr_cone `{Funext} {A B : HSet} (f : A -&gt; B) : isepi' f -&gt; Contr (setcone f).</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros hepi.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (Build_Contr _ (setcone_point _)).</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    pose (alpha1 := @pglue A B Unit f (const_tt _)).</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 59
+Time: 0.003s">
+<div class="time" style="width: 3.6144578313253%"></div>
+<pre>
+    pose (tot:= { h : B -&gt; setcone f &amp; tr o push o inl o f = h o f }).</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    transparent assert (l : tot).</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 62
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre> simple refine (tr o _ o inl; _).</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      {</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact push.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      {</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact idpath.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 64
+Time: 0.002s">
+<div class="time" style="width: 2.4096385542169%"></div>
+<pre>
+    pose (r := (@const B (setcone f) (setcone_point _); (ap (fun f =&gt; @tr 0 _ o f) (path_forall _ _ alpha1))) : tot).</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    subst tot.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    assert (X : l = r).</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      {</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 68
+Time: 0.002s">
+<div class="time" style="width: 2.4096385542169%"></div>
+<pre> let lem := constr:(fun X push' =&gt; hepi (Build_HSet (setcone f)) (tr o push' o @inl _ X)) in
+        pose (lem _ push).</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        exact (path_contr l r).</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    subst l r.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 71
+Time: 0.003s">
+<div class="time" style="width: 3.6144578313253%"></div>
+<pre>
+
+    pose (I0 b := ap10 (X ..1) b).</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 73
+Time: 0.003s">
+<div class="time" style="width: 3.6144578313253%"></div>
+<pre>
+    refine (Trunc_ind _ _).</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 74
+Time: 0.003s">
+<div class="time" style="width: 3.6144578313253%"></div>
+<pre>
+    pose (fun a : B + Unit =&gt; (match a as a return setcone_point _ = tr (push a) with
+                                 | inl a' =&gt; (I0 a')^
+                                 | inr tt =&gt; idpath
+                               end)) as I0f.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (Pushout_ind _ (fun a' =&gt; I0f (inl a')) (fun u =&gt; (I0f (inr u))) _).</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+    simpl.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> subst alpha1.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unfold setcone_point.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    subst I0.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    pose (X..2) as p.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl in p.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 84
+Time: 0.004s">
+<div class="time" style="width: 4.8192771084337%"></div>
+<pre>
+    rewrite (transport_precompose f _ _ X..1) in p.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 85
+Time: 0.003s">
+<div class="time" style="width: 3.6144578313253%"></div>
+<pre>
+    assert (H':=concat (ap (fun x =&gt; ap10 x a) p) (ap10_ap_postcompose tr (path_arrow (pushl o f) (pushr o const_tt _) pglue) _)).</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 86
+Time: 0.002s">
+<div class="time" style="width: 2.4096385542169%"></div>
+<pre>
+    rewrite ap10_path_arrow in H'.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    clear p.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (** Apparently [pose; clearbody] is only ~.8 seconds, while [pose proof] is ~4 seconds? *)
+   </pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 90
+Time: 0.003s">
+<div class="time" style="width: 3.6144578313253%"></div>
+<pre>pose (concat (ap10_ap_precompose f (X ..1) a)^ H') as p.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    clearbody p.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    simpl in p.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 92
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>
+    rewrite p.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 93
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>
+    rewrite transport_paths_Fr.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 94
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply concat_Vp.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 95
+Time: 0.083s">
+<div class="time" style="width: 100%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+End cones.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma issurj_isepi {X Y} (f:X-&gt;Y): IsSurjection f -&gt; isepi f.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+intros sur ? ? ? ep.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply path_forall.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro y.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+specialize (sur y).</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> pose (center (merely (hfiber f y))).</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 102
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>
+apply (Trunc_rec (n:=-1) (A:=(sig (fun x : X =&gt; f x = y))));
+  try assumption.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+intros [x p].</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> set (p0:=apD10 ep x).</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+transitivity (g (f x)).</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+-</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by apply ap.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+-</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 108
+Time: 0.002s">
+<div class="time" style="width: 2.4096385542169%"></div>
+<pre> transitivity (h (f x));auto with path_hints.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by apply ap.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Corollary issurj_isepi_funext {X Y} (f:X-&gt;Y) : IsSurjection f -&gt; isepi_funext f.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro s.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply equiv_isepi_isepi_funext.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by apply issurj_isepi.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Old-style proof using polymorphic Omega. Needs resizing for the [isepi] proof to live in the
+ same universe as X and Y (the Z quantifier is instantiated with an HSet at a level higher)
+&lt;&lt;
+Lemma isepi_issurj {X Y} (f:X-&gt;Y): isepi f -&gt; issurj f.
+Proof.
+  intros epif y.
+  set (g :=fun _:Y =&gt; Unit_hp).
+  set (h:=(fun y:Y =&gt; (hp (hexists (fun _ : Unit =&gt; {x:X &amp; y = (f x)})) _ ))).
+  assert (X1: g o f = h o f ).
+  - apply path_forall. intro x. apply path_equiv_biimp_rec;[|done].
+    intros _ . apply min1. exists tt. by (exists x).
+  - specialize (epif _ g h).
+    specialize (epif X1). clear X1.
+    set (p:=apD10 epif y).
+    apply (@minus1Trunc_map (sig (fun _ : Unit =&gt; sig (fun x : X =&gt; y = f x)))).
+    + intros [ _ [x eq]].
+      exists x.
+        by symmetry.
+    + apply (transport hproptype p tt).
+Defined.
+&gt;&gt;
+*)
+
+</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section isepi_issurj.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {X Y : HSet} (f : X -&gt; Y) (Hisepi : isepi f).</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition epif := equiv_isepi_isepi' _ Hisepi.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition fam (c : setcone f) : HProp.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    pose (fib y := hexists (fun x : X =&gt; f x = y)).</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 145
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (fun f =&gt; @Trunc_rec _ _ HProp _ f c).</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (Pushout_rec HProp fib (fun _ =&gt; Unit_hp) (fun x =&gt; _)).</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 147
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (** Prove that the truncated sigma is equivalent to Unit *)
+   </pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>pose (contr_inhabited_hprop (fib (f x)) (tr (x; idpath))) as i.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_hprop.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl in i.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (equiv_contr_unit).</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 152
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma isepi_issurj : IsSurjection f.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 154
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 155
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros y.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    pose (i := isepi'_contr_cone _ epif).</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+    assert (X0 : forall x : setcone f, fam x = fam (setcone_point f)).</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply contr_dom_equiv.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact i.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    specialize (X0 (tr (push (inl y)))).</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl in X0.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unfold IsConnected.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (transport (fun A =&gt; Contr A) (ap trunctype_type X0)^ _); exact _.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 163
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 164
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+End isepi_issurj.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 165
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma isepi_isequiv X Y (f : X -&gt; Y) `{IsEquiv _ _ f}
+: isepi f.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros ? g h H'.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply ap10 in H'.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply path_forall.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro x.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 173
+Time: 0.001s">
+<div class="time" style="width: 1.2048192771084%"></div>
+<pre>
+  transitivity (g (f (f^-1 x))).</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 174
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 175
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by rewrite eisretr.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 175
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> transitivity (h (f (f^-1 x))).</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    *</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply H'.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    *</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by rewrite eisretr.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 179
+Time: 0.004s">
+<div class="time" style="width: 4.8192771084337%"></div>
+<pre>
+End AssumingUA.</pre>
+</div>
+<div class="code" title="File: epi.v
+Line: 181
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

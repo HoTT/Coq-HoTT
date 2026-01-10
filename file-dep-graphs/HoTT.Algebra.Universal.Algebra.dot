@@ -1,0 +1,56 @@
+digraph HoTT_Algebra_Universal_Algebra {
+  graph [ratio=0.5]
+  node [style=filled]
+Algebra_path_path_algebra [label="path_path_algebra", URL=<Algebra.html#path_path_algebra>, peripheries=3, fillcolor="#F070D1"] ;
+Algebra_path_path_algebra_issig [label="path_path_algebra_issig", URL=<Algebra.html#path_path_algebra_issig>, fillcolor="#F070D1"] ;
+Algebra_path_ap_carriers_path_algebra [label="path_ap_carriers_path_algebra", URL=<Algebra.html#path_ap_carriers_path_algebra>, peripheries=3, fillcolor="#F070D1"] ;
+Algebra_path_algebra [label="path_algebra", URL=<Algebra.html#path_algebra>, fillcolor="#F070D1"] ;
+Algebra_issig_algebra [label="issig_algebra", URL=<Algebra.html#issig_algebra>, fillcolor="#F070D1"] ;
+Algebra_SigAlgebra [label="SigAlgebra", URL=<Algebra.html#SigAlgebra>, fillcolor="#F070D1"] ;
+Algebra_hset_algebra [label="hset_algebra", URL=<Algebra.html#hset_algebra>, peripheries=3, fillcolor="#F070D1"] ;
+Algebra_operations [label="operations", URL=<Algebra.html#operations>, peripheries=3, fillcolor="#F070D1"] ;
+Algebra_carriers [label="carriers", URL=<Algebra.html#carriers>, fillcolor="#F070D1"] ;
+Algebra_Build_Algebra [label="Build_Algebra", URL=<Algebra.html#Build_Algebra>, fillcolor="#7FAAFF"] ;
+Algebra_Algebra [label="Algebra", URL=<Algebra.html#Algebra>, fillcolor="#E2CDFA"] ;
+Algebra_Operation [label="Operation", URL=<Algebra.html#Operation>, fillcolor="#F070D1"] ;
+Algebra_hset_symbol [label="hset_symbol", URL=<Algebra.html#hset_symbol>, peripheries=3, fillcolor="#F070D1"] ;
+Algebra_hset_sort [label="hset_sort", URL=<Algebra.html#hset_sort>, peripheries=3, fillcolor="#F070D1"] ;
+Algebra_symbol_types [label="symbol_types", URL=<Algebra.html#symbol_types>, peripheries=3, fillcolor="#F070D1"] ;
+Algebra_Symbol [label="Symbol", URL=<Algebra.html#Symbol>, peripheries=3, fillcolor="#F070D1"] ;
+Algebra_Sort [label="Sort", URL=<Algebra.html#Sort>, peripheries=3, fillcolor="#F070D1"] ;
+Algebra_Build_Signature [label="Build_Signature", URL=<Algebra.html#Build_Signature>, peripheries=3, fillcolor="#7FAAFF"] ;
+Algebra_Signature [label="Signature", URL=<Algebra.html#Signature>, fillcolor="#E2CDFA"] ;
+Algebra_sort_cod [label="sort_cod", URL=<Algebra.html#sort_cod>, peripheries=3, fillcolor="#F070D1"] ;
+Algebra_sorts_dom [label="sorts_dom", URL=<Algebra.html#sorts_dom>, peripheries=3, fillcolor="#F070D1"] ;
+Algebra_Arity [label="Arity", URL=<Algebra.html#Arity>, peripheries=3, fillcolor="#F070D1"] ;
+Algebra_Build_SymbolTypeOf [label="Build_SymbolTypeOf", URL=<Algebra.html#Build_SymbolTypeOf>, peripheries=3, fillcolor="#7FAAFF"] ;
+Algebra_SymbolTypeOf [label="SymbolTypeOf", URL=<Algebra.html#SymbolTypeOf>, fillcolor="#E2CDFA"] ;
+  Algebra_path_path_algebra -> Algebra_path_path_algebra_issig [] ;
+  Algebra_path_path_algebra -> Algebra_carriers [] ;
+  Algebra_path_path_algebra_issig -> Algebra_issig_algebra [] ;
+  Algebra_path_ap_carriers_path_algebra -> Algebra_path_algebra [] ;
+  Algebra_path_ap_carriers_path_algebra -> Algebra_carriers [] ;
+  Algebra_path_algebra -> Algebra_issig_algebra [] ;
+  Algebra_issig_algebra -> Algebra_SigAlgebra [] ;
+  Algebra_issig_algebra -> Algebra_Build_Algebra [] ;
+  Algebra_issig_algebra -> Algebra_Algebra [] ;
+  Algebra_SigAlgebra -> Algebra_Operation [] ;
+  Algebra_hset_algebra -> Algebra_Algebra [] ;
+  Algebra_operations -> Algebra_Algebra [] ;
+  Algebra_carriers -> Algebra_Algebra [] ;
+  Algebra_Build_Algebra -> Algebra_Operation [] ;
+  Algebra_Algebra -> Algebra_Operation [] ;
+  Algebra_Operation -> Algebra_Signature [] ;
+  Algebra_hset_symbol -> Algebra_Signature [] ;
+  Algebra_hset_sort -> Algebra_Signature [] ;
+  Algebra_symbol_types -> Algebra_Signature [] ;
+  Algebra_Symbol -> Algebra_Signature [] ;
+  Algebra_Sort -> Algebra_Signature [] ;
+  Algebra_Build_Signature -> Algebra_SymbolTypeOf [] ;
+  Algebra_Signature -> Algebra_SymbolTypeOf [] ;
+  Algebra_sort_cod -> Algebra_SymbolTypeOf [] ;
+  Algebra_sorts_dom -> Algebra_SymbolTypeOf [] ;
+  Algebra_Arity -> Algebra_SymbolTypeOf [] ;
+subgraph cluster_Algebra { label="Algebra"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Algebra_SymbolTypeOf; Algebra_Build_SymbolTypeOf; Algebra_Arity; Algebra_sorts_dom; Algebra_sort_cod; Algebra_Signature; Algebra_Build_Signature; Algebra_Sort; Algebra_Symbol; Algebra_symbol_types; Algebra_hset_sort; Algebra_hset_symbol; Algebra_Operation; Algebra_Algebra; Algebra_Build_Algebra; Algebra_carriers; Algebra_operations; Algebra_hset_algebra; Algebra_SigAlgebra; Algebra_issig_algebra; Algebra_path_algebra; Algebra_path_ap_carriers_path_algebra; Algebra_path_path_algebra_issig; Algebra_path_path_algebra; };
+} /* END */

@@ -1,0 +1,944 @@
+<html>
+<head>
+<title>TorusEquivCircles.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for TorusEquivCircles.v</h1>
+
+<div class="code" title="File: TorusEquivCircles.v
+Line: 1
+Time: 0.04s">
+<div class="time" style="width: 3.2441200324412%"></div>
+<pre>From HoTT Require Import Basics Types.</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 1
+Time: 0.013s">
+<div class="time" style="width: 1.0543390105434%"></div>
+<pre>
+Require Import Cubical.DPath Cubical.PathSquare Cubical.DPathSquare
+  Cubical.PathCube Cubical.DPathCube.</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 3
+Time: 0.041s">
+<div class="time" style="width: 3.3252230332522%"></div>
+<pre>
+Require Import Spaces.Circle Spaces.Torus.Torus.</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** In this file we prove that the torus is equivalent to the product of two circles. *)
+
+(** Here is a cube filler for help with circle recursion into the torus *)</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 8
+Time: 0.003s">
+<div class="time" style="width: 0.24330900243309%"></div>
+<pre>Definition c2t_square_and_cube
+  : {s : PathSquare loop_a loop_a
+      (ap (Circle_rec _ tbase loop_b) loop)
+      (ap (Circle_rec _ tbase loop_b) loop)
+    &amp;  PathCube s surf hr hr
+       (sq_G1 (Circle_rec_beta_loop _ _ _))
+       (sq_G1 (Circle_rec_beta_loop _ _ _))}.</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply cu_fill_left.</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 16
+Time: 0.001s">
+<div class="time" style="width: 0.08110300081103%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We define the map from the Torus to the Circles *)</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition t2c : Torus -&gt; Circle * Circle.</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Torus_rec.</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (base, base).</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> (* The point of the torus is taken to (base, base *)
+ </pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>+</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (path_prod' loop 1).</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> (* loop_a is taken to loop in the first *)
+ </pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>+</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (path_prod' 1 loop).</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> (* loop_b is taken to loop in the second *)
+ </pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>+</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (sq_prod (hr, vr)).</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> (* The square is the obvious product of squares *)</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Defined.</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We now define the curried function from the circles to the torus. *)
+(** TODO: It's easy to remove [Funext] from this definition by using [intro] and [revert] appropriately, but then the cube algebra in the proof of [c2t'_beta] would need to be updated. See https://github.com/HoTT/Coq-HoTT/pull/1824. *)</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition c2t' `{Funext} : Circle -&gt; Circle -&gt; Torus.</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Circle_rec.</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> snapply Circle_rec.</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>     (* Double circle recursion *)
+   </pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>-</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact tbase.</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>      (* The basepoint is sent to the point of the torus *)
+   </pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>-</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact loop_b.</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>     (* The second loop is sent to loop_b *)
+ </pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>+</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply path_forall.</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>  (* We use function extensionality here to induct *)
+   </pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>snapply Circle_ind.</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>  (* Circle induction as a DPath *)
+   </pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>-</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact loop_a.</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>     (* The first loop is sent to loop_a *)
+   </pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>-</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 37
+Time: 0.001s">
+<div class="time" style="width: 0.08110300081103%"></div>
+<pre> srapply sq_dp^-1.</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> (* This DPath is actually a square *)
+     </pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>apply (pr1 c2t_square_and_cube).</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> (* We apply the cap we found above *)</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Defined.</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Here is the uncurried version *)</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition c2t `{Funext} : Circle * Circle -&gt; Torus.</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply uncurry, c2t'.</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Computation rules for c2t' as a cube filler *)</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 45
+Time: 0.005s">
+<div class="time" style="width: 0.40551500405515%"></div>
+<pre>Definition c2t'_beta `{Funext} :
+  {bl1 : PathSquare (ap (fun y =&gt; c2t' base y) loop) loop_b 1 1 &amp;
+  {bl2 : PathSquare (ap (fun x =&gt; c2t' x base) loop) loop_a 1 1 &amp;
+  PathCube (sq_ap011 c2t' loop loop) surf bl2 bl2 bl1 bl1}}.</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  nrefine (_;_;_).</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold sq_ap011.</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* 1. Unfusing ap *)
+ </pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 53
+Time: 0.026s">
+<div class="time" style="width: 2.1086780210868%"></div>
+<pre>nrefine (cu_concat_lr (cu_ds (dp_apD_nat
+    (fun y =&gt; ap_compose _ (fun f =&gt; f y) _) _)) _
+    (sji0:=?[X1]) (sji1:=?X1) (sj0i:=?[Y1]) (sj1i:=?Y1) (pj11:=1)).</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* 2. Reducing c2t' on loop *)
+ </pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 57
+Time: 0.014s">
+<div class="time" style="width: 1.1354420113544%"></div>
+<pre>nrefine (cu_concat_lr (cu_ds (dp_apD_nat
+    (fun x =&gt; ap_apply_l _ _ @ apD10 (ap _(Circle_rec_beta_loop _ _ _)) x) _)) _
+    (sji0:=?[X2]) (sji1:=?X2) (sj0i:=?[Y2]) (sj1i:=?Y2) (pj11:=1)).</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* 3. Reducing ap10 on function extensionality *)
+ </pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 61
+Time: 0.009s">
+<div class="time" style="width: 0.72992700729927%"></div>
+<pre>nrefine (cu_concat_lr (cu_ds (dp_apD_nat (ap10_path_forall _ _ _) _)) _
+    (sji0:=?[X3]) (sji1:=?X3) (sj0i:=?[Y3]) (sj1i:=?Y3) (pj11:=1)).</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* 4. Reducing Circle_ind on loop *)
+ </pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 64
+Time: 0.004s">
+<div class="time" style="width: 0.32441200324412%"></div>
+<pre>nrefine (cu_concat_lr (cu_G11 (ap _ (Circle_ind_beta_loop _ _ _))) _
+    (sji0:=?[X4]) (sji1:=?X4) (sj0i:=?[Y4]) (sj1i:=?Y4) (pj11:=1)).</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* 5. collapsing equivalence *)
+ </pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 67
+Time: 0.003s">
+<div class="time" style="width: 0.24330900243309%"></div>
+<pre>nrefine (cu_concat_lr (cu_G11 (eisretr _ _)) _
+    (sji0:=?[X5]) (sji1:=?X5) (sj0i:=?[Y5]) (sj1i:=?Y5) (pj11:=1)).</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* 6. filling the cube *)
+ </pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>apply c2t_square_and_cube.2.</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 70
+Time: 0.474s">
+<div class="time" style="width: 38.442822384428%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope path_scope.</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope cube_scope.</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We now prove that t2c is a section of c2t *)</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition t2c2t `{Funext} : c2t o t2c == idmap.</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* We start with Torus induction *)
+ </pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>nrefine (Torus_ind _ 1 _ _ _).</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* Our DPathSquare is really just a cube *)
+ </pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 81
+Time: 0.001s">
+<div class="time" style="width: 0.08110300081103%"></div>
+<pre>apply cu_ds^-1.</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* We pretend that our sides have sq_dpath o sq_dpath^-1
+    and get rid of them *)
+ </pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 84
+Time: 0.002s">
+<div class="time" style="width: 0.16220600162206%"></div>
+<pre>refine (cu_GGGGcc (eisretr _ _)^ (eisretr _ _)^
+    (eisretr _ _)^ (eisretr _ _)^ _).</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* Apply a symmetry to get the faces on the right side *)
+ </pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>apply cu_rot_tb_fb.</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* Clean up other faces *)
+ </pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 89
+Time: 0.002s">
+<div class="time" style="width: 0.16220600162206%"></div>
+<pre>refine (cu_ccGGGG (eisretr _ _)^ (eisretr _ _)^
+    (eisretr _ _)^ (eisretr _ _)^ _).</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* Now we finish the proof with the following composition of cubes *)
+ </pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 92
+Time: 0.04s">
+<div class="time" style="width: 3.2441200324412%"></div>
+<pre>exact ((sq_ap_compose t2c c2t surf)
+    @lr (cu_ap c2t (Torus_rec_beta_surf _ _ _ _ _ ))
+    @lr (sq_ap_uncurry _ _ _)
+    @lr (pr2 (pr2 c2t'_beta))
+    @lr (cu_flip_lr (sq_ap_idmap _))).</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 96
+Time: 0.592s">
+<div class="time" style="width: 48.01297648013%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* NOTE: The last step in the previous proof can be done as a sequence of
+   refines however Coq really struggles to unify this. Below is the original
+   way we proved the last statement before making it short and sweet. As can
+   be seen, we need to give refine hints using existential variables which is
+   tedious to write out, and perhaps motivates why we wrote it as one big
+   concatenation. Ideally the way below should be as smooth as the way above,
+   since above is difficult to write directly without having tried below.
+
+  (* Now we decompose the cube with middle sq_ap_compose *)
+  (* Note: coq sucks at unifying this so we have to explicitly give paths *)
+  refine (cu_concat_lr (sq_ap_compose t2c c2t surf) _
+    (sji0:=?[X1]) (sji1:=?X1) (sj0i:=?[Y1]) (sj1i:=?Y1) (pj11:=1)).
+  (* Now we reduce (sq_ap t2c surf) *)
+  refine (cu_concat_lr (cu_ap c2t (Torus_rec_beta_surf _ _ _ _ _ )) _
+    (sji0:=?[X2]) (sji1:=?X2) (sj0i:=?[Y2]) (sj1i:=?Y2) (pj11:=1)).
+  (* We now uncurry c2t inside sq_ap *)
+  refine (cu_concat_lr (sq_ap_uncurry _ _ _) _
+    (sji0:=?[X3]) (sji1:=?X3) (sj0i:=?[Y3]) (sj1i:=?Y3) (pj11:=1)).
+  (* Reduce sq_ap2 c2t' loop loop *)
+  refine (cu_concat_lr (pr2 (pr2 c2t'_beta)) _
+    (sji0:=?[X4]) (sji1:=?X4) (sj0i:=?[Y4]) (sj1i:=?Y4) (pj11:=1)).
+  (* Finally flip and sq_ap idmap *)
+  refine (cu_flip_lr (sq_ap_idmap _)).
+
+*)
+
+</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Notation apcs := (ap_compose_sq _ _ _).</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 124
+Time: 0.002s">
+<div class="time" style="width: 0.16220600162206%"></div>
+<pre>
+
+Definition sq_ap011_compose {A B C D : Type} (f : A -&gt; B -&gt; C) (g : C -&gt; D)
+  {a a' : A} (p : a = a') {b b' : B} (q : b = b')
+  : PathCube (sq_ap011 (fun x y =&gt; g (f x y)) p q) (sq_ap g (sq_ap011 f p q))
+      apcs apcs apcs apcs.</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 130
+Time: 0.002s">
+<div class="time" style="width: 0.16220600162206%"></div>
+<pre>
+  by destruct p, q.</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 131
+Time: 0.001s">
+<div class="time" style="width: 0.08110300081103%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We now prove t2c is a retraction of c2t *)</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition c2t2c `{Funext} : t2c o c2t == idmap.</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 135
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  napply prod_ind.</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* Start with double circle induction *)
+ </pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>snrefine (Circle_ind _ (Circle_ind _ 1 _) _).</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* Change the second loop case into a square and shelve *)
+ </pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 140
+Time: 0.001s">
+<div class="time" style="width: 0.08110300081103%"></div>
+<pre>1: apply sq_dp^-1, sq_tr^-1; shelve.</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* Take the forall out of the DPath *)
+ </pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>apply dp_forall_domain.</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 142
+Time: 0.002s">
+<div class="time" style="width: 0.16220600162206%"></div>
+<pre>
+  intro x; apply sq_dp^-1; revert x.</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snrefine (Circle_ind _ _ _).</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 144
+Time: 0.002s">
+<div class="time" style="width: 0.16220600162206%"></div>
+<pre>
+  1: apply sq_tr^-1; shelve.</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 145
+Time: 0.001s">
+<div class="time" style="width: 0.08110300081103%"></div>
+<pre>
+  apply dp_cu.</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 146
+Time: 0.003s">
+<div class="time" style="width: 0.24330900243309%"></div>
+<pre>
+  nrefine (cu_ccGGcc _ _ _).</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 147
+Time: 0.006s">
+<div class="time" style="width: 0.48661800486618%"></div>
+<pre>
+  1,2: exact (ap sq_dp (Circle_ind_beta_loop _ _ _)
+    @ eisretr _ _)^.</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 149
+Time: 0.002s">
+<div class="time" style="width: 0.16220600162206%"></div>
+<pre>
+  apply cu_rot_tb_fb.</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 150
+Time: 0.004s">
+<div class="time" style="width: 0.32441200324412%"></div>
+<pre>
+  nrefine (cu_ccGGGG _ _ _ _ _).</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 151
+Time: 0.004s">
+<div class="time" style="width: 0.32441200324412%"></div>
+<pre>
+  1,2,3,4: exact (eisretr _ _)^.</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 152
+Time: 0.026s">
+<div class="time" style="width: 2.1086780210868%"></div>
+<pre>
+  exact ((sq_ap011_compose c2t' t2c loop loop)
+    @lr (cu_ap t2c (c2t'_beta.2.2))
+    @lr (Torus_rec_beta_surf _ _ _ _ _)
+    @lr (cu_flip_lr (sq_ap_idmap _))
+    @lr (sq_ap_uncurry _ _ _)).</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 157
+Time: 1.233s">
+<div class="time" style="width: 100%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* refine (cu_concat_lr (sq_ap2_compose c2t' t2c loop loop) _
+    (sji0:=?[X1]) (sji1:=?X1) (sj0i:=?[Y1]) (sj1i:=?Y1) (pj11:=1)).
+  refine (cu_concat_lr (cu_ap t2c (c2t'_beta.2.2)) _
+    (sji0:=?[X2]) (sji1:=?X2) (sj0i:=?[Y2]) (sj1i:=?Y2) (pj11:=1)).
+  refine (cu_concat_lr (Torus_rec_beta_surf _ _ _ _ _) _
+    (sji0:=?[X3]) (sji1:=?X3) (sj0i:=?[Y3]) (sj1i:=?Y3) (pj11:=1)).
+  refine (cu_concat_lr (cu_flip_lr (sq_ap_idmap _)) _
+    (sji0:=?[X4]) (sji1:=?X4) (sj0i:=?[Y4]) (sj1i:=?Y4) (pj11:=1)).
+  apply sq_ap_uncurry. *)
+
+</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 169
+Time: 0.001s">
+<div class="time" style="width: 0.08110300081103%"></div>
+<pre>Definition equiv_torus_prod_Circle `{Funext} : Torus &lt;~&gt; Circle * Circle
+  := equiv_adjointify t2c c2t c2t2c t2c2t.</pre>
+</div>
+<div class="code" title="File: TorusEquivCircles.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

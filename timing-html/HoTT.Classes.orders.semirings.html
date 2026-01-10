@@ -1,0 +1,6826 @@
+<html>
+<head>
+<title>semirings.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for semirings.v</h1>
+
+<div class="code" title="File: semirings.v
+Line: 1
+Time: 0.073s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import
+  HoTT.Classes.theory.apartness
+  HoTT.Classes.interfaces.abstract_algebra
+  HoTT.Classes.interfaces.orders
+  HoTT.Classes.theory.rings.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 5
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+Require Export
+  HoTT.Classes.orders.orders
+  HoTT.Classes.orders.maps.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Generalizable Variables R Rlt f.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section semiring_order.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 12
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+  Context `{SemiRingOrder R} `{!IsSemiCRing R}.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+(*   Add Ring R : (stdlib_semiring_theory R). *)
+
+ </pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export] Instance plus_le_embed_l : forall (z : R), OrderEmbedding (+z).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 19
+Time: 0.002s">
+<div class="time" style="width: 2.7397260273973%"></div>
+<pre> exact order_preserving_flip.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 20
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre> exact order_reflecting_flip.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance plus_ordered_cancel_l : forall z, LeftCancellation (+) z.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros z x y E.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 25
+Time: 0.004s">
+<div class="time" style="width: 5.4794520547945%"></div>
+<pre>
+  apply (antisymmetry (≤)); apply (order_reflecting (z+)); apply eq_le;trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply symmetry;trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance plus_ordered_cancel_r : forall z, RightCancellation (+) z.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 32
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre> apply (right_cancel_from_left (+)).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma nonneg_plus_le_compat_r x z : 0 ≤ z &lt;-&gt; x ≤ x + z.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  pattern x at 1.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (transport _ (plus_0_r x)).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  split; intros.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (order_preserving _).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (order_reflecting (x+)).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma nonneg_plus_le_compat_l x z : 0 ≤ z &lt;-&gt; x ≤ z + x.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 44
+Time: 0.002s">
+<div class="time" style="width: 2.7397260273973%"></div>
+<pre>
+  rewrite (commutativity (f:=plus)).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply nonneg_plus_le_compat_r.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 47
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+
+  Lemma plus_le_compat x₁ y₁ x₂ y₂ : x₁ ≤ y₁ -&gt; x₂ ≤ y₂ -&gt; x₁ + x₂ ≤ y₁ + y₂.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros E1 E2.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 51
+Time: 0.003s">
+<div class="time" style="width: 4.1095890410959%"></div>
+<pre>
+  transitivity (y₁ + x₂).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (order_preserving (+ x₂));trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (order_preserving (y₁ +));trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma plus_le_compat_r x y z : 0 ≤ z -&gt; x ≤ y -&gt; x ≤ y + z.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite &lt;-(plus_0_r x).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply plus_le_compat;trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma plus_le_compat_l x y z : 0 ≤ z -&gt; x ≤ y -&gt; x ≤ z + y.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 64
+Time: 0.002s">
+<div class="time" style="width: 2.7397260273973%"></div>
+<pre>
+  rewrite (commutativity (f:=plus)).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply plus_le_compat_r.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 67
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+
+  Lemma nonpos_plus_compat x y : x ≤ 0 -&gt; y ≤ 0 -&gt; x + y ≤ 0.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite &lt;-(plus_0_r 0).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply plus_le_compat;trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 73
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+
+  Instance nonneg_plus_compat (x y : R)
+    : PropHolds (0 ≤ x) -&gt; PropHolds (0 ≤ y) -&gt; PropHolds (0 ≤ x + y).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply plus_le_compat_l;trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma decompose_le {x y} : x ≤ y -&gt; exists z, 0 ≤ z /\ y = x + z.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros E.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct (srorder_partial_minus x y E) as [z Ez].</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exists z.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split; [| trivial].</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (order_reflecting (x+)).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite plus_0_r, &lt;-Ez.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma compose_le x y z : 0 ≤ z -&gt; y = x + z -&gt; x ≤ y.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros E1 E2.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 94
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite E2.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply nonneg_plus_le_compat_r.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance nonneg_mult_le_l : forall (z : R), PropHolds (0 ≤ z) -&gt;
+    OrderPreserving (z *.).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros z E.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  repeat (split; try exact _).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y F.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct (decompose_le F) as [a [Ea1 Ea2]].</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite Ea2, plus_mult_distr_l.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply nonneg_plus_le_compat_r.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply nonneg_mult_compat;trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance nonneg_mult_le_r : forall (z : R), PropHolds (0 ≤ z) -&gt;
+    OrderPreserving (.* z).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 115
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre> exact order_preserving_flip.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 116
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+
+  Lemma mult_le_compat x₁ y₁ x₂ y₂ :
+    0 ≤ x₁ -&gt; 0 ≤ x₂ -&gt; x₁ ≤ y₁ -&gt; x₂ ≤ y₂ -&gt; x₁ * x₂ ≤ y₁ * y₂.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros Ex₁ Ey₁ E1 E2.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 121
+Time: 0.003s">
+<div class="time" style="width: 4.1095890410959%"></div>
+<pre>
+  transitivity (y₁ * x₂).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 122
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (order_preserving_flip_nonneg (.*.) x₂);trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (order_preserving_nonneg (.*.) y₁); [| trivial].</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 124
+Time: 0.003s">
+<div class="time" style="width: 4.1095890410959%"></div>
+<pre>
+    transitivity x₁;trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 125
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 126
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+
+  Lemma ge_1_mult_le_compat_r x y z : 1 ≤ z -&gt; 0 ≤ y -&gt; x ≤ y -&gt; x ≤ y * z.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 128
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 130
+Time: 0.003s">
+<div class="time" style="width: 4.1095890410959%"></div>
+<pre>
+  transitivity y; [trivial |].</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 131
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  pattern y at 1;apply (transport _ (mult_1_r y)).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (order_preserving_nonneg (.*.) y);trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 134
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+
+  Lemma ge_1_mult_le_compat_l x y z : 1 ≤ z -&gt; 0 ≤ y -&gt; x ≤ y -&gt; x ≤ z * y.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 137
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+  rewrite (commutativity (f:=mult)).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply ge_1_mult_le_compat_r.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 140
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+
+  Lemma flip_nonpos_mult_l x y z : z ≤ 0 -&gt; x ≤ y -&gt; z * y ≤ z * x.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros Ez Exy.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 144
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+  destruct (decompose_le Ez) as [a [Ea1 Ea2]], (decompose_le Exy) as [b [Eb1 Eb2]].</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 145
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite Eb2.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply compose_le with (a * b).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 147
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 148
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply nonneg_mult_compat;trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 148
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> transitivity (z * x + (z + a) * b).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite &lt;-Ea2.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 150
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre> rewrite mult_0_l,plus_0_r.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 151
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre> rewrite plus_mult_distr_r,plus_mult_distr_l.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 151
+Time: 0.002s">
+<div class="time" style="width: 2.7397260273973%"></div>
+<pre>
+      apply associativity.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 152
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 153
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+
+  Lemma flip_nonpos_mult_r x y z : z ≤ 0 -&gt; x ≤ y -&gt; y * z ≤ x * z.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 155
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 156
+Time: 0.002s">
+<div class="time" style="width: 2.7397260273973%"></div>
+<pre>
+  rewrite 2!(commutativity _ z).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply flip_nonpos_mult_l.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 159
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+
+  Lemma nonpos_mult x y : x ≤ 0 -&gt; y ≤ 0 -&gt; 0 ≤ x * y.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 163
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite &lt;-(mult_0_r x).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 164
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply flip_nonpos_mult_l;trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 165
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 166
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+
+  Lemma nonpos_nonneg_mult x y : x ≤ 0 -&gt; 0 ≤ y -&gt; x * y ≤ 0.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite &lt;-(mult_0_r x).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply flip_nonpos_mult_l;trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 173
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+
+  Lemma nonneg_nonpos_mult x y : 0 ≤ x -&gt; y ≤ 0 -&gt; x * y ≤ 0.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 175
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 177
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+  rewrite (commutativity (f:=mult)).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply nonpos_nonneg_mult;trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 179
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 180
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+End semiring_order.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 181
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* Due to bug #2528 *)</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 183
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export]
+Hint Extern 7 (PropHolds (0 ≤ _ + _)) =&gt;
+  eapply @nonneg_plus_compat : typeclass_instances.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section strict_semiring_order.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{IsSemiCRing R} `{!StrictSemiRingOrder Rlt}.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+(*   Add Ring Rs : (stdlib_semiring_theory R). *)
+
+ </pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 191
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export] Instance plus_lt_embed : forall (z : R), StrictOrderEmbedding (+z).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 191
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 192
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 193
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 193
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 194
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre> exact strictly_order_preserving_flip.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 194
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 195
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre> exact strictly_order_reflecting_flip.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma pos_plus_lt_compat_r x z : 0 &lt; z &lt;-&gt; x &lt; x + z.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 199
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  pattern x at 1;apply (transport _ (plus_0_r x)).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  split; intros.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 201
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 202
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (strictly_order_preserving _);trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 202
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 203
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (strictly_order_reflecting (x+));trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 203
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 204
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma pos_plus_lt_compat_l x z : 0 &lt; z -&gt; x &lt; z + x.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 207
+Time: 0.002s">
+<div class="time" style="width: 2.7397260273973%"></div>
+<pre>
+  rewrite (commutativity (f:=plus)).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply pos_plus_lt_compat_r.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 209
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 210
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+
+  Lemma plus_lt_compat x₁ y₁ x₂ y₂ : x₁ &lt; y₁ -&gt; x₂ &lt; y₂ -&gt; x₁ + x₂ &lt; y₁ + y₂.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 212
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 213
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros E1 E2.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 214
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+  transitivity (y₁ + x₂).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 215
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 216
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (strictly_order_preserving (+ x₂));trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 216
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 217
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (strictly_order_preserving (y₁ +));trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 217
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 218
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma plus_lt_compat_r x y z : 0 &lt; z -&gt; x &lt; y -&gt; x &lt; y + z.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 220
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 221
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 222
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite &lt;-(plus_0_r x).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 222
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply plus_lt_compat;trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 222
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 223
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma plus_lt_compat_l x y z : 0 &lt; z -&gt; x &lt; y -&gt; x &lt; z + y.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 226
+Time: 0.002s">
+<div class="time" style="width: 2.7397260273973%"></div>
+<pre>
+  rewrite (commutativity (f:=plus)).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 227
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply plus_lt_compat_r.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 229
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+
+  Lemma neg_plus_compat x y : x &lt; 0 -&gt; y &lt; 0 -&gt; x + y &lt; 0.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 231
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 232
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 233
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite &lt;-(plus_0_r 0).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 233
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply plus_lt_compat;trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 234
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 235
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+
+  Instance pos_plus_compat (x y : R)
+    : PropHolds (0 &lt; x) -&gt; PropHolds (0 &lt; y) -&gt; PropHolds (0 &lt; x + y).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 238
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 239
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 240
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply plus_lt_compat_l;trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 240
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 241
+Time: 0.021s">
+<div class="time" style="width: 28.767123287671%"></div>
+<pre>
+
+  Lemma compose_lt x y z : 0 &lt; z -&gt; y = x + z -&gt; x &lt; y.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 243
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 244
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros E1 E2.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 245
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite E2.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 246
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply pos_plus_lt_compat_r;trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 247
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 248
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma decompose_lt {x y} : x &lt; y -&gt; exists z, 0 &lt; z /\ y = x + z.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 250
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 251
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros E.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 252
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct (strict_srorder_partial_minus x y E) as [z Ez].</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 253
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exists z.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 254
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split; [| trivial].</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 254
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (strictly_order_reflecting (x+)).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 255
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite &lt;-Ez, rings.plus_0_r.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 256
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 256
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 257
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance pos_mult_lt_l : forall (z : R), PropHolds (0 &lt; z) -&gt;
+    StrictlyOrderPreserving (z *.).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 260
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 261
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros z E x y F.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 262
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct (decompose_lt F) as [a [Ea1 Ea2]].</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 263
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite Ea2, plus_mult_distr_l.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 264
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply pos_plus_lt_compat_r.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 265
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply pos_mult_compat;trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 266
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 267
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance pos_mult_lt_r : forall (z : R), PropHolds (0 &lt; z) -&gt;
+    StrictlyOrderPreserving (.* z).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 270
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 271
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 272
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre> exact strictly_order_preserving_flip.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 272
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 273
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+
+  Lemma mult_lt_compat x₁ y₁ x₂ y₂ :
+    0 &lt; x₁ -&gt; 0 &lt; x₂ -&gt; x₁ &lt; y₁ -&gt; x₂ &lt; y₂ -&gt; x₁ * x₂ &lt; y₁ * y₂.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 276
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 277
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros Ex₁ Ey₁ E1 E2.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 278
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+  transitivity (y₁ * x₂).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 279
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 280
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (strictly_order_preserving_flip_pos (.*.) x₂);trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 280
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 281
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (strictly_order_preserving_pos (.*.) y₁); [| trivial ].</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 281
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+    transitivity x₁;trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 282
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 283
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma gt_1_mult_lt_compat_r x y z : 1 &lt; z -&gt; 0 &lt; y -&gt; x &lt; y -&gt; x &lt; y * z.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 285
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 286
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 287
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+  transitivity y; [ trivial |].</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 288
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  pattern y at 1;apply (transport _ (mult_1_r y)).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 289
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (strictly_order_preserving_pos (.*.) y);trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 290
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 291
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+
+  Lemma gt_1_mult_lt_compat_l x y z : 1 &lt; z -&gt; 0 &lt; y -&gt; x &lt; y -&gt; x &lt; z * y.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 293
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 294
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+  rewrite (commutativity (f:=mult)).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 295
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply gt_1_mult_lt_compat_r.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 296
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 297
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma flip_neg_mult_l x y z : z &lt; 0 -&gt; x &lt; y -&gt; z * y &lt; z * x.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 299
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 300
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros Ez Exy.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 301
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct (decompose_lt Ez) as [a [Ea1 Ea2]], (decompose_lt Exy) as [b [Eb1 Eb2]].</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 302
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite Eb2.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 303
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply compose_lt with (a * b).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 304
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 305
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply pos_mult_compat;trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 305
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 306
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> transitivity (z * x + (z + a) * b).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 306
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 307
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite &lt;-Ea2.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 307
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre> rewrite mult_0_l,plus_0_r;reflexivity.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 307
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 308
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre> rewrite plus_mult_distr_r,plus_mult_distr_l.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 308
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+      apply associativity.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 309
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 310
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma flip_neg_mult_r x y z : z &lt; 0 -&gt; x &lt; y -&gt; y * z &lt; x * z.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 312
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 313
+Time: 0.002s">
+<div class="time" style="width: 2.7397260273973%"></div>
+<pre>
+  rewrite 2!(commutativity _ z).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 314
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply flip_neg_mult_l.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 315
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 316
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+
+  Lemma neg_mult x y : x &lt; 0 -&gt; y &lt; 0 -&gt; 0 &lt; x * y.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 318
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 319
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 320
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite &lt;-(mult_0_r x).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 321
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply flip_neg_mult_l;trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 322
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 323
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma pos_mult x y : 0 &lt; x -&gt; 0 &lt; y -&gt; 0 &lt; x * y.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 325
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 326
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros xpos ypos.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 327
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite &lt;-(mult_0_r x).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 328
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (pos_mult_lt_l); assumption.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 329
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 330
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma neg_pos_mult x y : x &lt; 0 -&gt; 0 &lt; y -&gt; x * y &lt; 0.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 332
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 333
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 334
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite &lt;-(mult_0_r x).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 335
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply flip_neg_mult_l;trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 336
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 337
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma pos_neg_mult x y : 0 &lt; x -&gt; y &lt; 0 -&gt; x * y &lt; 0.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 339
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 340
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 341
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre> rewrite (commutativity (f:=mult)).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 341
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply neg_pos_mult;trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 342
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 343
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+End strict_semiring_order.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 344
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* Due to bug #2528 *)</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 346
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export]
+Hint Extern 7 (PropHolds (0 &lt; _ + _)) =&gt;
+  eapply @pos_plus_compat : typeclass_instances.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 348
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section pseudo_semiring_order.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 350
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{PseudoSemiRingOrder R} `{!IsSemiCRing R}.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 351
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+(*   Add Ring Rp : (stdlib_semiring_theory R). *)
+
+ </pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 354
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Existing Instance pseudo_order_apart.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 354
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance pseudosrorder_strictsrorder : StrictSemiRingOrder (_ : Lt R).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 356
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 357
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+  split; try exact _.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 358
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 359
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 359
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply pseudo_srorder_partial_minus, lt_flip.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 359
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 359
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 360
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact pseudo_srorder_pos_mult_compat.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 360
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 361
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance plus_strong_ext : StrongBinaryExtensionality (+).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 363
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 364
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  assert (forall z, StrongExtensionality (z +)).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 365
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 366
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 366
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact pseudo_order_embedding_ext.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 366
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 367
+Time: 0.002s">
+<div class="time" style="width: 2.7397260273973%"></div>
+<pre> exact apartness.strong_binary_setoid_morphism_commutative.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 367
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 368
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance plus_strong_cancel_l
+    : forall z, StrongLeftCancellation (+) z.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 371
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 372
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros z x y E.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 373
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+  apply apart_iff_total_lt in E;apply apart_iff_total_lt.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 374
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+  destruct E; [left | right]; apply (strictly_order_preserving (z +));trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 375
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 376
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance plus_strong_cancel_r
+    : forall z, StrongRightCancellation (+) z.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 379
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 380
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 381
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre> exact (strong_right_cancel_from_left (+)).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 381
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 382
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+
+  Lemma neg_mult_decompose x y : x * y &lt; 0 -&gt; (x &lt; 0 /\ 0 &lt; y) |_| (0 &lt; x /\ y &lt; 0).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 384
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 385
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 386
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  assert (0 ≶ x) as Ex;[|assert (apart 0 y) as Ey].</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 387
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 388
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre> apply (strong_extensionality (.* y)).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 388
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite mult_0_l.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 389
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply pseudo_order_lt_apart_flip;trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 389
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 390
+Time: 0.009s">
+<div class="time" style="width: 12.328767123288%"></div>
+<pre> apply (strong_extensionality (x *.)).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 390
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite mult_0_r.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 391
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply pseudo_order_lt_apart_flip;trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 391
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 392
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre> apply apart_iff_total_lt in Ex;apply apart_iff_total_lt in Ey.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 392
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+    destruct Ex as [Ex|Ex], Ey as [Ey|Ey]; try auto.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 393
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 394
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (irreflexivity (&lt;) 0).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 394
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      transitivity (x * y); [| trivial].</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 395
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply pos_mult_compat;trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 396
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 397
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (irreflexivity (&lt;) 0).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 397
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      transitivity (x * y); [| trivial].</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 398
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply neg_mult;trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 399
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 400
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+
+  Lemma pos_mult_decompose x y : 0 &lt; x * y -&gt; (0 &lt; x /\ 0 &lt; y) |_| (x &lt; 0 /\ y &lt; 0).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 402
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 403
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 404
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  assert (0 ≶ x /\ apart 0 y) as [Ex Ey];[split|].</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 405
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 406
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre> apply (strong_extensionality (.* y)).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 406
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite mult_0_l.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 407
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply pseudo_order_lt_apart;trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 407
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 408
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre> apply (strong_extensionality (x *.)).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 408
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite mult_0_r.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 409
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply pseudo_order_lt_apart;trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 409
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 410
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre> apply apart_iff_total_lt in Ex;apply apart_iff_total_lt in Ey.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 410
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+    destruct Ex as [Ex|Ex], Ey as [Ey|Ey]; try auto.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 411
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 412
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (irreflexivity (&lt;) 0).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 412
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      transitivity (x * y); [trivial |].</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 413
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply pos_neg_mult;trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 414
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 415
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (irreflexivity (&lt;) 0).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 415
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      transitivity (x * y); [trivial |].</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 416
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply neg_pos_mult;trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 417
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 418
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance pos_mult_reflect_l
+    : forall (z : R), PropHolds (0 &lt; z) -&gt; StrictlyOrderReflecting (z *.).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 421
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 422
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros z Ez x y E1.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 423
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply not_lt_apart_lt_flip.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 424
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 425
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros E2.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 425
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (lt_flip _ _ E1).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 425
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+    apply (strictly_order_preserving (z *.));trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 426
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 427
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre> apply (strong_extensionality (z *.)).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 427
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply pseudo_order_lt_apart_flip;trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 428
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 429
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance pos_mult_reflect_r
+    : forall (z : R), PropHolds (0 &lt; z) -&gt; StrictlyOrderReflecting (.* z).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 432
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 433
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 434
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+  exact strictly_order_reflecting_flip.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 435
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 436
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance apartzero_mult_strong_cancel_l
+    : forall z, PropHolds (z ≶ 0) -&gt; StrongLeftCancellation (.*.) z.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 439
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 440
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros z Ez x y E.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 441
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> red in Ez.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 441
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+  apply apart_iff_total_lt in E;apply apart_iff_total_lt in Ez;
+  apply apart_iff_total_lt.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 443
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct E as [E|E], Ez as [Ez|Ez].</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 444
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 445
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> right.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 445
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply flip_neg_mult_l;trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 445
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 446
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> left.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 446
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre> apply (strictly_order_preserving_pos (.*.) z);trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 446
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 447
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> left.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 447
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply flip_neg_mult_l;trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 447
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 448
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> right.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 448
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre> apply (strictly_order_preserving_pos (.*.) z);trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 448
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 449
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance apartzero_mult_strong_cancel_r
+    : forall z, PropHolds (z ≶ 0) -&gt; StrongRightCancellation (.*.) z.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 452
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 453
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 454
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+  exact (strong_right_cancel_from_left (.*.)).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 455
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 456
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance apartzero_mult_cancel_l
+    : forall z, PropHolds (z ≶ 0) -&gt; LeftCancellation (.*.) z.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 459
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 460
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 461
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 461
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 462
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance apartzero_mult_cancel_r
+    : forall z, PropHolds (z ≶ 0) -&gt; RightCancellation (.*.) z.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 465
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 466
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 467
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 467
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 468
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma square_pos x : x ≶ 0 -&gt; 0 &lt; x * x.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 470
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 471
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros E.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 472
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply apart_iff_total_lt in E.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 472
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct E as [E|E].</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 473
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 474
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (decompose_lt E) as [z [Ez1 Ez2]].</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 474
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply compose_lt with (z * z).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 475
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 476
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply pos_mult_compat;trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 476
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 477
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite plus_0_l.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 477
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+      apply (left_cancellation (+) (x * z)).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 478
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+      rewrite &lt;-plus_mult_distr_r, &lt;-plus_mult_distr_l.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 479
+Time: 0.002s">
+<div class="time" style="width: 2.7397260273973%"></div>
+<pre>
+      rewrite (commutativity (f:=plus) z x), &lt;-!Ez2.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 480
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+      rewrite mult_0_l,mult_0_r.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 481
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 481
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 482
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply pos_mult_compat;trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 482
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 483
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma pos_mult_rev_l x y : 0 &lt; x * y -&gt; 0 &lt; y -&gt; 0 &lt; x.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 485
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 486
+Time: 0.005s">
+<div class="time" style="width: 6.8493150684932%"></div>
+<pre>
+  intros.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 487
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (strictly_order_reflecting (.* y)).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 487
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite rings.mult_0_l;trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 488
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 489
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma pos_mult_rev_r x y : 0 &lt; x * y -&gt; 0 &lt; x -&gt; 0 &lt; y.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 491
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 492
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 493
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply pos_mult_rev_l with x.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 493
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 494
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre> rewrite (commutativity (f:=mult));trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 494
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 495
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 495
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 496
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context `{PropHolds (1 ≶ 0)}.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 498
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Instance lt_0_1 : PropHolds (0 &lt; 1).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 500
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 501
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  red.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 502
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite &lt;-(mult_1_l 1).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 503
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply square_pos;trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 504
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 505
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Instance lt_0_2 : PropHolds (0 &lt; 2).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 507
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 508
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact _.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 509
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 510
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Instance lt_0_3 : PropHolds (0 &lt; 3).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 512
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 513
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact _.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 514
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 515
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Instance lt_0_4 : PropHolds (0 &lt; 4).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 517
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 518
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact _.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 519
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 520
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma lt_1_2 : 1 &lt; 2.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 522
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 523
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply pos_plus_lt_compat_r, lt_0_1.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 524
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 525
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma lt_1_3 : 1 &lt; 3.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 527
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 528
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply pos_plus_lt_compat_r, lt_0_2.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 529
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 530
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma lt_1_4 : 1 &lt; 4.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 532
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 533
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply pos_plus_lt_compat_r, lt_0_3.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 534
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 535
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma lt_2_3 : 2 &lt; 3.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 537
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 538
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (strictly_order_preserving (1+)), lt_1_2.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 539
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 540
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma lt_2_4 : 2 &lt; 4.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 542
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 543
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (strictly_order_preserving (1+)), lt_1_3.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 544
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 545
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma lt_3_4 : 3 &lt; 4.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 547
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 548
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (strictly_order_preserving (1+)), lt_2_3.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 549
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 550
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Instance apart_0_2 : PropHolds (2 ≶ 0).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 552
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 553
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  red.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 554
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply symmetry.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 554
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply pseudo_order_lt_apart, lt_0_2.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 555
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 556
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+End pseudo_semiring_order.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 557
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+#[export]
+Hint Extern 7 (PropHolds (0 &lt; 1)) =&gt; eapply @lt_0_1 : typeclass_instances.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 560
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+#[export]
+Hint Extern 7 (PropHolds (0 &lt; 2)) =&gt; eapply @lt_0_2 : typeclass_instances.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 562
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+#[export]
+Hint Extern 7 (PropHolds (0 &lt; 3)) =&gt; eapply @lt_0_3 : typeclass_instances.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 564
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+#[export]
+Hint Extern 7 (PropHolds (0 &lt; 4)) =&gt; eapply @lt_0_4 : typeclass_instances.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 566
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+#[export]
+Hint Extern 7 (PropHolds (2 ≶ 0)) =&gt; eapply @apart_0_2 : typeclass_instances.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 568
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section full_pseudo_semiring_order.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 570
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{FullPseudoSemiRingOrder R} `{!IsSemiCRing R}.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 571
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(*   Add Ring Rf : (stdlib_semiring_theory R). *)
+
+ </pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 575
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export] Instance fullpseudosrorder_fullpseudoorder
+    : FullPseudoOrder (_ : Le R) (_ : Lt R).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 576
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 577
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  split.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 578
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 579
+Time: 0.004s">
+<div class="time" style="width: 5.4794520547945%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 579
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 580
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 580
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 581
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact full_pseudo_srorder_le_iff_not_lt_flip.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 581
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 582
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance fullpseudosrorder_srorder : SemiRingOrder (_ : Le R).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 584
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 585
+Time: 0.002s">
+<div class="time" style="width: 2.7397260273973%"></div>
+<pre>
+  split; try exact _.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 586
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 587
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y E.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 587
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply le_iff_not_lt_flip in E.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 587
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply pseudo_srorder_partial_minus;trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 588
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 589
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros z.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 589
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> repeat (split; try exact _).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 589
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 590
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y E1.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 590
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply le_iff_not_lt_flip in E1;apply le_iff_not_lt_flip.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 590
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      intros E2.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 591
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply E1.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 591
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply (strictly_order_reflecting (z+)).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 592
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 592
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 593
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y E1.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 593
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>  apply le_iff_not_lt_flip in E1;apply le_iff_not_lt_flip.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 593
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      intros E2.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 594
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply E1.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 594
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply (strictly_order_preserving _);trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 595
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 596
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y Ex Ey.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 596
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+    apply le_iff_not_lt_flip in Ex;apply le_iff_not_lt_flip in Ey;
+    apply le_iff_not_lt_flip.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 598
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros E.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 599
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+    destruct (neg_mult_decompose x y E) as [[? ?]|[? ?]];auto.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 600
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 601
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance orderreflecting_left_mult : forall (z : R), PropHolds (0 &lt; z) -&gt; OrderReflecting (z *.).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 603
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 604
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros z E.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 605
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre> exact full_pseudo_order_reflecting.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 605
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 606
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance orderreflecting_right_mult : forall (z : R), PropHolds (0 &lt; z) -&gt; OrderReflecting (.* z).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 608
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 609
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 610
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre> exact order_reflecting_flip.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 610
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 611
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma plus_lt_le_compat x₁ y₁ x₂ y₂ : x₁ &lt; y₁ -&gt; x₂ ≤ y₂ -&gt; x₁ + x₂ &lt; y₁ + y₂.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 613
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 614
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros E1 E2.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 615
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply lt_le_trans with (y₁ + x₂).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 616
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 617
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (strictly_order_preserving (+ x₂));trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 617
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 618
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (order_preserving (y₁ +));trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 618
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 619
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma plus_le_lt_compat x₁ y₁ x₂ y₂ : x₁ ≤ y₁ -&gt; x₂ &lt; y₂ -&gt; x₁ + x₂ &lt; y₁ + y₂.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 621
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 622
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros E1 E2.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 623
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply le_lt_trans with (y₁ + x₂).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 624
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 625
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (order_preserving (+ x₂));trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 625
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 626
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (strictly_order_preserving (y₁ +));trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 626
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 627
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma nonneg_plus_lt_compat_r x y z : 0 ≤ z -&gt; x &lt; y -&gt; x &lt; y + z.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 629
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 630
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 631
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite &lt;-(plus_0_r x).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 631
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply plus_lt_le_compat;trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 631
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 632
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma nonneg_plus_lt_compat_l x y z : 0 ≤ z -&gt; x &lt; y -&gt; x &lt; z + y.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 634
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 635
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 636
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre> rewrite (commutativity (f:=plus)).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 636
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply nonneg_plus_lt_compat_r;trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 637
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 638
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+
+  Lemma pos_plus_le_lt_compat_r x y z : 0 &lt; z -&gt; x ≤ y -&gt; x &lt; y + z.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 640
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 641
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 642
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite &lt;-(plus_0_r x).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 642
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply plus_le_lt_compat;trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 642
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 643
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+
+  Lemma pos_plus_le_lt_compat_l x y z : 0 &lt; z -&gt; x ≤ y -&gt; x &lt; z + y.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 645
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 646
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 647
+Time: 0.002s">
+<div class="time" style="width: 2.7397260273973%"></div>
+<pre> rewrite (commutativity (f:=plus)).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 647
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply pos_plus_le_lt_compat_r;trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 648
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 649
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma square_nonneg x : 0 ≤ x * x.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 651
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 652
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply not_lt_le_flip.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 653
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros E.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 653
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct (lt_antisym (x * x) 0).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 654
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  split; [trivial |].</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 655
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply square_pos.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 656
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  pose proof pseudo_order_apart.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 657
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (strong_extensionality (x *.)).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 658
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite mult_0_r.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 659
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply lt_apart.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 660
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 660
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 661
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma nonneg_mult_rev_l x y : 0 ≤ x * y -&gt; 0 &lt; y -&gt; 0 ≤ x.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 663
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 664
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 665
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (order_reflecting (.* y)).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 665
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite rings.mult_0_l.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 666
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 666
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 667
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma nonneg_mult_rev_r x y : 0 ≤ x * y -&gt; 0 &lt; x -&gt; 0 ≤ y.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 669
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 670
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 671
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply nonneg_mult_rev_l with x.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 671
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 672
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre> rewrite (commutativity (f:=mult)).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 672
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 672
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 673
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 673
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 674
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Instance le_0_1 : PropHolds (0 ≤ 1).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 676
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 677
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  red.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 678
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite &lt;-(mult_1_r 1).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 678
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply square_nonneg.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 678
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 679
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Instance le_0_2 : PropHolds (0 ≤ 2).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 681
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 682
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> solve_propholds.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 682
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 682
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Instance le_0_3 : PropHolds (0 ≤ 3).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 684
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 685
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> solve_propholds.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 685
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 685
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Instance le_0_4 : PropHolds (0 ≤ 4).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 687
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 688
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> solve_propholds.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 688
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 688
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma le_1_2 : 1 ≤ 2.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 690
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 691
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply nonneg_plus_le_compat_r, le_0_1.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 692
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 693
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma le_1_3 : 1 ≤ 3.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 695
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 696
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply nonneg_plus_le_compat_r, le_0_2.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 697
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 698
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma le_1_4 : 1 ≤ 4.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 700
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 701
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply nonneg_plus_le_compat_r, le_0_3.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 702
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 703
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma le_2_3 : 2 ≤ 3.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 705
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 706
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (order_preserving (1+)), le_1_2.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 707
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 708
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma le_2_4 : 2 ≤ 4.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 710
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 711
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (order_preserving (1+)), le_1_3.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 712
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 713
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma le_3_4 : 3 ≤ 4.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 715
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 716
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (order_preserving (1+)), le_2_3.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 717
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 718
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma ge_1_mult_compat x y : 1 ≤ x -&gt; 1 ≤ y -&gt; 1 ≤ x * y.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 720
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 721
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 722
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply ge_1_mult_le_compat_r; trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 723
+Time: 0.003s">
+<div class="time" style="width: 4.1095890410959%"></div>
+<pre>
+  transitivity 1.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 724
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 725
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact le_0_1.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 725
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 726
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 726
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 727
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma gt_1_ge_1_mult_compat x y : 1 &lt; x -&gt; 1 ≤ y -&gt; 1 &lt; x * y.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 729
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 730
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 731
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply lt_le_trans with x; trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 732
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+  apply ge_1_mult_le_compat_r;[trivial| |apply reflexivity].</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 733
+Time: 0.003s">
+<div class="time" style="width: 4.1095890410959%"></div>
+<pre>
+  transitivity 1.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 734
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 735
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact le_0_1.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 735
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 736
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply lt_le;trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 736
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 737
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma ge_1_gt_1_mult_compat x y : 1 ≤ x -&gt; 1 &lt; y -&gt; 1 &lt; x * y.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 739
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 740
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 741
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+  rewrite (commutativity (f:=mult)).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 742
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply gt_1_ge_1_mult_compat;trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 743
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 744
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+
+  Lemma pos_mult_le_lt_compat : forall a b c d, 0 &lt;= a /\ a &lt;= b -&gt; 0 &lt; b -&gt;
+    0 &lt;= c /\ c &lt; d -&gt;
+    a * c &lt; b * d.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 748
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 749
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros a b c d [E1 E2] E3 [E4 E5] .</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 750
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply le_lt_trans with (b * c).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 751
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 752
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre> apply mult_le_compat;auto.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 752
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 753
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre> apply (strictly_order_preserving (b *.)).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 753
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 753
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 754
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context `{PropHolds (1 ≶ 0)}.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 756
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma not_le_1_0 : ~(1 ≤ 0).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 758
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 759
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply lt_not_le_flip, lt_0_1.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 760
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 761
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma not_le_2_0 : ~(2 ≤ 0).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 763
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 764
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply lt_not_le_flip, lt_0_2.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 765
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 766
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+
+  Lemma repeat_nat_nonneg : forall n, 0 &lt;= Core.nat_iter n (plus 1) 0.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 768
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 769
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction n;simpl.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 770
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 771
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 771
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 772
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply nonneg_plus_compat.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 772
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 773
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 773
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 774
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact IHn.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 774
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 775
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma repeat_nat_pos : forall n, 0 &lt; Core.nat_iter (S n) (plus 1) 0.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 777
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 778
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros n.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 779
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 779
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply pos_plus_le_lt_compat_l.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 780
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 781
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre> solve_propholds.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 781
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 782
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply repeat_nat_nonneg.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 782
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 783
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Existing Instance pseudo_order_apart.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 785
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance ordered_characteristic_0 : FieldCharacteristic R 0.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 787
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 788
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  hnf.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 789
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [|n] _;split.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 789
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 790
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros E'.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 790
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (E' O).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 790
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 790
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 791
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros E';apply (irreflexivity _) in E';destruct E'.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 791
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 792
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros _;apply apart_iff_total_lt;right;apply repeat_nat_pos.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 792
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 793
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros _ m;simpl.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 793
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros E.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 793
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (ap (fun n =&gt; match n with | S _ =&gt; Unit | _ =&gt; Empty end)) in E;
+    simpl in E.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 795
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite &lt;-E.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 795
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 795
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 796
+Time: 0.008s">
+<div class="time" style="width: 10.958904109589%"></div>
+<pre>
+End full_pseudo_semiring_order.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 797
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* Due to bug #2528 *)</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 799
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export]
+Hint Extern 7 (PropHolds (0 ≤ 1)) =&gt; eapply @le_0_1 : typeclass_instances.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 800
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+#[export]
+Hint Extern 7 (PropHolds (0 ≤ 2)) =&gt; eapply @le_0_2 : typeclass_instances.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 802
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+#[export]
+Hint Extern 7 (PropHolds (0 ≤ 3)) =&gt; eapply @le_0_3 : typeclass_instances.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 804
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+#[export]
+Hint Extern 7 (PropHolds (0 ≤ 4)) =&gt; eapply @le_0_4 : typeclass_instances.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 806
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section dec_semiring_order.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 808
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* Maybe these assumptions can be weakened? *)
+ </pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 810
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>Context `{SemiRingOrder R} `{Apart R} `{!TrivialApart R}
+    `{!NoZeroDivisors R} `{!TotalRelation (≤)} `{DecidablePaths R}.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 811
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+
+  Context `{Rlt : Lt R} `{is_mere_relation R lt}
+    (lt_correct : forall x y, x &lt; y &lt;-&gt; x ≤ y /\ x &lt;&gt; y).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 814
+Time: 0.002s">
+<div class="time" style="width: 2.7397260273973%"></div>
+<pre>
+
+  Instance dec_srorder_fullpseudo
+    : FullPseudoOrder _ _ := dec_full_pseudo_order lt_correct.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 817
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Local Existing Instance pseudo_order_apart.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 818
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Instance dec_pseudo_srorder: PseudoSemiRingOrder (&lt;).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 820
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 821
+Time: 0.003s">
+<div class="time" style="width: 4.1095890410959%"></div>
+<pre>
+  split; try exact _.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 822
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 823
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y E.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 823
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply srorder_partial_minus, not_lt_le_flip;trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 823
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 824
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros z.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 824
+Time: 0.011s">
+<div class="time" style="width: 15.068493150685%"></div>
+<pre> repeat (split; try exact _).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 824
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros x y E.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 825
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply lt_correct in E;apply lt_correct.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 825
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct E as [E2a E2b].</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 826
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 826
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 827
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (order_preserving (z+));trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 827
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 828
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros E3.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 828
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply E2b.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 828
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (left_cancellation (+) z);trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 828
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 829
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (apartness.dec_strong_binary_morphism (.*.)).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 829
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 830
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y E1 E2.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 830
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply lt_correct in E1;apply lt_correct in E2;apply lt_correct.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 831
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct E1 as [E1a E1b], E2 as [E2a E2b].</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 832
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 832
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 833
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply nonneg_mult_compat;trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 833
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 834
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply symmetric_neq.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 834
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply mult_ne_0; apply symmetric_neq;trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 835
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 836
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Instance dec_full_pseudo_srorder: FullPseudoSemiRingOrder (≤) (&lt;).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 838
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 839
+Time: 0.004s">
+<div class="time" style="width: 5.4794520547945%"></div>
+<pre>
+  split; try exact _.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 840
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact le_iff_not_lt_flip.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 841
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 842
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+End dec_semiring_order.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 843
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section another_semiring.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 845
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{SemiRingOrder R1}.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 846
+Time: 0.002s">
+<div class="time" style="width: 2.7397260273973%"></div>
+<pre>
+
+  Lemma projected_srorder `{IsSemiCRing R2} `{R2le : Le R2}
+    `{is_mere_relation R2 R2le} (f : R2 -&gt; R1)
+    `{!IsSemiRingPreserving f} `{!IsInjective f}
+    : (forall x y, x ≤ y &lt;-&gt; f x ≤ f y) -&gt; (forall x y : R2, x ≤ y -&gt; exists z, y = x + z) -&gt;
+      SemiRingOrder R2le.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 852
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 853
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros P.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 854
+Time: 0.006s">
+<div class="time" style="width: 8.2191780821918%"></div>
+<pre> pose proof (projected_partial_order f P).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 854
+Time: 0.004s">
+<div class="time" style="width: 5.4794520547945%"></div>
+<pre>
+  repeat (split; try exact _).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 855
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 856
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assumption.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 856
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 857
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> red;intros.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 857
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply P.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 857
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+    rewrite 2!(preserves_plus (f:=f)).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 858
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (order_preserving _), P.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 858
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 858
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 859
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> red;intros.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 859
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply P.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 859
+Time: 0.003s">
+<div class="time" style="width: 4.1095890410959%"></div>
+<pre> apply (order_reflecting (f z +)).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 859
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+    rewrite &lt;-2!preserves_plus.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 860
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply P.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 860
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 860
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 861
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 861
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply P.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 861
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre> rewrite preserves_mult, preserves_0.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 861
+Time: 0.002s">
+<div class="time" style="width: 2.7397260273973%"></div>
+<pre>
+    apply nonneg_mult_compat; rewrite &lt;-(preserves_0 (f:=f)); apply P;trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 862
+Time: 0.002s">
+<div class="time" style="width: 2.7397260273973%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 863
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+
+ Context `{!IsSemiCRing R1} `{SemiRingOrder R2} `{!IsSemiCRing R2}
+   `{!IsSemiRingPreserving (f : R1 -&gt; R2)}.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 866
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (* If a morphism agrees on the positive cone then it is order preserving *)
+ </pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 869
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma preserving_preserves_nonneg : (forall x, 0 ≤ x -&gt; 0 ≤ f x) -&gt; OrderPreserving f.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 869
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 870
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros E.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 871
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  repeat (split; try exact _).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 872
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y F.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 873
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+  destruct (decompose_le F) as [z [Ez1 Ez2]].</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 874
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply compose_le with (f z).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 875
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 876
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply E;trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 876
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 877
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite Ez2, (preserves_plus (f:=f)).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 877
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 877
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 878
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+
+  Instance preserves_nonneg `{!OrderPreserving f} x
+    : PropHolds (0 ≤ x) -&gt; PropHolds (0 ≤ f x).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 881
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 882
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 883
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite &lt;-(preserves_0 (f:=f)).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 883
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (order_preserving f);trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 883
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 884
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma preserves_nonpos `{!OrderPreserving f} x : x ≤ 0 -&gt; f x ≤ 0.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 886
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 887
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 888
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite &lt;-(preserves_0 (f:=f)).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 888
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (order_preserving f);trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 888
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 889
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma preserves_ge_1 `{!OrderPreserving f} x : 1 ≤ x -&gt; 1 ≤ f x.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 891
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 892
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 893
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite &lt;-(preserves_1 (f:=f)).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 893
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (order_preserving f);trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 893
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 894
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma preserves_le_1 `{!OrderPreserving f} x : x ≤ 1 -&gt; f x ≤ 1.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 896
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 897
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 898
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite &lt;-(preserves_1 (f:=f)).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 898
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (order_preserving f);trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 898
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 899
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+End another_semiring.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 900
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section another_semiring_strict.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 902
+Time: 0.002s">
+<div class="time" style="width: 2.7397260273973%"></div>
+<pre>
+  Context `{StrictSemiRingOrder R1} `{StrictSemiRingOrder R2}
+    `{!IsSemiCRing R1} `{!IsSemiCRing R2}
+    `{!IsSemiRingPreserving (f : R1 -&gt; R2)}.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 905
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma strictly_preserving_preserves_pos
+    : (forall x, 0 &lt; x -&gt; 0 &lt; f x) -&gt; StrictlyOrderPreserving f.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 908
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 909
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros E.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 910
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  repeat (split; try exact _).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 911
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y F.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 912
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+  destruct (decompose_lt F) as [z [Ez1 Ez2]].</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 913
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply compose_lt with (f z).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 914
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 915
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply E.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 915
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 915
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 916
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite Ez2, (preserves_plus (f:=f)).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 916
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 916
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 917
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Instance preserves_pos `{!StrictlyOrderPreserving f} x
+   : PropHolds (0 &lt; x) -&gt; PropHolds (0 &lt; f x).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 920
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 921
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 922
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite &lt;-(preserves_0 (f:=f)).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 922
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (strictly_order_preserving f);trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 923
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 924
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma preserves_neg `{!StrictlyOrderPreserving f} x
+    : x &lt; 0 -&gt; f x &lt; 0.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 927
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 928
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 929
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite &lt;-(preserves_0 (f:=f)).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 929
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (strictly_order_preserving f);trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 930
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 931
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma preserves_gt_1 `{!StrictlyOrderPreserving f} x
+    : 1 &lt; x -&gt; 1 &lt; f x.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 934
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 935
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 936
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite &lt;-(preserves_1 (f:=f)).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 936
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (strictly_order_preserving f);trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 937
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 938
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma preserves_lt_1 `{!StrictlyOrderPreserving f} x
+    : x &lt; 1 -&gt; f x &lt; 1.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 941
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 942
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 943
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite &lt;-(preserves_1 (f:=f)).</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 943
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (strictly_order_preserving f);trivial.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 944
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 945
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+End another_semiring_strict.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 946
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* Due to bug #2528 *)</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 948
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export]
+Hint Extern 15 (PropHolds (_ ≤ _ _)) =&gt;
+  eapply @preserves_nonneg : typeclass_instances.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 950
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+#[export]
+Hint Extern 15 (PropHolds (_ &lt; _ _)) =&gt;
+  eapply @preserves_pos : typeclass_instances.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 953
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* Oddly enough, the above hints do not work for goals of the following shape? *)</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 955
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export]
+Hint Extern 15 (PropHolds (_ ≤ '_)) =&gt;
+  eapply @preserves_nonneg : typeclass_instances.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 957
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+#[export]
+Hint Extern 15 (PropHolds (_ &lt; '_)) =&gt;
+  eapply @preserves_pos : typeclass_instances.</pre>
+</div>
+<div class="code" title="File: semirings.v
+Line: 961
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

@@ -1,0 +1,762 @@
+<html>
+<head>
+<title>WhiteheadsPrinciple.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for WhiteheadsPrinciple.v</h1>
+
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 1
+Time: 0.039s">
+<div class="time" style="width: 62.903225806452%"></div>
+<pre>From HoTT Require Import Basics Types.</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 1
+Time: 0.062s">
+<div class="time" style="width: 100%"></div>
+<pre>
+Require Import Pointed.</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 2
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+Require Import WildCat.Core HFiber.</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 3
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+Require Import Truncations.</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 4
+Time: 0.014s">
+<div class="time" style="width: 22.58064516129%"></div>
+<pre>
+Require Import Algebra.Groups.Group.</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 5
+Time: 0.008s">
+<div class="time" style="width: 12.903225806452%"></div>
+<pre>
+Require Import Homotopy.HomotopyGroup.</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope pointed_scope.</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope nat_scope.</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 9
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** 8.8.1 *)</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition isequiv_issurj_tr0_isequiv_ap
+           `{Univalence} {A B : Type} (f : A -&gt; B)
+           {i  : IsSurjection (Trunc_functor 0 f)}
+           {ii : forall x y, IsEquiv (@ap _ _ f x y)}
+  : IsEquiv f.</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 16
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+  apply (equiv_isequiv_ap_isembedding f)^-1 in ii.</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 17
+Time: 0.004s">
+<div class="time" style="width: 6.4516129032258%"></div>
+<pre>
+  srapply isequiv_surj_emb.</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply BuildIsSurjection.</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  cbn; intro b.</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  pose proof (@center _ (i (tr b))) as p.</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert p.</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply Trunc_functor.</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply sig_ind.</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 24
+Time: 0.031s">
+<div class="time" style="width: 50%"></div>
+<pre>
+  srapply Trunc_ind.</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros a p.</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 26
+Time: 0.003s">
+<div class="time" style="width: 4.8387096774194%"></div>
+<pre>
+  apply (equiv_path_Tr _ _)^-1 in p.</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 27
+Time: 0.02s">
+<div class="time" style="width: 32.258064516129%"></div>
+<pre>
+  strip_truncations.</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exists a.</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact p.</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 30
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** 8.8.2 *)</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 33
+Time: 0.002s">
+<div class="time" style="width: 3.2258064516129%"></div>
+<pre>Definition isequiv_isbij_tr0_isequiv_loops
+           `{Univalence} {A B : Type} (f : A -&gt; B)
+           {i  : IsEquiv (Trunc_functor 0 f)}
+           {ii : forall x, IsEquiv (fmap loops (pmap_from_point f x)) }
+  : IsEquiv f.</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 38
+Time: 0.012s">
+<div class="time" style="width: 19.354838709677%"></div>
+<pre>
+  srapply (isequiv_issurj_tr0_isequiv_ap f).</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y.</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply isequiv_inhab_codomain.</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro p.</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (ap (@tr 0 _)) in p.</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (@equiv_inj _ _ _ i (tr x) (tr y)) in p.</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 44
+Time: 0.002s">
+<div class="time" style="width: 3.2258064516129%"></div>
+<pre>
+  apply (equiv_path_Tr _ _)^-1 in p.</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 45
+Time: 0.032s">
+<div class="time" style="width: 51.612903225806%"></div>
+<pre>
+  strip_truncations.</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct p.</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  cbn in ii.</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply (isequiv_homotopic _ (H:=ii x)).</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (fun _ =&gt; concat_1p _ @ concat_p1 _).</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 50
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** When the types are 0-connected and the map is pointed, just one [loops_functor] needs to be checked. *)</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 53
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>Definition isequiv_is0connected_isequiv_loops
+           `{Univalence} {A B : pType} `{IsConnected 0 A} `{IsConnected 0 B}
+           (f : A -&gt;* B)
+           (e : IsEquiv (fmap loops f))
+  : IsEquiv f.</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply isequiv_isbij_tr0_isequiv_loops.</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (** The pi_0 condition is trivial because [A] and [B] are 0-connected. *)
+ </pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 61
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>1: apply isequiv_contr_contr.</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (** Since [A] is 0-connected, it's enough to check the [loops_functor] condition for the basepoint. *)
+ </pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 63
+Time: 0.003s">
+<div class="time" style="width: 4.8387096774194%"></div>
+<pre>rapply conn_point_elim.</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (** The [loops_functor] condition for [pmap_from_point f _] is equivalent to the [loops_functor] condition for [f] with its given pointing. *)
+ </pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>srapply isequiv_homotopic'.</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (equiv_concat_lr (point_eq f) (point_eq f)^ oE (Build_Equiv _ _ _ e)).</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro r.</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    simpl.</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 68
+Time: 0.046s">
+<div class="time" style="width: 74.193548387097%"></div>
+<pre>
+    hott_simpl.</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 69
+Time: 0.005s">
+<div class="time" style="width: 8.0645161290323%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Truncated Whitehead's principle (8.8.3) *)</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 72
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>Definition whiteheads_principle
+           {ua : Univalence} {A B : Type} {f : A -&gt; B}
+           (n : trunc_index) {H0 : IsTrunc n A} {H1 : IsTrunc n B}
+           {i  : IsEquiv (Trunc_functor 0 f)}
+           {ii : forall (x : A) (k : nat), IsEquiv (fmap (Pi k.+1) (pmap_from_point f x)) }
+  : IsEquiv f.</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert A B H0 H1 f i ii.</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction n as [|n IHn].</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: intros; apply isequiv_contr_contr.</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros A B H0 H1 f i ii.</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  nrefine (@isequiv_isbij_tr0_isequiv_loops ua _ _ f i _).</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro x.</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  nrefine (isequiv_homotopic (@ap _ _ f x x) _).</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  2:{</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>intros p; cbn.</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+     symmetry; exact (concat_1p _ @ concat_p1 _).</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  pose proof (@istrunc_paths _ _ H0 x x) as h0.</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  pose proof (@istrunc_paths _ _ H1 (f x) (f x)) as h1.</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  nrefine (IHn (x=x) (f x=f x) h0 h1 (@ap _ _ f x x) _ _).</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> pose proof (ii x 0) as h2.</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 91
+Time: 0.002s">
+<div class="time" style="width: 3.2258064516129%"></div>
+<pre>
+    unfold is0functor_pi in h2; cbn in h2.</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (@isequiv_homotopic _ _ _ _ h2 _).</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (O_functor_homotopy (Tr 0)); intros p.</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 94
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (concat_1p _ @ concat_p1 _).</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros p k; revert p.</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 96
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+    assert (h3 : forall (y:A) (q:x=y),
+               IsEquiv (fmap (Pi k.+1) (pmap_from_point (@ap _ _ f x y) q))).</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    2:exact (h3 x).</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros y q.</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct q.</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snrefine (isequiv_homotopic _ _).</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 101
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+    1: exact (fmap (Pi k.+1) (fmap loops (pmap_from_point f x))).</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    2:{</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 103
+Time: 0.014s">
+<div class="time" style="width: 22.58064516129%"></div>
+<pre> tapply (fmap2 (Pi k.+1)); srefine (Build_pHomotopy _ _).</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        -</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros p; cbn.</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          exact (concat_1p _ @ concat_p1 _).</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        -</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 106
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+    nrefine (isequiv_commsq _ _ _ _ (fmap_pi_loops k.+1 (pmap_from_point f x))).</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    2-3:exact (equiv_isequiv (pi_loops _ _)).</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (ii x k.+1).</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 109
+Time: 0.006s">
+<div class="time" style="width: 9.6774193548387%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: WhiteheadsPrinciple.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

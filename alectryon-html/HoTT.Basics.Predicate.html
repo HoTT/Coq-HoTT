@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>Predicate.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="predicate-v-chk0" style="display: none" type="checkbox"><label class="alectryon-input" for="predicate-v-chk0"><span class="kn">Require Import</span> Basics.Overture Basics.Tactics Basics.Iff Basics.Classes Basics.Utf8.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Universe Minimization ToSet</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** * Predicates on types *)</span>
+
+<span class="sd">(** We use the words &quot;predicate&quot; and &quot;(type) family&quot; interchangably to mean something of type [A -&gt; Type]. *)</span>
+
+<span class="sd">(** ** Predicate equality *)</span>
+
+<span class="sd">(** Two predicates are considered &quot;equal&quot; if they are pointwise logically equivalent: [forall a, P a &lt;-&gt; Q a]. We express this with [relation_pointwise] to ease typeclass search. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">pred_eq</span> {<span class="nv">A</span> : <span class="kt">Type</span>} := relation_pointwise (<span class="kr">fun</span> <span class="nv">_</span> : A =&gt; iff).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** It follows from [reflexive_pointwise], [transitive_pointwise] and [symmetric_pointwise] that [pred_eq] is reflexive, transitive and symmetric. *)</span>
+
+<span class="sd">(** ** Subsets of a predicate *)</span>
+
+<span class="sd">(** A predicate [P] is a &quot;subset&quot; of a predicate [Q] if [forall a, P a -&gt; Q a]. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">pred_subset</span> {<span class="nv">A</span> : <span class="kt">Type</span>} := relation_pointwise (<span class="kr">fun</span> (<span class="nv">_</span> : A) =&gt; (-&gt;)).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** *** Predicate Notations *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Declare Scope</span> predicate_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> predicate_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Infix</span> <span class="s2">&quot;⊆&quot;</span> := pred_subset : predicate_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Infix</span> <span class="s2">&quot;↔&quot;</span> := pred_eq     : predicate_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** *** Properties of subsets *)</span>
+
+<span class="sd">(** It follows from [reflexive_pointwise] and [transitive_pointwise] that [pred_subset] is reflexive and transitive. *)</span>
+
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Coercion</span> <span class="nf">pred_subset_pred_eq</span> {A : <span class="kt">Type</span>} (P Q : A -&gt; <span class="kt">Type</span>)
+  : P ↔ Q -&gt; P ⊆ Q
+  := <span class="kr">fun</span> <span class="nv">p</span> <span class="nv">x</span> =&gt; fst (p x).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">pred_subset_pred_eq&#39;</span> {<span class="nv">A</span> : <span class="kt">Type</span>} (<span class="nv">P</span> <span class="nv">Q</span> : A -&gt; <span class="kt">Type</span>)
+  : P ↔ Q -&gt; Q ⊆ P
+  := <span class="kr">fun</span> <span class="nv">p</span> <span class="nv">x</span> =&gt; snd (p x).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** The subset relation is antisymmetric. Note that this isn&#39;t [Antisymmetry] as defined in [Basics.Classes] since we get a [pred_eq] rather than a path. Under being a hprop and univalance, we would get a path. *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="predicate-v-chk1" style="display: none" type="checkbox"><label class="alectryon-input" for="predicate-v-chk1"><span class="kn">Definition</span> <span class="nf">pred_subset_antisymm</span> {<span class="nv">A</span> : <span class="kt">Type</span>} {<span class="nv">P</span> <span class="nv">Q</span> : A -&gt; <span class="kt">Type</span>}
+  : P ⊆ Q -&gt; Q ⊆ P -&gt; P ↔ Q.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>P, Q</var><span class="hyp-type"><b>: </b><span>A -&gt; <span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">P ⊆ Q -&gt; Q ⊆ P -&gt; P ↔ Q</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="predicate-v-chk2" style="display: none" type="checkbox"><label class="alectryon-input" for="predicate-v-chk2"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>P, Q</var><span class="hyp-type"><b>: </b><span>A -&gt; <span class="kt">Type</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">P ⊆ Q -&gt; Q ⊆ P -&gt; P ↔ Q</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">intros</span> p q x; <span class="nb">specialize</span> (p x); <span class="nb">specialize</span> (q x); <span class="bp">by</span> <span class="nb">split</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">pred_subset_precomp</span> {<span class="nv">A</span> <span class="nv">B</span> : <span class="kt">Type</span>} {<span class="nv">P</span> <span class="nv">Q</span> : B -&gt; <span class="kt">Type</span>} (<span class="nv">f</span> : A -&gt; B)
+  : P ⊆ Q -&gt; (P o f) ⊆ (Q o f)
+  := pointwise_precomp _ f P Q.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">pred_subset_postcomp</span> {<span class="nv">A</span> : <span class="kt">Type</span>} {<span class="nv">P</span> <span class="nv">Q</span> : A -&gt; <span class="kt">Type</span>}
+  (<span class="nv">F</span> : <span class="kt">Type</span> -&gt; <span class="kt">Type</span>) (<span class="nv">f</span> : <span class="kr">forall</span> {<span class="nv">X</span> <span class="nv">Y</span>}, (X -&gt; Y) -&gt; F X -&gt; F Y) (<span class="nv">p</span> : P ⊆ Q)
+  : (F o P) ⊆ (F o Q)
+  := <span class="kr">fun</span> <span class="nv">x</span> =&gt; f (p x).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">pred_subset_moveL_equiv</span> {<span class="nv">A</span> <span class="nv">B</span> : <span class="kt">Type</span>} {<span class="nv">P</span> : B -&gt; <span class="kt">Type</span>} {<span class="nv">Q</span> : A -&gt; <span class="kt">Type</span>}
+  (<span class="nv">f</span> : B &lt;~&gt; A)
+  : (P o f^-<span class="mi">1</span>) ⊆ Q -&gt; P ⊆ (Q o f)
+  := pointwise_moveL_equiv _ f P Q.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">pred_subset_moveR_equiv</span> {<span class="nv">A</span> <span class="nv">B</span> : <span class="kt">Type</span>} {<span class="nv">P</span> : B -&gt; <span class="kt">Type</span>} {<span class="nv">Q</span> : A -&gt; <span class="kt">Type</span>}
+  (<span class="nv">f</span> : A &lt;~&gt; B)
+  : P ⊆ (Q o f^-<span class="mi">1</span>) -&gt; (P o f) ⊆ Q
+  := pointwise_moveR_equiv _ f P Q.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">OperationsAndIdentities</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+<span class="sd">(** ** Operations on predicates *)</span>
+
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Context</span> {<span class="nv">A</span> : <span class="kt">Type</span>}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Notation</span> <span class="nf">Pred</span> := (A -&gt; <span class="kt">Type</span>).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">pred_and</span> (<span class="nv">P</span> <span class="nv">Q</span> : Pred) : Pred
+    := <span class="kr">fun</span> <span class="nv">a</span> =&gt; P a /\ Q a.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">pred_or</span> (<span class="nv">P</span> <span class="nv">Q</span> : Pred) : Pred
+    := <span class="kr">fun</span> <span class="nv">a</span> =&gt; P a + Q a.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** ** True and false predicates *)</span>
+
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">pred_unit</span> : Pred
+    := <span class="kr">fun</span> <span class="nv">_</span> =&gt; Unit.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">pred_empty</span> : Pred
+    := <span class="kr">fun</span> <span class="nv">_</span> =&gt; Empty.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** ** Relationships between predicates *)</span>
+
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">pred_empty_subset</span> (<span class="nv">P</span> : Pred) : pred_empty ⊆ P
+    := <span class="kr">fun</span> <span class="nv">_</span> =&gt; Empty_rec _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">pred_unit_subset</span> (<span class="nv">P</span> : Pred) : P ⊆ pred_unit
+    := <span class="kr">fun</span> <span class="nv">_</span> <span class="nv">_</span> =&gt; tt.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">pred_and_subset_l</span> (<span class="nv">P</span> <span class="nv">Q</span> : Pred) : pred_and P Q ⊆ P
+    := <span class="kr">fun</span> <span class="nv">_</span> =&gt; fst.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">pred_and_subset_r</span> (<span class="nv">P</span> <span class="nv">Q</span> : Pred) : pred_and P Q ⊆ Q
+    := <span class="kr">fun</span> <span class="nv">_</span> =&gt; snd.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">pred_and_is_meet</span> (<span class="nv">P</span> <span class="nv">Q</span> <span class="nv">R</span> : Pred) (<span class="nv">p</span> : R ⊆ P) (<span class="nv">q</span> : R ⊆ Q)
+    : R ⊆ pred_and P Q
+    := <span class="kr">fun</span> <span class="nv">a</span> <span class="nv">r</span> =&gt; ((p a r), (q a r)).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">pred_and_comm&#39;</span> (<span class="nv">P</span> <span class="nv">Q</span> : Pred)
+    : pred_and P Q ⊆ pred_and Q P
+    := <span class="kr">fun</span> <span class="nv">a</span> <span class="nv">pq</span> =&gt; (snd pq, fst pq).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">pred_and_comm</span> (<span class="nv">P</span> <span class="nv">Q</span> : Pred)
+    : pred_and P Q ↔ pred_and Q P
+    := pred_subset_antisymm (pred_and_comm&#39; P Q) (pred_and_comm&#39; Q P).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">pred_or_is_join</span> (<span class="nv">P</span> <span class="nv">Q</span> <span class="nv">R</span> : Pred) (<span class="nv">p</span> : P ⊆ R) (<span class="nv">q</span> : Q ⊆ R)
+    : pred_or P Q ⊆ R
+    := <span class="kr">fun</span> <span class="nv">a</span> <span class="nv">pq</span> =&gt; <span class="kr">match</span> pq <span class="kr">with</span>
+                 | inl l =&gt; p a l
+                 | inr r =&gt; q a r <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">pred_or_comm&#39;</span> (<span class="nv">P</span> <span class="nv">Q</span> : Pred)
+    : pred_or P Q ⊆ pred_or Q P
+    := <span class="kr">fun</span> <span class="nv">a</span> <span class="nv">pq</span> =&gt; <span class="kr">match</span> pq <span class="kr">with</span>
+                 | inl p =&gt; inr p
+                 | inr q =&gt; inl q <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">pred_or_comm</span> (<span class="nv">P</span> <span class="nv">Q</span> : Pred)
+    : pred_or P Q ↔ pred_or Q P
+    := pred_subset_antisymm (pred_or_comm&#39; P Q) (pred_or_comm&#39; Q P).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="predicate-v-chk3" style="display: none" type="checkbox"><label class="alectryon-input" for="predicate-v-chk3"><span class="kn">Definition</span> <span class="nf">pred_and_unit_l</span> (<span class="nv">P</span> : Pred) : pred_and pred_unit P ↔ P.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>Pred</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">pred_and pred_unit P ↔ P</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="predicate-v-chk4" style="display: none" type="checkbox"><label class="alectryon-input" for="predicate-v-chk4"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>Pred</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">pred_and pred_unit P ↔ P</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="predicate-v-chk5" style="display: none" type="checkbox"><label class="alectryon-input" for="predicate-v-chk5"><span class="nb">apply</span> pred_subset_antisymm.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>Pred</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">pred_and pred_unit P ⊆ P</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="predicate-v-chk6" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>Pred</span></span></span><br></div><label class="goal-separator" for="predicate-v-chk6"><hr></label><div class="goal-conclusion">P ⊆ pred_and pred_unit P</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="predicate-v-chk7" style="display: none" type="checkbox"><label class="alectryon-input" for="predicate-v-chk7"><span class="mi">1</span>: <span class="nb">apply</span> pred_and_subset_r.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>Pred</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">P ⊆ pred_and pred_unit P</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="predicate-v-chk8" style="display: none" type="checkbox"><label class="alectryon-input" for="predicate-v-chk8"><span class="nb">apply</span> pred_and_is_meet.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>Pred</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">P ⊆ pred_unit</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="predicate-v-chk9" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>Pred</span></span></span><br></div><label class="goal-separator" for="predicate-v-chk9"><hr></label><div class="goal-conclusion">P ⊆ P</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="predicate-v-chka" style="display: none" type="checkbox"><label class="alectryon-input" for="predicate-v-chka">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>Pred</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">P ⊆ pred_unit</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">apply</span> pred_unit_subset.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="predicate-v-chkb" style="display: none" type="checkbox"><label class="alectryon-input" for="predicate-v-chkb">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>Pred</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">P ⊆ P</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">reflexivity</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="predicate-v-chkc" style="display: none" type="checkbox"><label class="alectryon-input" for="predicate-v-chkc"><span class="kn">Definition</span> <span class="nf">pred_and_unit_r</span> (<span class="nv">P</span> : Pred) : pred_and P pred_unit ↔ P.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>Pred</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">pred_and P pred_unit ↔ P</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="predicate-v-chkd" style="display: none" type="checkbox"><label class="alectryon-input" for="predicate-v-chkd"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>Pred</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">pred_and P pred_unit ↔ P</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="predicate-v-chke" style="display: none" type="checkbox"><label class="alectryon-input" for="predicate-v-chke"><span class="nb">apply</span> pred_subset_antisymm.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>Pred</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">pred_and P pred_unit ⊆ P</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="predicate-v-chkf" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>Pred</span></span></span><br></div><label class="goal-separator" for="predicate-v-chkf"><hr></label><div class="goal-conclusion">P ⊆ pred_and P pred_unit</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="predicate-v-chk10" style="display: none" type="checkbox"><label class="alectryon-input" for="predicate-v-chk10"><span class="mi">1</span>: <span class="nb">apply</span> pred_and_subset_l.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>Pred</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">P ⊆ pred_and P pred_unit</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="predicate-v-chk11" style="display: none" type="checkbox"><label class="alectryon-input" for="predicate-v-chk11"><span class="nb">apply</span> pred_and_is_meet.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>Pred</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">P ⊆ P</div></blockquote><div class="alectryon-extra-goals"><input class="alectryon-extra-goal-toggle" id="predicate-v-chk12" style="display: none" type="checkbox"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>Pred</span></span></span><br></div><label class="goal-separator" for="predicate-v-chk12"><hr></label><div class="goal-conclusion">P ⊆ pred_unit</div></blockquote></div></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="predicate-v-chk13" style="display: none" type="checkbox"><label class="alectryon-input" for="predicate-v-chk13">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>Pred</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">P ⊆ P</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">reflexivity</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="predicate-v-chk14" style="display: none" type="checkbox"><label class="alectryon-input" for="predicate-v-chk14">-</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span><span class="kt">Type</span></span></span></span><br><span><var>P</var><span class="hyp-type"><b>: </b><span>Pred</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">P ⊆ pred_unit</div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">apply</span> pred_unit_subset.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Defined</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">OperationsAndIdentities</span>.</span></span></pre>
+</div>
+</div></body>
+</html>

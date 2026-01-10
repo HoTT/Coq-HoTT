@@ -1,0 +1,5890 @@
+<html>
+<head>
+<title>Syllepsis.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Syllepsis.v</h1>
+
+<div class="code" title="File: Syllepsis.v
+Line: 1
+Time: 0.037s">
+<div class="time" style="width: 3.5542747358309%"></div>
+<pre>From HoTT Require Import Basics Types.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Vertical composition of squares *)</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section concat_square_vert.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {X : Type}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** 0-paths *)
+ </pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Context {a0 b0 c0 : X}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {a1 b1 c1 : X}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 9
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** 1-paths *)
+ </pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Context {a01 : a0 = a1}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {b01 : b0 = b1}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {c01 : c0 = c1}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {ab0 : a0 = b0}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {ab1 : a1 = b1}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {bc0 : b0 = c0}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {bc1 : b1 = c1}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** 2-paths *)
+ </pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Context (p : ab0 @ b01 = a01 @ ab1).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context (q : bc0 @ c01 = b01 @ bc1).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Definition concat_square_vert :
+    (ab0 @ bc0) @ c01 = a01 @ (ab1 @ bc1).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (concat_pp_p _ _ _ @ _).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (whiskerL _ q @ _).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (concat_p_pp _ _ _ @ _).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (whiskerR p _ @ _).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply concat_pp_p.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End concat_square_vert.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Infix "[-]" := (concat_square_vert) (at level 60).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Horizontal composition of squares *)</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section concat_square_hor.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {X : Type}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** 0-paths *)
+ </pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Context {a0 b0 c0 : X}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {a1 b1 c1 : X}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** 1-paths *)
+ </pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Context {a01 : a0 = a1}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {b01 : b0 = b1}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {c01 : c0 = c1}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {ab0 : a0 = b0}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {ab1 : a1 = b1}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {bc0 : b0 = c0}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {bc1 : b1 = c1}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** 2-paths *)
+ </pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Context (p : a01 @ ab1 = ab0 @ b01).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context (q : b01 @ bc1 = bc0 @ c01).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Definition concat_square_hor :
+    a01 @ (ab1 @ bc1) = (ab0 @ bc0) @ c01.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (concat_p_pp _ _ _ @ _).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (whiskerR p _ @ _).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (concat_pp_p _ _ _ @ _).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (whiskerL _ q @ _).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply concat_p_pp.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End concat_square_hor.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Infix "[I]" := (concat_square_hor) (at level 60).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We will frequently use the following equivalences. *)</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition rlucancel {X} {a b : X} {p q : a = b} :
+  (p = q) &lt;~&gt; (p @ 1 = 1 @ q).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (equiv_compose' _ _).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (equiv_concat_r (concat_1p _)^ _).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (equiv_concat_l (concat_p1 _) _).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 83
+Time: 0.002s">
+<div class="time" style="width: 0.19212295869356%"></div>
+<pre>
+
+Definition rlucancel_inv {X} {a b : X} {p q : a = b} := (@rlucancel X a b p q)^-1.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition lrucancel {X} {a b : X} {p q : a = b} :
+  (p = q) &lt;~&gt; (1 @ p = q @ 1).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (equiv_compose' _ _).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (equiv_concat_r (concat_p1 _)^ _).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (equiv_concat_l (concat_1p _) _).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** This special case of [equiv_path_ind] comes up a lot. *)</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 95
+Time: 0.001s">
+<div class="time" style="width: 0.096061479346782%"></div>
+<pre>Definition equiv_path_ind_rlucancel {X} (a b : X) (p : a = b)
+           (P : forall (q : a = b), p @ 1 = 1 @ q -&gt; Type)
+           (r : P p (rlucancel 1))
+  : forall (q : a = b) (s : p @ 1 = 1 @ q), P q s.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 99
+Time: 0.001s">
+<div class="time" style="width: 0.096061479346782%"></div>
+<pre>
+  snapply (equiv_path_ind (fun _ =&gt; rlucancel)).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact r.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** This special case of [equiv_path_ind] comes up a lot. *)</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 104
+Time: 0.001s">
+<div class="time" style="width: 0.096061479346782%"></div>
+<pre>Definition equiv_path_ind_lrucancel {X} (a b : X) (p : a = b)
+           (P : forall (q : a = b), 1 @ p = q @ 1 -&gt; Type)
+           (r : P p (lrucancel 1))
+  : forall (q : a = b) (s : 1 @ p = q @ 1), P q s.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 108
+Time: 0.001s">
+<div class="time" style="width: 0.096061479346782%"></div>
+<pre>
+  snapply (equiv_path_ind (fun _ =&gt; lrucancel)).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact r.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Interaction of the above equivalences with square composition. *)</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 113
+Time: 0.003s">
+<div class="time" style="width: 0.28818443804035%"></div>
+<pre>Definition rlucancel_sVs_1_pp {X} {a b c : X} {p : a = b} {q : b = c} {r} (theta : p @ q = r) :
+  (rlucancel 1 [-] rlucancel 1) @ whiskerL _ theta = whiskerR theta _ @ (rlucancel 1).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 115
+Time: 0.002s">
+<div class="time" style="width: 0.19212295869356%"></div>
+<pre>
+  by destruct theta, p, q.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 116
+Time: 0.002s">
+<div class="time" style="width: 0.19212295869356%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 117
+Time: 0.003s">
+<div class="time" style="width: 0.28818443804035%"></div>
+<pre>
+
+Definition lrucancel_sHs_1_pp {X} {a b c : X} {p : a = b} {q : b = c} {r} (theta : p @ q = r) :
+  (lrucancel 1 [I] lrucancel 1) @ whiskerR theta _ = whiskerL _ theta @ (lrucancel 1).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 121
+Time: 0.002s">
+<div class="time" style="width: 0.19212295869356%"></div>
+<pre>
+  by destruct theta, p, q.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 122
+Time: 0.002s">
+<div class="time" style="width: 0.19212295869356%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 123
+Time: 0.001s">
+<div class="time" style="width: 0.096061479346782%"></div>
+<pre>
+
+Definition rlucancel_sHs_1 {X} {a b : X} (p : a = b) :
+  (rlucancel 1 [I] rlucancel 1) = rlucancel (idpath p).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 126
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by destruct p.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 128
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 129
+Time: 0.002s">
+<div class="time" style="width: 0.19212295869356%"></div>
+<pre>
+
+Definition lrucancel_sVs_1 {X} {a b : X} (p : a = b) :
+  (lrucancel 1 [-] lrucancel 1) = lrucancel (idpath p).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by destruct p.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 135
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Naturality of composition with 1. *)</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 137
+Time: 0.001s">
+<div class="time" style="width: 0.096061479346782%"></div>
+<pre>Definition ulnat {X} {a b : X} {u v : a = b} (p : u = v) :
+  whiskerL 1 p @ concat_1p v = concat_1p u @ p.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct p.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (lrucancel 1).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> 
+
+Definition urnat {X} {a b : X} {u v : a = b} (p : u = v) :
+  whiskerR p 1 @ concat_p1 v = concat_p1 u @ p.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 145
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct p.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 147
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (lrucancel 1).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 148
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Exchange law for whiskering on the left and on the right. *)</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 151
+Time: 0.001s">
+<div class="time" style="width: 0.096061479346782%"></div>
+<pre>Definition wlrnat {X} {a b c : X} {u v : a = b} {x y : b = c} p q :
+  whiskerL u p @ whiskerR q y = whiskerR q x @ whiskerL v p.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 152
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by destruct p, q.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 154
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 155
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Eckmann-Hilton.  This is also proved as [eckmann_hilton] in PathGroupoids.v, but we need this particular proof in order to prove the syllepsis. *)</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Theorem eh {X} {a : X} (p q : idpath a = idpath a) :
+  p @ q = q @ p.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_ @ rlucancel_inv (urnat q [-] ulnat p)).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine ((rlucancel_inv (ulnat p [-] urnat q))^ @ _).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (wlrnat p q).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 162
+Time: 0.001s">
+<div class="time" style="width: 0.096061479346782%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 163
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Eckmann-Hilton on reflexivity. *)</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 165
+Time: 0.005s">
+<div class="time" style="width: 0.48030739673391%"></div>
+<pre>Local Definition eh_1p_gen {X} {a b : X} {u v : a = b} (p : u = v) {q} (theta : whiskerR p 1 @ 1 = 1 @ q) :
+  (rlucancel_inv (1 [-] theta))^ @ wlrnat 1 p @ rlucancel_inv (theta [-] 1) @ concat_p1 q = concat_1p q.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 166
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert q theta.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 168
+Time: 0.004s">
+<div class="time" style="width: 0.38424591738713%"></div>
+<pre>
+  snapply equiv_path_ind_rlucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 169
+Time: 0.003s">
+<div class="time" style="width: 0.28818443804035%"></div>
+<pre>
+  by destruct p.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 170
+Time: 0.007s">
+<div class="time" style="width: 0.67243035542747%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 171
+Time: 0.001s">
+<div class="time" style="width: 0.096061479346782%"></div>
+<pre>
+
+Definition eh_1p {X} {a : X} (p : idpath a = idpath a) :
+  eh 1 p @ concat_p1 p = concat_1p p.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 174
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 175
+Time: 0.001s">
+<div class="time" style="width: 0.096061479346782%"></div>
+<pre>
+  exact (eh_1p_gen p (urnat p)).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 176
+Time: 0.001s">
+<div class="time" style="width: 0.096061479346782%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 177
+Time: 0.005s">
+<div class="time" style="width: 0.48030739673391%"></div>
+<pre>
+
+Local Definition eh_p1_gen {X} {a b : X} {u v : a = b} (p : u = v) {q} (theta : whiskerL 1 p @ 1 = 1 @ q) :
+  (rlucancel_inv (theta [-] 1))^ @ wlrnat p 1 @ rlucancel_inv (1 [-] theta) @ concat_1p q = concat_p1 q.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 180
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 181
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert q theta.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 182
+Time: 0.004s">
+<div class="time" style="width: 0.38424591738713%"></div>
+<pre>
+  snapply equiv_path_ind_rlucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 183
+Time: 0.004s">
+<div class="time" style="width: 0.38424591738713%"></div>
+<pre>
+  by destruct p.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 184
+Time: 0.007s">
+<div class="time" style="width: 0.67243035542747%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition eh_p1 {X} {a : X} (p : idpath a = idpath a) :
+  eh p 1 @ concat_1p p = concat_p1 p.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 189
+Time: 0.001s">
+<div class="time" style="width: 0.096061479346782%"></div>
+<pre>
+  exact (eh_p1_gen p (ulnat p)).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 190
+Time: 0.016s">
+<div class="time" style="width: 1.5369836695485%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 191
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Naturality of Eckmann-Hilton. *)</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 193
+Time: 0.001s">
+<div class="time" style="width: 0.096061479346782%"></div>
+<pre>Definition ehlnat {X} {a : X} (u : idpath a = idpath a) {x y} (p : x = y) :
+  whiskerL u p @ eh u y = eh u x @ whiskerR p u.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 194
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct p.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (lrucancel 1).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 198
+Time: 0.001s">
+<div class="time" style="width: 0.096061479346782%"></div>
+<pre>
+
+Definition ehrnat {X} {a : X} {u v} (p : u = v) (x : idpath a = idpath a) :
+  whiskerR p x @ eh v x = eh u x @ whiskerL x p.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 201
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 202
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct p.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 203
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (lrucancel 1).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 204
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 205
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Naturality of Eckmann-Hilton when the fixed path is 1. *)</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 207
+Time: 0.005s">
+<div class="time" style="width: 0.48030739673391%"></div>
+<pre>Definition ehlnat_1p {X} {a : X} {u v : idpath a = idpath a} (p : u = v) :
+  (ehlnat 1 p [I] urnat p) @ whiskerR (eh_1p u) _ = whiskerL _ (eh_1p v) @ ulnat p.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 209
+Time: 0.002s">
+<div class="time" style="width: 0.19212295869356%"></div>
+<pre>
+  destruct p.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 210
+Time: 0.001s">
+<div class="time" style="width: 0.096061479346782%"></div>
+<pre>
+  apply lrucancel_sHs_1_pp.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 211
+Time: 0.004s">
+<div class="time" style="width: 0.38424591738713%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 212
+Time: 0.005s">
+<div class="time" style="width: 0.48030739673391%"></div>
+<pre>
+
+Definition ehrnat_p1 {X} {a : X} {u v : idpath a = idpath a} (p : u = v) :
+  (ehrnat p 1 [I] ulnat p) @ whiskerR (eh_p1 u) _ = whiskerL _ (eh_p1 v) @ urnat p.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 215
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 216
+Time: 0.002s">
+<div class="time" style="width: 0.19212295869356%"></div>
+<pre>
+  destruct p.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 217
+Time: 0.044s">
+<div class="time" style="width: 4.2267050912584%"></div>
+<pre>
+  apply lrucancel_sHs_1_pp.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 218
+Time: 0.004s">
+<div class="time" style="width: 0.38424591738713%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 219
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* These lemmas should probably be in the library in some form. *)</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 221
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Definition concat_p_pp_pp_p {A} {u v x y : A} (p : u = v) (q : v = x) (r : x = y) :
+  concat_p_pp p q r @ concat_pp_p p q r = 1.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 222
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 223
+Time: 0.001s">
+<div class="time" style="width: 0.096061479346782%"></div>
+<pre>
+  by destruct p, q, r.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 224
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Definition concat_pp_p_p_pp {A} {u v x y : A} (p : u = v) (q : v = x) (r : x = y) :
+  concat_pp_p p q r @ concat_p_pp p q r = 1.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 229
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by destruct p, q, r.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 230
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 231
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* These lemmas are in the library but with worse computational behavior. *)</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 233
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Definition whiskerL_pp {A} {a b c : A} (u : a = b) {v w z : b = c} (p : v = w) (q : w = z) :
+  whiskerL u (p @ q) = whiskerL u p @ whiskerL u q.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 234
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 235
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by destruct p, q.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 236
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 237
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Definition whiskerR_pp {A} {a b c : A} {u v w : a = b} (z : b = c) (p : u = v) (q : v = w) :
+  whiskerR (p @ q) z = whiskerR p z @ whiskerR q z.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 240
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 241
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by destruct p, q.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 242
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 243
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We now prove that [ulnat (p @ q)] suitably relates to [ulnat p] and [ulnat q]. *)</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 245
+Time: 0.003s">
+<div class="time" style="width: 0.28818443804035%"></div>
+<pre>Definition ulnat_pp {X} {a b : X} {u v w : a = b} (p : u = v) (q : v = w) :
+  ulnat p [-] ulnat q = whiskerR (whiskerL_pp _ p q)^ _ @ ulnat (p @ q).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 246
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 247
+Time: 0.004s">
+<div class="time" style="width: 0.38424591738713%"></div>
+<pre>
+  by destruct p, q, u.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 248
+Time: 0.004s">
+<div class="time" style="width: 0.38424591738713%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 249
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We now prove that [urnat (p @ q)] suitably relates to [urnat p] and [urnat q]. *)</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 251
+Time: 0.003s">
+<div class="time" style="width: 0.28818443804035%"></div>
+<pre>Definition urnat_pp {X} {a b : X} {u v w : a = b} (p : u = v) (q : v = w) :
+  urnat p [-] urnat q = whiskerR (whiskerR_pp _ p q)^ _ @ urnat (p @ q).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 252
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 253
+Time: 0.003s">
+<div class="time" style="width: 0.28818443804035%"></div>
+<pre>
+  by destruct p, q, u.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 254
+Time: 0.004s">
+<div class="time" style="width: 0.38424591738713%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 255
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We now prove that [ehlnat u (p @ q)] suitably relates to [ehlnat u p] and [ehlnat u q]. *)</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 257
+Time: 0.01s">
+<div class="time" style="width: 0.96061479346782%"></div>
+<pre>Definition ehlnat_pp {X} {a : X} (u : idpath a = idpath a) {v w : idpath a = idpath a} (p : v = 1) (q : 1 = w) :
+  (ehlnat u p [-] ehlnat u q) @ whiskerL _ (whiskerR_pp _ p q)^ =
+  (whiskerR (whiskerL_pp _ p q)^ _) @ ehlnat u (p @ q).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 259
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 260
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert v p.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 261
+Time: 0.003s">
+<div class="time" style="width: 0.28818443804035%"></div>
+<pre>
+  snapply (equiv_path_ind (equiv_path_inverse _)).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 262
+Time: 0.003s">
+<div class="time" style="width: 0.28818443804035%"></div>
+<pre>
+  destruct q.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 263
+Time: 0.003s">
+<div class="time" style="width: 0.28818443804035%"></div>
+<pre>
+  apply rlucancel, lrucancel_sVs_1.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 264
+Time: 0.017s">
+<div class="time" style="width: 1.6330451488953%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 265
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We now prove that [ehrnat (p @ q) w] suitably relates to [ehrnat p w] and [ehrnat q w]. *)</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 267
+Time: 0.008s">
+<div class="time" style="width: 0.76849183477426%"></div>
+<pre>Definition ehrnat_pp {X} {a : X} {u v : idpath a = idpath a} (p : u = 1) (q : 1 = v) (w : idpath a = idpath a) :
+  (ehrnat p w [-] ehrnat q w) @ whiskerL _ (whiskerL_pp _ p q)^ =
+  (whiskerR (whiskerR_pp _ p q)^ _) @ ehrnat (p @ q) w.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 269
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 270
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert u p.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 271
+Time: 0.006s">
+<div class="time" style="width: 0.57636887608069%"></div>
+<pre>
+  snapply (equiv_path_ind (equiv_path_inverse _)).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 272
+Time: 0.003s">
+<div class="time" style="width: 0.28818443804035%"></div>
+<pre>
+  destruct q.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 273
+Time: 0.026s">
+<div class="time" style="width: 2.4975984630163%"></div>
+<pre>
+  cbn.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 274
+Time: 0.066s">
+<div class="time" style="width: 6.3400576368876%"></div>
+<pre>
+  apply rlucancel, lrucancel_sVs_1.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 275
+Time: 0.057s">
+<div class="time" style="width: 5.4755043227666%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 276
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We now prove that [wlrnat p (q @ r)] suitably relates to [wlrnat p q] and [wlrnat q p]. *)</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 278
+Time: 0.006s">
+<div class="time" style="width: 0.57636887608069%"></div>
+<pre>Definition wlrnat_p_pp {X} {a b c : X} {u v w : a = b} {x y : b = c} (p : x = y) (q : u = v) (r : v = w) :
+  (wlrnat p q [I] wlrnat p r) @ whiskerR (whiskerR_pp _ q r)^ _ =
+  whiskerL _ (whiskerR_pp _ q r)^ @ wlrnat p (q @ r).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 280
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 281
+Time: 0.005s">
+<div class="time" style="width: 0.48030739673391%"></div>
+<pre>
+  by destruct p, q, r.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 282
+Time: 0.005s">
+<div class="time" style="width: 0.48030739673391%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 283
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We now prove that [wlrnat (p @ q) r] suitably relates to [wlrnat p r] and [wlrnat q r]. *)</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 285
+Time: 0.006s">
+<div class="time" style="width: 0.57636887608069%"></div>
+<pre>Definition wlrnat_pp_p {X} {a b c : X} {u v : a = b} {x y z : b = c} (p : x = y) (q : y = z) (r : u = v) :
+  (wlrnat p r [-] wlrnat q r) @ whiskerL _ (whiskerL_pp _ p q)^ =
+  whiskerR (whiskerL_pp _ p q)^ _ @ wlrnat (p @ q) r.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 287
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 288
+Time: 0.005s">
+<div class="time" style="width: 0.48030739673391%"></div>
+<pre>
+  by destruct p, q, r.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 289
+Time: 0.006s">
+<div class="time" style="width: 0.57636887608069%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 290
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We now prove that [wrlnat p q] suitably relates to [wlrnat q p]. *)</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 292
+Time: 0.013s">
+<div class="time" style="width: 1.2487992315082%"></div>
+<pre>Definition wlrnat_V {X} {a : X} {u v x y : idpath a = idpath a} p q :
+  whiskerR (wlrnat p q) (eh v y) @ (ehrnat q x [-] ehlnat v p) =
+  (ehlnat u p [-] ehrnat q y) @ whiskerL (eh u x) (wlrnat q p)^.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 294
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 295
+Time: 0.007s">
+<div class="time" style="width: 0.67243035542747%"></div>
+<pre>
+  destruct p, q.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 296
+Time: 0.022s">
+<div class="time" style="width: 2.1133525456292%"></div>
+<pre>
+  exact (lrucancel 1).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 297
+Time: 0.033s">
+<div class="time" style="width: 3.1700288184438%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 298
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Coherence #1: We now prove that [eh p (q @ r)] suitably relates to [eh p q] and [eh p r]. *)</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 300
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section eh_p_pp.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 300
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {X : Type}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 302
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (* 0-paths *)
+ </pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 305
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Context {a b c d e f : X}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 305
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (* 1-paths *)
+ </pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 308
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Context {wlx0 x0 : a = b}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 308
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {wlx1 x1 : c = d}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 309
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {wlx2 x2 : e = f}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 310
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {wry0 y0 : b = d}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 312
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {wry1 y1 : a = c}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 313
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {wrz0 z0 : d = f}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 315
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {wrz1 z1 : c = e}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 316
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {wryz0 : b = f}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 318
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {wryz1 : a = e}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 319
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (* 2-paths *)
+ </pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 322
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Context {ulnat_x0 : wlx0 @ 1 = 1 @ x0}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 322
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {ulnat_x1 : wlx1 @ 1 = 1 @ x1}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 323
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {ulnat_x2 : wlx2 @ 1 = 1 @ x2}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 324
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {urnat_y0 : wry0 @ 1 = 1 @ y0}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 326
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {urnat_y1 : wry1 @ 1 = 1 @ y1}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 327
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {urnat_z0 : wrz0 @ 1 = 1 @ z0}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 329
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {urnat_z1 : wrz1 @ 1 = 1 @ z1}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 330
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {urnat_yz0 : wryz0 @ 1 = 1 @ (y0 @ z0)}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 332
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {urnat_yz1 : wryz1 @ 1 = 1 @ (y1 @ z1)}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 333
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {wlrnat_x_y : wlx0 @ wry0 = wry1 @ wlx1}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 335
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {wlrnat_x_z : wlx1 @ wrz0 = wrz1 @ wlx2}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 336
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {wlrnat_x_yz : wlx0 @ wryz0 = wryz1 @ wlx2}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 337
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {wrpp_yz0 : wry0 @ wrz0 = wryz0}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 339
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {wrpp_yz1 : wry1 @ wrz1 = wryz1}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 340
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (* 3-paths *)
+ </pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 343
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Hypothesis H_urnat_yz0 :
+    (urnat_y0 [-] urnat_z0) = whiskerR wrpp_yz0 _ @ urnat_yz0.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 344
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Hypothesis H_urnat_yz1 :
+    (urnat_y1 [-] urnat_z1) = whiskerR wrpp_yz1 _ @ urnat_yz1.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 347
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Hypothesis H_wlrnat_x_yz :
+    (wlrnat_x_y [I] wlrnat_x_z) @ whiskerR wrpp_yz1 _ =
+    whiskerL _ wrpp_yz0 @ wlrnat_x_yz.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 351
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (* the coherence *)
+ </pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 354
+Time: 0.012s">
+<div class="time" style="width: 1.1527377521614%"></div>
+<pre>Definition eh_p_pp_gen :
+    let EH_x_y := (rlucancel_inv (ulnat_x0 [-] urnat_y0))^ @
+      wlrnat_x_y @ rlucancel_inv (urnat_y1 [-] ulnat_x1) in
+    let EH_x_z := (rlucancel_inv (ulnat_x1 [-] urnat_z0))^ @
+      wlrnat_x_z @ rlucancel_inv (urnat_z1 [-] ulnat_x2) in
+    let EH_x_yz := (rlucancel_inv (ulnat_x0 [-] urnat_yz0))^ @
+      wlrnat_x_yz @ rlucancel_inv (urnat_yz1 [-] ulnat_x2) in
+    EH_x_yz @ (concat_pp_p _ _ _ @ whiskerL _ EH_x_z^) =
+    concat_p_pp _ _ _ @ whiskerR EH_x_y _ @ concat_pp_p _ _ _.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 362
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 363
+Time: 0.001s">
+<div class="time" style="width: 0.096061479346782%"></div>
+<pre>
+    apply moveR_Vp in H_urnat_yz0, H_urnat_yz1, H_wlrnat_x_yz.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 364
+Time: 0.019s">
+<div class="time" style="width: 1.8251681075889%"></div>
+<pre>
+    destruct H_urnat_yz0, H_urnat_yz1, H_wlrnat_x_yz.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 365
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    clear H_urnat_yz0 H_urnat_yz1 H_wlrnat_x_yz.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 366
+Time: 0.011s">
+<div class="time" style="width: 1.0566762728146%"></div>
+<pre>
+    destruct wrpp_yz0, wrpp_yz1.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 367
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    clear wrpp_yz0 wrpp_yz1.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 368
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    revert x0 ulnat_x0.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 369
+Time: 0.003s">
+<div class="time" style="width: 0.28818443804035%"></div>
+<pre>
+    snapply equiv_path_ind_rlucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 370
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    revert x1 ulnat_x1.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 371
+Time: 0.003s">
+<div class="time" style="width: 0.28818443804035%"></div>
+<pre>
+    snapply equiv_path_ind_rlucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 372
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    revert x2 ulnat_x2.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 373
+Time: 0.003s">
+<div class="time" style="width: 0.28818443804035%"></div>
+<pre>
+    snapply equiv_path_ind_rlucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 374
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    revert y0 urnat_y0.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 375
+Time: 0.003s">
+<div class="time" style="width: 0.28818443804035%"></div>
+<pre>
+    snapply equiv_path_ind_rlucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 376
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    revert y1 urnat_y1.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 377
+Time: 0.005s">
+<div class="time" style="width: 0.48030739673391%"></div>
+<pre>
+    snapply equiv_path_ind_rlucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 378
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    revert z0 urnat_z0.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 379
+Time: 0.003s">
+<div class="time" style="width: 0.28818443804035%"></div>
+<pre>
+    snapply equiv_path_ind_rlucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 380
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    revert z1 urnat_z1.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 381
+Time: 0.003s">
+<div class="time" style="width: 0.28818443804035%"></div>
+<pre>
+    snapply equiv_path_ind_rlucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 382
+Time: 0.026s">
+<div class="time" style="width: 2.4975984630163%"></div>
+<pre>
+    destruct wry0, wry1, wrz0, wrz1.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 383
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    clear wry0 wry1 wrz0 wrz1.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 384
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    revert wlx2 wlrnat_x_z.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 385
+Time: 0.006s">
+<div class="time" style="width: 0.57636887608069%"></div>
+<pre>
+    snapply equiv_path_ind_rlucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 386
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    revert wlx1 wlrnat_x_y.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 387
+Time: 0.004s">
+<div class="time" style="width: 0.38424591738713%"></div>
+<pre>
+    snapply equiv_path_ind_rlucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 388
+Time: 0.007s">
+<div class="time" style="width: 0.67243035542747%"></div>
+<pre>
+    destruct wlx0.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 389
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    clear wlx0.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 390
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    reflexivity.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 391
+Time: 0.033s">
+<div class="time" style="width: 3.1700288184438%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 392
+Time: 0.019s">
+<div class="time" style="width: 1.8251681075889%"></div>
+<pre>
+
+End eh_p_pp.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 394
+Time: 0.003s">
+<div class="time" style="width: 0.28818443804035%"></div>
+<pre>
+
+Theorem eh_p_pp {X} {a : X} (p q r : idpath a = idpath a) :
+  eh p (q @ r) @ (concat_pp_p _ _ _ @ whiskerL _ (eh p r)^) =
+  concat_p_pp _ _ _ @ whiskerR (eh p q) _ @ concat_pp_p _ _ _.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 398
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 399
+Time: 0.004s">
+<div class="time" style="width: 0.38424591738713%"></div>
+<pre>
+  napply eh_p_pp_gen.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 400
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 401
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (urnat_pp q r).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 401
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 402
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (urnat_pp q r).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 402
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 403
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (wlrnat_p_pp p q r).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 403
+Time: 0.003s">
+<div class="time" style="width: 0.28818443804035%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 404
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* Coherence #1: We now prove that "eh (p @ q) r" suitably relates to "eh p r" and "eh q r". *)</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 406
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section eh_pp_p.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 406
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {X : Type}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 408
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (* 0-paths *)
+ </pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 411
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Context {a b c d e f : X}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 411
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (* 1-paths *)
+ </pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 414
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Context {wlx0 x0 : a = b}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 414
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {wlx1 x1 : d = e}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 415
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {wly0 y0 : b = c}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 417
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {wly1 y1 : e = f}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 418
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {wrz0 z0 : c = f}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 420
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {wrz1 z1 : b = e}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 421
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {wrz2 z2 : a = d}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 422
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {wlxy0 : a = c}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 424
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {wlxy1 : d = f}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 425
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (* 2-paths *)
+ </pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 428
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Context {ulnat_x0 : wlx0 @ 1 = 1 @ x0}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 428
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {ulnat_x1 : wlx1 @ 1 = 1 @ x1}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 429
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {ulnat_y0 : wly0 @ 1 = 1 @ y0}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 431
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {ulnat_y1 : wly1 @ 1 = 1 @ y1}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 432
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {urnat_z0 : wrz0 @ 1 = 1 @ z0}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 434
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {urnat_z1 : wrz1 @ 1 = 1 @ z1}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 435
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {urnat_z2 : wrz2 @ 1 = 1 @ z2}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 436
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {ulnat_xy0 : wlxy0 @ 1 = 1 @ (x0 @ y0)}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 438
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {ulnat_xy1 : wlxy1 @ 1 = 1 @ (x1 @ y1)}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 439
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {wlrnat_x_z : wlx0 @ wrz1 = wrz2 @ wlx1}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 441
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {wlrnat_y_z : wly0 @ wrz0 = wrz1 @ wly1}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 442
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {wlrnat_xy_z : wlxy0 @ wrz0 = wrz2 @ wlxy1}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 443
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {wlpp_xy0 : wlx0 @ wly0 = wlxy0}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 445
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {wlpp_xy1 : wlx1 @ wly1 = wlxy1}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 446
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (* 3-paths *)
+ </pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 449
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Hypothesis H_ulnat_xy0 :
+    (ulnat_x0 [-] ulnat_y0) = whiskerR wlpp_xy0 _ @ ulnat_xy0.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 450
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Hypothesis H_ulnat_xy1 :
+    (ulnat_x1 [-] ulnat_y1) = whiskerR wlpp_xy1 _ @ ulnat_xy1.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 453
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Hypothesis H_wlrnat_xy_z :
+    (wlrnat_x_z [-] wlrnat_y_z) @ whiskerL _ wlpp_xy1 =
+    whiskerR wlpp_xy0 _ @ wlrnat_xy_z.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 457
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (* the coherence *)
+ </pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 460
+Time: 0.015s">
+<div class="time" style="width: 1.4409221902017%"></div>
+<pre>Definition eh_pp_p_gen :
+    let EH_x_z := (rlucancel_inv (ulnat_x0 [-] urnat_z1))^ @
+      wlrnat_x_z @ rlucancel_inv (urnat_z2 [-] ulnat_x1) in
+    let EH_y_z := (rlucancel_inv (ulnat_y0 [-] urnat_z0))^ @
+      wlrnat_y_z @ rlucancel_inv (urnat_z1 [-] ulnat_y1) in
+    let EH_xy_z := (rlucancel_inv (ulnat_xy0 [-] urnat_z0))^ @
+      wlrnat_xy_z @ rlucancel_inv (urnat_z2 [-] ulnat_xy1) in
+    EH_xy_z @ (concat_p_pp _ _ _ @ whiskerR EH_x_z^ _) =
+    concat_pp_p _ _ _ @ whiskerL _ EH_y_z @ concat_p_pp _ _ _.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 468
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 469
+Time: 0.001s">
+<div class="time" style="width: 0.096061479346782%"></div>
+<pre>
+    apply moveR_Vp in H_ulnat_xy0, H_ulnat_xy1, H_wlrnat_xy_z.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 470
+Time: 0.019s">
+<div class="time" style="width: 1.8251681075889%"></div>
+<pre>
+    destruct H_ulnat_xy0, H_ulnat_xy1, H_wlrnat_xy_z.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 471
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    clear H_ulnat_xy0 H_ulnat_xy1 H_wlrnat_xy_z.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 472
+Time: 0.01s">
+<div class="time" style="width: 0.96061479346782%"></div>
+<pre>
+    destruct wlpp_xy0, wlpp_xy1.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 473
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    clear wlpp_xy0 wlpp_xy1.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 474
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    revert x0 ulnat_x0.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 475
+Time: 0.003s">
+<div class="time" style="width: 0.28818443804035%"></div>
+<pre>
+    snapply equiv_path_ind_rlucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 476
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    revert x1 ulnat_x1.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 477
+Time: 0.003s">
+<div class="time" style="width: 0.28818443804035%"></div>
+<pre>
+    snapply equiv_path_ind_rlucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 478
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    revert y0 ulnat_y0.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 479
+Time: 0.003s">
+<div class="time" style="width: 0.28818443804035%"></div>
+<pre>
+    snapply equiv_path_ind_rlucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 480
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    revert y1 ulnat_y1.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 481
+Time: 0.003s">
+<div class="time" style="width: 0.28818443804035%"></div>
+<pre>
+    snapply equiv_path_ind_rlucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 482
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    revert z0 urnat_z0.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 483
+Time: 0.003s">
+<div class="time" style="width: 0.28818443804035%"></div>
+<pre>
+    snapply equiv_path_ind_rlucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 484
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    revert z1 urnat_z1.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 485
+Time: 0.003s">
+<div class="time" style="width: 0.28818443804035%"></div>
+<pre>
+    snapply equiv_path_ind_rlucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 486
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    revert z2 urnat_z2.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 487
+Time: 0.003s">
+<div class="time" style="width: 0.28818443804035%"></div>
+<pre>
+    snapply equiv_path_ind_rlucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 488
+Time: 0.027s">
+<div class="time" style="width: 2.5936599423631%"></div>
+<pre>
+    destruct wlx0, wlx1, wly0, wly1.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 489
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    clear wlx0 wlx1 wly0 wly1.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 490
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    revert wrz2 wlrnat_x_z.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 491
+Time: 0.004s">
+<div class="time" style="width: 0.38424591738713%"></div>
+<pre>
+    snapply equiv_path_ind_lrucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 492
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    revert wrz1 wlrnat_y_z.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 493
+Time: 0.004s">
+<div class="time" style="width: 0.38424591738713%"></div>
+<pre>
+    snapply equiv_path_ind_lrucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 494
+Time: 0.006s">
+<div class="time" style="width: 0.57636887608069%"></div>
+<pre>
+    destruct wrz0.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 495
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    clear wrz0.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 496
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    reflexivity.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 497
+Time: 0.044s">
+<div class="time" style="width: 4.2267050912584%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 498
+Time: 0.02s">
+<div class="time" style="width: 1.9212295869356%"></div>
+<pre>
+
+End eh_pp_p.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 500
+Time: 0.003s">
+<div class="time" style="width: 0.28818443804035%"></div>
+<pre>
+
+Theorem eh_pp_p {X} {a : X} (p q r : idpath a = idpath a) :
+  eh (p @ q) r @ (concat_p_pp _ _ _ @ whiskerR (eh p r)^ _) =
+  concat_pp_p _ _ _ @ whiskerL _ (eh q r) @ concat_p_pp _ _ _.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 504
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 505
+Time: 0.007s">
+<div class="time" style="width: 0.67243035542747%"></div>
+<pre>
+  napply eh_pp_p_gen.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 506
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 507
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (ulnat_pp p q).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 507
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 508
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (ulnat_pp p q).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 508
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 509
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (wlrnat_pp_p p q r).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 509
+Time: 0.003s">
+<div class="time" style="width: 0.28818443804035%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 510
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* Syllepsis: We now prove that "eh p q" is suitably related to "eh q p". *)</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 512
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section eh_V.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 512
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {X : Type}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 514
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (* 0-paths *)
+ </pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 517
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Context {a b c d : X}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 517
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (* 1-paths *)
+ </pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 520
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Context {wlx0 x0 wrx0 : a = b}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 520
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {wlx1 x1 wrx1 : c = d}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 521
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  
+  Context {wly0 y0 wry0 : b = d}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 523
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {wly1 y1 wry1 : a = c}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 524
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (* 2-paths *)
+ </pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 527
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Context {ulnat_x0 : wlx0 @ 1 = 1 @ x0}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 527
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {urnat_x0 : wrx0 @ 1 = 1 @ x0}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 528
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {ulnat_x1 : wlx1 @ 1 = 1 @ x1}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 529
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {urnat_x1 : wrx1 @ 1 = 1 @ x1}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 530
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {ulnat_y0 : wly0 @ 1 = 1 @ y0}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 532
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {urnat_y0 : wry0 @ 1 = 1 @ y0}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 533
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {ulnat_y1 : wly1 @ 1 = 1 @ y1}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 534
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {urnat_y1 : wry1 @ 1 = 1 @ y1}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 535
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {ehlnat_x0 : wlx0 @ 1 = 1 @ wrx0}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 537
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {ehlnat_x1 : wlx1 @ 1 = 1 @ wrx1}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 538
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {ehrnat_y0 : wry0 @ 1 = 1 @ wly0}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 540
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {ehrnat_y1 : wry1 @ 1 = 1 @ wly1}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 541
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {wlrnat_x_y : wlx0 @ wry0 = wry1 @ wlx1}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 543
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {wlrnat_y_x : wly1 @ wrx1 = wrx0 @ wly0}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 544
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (* 3-paths *)
+ </pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 547
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Hypothesis ehlnat_1p_x0 :
+    (ehlnat_x0 [I] urnat_x0) @ 1  = 1 @ ulnat_x0.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 548
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Hypothesis ehlnat_1p_x1 :
+    (ehlnat_x1 [I] urnat_x1) @ 1 = 1 @ ulnat_x1.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 551
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Hypothesis ehrnat_p1_y0 :
+    (ehrnat_y0 [I] ulnat_y0) @ 1 = 1 @ urnat_y0.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 554
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Hypothesis ehrnat_p1_y1 :
+    (ehrnat_y1 [I] ulnat_y1) @ 1 = 1 @ urnat_y1.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 557
+Time: 0.001s">
+<div class="time" style="width: 0.096061479346782%"></div>
+<pre>
+
+  Hypothesis wlrnat_V_x_y :
+    whiskerR wlrnat_x_y _ @ (ehrnat_y1 [-] ehlnat_x1) =
+    (ehlnat_x0 [-] ehrnat_y0) @ whiskerL _ wlrnat_y_x^.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 561
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The syllepsis *)
+ </pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 564
+Time: 0.002s">
+<div class="time" style="width: 0.19212295869356%"></div>
+<pre>Definition eh_V_gen :
+    let EH_x_y := (rlucancel_inv (ulnat_x0 [-] urnat_y0))^ @
+      wlrnat_x_y @ rlucancel_inv (urnat_y1 [-] ulnat_x1) in
+    let EH_y_x := (rlucancel_inv (ulnat_y1 [-] urnat_x1))^ @
+      wlrnat_y_x @ rlucancel_inv (urnat_x0 [-] ulnat_y0) in
+    EH_x_y @ EH_y_x = 1.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 569
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 570
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    pose (H_whiskerR_wlrnat_x_y := moveL_Mp _ _ _ (moveL_pV _ _ _ (whiskerR_p1 wlrnat_x_y))).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 571
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply moveL_pV in wlrnat_V_x_y.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 572
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (concat H_whiskerR_wlrnat_x_y^) in wlrnat_V_x_y.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 573
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply moveL_Vp, moveL_pV in wlrnat_V_x_y.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 574
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply symmetry in wlrnat_V_x_y.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 575
+Time: 0.008s">
+<div class="time" style="width: 0.76849183477426%"></div>
+<pre>
+    destruct wlrnat_V_x_y.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 576
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    clear wlrnat_V_x_y.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 577
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    clear H_whiskerR_wlrnat_x_y.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 578
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    revert ulnat_x0 ehlnat_1p_x0.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 579
+Time: 0.003s">
+<div class="time" style="width: 0.28818443804035%"></div>
+<pre>
+    snapply equiv_path_ind_rlucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 580
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    revert ulnat_x1 ehlnat_1p_x1.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 581
+Time: 0.003s">
+<div class="time" style="width: 0.28818443804035%"></div>
+<pre>
+    snapply equiv_path_ind_rlucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 582
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    revert urnat_y0 ehrnat_p1_y0.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 583
+Time: 0.003s">
+<div class="time" style="width: 0.28818443804035%"></div>
+<pre>
+    snapply equiv_path_ind_rlucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 584
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    revert urnat_y1 ehrnat_p1_y1.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 585
+Time: 0.004s">
+<div class="time" style="width: 0.38424591738713%"></div>
+<pre>
+    snapply equiv_path_ind_rlucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 586
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+    revert x0 urnat_x0.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 588
+Time: 0.008s">
+<div class="time" style="width: 0.76849183477426%"></div>
+<pre>
+    snapply equiv_path_ind_rlucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 589
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    revert x1 urnat_x1.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 590
+Time: 0.003s">
+<div class="time" style="width: 0.28818443804035%"></div>
+<pre>
+    snapply equiv_path_ind_rlucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 591
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    revert y0 ulnat_y0.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 592
+Time: 0.003s">
+<div class="time" style="width: 0.28818443804035%"></div>
+<pre>
+    snapply equiv_path_ind_rlucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 593
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    revert y1 ulnat_y1.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 594
+Time: 0.003s">
+<div class="time" style="width: 0.28818443804035%"></div>
+<pre>
+    snapply equiv_path_ind_rlucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 595
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+    revert wlrnat_y_x.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 597
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    revert wrx0 ehlnat_x0.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 598
+Time: 0.003s">
+<div class="time" style="width: 0.28818443804035%"></div>
+<pre>
+    snapply equiv_path_ind_rlucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 599
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    revert wrx1 ehlnat_x1.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 600
+Time: 0.003s">
+<div class="time" style="width: 0.28818443804035%"></div>
+<pre>
+    snapply equiv_path_ind_rlucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 601
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    revert wly0 ehrnat_y0.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 602
+Time: 0.004s">
+<div class="time" style="width: 0.38424591738713%"></div>
+<pre>
+    snapply equiv_path_ind_rlucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 603
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    revert wly1 ehrnat_y1.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 604
+Time: 0.003s">
+<div class="time" style="width: 0.28818443804035%"></div>
+<pre>
+    snapply equiv_path_ind_rlucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 605
+Time: 0.018s">
+<div class="time" style="width: 1.7291066282421%"></div>
+<pre>
+
+    destruct wry0, wry1, wlx1.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 607
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    clear wry0 wry1 wlx1.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 608
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    revert wlx0.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 609
+Time: 0.003s">
+<div class="time" style="width: 0.28818443804035%"></div>
+<pre>
+    snapply equiv_path_ind_lrucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 610
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    reflexivity.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 611
+Time: 0.033s">
+<div class="time" style="width: 3.1700288184438%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 612
+Time: 0.02s">
+<div class="time" style="width: 1.9212295869356%"></div>
+<pre>
+
+End eh_V.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 614
+Time: 0.001s">
+<div class="time" style="width: 0.096061479346782%"></div>
+<pre>
+
+Theorem eh_V {X} {a : X} (p q : idpath (idpath a) = idpath (idpath a)) :
+  eh p q @ eh q p = 1.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 617
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 618
+Time: 0.006s">
+<div class="time" style="width: 0.57636887608069%"></div>
+<pre>
+  napply eh_V_gen.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 619
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 620
+Time: 0.001s">
+<div class="time" style="width: 0.096061479346782%"></div>
+<pre> exact (ehlnat_1p p).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 620
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 621
+Time: 0.001s">
+<div class="time" style="width: 0.096061479346782%"></div>
+<pre> exact (ehlnat_1p p).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 621
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 622
+Time: 0.001s">
+<div class="time" style="width: 0.096061479346782%"></div>
+<pre> exact (ehrnat_p1 q).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 622
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 623
+Time: 0.001s">
+<div class="time" style="width: 0.096061479346782%"></div>
+<pre> exact (ehrnat_p1 q).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 623
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 624
+Time: 0.002s">
+<div class="time" style="width: 0.19212295869356%"></div>
+<pre> exact (wlrnat_V p q).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 624
+Time: 0.007s">
+<div class="time" style="width: 0.67243035542747%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 625
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Given [ehrnat_p1 y] and [ehrnat_p1 z], we can explicitly construct [ehrnat_p1 (y @ z)]. *)</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 627
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section Ehrnat_p1_pp.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 627
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {X : Type}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 629
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** 0-paths *)
+ </pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 632
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Context {a0 a1 a2 : X}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 632
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {b0 b1 b2 : X}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 633
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {c0 c1 c2 : X}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 634
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** 1-paths *)
+ </pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 637
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Context {wry : a0 = b0}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 637
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {wrz : b0 = c0}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 638
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {wly : a1 = b1}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 640
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {wlz : b1 = c1}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 641
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {y : a2 = b2}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 643
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {z : b2 = c2}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 644
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {wryz : a0 = c0}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 646
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {wlyz : a1 = c1}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 647
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {a01 : a0 = a1}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 649
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {a12 : a1 = a2}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 650
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {b01 : b0 = b1}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 652
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {b12 : b1 = b2}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 653
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {c01 : c0 = c1}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 655
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {c12 : c1 = c2}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 656
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {a02 : a0 = a2}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 658
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {c02 : c0 = c2}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 659
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  
+  (** 2-paths *)
+ </pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 662
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Context {ehrnat_y : wry @ b01 = a01 @ wly}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 662
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {ehrnat_z : wrz @ c01 = b01 @ wlz}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 663
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {ehrnat_yz : wryz @ c01 = a01 @ wlyz}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 664
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {ulnat_y : wly @ b12 = a12 @ y}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 666
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {ulnat_z : wlz @ c12 = b12 @ z}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 667
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {ulnat_yz : wlyz @ c12 = a12 @ (y @ z)}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 668
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {urnat_y : wry @ (b01 @ b12) = a02 @ y}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 670
+Time: 0.002s">
+<div class="time" style="width: 0.19212295869356%"></div>
+<pre>
+  Context {urnat_z : wrz @ c02 = (b01 @ b12) @ z}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 671
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {urnat_yz : wryz @ c02 = a02 @ (y @ z)}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 672
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {wrpp_yz : wry @ wrz = wryz}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 674
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {wlpp_yz : wly @ wlz = wlyz}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 675
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context (H_a02 : a01 @ a12 = a02).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 677
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context (H_c02 : c01 @ c12 = c02).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 678
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (*&amp; 3-paths *)
+ </pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 681
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Hypothesis H_ehrnat_yz :
+    (ehrnat_y [-] ehrnat_z) @ whiskerL _ wlpp_yz =
+    whiskerR wrpp_yz _ @ ehrnat_yz.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 683
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Hypothesis H_ulnat_yz :
+    (ulnat_y [-] ulnat_z) = whiskerR wlpp_yz _ @ ulnat_yz.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 686
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Hypothesis H_urnat_yz :
+    (urnat_y [-] urnat_z) = whiskerR wrpp_yz _ @ urnat_yz.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 689
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Variable ehrnat_p1_y :
+    (ehrnat_y [I] ulnat_y) @ whiskerR H_a02 _ = 1 @ urnat_y.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 692
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Variable ehrnat_p1_z :
+    (ehrnat_z [I] ulnat_z) @ 1 = whiskerL _ H_c02 @ urnat_z.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 695
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The composite iso *)
+ </pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 698
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Ehrnat_p1_pp :
+    (ehrnat_yz [I] ulnat_yz) @ whiskerR H_a02 _ =
+    whiskerL _ H_c02 @ urnat_yz.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 700
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 701
+Time: 0.001s">
+<div class="time" style="width: 0.096061479346782%"></div>
+<pre>
+    apply moveR_Vp in H_urnat_yz, H_ulnat_yz, H_ehrnat_yz.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 702
+Time: 0.011s">
+<div class="time" style="width: 1.0566762728146%"></div>
+<pre>
+    destruct H_urnat_yz, H_ulnat_yz, H_ehrnat_yz.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 703
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    clear H_urnat_yz H_ulnat_yz H_ehrnat_yz.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 704
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply moveR_Vp in ehrnat_p1_y, ehrnat_p1_z.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 705
+Time: 0.008s">
+<div class="time" style="width: 0.76849183477426%"></div>
+<pre>
+    destruct ehrnat_p1_y, ehrnat_p1_z.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 706
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    clear ehrnat_p1_y ehrnat_p1_z.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 707
+Time: 0.007s">
+<div class="time" style="width: 0.67243035542747%"></div>
+<pre>
+    destruct H_a02, H_c02.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 708
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    clear H_a02 H_c02.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 709
+Time: 0.009s">
+<div class="time" style="width: 0.86455331412104%"></div>
+<pre>
+    destruct wrpp_yz, wlpp_yz.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 710
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    clear wrpp_yz wlpp_yz.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 711
+Time: 0.033s">
+<div class="time" style="width: 3.1700288184438%"></div>
+<pre>
+    destruct a01, a12, b01, b12, c01, c12.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 712
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    clear a01 a12 b01 b12 c01 c12.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 713
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    revert y ulnat_y.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 714
+Time: 0.003s">
+<div class="time" style="width: 0.28818443804035%"></div>
+<pre>
+    snapply equiv_path_ind_rlucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 715
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    revert z ulnat_z.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 716
+Time: 0.003s">
+<div class="time" style="width: 0.28818443804035%"></div>
+<pre>
+    snapply equiv_path_ind_rlucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 717
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    revert wly ehrnat_y.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 718
+Time: 0.003s">
+<div class="time" style="width: 0.28818443804035%"></div>
+<pre>
+    snapply equiv_path_ind_rlucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 719
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    revert wlz ehrnat_z.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 720
+Time: 0.003s">
+<div class="time" style="width: 0.28818443804035%"></div>
+<pre>
+    snapply equiv_path_ind_rlucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 721
+Time: 0.011s">
+<div class="time" style="width: 1.0566762728146%"></div>
+<pre>
+    destruct wry, wrz.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 722
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    clear wry wrz.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 723
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    reflexivity.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 724
+Time: 0.028s">
+<div class="time" style="width: 2.6897214217099%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 725
+Time: 0.018s">
+<div class="time" style="width: 1.7291066282421%"></div>
+<pre>
+
+End Ehrnat_p1_pp.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 727
+Time: 0.021s">
+<div class="time" style="width: 2.0172910662824%"></div>
+<pre>
+
+Definition ehrnat_p1_pp {X} {a : X} {u v : idpath a = idpath a} (q : u = 1) (r : 1 = v) :
+  Ehrnat_p1_pp (eh_p1 u) (eh_p1 v) (ehrnat_pp q r 1) (ulnat_pp q r) (urnat_pp q r)
+    (ehrnat_p1 q) (ehrnat_p1 r) =
+  ehrnat_p1 (q @ r).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 732
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 733
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert u q.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 734
+Time: 0.003s">
+<div class="time" style="width: 0.28818443804035%"></div>
+<pre>
+  snapply (equiv_path_ind (equiv_path_inverse _)).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 735
+Time: 0.014s">
+<div class="time" style="width: 1.3448607108549%"></div>
+<pre>
+  by destruct r.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 736
+Time: 0.032s">
+<div class="time" style="width: 3.073967339097%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 737
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Given [wlrnat_V x y] and [wlrnat_V x z], we can explicitly construct [wlrnat_V x (y @ z)]. *)</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 739
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section wlrnat_V_p_pp.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 739
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {X : Type}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 741
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** 0-paths *)
+ </pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 744
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Context {a0 b0 c0 d0 e0 f0 : X}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 744
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {a1 b1 c1 d1 e1 f1 : X}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 745
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** 1-paths *)
+ </pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 748
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Context {wlx0 : a0 = b0}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 748
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {wlx1 : c0 = d0}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 749
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {wlx2 : e0 = f0}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 750
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {wrx0 : a1 = b1}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 752
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {wrx1 : c1 = d1}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 753
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {wrx2 : e1 = f1}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 754
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {wry0 : b0 = d0}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 756
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {wly0 : b1 = d1}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 757
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {wry1 : a0 = c0}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 758
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {wly1 : a1 = c1}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 759
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {wrz0 : d0 = f0}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 761
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {wlz0 : d1 = f1}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 762
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {wrz1 : c0 = e0}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 763
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {wlz1 : c1 = e1}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 764
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {a01 : a0 = a1}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 766
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {b01 : b0 = b1}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 767
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {c01 : c0 = c1}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 768
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {d01 : d0 = d1}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 769
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {e01 : e0 = e1}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 770
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {f01 : f0 = f1}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 771
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {wryz0 : b0 = f0}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 773
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {wlyz0 : b1 = f1}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 774
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {wryz1 : a0 = e0}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 775
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {wlyz1 : a1 = e1}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 776
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** 2-paths *)
+ </pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 779
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Context {ehlnat_x0 : wlx0 @ b01 = a01 @ wrx0}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 779
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {ehlnat_x1 : wlx1 @ d01 = c01 @ wrx1}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 780
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {ehlnat_x2 : wlx2 @ f01 = e01 @ wrx2}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 781
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {ehrnat_y0 : wry0 @ d01 = b01 @ wly0}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 783
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {ehrnat_y1 : wry1 @ c01 = a01 @ wly1}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 784
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {ehrnat_z0 : wrz0 @ f01 = d01 @ wlz0}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 786
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {ehrnat_z1 : wrz1 @ e01 = c01 @ wlz1}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 787
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {ehrnat_yz0 : wryz0 @ f01 = b01 @ wlyz0}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 789
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {ehrnat_yz1 : wryz1 @ e01 = a01 @ wlyz1}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 790
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {wlrnat_x_y : wlx0 @ wry0 = wry1 @ wlx1}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 792
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {wlrnat_y_x : wly1 @ wrx1 = wrx0 @ wly0}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 793
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {wlrnat_x_z : wlx1 @ wrz0 = wrz1 @ wlx2}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 795
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {wlrnat_z_x : wlz1 @ wrx2 = wrx1 @ wlz0}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 796
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {wlrnat_x_yz : wlx0 @ wryz0 = wryz1 @ wlx2}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 798
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {wlrnat_yz_x : wlyz1 @ wrx2 = wrx0 @ wlyz0}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 799
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {wrpp_yz0 : wry0 @ wrz0 = wryz0}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 801
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {wlpp_yz0 : wly0 @ wlz0 = wlyz0}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 802
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {wrpp_yz1 : wry1 @ wrz1 = wryz1}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 803
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {wlpp_yz1 : wly1 @ wlz1 = wlyz1}.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 804
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** 3-paths *)
+ </pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 807
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Hypothesis H_ehrnat_yz0 :
+    (ehrnat_y0 [-] ehrnat_z0) @ whiskerL _ wlpp_yz0 =
+    whiskerR wrpp_yz0 _ @ ehrnat_yz0.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 809
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Hypothesis H_ehrnat_yz1 :
+    (ehrnat_y1 [-] ehrnat_z1) @ whiskerL _ wlpp_yz1 =
+    whiskerR wrpp_yz1 _ @ ehrnat_yz1.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 813
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Hypothesis H_wlrnat_x_yz :
+    (wlrnat_x_y [I] wlrnat_x_z) @ whiskerR wrpp_yz1 _ =
+    whiskerL _ wrpp_yz0 @ wlrnat_x_yz.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 817
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Hypothesis H_wlrnat_yz_x :
+    (wlrnat_y_x [-] wlrnat_z_x) @ whiskerL _ wlpp_yz0 =
+    whiskerR wlpp_yz1 _ @ wlrnat_yz_x.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 821
+Time: 0.001s">
+<div class="time" style="width: 0.096061479346782%"></div>
+<pre>
+
+  Variable wlrnat_V_x_y :
+    whiskerR wlrnat_x_y _ @ (ehrnat_y1 [-] ehlnat_x1) =
+    (ehlnat_x0 [-] ehrnat_y0) @ whiskerL _ wlrnat_y_x^.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 825
+Time: 0.001s">
+<div class="time" style="width: 0.096061479346782%"></div>
+<pre>
+
+  Variable wlrnat_V_x_z :
+    whiskerR wlrnat_x_z _ @ (ehrnat_z1 [-] ehlnat_x2) =
+    (ehlnat_x1 [-] ehrnat_z0) @ whiskerL _ wlrnat_z_x^.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 829
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The composite square *)
+ </pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 832
+Time: 0.001s">
+<div class="time" style="width: 0.096061479346782%"></div>
+<pre>Definition Wlrnat_V_p_pp :
+    whiskerR wlrnat_x_yz _ @ (ehrnat_yz1 [-] ehlnat_x2) =
+    (ehlnat_x0 [-] ehrnat_yz0) @ whiskerL _ wlrnat_yz_x^.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 834
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 835
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply moveR_Vp in H_ehrnat_yz0, H_ehrnat_yz1.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 836
+Time: 0.009s">
+<div class="time" style="width: 0.86455331412104%"></div>
+<pre>
+    destruct H_ehrnat_yz0, H_ehrnat_yz1.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 837
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    clear H_ehrnat_yz0 H_ehrnat_yz1.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 838
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply moveR_Vp in H_wlrnat_x_yz, H_wlrnat_yz_x.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 839
+Time: 0.024s">
+<div class="time" style="width: 2.3054755043228%"></div>
+<pre>
+    destruct H_wlrnat_x_yz, H_wlrnat_yz_x.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 840
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    clear H_wlrnat_x_yz H_wlrnat_yz_x.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 841
+Time: 0.04s">
+<div class="time" style="width: 3.8424591738713%"></div>
+<pre>
+    destruct a01, b01, c01, d01, e01, f01.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 842
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    clear a01 b01 c01 d01 e01 f01.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 843
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    pose (H_whiskerR_wlrnat_x_y := moveL_Mp _ _ _ (moveL_pV _ _ _ (whiskerR_p1 wlrnat_x_y))).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 844
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    pose (H_whiskerR_wlrnat_x_z := moveL_Mp _ _ _ (moveL_pV _ _ _ (whiskerR_p1 wlrnat_x_z))).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 845
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply moveL_pV in wlrnat_V_x_y.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 846
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (concat H_whiskerR_wlrnat_x_y^) in wlrnat_V_x_y.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 847
+Time: 0.001s">
+<div class="time" style="width: 0.096061479346782%"></div>
+<pre>
+    apply moveL_Vp, moveL_pV in wlrnat_V_x_y.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 848
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply symmetry in wlrnat_V_x_y.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 849
+Time: 0.01s">
+<div class="time" style="width: 0.96061479346782%"></div>
+<pre>
+    destruct wlrnat_V_x_y.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 850
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    clear wlrnat_V_x_y.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 851
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply moveL_pV in wlrnat_V_x_z.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 852
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (concat H_whiskerR_wlrnat_x_z^) in wlrnat_V_x_z.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 853
+Time: 0.001s">
+<div class="time" style="width: 0.096061479346782%"></div>
+<pre>
+    apply moveL_Vp, moveL_pV in wlrnat_V_x_z.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 854
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply symmetry in wlrnat_V_x_z.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 855
+Time: 0.021s">
+<div class="time" style="width: 2.0172910662824%"></div>
+<pre>
+    destruct wlrnat_V_x_z.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 856
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    clear wlrnat_V_x_z.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 857
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    clear H_whiskerR_wlrnat_x_y H_whiskerR_wlrnat_x_z.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 858
+Time: 0.033s">
+<div class="time" style="width: 3.1700288184438%"></div>
+<pre>
+    destruct wrpp_yz0, wlpp_yz0, wrpp_yz1, wlpp_yz1.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 859
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    clear wrpp_yz0 wlpp_yz0 wrpp_yz1 wlpp_yz1.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 860
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    revert wlrnat_y_x wlrnat_z_x.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 861
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    revert wrx0 ehlnat_x0.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 862
+Time: 0.005s">
+<div class="time" style="width: 0.48030739673391%"></div>
+<pre>
+    snapply equiv_path_ind_rlucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 863
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    revert wrx1 ehlnat_x1.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 864
+Time: 0.005s">
+<div class="time" style="width: 0.48030739673391%"></div>
+<pre>
+    snapply equiv_path_ind_rlucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 865
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    revert wrx2 ehlnat_x2.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 866
+Time: 0.005s">
+<div class="time" style="width: 0.48030739673391%"></div>
+<pre>
+    snapply equiv_path_ind_rlucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 867
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    revert wly0 ehrnat_y0.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 868
+Time: 0.005s">
+<div class="time" style="width: 0.48030739673391%"></div>
+<pre>
+    snapply equiv_path_ind_rlucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 869
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    revert wly1 ehrnat_y1.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 870
+Time: 0.005s">
+<div class="time" style="width: 0.48030739673391%"></div>
+<pre>
+    snapply equiv_path_ind_rlucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 871
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    revert wlz0 ehrnat_z0.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 872
+Time: 0.005s">
+<div class="time" style="width: 0.48030739673391%"></div>
+<pre>
+    snapply equiv_path_ind_rlucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 873
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    revert wlz1 ehrnat_z1.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 874
+Time: 0.005s">
+<div class="time" style="width: 0.48030739673391%"></div>
+<pre>
+    snapply equiv_path_ind_rlucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 875
+Time: 0.037s">
+<div class="time" style="width: 3.5542747358309%"></div>
+<pre>
+    destruct wry0, wry1, wrz0, wrz1.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 876
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    clear wry0 wry1 wrz0 wrz1.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 877
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    revert wlx0.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 878
+Time: 0.005s">
+<div class="time" style="width: 0.48030739673391%"></div>
+<pre>
+    snapply equiv_path_ind_lrucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 879
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    revert wlx1.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 880
+Time: 0.008s">
+<div class="time" style="width: 0.76849183477426%"></div>
+<pre>
+    snapply equiv_path_ind_lrucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 881
+Time: 0.009s">
+<div class="time" style="width: 0.86455331412104%"></div>
+<pre>
+    destruct wlx2.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 882
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    clear wlx2.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 883
+Time: 0.001s">
+<div class="time" style="width: 0.096061479346782%"></div>
+<pre>
+    reflexivity.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 884
+Time: 0.079s">
+<div class="time" style="width: 7.5888568683958%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 885
+Time: 0.054s">
+<div class="time" style="width: 5.1873198847262%"></div>
+<pre>
+
+End wlrnat_V_p_pp.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 887
+Time: 0.043s">
+<div class="time" style="width: 4.1306436119116%"></div>
+<pre>
+
+Definition wlrnat_V_p_pp {X} {a : X} {u v w : idpath a = idpath a} (p : 1 = w) (q : u = 1) (r : 1 = v) :
+  Wlrnat_V_p_pp (ehrnat_pp q r _) (ehrnat_pp q r _) (wlrnat_p_pp p q r) (wlrnat_pp_p q r p)
+    (wlrnat_V p q) (wlrnat_V p r) =
+  wlrnat_V p (q @ r).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 892
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 893
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert u q.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 894
+Time: 0.006s">
+<div class="time" style="width: 0.57636887608069%"></div>
+<pre>
+  snapply (equiv_path_ind (equiv_path_inverse _)).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 895
+Time: 0.055s">
+<div class="time" style="width: 5.283381364073%"></div>
+<pre>
+  by destruct p, r.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 896
+Time: 0.072s">
+<div class="time" style="width: 6.9164265129683%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 897
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Next we prove a coherence law relating [eh_V p (q @ r)] to [eh_V p q] and [eh_V p q]. *)
+
+(* The following tactics will be used to make the proof faster, but with only minor modifications, the proof goes through without these tactics. The final tactic [generalize_goal] takes a goal of the form [forall a b c ..., expression] and asserts a new goal [forall P, _ -&gt; forall a b c ..., P a b c ...] which can be used to prove the original goal. Because [expression] has been replaced with a generic function, the proof of the new goal can be more efficient than the proof of the special case, especially when there are around 84 variables. *)
+
+</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 902
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Ltac apply_P ty P :=
+  lazymatch ty with
+  | forall a : ?A, ?ty
+    =&gt; let ty' := fresh in
+       let P' := fresh in
+       constr:(forall a : A,
+                  (* Bind [ty] in [match] so that we avoid issues such as https://github.com/coq/coq/issues/7299 and similar ones.  Without [return _], [match] tries two ways to elaborate the branches, which results in exponential blowup on failure. *)
+                  match ty, P a return _ with
+                  | ty', P'
+                    =&gt; ltac:(let ty := (eval cbv delta [ty'] in ty') in
+                             let P := (eval cbv delta [P'] in P') in
+                             clear ty' P';
+                             let res := apply_P ty P in
+                             exact res)
+                  end)
+  | _ =&gt; P
+  end.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 918
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Ltac make_P_and_evar ty :=
+  let P := fresh "P" in
+  open_constr:(forall P : _, _ -&gt; ltac:(let res := apply_P ty P in exact res)).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 922
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Ltac generalize_goal X :=
+  match goal with |- ?G =&gt; let T := make_P_and_evar G in assert (X : T) end.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 925
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* We need this equivalence twice below. *)</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 927
+Time: 0.001s">
+<div class="time" style="width: 0.096061479346782%"></div>
+<pre>Local Lemma equiv_helper {X} {a b : X} {p q r : a = b} (t : q @ 1 = r) (u : p @ 1 = r) (s : p = q)
+  : ((concat_p1 p)^ @ (u @ t^)) @ (concat_p1 q) = s
+    &lt;~&gt; whiskerR s 1 @ t = u.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 929
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 930
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply (_ oE equiv_path_inverse _ _).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 931
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply (_ oE equiv_moveR_pV _ _ _).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 932
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply (_ oE equiv_moveR_Mp _ _ _).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 933
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply (_ oE equiv_concat_l _ _).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 934
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  3: exact (moveL_Mp _ _ _ (moveL_pV _ _ _ (whiskerR_p1 s))).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 935
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (equiv_moveR_pM _ _ _).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 936
+Time: 0.002s">
+<div class="time" style="width: 0.19212295869356%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 937
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* This special case of [equiv_path_ind] comes up a lot. *)</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 939
+Time: 0.001s">
+<div class="time" style="width: 0.096061479346782%"></div>
+<pre>Definition equiv_path_ind_moveL_Mp {X} (a b c : X) (p : a = c) (r : a = b)
+           (P : forall (q : b = c), p = r @ q -&gt; Type)
+           (i : P (r^ @ p) (equiv_moveL_Mp _ _ _ 1))
+  : forall (q : b = c) (s : p = r @ q), P q s.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 942
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 943
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (equiv_path_ind (fun q =&gt; (equiv_moveL_Mp q _ _)) P i).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 944
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 945
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* A form of the coherence we can prove by path induction. *)</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 947
+Time: 0.566s">
+<div class="time" style="width: 54.370797310279%"></div>
+<pre>Definition eh_V_p_pp_gen {X : Type}
+
+           (* 0-paths *)
+           {a b c d e f : X}
+
+           (* 1-paths *)
+           {wlx0 x0 wrx0 : a = b}
+           {wlx1 x1 wrx1 : c = d}
+           {wlx2 x2 wrx2 : e = f}
+
+           {wly0 y0 wry0 : b = d}
+           {wly1 y1 wry1 : a = c}
+
+           {wlz0 z0 wrz0 : d = f}
+           {wlz1 z1 wrz1 : c = e}
+
+           {wlyz0 wryz0 : b = f}
+           {wlyz1 wryz1 : a = e}
+
+           (* 2-paths *)
+           {ulnat_x0 : wlx0 @ 1 = 1 @ x0}
+           {urnat_x0 : wrx0 @ 1 = 1 @ x0}
+           {ulnat_x1 : wlx1 @ 1 = 1 @ x1}
+           {urnat_x1 : wrx1 @ 1 = 1 @ x1}
+           {ulnat_x2 : wlx2 @ 1 = 1 @ x2}
+           {urnat_x2 : wrx2 @ 1 = 1 @ x2}
+
+           {ulnat_y0 : wly0 @ 1 = 1 @ y0}
+           {urnat_y0 : wry0 @ 1 = 1 @ y0}
+           {ulnat_y1 : wly1 @ 1 = 1 @ y1}
+           {urnat_y1 : wry1 @ 1 = 1 @ y1}
+
+           {ulnat_z0 : wlz0 @ 1 = 1 @ z0}
+           {urnat_z0 : wrz0 @ 1 = 1 @ z0}
+           {ulnat_z1 : wlz1 @ 1 = 1 @ z1}
+           {urnat_z1 : wrz1 @ 1 = 1 @ z1}
+
+           {ulnat_yz0 : wlyz0 @ 1 = 1 @ (y0 @ z0)}
+           {urnat_yz0 : wryz0 @ 1 = 1 @ (y0 @ z0)}
+           {ulnat_yz1 : wlyz1 @ 1 = 1 @ (y1 @ z1)}
+           {urnat_yz1 : wryz1 @ 1 = 1 @ (y1 @ z1)}
+
+           {ehlnat_x0 : wlx0 @ 1 = 1 @ wrx0}
+           {ehlnat_x1 : wlx1 @ 1 = 1 @ wrx1}
+           {ehlnat_x2 : wlx2 @ 1 = 1 @ wrx2}
+
+           {ehrnat_y0 : wry0 @ 1 = 1 @ wly0}
+           {ehrnat_y1 : wry1 @ 1 = 1 @ wly1}
+
+           {ehrnat_z0 : wrz0 @ 1 = 1 @ wlz0}
+           {ehrnat_z1 : wrz1 @ 1 = 1 @ wlz1}
+
+           {ehrnat_yz0 : wryz0 @ 1 = 1 @ wlyz0}
+           {ehrnat_yz1 : wryz1 @ 1 = 1 @ wlyz1}
+
+           {wlrnat_x_y : wlx0 @ wry0 = wry1 @ wlx1}
+           {wlrnat_y_x : wly1 @ wrx1 = wrx0 @ wly0}
+
+           {wlrnat_x_z : wlx1 @ wrz0 = wrz1 @ wlx2}
+           {wlrnat_z_x : wlz1 @ wrx2 = wrx1 @ wlz0}
+
+           {wlrnat_x_yz : wlx0 @ wryz0 = wryz1 @ wlx2}
+           {wlrnat_yz_x : wlyz1 @ wrx2 = wrx0 @ wlyz0}
+
+           {wrpp_yz0 : wry0 @ wrz0 = wryz0}
+           {wlpp_yz0 : wly0 @ wlz0 = wlyz0}
+           {wrpp_yz1 : wry1 @ wrz1 = wryz1}
+           {wlpp_yz1 : wly1 @ wlz1 = wlyz1}
+
+           (* 3-paths *)
+           {H_ulnat_yz0 : (ulnat_y0 [-] ulnat_z0) = whiskerR wlpp_yz0 _ @ ulnat_yz0}
+           {H_urnat_yz0 : (urnat_y0 [-] urnat_z0) = whiskerR wrpp_yz0 _ @ urnat_yz0}
+           {H_ulnat_yz1 : (ulnat_y1 [-] ulnat_z1) = whiskerR wlpp_yz1 _ @ ulnat_yz1}
+           {H_urnat_yz1 : (urnat_y1 [-] urnat_z1) = whiskerR wrpp_yz1 _ @ urnat_yz1}
+           {H_ehrnat_yz0 : (ehrnat_y0 [-] ehrnat_z0) @ whiskerL _ wlpp_yz0 =
+                             whiskerR wrpp_yz0 _ @ ehrnat_yz0}
+           {H_ehrnat_yz1 : (ehrnat_y1 [-] ehrnat_z1) @ whiskerL _ wlpp_yz1 =
+                             whiskerR wrpp_yz1 _ @ ehrnat_yz1}
+           {H_wlrnat_x_yz : (wlrnat_x_y [I] wlrnat_x_z) @ whiskerR wrpp_yz1 _ =
+                              whiskerL _ wrpp_yz0 @ wlrnat_x_yz}
+           {H_wlrnat_yz_x : (wlrnat_y_x [-] wlrnat_z_x) @ whiskerL _ wlpp_yz0 =
+                              whiskerR wlpp_yz1 _ @ wlrnat_yz_x}
+           (ehlnat_1p_x0 : (ehlnat_x0 [I] urnat_x0) @ 1 = 1 @ ulnat_x0)
+           (ehlnat_1p_x1 : (ehlnat_x1 [I] urnat_x1) @ 1 = 1 @ ulnat_x1)
+           (ehlnat_1p_x2 : (ehlnat_x2 [I] urnat_x2) @ 1 = 1 @ ulnat_x2)
+           {ehrnat_p1_y0 : (ehrnat_y0 [I] ulnat_y0) @ 1 = 1 @ urnat_y0}
+           {ehrnat_p1_y1 : (ehrnat_y1 [I] ulnat_y1) @ 1 = 1 @ urnat_y1}
+           {ehrnat_p1_z0 : (ehrnat_z0 [I] ulnat_z0) @ 1 = 1 @ urnat_z0}
+           {ehrnat_p1_z1 : (ehrnat_z1 [I] ulnat_z1) @ 1 = 1 @ urnat_z1}
+           {ehrnat_p1_yz0 : (ehrnat_yz0 [I] ulnat_yz0) @ 1 = 1 @ urnat_yz0}
+           {ehrnat_p1_yz1 : (ehrnat_yz1 [I] ulnat_yz1) @ 1 = 1 @ urnat_yz1}
+           {wlrnat_V_x_y : whiskerR wlrnat_x_y _ @ (ehrnat_y1 [-] ehlnat_x1) =
+                             (ehlnat_x0 [-] ehrnat_y0) @ whiskerL _ wlrnat_y_x^}
+           {wlrnat_V_x_z : whiskerR wlrnat_x_z _ @ (ehrnat_z1 [-] ehlnat_x2) =
+                             (ehlnat_x1 [-] ehrnat_z0) @ whiskerL _ wlrnat_z_x^}
+           {wlrnat_V_x_yz : whiskerR wlrnat_x_yz _ @ (ehrnat_yz1 [-] ehlnat_x2) =
+                              (ehlnat_x0 [-] ehrnat_yz0) @ whiskerL _ wlrnat_yz_x^}
+
+           (* 4-paths *)
+           (H_ehrnat_p1_yz0 :
+             Ehrnat_p1_pp 1 1 H_ehrnat_yz0 H_ulnat_yz0 H_urnat_yz0 ehrnat_p1_y0 ehrnat_p1_z0 =
+               ehrnat_p1_yz0)
+           (H_ehrnat_p1_yz1 :
+             Ehrnat_p1_pp 1 1 H_ehrnat_yz1 H_ulnat_yz1 H_urnat_yz1 ehrnat_p1_y1 ehrnat_p1_z1 =
+               ehrnat_p1_yz1)
+           (H_wlrnat_V_x_yz :
+             Wlrnat_V_p_pp H_ehrnat_yz0 H_ehrnat_yz1 H_wlrnat_x_yz H_wlrnat_yz_x wlrnat_V_x_y wlrnat_V_x_z =
+               wlrnat_V_x_yz)
+  : let eh_x_y := concat_p_pp x0 y0 z0 @
+                 whiskerR (((rlucancel_inv (ulnat_x0 [-] urnat_y0))^ @ wlrnat_x_y) @
+                            rlucancel_inv (urnat_y1 [-] ulnat_x1)) z0 in
+    whiskerR (concat_p1 _ @@ concat_p1 _) eh_x_y @
+    whiskerR (eh_V_gen (ehlnat_1p_x0) (ehlnat_1p_x2) (ehrnat_p1_yz0) (ehrnat_p1_yz1) wlrnat_V_x_yz) eh_x_y @
+    lrucancel 1 @
+    whiskerL eh_x_y (Syllepsis.concat_pp_p_p_pp _ _ _)^ @
+    whiskerL eh_x_y (concat_p1 _ @@ concat_p1 _)^ =
+    (eh_p_pp_gen H_urnat_yz0 H_urnat_yz1 H_wlrnat_x_yz [-]
+     lrucancel (whiskerL _ (ap (fun p =&gt; whiskerL y1 p)
+                               (moveL_V1 _ _ (eh_V_gen ehlnat_1p_x1 ehlnat_1p_x2
+                                                       ehrnat_p1_z0 ehrnat_p1_z1 wlrnat_V_x_z))))) [-]
+    (eh_pp_p_gen H_ulnat_yz1 H_ulnat_yz0 H_wlrnat_yz_x [-]
+     lrucancel (whiskerL _ (ap (fun p =&gt; whiskerR p z0)
+                               (moveL_1V _ _ (eh_V_gen ehlnat_1p_x0 ehlnat_1p_x1
+                                                       ehrnat_p1_y0 ehrnat_p1_y1 wlrnat_V_x_y))))).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1070
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1071
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* For some reason, it's most efficient to destruct a few things here but the rest within the subgoal. *)
+ </pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1073
+Time: 0.114s">
+<div class="time" style="width: 10.951008645533%"></div>
+<pre>destruct H_ehrnat_p1_yz0, H_ehrnat_p1_yz1, H_wlrnat_V_x_yz.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1073
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (* For efficiency purposes, we generalize the goal to an arbitrary function [P] of the context (except for [X] and [a]), and do all of the induction steps in this generality.  This reduces the size of the term that Coq needs to manipulate, speeding up the proof.  The same proof works with the next three lines removed and with the second and third last lines removed. *)
+ </pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1076
+Time: 0.059s">
+<div class="time" style="width: 5.6676272814601%"></div>
+<pre>revert_until a.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1076
+Time: 1.041s">
+<div class="time" style="width: 100%"></div>
+<pre>
+  generalize_goal lem.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1077
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1078
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros P H; intros.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1078
+Time: 0.039s">
+<div class="time" style="width: 3.7463976945245%"></div>
+<pre>
+
+  destruct wry0, wry1, wrz0, wrz1.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1080
+Time: 0.013s">
+<div class="time" style="width: 1.2487992315082%"></div>
+<pre>
+  destruct wrpp_yz0, wlpp_yz0, wrpp_yz1, wlpp_yz1.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1081
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  revert wlrnat_x_yz H_wlrnat_x_yz.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1083
+Time: 0.007s">
+<div class="time" style="width: 0.67243035542747%"></div>
+<pre>
+  snapply equiv_path_ind_moveL_Mp.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1084
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  revert wlrnat_x_y wlrnat_V_x_y.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1086
+Time: 0.01s">
+<div class="time" style="width: 0.96061479346782%"></div>
+<pre>
+  snapply (equiv_path_ind (equiv_helper _ _)).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1087
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert wlrnat_x_z wlrnat_V_x_z.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1088
+Time: 0.012s">
+<div class="time" style="width: 1.1527377521614%"></div>
+<pre>
+  snapply (equiv_path_ind (equiv_helper _ _)).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1089
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  revert ulnat_x0 ehlnat_1p_x0.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1091
+Time: 0.018s">
+<div class="time" style="width: 1.7291066282421%"></div>
+<pre>
+  snapply equiv_path_ind_rlucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1092
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert ulnat_x1 ehlnat_1p_x1.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1093
+Time: 0.013s">
+<div class="time" style="width: 1.2487992315082%"></div>
+<pre>
+  snapply equiv_path_ind_rlucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1094
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert ulnat_x2 ehlnat_1p_x2.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1095
+Time: 0.013s">
+<div class="time" style="width: 1.2487992315082%"></div>
+<pre>
+  snapply equiv_path_ind_rlucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1096
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  revert urnat_yz0 H_urnat_yz0.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1098
+Time: 0.018s">
+<div class="time" style="width: 1.7291066282421%"></div>
+<pre>
+  snapply equiv_path_ind_moveL_Mp.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1099
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert urnat_yz1 H_urnat_yz1.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1100
+Time: 0.019s">
+<div class="time" style="width: 1.8251681075889%"></div>
+<pre>
+  snapply equiv_path_ind_moveL_Mp.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert wlrnat_yz_x H_wlrnat_yz_x.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1102
+Time: 0.021s">
+<div class="time" style="width: 2.0172910662824%"></div>
+<pre>
+  snapply equiv_path_ind_moveL_Mp.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert ehrnat_yz0 H_ehrnat_yz0.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1104
+Time: 0.022s">
+<div class="time" style="width: 2.1133525456292%"></div>
+<pre>
+  snapply equiv_path_ind_moveL_Mp.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert ehrnat_yz1 H_ehrnat_yz1.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1106
+Time: 0.025s">
+<div class="time" style="width: 2.4015369836695%"></div>
+<pre>
+  snapply equiv_path_ind_moveL_Mp.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert ulnat_yz1 H_ulnat_yz1.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1108
+Time: 0.026s">
+<div class="time" style="width: 2.4975984630163%"></div>
+<pre>
+  snapply equiv_path_ind_moveL_Mp.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert ulnat_yz0 H_ulnat_yz0.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1110
+Time: 0.029s">
+<div class="time" style="width: 2.7857829010567%"></div>
+<pre>
+  snapply equiv_path_ind_moveL_Mp.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  revert urnat_y0 ehrnat_p1_y0.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1113
+Time: 0.023s">
+<div class="time" style="width: 2.209414024976%"></div>
+<pre>
+  snapply equiv_path_ind_rlucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert urnat_y1 ehrnat_p1_y1.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1115
+Time: 0.023s">
+<div class="time" style="width: 2.209414024976%"></div>
+<pre>
+  snapply equiv_path_ind_rlucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert urnat_z0 ehrnat_p1_z0.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1117
+Time: 0.025s">
+<div class="time" style="width: 2.4015369836695%"></div>
+<pre>
+  snapply equiv_path_ind_rlucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1118
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert urnat_z1 ehrnat_p1_z1.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1119
+Time: 0.024s">
+<div class="time" style="width: 2.3054755043228%"></div>
+<pre>
+  snapply equiv_path_ind_rlucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  revert x0 urnat_x0.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1122
+Time: 0.024s">
+<div class="time" style="width: 2.3054755043228%"></div>
+<pre>
+  snapply equiv_path_ind_rlucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert x1 urnat_x1.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1124
+Time: 0.023s">
+<div class="time" style="width: 2.209414024976%"></div>
+<pre>
+  snapply equiv_path_ind_rlucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1125
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert x2 urnat_x2.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1126
+Time: 0.026s">
+<div class="time" style="width: 2.4975984630163%"></div>
+<pre>
+  snapply equiv_path_ind_rlucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert y0 ulnat_y0.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1128
+Time: 0.024s">
+<div class="time" style="width: 2.3054755043228%"></div>
+<pre>
+  snapply equiv_path_ind_rlucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert y1 ulnat_y1.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1130
+Time: 0.024s">
+<div class="time" style="width: 2.3054755043228%"></div>
+<pre>
+  snapply equiv_path_ind_rlucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1131
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert z0 ulnat_z0.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1132
+Time: 0.025s">
+<div class="time" style="width: 2.4015369836695%"></div>
+<pre>
+  snapply equiv_path_ind_rlucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert z1 ulnat_z1.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1134
+Time: 0.024s">
+<div class="time" style="width: 2.3054755043228%"></div>
+<pre>
+  snapply equiv_path_ind_rlucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1135
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  revert wlrnat_y_x.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1137
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> (* Paired with wlx0 below. *)
+ </pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>revert wrx0 ehlnat_x0.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1138
+Time: 0.024s">
+<div class="time" style="width: 2.3054755043228%"></div>
+<pre>
+  snapply equiv_path_ind_rlucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert wlrnat_z_x.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> (* Paired with wlx1 below. *)
+ </pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>revert wrx1 ehlnat_x1.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1141
+Time: 0.025s">
+<div class="time" style="width: 2.4015369836695%"></div>
+<pre>
+  snapply equiv_path_ind_rlucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert wrx2 ehlnat_x2.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1143
+Time: 0.026s">
+<div class="time" style="width: 2.4975984630163%"></div>
+<pre>
+  snapply equiv_path_ind_rlucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert wly0 ehrnat_y0.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1145
+Time: 0.025s">
+<div class="time" style="width: 2.4015369836695%"></div>
+<pre>
+  snapply equiv_path_ind_rlucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert wly1 ehrnat_y1.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1147
+Time: 0.026s">
+<div class="time" style="width: 2.4975984630163%"></div>
+<pre>
+  snapply equiv_path_ind_rlucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1148
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert wlz0 ehrnat_z0.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1149
+Time: 0.029s">
+<div class="time" style="width: 2.7857829010567%"></div>
+<pre>
+  snapply equiv_path_ind_rlucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert wlz1 ehrnat_z1.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1151
+Time: 0.029s">
+<div class="time" style="width: 2.7857829010567%"></div>
+<pre>
+  snapply equiv_path_ind_rlucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1152
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  revert wlx1.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1154
+Time: 0.064s">
+<div class="time" style="width: 6.147934678194%"></div>
+<pre>
+  snapply equiv_path_ind_lrucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1155
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert wlx0.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1156
+Time: 0.044s">
+<div class="time" style="width: 4.2267050912584%"></div>
+<pre>
+  snapply equiv_path_ind_lrucancel.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1157
+Time: 0.032s">
+<div class="time" style="width: 3.073967339097%"></div>
+<pre>
+
+  destruct wlx2.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* Remove the next two lines if not using the [generalize_goal] tactic. *)
+ </pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1161
+Time: 0.012s">
+<div class="time" style="width: 1.1527377521614%"></div>
+<pre>exact H.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1161
+Time: 0.193s">
+<div class="time" style="width: 18.539865513929%"></div>
+<pre>
+  apply lem.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1162
+Time: 0.081s">
+<div class="time" style="width: 7.7809798270893%"></div>
+<pre>
+  reflexivity.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1163
+Time: 0.845s">
+<div class="time" style="width: 81.171950048031%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1164
+Time: 0.235s">
+<div class="time" style="width: 22.574447646494%"></div>
+<pre>
+
+Definition eh_V_p_pp {X} {a : X} (p q r : idpath (idpath a) = idpath (idpath a)) :
+  whiskerR (concat_p1 _ @@ concat_p1 _) _ @ whiskerR (eh_V p (q @ r)) _ @ lrucancel 1 @
+  whiskerL _ (Syllepsis.concat_pp_p_p_pp _ _ _)^ @ whiskerL _ (concat_p1 _ @@ concat_p1 _)^ =
+  (eh_p_pp_gen (urnat_pp q r) (urnat_pp q r) (wlrnat_p_pp p q r) [-]
+   lrucancel (whiskerL _ (ap (fun p =&gt; whiskerL q p) (moveL_V1 _ _ (eh_V p r))))) [-]
+  (eh_pp_p_gen (ulnat_pp q r) (ulnat_pp q r) (wlrnat_pp_p q r p) [-]
+   lrucancel (whiskerL _ (ap (fun p =&gt; whiskerR p r) (moveL_1V _ _ (eh_V p q))))).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1173
+Time: 0.15s">
+<div class="time" style="width: 14.409221902017%"></div>
+<pre>
+  exact (eh_V_p_pp_gen _ _ _ (ehrnat_p1_pp q r) (ehrnat_p1_pp q r) (wlrnat_V_p_pp p q r)).</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1174
+Time: 0.179s">
+<div class="time" style="width: 17.195004803074%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Syllepsis.v
+Line: 1176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

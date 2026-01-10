@@ -1,0 +1,2731 @@
+<html>
+<head>
+<title>Pushout.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Pushout.v</h1>
+
+<div class="code" title="File: Pushout.v
+Line: 1
+Time: 0.064s">
+<div class="time" style="width: 50%"></div>
+<pre>From HoTT Require Import Basics Types Truncations.Core.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 1
+Time: 0.003s">
+<div class="time" style="width: 2.34375%"></div>
+<pre>
+From HoTT.WildCat Require Import Core Universe Opposite NatTrans.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 2
+Time: 0.036s">
+<div class="time" style="width: 28.125%"></div>
+<pre>
+Require Import Pointed.Core Homotopy.ExactSequence HIT.epi.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 3
+Time: 0.001s">
+<div class="time" style="width: 0.78125%"></div>
+<pre>
+Require Import Modalities.ReflectiveSubuniverse.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 4
+Time: 0.03s">
+<div class="time" style="width: 23.4375%"></div>
+<pre>
+Require Import AbelianGroup AbPushout AbHom AbGroups.Biproduct.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 5
+Time: 0.002s">
+<div class="time" style="width: 1.5625%"></div>
+<pre>
+Require Import AbSES.Core AbSES.DirectSum.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope pointed_scope.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope type_scope.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 9
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope path_scope.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope mc_add_scope.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Pushouts of short exact sequences *)
+
+</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 14
+Time: 0.001s">
+<div class="time" style="width: 0.78125%"></div>
+<pre>Definition abses_pushout `{Univalence} {A A' B : AbGroup} (f : A $-&gt; A')
+  : AbSES B A -&gt; AbSES B A'.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro E.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 17
+Time: 0.002s">
+<div class="time" style="width: 1.5625%"></div>
+<pre>
+  snapply (Build_AbSES (ab_pushout f (inclusion E))
+                        ab_pushout_inl
+                        (ab_pushout_rec grp_homo_const (projection E) _)).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 21
+Time: 0.001s">
+<div class="time" style="width: 0.78125%"></div>
+<pre> symmetry; rapply iscomplex_abses.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 22
+Time: 0.002s">
+<div class="time" style="width: 1.5625%"></div>
+<pre> rapply ab_pushout_embedding_inl.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> napply (cancelR_issurjection ab_pushout_inr _).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 23
+Time: 0.003s">
+<div class="time" style="width: 2.34375%"></div>
+<pre>
+    rapply (conn_map_homotopic _ (projection E)); symmetry.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 24
+Time: 0.001s">
+<div class="time" style="width: 0.78125%"></div>
+<pre>
+    napply ab_pushout_rec_beta_right.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 26
+Time: 0.001s">
+<div class="time" style="width: 0.78125%"></div>
+<pre> snapply Build_IsExact.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 27
+Time: 0.007s">
+<div class="time" style="width: 5.46875%"></div>
+<pre> srapply phomotopy_homotopy_hset.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 27
+Time: 0.001s">
+<div class="time" style="width: 0.78125%"></div>
+<pre>
+      napply ab_pushout_rec_beta_left.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [bc' p].</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 29
+Time: 0.002s">
+<div class="time" style="width: 1.5625%"></div>
+<pre>
+      rapply contr_inhabited_hprop.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      (** Pick a preimage under the quotient map. *)
+     </pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>assert (bc : merely (hfiber grp_quotient_map bc')).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 32
+Time: 0.001s">
+<div class="time" style="width: 0.78125%"></div>
+<pre>
+      1: apply center, issurj_class_of.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 33
+Time: 0.02s">
+<div class="time" style="width: 15.625%"></div>
+<pre>
+      strip_truncations.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 34
+Time: 0.003s">
+<div class="time" style="width: 2.34375%"></div>
+<pre>
+      destruct bc as [[b c] q].</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      (** The E-component of the preimage is in the kernel of [projection E]. *)
+     </pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>assert (c_in_kernel : (projection E) c = mon_unit).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      1: {</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 38
+Time: 0.001s">
+<div class="time" style="width: 0.78125%"></div>
+<pre> refine (_ @ p); symmetry.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 38
+Time: 0.001s">
+<div class="time" style="width: 0.78125%"></div>
+<pre>
+           rewrite &lt;- q; simpl.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 39
+Time: 0.001s">
+<div class="time" style="width: 0.78125%"></div>
+<pre>
+           apply left_identity.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      (** By exactness, we get an element in [A]. *)
+     </pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>pose proof (a := isexact_preimage _ _ _ c c_in_kernel).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 42
+Time: 0.056s">
+<div class="time" style="width: 43.75%"></div>
+<pre>
+      strip_truncations.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      destruct a as [a s].</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      (** Now the goal is to show that [bc'] lies in the image of [ab_pushout_inl]. *)
+     </pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>apply tr.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 46
+Time: 0.046s">
+<div class="time" style="width: 35.9375%"></div>
+<pre>
+      exists (b + - f (- a)); cbn.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>  (* It simplifies the algebra to write [- f(- a)] instead of [f a]. *)
+     </pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 48
+Time: 0.037s">
+<div class="time" style="width: 28.90625%"></div>
+<pre>apply path_sigma_hprop; cbn.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 48
+Time: 0.001s">
+<div class="time" style="width: 0.78125%"></div>
+<pre>
+      change (ab_pushout_inl (b + - f (- a)) = bc').</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>  (* Just to guide the reader. *)
+     </pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>refine (_ @ q).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 50
+Time: 0.003s">
+<div class="time" style="width: 2.34375%"></div>
+<pre>
+      symmetry.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 51
+Time: 0.128s">
+<div class="time" style="width: 100%"></div>
+<pre>
+      apply path_ab_pushout; cbn.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      refine (tr (-a; _)).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply path_prod; cbn.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply grp_moveL_Mg.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 55
+Time: 0.001s">
+<div class="time" style="width: 0.78125%"></div>
+<pre>
+        by rewrite involutive.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 57
+Time: 0.003s">
+<div class="time" style="width: 2.34375%"></div>
+<pre> exact ((preserves_inverse a) @ ap _ s @ (right_identity _)^).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 57
+Time: 0.085s">
+<div class="time" style="width: 66.40625%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** The universal property of [abses_pushout_morphism] *)
+
+</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition abses_pushout_morphism `{Univalence} {A A' B : AbGroup}
+  (E : AbSES B A) (f : A $-&gt; A')
+  : AbSESMorphism E (abses_pushout f E).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply (Build_AbSESMorphism f _ grp_homo_id).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 66
+Time: 0.002s">
+<div class="time" style="width: 1.5625%"></div>
+<pre> exact ab_pushout_inr.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 67
+Time: 0.002s">
+<div class="time" style="width: 1.5625%"></div>
+<pre> exact ab_pushout_commsq.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 68
+Time: 0.011s">
+<div class="time" style="width: 8.59375%"></div>
+<pre> rapply ab_pushout_rec_beta_right.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Any map [f : E -&gt; F] of short exact sequences factors (uniquely) through [abses_pushout E f1]. *)
+
+</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition abses_pushout_morphism_rec `{Univalence} {A B X Y : AbGroup}
+  {E : AbSES B A} {F : AbSES Y X} (f : AbSESMorphism E F)
+  : AbSESMorphism (abses_pushout (component1 f) E) F.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 75
+Time: 0.001s">
+<div class="time" style="width: 0.78125%"></div>
+<pre>
+  snapply (Build_AbSESMorphism grp_homo_id _ (component3 f)).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 77
+Time: 0.005s">
+<div class="time" style="width: 3.90625%"></div>
+<pre> rapply ab_pushout_rec.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply left_square.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 79
+Time: 0.002s">
+<div class="time" style="width: 1.5625%"></div>
+<pre> intro x; simpl.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite grp_homo_unit.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 80
+Time: 0.001s">
+<div class="time" style="width: 0.78125%"></div>
+<pre>
+    exact (right_identity _)^.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 82
+Time: 0.028s">
+<div class="time" style="width: 21.875%"></div>
+<pre> snapply (issurj_isepi_funext grp_quotient_map).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: apply issurj_class_of.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 83
+Time: 0.004s">
+<div class="time" style="width: 3.125%"></div>
+<pre>
+    2: exact _.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 84
+Time: 0.002s">
+<div class="time" style="width: 1.5625%"></div>
+<pre>
+    intro x; simpl.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 85
+Time: 0.001s">
+<div class="time" style="width: 0.78125%"></div>
+<pre>
+    napply grp_homo_op_agree.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> refine (_ @ (grp_homo_unit _)^).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 87
+Time: 0.001s">
+<div class="time" style="width: 0.78125%"></div>
+<pre>
+      apply iscomplex_abses.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply right_square.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 89
+Time: 0.003s">
+<div class="time" style="width: 2.34375%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The original map factors via the induced map. *)</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 92
+Time: 0.002s">
+<div class="time" style="width: 1.5625%"></div>
+<pre>Definition abses_pushout_morphism_rec_beta `{Univalence} (A B X Y : AbGroup)
+  (E : AbSES B A) (F : AbSES Y X) (f : AbSESMorphism E F)
+  : f = absesmorphism_compose (abses_pushout_morphism_rec f)
+                              (abses_pushout_morphism E (component1 f)).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 96
+Time: 0.003s">
+<div class="time" style="width: 2.34375%"></div>
+<pre>
+  apply (equiv_ap issig_AbSESMorphism^-1 _ _).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 97
+Time: 0.024s">
+<div class="time" style="width: 18.75%"></div>
+<pre>
+  srapply path_sigma_hprop.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: apply path_prod.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: apply path_prod.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 100
+Time: 0.01s">
+<div class="time" style="width: 7.8125%"></div>
+<pre>
+  all: apply equiv_path_grouphomomorphism; intro x; simpl.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1,3: reflexivity.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite grp_homo_unit.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 103
+Time: 0.001s">
+<div class="time" style="width: 0.78125%"></div>
+<pre>
+  exact (left_identity _)^.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 104
+Time: 0.007s">
+<div class="time" style="width: 5.46875%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Given [E : AbSES B A'] and [F : AbSES B A] and a morphism [f : E -&gt; F], the pushout of [E] along [f_1] is [F] if [f_3] is homotopic to [id_B]. *)</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 107
+Time: 0.001s">
+<div class="time" style="width: 0.78125%"></div>
+<pre>Lemma abses_pushout_component3_id' `{Univalence}
+  {A A' B : AbGroup} {E : AbSES B A'} {F : AbSES B A}
+  (f : AbSESMorphism E F) (h : component3 f == grp_homo_id)
+  : abses_pushout (component1 f) E $== F.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  pose (g := abses_pushout_morphism_rec f).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  napply abses_path_data_to_iso.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exists (component2 g); split.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro x.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (left_square g _)^.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro x.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 117
+Time: 0.002s">
+<div class="time" style="width: 1.5625%"></div>
+<pre>
+    exact ((right_square g _) @ h _)^.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 118
+Time: 0.002s">
+<div class="time" style="width: 1.5625%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A version with equality instead of path data. *)</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 121
+Time: 0.017s">
+<div class="time" style="width: 13.28125%"></div>
+<pre>Definition abses_pushout_component3_id `{Univalence}
+  {A A' B : AbGroup} {E : AbSES B A'} {F : AbSES B A}
+  (f : AbSESMorphism E F) (h : component3 f == grp_homo_id)
+  : abses_pushout (component1 f) E = F
+  := equiv_path_abses_iso (abses_pushout_component3_id' f h).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 125
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Given short exact sequences [E] and [F] and homomorphisms [f : A' $-&gt; A] and [g : D' $-&gt; D], there is a morphism [E + F -&gt; fE + gF] induced by the universal properties of the pushouts of [E] and [F]. *)</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 127
+Time: 0.005s">
+<div class="time" style="width: 3.90625%"></div>
+<pre>Definition abses_directsum_pushout_morphism `{Univalence}
+  {A A' B C D D' : AbGroup} {E : AbSES B A'} {F : AbSES C D'}
+  (f : A' $-&gt; A) (g : D' $-&gt; D)
+  : AbSESMorphism (abses_direct_sum E F) (abses_direct_sum (abses_pushout f E) (abses_pushout g F))
+  := functor_abses_directsum (abses_pushout_morphism E f) (abses_pushout_morphism F g).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 131
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** For [E, F : AbSES B A'] and [f, g : A' $-&gt; A], we have (f+g)(E+F) = fE + gF, where + denotes the direct sum. *)</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 133
+Time: 0.008s">
+<div class="time" style="width: 6.25%"></div>
+<pre>Definition abses_directsum_distributive_pushouts `{Univalence}
+  {A A' B C C' D : AbGroup} {E : AbSES B A'} {F : AbSES D C'} (f : A' $-&gt; A) (g : C' $-&gt; C)
+  : abses_pushout (functor_ab_biprod f g) (abses_direct_sum E F)
+    = abses_direct_sum (abses_pushout f E) (abses_pushout g F)
+  := abses_pushout_component3_id (abses_directsum_pushout_morphism f g) (fun _ =&gt; idpath).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 137
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Given an [AbSESMorphism] whose third component is the identity, we know that it induces a path from the pushout of the domain along the first map to the codomain. Conversely, given a path from a pushout, we can deduce that the following square commutes: *)</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 139
+Time: 0.002s">
+<div class="time" style="width: 1.5625%"></div>
+<pre>Definition abses_path_pushout_inclusion_commsq `{Univalence} {A A' B : AbGroup}
+  (alpha : A $-&gt; A') (E : AbSES B A) (F : AbSES B A')
+  (p : abses_pushout alpha E = F)
+  : exists phi : middle E $-&gt; F, inclusion F o alpha == phi o inclusion E.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction p.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 144
+Time: 0.002s">
+<div class="time" style="width: 1.5625%"></div>
+<pre>
+  exists ab_pushout_inr; intro x.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 145
+Time: 0.003s">
+<div class="time" style="width: 2.34375%"></div>
+<pre>
+  napply ab_pushout_commsq.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 146
+Time: 0.001s">
+<div class="time" style="width: 0.78125%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 147
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Functoriality of [abses_pushout f : AbSES B A -&gt; AbSES B A'] *)
+
+(** In this file we will prove various "levels" of functoriality of pushing out. Here we show that the induced map between [AbSES B A] respect the groupoid structure of [is1gpd_abses] from AbSES.Core. *)
+
+</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 152
+Time: 0.001s">
+<div class="time" style="width: 0.78125%"></div>
+<pre>Instance is0functor_abses_pushout `{Univalence} {A A' B : AbGroup} (f : A $-&gt; A')
+  : Is0Functor (abses_pushout (B:=B) f).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 154
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply Build_Is0Functor;
+    intros E F p.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply abses_path_data_to_iso.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srefine (functor_ab_pushout f f (inclusion _) (inclusion _) grp_homo_id grp_homo_id p.1 _ _; (_, _)).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> symmetry; exact (fst p.2).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 161
+Time: 0.004s">
+<div class="time" style="width: 3.125%"></div>
+<pre> napply ab_pushout_rec_beta_left.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 162
+Time: 0.027s">
+<div class="time" style="width: 21.09375%"></div>
+<pre> srapply Quotient_ind_hprop.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 162
+Time: 0.026s">
+<div class="time" style="width: 20.3125%"></div>
+<pre>
+    intro x; simpl.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 163
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply grp_cancelL.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 164
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (snd p.2 (snd x) @ ap (projection F) _).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 165
+Time: 0.001s">
+<div class="time" style="width: 0.78125%"></div>
+<pre>
+    exact (left_identity _)^.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 166
+Time: 0.007s">
+<div class="time" style="width: 5.46875%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 167
+Time: 0.001s">
+<div class="time" style="width: 0.78125%"></div>
+<pre>
+
+Instance is1functor_abses_pushout `{Univalence}
+  {A A' B : AbGroup} (f : A $-&gt; A')
+  : Is1Functor (abses_pushout (B:=B) f).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 172
+Time: 0.002s">
+<div class="time" style="width: 1.5625%"></div>
+<pre>
+  srapply Build_Is1Functor.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 174
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros E F g0 g1 h.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 174
+Time: 0.034s">
+<div class="time" style="width: 26.5625%"></div>
+<pre>
+    rapply Quotient_ind_hprop; intros [a' e]; simpl.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 175
+Time: 0.002s">
+<div class="time" style="width: 1.5625%"></div>
+<pre>
+    by rewrite (h e).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro E.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 177
+Time: 0.038s">
+<div class="time" style="width: 29.6875%"></div>
+<pre>
+    rapply Quotient_ind_hprop; intros [a' e]; simpl.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 178
+Time: 0.009s">
+<div class="time" style="width: 7.03125%"></div>
+<pre>
+    refine (ap (class_of _) (path_prod' _ _)).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 179
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 180
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (grp_unit_r _).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 180
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 181
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (grp_unit_l _).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 181
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 182
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros E F G g0 g1.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 182
+Time: 0.036s">
+<div class="time" style="width: 28.125%"></div>
+<pre>
+    rapply Quotient_ind_hprop; intros [a' e]; simpl.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 183
+Time: 0.017s">
+<div class="time" style="width: 13.28125%"></div>
+<pre>
+    refine (ap (class_of _) (path_prod' _ _)).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 184
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (grp_unit_r _)^.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 186
+Time: 0.001s">
+<div class="time" style="width: 0.78125%"></div>
+<pre> exact (ap (fun x =&gt; _ + g1.1 x) (grp_unit_l _)^).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 186
+Time: 0.075s">
+<div class="time" style="width: 58.59375%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 187
+Time: 0.004s">
+<div class="time" style="width: 3.125%"></div>
+<pre>
+
+Definition abses_pushout_path_data_1 `{Univalence} {A A' B : AbGroup} (f : A $-&gt; A') {E : AbSES B A} 
+  : fmap (abses_pushout f) (Id E) = Id (abses_pushout f E).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 190
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 191
+Time: 0.033s">
+<div class="time" style="width: 25.78125%"></div>
+<pre>
+  srapply path_sigma_hprop.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 192
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply equiv_path_groupisomorphism.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 193
+Time: 0.02s">
+<div class="time" style="width: 15.625%"></div>
+<pre>
+  srapply Quotient_ind_hprop.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 194
+Time: 0.005s">
+<div class="time" style="width: 3.90625%"></div>
+<pre>
+  intros [a' e]; simpl.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> (* This is true even on the representatives. *)
+ </pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 196
+Time: 0.033s">
+<div class="time" style="width: 25.78125%"></div>
+<pre>apply qglue.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (tr (0; _)).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 197
+Time: 0.001s">
+<div class="time" style="width: 0.78125%"></div>
+<pre>
+  apply path_prod'; cbn.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 199
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> refine (ap _ (grp_homo_unit _) @ _).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 199
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (grp_inv_unit @ _).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply grp_moveL_Vg.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 201
+Time: 0.002s">
+<div class="time" style="width: 1.5625%"></div>
+<pre>
+    exact (right_identity _ @ right_identity _).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 202
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 203
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> refine (grp_homo_unit _ @ _).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 203
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply grp_moveL_Vg.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 204
+Time: 0.002s">
+<div class="time" style="width: 1.5625%"></div>
+<pre>
+    exact (right_identity _ @ left_identity _).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 205
+Time: 0.007s">
+<div class="time" style="width: 5.46875%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 206
+Time: 0.006s">
+<div class="time" style="width: 4.6875%"></div>
+<pre>
+
+Definition ap_abses_pushout `{Univalence} {A A' B : AbGroup} (f : A $-&gt; A')
+  {E F : AbSES B A} (p : E = F)
+  : ap (abses_pushout f) p
+    = equiv_path_abses_iso (fmap (abses_pushout f) (equiv_path_abses_iso^-1 p)).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 211
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 212
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction p.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 213
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_ @ ap _ _).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 214
+Time: 0.022s">
+<div class="time" style="width: 17.1875%"></div>
+<pre>
+  2: exact ((abses_pushout_path_data_1 f)^ @ ap _ equiv_path_absesV_1^).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 215
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact equiv_path_abses_1^.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 216
+Time: 0.001s">
+<div class="time" style="width: 0.78125%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 217
+Time: 0.004s">
+<div class="time" style="width: 3.125%"></div>
+<pre>
+
+Definition ap_abses_pushout_data `{Univalence} {A A' B : AbGroup} (f : A $-&gt; A')
+  {E F : AbSES B A} (p : E $== F)
+  : ap (abses_pushout f) (equiv_path_abses_iso p)
+    = equiv_path_abses_iso (fmap (abses_pushout f) p).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 222
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 223
+Time: 0.009s">
+<div class="time" style="width: 7.03125%"></div>
+<pre>
+  refine (ap_abses_pushout _ _ @ _).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 224
+Time: 0.001s">
+<div class="time" style="width: 0.78125%"></div>
+<pre>
+  apply (ap (equiv_path_abses_iso o _)).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 225
+Time: 0.026s">
+<div class="time" style="width: 20.3125%"></div>
+<pre>
+  apply eissect.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 226
+Time: 0.031s">
+<div class="time" style="width: 24.21875%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 227
+Time: 0.001s">
+<div class="time" style="width: 0.78125%"></div>
+<pre>
+
+Definition abses_pushout_point' `{Univalence} {A A' B : AbGroup} (f : A $-&gt; A')
+  : abses_pushout f (point (AbSES B A)) $== pt.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 230
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 231
+Time: 0.001s">
+<div class="time" style="width: 0.78125%"></div>
+<pre>
+  srapply abses_path_data_to_iso;
+    srefine (_; (_,_)).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 233
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 234
+Time: 0.003s">
+<div class="time" style="width: 2.34375%"></div>
+<pre> snrefine (ab_pushout_rec ab_biprod_inl _ _).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 234
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 235
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (functor_ab_biprod f grp_homo_id).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 235
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 236
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 236
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 237
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro a'.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 237
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> 
+    apply path_prod.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 238
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 239
+Time: 0.002s">
+<div class="time" style="width: 1.5625%"></div>
+<pre> simpl.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 239
+Time: 0.001s">
+<div class="time" style="width: 0.78125%"></div>
+<pre>
+      exact (ap _ (grp_homo_unit f) @ right_identity _).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 240
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 241
+Time: 0.002s">
+<div class="time" style="width: 1.5625%"></div>
+<pre> simpl.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 241
+Time: 0.001s">
+<div class="time" style="width: 0.78125%"></div>
+<pre>
+      exact (right_identity _).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 242
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 243
+Time: 0.03s">
+<div class="time" style="width: 23.4375%"></div>
+<pre> srapply Quotient_ind_hprop.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 243
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    reflexivity.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 244
+Time: 0.006s">
+<div class="time" style="width: 4.6875%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 245
+Time: 0.018s">
+<div class="time" style="width: 14.0625%"></div>
+<pre>
+
+Definition abses_pushout_point `{Univalence} {A A' B : AbGroup} (f : A $-&gt; A')
+  : abses_pushout f (point (AbSES B A)) = pt
+  := equiv_path_abses_iso (abses_pushout_point' f).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 249
+Time: 0.003s">
+<div class="time" style="width: 2.34375%"></div>
+<pre>
+
+Definition abses_pushout' `{Univalence} {A A' B : AbGroup} (f : A $-&gt; A')
+  : AbSES B A --&gt;* AbSES B A'
+  := Build_BasepointPreservingFunctor (abses_pushout f) (abses_pushout_point' f).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 253
+Time: 0.001s">
+<div class="time" style="width: 0.78125%"></div>
+<pre>
+
+Definition abses_pushout_pmap `{Univalence} {A A' B : AbGroup} (f : A $-&gt; A')
+  : AbSES B A -&gt;* AbSES B A'
+  := to_pointed (abses_pushout' f).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 257
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The following general lemma lets us show that [abses_pushout f E] is trivial in cases of interest. It says that if you have a map [phi : E -&gt; A'], then if you push out along the restriction [phi $o inclusion E], the result is trivial. Specifically, we get a morphism witnessing this fact.  *)</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 259
+Time: 0.001s">
+<div class="time" style="width: 0.78125%"></div>
+<pre>Definition abses_pushout_trivial_morphism {B A A' : AbGroup}
+  (E : AbSES B A) (f : A $-&gt; A') (phi : middle E $-&gt; A')
+  (k : f == phi $o inclusion E)
+  : AbSESMorphism E (pt : AbSES B A').</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 262
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 263
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply (Build_AbSESMorphism f _ grp_homo_id).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 264
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact (ab_biprod_corec phi (projection E)).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 265
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 266
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro a; cbn.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 266
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (path_prod' (k a) _^).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 267
+Time: 0.001s">
+<div class="time" style="width: 0.78125%"></div>
+<pre>
+    apply isexact_inclusion_projection.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 268
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 268
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  reflexivity.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 269
+Time: 0.001s">
+<div class="time" style="width: 0.78125%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 270
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The pushout of a short exact sequence along its inclusion map is trivial. *)</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 272
+Time: 0.001s">
+<div class="time" style="width: 0.78125%"></div>
+<pre>Definition abses_pushout_inclusion_morphism {B A : AbGroup} (E : AbSES B A)
+  : AbSESMorphism E (pt : AbSES B E)
+  := abses_pushout_trivial_morphism E (inclusion E) grp_homo_id (fun _ =&gt; idpath).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 274
+Time: 0.003s">
+<div class="time" style="width: 2.34375%"></div>
+<pre>
+
+Definition abses_pushout_inclusion `{Univalence} {B A : AbGroup} (E : AbSES B A)
+  : abses_pushout (inclusion E) E = pt
+  := abses_pushout_component3_id
+       (abses_pushout_inclusion_morphism E) (fun _ =&gt; idpath).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 279
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Pushing out along [grp_homo_const] is trivial. *)</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 281
+Time: 0.001s">
+<div class="time" style="width: 0.78125%"></div>
+<pre>Definition abses_pushout_const_morphism {B A A' : AbGroup} (E : AbSES B A)
+  : AbSESMorphism E (pt : AbSES B A')
+  := abses_pushout_trivial_morphism E
+       grp_homo_const grp_homo_const (fun _ =&gt; idpath).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 284
+Time: 0.004s">
+<div class="time" style="width: 3.125%"></div>
+<pre>
+
+Definition abses_pushout_const `{Univalence} {B A A' : AbGroup} (E : AbSES B A)
+  : abses_pushout grp_homo_const E = pt :&gt; AbSES B A'
+  := abses_pushout_component3_id
+       (abses_pushout_const_morphism E) (fun _ =&gt; idpath).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 289
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Pushing out a fixed extension, with the map variable. This is the connecting map in the contravariant six-term exact sequence (see SixTerm.v). *)</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 291
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition abses_pushout_abses `{Univalence} {B A G : AbGroup} (E : AbSES B A)
+  : ab_hom A G -&gt;* AbSES B G.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 292
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 293
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply Build_pMap.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 294
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact (fun g =&gt; abses_pushout g E).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 295
+Time: 0.018s">
+<div class="time" style="width: 14.0625%"></div>
+<pre>
+  apply abses_pushout_const.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 296
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 297
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Functoriality of pushing out *)
+
+(** For every [E : AbSES B A], the pushout of [E] along [id_A] is [E]. *)</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 301
+Time: 0.002s">
+<div class="time" style="width: 1.5625%"></div>
+<pre>Definition abses_pushout_id `{Univalence} {A B : AbGroup}
+  : abses_pushout (B:=B) (@grp_homo_id A) == idmap
+  := fun E =&gt; abses_pushout_component3_id (abses_morphism_id E) (fun _ =&gt; idpath).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 303
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition abses_pushout_pmap_id `{Univalence} {A B : AbGroup}
+  : abses_pushout_pmap (B:=B) (@grp_homo_id A) ==* @pmap_idmap (AbSES B A).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 306
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 307
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply Build_pHomotopy.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 308
+Time: 0.003s">
+<div class="time" style="width: 2.34375%"></div>
+<pre>
+  1: exact abses_pushout_id.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 309
+Time: 0.001s">
+<div class="time" style="width: 0.78125%"></div>
+<pre>
+  refine (_ @ (concat_p1 _)^).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 310
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* For some reason Coq spends time finding [x] below, so we specify it. *)
+ </pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 312
+Time: 0.04s">
+<div class="time" style="width: 31.25%"></div>
+<pre>napply (ap equiv_path_abses_iso
+             (x:=abses_pushout_component3_id' (abses_morphism_id pt) _)).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 313
+Time: 0.068s">
+<div class="time" style="width: 53.125%"></div>
+<pre>
+  apply path_sigma_hprop.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 314
+Time: 0.001s">
+<div class="time" style="width: 0.78125%"></div>
+<pre>
+  apply equiv_path_groupisomorphism.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 315
+Time: 0.087s">
+<div class="time" style="width: 67.96875%"></div>
+<pre>
+  by rapply Quotient_ind_hprop.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 316
+Time: 0.015s">
+<div class="time" style="width: 11.71875%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 317
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Pushing out along homotopic maps induces homotopic pushout functors. This statement has a short proof by path induction on the homotopy [h], but we prefer to construct a path using [abses_path_data_iso] with better computational properties. *)</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 319
+Time: 0.001s">
+<div class="time" style="width: 0.78125%"></div>
+<pre>Lemma abses_pushout_homotopic' `{Univalence} {A A' B : AbGroup}
+  (f f' : A $-&gt; A') (h : f == f')
+  : abses_pushout (B:=B) f $=&gt; abses_pushout f'.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 321
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 322
+Time: 0.005s">
+<div class="time" style="width: 3.90625%"></div>
+<pre>
+  intro E; cbn.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 323
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply abses_path_data_to_iso.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 324
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snrefine (_; (_, _)).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 325
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 326
+Time: 0.005s">
+<div class="time" style="width: 3.90625%"></div>
+<pre> srapply (ab_pushout_rec (inclusion _)).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 326
+Time: 0.004s">
+<div class="time" style="width: 3.125%"></div>
+<pre>
+    1: exact ab_pushout_inr.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 327
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro x.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 328
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (ap _ (h x) @ _).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 329
+Time: 0.003s">
+<div class="time" style="width: 2.34375%"></div>
+<pre>
+    exact (ab_pushout_commsq x).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 330
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 331
+Time: 0.003s">
+<div class="time" style="width: 2.34375%"></div>
+<pre> apply ab_pushout_rec_beta_left.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 331
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 332
+Time: 0.033s">
+<div class="time" style="width: 25.78125%"></div>
+<pre> rapply Quotient_ind_hprop; intros [a' e]; simpl.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 332
+Time: 0.001s">
+<div class="time" style="width: 0.78125%"></div>
+<pre>
+    exact (ap (fun x =&gt; _ + projection E x) (grp_unit_l _)^).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 333
+Time: 0.005s">
+<div class="time" style="width: 3.90625%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 334
+Time: 0.004s">
+<div class="time" style="width: 3.125%"></div>
+<pre>
+
+Definition abses_pushout_homotopic `{Univalence} {A A' B : AbGroup}
+  (f f' : A $-&gt; A') (h : f == f')
+  : abses_pushout (B:=B) f == abses_pushout f'
+  := equiv_path_data_homotopy _ _ (abses_pushout_homotopic' _ _ h).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 339
+Time: 0.001s">
+<div class="time" style="width: 0.78125%"></div>
+<pre>
+
+Definition abses_pushout_phomotopic' `{Univalence} {A A' B : AbGroup}
+  (f f' : A $-&gt; A') (h : f == f')
+  : abses_pushout' (B:=B) f $=&gt;* abses_pushout' f'.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 343
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 344
+Time: 0.023s">
+<div class="time" style="width: 17.96875%"></div>
+<pre>
+  exists (abses_pushout_homotopic' _ _ h).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 345
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply gpd_moveL_Vh.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 346
+Time: 0.064s">
+<div class="time" style="width: 50%"></div>
+<pre>
+  rapply Quotient_ind_hprop; intros [a' [a b]]; simpl.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 347
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply path_prod'.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 348
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 349
+Time: 0.001s">
+<div class="time" style="width: 0.78125%"></div>
+<pre> by rewrite grp_unit_l, grp_unit_r, (h a).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 349
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 350
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply grp_unit_l.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 350
+Time: 0.016s">
+<div class="time" style="width: 12.5%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 351
+Time: 0.004s">
+<div class="time" style="width: 3.125%"></div>
+<pre>
+
+Definition abses_pushout_phomotopic `{Univalence} {A A' B : AbGroup}
+  (f f' : A $-&gt; A') (h : f == f')
+  : abses_pushout_pmap (B:=B) f ==* abses_pushout_pmap f'
+  := equiv_ptransformation_phomotopy (abses_pushout_phomotopic' f f' h).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 356
+Time: 0.001s">
+<div class="time" style="width: 0.78125%"></div>
+<pre>
+
+Definition abses_pushout_compose' `{Univalence} {A0 A1 A2 B : AbGroup}
+  (f : A0 $-&gt; A1) (g : A1 $-&gt; A2)
+  : abses_pushout (g $o f) $=&gt; abses_pushout (B:=B) g o abses_pushout f.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 360
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 361
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro E.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 362
+Time: 0.001s">
+<div class="time" style="width: 0.78125%"></div>
+<pre>
+  srapply abses_path_data_to_iso;
+    srefine (_; (_,_)).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 364
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 365
+Time: 0.003s">
+<div class="time" style="width: 2.34375%"></div>
+<pre> snapply ab_pushout_rec.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 365
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 366
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply inclusion.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 366
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 367
+Time: 0.003s">
+<div class="time" style="width: 2.34375%"></div>
+<pre> exact (component2 (abses_pushout_morphism _ g)
+                        $o component2 (abses_pushout_morphism _ f)).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 368
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 369
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro a0.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 369
+Time: 0.011s">
+<div class="time" style="width: 8.59375%"></div>
+<pre>
+      refine (left_square (abses_pushout_morphism _ g) _ @ _).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 370
+Time: 0.009s">
+<div class="time" style="width: 7.03125%"></div>
+<pre>
+      exact (ap (component2 (abses_pushout_morphism (abses_pushout f E) g))
+                (left_square (abses_pushout_morphism _ f) a0)).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 372
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 373
+Time: 0.003s">
+<div class="time" style="width: 2.34375%"></div>
+<pre> apply ab_pushout_rec_beta_left.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 373
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 374
+Time: 0.028s">
+<div class="time" style="width: 21.875%"></div>
+<pre> srapply Quotient_ind_hprop.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 374
+Time: 0.009s">
+<div class="time" style="width: 7.03125%"></div>
+<pre>
+    intro x; simpl.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 375
+Time: 0.001s">
+<div class="time" style="width: 0.78125%"></div>
+<pre>
+    apply grp_cancelL; symmetry.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 376
+Time: 0.003s">
+<div class="time" style="width: 2.34375%"></div>
+<pre>
+    exact (left_identity _ @ ap (projection E) (left_identity _)).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 377
+Time: 0.011s">
+<div class="time" style="width: 8.59375%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 378
+Time: 0.004s">
+<div class="time" style="width: 3.125%"></div>
+<pre>
+
+Definition abses_pushout_compose `{Univalence} {A0 A1 A2 B : AbGroup}
+  (f : A0 $-&gt; A1) (g : A1 $-&gt; A2)
+  : abses_pushout (g $o f) == abses_pushout (B:=B) g o abses_pushout f
+  := equiv_path_data_homotopy _ _ (abses_pushout_compose' f g).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 383
+Time: 0.002s">
+<div class="time" style="width: 1.5625%"></div>
+<pre>
+
+Definition abses_pushout_pcompose' `{Univalence} {A0 A1 A2 B : AbGroup}
+  (f : A0 $-&gt; A1) (g : A1 $-&gt; A2)
+  : abses_pushout' (B:=B) (g $o f) $=&gt;* abses_pushout' g $o* abses_pushout' f.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 387
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 388
+Time: 0.003s">
+<div class="time" style="width: 2.34375%"></div>
+<pre>
+  exists (abses_pushout_compose' f g).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 389
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply gpd_moveL_Vh.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 390
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> (* it's easiest to construct a path in [pt] *)
+ </pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 391
+Time: 0.079s">
+<div class="time" style="width: 61.71875%"></div>
+<pre>rapply Quotient_ind_hprop; intros [a2 [a0 b]]; simpl.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 391
+Time: 0.004s">
+<div class="time" style="width: 3.125%"></div>
+<pre>
+  by rewrite 7 grp_unit_l, 2 grp_unit_r.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 392
+Time: 0.025s">
+<div class="time" style="width: 19.53125%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 393
+Time: 0.001s">
+<div class="time" style="width: 0.78125%"></div>
+<pre>
+
+Definition abses_pushout_pcompose `{Univalence} {A0 A1 A2 B : AbGroup}
+  (f : A0 $-&gt; A1) (g : A1 $-&gt; A2)
+  : abses_pushout_pmap (B:=B) (g $o f)
+      ==* abses_pushout_pmap g o* abses_pushout_pmap f.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 398
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 399
+Time: 0.001s">
+<div class="time" style="width: 0.78125%"></div>
+<pre>
+  refine (_ @* (to_pointed_compose _ _)^*).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 400
+Time: 0.001s">
+<div class="time" style="width: 0.78125%"></div>
+<pre>
+  apply equiv_ptransformation_phomotopy.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 401
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply abses_pushout_pcompose'.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 402
+Time: 0.001s">
+<div class="time" style="width: 0.78125%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 403
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [AbSES B : AbGroup -&gt; pType] and [AbSES' B : AbGroup -&gt; Type] are covariant functors, for any [B]. *)
+
+</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 406
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance is0functor_abses'01 `{Univalence} {B : AbGroup^op}
+  : Is0Functor (AbSES' B).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 407
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 408
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply Build_Is0Functor.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 409
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (fun _ _ g =&gt; abses_pushout g).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 410
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 411
+Time: 0.001s">
+<div class="time" style="width: 0.78125%"></div>
+<pre>
+
+Instance is1functor_abses'01 `{Univalence} {B : AbGroup^op}
+  : Is1Functor (AbSES' B).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 414
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 415
+Time: 0.012s">
+<div class="time" style="width: 9.375%"></div>
+<pre>
+  apply Build_Is1Functor; intros; cbn.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 416
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 417
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by apply abses_pushout_homotopic.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 417
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 418
+Time: 0.001s">
+<div class="time" style="width: 0.78125%"></div>
+<pre> exact abses_pushout_id.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 418
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 419
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply abses_pushout_compose.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 419
+Time: 0.001s">
+<div class="time" style="width: 0.78125%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 420
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance is0functor_abses01 `{Univalence} {B : AbGroup^op}
+  : Is0Functor (AbSES B).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 423
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 424
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply Build_Is0Functor.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 425
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (fun _ _ g =&gt; abses_pushout_pmap g).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 426
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 427
+Time: 0.001s">
+<div class="time" style="width: 0.78125%"></div>
+<pre>
+
+Instance is1functor_abses01 `{Univalence} {B : AbGroup^op}
+  : Is1Functor (AbSES B).</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 430
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 431
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply Build_Is1Functor; intros; cbn.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 432
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 433
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by apply abses_pushout_phomotopic.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 433
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 434
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply abses_pushout_pmap_id.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 434
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 435
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply abses_pushout_pcompose.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 435
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Pushout.v
+Line: 437
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

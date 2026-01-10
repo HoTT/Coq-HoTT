@@ -1,0 +1,1194 @@
+<html>
+<head>
+<title>FunctorCat.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for FunctorCat.v</h1>
+
+<div class="code" title="File: FunctorCat.v
+Line: 1
+Time: 0.022s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import Basics.Overture Basics.Tactics.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 1
+Time: 0.002s">
+<div class="time" style="width: 9.0909090909091%"></div>
+<pre>
+Require Import WildCat.Core.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 2
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import WildCat.Opposite.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 3
+Time: 0.004s">
+<div class="time" style="width: 18.181818181818%"></div>
+<pre>
+Require Import WildCat.Equiv.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import WildCat.Induced.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 5
+Time: 0.002s">
+<div class="time" style="width: 9.0909090909091%"></div>
+<pre>
+Require Import WildCat.NatTrans.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Wild functor categories *)
+
+(** ** Categories of 0-coherent 1-functors *)
+
+</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 11
+Time: 0.001s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>Record Fun01 (A B : Type) `{IsGraph A} `{IsGraph B} := {
+  fun01_F : A -&gt; B;
+  fun01_is0functor :: Is0Functor fun01_F;
+}.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Coercion fun01_F : Fun01 &gt;-&gt; Funclass.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments Build_Fun01 {A B isgraph_A isgraph_B} F {fun01_is0functor} : rename.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments fun01_F {A B isgraph_A isgraph_B} : rename.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** An alternate constructor that expects the [fmap] argument. *)</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 21
+Time: 0.001s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>Definition Build_Fun01' {A B : Type} `{IsGraph A} `{IsGraph B}
+  (F : A -&gt; B) (fmap : forall a b (f : a $-&gt; b), F a $-&gt; F b)
+  : Fun01 A B
+  := Build_Fun01 F (fun01_is0functor:=Build_Is0Functor F fmap).</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 24
+Time: 0.005s">
+<div class="time" style="width: 22.727272727273%"></div>
+<pre>
+
+Definition issig_Fun01 (A B : Type) `{IsGraph A} `{IsGraph B}
+  : _  &lt;~&gt; Fun01 A B := ltac:(issig).</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Note that even if [A] and [B] are fully coherent oo-categories, the objects of our "functor category" are not fully coherent.  Thus we cannot in general expect this "functor category" to itself be fully coherent.  However, it is at least a 0-coherent 1-category, as long as [B] is a 1-coherent 1-category. *)
+
+</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isgraph_fun01 (A B : Type) `{IsGraph A} `{Is1Cat B} : IsGraph (Fun01 A B).</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply Build_IsGraph.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [F ?] [G ?].</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (NatTrans F G).</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance is01cat_fun01 (A B : Type) `{IsGraph A} `{Is1Cat B} : Is01Cat (Fun01 A B).</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply Build_Is01Cat.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [F ?]; cbn.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (nattrans_id F).</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros F G K gamma alpha; cbn in *.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (nattrans_comp gamma alpha).</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance is2graph_fun01 (A B : Type) `{IsGraph A, Is1Cat B}
+  : Is2Graph (Fun01 A B).</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [F ?] [G ?]; apply Build_IsGraph.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [alpha ?] [gamma ?].</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 50
+Time: 0.001s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>
+  exact (forall a, alpha a $== gamma a).</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 51
+Time: 0.001s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** In fact, in this case it is automatically also a 0-coherent 2-category and a 1-coherent 1-category, with a totally incoherent notion of 2-cell between 1-coherent natural transformations. *)
+
+</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 55
+Time: 0.001s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>Instance is1cat_fun01 (A B : Type) `{IsGraph A} `{Is1Cat B} : Is1Cat (Fun01 A B).</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 56
+Time: 0.01s">
+<div class="time" style="width: 45.454545454545%"></div>
+<pre>
+  srapply Build_Is1Cat.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 58
+Time: 0.001s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre> intros [F ?] [G ?]; srapply Build_Is01Cat.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [alpha ?] a; cbn.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      reflexivity.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 61
+Time: 0.001s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre> intros [alpha ?] [gamma ?] [phi ?] nu mu a.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (mu a $@ nu a).</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 63
+Time: 0.003s">
+<div class="time" style="width: 13.636363636364%"></div>
+<pre> intros [F ?] [G ?]; srapply Build_Is0Gpd.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros [alpha ?] [gamma ?] mu a.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 64
+Time: 0.001s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>
+    exact ((mu a)^$).</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 66
+Time: 0.001s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre> intros [F ?] [G ?] [K ?] [alpha ?].</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply Build_Is0Functor.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 67
+Time: 0.001s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>
+    intros [phi ?] [mu ?] f a.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (alpha a $@L f a).</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 70
+Time: 0.001s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre> intros [F ?] [G ?] [K ?] [alpha ?].</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply Build_Is0Functor.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 71
+Time: 0.001s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>
+    intros [phi ?] [mu ?] f a.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (f a $@R alpha a).</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 74
+Time: 0.022s">
+<div class="time" style="width: 100%"></div>
+<pre> intros [F ?] [G ?] [K ?] [L ?] [alpha ?] [gamma ?] [phi ?] a; cbn.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 74
+Time: 0.001s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>
+    srapply cat_assoc.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 76
+Time: 0.022s">
+<div class="time" style="width: 100%"></div>
+<pre> intros [F ?] [G ?] [K ?] [L ?] [alpha ?] [gamma ?] [phi ?] a; cbn.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 76
+Time: 0.001s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>
+    srapply cat_assoc_opp.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 78
+Time: 0.011s">
+<div class="time" style="width: 50%"></div>
+<pre> intros [F ?] [G ?] [alpha ?] a; cbn.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply cat_idl.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 80
+Time: 0.021s">
+<div class="time" style="width: 95.454545454545%"></div>
+<pre> intros [F ?] [G ?] [alpha ?] a; cbn.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply cat_idr.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 81
+Time: 0.016s">
+<div class="time" style="width: 72.727272727273%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** It also inherits a notion of equivalence, namely a natural transformation that is a pointwise equivalence.  Note that this is not a "fully coherent" notion of equivalence, since the functors and transformations are not themselves fully coherent. *)
+
+</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 85
+Time: 0.001s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>Instance hasequivs_fun01 (A B : Type) `{Is01Cat A} `{HasEquivs B}
+  : HasEquivs (Fun01 A B).</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 87
+Time: 0.002s">
+<div class="time" style="width: 9.0909090909091%"></div>
+<pre>
+  srapply Build_HasEquivs.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: intros F G; exact (NatEquiv F G).</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  all: intros F G alpha; cbn in *.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (forall a, CatIsEquiv (alpha a)).</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact alpha.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a; exact _.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 94
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply Build_NatEquiv'.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 94
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn; intros; apply cate_buildequiv_fun.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (natequiv_inverse alpha).</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros; apply cate_issect.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros; apply cate_isretr.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [gamma ?] r s a; cbn in *.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (catie_adjointify (alpha a) (gamma a) (r a) (s a)).</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 100
+Time: 0.004s">
+<div class="time" style="width: 18.181818181818%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Bundled opposite functors *)</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition fun01_op (A B : Type) `{IsGraph A} `{IsGraph B}
+  : Fun01 A B -&gt; Fun01 A^op B^op.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros F.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (Build_Fun01 (A:=A^op) (B:=B^op) F).</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Categories of 1-coherent 1-functors *)
+
+</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 111
+Time: 0.002s">
+<div class="time" style="width: 9.0909090909091%"></div>
+<pre>Record Fun11 (A B : Type) `{Is1Cat A} `{Is1Cat B} :=
+{
+  fun11_fun : A -&gt; B ;
+  is0functor_fun11 :: Is0Functor fun11_fun ;
+  is1functor_fun11 :: Is1Functor fun11_fun
+}.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Coercion fun11_fun : Fun11 &gt;-&gt; Funclass.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 118
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments Build_Fun11 A B
+  {isgraph_A is2graph_A is01cat_A is1cat_A
+   isgraph_B is2graph_B is01cat_B is1cat_B}
+  F {is0functor_fun11 is1functor_fun11} : rename.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Coercion fun01_fun11 {A B : Type} `{Is1Cat A} `{Is1Cat B}
+           (F : Fun11 A B)
+  : Fun01 A B.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 128
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exists F; exact _.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 130
+Time: 0.001s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>
+
+Instance isgraph_fun11 {A B : Type} `{Is1Cat A} `{Is1Cat B}
+  : IsGraph (Fun11 A B)
+  := isgraph_induced fun01_fun11.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 134
+Time: 0.002s">
+<div class="time" style="width: 9.0909090909091%"></div>
+<pre>
+
+Instance is01cat_fun11 {A B : Type} `{Is1Cat A} `{Is1Cat B}
+  : Is01Cat (Fun11 A B)
+  := is01cat_induced fun01_fun11.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 138
+Time: 0.004s">
+<div class="time" style="width: 18.181818181818%"></div>
+<pre>
+
+Instance is2graph_fun11 {A B : Type} `{Is1Cat A, Is1Cat B}
+  : Is2Graph (Fun11 A B)
+  := is2graph_induced fun01_fun11.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 142
+Time: 0.002s">
+<div class="time" style="width: 9.0909090909091%"></div>
+<pre>
+
+Instance is1cat_fun11 {A B :Type} `{Is1Cat A} `{Is1Cat B}
+  : Is1Cat (Fun11 A B)
+  := is1cat_induced fun01_fun11.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 146
+Time: 0.003s">
+<div class="time" style="width: 13.636363636364%"></div>
+<pre>
+
+Instance hasequivs_fun11 {A B : Type} `{Is1Cat A} `{HasEquivs B}
+  : HasEquivs (Fun11 A B)
+  := hasequivs_induced fun01_fun11.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Identity functors *)
+
+</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition fun01_id {A} `{IsGraph A} : Fun01 A A
+  := Build_Fun01 idmap.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 154
+Time: 0.001s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>
+
+Definition fun11_id {A} `{Is1Cat A} : Fun11 A A
+  := Build_Fun11 _ _ idmap.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Composition of functors *)
+
+</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 160
+Time: 0.002s">
+<div class="time" style="width: 9.0909090909091%"></div>
+<pre>Definition fun01_compose {A B C} `{IsGraph A, IsGraph B, IsGraph C}
+  : Fun01 B C -&gt; Fun01 A B -&gt; Fun01 A C
+  := fun G F =&gt; Build_Fun01 (G o F).</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 162
+Time: 0.001s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>
+
+Definition fun01_postcomp {A B C}
+  `{IsGraph A, Is1Cat B, Is1Cat C} (F : Fun11 B C)
+  : Fun01 A B -&gt; Fun01 A C
+  := fun01_compose (A:=A) F.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Warning: [F] needs to be a 1-functor for this to be a 0-functor. *)</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 169
+Time: 0.001s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>Instance is0functor_fun01_postcomp {A B C}
+  `{IsGraph A, Is1Cat B, Is1Cat C} (F : Fun11 B C)
+  : Is0Functor (fun01_postcomp (A:=A) F).</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply Build_Is0Functor.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros a b f.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 174
+Time: 0.003s">
+<div class="time" style="width: 13.636363636364%"></div>
+<pre>
+  napply nattrans_postwhisker.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 175
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact _.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact f.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 178
+Time: 0.003s">
+<div class="time" style="width: 13.636363636364%"></div>
+<pre>
+
+Instance is1functor_fun01_postcomp {A B C}
+  `{IsGraph A, Is1Cat B, Is1Cat C} (F : Fun11 B C)
+  : Is1Functor (fun01_postcomp (A:=A) F).</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 182
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 183
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply Build_Is1Functor.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 184
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a b f g p x.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 185
+Time: 0.002s">
+<div class="time" style="width: 9.0909090909091%"></div>
+<pre>
+    rapply fmap2.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 186
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rapply p.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros f x.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 188
+Time: 0.001s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>
+    rapply fmap_id.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 189
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 190
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a b c f g x.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 190
+Time: 0.002s">
+<div class="time" style="width: 9.0909090909091%"></div>
+<pre>
+    rapply fmap_comp.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 191
+Time: 0.002s">
+<div class="time" style="width: 9.0909090909091%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 192
+Time: 0.004s">
+<div class="time" style="width: 18.181818181818%"></div>
+<pre>
+
+Definition fun11_fun01_postcomp {A B C}
+  `{IsGraph A, Is1Cat B, Is1Cat C} (F : Fun11 B C)
+  : Fun11 (Fun01 A B) (Fun01 A C)
+  := Build_Fun11 _ _ (fun01_postcomp F).</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 197
+Time: 0.001s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>
+
+Definition fun11_compose {A B C} `{Is1Cat A, Is1Cat B, Is1Cat C}
+  : Fun11 B C -&gt; Fun11 A B -&gt; Fun11 A C.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 201
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros F G.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 202
+Time: 0.001s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>
+  napply Build_Fun11.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 203
+Time: 0.001s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>
+  exact (is1functor_compose G F).</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 204
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: FunctorCat.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

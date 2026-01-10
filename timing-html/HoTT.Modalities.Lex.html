@@ -1,0 +1,2375 @@
+<html>
+<head>
+<title>Lex.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Lex.v</h1>
+
+<div class="code" title="File: Lex.v
+Line: 1
+Time: 0.038s">
+<div class="time" style="width: 50%"></div>
+<pre>Require Import HoTT.Basics HoTT.Types.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 1
+Time: 0.035s">
+<div class="time" style="width: 46.052631578947%"></div>
+<pre>
+Require Import HFiber Limits.Pullback Factorization Truncations.Core.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 2
+Time: 0.005s">
+<div class="time" style="width: 6.5789473684211%"></div>
+<pre>
+Require Import Modality Accessible Modalities.Localization Descent Separated.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope path_scope.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope subuniverse_scope.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Lex modalities *)
+
+(** A lex modality is one that preserves finite limits, or equivalently pullbacks.  Many equivalent characterizations of this can be found in Theorem 3.1 of RSS.
+
+We choose as our definition that a lex modality to be a reflective subuniverse such that [O &lt;&lt;&lt; O], which is close to (but not quite the same as) RSS Theorem 3.1 (xiii).
+
+Note that since this includes [O &lt;&lt; O] as a precondition, such an [O] must indeed be a modality (and since modalities coerce to reflective subuniverses, in the following notation [O] could be either an element of [ReflectiveSubuniverse] or of [Modality]). *)</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Notation Lex O := (O &lt;&lt;&lt; O).</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Properties of lex modalities *)
+
+(** We now show that lex modalities have all the other properties from RSS Theorem 3.1 (which are equivalent to lex-ness).  All of them are simple specializations of properties from [Descent.v] to the case [O' = O] (although in the general case they are not known to be equivalent). *)</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section LexModality.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context (O : Modality) `{Lex O}.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** RSS Theorem 3.1 (i) *)
+ </pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition isconnected_paths
+             {A : Type} `{IsConnected O A} (x y : A)
+    : IsConnected O (x = y)
+    := OO_isconnected_paths O O x y.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** RSS Theorem 3.1 (iii) *)
+ </pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition conn_map_lex
+             {Y X : Type} `{IsConnected O Y, IsConnected O X} (f : Y -&gt; X)
+    : IsConnMap O f
+    := OO_conn_map_isconnected O O f.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** RSS Theorem 3.1 (iv) *)
+ </pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition isequiv_mapino_isconnected
+         {Y X : Type} `{IsConnected O Y, IsConnected O X}
+         (f : Y -&gt; X) `{MapIn O _ _ f}
+    : IsEquiv f
+    := OO_isequiv_mapino_isconnected O O f.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** RSS Theorem 3.1 (vi) *)
+ </pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 41
+Time: 0.002s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>Definition conn_map_functor_hfiber {A B C D : Type}
+             {f : A -&gt; B} {g : C -&gt; D} {h : A -&gt; C} {k : B -&gt; D}
+             `{IsConnMap O _ _ h, IsConnMap O _ _ k}
+             (p : k o f == g o h) (b : B)
+    : IsConnMap O (functor_hfiber p b)
+    := OO_conn_map_functor_hfiber O O p b.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** RSS Theorem 3.1 (vii) *)
+ </pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 49
+Time: 0.003s">
+<div class="time" style="width: 3.9473684210526%"></div>
+<pre>Definition ispullback_connmap_mapino_commsq
+             {A B C D : Type} {f : A -&gt; B} {g : C -&gt; D} {h : A -&gt; C} {k : B -&gt; D}
+             (p : k o f == g o h)
+             `{O_inverts O h, O_inverts O k, MapIn O _ _ f, MapIn O _ _ g}
+    : IsPullback p
+    := OO_ispullback_connmap_mapino O O p.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** RSS Theorem 3.1 (viii) *)
+ </pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 57
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>#[export] Instance
+    conn_map_functor_hfiber_to_O
+         {Y X : Type} (f : Y -&gt; X) (x : X)
+    : IsConnMap O (functor_hfiber (fun y =&gt; (to_O_natural O f y)^) x)
+    := OO_conn_map_functor_hfiber_to_O O O f x.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance isequiv_O_functor_hfiber
+         {A B} (f : A -&gt; B) (b : B)
+    : IsEquiv (O_functor_hfiber O f b).</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (isequiv_O_rec_O_inverts O).</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply O_inverts_conn_map.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 68
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>
+    refine (conn_map_homotopic
+              O (functor_hfiber (fun x =&gt; (to_O_natural O f x)^) b)
+              _ _ _).</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros [a p].</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unfold functor_hfiber, functor_sigma.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply ap.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply whiskerR, inv_V.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 74
+Time: 0.003s">
+<div class="time" style="width: 3.9473684210526%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 75
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>
+
+  Definition equiv_O_functor_hfiber
+             {A B} (f : A -&gt; B) (b : B)
+    : O (hfiber f b) &lt;~&gt; hfiber (O_functor O f) (to O B b)
+    := Build_Equiv _ _ (O_functor_hfiber O f b) _.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** RSS Theorem 3.1 (ix) *)
+ </pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export] Instance isequiv_path_O
+         {X : Type@{i}} (x y : X)
+    : IsEquiv (path_OO O O x y)
+    := isequiv_path_OO O O x y.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 86
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>
+
+  Definition equiv_path_O {X : Type@{i}} (x y : X)
+    : O (x = y) &lt;~&gt; (to O X x = to O X y)
+    := equiv_path_OO O O x y.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 90
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>
+
+  Definition equiv_path_O_to_O {X : Type} (x y : X)
+    : (equiv_path_O x y) o (to O (x = y)) == @ap _ _ (to O X) x y.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 94
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros p; unfold equiv_path_O, equiv_path_OO, path_OO; cbn.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply O_rec_beta.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** RSS Theorem 3.1 (x).  This justifies the term "left exact". *)
+ </pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 100
+Time: 0.002s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>#[export] Instance O_inverts_functor_pullback_to_O
+         {A B C : Type} (f : B -&gt; A) (g : C -&gt; A)
+    : O_inverts O (functor_pullback f g (O_functor O f) (O_functor O g)
+                                    (to O A) (to O B) (to O C)
+                                    (to_O_natural O f) (to_O_natural O g))
+    := OO_inverts_functor_pullback_to_O O O f g.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 105
+Time: 0.033s">
+<div class="time" style="width: 43.421052631579%"></div>
+<pre>
+
+  Definition equiv_O_pullback {A B C : Type} (f : B -&gt; A) (g : C -&gt; A)
+    : O (Pullback f g) &lt;~&gt; Pullback (O_functor O f) (O_functor O g)
+    := equiv_O_rec_O_inverts
+         O (functor_pullback f g (O_functor O f) (O_functor O g)
+                             (to O A) (to O B) (to O C)
+                             (to_O_natural O f) (to_O_natural O g)).</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 112
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>
+
+  Definition O_functor_pullback
+             {A B C : Type} (f : B -&gt; A) (g : C -&gt; A)
+    : IsPullback (O_functor_square O _ _ _ _ (pullback_commsq f g)).</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unfold IsPullback.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 118
+Time: 0.002s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+    napply (isequiv_homotopic
+               (O_rec (functor_pullback _ _ _ _ _ _ _
+                                        (to_O_natural O f) (to_O_natural O g)))).</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 121
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: apply isequiv_O_rec_O_inverts; exact _.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 122
+Time: 0.03s">
+<div class="time" style="width: 39.473684210526%"></div>
+<pre>
+    apply O_indpaths.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 123
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>
+    etransitivity.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 124
+Time: 0.037s">
+<div class="time" style="width: 48.684210526316%"></div>
+<pre>
+    1: intro x; apply O_rec_beta.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 125
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    symmetry.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 126
+Time: 0.009s">
+<div class="time" style="width: 11.842105263158%"></div>
+<pre>
+    snapply pullback_homotopic; intros [b [c e]]; cbn.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 127
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>
+    all: change (to (modality_subuniv O)) with (to O).</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 128
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> napply (to_O_natural O).</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 130
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> napply (to_O_natural O).</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 130
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 131
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> Open Scope long_path_scope.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 131
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>
+      lhs napply concat_p_pp.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 132
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>
+      lhs napply (concat_p_pp _ _ _ @@ 1).</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 133
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>
+      rewrite to_O_natural_compose.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      unfold O_functor_square.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 135
+Time: 0.002s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+      rewrite O_functor_homotopy_beta.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 136
+Time: 0.016s">
+<div class="time" style="width: 21.052631578947%"></div>
+<pre>
+      rewrite 6 concat_pp_p.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 137
+Time: 0.002s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+      do 3 apply whiskerL.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 138
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>
+      rhs_V napply concat_pp_p.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply moveL_pM.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 140
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>
+      lhs_V napply inv_pp.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 141
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>
+      rhs_V napply inv_Vp.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply (ap inverse).</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 143
+Time: 0.014s">
+<div class="time" style="width: 18.421052631579%"></div>
+<pre>
+      napply to_O_natural_compose.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      Close Scope long_path_scope.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 145
+Time: 0.073s">
+<div class="time" style="width: 96.052631578947%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 146
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>
+
+  Definition diagonal_O_functor {A B : Type} (f : A -&gt; B)
+    : diagonal (O_functor O f) == equiv_O_pullback f f o O_functor O (diagonal f).</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 150
+Time: 0.022s">
+<div class="time" style="width: 28.947368421053%"></div>
+<pre>
+    apply O_indpaths; intros x.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (_ @ (ap _ (to_O_natural _ _ _))^).</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 152
+Time: 0.004s">
+<div class="time" style="width: 5.2631578947368%"></div>
+<pre>
+    cbn.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (_ @ (O_rec_beta _ _)^).</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 154
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unfold diagonal, functor_pullback, functor_sigma; cbn.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 155
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply ap, ap.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply moveL_pV; exact (concat_1p_p1 _).</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 157
+Time: 0.004s">
+<div class="time" style="width: 5.2631578947368%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** RSS Theorem 3.1 (xi) *)
+ </pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 161
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>Definition cancelL_conn_map
+             {Y X Z : Type} (f : Y -&gt; X) (g : X -&gt; Z)
+             `{IsConnMap O _ _ (g o f)} `{IsConnMap O _ _ g}
+    : IsConnMap O f
+    := OO_cancelL_conn_map O O f g.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 165
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** RSS Theorem 3.1 (xii) *)
+ </pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export] Instance conn_map_O_inverts
+         {A B : Type} (f : A -&gt; B) `{O_inverts O f}
+    : IsConnMap O f
+    := conn_map_OO_inverts O O f.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** RSS Theorem 3.1 (xiii) *)
+ </pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 174
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition modal_over_connected_isconst_lex
+             (A : Type) `{IsConnected O A}
+             (P : A -&gt; Type) `{forall x, In O (P x)}
+    : {Q : Type &amp; In O Q * forall x, Q &lt;~&gt; P x}.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 178
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>
+    pose proof (O_inverts_isconnected O (fun _:A =&gt; tt)).</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 179
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists (OO_descend_O_inverts O O (fun _:A =&gt; tt) P tt); split.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 180
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 181
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply OO_descend_O_inverts_inO.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 181
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 182
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros; napply OO_descend_O_inverts_beta.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 182
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 183
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>  
+
+  (** RSS Theorem 3.11 (iii): in the accessible case, the universe is modal. *)
+ </pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 186
+Time: 0.007s">
+<div class="time" style="width: 9.2105263157895%"></div>
+<pre>#[export] Instance inO_typeO_lex `{Univalence} `{IsAccRSU O}
+    : In (lift_accrsu O) (Type_ O)
+    := _.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Part of RSS Corollary 3.9: lex modalities preserve [n]-types for all [n].  This is definitely not equivalent to lex-ness, since it is true for the truncation modalities that are not lex.  But it is also not true of all modalities; e.g. the shape modality in a cohesive topos can take 0-types to [oo]-types.  With a little more work, this can probably be proven without [Funext]. *)
+ </pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 191
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export] Instance istrunc_O_lex `{Funext}
+         {n : trunc_index} {A : Type} `{IsTrunc n A}
+    : IsTrunc n (O A).</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 193
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 194
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    generalize dependent A; simple_induction n n IHn; intros A ?.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>               (** Already proven for all modalities. *)
+   </pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>-</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply istrunc_S.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 197
+Time: 0.021s">
+<div class="time" style="width: 27.631578947368%"></div>
+<pre>
+      refine (O_ind (fun x =&gt; forall y, IsTrunc n (x = y)) _); intros x.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 198
+Time: 0.021s">
+<div class="time" style="width: 27.631578947368%"></div>
+<pre>
+      refine (O_ind (fun y =&gt; IsTrunc n (to O A x = y)) _); intros y.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 199
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (istrunc_equiv_istrunc _ (equiv_path_O x y)).</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 201
+Time: 0.037s">
+<div class="time" style="width: 48.684210526316%"></div>
+<pre>
+
+End LexModality.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 203
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Equivalent characterizations of lex-ness *)
+
+(** We will not prove that *all* of the above properties from RSS Theorem 3.1 are equivalent to lex-ness, but we will do it for some of them. *)
+
+</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section ImpliesLex.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {O : Modality}.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 209
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** RSS 3.1 (xiii) implies lexness *)
+ </pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 212
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition lex_from_modal_over_connected_isconst
+             (H : forall (A : Type) (A_isC : IsConnected O A)
+                         (P : A -&gt; Type) (P_inO : forall x, In O (P x)),
+                 {Q : Type &amp; In O Q * forall x, Q &lt;~&gt; P x})
+    : Lex O.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 216
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 217
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros A; unshelve econstructor; intros P P_inO.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 218
+Time: 0.007s">
+<div class="time" style="width: 9.2105263157895%"></div>
+<pre>
+    all:pose (Q := fun z:O A =&gt; H (hfiber (to O A) z) _ (P o pr1) _).</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 219
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 220
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fun z =&gt; (Q z).1).</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 220
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 221
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fun z =&gt; fst (Q z).2).</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 221
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 222
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x; cbn.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 222
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (snd (Q (to O A x)).2 (x;1)).</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 223
+Time: 0.002s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 224
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** RSS 3.11 (iii), the universe is modal, implies lex-ness *)
+ </pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 227
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition lex_from_inO_typeO `{IsAccRSU O} `{In (lift_accrsu O) (Type_ O)}
+    : Lex O.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 229
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (O_lex_leq_inO_TypeO O O).</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 230
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 231
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** RSS Theorem 3.1 (xi) implies lex-ness *)
+ </pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 234
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition lex_from_cancelL_conn_map
+             (cancel : forall {Y X Z : Type} (f : Y -&gt; X) (g : X -&gt; Z),
+                 (IsConnMap O (g o f)) -&gt; (IsConnMap O g)
+                 -&gt; IsConnMap O f)
+    : Lex O.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 238
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 239
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply lex_from_modal_over_connected_isconst; intros.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 240
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>
+    exists (O {x:A &amp; P x}); split; [ exact _ | intros x; symmetry ].</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 241
+Time: 0.008s">
+<div class="time" style="width: 10.526315789474%"></div>
+<pre>
+    refine (Build_Equiv _ _ (fun p =&gt; to O _ (x ; p)) _).</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 242
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    nrefine (isequiv_conn_map_ino O _).</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 243
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> 1-2:exact _.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 243
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    revert x; apply conn_map_fiber.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 244
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    nrefine (cancel _ _ _ _ (fun z:{x:A &amp; O {x : A &amp; P x}} =&gt; z.2) _ _).</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 245
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: clear cancel; exact _.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 246
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros z.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 247
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (isconnected_equiv' O A _ _).</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 248
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unfold hfiber.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 249
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (equiv_adjointify (fun x =&gt; ((x ; z) ; 1))
+                             (fun y =&gt; y.1.1) _ _).</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 251
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> 
+    -</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 252
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre> intros [[x y] []]; reflexivity.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 252
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 253
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x; reflexivity.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 253
+Time: 0.002s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 254
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** RSS Theorem 3.1 (iii) implies lex-ness *)
+ </pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 257
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition lex_from_conn_map_lex
+             (H : forall A B (f : A -&gt; B),
+                 (IsConnected O A) -&gt; (IsConnected O B) -&gt;
+                 IsConnMap O f)
+    : Lex O.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 261
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 262
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply lex_from_cancelL_conn_map.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 263
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros Y X Z f g gfc gc x.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 264
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    pose (h := @functor_hfiber Y Z X Z (g o f) g f idmap (fun a =&gt; 1%path)).</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 265
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    assert (cc := H _ _ (h (g x)) (gfc (g x)) (gc (g x))).</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 266
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (isconnected_equiv' O _ _ (cc (x;1))).</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 267
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unfold hfiber.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 268
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    subst h; unfold functor_hfiber, functor_sigma; cbn.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 269
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (_ oE (equiv_sigma_assoc _ _)^-1).</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 270
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply equiv_functor_sigma_id; intros y; cbn.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 271
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (_ oE (equiv_functor_sigma_id _)).</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 272
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    2:intros; symmetry; apply equiv_path_sigma.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 273
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    cbn.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 274
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (_ oE equiv_sigma_symm _).</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 275
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply equiv_sigma_contr; intros p.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 276
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct p; cbn.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 277
+Time: 0.002s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+    refine (contr_equiv' { p : g (f y) = g (f y) &amp; p = 1%path } _).</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 278
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply equiv_functor_sigma_id; intros p; cbn.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 279
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply equiv_concat_l.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 280
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (concat_1p _ @ ap_idmap _).</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 281
+Time: 0.004s">
+<div class="time" style="width: 5.2631578947368%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 282
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** RSS Theorem 3.1 (i) implies lex-ness *)
+ </pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 285
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition lex_from_isconnected_paths
+             (H : forall (A : Type) (Ac : IsConnected O A) (x y : A),
+                 IsConnected O (x = y))
+    : Lex O.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 288
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 289
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply lex_from_conn_map_lex.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 290
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros A B f Ac Bc c.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 291
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>
+    rapply isconnected_sigma.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 292
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 293
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** RSS Theorem 3.1 (iv) implies lex-ness *)
+ </pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 296
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition lex_from_isequiv_ismodal_isconnected_types
+             (H : forall A B (f : A -&gt; B),
+                 (IsConnected O A) -&gt; (IsConnected O B) -&gt; 
+                 (MapIn O f) -&gt; IsEquiv f)
+    : Lex O.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 300
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 301
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply lex_from_conn_map_lex.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 302
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros A B f AC BC.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 303
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (conn_map_homotopic O _ _ (fact_factors (image O f))).</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 304
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply conn_map_compose; [ exact _ | ].</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 305
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply conn_map_isequiv.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 306
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply H; [ | exact _ | exact _ ].</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 307
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply isconnected_conn_map_to_unit.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 308
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>
+    exact (cancelR_conn_map O (factor1 (image O f)) (const_tt _)).</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 309
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 310
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** RSS Theorem 3.1 (vii) implies lex-ness *)
+ </pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 313
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>Definition lex_from_ispullback_connmap_mapino_commsq
+             (H : forall {A B C D}
+                         (f : A -&gt; B) (g : C -&gt; D) (h : A -&gt; C) (k : B -&gt; D),
+                 (IsConnMap O f) -&gt; (IsConnMap O g) -&gt;
+                 (MapIn O h) -&gt; (MapIn O k) -&gt;
+                 forall (p : k o f == g o h), IsPullback p)
+    : Lex O.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 319
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 320
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply lex_from_isequiv_ismodal_isconnected_types.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 321
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros A B f AC BC fM.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 322
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>
+    specialize (H A Unit B Unit (const_tt _) (const_tt _) f idmap _ _ _ _
+                  (fun _ =&gt; 1)).</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 324
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unfold IsPullback, pullback_corec in H.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 325
+Time: 0.004s">
+<div class="time" style="width: 5.2631578947368%"></div>
+<pre>
+    refine (isequiv_compose _ (H:=H) (fun x =&gt; x.2.1)).</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 326
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unfold Pullback.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 327
+Time: 0.008s">
+<div class="time" style="width: 10.526315789474%"></div>
+<pre>
+    refine (isequiv_compose (B:={b:Unit &amp; B})
+              (functor_sigma idmap (fun a =&gt; pr1))
+              pr2).</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 330
+Time: 0.003s">
+<div class="time" style="width: 3.9473684210526%"></div>
+<pre>
+    refine (isequiv_compose (equiv_sigma_prod0 Unit B) snd).</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 331
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (equiv_isequiv (prod_unit_l B)).</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 332
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 333
+Time: 0.004s">
+<div class="time" style="width: 5.2631578947368%"></div>
+<pre>
+
+End ImpliesLex.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 335
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Lex reflective subuniverses *)
+
+(** A reflective subuniverse that preserves fibers is in fact a modality (and hence lex). *)</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 339
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ismodality_isequiv_O_functor_hfiber (O : ReflectiveSubuniverse)
+           (H : forall {A B : Type} (f : A -&gt; B) (b : B),
+               IsEquiv (O_functor_hfiber O f b))
+  : IsModality O.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 342
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 343
+Time: 0.011s">
+<div class="time" style="width: 14.473684210526%"></div>
+<pre>
+  intros A'; rapply reflectsD_from_inO_sigma.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 344
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros B B_inO.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 345
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  pose (A := O A').</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 346
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  pose (g := O_rec pr1 : O {x : A &amp; B x} -&gt; A).</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 347
+Time: 0.006s">
+<div class="time" style="width: 7.8947368421053%"></div>
+<pre>
+  transparent assert (p : (forall x, g (to O _ x) = x.1)).</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 348
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 349
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x; subst g; apply O_rec_beta.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 349
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 349
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply inO_isequiv_to_O.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 350
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply isequiv_contr_map; intros x.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 351
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snrefine (contr_equiv' _ (hfiber_hfiber_compose_map _ g x)).</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 352
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply contr_map_isequiv.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 353
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold hfiber_compose_map.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 354
+Time: 0.044s">
+<div class="time" style="width: 57.894736842105%"></div>
+<pre>
+  transparent assert (h : (hfiber (@pr1 A B) (g x) &lt;~&gt; hfiber g (g x))).</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 355
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 356
+Time: 0.012s">
+<div class="time" style="width: 15.789473684211%"></div>
+<pre> refine (_ oE equiv_to_O O _).</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 356
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (_ oE Build_Equiv _ _
+              (O_functor_hfiber O (@pr1 A B) (g x)) _).</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 358
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unfold hfiber.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 359
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply equiv_functor_sigma_id.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 360
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros y; cbn.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 360
+Time: 0.002s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+    refine (_ oE (equiv_moveR_equiv_V _ _)).</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 361
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply equiv_concat_l.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 362
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply moveL_equiv_V.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 363
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unfold g, O_functor.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 364
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>
+    revert y; apply O_indpaths; intros [a q]; cbn.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 365
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (_ @ (O_rec_beta _ _)^).</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 366
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply ap, O_rec_beta.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 367
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 367
+Time: 0.003s">
+<div class="time" style="width: 3.9473684210526%"></div>
+<pre>
+  refine (isequiv_homotopic (h oE equiv_hfiber_homotopic _ _ p (g x)) _).</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 368
+Time: 0.002s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+  intros [[a b] q]; cbn.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 369
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> clear h.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 369
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold O_functor_hfiber.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 370
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>
+  rewrite O_rec_beta.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 371
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>
+  unfold functor_sigma; cbn.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 372
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (path_sigma' _ 1 _).</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 373
+Time: 0.002s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+  rewrite O_indpaths_beta; cbn.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 374
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold moveL_equiv_V, moveR_equiv_V.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 375
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Open Scope long_path_scope.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 376
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Local Opaque eissect.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 377
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> (* work around bug 4533 *)
+  (* Even though https://github.com/coq/coq/issues/4533 is closed, this is still needed. *)
+ </pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 379
+Time: 0.024s">
+<div class="time" style="width: 31.578947368421%"></div>
+<pre>rewrite !ap_pp, !concat_p_pp, !ap_V.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 379
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold to_O_natural.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 380
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>
+  rewrite concat_pV_p.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 381
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  subst p.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 382
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>
+  rewrite concat_pp_V.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 383
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>
+  rewrite concat_pp_p; apply moveR_Vp.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 384
+Time: 0.002s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+  rewrite &lt;- !(ap_compose (to O A) (to O A)^-1).</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 385
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>
+  rapply @concat_A1p.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 386
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Local Transparent eissect.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 387
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> (* work around bug 4533 *)
+ </pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 388
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Close Scope long_path_scope.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 388
+Time: 0.076s">
+<div class="time" style="width: 100%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 389
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Lexness via generators *)
+
+(** Here the characterization of when an accessible presentation yields a lex modality from Anel-Biederman-Finster-Joyal ("Higher Sheaves and Left-Exact Localizations of ∞-Topoi", arXiv:2101.02791): it's enough for path spaces of the generators to be connected. *)</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 393
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>Definition lex_gen `{Univalence} (O : Modality) `{IsAccModality O}
+           (lexgen : forall (i : ngen_indices (acc_ngen O)) (x y : ngen_type (acc_ngen O) i),
+               IsConnected O (x = y))
+  : Lex O.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 396
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 397
+Time: 0.008s">
+<div class="time" style="width: 10.526315789474%"></div>
+<pre>
+  srapply lex_from_inO_typeO; [ exact _ | intros i ].</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 398
+Time: 0.002s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+  rapply ooextendable_TypeO_from_extension; intros P; srefine (_;_).</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 399
+Time: 0.021s">
+<div class="time" style="width: 27.631578947368%"></div>
+<pre>
+  1:intros; exists (forall x, P x); exact _.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 400
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  assert (wc : forall y z, P y &lt;~&gt; P z).</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 401
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 402
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros y z.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 402
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (** Here we use the hypothesis [lexgen] (typeclass inference finds it automatically). *)
+   </pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 404
+Time: 0.005s">
+<div class="time" style="width: 6.5789473684211%"></div>
+<pre>exact (pr1 (isconnected_elim O _ (@equiv_transport _ P y z))).</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 404
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 404
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x; apply path_TypeO, path_universe_uncurried.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 405
+Time: 0.002s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+  refine (equiv_adjointify (fun f =&gt; f x) (fun u y =&gt; wc x y ((wc x x)^-1 u)) _ _).</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 406
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 407
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros u; apply eisretr.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 407
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 408
+Time: 0.002s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre> intros f; apply path_forall; intros y; apply moveR_equiv_M.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 408
+Time: 0.003s">
+<div class="time" style="width: 3.9473684210526%"></div>
+<pre>
+    destruct (isconnected_elim O _ (fun y =&gt; (wc x y)^-1 (f y))) as [z p].</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 409
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (p x @ (p y)^).</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 410
+Time: 0.003s">
+<div class="time" style="width: 3.9473684210526%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 411
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** n-fold separation *)
+
+(** A type is [n]-[O]-separated, for n &gt;= -2, if all its (n+2)-fold iterated identity types are [O]-modal.  Inductively, this means that it is (-2)-O-separated if it is O-modal, and (n+1)-O-separated if its identity types are n-O-separated. *)</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 415
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Fixpoint nSep (n : trunc_index) (O : Subuniverse) : Subuniverse
+  := match n with
+     | -2 =&gt; O
+     | n.+1 =&gt; Sep (nSep n O)
+     end.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 419
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The reason for indexing this notion by a [trunc_index] rather than a [nat] is that when O is lex, a type is n-O-separated if and only if its O-unit is an n-truncated map. *)</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 421
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition nsep_iff_trunc_to_O (n : trunc_index) (O : Modality) `{Lex O} (A : Type)
+  : In (nSep n O) A &lt;-&gt; IsTruncMap n (to O A).</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 422
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 423
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert A; induction n as [|n IHn]; intros A; split; intros ?.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 424
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 425
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply contr_map_isequiv; rapply isequiv_to_O_inO.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 425
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 426
+Time: 0.004s">
+<div class="time" style="width: 5.2631578947368%"></div>
+<pre> exact (inO_equiv_inO (O A) (to O A)^-1).</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 426
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 427
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply istruncmap_from_ap; intros x y.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 427
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    pose (i := fst (IHn (x = y)) _).</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 428
+Time: 0.047s">
+<div class="time" style="width: 61.842105263158%"></div>
+<pre>
+    apply istruncmap_mapinO_tr, (mapinO_homotopic _ _ (equiv_path_O_to_O O x y)).</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 429
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 430
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 430
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (snd (IHn (x = y))).</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 431
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    pose (i := istruncmap_ap n (to O A) x y).</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 432
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply mapinO_tr_istruncmap in i.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 433
+Time: 0.002s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+    apply istruncmap_mapinO_tr, (mapinO_homotopic _ ((equiv_path_O O x y)^-1 o (@ap _ _ (to O A) x y))).</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 434
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 435
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre> intros p; apply moveR_equiv_V; symmetry; apply equiv_path_O_to_O.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 435
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 435
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    pose mapinO_isequiv.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 436
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> (* This speeds up the next line. *)
+   </pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 437
+Time: 0.002s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>rapply mapinO_compose.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 437
+Time: 0.003s">
+<div class="time" style="width: 3.9473684210526%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Lex.v
+Line: 439
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<title>NatCategory.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="pygments.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.19.0+0.19.3. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-wsp"><span class="sd">(** * Discrete categories on [n] objects *)</span>
+</span><span class="alectryon-sentence"><input class="alectryon-toggle" id="natcategory-v-chk0" style="display: none" type="checkbox"><label class="alectryon-input" for="natcategory-v-chk0"><span class="kn">Require Import</span> Category.Core DiscreteCategory IndiscreteCategory.</label><small class="alectryon-output"><div><div class="alectryon-messages"><blockquote class="alectryon-message">[Loading ML file number_string_notation_plugin.cmxs (<span class="nb">using</span> legacy method) ... <span class="bp">done</span>]</blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Types.Unit Trunc Types.Sum Types.Empty.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Basics.Nat.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Universe Polymorphism</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Implicit Arguments</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Generalizable All Variables</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Asymmetric Patterns</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> nat_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Module</span> <span class="nf">Export</span> Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  <span class="sd">(** ** [Fin n] types, or [CardinalityRepresentative] *)</span>
+  <span class="sd">(** We use [Empty] for [0] and [Unit] for [1] so that we get nice judgmental behavior.</span>
+<span class="sd">      TODO: this should be unified with [Spaces.Finite.Fin].</span>
+<span class="sd">   *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Fixpoint</span> <span class="nf">CardinalityRepresentative</span> (<span class="nv">n</span> : nat) : Type0 :=
+    <span class="kr">match</span> n <span class="kr">with</span>
+      | <span class="mi">0</span> =&gt; Empty
+      | <span class="mi">1</span> =&gt; Unit
+      | S n&#39; =&gt; CardinalityRepresentative n&#39; + Unit
+    <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Coercion</span> <span class="nf">CardinalityRepresentative</span> : nat &gt;-&gt; <span class="kt">Sortclass</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** ** [Fin n] is an hSet *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="natcategory-v-chk1" style="display: none" type="checkbox"><label class="alectryon-input" for="natcategory-v-chk1">#[export] <span class="kn">Instance</span> <span class="nf">trunc_cardinality_representative</span> (<span class="nv">n</span> : nat)
+  : IsHSet (CardinalityRepresentative n).</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsHSet n</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="natcategory-v-chk2" style="display: none" type="checkbox"><label class="alectryon-input" for="natcategory-v-chk2"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsHSet n</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="natcategory-v-chk3" style="display: none" type="checkbox"><label class="alectryon-input" for="natcategory-v-chk3"><span class="nb">induction</span> n; [ <span class="nb">typeclasses eauto</span> |].</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>IHn</var><span class="hyp-type"><b>: </b><span>IsHSet n</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsHSet n.+<span class="mi">1</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="natcategory-v-chk4" style="display: none" type="checkbox"><label class="alectryon-input" for="natcategory-v-chk4"><span class="nb">induction</span> n; [ <span class="nb">typeclasses eauto</span> |].</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>IHn</var><span class="hyp-type"><b>: </b><span>IsHSet n.+<span class="mi">1</span></span></span></span><br><span><var>IHn0</var><span class="hyp-type"><b>: </b><span>IsHSet n -&gt; IsHSet n.+<span class="mi">1</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">IsHSet n.+<span class="mi">2</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="natcategory-v-chk5" style="display: none" type="checkbox"><label class="alectryon-input" for="natcategory-v-chk5"><span class="nb">apply</span> istrunc_S.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>n</var><span class="hyp-type"><b>: </b><span>nat</span></span></span><br><span><var>IHn</var><span class="hyp-type"><b>: </b><span>IsHSet n.+<span class="mi">1</span></span></span></span><br><span><var>IHn0</var><span class="hyp-type"><b>: </b><span>IsHSet n -&gt; IsHSet n.+<span class="mi">1</span></span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">is_mere_relation n.+<span class="mi">2</span> paths</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="nb">intros</span> [x|x] [y|y];
+      <span class="nb">typeclasses eauto</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Qed</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+  <span class="sd">(** ** Define the categories [n] *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">nat_category</span> (<span class="nv">n</span> : nat) :=
+    <span class="kr">match</span> n <span class="kr">with</span>
+      | <span class="mi">0</span> =&gt; indiscrete_category <span class="mi">0</span>
+      | <span class="mi">1</span> =&gt; indiscrete_category <span class="mi">1</span>
+      | S (S n&#39;) =&gt; discrete_category (S (S n&#39;))
+    <span class="kr">end</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Module</span> <span class="nf">Export</span> NatCategoryCoreNotations.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;0&quot;</span> := (nat_category <span class="mi">0</span>) : category_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;1&quot;</span> := (nat_category <span class="mi">1</span>) : category_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;2&quot;</span> := (nat_category <span class="mi">2</span>) : category_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;3&quot;</span> := (nat_category <span class="mi">3</span>) : category_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;4&quot;</span> := (nat_category <span class="mi">4</span>) : category_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;5&quot;</span> := (nat_category <span class="mi">5</span>) : category_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;6&quot;</span> := (nat_category <span class="mi">6</span>) : category_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;7&quot;</span> := (nat_category <span class="mi">7</span>) : category_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;8&quot;</span> := (nat_category <span class="mi">8</span>) : category_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;9&quot;</span> := (nat_category <span class="mi">9</span>) : category_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">NatCategoryCoreNotations</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input">#[export]
+<span class="kn">Typeclasses Transparent</span> nat_category.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input">#[export]
+  <span class="kn">Hint Unfold</span> nat_category : core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> nat_category / .</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">Core</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Module</span> <span class="nf">Notations</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Include</span> Core.NatCategoryCoreNotations.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">Notations</span>.</span></span></pre>
+</div>
+</div></body>
+</html>

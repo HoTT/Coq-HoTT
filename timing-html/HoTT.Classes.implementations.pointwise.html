@@ -1,0 +1,474 @@
+<html>
+<head>
+<title>pointwise.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for pointwise.v</h1>
+
+<div class="code" title="File: pointwise.v
+Line: 1
+Time: 0.073s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import
+  HoTT.Classes.interfaces.abstract_algebra.</pre>
+</div>
+<div class="code" title="File: pointwise.v
+Line: 2
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** If [B] is a (bounded) lattice, then so is [A -&gt; B], pointwise.
+    This relies on functional extensionality. *)</pre>
+</div>
+<div class="code" title="File: pointwise.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section contents.</pre>
+</div>
+<div class="code" title="File: pointwise.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{Funext}.</pre>
+</div>
+<div class="code" title="File: pointwise.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {A B : Type}.</pre>
+</div>
+<div class="code" title="File: pointwise.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{BJoin : Join B}.</pre>
+</div>
+<div class="code" title="File: pointwise.v
+Line: 9
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{BMeet : Meet B}.</pre>
+</div>
+<div class="code" title="File: pointwise.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{BBottom : Bottom B}.</pre>
+</div>
+<div class="code" title="File: pointwise.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{BTop : Top B}.</pre>
+</div>
+<div class="code" title="File: pointwise.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance bot_fun : Bottom (A -&gt; B)
+    := fun _ =&gt; ⊥.</pre>
+</div>
+<div class="code" title="File: pointwise.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance top_fun : Top (A -&gt; B)
+    := fun _ =&gt; ⊤.</pre>
+</div>
+<div class="code" title="File: pointwise.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance join_fun : Join (A -&gt; B) :=
+    fun (f g : A -&gt; B) (a : A) =&gt; (f a) ⊔ (g a).</pre>
+</div>
+<div class="code" title="File: pointwise.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance meet_fun : Meet (A -&gt; B) :=
+    fun (f g : A -&gt; B) (a : A) =&gt; (f a) ⊓ (g a).</pre>
+</div>
+<div class="code" title="File: pointwise.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Try to solve some of the lattice obligations automatically *)
+ </pre>
+</div>
+<div class="code" title="File: pointwise.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Create HintDb lattice_hints.</pre>
+</div>
+<div class="code" title="File: pointwise.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  #[local]
+  Hint Resolve
+       associativity
+       absorption
+       commutativity | 1 : lattice_hints.</pre>
+</div>
+<div class="code" title="File: pointwise.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Local Ltac reduce_fun := compute; intros; apply path_forall; intro.</pre>
+</div>
+<div class="code" title="File: pointwise.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance lattice_fun `{!IsLattice B} : IsLattice (A -&gt; B).</pre>
+</div>
+<div class="code" title="File: pointwise.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: pointwise.v
+Line: 36
+Time: 0.028s">
+<div class="time" style="width: 38.356164383562%"></div>
+<pre>
+    repeat split; try apply _; reduce_fun.</pre>
+</div>
+<div class="code" title="File: pointwise.v
+Line: 37
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+    1,4: apply associativity.</pre>
+</div>
+<div class="code" title="File: pointwise.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1,3: apply commutativity.</pre>
+</div>
+<div class="code" title="File: pointwise.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1,2: apply binary_idempotent.</pre>
+</div>
+<div class="code" title="File: pointwise.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1,2: apply absorption.</pre>
+</div>
+<div class="code" title="File: pointwise.v
+Line: 41
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: pointwise.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Instance boundedjoinsemilattice_fun
+   `{!IsBoundedJoinSemiLattice B} :
+    IsBoundedJoinSemiLattice (A -&gt; B).</pre>
+</div>
+<div class="code" title="File: pointwise.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: pointwise.v
+Line: 47
+Time: 0.02s">
+<div class="time" style="width: 27.397260273973%"></div>
+<pre>
+    repeat split; try apply _; reduce_fun.</pre>
+</div>
+<div class="code" title="File: pointwise.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    *</pre>
+</div>
+<div class="code" title="File: pointwise.v
+Line: 49
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre> apply associativity.</pre>
+</div>
+<div class="code" title="File: pointwise.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    *</pre>
+</div>
+<div class="code" title="File: pointwise.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply left_identity.</pre>
+</div>
+<div class="code" title="File: pointwise.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    *</pre>
+</div>
+<div class="code" title="File: pointwise.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply right_identity.</pre>
+</div>
+<div class="code" title="File: pointwise.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    *</pre>
+</div>
+<div class="code" title="File: pointwise.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply commutativity.</pre>
+</div>
+<div class="code" title="File: pointwise.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    *</pre>
+</div>
+<div class="code" title="File: pointwise.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply binary_idempotent.</pre>
+</div>
+<div class="code" title="File: pointwise.v
+Line: 53
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: pointwise.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Instance boundedmeetsemilattice_fun
+   `{!IsBoundedMeetSemiLattice B} :
+    IsBoundedMeetSemiLattice (A -&gt; B).</pre>
+</div>
+<div class="code" title="File: pointwise.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: pointwise.v
+Line: 59
+Time: 0.02s">
+<div class="time" style="width: 27.397260273973%"></div>
+<pre>
+    repeat split; try apply _; reduce_fun.</pre>
+</div>
+<div class="code" title="File: pointwise.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    *</pre>
+</div>
+<div class="code" title="File: pointwise.v
+Line: 61
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre> apply associativity.</pre>
+</div>
+<div class="code" title="File: pointwise.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    *</pre>
+</div>
+<div class="code" title="File: pointwise.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply left_identity.</pre>
+</div>
+<div class="code" title="File: pointwise.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    *</pre>
+</div>
+<div class="code" title="File: pointwise.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply right_identity.</pre>
+</div>
+<div class="code" title="File: pointwise.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    *</pre>
+</div>
+<div class="code" title="File: pointwise.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply commutativity.</pre>
+</div>
+<div class="code" title="File: pointwise.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    *</pre>
+</div>
+<div class="code" title="File: pointwise.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply binary_idempotent.</pre>
+</div>
+<div class="code" title="File: pointwise.v
+Line: 65
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: pointwise.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance boundedlattice_fun
+   `{!IsBoundedLattice B} : IsBoundedLattice (A -&gt; B).</pre>
+</div>
+<div class="code" title="File: pointwise.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: pointwise.v
+Line: 70
+Time: 0.033s">
+<div class="time" style="width: 45.205479452055%"></div>
+<pre>
+    repeat split; try apply _; reduce_fun; apply absorption.</pre>
+</div>
+<div class="code" title="File: pointwise.v
+Line: 71
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: pointwise.v
+Line: 72
+Time: 0.001s">
+<div class="time" style="width: 1.3698630136986%"></div>
+<pre>
+End contents.</pre>
+</div>
+<div class="code" title="File: pointwise.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+#[export]
+  Hint Resolve
+       associativity
+       absorption
+       commutativity | 1 : lattice_hints.</pre>
+</div>
+<div class="code" title="File: pointwise.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+
+</pre>
+</div>
+</body>
+</html>
+

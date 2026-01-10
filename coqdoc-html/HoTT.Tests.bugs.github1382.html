@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Tests.bugs.github1382</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Tests.bugs.github1382</h1>
+
+<div class="code">
+<span class="id" title="keyword">From</span> <span class="id" title="var">HoTT</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.html#"><span class="id" title="library">Basics</span></a> <a class="idref" href="HoTT.Types.html#"><span class="id" title="library">Types</span></a>.<br/>
+
+<br/>
+<span class="comment">(*&nbsp;Tests&nbsp;for&nbsp;discriminate&nbsp;tactic&nbsp;*)</span><br/>
+
+<br/>
+<span class="id" title="keyword">Goal</span> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">O</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">=</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">S</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">O</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">→</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">Empty</span></a>.<br/>
+&nbsp;<span class="id" title="tactic">discriminate</span> 1.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Goal</span> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">∀</span></a> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="binder, definition"><span id="H:1" class="id">H</span></span></a> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">:</span></a> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">O</span></a> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">=</span></a> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">S</span></a> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">O</span></a><a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">,</span></a> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">H</span></a> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">=</span></a> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">H</span></a>.<br/>
+&nbsp;<span class="id" title="tactic">discriminate</span> <span class="id" title="var">H</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Goal</span> <a id="Unnamed_thm1" class="idref" href="#Unnamed_thm1"><span class="id" title="definition">O</span></a> <a id="Unnamed_thm1" class="idref" href="#Unnamed_thm1"><span class="id" title="definition">=</span></a> <a id="Unnamed_thm1" class="idref" href="#Unnamed_thm1"><span class="id" title="definition">S</span></a> <a id="Unnamed_thm1" class="idref" href="#Unnamed_thm1"><span class="id" title="definition">O</span></a> <a id="Unnamed_thm1" class="idref" href="#Unnamed_thm1"><span class="id" title="definition">→</span></a> <a id="Unnamed_thm1" class="idref" href="#Unnamed_thm1"><span class="id" title="definition">Unit</span></a>.<br/>
+<span class="id" title="tactic">intros</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">discriminate</span> <span class="id" title="var">H</span>. <span class="id" title="keyword">Qed</span>.<br/>
+<span class="id" title="keyword">Goal</span> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">O</span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">=</span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">S</span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">O</span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">→</span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">Unit</span></a>.<br/>
+<span class="id" title="tactic">intros</span> <span class="id" title="var">H</span>. <span class="id" title="keyword">Ltac</span> <span class="id" title="var">g</span> <span class="id" title="var">x</span> := <span class="id" title="tactic">discriminate</span> <span class="id" title="var">x</span>. <span class="id" title="var">g</span> <span class="id" title="var">H</span>. <span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Goal</span> <a id="Unnamed_thm3" class="idref" href="#Unnamed_thm3"><span class="id" title="definition">(</span></a><a id="Unnamed_thm3" class="idref" href="#Unnamed_thm3"><span class="id" title="definition">∀</span></a> <a id="Unnamed_thm3" class="idref" href="#Unnamed_thm3"><span class="id" title="binder, definition"><span id="x:2" class="id">x</span></span></a> <a id="Unnamed_thm3" class="idref" href="#Unnamed_thm3"><span class="id" title="binder, definition"><span id="y:3" class="id">y</span></span></a> <a id="Unnamed_thm3" class="idref" href="#Unnamed_thm3"><span class="id" title="definition">:</span></a> <a id="Unnamed_thm3" class="idref" href="#Unnamed_thm3"><span class="id" title="definition">nat</span></a><a id="Unnamed_thm3" class="idref" href="#Unnamed_thm3"><span class="id" title="definition">,</span></a> <a id="Unnamed_thm3" class="idref" href="#Unnamed_thm3"><span class="id" title="definition">x</span></a> <a id="Unnamed_thm3" class="idref" href="#Unnamed_thm3"><span class="id" title="definition">=</span></a> <a id="Unnamed_thm3" class="idref" href="#Unnamed_thm3"><span class="id" title="definition">y</span></a> <a id="Unnamed_thm3" class="idref" href="#Unnamed_thm3"><span class="id" title="definition">→</span></a> <a id="Unnamed_thm3" class="idref" href="#Unnamed_thm3"><span class="id" title="definition">x</span></a> <a id="Unnamed_thm3" class="idref" href="#Unnamed_thm3"><span class="id" title="definition">=</span></a> <a id="Unnamed_thm3" class="idref" href="#Unnamed_thm3"><span class="id" title="definition">S</span></a> <a id="Unnamed_thm3" class="idref" href="#Unnamed_thm3"><span class="id" title="definition">y</span></a><a id="Unnamed_thm3" class="idref" href="#Unnamed_thm3"><span class="id" title="definition">)</span></a> <a id="Unnamed_thm3" class="idref" href="#Unnamed_thm3"><span class="id" title="definition">→</span></a> <a id="Unnamed_thm3" class="idref" href="#Unnamed_thm3"><span class="id" title="definition">Unit</span></a>.<br/>
+<span class="id" title="tactic">intros</span>.<br/>
+<span class="id" title="tactic">try</span> <span class="id" title="tactic">discriminate</span> (<span class="id" title="var">H</span> <a class="idref" href="HoTT.Basics.Overture.html#O"><span class="id" title="constructor">O</span></a>) || <span class="id" title="tactic">exact</span> <a class="idref" href="HoTT.Basics.Overture.html#tt"><span class="id" title="constructor">tt</span></a>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Goal</span> <a id="Unnamed_thm4" class="idref" href="#Unnamed_thm4"><span class="id" title="definition">(</span></a><a id="Unnamed_thm4" class="idref" href="#Unnamed_thm4"><span class="id" title="definition">∀</span></a> <a id="Unnamed_thm4" class="idref" href="#Unnamed_thm4"><span class="id" title="binder, definition"><span id="x:4" class="id">x</span></span></a> <a id="Unnamed_thm4" class="idref" href="#Unnamed_thm4"><span class="id" title="binder, definition"><span id="y:5" class="id">y</span></span></a> <a id="Unnamed_thm4" class="idref" href="#Unnamed_thm4"><span class="id" title="definition">:</span></a> <a id="Unnamed_thm4" class="idref" href="#Unnamed_thm4"><span class="id" title="definition">nat</span></a><a id="Unnamed_thm4" class="idref" href="#Unnamed_thm4"><span class="id" title="definition">,</span></a> <a id="Unnamed_thm4" class="idref" href="#Unnamed_thm4"><span class="id" title="definition">x</span></a> <a id="Unnamed_thm4" class="idref" href="#Unnamed_thm4"><span class="id" title="definition">=</span></a> <a id="Unnamed_thm4" class="idref" href="#Unnamed_thm4"><span class="id" title="definition">y</span></a> <a id="Unnamed_thm4" class="idref" href="#Unnamed_thm4"><span class="id" title="definition">→</span></a> <a id="Unnamed_thm4" class="idref" href="#Unnamed_thm4"><span class="id" title="definition">x</span></a> <a id="Unnamed_thm4" class="idref" href="#Unnamed_thm4"><span class="id" title="definition">=</span></a> <a id="Unnamed_thm4" class="idref" href="#Unnamed_thm4"><span class="id" title="definition">S</span></a> <a id="Unnamed_thm4" class="idref" href="#Unnamed_thm4"><span class="id" title="definition">y</span></a><a id="Unnamed_thm4" class="idref" href="#Unnamed_thm4"><span class="id" title="definition">)</span></a> <a id="Unnamed_thm4" class="idref" href="#Unnamed_thm4"><span class="id" title="definition">→</span></a> <a id="Unnamed_thm4" class="idref" href="#Unnamed_thm4"><span class="id" title="definition">Unit</span></a>.<br/>
+<span class="id" title="tactic">intros</span> <span class="id" title="var">H</span>. <span class="id" title="var">ediscriminate</span> (<span class="id" title="var">H</span> <a class="idref" href="HoTT.Basics.Overture.html#O"><span class="id" title="constructor">O</span></a>). <span class="id" title="tactic">instantiate</span> (1:=<a class="idref" href="HoTT.Basics.Overture.html#O"><span class="id" title="constructor">O</span></a>). <span class="id" title="keyword">Abort</span>.<br/>
+
+<br/>
+<span class="comment">(*&nbsp;Check&nbsp;discriminate&nbsp;on&nbsp;types&nbsp;with&nbsp;local&nbsp;definitions&nbsp;*)</span><br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <a id="A" class="idref" href="#A"><span class="id" title="definition, inductive"><span id="A_rect" class="id"><span id="A_ind" class="id"><span id="A_rec" class="id"><span id="A_sind" class="id">A</span></span></span></span></span></a> : <a class="idref" href="HoTT.Basics.Overture.html#Type0"><span class="id" title="abbreviation">Type0</span></a> := <a id="B" class="idref" href="#B"><span class="id" title="constructor">B</span></a> (<a id="T:8" class="idref" href="#T:8"><span class="id" title="binder">T</span></a> := <a class="idref" href="HoTT.Basics.Overture.html#Unit"><span class="id" title="inductive">Unit</span></a>) (<a id="x:9" class="idref" href="#x:9"><span class="id" title="binder">x</span></a> <a id="y:10" class="idref" href="#y:10"><span class="id" title="binder">y</span></a> : <a class="idref" href="HoTT.Types.Bool.html#Bool"><span class="id" title="inductive">Bool</span></a>) (<a id="z:11" class="idref" href="#z:11"><span class="id" title="binder">z</span></a> := <a class="idref" href="HoTT.Tests.bugs.github1382.html#x:9"><span class="id" title="variable">x</span></a>).<br/>
+<span class="id" title="keyword">Goal</span> <a id="Unnamed_thm4" class="idref" href="#Unnamed_thm4"><span class="id" title="definition">∀</span></a> <a id="Unnamed_thm4" class="idref" href="#Unnamed_thm4"><span class="id" title="binder, definition"><span id="x:12" class="id">x</span></span></a> <a id="Unnamed_thm4" class="idref" href="#Unnamed_thm4"><span class="id" title="binder, definition"><span id="y:13" class="id">y</span></span></a><a id="Unnamed_thm4" class="idref" href="#Unnamed_thm4"><span class="id" title="definition">,</span></a> <a id="Unnamed_thm4" class="idref" href="#Unnamed_thm4"><span class="id" title="definition">B</span></a> <a id="Unnamed_thm4" class="idref" href="#Unnamed_thm4"><span class="id" title="definition">x</span></a> <a id="Unnamed_thm4" class="idref" href="#Unnamed_thm4"><span class="id" title="definition">true</span></a> <a id="Unnamed_thm4" class="idref" href="#Unnamed_thm4"><span class="id" title="definition">=</span></a> <a id="Unnamed_thm4" class="idref" href="#Unnamed_thm4"><span class="id" title="definition">B</span></a> <a id="Unnamed_thm4" class="idref" href="#Unnamed_thm4"><span class="id" title="definition">y</span></a> <a id="Unnamed_thm4" class="idref" href="#Unnamed_thm4"><span class="id" title="definition">false</span></a> <a id="Unnamed_thm4" class="idref" href="#Unnamed_thm4"><span class="id" title="definition">→</span></a> <a id="Unnamed_thm4" class="idref" href="#Unnamed_thm4"><span class="id" title="definition">Empty</span></a>.<br/>
+<span class="id" title="tactic">discriminate</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

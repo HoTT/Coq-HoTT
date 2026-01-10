@@ -1,0 +1,3836 @@
+<html>
+<head>
+<title>orders.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for orders.v</h1>
+
+<div class="code" title="File: orders.v
+Line: 1
+Time: 0.072s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import
+  HoTT.Classes.interfaces.abstract_algebra
+  HoTT.Classes.interfaces.orders
+  HoTT.Classes.theory.apartness.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Generalizable Variables A.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma irrefl_neq `{R : Relation A} `{!Irreflexive R}
+  : forall x y, R x y -&gt; x &lt;&gt; y.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 9
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+intros ?? E e;rewrite e in E.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (irreflexivity _ _ E).</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma le_flip `{Le A} `{!TotalRelation (≤)} x y : ~(y ≤ x) -&gt; x ≤ y.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+intros nle.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 16
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre>
+destruct (total _ x y) as [?|le];auto.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+destruct (nle le).</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section partial_order.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{PartialOrder A}.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma eq_le x y : x = y -&gt; x ≤ y.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros E.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite E.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply reflexivity.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma eq_le_flip x y : x = y -&gt; y ≤ x.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros E.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite E.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply reflexivity.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma not_le_ne x y : ~(x ≤ y) -&gt; x &lt;&gt; y.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros E1 E2.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply E1.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite E2.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply reflexivity.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma eq_iff_le x y : x = y &lt;-&gt; x ≤ y /\ y ≤ x.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  split; intros E.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite E.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split;apply reflexivity.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (antisymmetry (≤) x y);apply E.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+End partial_order.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section strict_order.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{StrictOrder A}.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma lt_flip x y : x &lt; y -&gt; ~(y &lt; x).</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros E1 E2.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (irreflexivity (&lt;) x).</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  transitivity y;assumption.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma lt_antisym x y : ~(x &lt; y &lt; x).</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [E1 E2].</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct (lt_flip x y);assumption.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma lt_ne x y : x &lt; y -&gt; x &lt;&gt; y.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros E1 E2.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite E2 in E1.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (irreflexivity (&lt;) y).</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assumption.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma lt_ne_flip x y : x &lt; y -&gt; y &lt;&gt; x.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply symmetric_neq, lt_ne.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  assumption.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma eq_not_lt x y : x = y -&gt; ~(x &lt; y).</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros E.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite E.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (irreflexivity (&lt;)).</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+End strict_order.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section pseudo_order.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{PseudoOrder A}.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Existing Instance pseudo_order_apart.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma apart_total_lt x y : x ≶ y -&gt; x &lt; y |_| y &lt; x.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply apart_iff_total_lt.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  assumption.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma pseudo_order_lt_apart x y : x &lt; y -&gt; x ≶ y.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply apart_iff_total_lt.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  auto.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma pseudo_order_lt_apart_flip x y : x &lt; y -&gt; y ≶ x.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply apart_iff_total_lt.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  auto.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma not_lt_apart_lt_flip x y : ~(x &lt; y) -&gt; x ≶ y -&gt; y &lt; x.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 118
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros nlt neq.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply apart_iff_total_lt in neq.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct neq.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 121
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 122
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct nlt;auto.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 122
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> auto.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma pseudo_order_cotrans_twice x₁ y₁ x₂ y₂
+    : x₁ &lt; y₁ -&gt; merely (x₂ &lt; y₂ |_| x₁ &lt; x₂ |_| y₂ &lt; y₁).</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 128
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros E1.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 129
+Time: 0.002s">
+<div class="time" style="width: 2.7777777777778%"></div>
+<pre>
+  apply (merely_destruct (cotransitive E1 x₂));intros [?|E2];
+  try solve [apply tr;auto].</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 131
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre>
+  apply (merely_destruct (cotransitive E2 y₂));intros [?|?];apply tr;auto.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 133
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre>
+
+  Lemma pseudo_order_lt_ext x₁ y₁ x₂ y₂ : x₁ &lt; y₁ -&gt;
+    merely (x₂ &lt; y₂ |_| x₁ ≶ x₂ |_| y₂ ≶ y₁).</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 137
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros E.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 138
+Time: 0.002s">
+<div class="time" style="width: 2.7777777777778%"></div>
+<pre>
+  apply (merely_destruct (pseudo_order_cotrans_twice x₁ y₁ x₂ y₂ E));
+  intros [?|[?|?]];apply tr;
+  auto using pseudo_order_lt_apart.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 141
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance pseudoorder_strictorder : StrictOrder (_ : Lt A).</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 145
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  split.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 147
+Time: 0.005s">
+<div class="time" style="width: 6.9444444444444%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 147
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 148
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x E.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 148
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct (pseudo_order_antisym x x); auto.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y z E1 E2.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 150
+Time: 0.004s">
+<div class="time" style="width: 5.5555555555556%"></div>
+<pre>
+    apply (merely_destruct (cotransitive E1 z));intros [?|?]; trivial.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct (pseudo_order_antisym y z); auto.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 152
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance nlt_trans : Transitive (complement (&lt;)).</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 155
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y z.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros E1 E2 E3.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 158
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre>
+  apply (merely_destruct (cotransitive E3 y));
+  intros [?|?]; contradiction.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance nlt_antisymm : AntiSymmetric (complement (&lt;)).</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 163
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 164
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y H1 H2.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 165
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply tight_apart.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 166
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros nap.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 166
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply apart_iff_total_lt in nap.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 166
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct nap;auto.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma ne_total_lt `{!TrivialApart A} x y : x &lt;&gt; y -&gt; x &lt; y |_| y &lt; x.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros neq;apply trivial_apart in neq.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply apart_total_lt.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assumption.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 174
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance lt_trichotomy `{!TrivialApart A} `{DecidablePaths A}
+    : Trichotomy (&lt;).</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 179
+Time: 0.004s">
+<div class="time" style="width: 5.5555555555556%"></div>
+<pre>
+  destruct (dec (x = y)) as [?|?]; try auto.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 180
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre>
+  destruct (ne_total_lt x y); auto.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 181
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 182
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+End pseudo_order.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 183
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section full_partial_order.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{FullPartialOrder A}.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 186
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Existing Instance strict_po_apart.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (* Duplicate of strong_setoids.apart_ne. This is useful because a
+    StrongSetoid is not defined as a substructure of a FullPartialOrder *)
+ </pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 192
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance strict_po_apart_ne x y : PropHolds (x ≶ y) -&gt; PropHolds (x &lt;&gt; y).</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 192
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 193
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros; exact _.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 194
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance fullpartialorder_strictorder : StrictOrder (&lt;).</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 198
+Time: 0.015s">
+<div class="time" style="width: 20.833333333333%"></div>
+<pre>
+  split; try exact _.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 199
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact strict_po_mere_lt.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 201
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 201
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> red.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 201
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros E;apply lt_iff_le_apart in E.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 201
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct E as [_ ?].</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 202
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (irreflexivity (≶) x).</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 203
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    assumption.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 204
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 205
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma lt_le x y : PropHolds (x &lt; y) -&gt; PropHolds (x ≤ y).</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 207
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 209
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply lt_iff_le_apart.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 210
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  assumption.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 211
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 212
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma not_le_not_lt x y : ~(x ≤ y) -&gt; ~(x &lt; y).</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 214
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 215
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros E1 E2.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 216
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply E1.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 217
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply lt_le.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 217
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assumption.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 217
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 218
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma lt_apart x y : x &lt; y -&gt; x ≶ y.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 220
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 221
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 222
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply lt_iff_le_apart.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 223
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  assumption.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 224
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma lt_apart_flip x y : x &lt; y -&gt; y ≶ x.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 227
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 229
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre>
+  apply symmetry, lt_iff_le_apart.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 230
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  assumption.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 231
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 232
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma le_not_lt_flip x y : y ≤ x -&gt; ~(x &lt; y).</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 234
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 235
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros E1 E2;apply lt_iff_le_apart in E2.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 236
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct E2 as [E2a E2b].</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 237
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert E2b.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 238
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply tight_apart.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 238
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre>
+  apply (antisymmetry (≤));assumption.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 239
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 240
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma lt_not_le_flip x y : y &lt; x -&gt; ~(x ≤ y).</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 242
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 243
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros E1 E2.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 244
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (le_not_lt_flip y x);assumption.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 245
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 246
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma lt_le_trans x y z : x &lt; y -&gt; y ≤ z -&gt; x &lt; z.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 248
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 249
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros E1 E2.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 250
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre>
+  apply lt_iff_le_apart.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 251
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply lt_iff_le_apart in E1.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 251
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct E1 as [E1a E1b].</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 252
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  split.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 253
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 254
+Time: 0.002s">
+<div class="time" style="width: 2.7777777777778%"></div>
+<pre> transitivity y;assumption.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 254
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 255
+Time: 0.002s">
+<div class="time" style="width: 2.7777777777778%"></div>
+<pre> apply (merely_destruct (cotransitive E1b z));intros [E3 | E3]; trivial.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 255
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply lt_apart.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 256
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply symmetry in E3.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 256
+Time: 0.003s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>
+    transitivity y;apply lt_iff_le_apart; auto.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 257
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 258
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma le_lt_trans x y z : x ≤ y -&gt; y &lt; z -&gt; x &lt; z.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 260
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 261
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros E2 E1.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 262
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre>
+  apply lt_iff_le_apart.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 263
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply lt_iff_le_apart in E1.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 263
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct E1 as [E1a E1b].</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 264
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  split.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 265
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 266
+Time: 0.002s">
+<div class="time" style="width: 2.7777777777778%"></div>
+<pre> transitivity y;auto.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 266
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 267
+Time: 0.002s">
+<div class="time" style="width: 2.7777777777778%"></div>
+<pre> apply (merely_destruct (cotransitive E1b x));intros [E3 | E3]; trivial.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 267
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply lt_apart.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 268
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply symmetry in E3.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 268
+Time: 0.003s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>
+    transitivity y; apply lt_iff_le_apart; auto.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 269
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 270
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre>
+
+  Lemma lt_iff_le_ne `{!TrivialApart A} x y : x &lt; y &lt;-&gt; x ≤ y /\ x &lt;&gt; y.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 272
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 273
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre>
+   transitivity (x &lt;= y /\ apart x y).</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 274
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+   -</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 275
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply lt_iff_le_apart.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 275
+Time: 0.02s">
+<div class="time" style="width: 27.777777777778%"></div>
+<pre>
+   -</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 276
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre> split;intros [E1 E2];split;trivial;apply trivial_apart;trivial.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 276
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 277
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma le_equiv_lt `{!TrivialApart A} `{forall x y : A, Decidable (x = y)} x y
+    : x ≤ y -&gt; x = y |_| x &lt; y.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 280
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 281
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 282
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre>
+  destruct (dec (x = y)); try auto.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 283
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  right.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 284
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply lt_iff_le_ne; auto.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 285
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 286
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Instance dec_from_lt_dec `{!TrivialApart A} `{forall x y, Decidable (x ≤ y)}
+    : DecidablePaths A.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 289
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 290
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 291
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre>
+  destruct (decide_rel (&lt;=) x y) as [E1|E1];
+  [destruct (decide_rel (&lt;=) y x) as [E2|E2]|].</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 293
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 294
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> left.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 294
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (antisymmetry (&lt;=));assumption.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 294
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 295
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> right.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 295
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros E3;apply E2.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 295
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    pattern y.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 296
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (transport _ E3).</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 296
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply reflexivity.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 297
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 298
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> right.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 298
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros E3;apply E1.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 298
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    pattern y; apply (transport _ E3).</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 299
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply reflexivity.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 300
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 301
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition lt_dec_slow `{!TrivialApart A} `{forall x y, Decidable (x ≤ y)} :
+    forall x y, Decidable (x &lt; y).</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 304
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 305
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 306
+Time: 0.005s">
+<div class="time" style="width: 6.9444444444444%"></div>
+<pre>
+  destruct (dec (x ≤ y));
+  [destruct (dec (x = y))|].</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 308
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 309
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> right.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 309
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply eq_not_lt.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 309
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assumption.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 309
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 310
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> left.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 310
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply lt_iff_le_ne.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 310
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> auto.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 310
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 311
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> right.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 311
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply not_le_not_lt.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 311
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assumption.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 311
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 312
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre>
+End full_partial_order.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 313
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* Due to bug #2528 *)</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 315
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export]
+Hint Extern 5 (PropHolds (_ &lt;&gt; _)) =&gt;
+  eapply @strict_po_apart_ne :  typeclass_instances.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 317
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+#[export]
+Hint Extern 10 (PropHolds (_ ≤ _)) =&gt;
+  eapply @lt_le : typeclass_instances.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 320
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+#[export]
+Hint Extern 20 (Decidable (_ &lt; _)) =&gt;
+  eapply @lt_dec_slow : typeclass_instances.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 323
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section full_pseudo_order.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 325
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{FullPseudoOrder A}.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 326
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Local Existing Instance pseudo_order_apart.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 328
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma not_lt_le_flip x y : ~(y &lt; x) -&gt; x ≤ y.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 330
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 331
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 332
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply le_iff_not_lt_flip.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 333
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  assumption.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 334
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 335
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Instance fullpseudo_partial : PartialOrder (≤) | 10.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 337
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 338
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  repeat split.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 339
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 340
+Time: 0.004s">
+<div class="time" style="width: 5.5555555555556%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 340
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 341
+Time: 0.005s">
+<div class="time" style="width: 6.9444444444444%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 341
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 342
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 342
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply not_lt_le_flip, (irreflexivity (&lt;)).</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 342
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 343
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y z E1 E2.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 343
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre>
+    apply le_iff_not_lt_flip;
+    apply le_iff_not_lt_flip in E1;
+    apply le_iff_not_lt_flip in E2.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 346
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    change (complement (&lt;) z x).</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 347
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre>
+    transitivity y;assumption.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 348
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 349
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y E1 E2.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 349
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply le_iff_not_lt_flip in E1;
+    apply le_iff_not_lt_flip in E2.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 351
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre>
+    apply (antisymmetry (complement (&lt;)));assumption.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 352
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 353
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma fullpseudo_fullpartial' : FullPartialOrder Ale Alt.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 355
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 356
+Time: 0.003s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>
+  split; try exact _.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 357
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 358
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  split.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 359
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 360
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros E.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 360
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> split.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 360
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 361
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply not_lt_le_flip.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 361
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply lt_flip;assumption.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 361
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 362
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply pseudo_order_lt_apart.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 362
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assumption.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 362
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 363
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [? E].</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 363
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply not_lt_apart_lt_flip;[|symmetry;trivial].</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 363
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply le_iff_not_lt_flip.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 364
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> trivial.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 364
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 365
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance fullpseudo_fullpartial@{i} : FullPartialOrder Ale Alt
+    := ltac:(first [exact fullpseudo_fullpartial'@{i i Set Set Set}|
+                    exact fullpseudo_fullpartial'@{i i}]).</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 369
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance le_stable : forall x y, Stable (x ≤ y).</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 371
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 372
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 373
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> unfold Stable.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 373
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros dn.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 374
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply le_iff_not_lt_flip.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 374
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros E.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 375
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply dn.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 375
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros E';apply le_iff_not_lt_flip in E';auto.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 376
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 377
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma le_or_lt `{!TrivialApart A} `{DecidablePaths A} x y : x ≤ y |_| y &lt; x.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 379
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 380
+Time: 0.003s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>
+  destruct (trichotomy (&lt;) x y) as [|[|]]; try auto.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 381
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 382
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> left.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 382
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply lt_le;trivial.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 382
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 383
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> left.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 383
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply eq_le;trivial.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 383
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 384
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance le_total `{!TrivialApart A} `{DecidablePaths A}
+    : TotalOrder (≤).</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 387
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 388
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  split; try exact _.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 389
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 390
+Time: 0.015s">
+<div class="time" style="width: 20.833333333333%"></div>
+<pre>
+  destruct (le_or_lt x y); auto.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 391
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  right.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 392
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply lt_le.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 392
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  trivial.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 393
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 394
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma not_le_lt_flip `{!TrivialApart A} `{DecidablePaths A} x y
+    : ~(y ≤ x) -&gt; x &lt; y.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 397
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 398
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 399
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct (le_or_lt y x); auto.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 400
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  contradiction.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 401
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 402
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Existing Instance dec_from_lt_dec.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 404
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition lt_dec `{!TrivialApart A} `{forall x y, Decidable (x ≤ y)}
+    : forall x y, Decidable (x &lt; y).</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 407
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 408
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 409
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct (decide_rel (&lt;=) y x).</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 410
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 411
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> right;apply le_not_lt_flip;assumption.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 411
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 412
+Time: 0.002s">
+<div class="time" style="width: 2.7777777777778%"></div>
+<pre> left; apply not_le_lt_flip;assumption.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 412
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 413
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+End full_pseudo_order.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 414
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+#[export]
+Hint Extern 8 (Decidable (_ &lt; _)) =&gt; eapply @lt_dec : typeclass_instances.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 417
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+(*
+The following instances would be tempting, but turn out to be a bad idea.
+
+#[export]
+Hint Extern 10 (PropHolds (_ &lt;&gt; _)) =&gt; eapply @le_ne : typeclass_instances.
+#[export]
+Hint Extern 10 (PropHolds (_ &lt;&gt; _)) =&gt; eapply @le_ne_flip : typeclass_instances.
+
+It will then loop like:
+
+semirings.lt_0_1 -&gt; lt_ne_flip -&gt; ...
+*)
+
+</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 430
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section dec_strict_setoid_order.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 430
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{StrictOrder A} `{Apart A} `{!TrivialApart A} `{DecidablePaths A}.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 431
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Instance: IsApart A := dec_strong_setoid.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 433
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context `{!Trichotomy (&lt;)}.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 435
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Instance dec_strict_pseudo_order: PseudoOrder (&lt;).</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 437
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 438
+Time: 0.003s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>
+  split; try exact _.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 439
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 440
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y [??].</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 440
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct (lt_antisym x y); auto.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 441
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 442
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y Exy z.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 442
+Time: 0.002s">
+<div class="time" style="width: 2.7777777777778%"></div>
+<pre>
+    destruct (trichotomy (&lt;) x z) as [? | [Exz | Exz]];apply tr; try auto.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 443
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    right.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 444
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite &lt;-Exz.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 444
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assumption.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 444
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 445
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 445
+Time: 0.002s">
+<div class="time" style="width: 2.7777777777778%"></div>
+<pre> transitivity (x &lt;&gt; y);[split;apply trivial_apart|].</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 445
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    split.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 446
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 447
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre> destruct (trichotomy (&lt;) x y) as [?|[?|?]]; auto.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 447
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      intros E;contradiction E.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 448
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 449
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [?|?];[apply lt_ne|apply lt_ne_flip];trivial.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 449
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 450
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+End dec_strict_setoid_order.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 451
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section dec_partial_order.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 453
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{PartialOrder A} `{DecidablePaths A}.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 454
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition dec_lt: Lt A := fun x y =&gt; x ≤ y /\ x &lt;&gt; y.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 456
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context `{Alt : Lt A} `{is_mere_relation A lt}
+    (lt_correct : forall x y, x &lt; y &lt;-&gt; x ≤ y /\ x &lt;&gt; y).</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 459
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Instance dec_order: StrictOrder (&lt;).</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 461
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 462
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  split.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 463
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 464
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 464
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 465
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x E.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 465
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply lt_correct in E.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 465
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct E as [_ []];trivial.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 465
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 466
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x y z E1 E2.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 466
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply lt_correct;
+    apply lt_correct in E1;
+    apply lt_correct in E2.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 469
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct E1 as [E1a E1b],E2 as [E2a E2b].</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 470
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    split.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 471
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 472
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre> transitivity y;trivial.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 472
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 473
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros E3.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 473
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct E2b.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 473
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply (antisymmetry (≤)); trivial.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 474
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite &lt;-E3.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 475
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assumption.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 475
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 476
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context `{Apart A} `{!TrivialApart A}.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 478
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Instance: IsApart A := dec_strong_setoid.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 480
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Instance dec_full_partial_order: FullPartialOrder (≤) (&lt;).</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 482
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 483
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  split;try exact _.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 484
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 485
+Time: 0.004s">
+<div class="time" style="width: 5.5555555555556%"></div>
+<pre> transitivity (x &lt;= y /\ x &lt;&gt; y);[|
+  split;intros [? ?];split;trivial;apply trivial_apart;trivial].</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 486
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply lt_correct.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 487
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 488
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context `{!TotalRelation (≤)}.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 490
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Instance: Trichotomy (&lt;).</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 492
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 493
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 494
+Time: 0.004s">
+<div class="time" style="width: 5.5555555555556%"></div>
+<pre>
+  destruct (dec (x = y)); try auto.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 495
+Time: 0.002s">
+<div class="time" style="width: 2.7777777777778%"></div>
+<pre>
+  destruct (total (≤) x y);[left|right;right];
+  apply lt_correct;auto.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 497
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  split;auto.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 498
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro E;apply symmetry in E;auto.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 499
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 500
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Instance dec_pseudo_order: PseudoOrder (&lt;) := dec_strict_pseudo_order.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 502
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Instance dec_full_pseudo_order: FullPseudoOrder (≤) (&lt;).</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 504
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 505
+Time: 0.003s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>
+  split; try exact _.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 506
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x y.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 507
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  split.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 508
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 509
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros ? E.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 509
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply lt_correct in E;destruct E as [? []].</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 509
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (antisymmetry (≤));assumption.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 510
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 511
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros E1.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 511
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct (total (≤) x y); trivial.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 512
+Time: 0.003s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>
+    destruct (dec (x = y)) as [E2|E2].</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 513
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 514
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite E2.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 514
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply reflexivity.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 514
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 515
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct E1.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 515
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply lt_correct;split;auto.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 515
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply symmetric_neq;assumption.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 516
+Time: 0.001s">
+<div class="time" style="width: 1.3888888888889%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 517
+Time: 0.005s">
+<div class="time" style="width: 6.9444444444444%"></div>
+<pre>
+End dec_partial_order.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 518
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma lt_eq_trans `{Lt A} : forall x y z, x &lt; y -&gt; y = z -&gt; x &lt; z.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 520
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 521
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+intros ???? [];trivial.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 522
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 523
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section pseudo.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 525
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {A : Type}.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 526
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{PseudoOrder A}.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 527
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma nlt_lt_trans {x y z : A} : ~ (y &lt; x) -&gt; y &lt; z -&gt; x &lt; z.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 529
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 530
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros nltyx ltyz.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 531
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    assert (disj := cotransitive ltyz x).</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 532
+Time: 0.014s">
+<div class="time" style="width: 19.444444444444%"></div>
+<pre>
+    strip_truncations.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 533
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct disj as [ltyx|ltxz].</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 534
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 535
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (nltyx ltyx).</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 535
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 536
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact ltxz.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 536
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 537
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma lt_nlt_trans {x y z : A} : x &lt; y -&gt; ~ (z &lt; y) -&gt; x &lt; z.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 539
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 540
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros ltxy nltzy.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 541
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    assert (disj := cotransitive ltxy z).</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 542
+Time: 0.012s">
+<div class="time" style="width: 16.666666666667%"></div>
+<pre>
+    strip_truncations.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 543
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct disj as [ltxz|ltzy].</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 544
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 545
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact ltxz.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 545
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 546
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (nltzy ltzy).</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 546
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 547
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma lt_transitive : Transitive (_ : Lt A).</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 549
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 550
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros x y z ltxy ltyz.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 551
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    assert (ltxyz := cotransitive ltxy z).</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 552
+Time: 0.013s">
+<div class="time" style="width: 18.055555555556%"></div>
+<pre>
+    strip_truncations.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 553
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct ltxyz as [ltxz|ltzy].</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 554
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 555
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assumption.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 555
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 556
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (pseudo_order_antisym y z (ltyz , ltzy)).</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 556
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 557
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Existing Instance lt_transitive.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 559
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End pseudo.</pre>
+</div>
+<div class="code" title="File: orders.v
+Line: 562
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

@@ -1,0 +1,1325 @@
+<html>
+<head>
+<title>AbEnriched.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for AbEnriched.v</h1>
+
+<div class="code" title="File: AbEnriched.v
+Line: 1
+Time: 0.044s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import WildCat.SetoidRewrite.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 1
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Import CMorphisms.ProperNotations.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 2
+Time: 0.004s">
+<div class="time" style="width: 9.0909090909091%"></div>
+<pre>
+
+Require Import Basics.Overture Basics.Tactics.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 4
+Time: 0.036s">
+<div class="time" style="width: 81.818181818182%"></div>
+<pre>
+Require Import WildCat.Core WildCat.FunctorCat WildCat.ZeroGroupoid WildCat.Yoneda WildCat.UnitCat WildCat.Equiv WildCat.Products WildCat.Prod WildCat.Bifunctor WildCat.Monoidal.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** See Groups/Group.v and AbGroups/AbelianGroup.v for additional things that it might be useful to export in the future. *)</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 7
+Time: 0.021s">
+<div class="time" style="width: 47.727272727273%"></div>
+<pre>Require Export Classes.interfaces.canonical_names (SgOp, sg_op,
+    MonUnit, mon_unit, Inverse, inv).</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Export canonical_names.BinOpNotations.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 9
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope mc_add_scope.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Wild categories enriched in abelian groups *)
+
+(** ** 0-groupoid abelian groups *)
+
+(** Hom sets in wild categories are 0-groupoids, and we'd like to put an abelian group structure on these hom sets that satisfies the axioms up to 1-cells, to avoid needing function extensionality.  So we define the abstract idea of a 0-groupoid with an abelian group structure.  Because we use 1-cells, not paths, we can't reuse any of the work done in Algebra/Groups or Algebra/AbGroups. Note that our definition has redundant fields, which could be filled in using a "smart constructor":  [is0functor_inverse_0gpd], [mon_unit_r_0gpd], [inverse_r_0gpd] and the fact that [sgop_0gpd] is a 0-functor in the second variable. *)
+
+</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 18
+Time: 0.009s">
+<div class="time" style="width: 20.454545454545%"></div>
+<pre>Class IsAbGroup_0gpd (A : Type) `{Is0Gpd A} := {
+    (* Data: *)
+    sgop_0gpd :: SgOp A;
+    mon_unit_0gpd :: MonUnit A;
+    inverse_0gpd :: Inverse A;
+
+    (* 0-functoriality: *)
+    is0bifunctor_sgop_0gpd :: Is0Bifunctor sgop_0gpd;
+    is0functor_inverse_0gpd :: Is0Functor inverse_0gpd;
+
+    (* Axioms: *)
+    assoc_0gpd : forall a b c, (a + b) + c $== a + (b + c);
+    mon_unit_l_0gpd : forall a, 0 + a $== a;
+    mon_unit_r_0gpd : forall a, a + 0 $== a;
+    inverse_l_0gpd : forall a, (-a) + a $== 0;
+    inverse_r_0gpd : forall a, a - a $== 0;
+    comm_0gpd : forall a b, a + b $== b + a;
+  }.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Setoid rewriting *)
+
+(** [forall x y : A, x $== y -&gt; forall x' y' : A, x' $== y' -&gt; x + x' $== y + y']. *)</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 39
+Time: 0.002s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>Instance IsProper_sgop_0gpd (A : Type) `{IsAbGroup_0gpd A}
+  : CMorphisms.Proper (GpdHom ==&gt; GpdHom ==&gt; GpdHom) (sg_op (A:=A))
+  := @fmap11 _ _ _ _ _ _ sg_op _.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [forall a x y : A, x $== y -&gt; a + x $== a + y]. This is needed to rewrite on the RHS of a sum. LHS is handled by the two-argument version, but this isn't. *)</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 43
+Time: 0.002s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>Instance IsProper_sgop_0gpd1 (A : Type) `{IsAbGroup_0gpd A} {a : A}
+  : CMorphisms.Proper (GpdHom ==&gt; GpdHom) (sg_op (A:=A) a)
+  := @fmap01 _ _ _ _ _ _ sg_op _ a.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 45
+Time: 0.002s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>
+
+Instance IsProper_inverse_0gpd (A : Type) `{IsAbGroup_0gpd A}
+  : CMorphisms.Proper (GpdHom ==&gt; GpdHom) (inv (A:=A))
+  := @fmap _ _ _ _ inv _.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** A few lemmas about 0-groupoid abelian groups *)
+
+(** We will try to parallel the naming in Group.v, when applicable. *)
+
+</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section Lemmas.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {A : Type} `{IsAbGroup_0gpd A}.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context (x y : A).</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 57
+Time: 0.002s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>
+
+  Definition inv_V_gg_0gpd : (-x) + (x + y) $== y
+    := (assoc_0gpd _ _ _)^$ $@ fmap10 sg_op (inverse_l_0gpd x) y $@ mon_unit_l_0gpd _.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 60
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+
+  Definition inv_g_Vg_0gpd : x + (-x + y) $== y
+    := (assoc_0gpd _ _ _)^$ $@ fmap10 sg_op (inverse_r_0gpd x) y $@ mon_unit_l_0gpd _.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 63
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+
+  Definition inv_gg_V_0gpd : (x + y) - y $== x
+    := assoc_0gpd _ _ _ $@ fmap01 sg_op x (inverse_r_0gpd y) $@ mon_unit_r_0gpd _.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 66
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+
+  Definition inv_gV_g_0gpd : (x - y) + y $== x
+    := assoc_0gpd _ _ _ $@ fmap01 sg_op x (inverse_l_0gpd y) $@ mon_unit_r_0gpd _.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition inv_inv_0gpd : - (-x) $== x.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 72
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+    rhs_V' rapply mon_unit_l_0gpd.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 73
+Time: 0.004s">
+<div class="time" style="width: 9.0909090909091%"></div>
+<pre>
+    rewrite &lt;- (inverse_l_0gpd (-x)).</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 74
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+    rhs' napply assoc_0gpd.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 75
+Time: 0.004s">
+<div class="time" style="width: 9.0909090909091%"></div>
+<pre>
+    rewrite inverse_l_0gpd.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    symmetry; apply mon_unit_r_0gpd.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 77
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 78
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+
+End Lemmas.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** We express the operations as maps of 0-groupoids *)
+
+</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition zerogpd_0gpd (A : Type) `{IsAbGroup_0gpd A} : ZeroGpd
+  := Build_ZeroGpd _ _ _ _.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 84
+Time: 0.002s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>
+
+Definition left_op_0gpd {A : Type} `{IsAbGroup_0gpd A} (a : A)
+  : zerogpd_0gpd A $-&gt; zerogpd_0gpd A
+  := Build_Fun01' (fun b : A =&gt; a + b) (fun _ _ =&gt; fmap01 sg_op a).</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 88
+Time: 0.002s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>
+
+Definition right_op_0gpd {A : Type} `{IsAbGroup_0gpd A} (a : A)
+  : zerogpd_0gpd A $-&gt; zerogpd_0gpd A
+  := Build_Fun01' (fun b : A =&gt; b + a) (fun b b' p =&gt; fmap10 sg_op p a).</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 92
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+
+Definition inv_0gpd {A : Type} `{IsAbGroup_0gpd A}
+  : zerogpd_0gpd A $-&gt; zerogpd_0gpd A
+  := Build_Fun01 inverse_0gpd.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** The operations are equivalences *)
+
+(** Addition on the left is biinvertible. *)</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 100
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>Instance cat_isbiinv_left_op_0gpd {A : Type} `{IsAbGroup_0gpd A} (a : A)
+  : Cat_IsBiInv (left_op_0gpd a).</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 102
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+  snapply Build_Cat_IsBiInv.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1,3: exact (left_op_0gpd (-a)).</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  all: intro b; simpl.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply inv_g_Vg_0gpd.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply inv_V_gg_0gpd.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 107
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 108
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+
+Definition left_op_0gpd' {A : Type} `{IsAbGroup_0gpd A} (a : A)
+  := Build_Cat_BiInv _ _ _ _ _ _ _ (left_op_0gpd a) _.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Addition on the right is biinvertible. *)</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 113
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>Instance cat_isbiinv_right_op_0gpd {A : Type} `{IsAbGroup_0gpd A} (a : A)
+  : Cat_IsBiInv (right_op_0gpd a).</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 115
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+  snapply Build_Cat_IsBiInv.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1,3: exact (right_op_0gpd (-a)).</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  all: intro b; simpl.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 118
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply inv_gV_g_0gpd.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply inv_gg_V_0gpd.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 120
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 121
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+
+Definition right_op_0gpd' {A : Type} `{IsAbGroup_0gpd A} (a : A)
+  := Build_Cat_BiInv _ _ _ _ _ _ _ (right_op_0gpd a) _.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Inversion is biinvertible. *)</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 126
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>Instance cat_isbiinv_inverse_0gpd {A : Type} `{IsAbGroup_0gpd A}
+  : Cat_IsBiInv (inv_0gpd (A:=A)).</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 128
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+  snapply Build_Cat_IsBiInv.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1,3: exact inv_0gpd.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 130
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  all: intro b; simpl.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 131
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  all: apply inv_inv_0gpd.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 132
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 133
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+
+Definition inv_0gpd' {A : Type} `{IsAbGroup_0gpd A}
+  := Build_Cat_BiInv _ _ _ _ _ _ _ (inv_0gpd (A:=A)) _.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** General properties of a 0-groupoid abelian group *)
+
+(** None of these use commutativity. *)
+
+</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section GroupProperties.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {A : Type} `{IsAbGroup_0gpd A}.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 143
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+
+  Definition cancelL_0gpd (a b c : A) (p : a + b $== a + c)
+    : b $== c
+    := isinj_equiv_0gpd (left_op_0gpd' a) p.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 147
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+
+  Definition cancelR_0gpd (a b c : A) (p : b + a $== c + a)
+    : b $== c
+    := isinj_equiv_0gpd (right_op_0gpd' a) p.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 151
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+
+  Definition inv_unit_0gpd : -0 $== 0
+    := (mon_unit_l_0gpd (-0))^$ $@ inverse_r_0gpd 0.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 154
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+
+  Definition moveL_gM_0gpd {a b c : A} (p : a - c $== b)
+    : a $== b + c
+    := moveL_equiv_M_0gpd (right_op_0gpd' c) p.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 158
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+
+  Definition moveL_Mg_0gpd {a b c : A} (p : - b + a $== c)
+    : a $== b + c
+    := moveL_equiv_M_0gpd (left_op_0gpd' b) p.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 162
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+
+  Definition moveR_gM_0gpd {a b c : A} (p : a $== c - b)
+    : a + b $== c
+    := moveR_equiv_M_0gpd (right_op_0gpd' b) p.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 166
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+
+  Definition moveR_Mg_0gpd {a b c : A} (p : b $== - a + c)
+    : a + b $== c
+    := moveR_equiv_M_0gpd (left_op_0gpd' a) p.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The next four are the inverses of the previous four. *)
+ </pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 173
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>Definition moveR_gV_0gpd {a b c : A} (p : a $== c + b)
+    : a - b $== c
+    := moveR_equiv_V_0gpd (right_op_0gpd' b) p.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 175
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+
+  Definition moveR_Vg_0gpd {a b c : A} (p : b $== a + c)
+    : -a + b $== c
+    := moveR_equiv_V_0gpd (left_op_0gpd' a) p.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 179
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+
+  Definition moveL_gV_0gpd {a b c : A} (p : a + c $== b)
+    : a $== b - c
+    := moveL_equiv_V_0gpd (right_op_0gpd' c) p.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 183
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+
+  Definition moveL_Vg_0gpd {a b c : A} (p : b + a $== c)
+    : a $== -b + c
+    := moveL_equiv_V_0gpd (left_op_0gpd' b) p.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Versions of the above involving the unit. *)
+ </pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 190
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>Definition moveL_0M_0gpd {a b : A} (p : a - b $== 0) : a $== b
+    := moveL_gM_0gpd p $@ mon_unit_l_0gpd _.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 191
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+
+  Definition moveL_M0_0gpd {a b : A} (p : -b + a $== 0) : a $== b
+    := moveL_Mg_0gpd p $@ mon_unit_r_0gpd _.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 194
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+
+  Definition moveL_0V_0gpd {a b : A} (p : a + b $== 0) : a $== -b
+    := moveL_gV_0gpd p $@ mon_unit_l_0gpd _.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 197
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+
+  Definition moveL_V0_0gpd {a b : A} (p : b + a $== 0) : a $== -b
+    := moveL_Vg_0gpd p $@ mon_unit_r_0gpd _.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 200
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+
+  Definition moveR_0M_0gpd {a b : A} (p : 0 $== b - a) : a $== b
+    := (mon_unit_l_0gpd _)^$ $@ moveR_gM_0gpd p.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 203
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+
+  Definition moveR_M0_0gpd {a b : A} (p : 0 $== -a + b) : a $== b
+    := (mon_unit_r_0gpd _)^$ $@ moveR_Mg_0gpd p.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 206
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+
+  Definition moveR_0V_0gpd {a b : A} (p : 0 $== b + a) : -a $== b
+    := (mon_unit_l_0gpd _)^$ $@ moveR_gV_0gpd p.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 209
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+
+  Definition moveR_V0_0gpd {a b : A} (p : 0 $== a + b) : -a $== b
+    := (mon_unit_r_0gpd _)^$ $@ moveR_Vg_0gpd p.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 212
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Equal things have zero difference. *)
+ </pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 215
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition inverse_r_homotopy_0gpd {a b : A} (p : a $== b)
+    : a - b $== 0.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 216
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 217
+Time: 0.027s">
+<div class="time" style="width: 61.363636363636%"></div>
+<pre>
+    rewrite p; apply inverse_r_0gpd.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 218
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 219
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition inverse_l_homotopy_0gpd {a b : A} (p : a $== b)
+    : -a + b $== 0.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 222
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 223
+Time: 0.003s">
+<div class="time" style="width: 6.8181818181818%"></div>
+<pre>
+    rewrite p; apply inverse_l_0gpd.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 224
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Adding the inverse of the unit. *)
+ </pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition mon_unit_l_inv_0gpd {a : A} : a - 0 $== a.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 229
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply moveR_gV_0gpd.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 230
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    symmetry; apply mon_unit_r_0gpd.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 231
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 232
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition mon_unit_r_inv_0gpd {a : A} : -0 + a $== a.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 234
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 235
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply moveR_Vg_0gpd.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 236
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    symmetry; apply mon_unit_l_0gpd.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 237
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 238
+Time: 0.002s">
+<div class="time" style="width: 4.5454545454545%"></div>
+<pre>
+
+End GroupProperties.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 240
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Homomorphisms between 0-groupoid abelian groups *)
+
+</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 243
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section Homomorphism.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 243
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {A B : Type} `{IsAbGroup_0gpd A} `{IsAbGroup_0gpd B}.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 245
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** A homomorphism is a 0-functor that respects the operation up to 1-cells. *)
+ </pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 248
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>Class IsGroupHom_0gpd (f : A -&gt; B) `{!Is0Functor f} :=
+      grp_homo_op_0gpd : forall (a a' : A), f (a + a') $== f a + f a'.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 249
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** It follows that it respects the unit and inversion. *)
+ </pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 252
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition grp_homo_unit_0gpd (f : A -&gt; B) `{IsGroupHom_0gpd f}
+    : f 0 $== 0.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 253
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 254
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (cancelL_0gpd (f 0)).</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 255
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+    rhs' napply mon_unit_r_0gpd.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 256
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+    rhs_V' rapply (fmap f (mon_unit_l_0gpd 0)).</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 257
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    symmetry.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 258
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply grp_homo_op_0gpd.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 259
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 260
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition grp_homo_inv_0gpd (f : A -&gt; B) `{IsGroupHom_0gpd f} (a : A)
+    : f (-a) $== -(f a).</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 263
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 264
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (cancelL_0gpd (f a)).</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 265
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+    lhs_V' rapply grp_homo_op_0gpd.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 266
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+    lhs' rapply (fmap f (inverse_r_0gpd _)).</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 267
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+    rhs' rapply inverse_r_0gpd.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 268
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rapply grp_homo_unit_0gpd.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 269
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 270
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+
+  Definition grp_homo_op_inv_0gpd (f : A -&gt; B) `{IsGroupHom_0gpd f} (a b : A)
+    : f (a - b) $== f a - f b.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 273
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 274
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    lhs' rapply grp_homo_op_0gpd.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 275
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+    apply (fmap (sgop_0gpd _)).</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 276
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rapply grp_homo_inv_0gpd.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 277
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 278
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End Homomorphism.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 280
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Definition of a wild category enriched in abelian groups *)
+
+(** It is a 1-category with 0-groupoid abelian group structures on its hom types, such that pre- and post-composition are homomorphisms. *)</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 284
+Time: 0.013s">
+<div class="time" style="width: 29.545454545455%"></div>
+<pre>Class IsAbEnriched (A : Type) `{Is1Cat A} := {
+    abgroup_abenriched :: forall (a b : A), IsAbGroup_0gpd (a $-&gt; b);
+    issgpreserving_postcomp_abenriched
+      :: forall (a b c : A) (g : b $-&gt; c), IsGroupHom_0gpd (cat_postcomp a g) ;
+    issgpreserving_precomp_abenriched
+      :: forall (a b c : A) (f : a $-&gt; b), IsGroupHom_0gpd (cat_precomp c f) ;
+  }.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 290
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Results involving pre- and post-composition *)
+
+(** All of these except [precomp_zero] may not be needed, since Rocq is usually able to infer which homomorphism is involved, but we include them for completeness. *)
+
+</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 295
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section AbEnriched.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 295
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {A : Type} `{IsAbEnriched A}.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 297
+Time: 0.004s">
+<div class="time" style="width: 9.0909090909091%"></div>
+<pre>
+
+  Definition postcomp_op {B C D : A} (f : C $-&gt; D) (g h : B $-&gt; C)
+    : f $o (g + h) $== (f $o g) + (f $o h)
+    := grp_homo_op_0gpd g h.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 301
+Time: 0.006s">
+<div class="time" style="width: 13.636363636364%"></div>
+<pre>
+
+  Definition precomp_op {B C D : A} (f : B $-&gt; C) (g h : C $-&gt; D)
+    : (g + h) $o f $== (g $o f) + (h $o f)
+    := grp_homo_op_0gpd g h.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 305
+Time: 0.013s">
+<div class="time" style="width: 29.545454545455%"></div>
+<pre>
+
+  Definition postcomp_zero {B C D : A} (f : C $-&gt; D)
+    : f $o 0 $== (0 : B $-&gt; D)
+    := grp_homo_unit_0gpd _.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 309
+Time: 0.004s">
+<div class="time" style="width: 9.0909090909091%"></div>
+<pre>
+
+  Definition precomp_zero {B C D : A} (f : B $-&gt; C)
+    : 0 $o f $== (0 : B $-&gt; D)
+    := grp_homo_unit_0gpd (cat_precomp _ _).</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 313
+Time: 0.004s">
+<div class="time" style="width: 9.0909090909091%"></div>
+<pre>
+
+  Definition postcomp_inv {B C D : A} (f : C $-&gt; D) (g : B $-&gt; C)
+    : f $o (-g) $== -(f $o g)
+    := grp_homo_inv_0gpd _ g.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 317
+Time: 0.006s">
+<div class="time" style="width: 13.636363636364%"></div>
+<pre>
+
+  Definition precomp_inv {B C D : A} (f : C $-&gt; D) (g : B $-&gt; C)
+    : (-f) $o g $== -(f $o g)
+    := grp_homo_inv_0gpd _ f.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 321
+Time: 0.005s">
+<div class="time" style="width: 11.363636363636%"></div>
+<pre>
+
+  Definition postcomp_op_inv {B C D : A} (f : C $-&gt; D) (g h : B $-&gt; C)
+    : f $o (g - h) $== (f $o g) - (f $o h)
+    := grp_homo_op_inv_0gpd _ _ _.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 325
+Time: 0.008s">
+<div class="time" style="width: 18.181818181818%"></div>
+<pre>
+
+  Definition precomp_op_inv {B C D : A} (f : B $-&gt; C) (g h : C $-&gt; D)
+    : (g - h) $o f $== (g $o f) - (h $o f)
+    := grp_homo_op_inv_0gpd _ g h.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 329
+Time: 0.001s">
+<div class="time" style="width: 2.2727272727273%"></div>
+<pre>
+
+End AbEnriched.</pre>
+</div>
+<div class="code" title="File: AbEnriched.v
+Line: 332
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

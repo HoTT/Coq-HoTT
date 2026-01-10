@@ -1,0 +1,773 @@
+<html>
+<head>
+<title>hprop_lattice.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for hprop_lattice.v</h1>
+
+<div class="code" title="File: hprop_lattice.v
+Line: 1
+Time: 0.072s">
+<div class="time" style="width: 55.813953488372%"></div>
+<pre>Require Import
+  HoTT.Classes.interfaces.abstract_algebra
+  HoTT.Universes.TruncType.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Demonstrate the [HProp] is a (bounded) lattice w.r.t. the logical
+operations. This requires Univalence. *)</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance join_hor : Join HProp := hor.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 6
+Time: 0.002s">
+<div class="time" style="width: 1.5503875968992%"></div>
+<pre>
+Definition hand (X Y : HProp) : HProp := Build_HProp (X * Y).</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Instance meet_hprop : Meet HProp := hand.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Instance bottom_hprop : Bottom HProp := False_hp.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 9
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Instance top_hprop : Top HProp := Unit_hp.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section contents.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{Univalence}.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (* We use this notation because [hor] can accept arguments of type [Type], which leads to minor confusion in the instances below *)
+ </pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Notation lor := (hor : HProp -&gt; HProp -&gt; HProp).</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (* This tactic attempts to destruct a truncated sum (disjunction) *)
+ </pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Ltac hor_intros :=
+    let x := fresh in
+    intro x; repeat (strip_truncations; destruct x as [x | x]).</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Instance commutative_hor : Commutative lor.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros ??.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 25
+Time: 0.055s">
+<div class="time" style="width: 42.635658914729%"></div>
+<pre>
+    apply path_iff_hprop; hor_intros; apply tr; auto.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Instance commutative_hand : Commutative hand.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros ??.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_hprop.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply equiv_prod_symm.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Instance associative_hor : Associative lor.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros ???.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 38
+Time: 0.129s">
+<div class="time" style="width: 100%"></div>
+<pre>
+    apply path_iff_hprop;
+    hor_intros; apply tr;
+    ((by auto) || (left; apply tr) || (right; apply tr));
+    auto.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 42
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Instance associative_hand : Associative hand.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros ???.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_hprop.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply equiv_prod_assoc.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Instance idempotent_hor : BinaryIdempotent lor.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros ?.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> compute.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 54
+Time: 0.021s">
+<div class="time" style="width: 16.279069767442%"></div>
+<pre>
+    apply path_iff_hprop; hor_intros; auto.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by apply tr, inl.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Instance idempotent_hand : BinaryIdempotent hand.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros ?.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_iff_hprop.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [a _] ; apply a.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a; apply (pair a a).</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Instance leftidentity_hor : LeftIdentity lor False_hp.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros ?.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 69
+Time: 0.023s">
+<div class="time" style="width: 17.829457364341%"></div>
+<pre>
+    apply path_iff_hprop; hor_intros; try contradiction || assumption.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by apply tr, inr.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Instance rightidentity_hor : RightIdentity lor False_hp.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros ?.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 76
+Time: 0.023s">
+<div class="time" style="width: 17.829457364341%"></div>
+<pre>
+    apply path_iff_hprop; hor_intros; try contradiction || assumption.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by apply tr, inl.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Instance leftidentity_hand : LeftIdentity hand Unit_hp.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros ?.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_trunctype, prod_unit_l.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Instance rightidentity_hand : RightIdentity hand Unit_hp.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros ?.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_trunctype, prod_unit_r.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Instance absorption_hor_hand : Absorption lor hand.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 94
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros ??.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_iff_hprop.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 97
+Time: 0.006s">
+<div class="time" style="width: 4.6511627906977%"></div>
+<pre> intros X; strip_truncations.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      destruct X as [? | [? _]]; assumption.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros ?.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by apply tr, inl.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Instance absorption_hand_hor : Absorption hand lor.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros ??.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_iff_hprop.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [? _]; assumption.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros ?.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      split.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assumption.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by apply tr, inl.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 111
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+
+  #[export] Instance boundedlattice_hprop : IsBoundedLattice HProp.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 114
+Time: 0.003s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre> repeat split; apply _.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> Defined.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 114
+Time: 0.001s">
+<div class="time" style="width: 0.77519379844961%"></div>
+<pre>
+End contents.</pre>
+</div>
+<div class="code" title="File: hprop_lattice.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

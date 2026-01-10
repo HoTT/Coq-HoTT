@@ -1,0 +1,128 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Utf8</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Utf8</h1>
+
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Export</span> <a class="idref" href="HoTT.Basics.Utf8.html#"><span class="id" title="library">HoTT.Basics.Utf8</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Export</span> <a class="idref" href="HoTT.Utf8Minimal.html#"><span class="id" title="library">HoTT.Utf8Minimal</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.html#"><span class="id" title="library">HoTT.Basics</span></a> <a class="idref" href="HoTT.Types.html#"><span class="id" title="library">HoTT.Types</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Modalities.Identity.html#"><span class="id" title="library">Modalities.Identity</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Spaces.Circle.html#"><span class="id" title="library">Spaces.Circle</span></a> <a class="idref" href="HoTT.Spaces.TwoSphere.html#"><span class="id" title="library">Spaces.TwoSphere</span></a> <a class="idref" href="HoTT.Truncations.html#"><span class="id" title="library">HoTT.Truncations</span></a> <a class="idref" href="HoTT.Homotopy.Suspension.html#"><span class="id" title="library">Homotopy.Suspension</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Some Unicode symbols that we don't use within the library.  See also Utf8Minimal.v for a small number of symbols uses in the Classes library. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Notation</span> <a id="c9783e3466e3b54f3b2fcff61ab25c0d" class="idref" href="#c9783e3466e3b54f3b2fcff61ab25c0d"><span class="id" title="abbreviation">Type₀</span></a> := <a class="idref" href="HoTT.Basics.Overture.html#Type0"><span class="id" title="abbreviation">Type0</span></a>.<br/>
+<span class="id" title="keyword">Notation</span> <a id="990672c6a1050186cb1df73614ef20c5" class="idref" href="#990672c6a1050186cb1df73614ef20c5"><span class="id" title="abbreviation">pr₁</span></a> := <a class="idref" href="HoTT.Basics.Overture.html#pr1"><span class="id" title="abbreviation">pr1</span></a>.<br/>
+<span class="id" title="keyword">Notation</span> <a id="d489c5cfa0e1cbc878c1ff494e751fec" class="idref" href="#d489c5cfa0e1cbc878c1ff494e751fec"><span class="id" title="abbreviation">pr₂</span></a> := <a class="idref" href="HoTT.Basics.Overture.html#pr2"><span class="id" title="abbreviation">pr2</span></a>.<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">fibration_scope</span>.<br/>
+<span class="comment">(*Notation&nbsp;"f&nbsp;→&nbsp;g"&nbsp;:=&nbsp;(f&nbsp;-&gt;&nbsp;g)*)</span><br/>
+<span class="id" title="keyword">Notation</span> <a id="aa7b5cf7be566445126f7ad470037615" class="idref" href="#aa7b5cf7be566445126f7ad470037615"><span class="id" title="notation">&quot;</span></a>x ₁" := (<span class="id" title="var">x</span><a class="idref" href="HoTT.Basics.Overture.html#::fibration_scope:x_'.1'"><span class="id" title="notation">.1</span></a>) : <span class="id" title="var">fibration_scope</span>.<br/>
+<span class="id" title="keyword">Notation</span> <a id="7ddb937e4d5988a69f707d4f79f597e3" class="idref" href="#7ddb937e4d5988a69f707d4f79f597e3"><span class="id" title="notation">&quot;</span></a>x ₂" := (<span class="id" title="var">x</span><a class="idref" href="HoTT.Basics.Overture.html#::fibration_scope:x_'.2'"><span class="id" title="notation">.2</span></a>) : <span class="id" title="var">fibration_scope</span>.<br/>
+<span class="id" title="keyword">Notation</span> <a id="b73e1a5eef23c59e353fc04958d94d33" class="idref" href="#b73e1a5eef23c59e353fc04958d94d33"><span class="id" title="notation">&quot;</span></a>g ∘ f" := (<span class="id" title="var">g</span> <a class="idref" href="HoTT.Basics.Overture.html#::function_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <span class="id" title="var">f</span>)%<span class="id" title="var">function</span> : <span class="id" title="var">function_scope</span>.<br/>
+<span class="comment">(*&nbsp;Notation&nbsp;"g&nbsp;∘ᴱ&nbsp;f"&nbsp;:=&nbsp;(g&nbsp;oE&nbsp;f)*)</span><br/>
+<span class="comment">(*&nbsp;Notation&nbsp;"f&nbsp;*ᴱ&nbsp;g"&nbsp;:=&nbsp;(f&nbsp;*E&nbsp;g)*)</span><br/>
+<span class="comment">(*&nbsp;Notation&nbsp;"f&nbsp;×ᴱ&nbsp;g"&nbsp;:=&nbsp;(f&nbsp;*E&nbsp;g)*)</span><br/>
+<span class="id" title="keyword">Notation</span> <a id="57f4926fe686c2f5c985fad93ee01cfb" class="idref" href="#57f4926fe686c2f5c985fad93ee01cfb"><span class="id" title="notation">&quot;</span></a>A × B" := (<span class="id" title="var">A</span> <a class="idref" href="HoTT.Basics.Overture.html#11c698c8685bb8ab1cf725545c085ac4"><span class="id" title="notation">×</span></a> <span class="id" title="var">B</span>)%<span class="id" title="keyword">type</span> : <span class="id" title="var">type_scope</span>.<br/>
+<span class="id" title="keyword">Notation</span> <a id="dbf653c9f6a69b4113c532f8dd03b1c7" class="idref" href="#dbf653c9f6a69b4113c532f8dd03b1c7"><span class="id" title="notation">&quot;</span></a>f +ᴱ g" := (<span class="id" title="var">f</span> <a class="idref" href="HoTT.Types.Sum.html#6f316eb0e72edafd90fcf935afd7e126"><span class="id" title="notation">+</span></a><a class="idref" href="HoTT.Types.Sum.html#6f316eb0e72edafd90fcf935afd7e126"><span class="id" title="notation">E</span></a> <span class="id" title="var">g</span>)%<span class="id" title="var">equiv</span> : <span class="id" title="var">equiv_scope</span>.<br/>
+</div>
+
+<div class="doc">
+We copy the HoTT-Agda library with regard to path concatenation. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Notation</span> <a id="c4b447c706ba63ef9826693f84f55efe" class="idref" href="#c4b447c706ba63ef9826693f84f55efe"><span class="id" title="notation">&quot;</span></a>p • q" := (<span class="id" title="var">p</span> <a class="idref" href="HoTT.Basics.Overture.html#da4283005a63bc086811fc2e64b35356"><span class="id" title="notation">@</span></a> <span class="id" title="var">q</span>)%<span class="id" title="var">path</span> : <span class="id" title="var">path_scope</span>.<br/>
+<span class="id" title="keyword">Notation</span> <a id="6f6182e4dfd0b562d4855b7a602e423c" class="idref" href="#6f6182e4dfd0b562d4855b7a602e423c"><span class="id" title="notation">&quot;</span></a>p '⁻¹'" := (<span class="id" title="var">p</span><a class="idref" href="HoTT.Basics.Overture.html#6bc2e8b4a6e295632a90f5f35132db8d"><span class="id" title="notation">^</span></a>)%<span class="id" title="var">path</span> : <span class="id" title="var">path_scope</span>.<br/>
+<span class="id" title="keyword">Notation</span> <a id="cfee4cb4d87ba5afd231cc8827516ac9" class="idref" href="#cfee4cb4d87ba5afd231cc8827516ac9"><span class="id" title="notation">&quot;</span></a>p •' q" := (<span class="id" title="var">p</span> <a class="idref" href="HoTT.Basics.Overture.html#da4283005a63bc086811fc2e64b35356"><span class="id" title="notation">@</span></a> <span class="id" title="var">q</span>)%<span class="id" title="var">path</span> : <span class="id" title="var">long_path_scope</span>.<br/>
+</div>
+
+<div class="doc">
+Add error messages so people aren't intensely confused by using an almost identical character. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Infix</span> <a id="1e5278c2e888b32d808fa2be8a09a5e2" class="idref" href="#1e5278c2e888b32d808fa2be8a09a5e2"><span class="id" title="notation">&quot;</span></a>∙" := <span class="id" title="keyword">ltac</span>:(<span class="id" title="tactic">fail</span> "You used '∙' (BULLET OPERATOR, #x2219) when you probably meant to use '•' (BULLET, #x2022)") (<span class="id" title="var">only</span> <span class="id" title="var">parsing</span>) : <span class="id" title="var">path_scope</span>.<br/>
+<span class="comment">(*Notation&nbsp;"p&nbsp; x" := (transport _ p x) : path_scope.*)</span><br/>
+<span class="comment">(*Notation&nbsp;"f&nbsp;==&nbsp;g"&nbsp;:=&nbsp;(pointwise_paths&nbsp;f&nbsp;g)&nbsp;:&nbsp;type_scope.*)</span><br/>
+<span class="id" title="keyword">Notation</span> <a id="dd7277d0940f85bc9f30edc592228b3b" class="idref" href="#dd7277d0940f85bc9f30edc592228b3b"><span class="id" title="notation">&quot;</span></a>A ≃ B" := (<span class="id" title="var">A</span> <a class="idref" href="HoTT.Basics.Overture.html#068136b784cb569aaadfa01f234d5c01"><span class="id" title="notation">&lt;~&gt;</span></a> <span class="id" title="var">B</span>) : <span class="id" title="var">type_scope</span>.<br/>
+<span class="id" title="keyword">Notation</span> <a id="815ca55b9c3214f310716ca5846e80bb" class="idref" href="#815ca55b9c3214f310716ca5846e80bb"><span class="id" title="notation">&quot;</span></a>f '⁻¹'" := (<span class="id" title="var">f</span><a class="idref" href="HoTT.Basics.Overture.html#f3f2d22838b594a6e5dbfb541ecf90ae"><span class="id" title="notation">^-1</span></a>)%<span class="id" title="var">function</span> : <span class="id" title="var">function_scope</span>.<br/>
+<span class="id" title="keyword">Notation</span> <a id="caa1b45601ed7b42aa6bb33ee26c31b9" class="idref" href="#caa1b45601ed7b42aa6bb33ee26c31b9"><span class="id" title="notation">&quot;</span></a>f '⁻¹'" := (<span class="id" title="var">f</span><a class="idref" href="HoTT.Basics.Equivalences.html#76214fa316f18d720833e810bbfd71fb"><span class="id" title="notation">^-1</span></a>)%<span class="id" title="var">equiv</span> : <span class="id" title="var">equiv_scope</span>.<br/>
+<span class="id" title="keyword">Notation</span> <a id="b02645851bc60f28087c4c8d90376442" class="idref" href="#b02645851bc60f28087c4c8d90376442"><span class="id" title="notation">&quot;</span></a>¬ x" := (<a class="idref" href="HoTT.Basics.Overture.html#63a68285c81db8f9bc456233bb9ed181"><span class="id" title="notation">¬</span></a><span class="id" title="var">x</span>) : <span class="id" title="var">type_scope</span>.<br/>
+<span class="id" title="keyword">Notation</span> <a id="eac9b9307401b34847f15ea69bb5957f" class="idref" href="#eac9b9307401b34847f15ea69bb5957f"><span class="id" title="notation">&quot;</span></a>x ≠ y" := (<span class="id" title="var">x</span> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'&lt;&gt;'_x"><span class="id" title="notation">≠</span></a> <span class="id" title="var">y</span>) : <span class="id" title="var">type_scope</span>.<br/>
+<span class="comment">(*Notation&nbsp;"p&nbsp;@@&nbsp;q"&nbsp;:=&nbsp;(concat2&nbsp;p&nbsp;q)*)</span><br/>
+
+<br/>
+<span class="id" title="keyword">Notation</span> <a id="7e66ebf35426e73c599eab2593b3e3b3" class="idref" href="#7e66ebf35426e73c599eab2593b3e3b3"><span class="id" title="notation">&quot;</span></a>m ≤ n" := (<span class="id" title="var">m</span> <a class="idref" href="HoTT.Basics.Trunc.html#20142177726a7a019ee7c2fb6997f6d8"><span class="id" title="notation">≤</span></a> <span class="id" title="var">n</span>)%<span class="id" title="var">trunc</span> : <span class="id" title="var">trunc_scope</span>.<br/>
+
+<br/>
+<span class="comment">(*Infix&nbsp;"||"&nbsp;:=&nbsp;orb&nbsp;:&nbsp;bool_scope.*)</span><br/>
+<span class="comment">(*Infix&nbsp;"&amp;&amp;"&nbsp;:=&nbsp;andb&nbsp;:&nbsp;bool_scope.*)</span><br/>
+<span class="comment">(*Notation&nbsp;"p&nbsp;..1"&nbsp;:=&nbsp;(pr1_path&nbsp;p)&nbsp;:&nbsp;fibration_scope.*)</span><br/>
+<span class="comment">(*Notation&nbsp;"p&nbsp;..2"&nbsp;:=&nbsp;(pr2_path&nbsp;p)&nbsp;:&nbsp;fibration_scope.*)</span><br/>
+
+<br/>
+<span class="id" title="keyword">Notation</span> <a id="22fe0ecb30fb3fa45b0014332b9c722d" class="idref" href="#22fe0ecb30fb3fa45b0014332b9c722d"><span class="id" title="notation">&quot;</span></a>'S¹'" := <a class="idref" href="HoTT.Spaces.Circle.html#Circle"><span class="id" title="definition">Circle</span></a>.<br/>
+<span class="id" title="keyword">Notation</span> <a id="6c06799dc99c629c3f074b0c52e72be2" class="idref" href="#6c06799dc99c629c3f074b0c52e72be2"><span class="id" title="notation">&quot;</span></a>'S²'" := <a class="idref" href="HoTT.Spaces.TwoSphere.html#TwoSphere.TwoSphere"><span class="id" title="inductive">TwoSphere</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Notation</span> <a id="13ebda86b6925470a216a88d1ff380c9" class="idref" href="#13ebda86b6925470a216a88d1ff380c9"><span class="id" title="notation">&quot;</span></a>∥ A ∥₋₂" := (<a class="idref" href="HoTT.Truncations.Core.html#Trunc.Trunc"><span class="id" title="inductive">Trunc</span></a> (-2) <span class="id" title="var">A</span>).<br/>
+<span class="id" title="keyword">Notation</span> <a id="5f6928abb9f2faed46f00490ffab488c" class="idref" href="#5f6928abb9f2faed46f00490ffab488c"><span class="id" title="notation">&quot;</span></a>❘ a ❘₋₂" := (@<a class="idref" href="HoTT.Truncations.Core.html#Trunc.tr"><span class="id" title="constructor">tr</span></a> (-2) <span class="id" title="var">_</span> <span class="id" title="var">a</span>) : <span class="id" title="var">trunc_scope</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Notation</span> <a id="2403cb4f4230cf3f6910dd7542d09118" class="idref" href="#2403cb4f4230cf3f6910dd7542d09118"><span class="id" title="notation">&quot;</span></a>∥ A ∥" := (<a class="idref" href="HoTT.Truncations.Core.html#Trunc.Trunc"><span class="id" title="inductive">Trunc</span></a> (-1) <span class="id" title="var">A</span>) (<span class="id" title="var">only</span> <span class="id" title="var">parsing</span>).<br/>
+<span class="id" title="keyword">Notation</span> <a id="a41a73836e365cffddb643ec9a48e45e" class="idref" href="#a41a73836e365cffddb643ec9a48e45e"><span class="id" title="notation">&quot;</span></a>∥ A ∥₋₁" := (<a class="idref" href="HoTT.Truncations.Core.html#Trunc.Trunc"><span class="id" title="inductive">Trunc</span></a> (-1) <span class="id" title="var">A</span>).<br/>
+<span class="id" title="keyword">Notation</span> <a id="c2d07fb38bd02054b4963d30fdcfe4ad" class="idref" href="#c2d07fb38bd02054b4963d30fdcfe4ad"><span class="id" title="notation">&quot;</span></a>❘ a ❘₋₁" := (@<a class="idref" href="HoTT.Truncations.Core.html#Trunc.tr"><span class="id" title="constructor">tr</span></a> (-1) <span class="id" title="var">_</span> <span class="id" title="var">a</span>) : <span class="id" title="var">trunc_scope</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Notation</span> <a id="9b27a55e56b4bfcc20e5b8cbd0156a3e" class="idref" href="#9b27a55e56b4bfcc20e5b8cbd0156a3e"><span class="id" title="notation">&quot;</span></a>x ∨ y" := (<a class="idref" href="HoTT.Truncations.Core.html#hor"><span class="id" title="definition">hor</span></a> <span class="id" title="var">x</span> <span class="id" title="var">y</span>) : <span class="id" title="var">type_scope</span>.<br/>
+<span class="comment">(*&nbsp;Notation&nbsp;"x&nbsp;⊔&nbsp;y"&nbsp;:=&nbsp;(sum&nbsp;x&nbsp;y)&nbsp;:&nbsp;type_scope.&nbsp;*)</span><br/>
+
+<br/>
+<span class="id" title="keyword">Notation</span> <a id="2cf40dfc8df8c0a86b96afd69f5bc14d" class="idref" href="#2cf40dfc8df8c0a86b96afd69f5bc14d"><span class="id" title="notation">&quot;</span></a>∥ A ∥₀" := (<a class="idref" href="HoTT.Truncations.Core.html#Trunc.Trunc"><span class="id" title="inductive">Trunc</span></a> 0 <span class="id" title="var">A</span>).<br/>
+<span class="id" title="keyword">Notation</span> <a id="21c1f98632330732528015d8824e5001" class="idref" href="#21c1f98632330732528015d8824e5001"><span class="id" title="notation">&quot;</span></a>❘ a ❘₀" := (@<a class="idref" href="HoTT.Truncations.Core.html#Trunc.tr"><span class="id" title="constructor">tr</span></a> 0 <span class="id" title="var">_</span> <span class="id" title="var">a</span>) : <span class="id" title="var">trunc_scope</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Notation</span> <a id="3206e7ee33a0ff51582168e03def5c27" class="idref" href="#3206e7ee33a0ff51582168e03def5c27"><span class="id" title="notation">&quot;</span></a>∥ A ∥₁" := (<a class="idref" href="HoTT.Truncations.Core.html#Trunc.Trunc"><span class="id" title="inductive">Trunc</span></a> 1 <span class="id" title="var">A</span>).<br/>
+<span class="id" title="keyword">Notation</span> <a id="30a42f1c80192790d54867be3985a96e" class="idref" href="#30a42f1c80192790d54867be3985a96e"><span class="id" title="notation">&quot;</span></a>❘ a ❘₁" := (@<a class="idref" href="HoTT.Truncations.Core.html#Trunc.tr"><span class="id" title="constructor">tr</span></a> 1 <span class="id" title="var">_</span> <span class="id" title="var">a</span>) : <span class="id" title="var">trunc_scope</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Notation</span> <a id="baa41330cb8b88263e116d270601e6e1" class="idref" href="#baa41330cb8b88263e116d270601e6e1"><span class="id" title="notation">&quot;</span></a>∥ A ∥₂" := (<a class="idref" href="HoTT.Truncations.Core.html#Trunc.Trunc"><span class="id" title="inductive">Trunc</span></a> 2 <span class="id" title="var">A</span>).<br/>
+<span class="id" title="keyword">Notation</span> <a id="9217ec7b18f334d8764a7c148adb2bff" class="idref" href="#9217ec7b18f334d8764a7c148adb2bff"><span class="id" title="notation">&quot;</span></a>❘ a ❘₂" := (@<a class="idref" href="HoTT.Truncations.Core.html#Trunc.tr"><span class="id" title="constructor">tr</span></a> 2 <span class="id" title="var">_</span> <span class="id" title="var">a</span>) : <span class="id" title="var">trunc_scope</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Notation</span> <a id="64c171aea4e44fc492e2d92ba25ddad2" class="idref" href="#64c171aea4e44fc492e2d92ba25ddad2"><span class="id" title="notation">&quot;</span></a>∞" := <a class="idref" href="HoTT.Modalities.Identity.html#purely"><span class="id" title="definition">purely</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Notation</span> <a id="e15c0eb40e61adefe95778c26e7840f6" class="idref" href="#e15c0eb40e61adefe95778c26e7840f6"><span class="id" title="abbreviation">Σ</span></a> := <a class="idref" href="HoTT.Homotopy.Suspension.html#Susp"><span class="id" title="definition">Susp</span></a>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

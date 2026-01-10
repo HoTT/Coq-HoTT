@@ -1,0 +1,961 @@
+<html>
+<head>
+<title>Colimit_Sigma.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Colimit_Sigma.v</h1>
+
+<div class="code" title="File: Colimit_Sigma.v
+Line: 1
+Time: 0.029s">
+<div class="time" style="width: 52.727272727273%"></div>
+<pre>From HoTT Require Import Basics.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 1
+Time: 0.014s">
+<div class="time" style="width: 25.454545454545%"></div>
+<pre>
+Require Import Types.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 2
+Time: 0.01s">
+<div class="time" style="width: 18.181818181818%"></div>
+<pre>
+Require Import Diagrams.Diagram.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Diagrams.Graph.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Diagrams.Cocone.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 5
+Time: 0.008s">
+<div class="time" style="width: 14.545454545455%"></div>
+<pre>
+Require Import Colimits.Colimit.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Colimit of the dependent sum of a family of diagrams *)
+
+(** Given a family of diagrams [D y], and a colimit [Q y] of each diagram, one can consider the diagram of the sigmas of the types of the [D y]s. Then, a colimit of such a diagram is the sigma of the [Q y]s. *)
+
+</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section ColimitSigma.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context `{Funext} {G : Graph} {Y : Type} (D : Y -&gt; Diagram G).</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The diagram of the sigmas. *)
+
+ </pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition sigma_diagram : Diagram G.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply Build_Diagram.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fun i =&gt; {y: Y &amp; D y i}).</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl; intros i j g x.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (x.1; D x.1 _f g x.2).</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The embedding, for a particular [y], of [D(y)] in the sigma diagram. *)
+
+ </pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition sigma_diagram_map (y: Y) : DiagramMap (D y) sigma_diagram.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply Build_DiagramMap.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: exact (fun i x =&gt; (y; x)).</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    reflexivity.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {Q : Y -&gt; Type}.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The sigma of a family of cocones. *)
+
+ </pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition sigma_cocone (C : forall y, Cocone (D y) (Q y))
+    : Cocone sigma_diagram (sig Q).</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply Build_Cocone; simpl; intros i x.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: exact (x.1; legs (C x.1) i x.2).</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    simpl; intros g x'.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply path_sigma'.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply legs_comm.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The main result: [sig Q] is a colimit of the diagram of sigma types. *)
+
+ </pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma iscolimit_sigma (HQ : forall y, IsColimit (D y) (Q y))
+  : IsColimit sigma_diagram (sig Q).</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    pose (SigmaC := sigma_cocone (fun y =&gt; HQ y)).</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 54
+Time: 0.001s">
+<div class="time" style="width: 1.8181818181818%"></div>
+<pre>
+    srapply (Build_IsColimit SigmaC).</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 55
+Time: 0.003s">
+<div class="time" style="width: 5.4545454545455%"></div>
+<pre>
+    srapply Build_UniversalCocone.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros X; srapply isequiv_adjointify.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros CX x.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      srapply (cocone_postcompose_inv (HQ x.1) _ x.2).</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      srapply (cocone_precompose _ CX).</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply sigma_diagram_map.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro CX.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      pose (CXy := fun y =&gt; cocone_precompose (sigma_diagram_map y) CX).</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      change (cocone_postcompose SigmaC
+        (fun x =&gt; cocone_postcompose_inv (HQ x.1) (CXy x.1) x.2) = CX).</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 65
+Time: 0.002s">
+<div class="time" style="width: 3.6363636363636%"></div>
+<pre>
+      srapply path_cocone; simpl.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros i x.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 67
+Time: 0.001s">
+<div class="time" style="width: 1.8181818181818%"></div>
+<pre>
+        change (legs (cocone_postcompose (HQ x.1)
+                 (cocone_postcompose_inv (HQ x.1) (CXy x.1))) i x.2 = CX i x).</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 69
+Time: 0.001s">
+<div class="time" style="width: 1.8181818181818%"></div>
+<pre>
+        exact (ap10 (apD10 (ap legs (eisretr
+          (cocone_postcompose (HQ x.1)) (CXy _))) i) x.2).</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 72
+Time: 0.002s">
+<div class="time" style="width: 3.6363636363636%"></div>
+<pre> intros i j g [y x]; simpl.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 72
+Time: 0.004s">
+<div class="time" style="width: 7.2727272727273%"></div>
+<pre>
+        set (py := (eisretr (cocone_postcompose (HQ y)) (CXy y))).</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 73
+Time: 0.001s">
+<div class="time" style="width: 1.8181818181818%"></div>
+<pre>
+        set (py1 := ap legs py).</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        specialize (apD legs_comm py); intro py2.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 75
+Time: 0.001s">
+<div class="time" style="width: 1.8181818181818%"></div>
+<pre>
+          simpl in *.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 76
+Time: 0.001s">
+<div class="time" style="width: 1.8181818181818%"></div>
+<pre>
+          rewrite (path_forall _ _(transport_forall_constant _ _)) in py2.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          apply apD10 in py2; specialize (py2 i); simpl in py2.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 78
+Time: 0.001s">
+<div class="time" style="width: 1.8181818181818%"></div>
+<pre>
+          rewrite (path_forall _ _(transport_forall_constant _ _)) in py2.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 79
+Time: 0.001s">
+<div class="time" style="width: 1.8181818181818%"></div>
+<pre>
+          apply apD10 in py2; specialize (py2 j); simpl in py2.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 80
+Time: 0.001s">
+<div class="time" style="width: 1.8181818181818%"></div>
+<pre>
+          rewrite (path_forall _ _(transport_forall_constant _ _)) in py2.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          apply apD10 in py2; specialize (py2 g); simpl in py2.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 82
+Time: 0.001s">
+<div class="time" style="width: 1.8181818181818%"></div>
+<pre>
+          rewrite (path_forall _ _(transport_forall_constant _ _)) in py2.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          apply apD10 in py2; specialize (py2 x); simpl in py2.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 84
+Time: 0.001s">
+<div class="time" style="width: 1.8181818181818%"></div>
+<pre>
+          rewrite transport_paths_FlFr in py2.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 85
+Time: 0.001s">
+<div class="time" style="width: 1.8181818181818%"></div>
+<pre>
+          rewrite concat_1p, concat_pp_p in py2.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          apply moveL_Mp in py2.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 87
+Time: 0.002s">
+<div class="time" style="width: 3.6363636363636%"></div>
+<pre>
+        rewrite (ap_path_sigma_1p
+          (fun x01 x02 =&gt; cocone_postcompose_inv (HQ x01) (CXy x01) x02)).</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        (* Set Printing Coercions. (* to understand what happens *)   *)
+       </pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>subst py1.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        etransitivity.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        *</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> etransitivity.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          2:exact py2.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 94
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          apply ap.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 95
+Time: 0.001s">
+<div class="time" style="width: 1.8181818181818%"></div>
+<pre>
+          rewrite (ap_compose legs (fun x0 =&gt; x0 i x)).</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 96
+Time: 0.001s">
+<div class="time" style="width: 1.8181818181818%"></div>
+<pre>
+          rewrite (ap_apply_lD2 _ i x).</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          reflexivity.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        *</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 99
+Time: 0.001s">
+<div class="time" style="width: 1.8181818181818%"></div>
+<pre> apply ap10, ap.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 99
+Time: 0.001s">
+<div class="time" style="width: 1.8181818181818%"></div>
+<pre>
+          rewrite (ap_compose legs (fun x0 =&gt; x0 j _)).</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 100
+Time: 0.001s">
+<div class="time" style="width: 1.8181818181818%"></div>
+<pre>
+          rewrite (ap_apply_lD2 _ j _).</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          reflexivity.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros f.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply path_forall; intros [y x]; simpl.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite &lt;- cocone_precompose_postcompose.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      srapply (apD10 (g := fun x =&gt; f (y; x)) _ x).</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      snapply equiv_moveR_equiv_V.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      srapply path_cocone.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 109
+Time: 0.001s">
+<div class="time" style="width: 1.8181818181818%"></div>
+<pre>
+      intros i j g x'; simpl.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 110
+Time: 0.055s">
+<div class="time" style="width: 100%"></div>
+<pre>
+      hott_simpl.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 111
+Time: 0.001s">
+<div class="time" style="width: 1.8181818181818%"></div>
+<pre>
+      exact (ap_compose _ _ _)^.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 112
+Time: 0.044s">
+<div class="time" style="width: 80%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 113
+Time: 0.015s">
+<div class="time" style="width: 27.272727272727%"></div>
+<pre>
+
+End ColimitSigma.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Sigma diagrams and diagram maps / equivalences *)
+
+</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 118
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section SigmaDiagram.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 118
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {G : Graph} {Y : Type} (D1 D2 : Y -&gt; Diagram G).</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition sigma_diagram_functor (m : forall y, DiagramMap (D1 y) (D2 y))
+  : DiagramMap (sigma_diagram D1) (sigma_diagram D2).</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply Build_DiagramMap.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 125
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 126
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros i.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 126
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      srapply (functor_sigma idmap _).</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      intros y; apply m.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 128
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros i j g x; simpl in *.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply path_sigma'.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 130
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 131
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    simpl.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (DiagramMap_comm (m x.1)).</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition sigma_diag_functor_equiv (m : forall y, (D1 y) ~d~ (D2 y))
+    : (sigma_diagram D1) ~d~ (sigma_diagram D2).</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 137
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 138
+Time: 0.024s">
+<div class="time" style="width: 43.636363636364%"></div>
+<pre>
+    srapply (Build_diagram_equiv (sigma_diagram_functor m)).</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros i.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 140
+Time: 0.005s">
+<div class="time" style="width: 9.0909090909091%"></div>
+<pre>
+    srapply isequiv_functor_sigma.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros y; apply m.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End SigmaDiagram.</pre>
+</div>
+<div class="code" title="File: Colimit_Sigma.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

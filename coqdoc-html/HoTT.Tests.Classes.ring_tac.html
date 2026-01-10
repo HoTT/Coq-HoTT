@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Tests.Classes.ring_tac</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Tests.Classes.ring_tac</h1>
+
+<div class="code">
+<span class="id" title="keyword">From</span> <span class="id" title="var">HoTT</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span><br/>
+&nbsp;&nbsp;<a class="idref" href="HoTT.Classes.interfaces.abstract_algebra.html#"><span class="id" title="library">Classes.interfaces.abstract_algebra</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="HoTT.Classes.implementations.peano_naturals.html#"><span class="id" title="library">Classes.implementations.peano_naturals</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="HoTT.Classes.orders.sum.html#"><span class="id" title="library">Classes.orders.sum</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="HoTT.Classes.tactics.ring_tac.html#"><span class="id" title="library">Classes.tactics.ring_tac</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="HoTT.Classes.tactics.ring_quote.html#"><span class="id" title="library">Classes.tactics.ring_quote</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Classes.tactics.ring_quote.html#Quoting.Instances"><span class="id" title="module">Quoting.Instances</span></a>.<br/>
+<span class="id" title="keyword">Generalizable Variables</span> <span class="id" title="var">R</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="test1" class="idref" href="#test1"><span class="id" title="lemma">test1</span></a> `{<a id="H:6" class="idref" href="#H:6"><span class="id" title="binder">IsSemiCRing</span></a> <a id="R:1" class="idref" href="#R:1"><span class="id" title="binder"><span id="H:6" class="id">R</span></span></a>}<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="x:7" class="idref" href="#x:7"><span class="id" title="binder">x</span></a> <a id="y:8" class="idref" href="#y:8"><span class="id" title="binder">y</span></a> : <a class="idref" href="HoTT.Tests.Classes.ring_tac.html#R:1"><span class="id" title="variable">R</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Tests.Classes.ring_tac.html#x:7"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#d572d2488ab9ee1088e693a6d2198372"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#d572d2488ab9ee1088e693a6d2198372"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Tests.Classes.ring_tac.html#y:8"><span class="id" title="variable">y</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6e6b564acea72cb37306d61ea269e8c3"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Tests.Classes.ring_tac.html#x:7"><span class="id" title="variable">x</span></a><a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#d572d2488ab9ee1088e693a6d2198372"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Tests.Classes.ring_tac.html#x:7"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6e6b564acea72cb37306d61ea269e8c3"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6e6b564acea72cb37306d61ea269e8c3"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Tests.Classes.ring_tac.html#y:8"><span class="id" title="variable">y</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#d572d2488ab9ee1088e693a6d2198372"><span class="id" title="notation">+</span></a> 1<a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6e6b564acea72cb37306d61ea269e8c3"><span class="id" title="notation">)</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+<span class="id" title="tactic">intros</span>.<br/>
+<span class="id" title="var">ring_with_nat</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span><br/>
+&nbsp;&nbsp;<a class="idref" href="HoTT.Classes.interfaces.naturals.html#"><span class="id" title="library">HoTT.Classes.interfaces.naturals</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="test2" class="idref" href="#test2"><span class="id" title="lemma">test2</span></a> `{<a id="H:14" class="idref" href="#H:14"><span class="id" title="binder">IsSemiCRing</span></a> <a id="R:9" class="idref" href="#R:9"><span class="id" title="binder"><span id="H:14" class="id">R</span></span></a>}<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="x:15" class="idref" href="#x:15"><span class="id" title="binder">x</span></a> <a id="y:16" class="idref" href="#y:16"><span class="id" title="binder">y</span></a> : <a class="idref" href="HoTT.Tests.Classes.ring_tac.html#R:9"><span class="id" title="variable">R</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Tests.Classes.ring_tac.html#x:15"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#d572d2488ab9ee1088e693a6d2198372"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#d572d2488ab9ee1088e693a6d2198372"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Tests.Classes.ring_tac.html#y:16"><span class="id" title="variable">y</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6e6b564acea72cb37306d61ea269e8c3"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Tests.Classes.ring_tac.html#x:15"><span class="id" title="variable">x</span></a><a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#d572d2488ab9ee1088e693a6d2198372"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Tests.Classes.ring_tac.html#x:15"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6e6b564acea72cb37306d61ea269e8c3"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6e6b564acea72cb37306d61ea269e8c3"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Tests.Classes.ring_tac.html#y:16"><span class="id" title="variable">y</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#d572d2488ab9ee1088e693a6d2198372"><span class="id" title="notation">+</span></a> 1<a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6e6b564acea72cb37306d61ea269e8c3"><span class="id" title="notation">)</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+<span class="id" title="tactic">intros</span>.<br/>
+<span class="id" title="tactic">apply</span> (<a class="idref" href="HoTT.Classes.tactics.ring_tac.html#by_quoting"><span class="id" title="lemma">by_quoting</span></a> (<a class="idref" href="HoTT.Classes.interfaces.naturals.html#naturals_to_semiring"><span class="id" title="definition">naturals_to_semiring</span></a> <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a> <span class="id" title="var">R</span>)).<br/>
+<span class="id" title="tactic">compute</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="test3" class="idref" href="#test3"><span class="id" title="lemma">test3</span></a> `{<a id="H:22" class="idref" href="#H:22"><span class="id" title="binder">IsSemiCRing</span></a> <a id="R:17" class="idref" href="#R:17"><span class="id" title="binder"><span id="H:22" class="id">R</span></span></a>}<br/>
+&nbsp;&nbsp;(<a id="pa:23" class="idref" href="#pa:23"><span class="id" title="binder">pa</span></a> <a id="pb:24" class="idref" href="#pb:24"><span class="id" title="binder">pb</span></a> <a id="pc:25" class="idref" href="#pc:25"><span class="id" title="binder">pc</span></a> : <a class="idref" href="HoTT.Tests.Classes.ring_tac.html#R:17"><span class="id" title="variable">R</span></a>) :<br/>
+&nbsp;&nbsp;<a class="idref" href="HoTT.Tests.Classes.ring_tac.html#pa:23"><span class="id" title="variable">pa</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6e6b564acea72cb37306d61ea269e8c3"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6e6b564acea72cb37306d61ea269e8c3"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Tests.Classes.ring_tac.html#pb:24"><span class="id" title="variable">pb</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6e6b564acea72cb37306d61ea269e8c3"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Tests.Classes.ring_tac.html#pc:25"><span class="id" title="variable">pc</span></a><a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6e6b564acea72cb37306d61ea269e8c3"><span class="id" title="notation">)</span></a><br/>
+<a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Tests.Classes.ring_tac.html#pa:23"><span class="id" title="variable">pa</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6e6b564acea72cb37306d61ea269e8c3"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Tests.Classes.ring_tac.html#pb:24"><span class="id" title="variable">pb</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6e6b564acea72cb37306d61ea269e8c3"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Tests.Classes.ring_tac.html#pc:25"><span class="id" title="variable">pc</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+<span class="id" title="tactic">intros</span>.<br/>
+<span class="id" title="tactic">apply</span> (<a class="idref" href="HoTT.Classes.tactics.ring_tac.html#by_quoting"><span class="id" title="lemma">by_quoting</span></a> (<a class="idref" href="HoTT.Classes.interfaces.naturals.html#naturals_to_semiring"><span class="id" title="definition">naturals_to_semiring</span></a> <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a> <span class="id" title="var">R</span>)). <span class="id" title="tactic">compute</span>.<br/>
+<span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="test4" class="idref" href="#test4"><span class="id" title="lemma">test4</span></a> `{<a id="H:31" class="idref" href="#H:31"><span class="id" title="binder">IsSemiCRing</span></a> <a id="R:26" class="idref" href="#R:26"><span class="id" title="binder"><span id="H:31" class="id">R</span></span></a>}<br/>
+&nbsp;&nbsp;(<a id="a:32" class="idref" href="#a:32"><span class="id" title="binder">a</span></a> <a id="b:33" class="idref" href="#b:33"><span class="id" title="binder">b</span></a> : <a class="idref" href="HoTT.Tests.Classes.ring_tac.html#R:26"><span class="id" title="variable">R</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Tests.Classes.ring_tac.html#a:32"><span class="id" title="variable">a</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6e6b564acea72cb37306d61ea269e8c3"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Tests.Classes.ring_tac.html#b:33"><span class="id" title="variable">b</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Tests.Classes.ring_tac.html#b:33"><span class="id" title="variable">b</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6e6b564acea72cb37306d61ea269e8c3"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Tests.Classes.ring_tac.html#a:32"><span class="id" title="variable">a</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+<span class="id" title="tactic">apply</span> (<a class="idref" href="HoTT.Classes.tactics.ring_quote.html#Quoting.eval_eqquote"><span class="id" title="method">ring_quote.Quoting.eval_eqquote</span></a> <span class="id" title="var">R</span>).<br/>
+<span class="id" title="tactic">apply</span> (<a class="idref" href="HoTT.Classes.tactics.ring_tac.html#prove_prequoted"><span class="id" title="lemma">prove_prequoted</span></a> (<a class="idref" href="HoTT.Classes.interfaces.naturals.html#naturals_to_semiring"><span class="id" title="definition">naturals_to_semiring</span></a> <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a> <span class="id" title="var">R</span>)).<br/>
+<span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="test5" class="idref" href="#test5"><span class="id" title="lemma">test5</span></a> : <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="x:34" class="idref" href="#x:34"><span class="id" title="binder">x</span></a> <a id="y:35" class="idref" href="#y:35"><span class="id" title="binder">y</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Tests.Classes.ring_tac.html#x:34"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#d572d2488ab9ee1088e693a6d2198372"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#d572d2488ab9ee1088e693a6d2198372"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Tests.Classes.ring_tac.html#y:35"><span class="id" title="variable">y</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6e6b564acea72cb37306d61ea269e8c3"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Tests.Classes.ring_tac.html#x:34"><span class="id" title="variable">x</span></a><a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#d572d2488ab9ee1088e693a6d2198372"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Tests.Classes.ring_tac.html#x:34"><span class="id" title="variable">x</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6e6b564acea72cb37306d61ea269e8c3"><span class="id" title="notation">×</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6e6b564acea72cb37306d61ea269e8c3"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Tests.Classes.ring_tac.html#y:35"><span class="id" title="variable">y</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#d572d2488ab9ee1088e693a6d2198372"><span class="id" title="notation">+</span></a> 1<a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#6e6b564acea72cb37306d61ea269e8c3"><span class="id" title="notation">)</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+<span class="id" title="tactic">intros</span>;<span class="id" title="var">ring_with_nat</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

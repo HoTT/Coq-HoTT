@@ -1,0 +1,27 @@
+digraph HoTT_Homotopy_Hopf {
+  graph [ratio=0.5]
+  node [style=filled]
+Hopf_pequiv_ptr_psusp_loops [label="pequiv_ptr_psusp_loops", URL=<Hopf.html#pequiv_ptr_psusp_loops>, peripheries=3, fillcolor="#F070D1"] ;
+Hopf_conn_map_loop_susp_counit [label="conn_map_loop_susp_counit", URL=<Hopf.html#conn_map_loop_susp_counit>, fillcolor="#F070D1"] ;
+Hopf_pequiv_pfiber_loops_susp_counit_join [label="pequiv_pfiber_loops_susp_counit_join", URL=<Hopf.html#pequiv_pfiber_loops_susp_counit_join>, fillcolor="#F070D1"] ;
+Hopf_licata_finster [label="licata_finster", URL=<Hopf.html#licata_finster>, peripheries=3, fillcolor="#F070D1"] ;
+Hopf_freudenthal_hspace [label="freudenthal_hspace", URL=<Hopf.html#freudenthal_hspace>, fillcolor="#F070D1"] ;
+Hopf_freudenthal_hspace_ [label="freudenthal_hspace'", URL=<Hopf.html#freudenthal_hspace'>, fillcolor="#F070D1"] ;
+Hopf_isequiv_Pi_connected_hspace [label="isequiv_Pi_connected_hspace", URL=<Hopf.html#isequiv_Pi_connected_hspace>, peripheries=3, fillcolor="#F070D1"] ;
+Hopf_hopf_retraction [label="hopf_retraction", URL=<Hopf.html#hopf_retraction>, fillcolor="#F070D1"] ;
+Hopf_transport_hopf_construction [label="transport_hopf_construction", URL=<Hopf.html#transport_hopf_construction>, fillcolor="#F070D1"] ;
+Hopf_pequiv_hopf_total_join [label="pequiv_hopf_total_join", URL=<Hopf.html#pequiv_hopf_total_join>, fillcolor="#F070D1"] ;
+Hopf_hopf_construction [label="hopf_construction", URL=<Hopf.html#hopf_construction>, fillcolor="#F070D1"] ;
+  Hopf_pequiv_ptr_psusp_loops -> Hopf_conn_map_loop_susp_counit [] ;
+  Hopf_conn_map_loop_susp_counit -> Hopf_pequiv_pfiber_loops_susp_counit_join [] ;
+  Hopf_pequiv_pfiber_loops_susp_counit_join -> Hopf_pequiv_hopf_total_join [] ;
+  Hopf_licata_finster -> Hopf_freudenthal_hspace [] ;
+  Hopf_freudenthal_hspace -> Hopf_freudenthal_hspace_ [] ;
+  Hopf_freudenthal_hspace_ -> Hopf_hopf_retraction [] ;
+  Hopf_isequiv_Pi_connected_hspace -> Hopf_hopf_retraction [] ;
+  Hopf_hopf_retraction -> Hopf_transport_hopf_construction [] ;
+  Hopf_transport_hopf_construction -> Hopf_hopf_construction [] ;
+  Hopf_pequiv_hopf_total_join -> Hopf_hopf_construction [] ;
+subgraph cluster_Hopf { label="Hopf"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Hopf_hopf_construction; Hopf_pequiv_hopf_total_join; Hopf_transport_hopf_construction; Hopf_hopf_retraction; Hopf_isequiv_Pi_connected_hspace; Hopf_freudenthal_hspace_; Hopf_freudenthal_hspace; Hopf_licata_finster; Hopf_pequiv_pfiber_loops_susp_counit_join; Hopf_conn_map_loop_susp_counit; Hopf_pequiv_ptr_psusp_loops; };
+} /* END */

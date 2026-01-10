@@ -1,0 +1,1251 @@
+<html>
+<head>
+<title>Automorphisms.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Automorphisms.v</h1>
+
+<div class="code" title="File: Automorphisms.v
+Line: 1
+Time: 0.037s">
+<div class="time" style="width: 52.112676056338%"></div>
+<pre>From HoTT Require Import Basics Types.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 1
+Time: 0.036s">
+<div class="time" style="width: 50.704225352113%"></div>
+<pre>
+Require Import HoTT.Truncations.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 2
+Time: 0.03s">
+<div class="time" style="width: 42.253521126761%"></div>
+<pre>
+Require Import Universes.BAut Universes.Rigid.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 3
+Time: 0.002s">
+<div class="time" style="width: 2.8169014084507%"></div>
+<pre>
+Require Import ExcludedMiddle.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope trunc_scope.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope path_scope.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * The universe *)
+
+(** ** Automorphisms of the universe *)
+
+(** See "Parametricity, automorphisms of the universe, and excluded middle" by Booij, Escardó, Lumsdaine, Shulman. *)
+
+(** If two inequivalent types have equivalent automorphism oo-groups, then assuming LEM we can swap them and leave the rest of the universe untouched. *)</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section SwapTypes.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (** Amusingly, this does not actually require univalence!  But of course, to verify [BAut A &lt;~&gt; BAut B] in any particular example does require univalence. *)
+ </pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Context `{Funext} `{ExcludedMiddle}.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context (A B : Type) (ne : ~(A &lt;~&gt; B)) (e : BAut A &lt;~&gt; BAut B).</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition equiv_swap_types : Type &lt;~&gt; Type.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 21
+Time: 0.062s">
+<div class="time" style="width: 87.323943661972%"></div>
+<pre>
+    refine (((equiv_decidable_sum (fun X:Type =&gt; merely (X=A)))^-1)
+              oE _ oE
+              (equiv_decidable_sum (fun X:Type =&gt; merely (X=A)))).</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 24
+Time: 0.071s">
+<div class="time" style="width: 100%"></div>
+<pre>
+    refine ((equiv_functor_sum_l
+               (equiv_decidable_sum (fun X =&gt; merely (X.1=B)))^-1)
+              oE _ oE
+              (equiv_functor_sum_l
+                 (equiv_decidable_sum (fun X =&gt; merely (X.1=B))))).</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine ((equiv_sum_assoc _ _ _)
+              oE _ oE
+              (equiv_sum_assoc _ _ _)^-1).</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply equiv_functor_sum_r.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    assert (q : BAut B &lt;~&gt; {x : {x : Type &amp; ~ merely (x = A)} &amp;
+                                merely (x.1 = B)}).</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> refine (equiv_sigma_assoc _ _ oE _).</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply equiv_functor_sigma_id; intros X.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 37
+Time: 0.004s">
+<div class="time" style="width: 5.6338028169014%"></div>
+<pre>
+      apply equiv_iff_hprop.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      -</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros p.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        refine (fun q =&gt; _ ; p).</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 40
+Time: 0.03s">
+<div class="time" style="width: 42.253521126761%"></div>
+<pre>
+        strip_truncations.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        destruct q.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        exact (ne (equiv_path X B p)).</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      -</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact pr2.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (_ oE equiv_sum_symm _ _).</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply equiv_functor_sum'.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (e^-1 oE q^-1).</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (q oE e).</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 48
+Time: 0.005s">
+<div class="time" style="width: 7.0422535211268%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition equiv_swap_types_swaps : merely (equiv_swap_types A = B).</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    assert (ea := (e (point _)).2).</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn in ea.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 53
+Time: 0.003s">
+<div class="time" style="width: 4.2253521126761%"></div>
+<pre>
+    strip_truncations; apply tr.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unfold equiv_swap_types.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 55
+Time: 0.004s">
+<div class="time" style="width: 5.6338028169014%"></div>
+<pre>
+    apply moveR_equiv_V.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 56
+Time: 0.004s">
+<div class="time" style="width: 5.6338028169014%"></div>
+<pre>
+    rewrite (equiv_decidable_sum_l
+               (fun X =&gt; merely (X=A)) A (tr 1)).</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 58
+Time: 0.013s">
+<div class="time" style="width: 18.30985915493%"></div>
+<pre>
+    assert (ne' : ~ merely (B=A))
+      by (intros p; strip_truncations; exact (ne (equiv_path A B p^))).</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 60
+Time: 0.004s">
+<div class="time" style="width: 5.6338028169014%"></div>
+<pre>
+    rewrite (equiv_decidable_sum_r
+               (fun X =&gt; merely (X=A)) B ne').</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 62
+Time: 0.003s">
+<div class="time" style="width: 4.2253521126761%"></div>
+<pre>
+    cbn.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 63
+Time: 0.003s">
+<div class="time" style="width: 4.2253521126761%"></div>
+<pre>
+    apply ap, path_sigma_hprop; cbn.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact ea.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 65
+Time: 0.019s">
+<div class="time" style="width: 26.760563380282%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition equiv_swap_types_not_id
+    : equiv_swap_types &lt;&gt; equiv_idmap.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros p.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    assert (q := equiv_swap_types_swaps).</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 72
+Time: 0.005s">
+<div class="time" style="width: 7.0422535211268%"></div>
+<pre>
+    strip_truncations.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply ne.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply equiv_path.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite p in q; exact q.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 77
+Time: 0.013s">
+<div class="time" style="width: 18.30985915493%"></div>
+<pre>
+
+End SwapTypes.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** In particular, we can swap any two distinct rigid types. *)
+
+</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition equiv_swap_rigid `{Univalence} `{ExcludedMiddle}
+           (A B : Type) `{IsRigid A} `{IsRigid B} (ne : ~(A &lt;~&gt; B))
+  : Type &lt;~&gt; Type.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (equiv_swap_types A B ne _).</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 86
+Time: 0.001s">
+<div class="time" style="width: 1.4084507042254%"></div>
+<pre>
+  exact equiv_contr_contr.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Such as [Empty] and [Unit]. *)
+
+</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 91
+Time: 0.001s">
+<div class="time" style="width: 1.4084507042254%"></div>
+<pre>Definition equiv_swap_empty_unit `{Univalence} `{ExcludedMiddle}
+  : Type &lt;~&gt; Type
+  := equiv_swap_rigid Empty Unit (fun e =&gt; e^-1 tt).</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** In this case we get an untruncated witness of the swapping. *)
+
+</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition equiv_swap_rigid_swaps `{Univalence} `{ExcludedMiddle}
+           (A B : Type) `{IsRigid A} `{IsRigid B} (ne : ~(A &lt;~&gt; B))
+  : equiv_swap_rigid A B ne A = B.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold equiv_swap_rigid, equiv_swap_types.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 100
+Time: 0.004s">
+<div class="time" style="width: 5.6338028169014%"></div>
+<pre>
+  apply moveR_equiv_V.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 101
+Time: 0.004s">
+<div class="time" style="width: 5.6338028169014%"></div>
+<pre>
+  rewrite (equiv_decidable_sum_l
+             (fun X =&gt; merely (X=A)) A (tr 1)).</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 103
+Time: 0.015s">
+<div class="time" style="width: 21.12676056338%"></div>
+<pre>
+  assert (ne' : ~ merely (B=A))
+    by (intros p; strip_truncations; exact (ne (equiv_path A B p^))).</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 105
+Time: 0.004s">
+<div class="time" style="width: 5.6338028169014%"></div>
+<pre>
+  rewrite (equiv_decidable_sum_r
+             (fun X =&gt; merely (X=A)) B ne').</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 107
+Time: 0.003s">
+<div class="time" style="width: 4.2253521126761%"></div>
+<pre>
+  cbn.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 108
+Time: 0.003s">
+<div class="time" style="width: 4.2253521126761%"></div>
+<pre>
+  apply ap, path_sigma_hprop; cbn.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 109
+Time: 0.002s">
+<div class="time" style="width: 2.8169014084507%"></div>
+<pre>
+  exact ((path_contr (center (BAut B)) (point (BAut B)))..1).</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 110
+Time: 0.021s">
+<div class="time" style="width: 29.577464788732%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We can also swap the products of two rigid types with another type [X], under a connectedness/truncatedness assumption. *)
+
+</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition equiv_swap_prod_rigid  `{Univalence} `{ExcludedMiddle}
+           (X A B : Type) (n : trunc_index) (ne : ~(X*A &lt;~&gt; X*B))
+           `{IsRigid A} `{IsConnected n.+1 A}
+           `{IsRigid B} `{IsConnected n.+1 B}
+           `{IsTrunc n.+1 X}
+  : Type &lt;~&gt; Type.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (equiv_swap_types (X*A) (X*B) ne _).</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 121
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  transitivity (BAut X).</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 122
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> symmetry; exact (baut_prod_rigid_equiv X A n).</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (baut_prod_rigid_equiv X B n).</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 125
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Conversely, from some nontrivial automorphisms of the universe we can deduce nonconstructive consequences. *)
+
+</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 128
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition lem_from_aut_type_unit_empty `{Univalence}
+           (f : Type &lt;~&gt; Type) (eu : f Unit = Empty)
+  : ExcludedMiddle_type.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 130
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 131
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply DNE_to_LEM, DNE_from_allneg; intros P ?.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exists (f P); split.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros p.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    assert (Contr P) by (apply contr_inhabited_hprop; assumption).</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 135
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    assert (q : Unit = P)
+      by (apply path_universe_uncurried, equiv_contr_contr).</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 137
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct q.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite eu.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    auto.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros nfp.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    assert (q : f P = Empty)
+      by (apply path_universe_uncurried, equiv_to_empty, nfp).</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite &lt;- eu in q.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 144
+Time: 0.004s">
+<div class="time" style="width: 5.6338028169014%"></div>
+<pre>
+    apply ((ap f)^-1) in q.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 145
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite q; exact tt.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 147
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma equiv_hprop_idprod `{Univalence}
+      (A : Type) (P : Type) (a : merely A) `{IsHProp P}
+  : P &lt;-&gt; (P * A = A).</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 152
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  split.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 154
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros p; apply path_universe with snd.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 154
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply isequiv_adjointify with (fun a =&gt; (p,a)).</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 155
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x; reflexivity.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [p' x].</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply path_prod; [ apply path_ishprop | reflexivity ].</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros q.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 159
+Time: 0.017s">
+<div class="time" style="width: 23.943661971831%"></div>
+<pre>
+    strip_truncations.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply equiv_path in q.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (fst (q^-1 a)).</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 163
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition lem_from_aut_type_inhabited_empty `{Univalence}
+           (f : Type &lt;~&gt; Type)
+           (A : Type) (a : merely A) (eu : f A = Empty)
+  : ExcludedMiddle_type.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply DNE_to_LEM, DNE_from_allneg; intros P ?.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exists (f (P * A)); split.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros p.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    assert (q := fst (equiv_hprop_idprod A P a) p).</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (ap f) in q.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 174
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite eu in q.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 175
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite q; auto.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros q.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply equiv_to_empty in q.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_universe_uncurried in q.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 179
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite &lt;- eu in q.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 180
+Time: 0.004s">
+<div class="time" style="width: 5.6338028169014%"></div>
+<pre>
+    apply ((ap f)^-1) in q.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 181
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (snd (equiv_hprop_idprod A P a) q).</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 182
+Time: 0.001s">
+<div class="time" style="width: 1.4084507042254%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 183
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** If you can derive a constructive taboo from an automorphism of the universe such that [g X &lt;&gt; X], then you get [X]-many beers; see &lt;https://groups.google.com/d/msg/homotopytypetheory/8CV0S2DuOI8/blCo7x-B7aoJ&gt;. *)
+
+</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 186
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition zero_beers `{Univalence}
+           (g : Type &lt;~&gt; Type) (ge : g Empty &lt;&gt; Empty)
+  : ~~ExcludedMiddle_type.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 189
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  pose (f := equiv_inverse g).</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 190
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros nlem.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 191
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply ge.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 192
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply path_universe_uncurried, equiv_to_empty; intros gz.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 193
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply nlem.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 194
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (lem_from_aut_type_inhabited_empty f (g Empty) (tr gz)).</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold f; apply eissect.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition lem_beers `{Univalence}
+           (g : Type &lt;~&gt; Type) (ge : g ExcludedMiddle_type &lt;&gt; ExcludedMiddle_type)
+  : ~~ExcludedMiddle_type.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 201
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 202
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros nlem.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 203
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  pose (nlem' := equiv_to_empty nlem).</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 204
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply path_universe_uncurried in nlem'.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 205
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite nlem' in ge.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (zero_beers g) in ge.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 207
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (ge nlem).</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Automorphisms.v
+Line: 210
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

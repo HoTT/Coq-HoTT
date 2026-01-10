@@ -1,0 +1,4764 @@
+<html>
+<head>
+<title>Finite.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Finite.v</h1>
+
+<div class="code" title="File: Finite.v
+Line: 1
+Time: 0.029s">
+<div class="time" style="width: 38.157894736842%"></div>
+<pre>From HoTT Require Import Basics.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 1
+Time: 0.012s">
+<div class="time" style="width: 15.789473684211%"></div>
+<pre>
+Require Import Types.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 2
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import HSet.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 3
+Time: 0.012s">
+<div class="time" style="width: 15.789473684211%"></div>
+<pre>
+Require Import Spaces.Nat.Core Spaces.Nat.Factorial.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 4
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>
+Require Import HFiber.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 5
+Time: 0.013s">
+<div class="time" style="width: 17.105263157895%"></div>
+<pre>
+Require Import Factorization.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 6
+Time: 0.012s">
+<div class="time" style="width: 15.789473684211%"></div>
+<pre>
+Require Import Truncations.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 7
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>
+Require Import Colimits.Quotient.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Projective.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 9
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Fin.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope path_scope.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope nat_scope.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Definition of general finite sets *)
+
+</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 16
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>Class Finite (X : Type) :=
+  { fcard : nat ;
+    merely_equiv_fin : merely (X &lt;~&gt; Fin fcard) }.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments fcard X {_}.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments merely_equiv_fin X {_}.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition issig_finite X
+: { n : nat &amp; merely (X &lt;~&gt; Fin n) } &lt;~&gt; Finite X.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 25
+Time: 0.003s">
+<div class="time" style="width: 3.9473684210526%"></div>
+<pre>
+  issig.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Note that the sigma over cardinalities is not truncated.  Nevertheless, because canonical finite sets of different cardinalities are not isomorphic, being finite is still an hprop.  (Thus, we could have truncated the sigma and gotten an equivalent definition, but it would be less convenient to reason about.) *)</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance ishprop_finite X
+: IsHProp (Finite X).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 31
+Time: 0.006s">
+<div class="time" style="width: 7.8947368421053%"></div>
+<pre>
+  refine (istrunc_equiv_istrunc _ (issig_finite X)).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 32
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>
+  apply ishprop_sigma_disjoint; intros n m Hn Hm.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 33
+Time: 0.014s">
+<div class="time" style="width: 18.421052631579%"></div>
+<pre>
+  strip_truncations.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (nat_eq_fin_equiv n m (Hm oE Hn^-1)).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Preservation of finiteness by equivalences *)
+
+</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition finite_equiv X {Y} (e : X -&gt; Y) `{IsEquiv X Y e}
+: Finite X -&gt; Finite Y.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros ?.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (Build_Finite Y (fcard X) _).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 43
+Time: 0.007s">
+<div class="time" style="width: 9.2105263157895%"></div>
+<pre>
+  assert (f := merely_equiv_fin X); strip_truncations.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply tr.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 45
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>
+  exact (equiv_compose f e^-1).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 47
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>
+
+Definition finite_equiv' X {Y} (e : X &lt;~&gt; Y)
+: Finite X -&gt; Finite Y
+  := finite_equiv X e.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Corollary finite_equiv_equiv X Y
+: (X &lt;~&gt; Y) -&gt; (Finite X &lt;~&gt; Finite Y).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros ?; apply equiv_iff_hprop; apply finite_equiv';
+    [ assumption | symmetry; assumption ].</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition fcard_equiv {X Y} (e : X -&gt; Y) `{IsEquiv X Y e}
+           `{Finite X} `{Finite Y}
+: fcard X = fcard Y.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  transitivity (@fcard Y (finite_equiv X e _)).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (ap (@fcard Y) (path_ishprop _ _)).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 67
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>
+
+Definition fcard_equiv' {X Y} (e : X &lt;~&gt; Y)
+           `{Finite X} `{Finite Y}
+: fcard X = fcard Y
+  := fcard_equiv e.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Simple examples of finite sets *)
+
+(** Canonical finite sets are finite *)</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance finite_fin n : Finite (Fin n)
+  := Build_Finite _ n (tr (equiv_idmap _)).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** This includes the empty set. *)</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance finite_empty : Finite Empty
+  := finite_fin 0.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The unit type is finite, since it's equivalent to [Fin 1]. *)</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance finite_unit : Finite Unit.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (finite_equiv' (Fin 1) _ _); simpl.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply sum_empty_l.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Thus, any contractible type is finite. *)</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 88
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>Instance finite_contr X `{Contr X} : Finite X
+  := finite_equiv Unit equiv_contr_unit^-1 _.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Any decidable hprop is finite, since it must be equivalent to [Empty] or [Unit]. *)</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition finite_decidable_hprop X `{IsHProp X} `{Decidable X}
+: Finite X.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct (dec X) as [x|nx].</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 94
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply finite_contr.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by apply contr_inhabited_hprop.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> refine (finite_equiv Empty nx^-1 _).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+#[export]
+Hint Immediate finite_decidable_hprop : typeclass_instances.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** It follows that the propositional truncation of any finite set is finite. *)</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance finite_merely X {fX : Finite X}
+: Finite (merely X).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (** As in decidable_finite_hprop, we case on cardinality first to avoid needing funext. *)
+ </pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 107
+Time: 0.019s">
+<div class="time" style="width: 25%"></div>
+<pre>destruct fX as [[|n] e]; refine (finite_decidable_hprop _).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> right.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 108
+Time: 0.013s">
+<div class="time" style="width: 17.105263157895%"></div>
+<pre>
+    intros x; strip_truncations; exact (e x).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> left.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 110
+Time: 0.005s">
+<div class="time" style="width: 6.5789473684211%"></div>
+<pre>
+    strip_truncations; exact (tr (e^-1 (inr tt))).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 111
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Finite sets are closed under path-spaces. *)</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance finite_paths {X} `{Finite X} (x y : X)
+: Finite (x = y).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (** If we assume [Funext], then typeclass inference produces this automatically, since [X] has decidable equality and (hence) is a set, so [x=y] is a decidable hprop.  But we can also deduce it without funext, since [Finite] is an hprop even without funext. *)
+ </pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 118
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>assert (e := merely_equiv_fin X).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 118
+Time: 0.011s">
+<div class="time" style="width: 14.473684210526%"></div>
+<pre>
+  strip_truncations.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 119
+Time: 0.026s">
+<div class="time" style="width: 34.210526315789%"></div>
+<pre>
+  refine (finite_equiv _ (ap e)^-1 _).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 120
+Time: 0.009s">
+<div class="time" style="width: 11.842105263158%"></div>
+<pre>
+  apply finite_decidable_hprop; exact _.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 121
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 122
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Finite sets are also closed under successors. *)
+
+</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 125
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance finite_succ X `{Finite X} : Finite (X + Unit).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 125
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 126
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (Build_Finite _ (fcard X).+1 _).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  pose proof (merely_equiv_fin X).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 128
+Time: 0.003s">
+<div class="time" style="width: 3.9473684210526%"></div>
+<pre>
+  strip_truncations; apply tr.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_ +E 1); assumption.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 130
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 131
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition fcard_succ X `{Finite X}
+: fcard (X + Unit) = (fcard X).+1
+  := 1.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 135
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Decidability *)		
+
+(** Like canonical finite sets, finite sets have decidable equality. *)</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance decidablepaths_finite `{Funext} X `{Finite X}
+: DecidablePaths X.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  assert (e := merely_equiv_fin X).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 142
+Time: 0.005s">
+<div class="time" style="width: 6.5789473684211%"></div>
+<pre>
+  strip_truncations.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (decidablepaths_equiv _ e^-1 _).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 145
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** However, contrary to what you might expect, we cannot assert that "every finite set is decidable"!  That would be claiming a *uniform* way to select an element from every nonempty finite set, which contradicts univalence. *)
+
+(** One thing we can prove is that any finite hprop is decidable. *)</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance decidable_finite_hprop X `{IsHProp X} {fX : Finite X}
+: Decidable X.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (** To avoid having to use [Funext], we case on the cardinality of [X] before stripping the truncation from its equivalence to [Fin n]; if we did things in the other order then we'd have to know that [Decidable X] is an hprop, which requires funext. *)
+ </pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>destruct fX as [[|n] e].</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 154
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> right; intros x.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 154
+Time: 0.01s">
+<div class="time" style="width: 13.157894736842%"></div>
+<pre>
+    strip_truncations; exact (e x).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 155
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> left.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 156
+Time: 0.017s">
+<div class="time" style="width: 22.368421052632%"></div>
+<pre>
+    strip_truncations; exact (e^-1 (inr tt)).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** It follows that if [X] is finite, then its propositional truncation is decidable. *)</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 160
+Time: 0.006s">
+<div class="time" style="width: 7.8947368421053%"></div>
+<pre>Definition decidable_merely_finite X {fX : Finite X}
+  : Decidable (merely X)
+  := _.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** From this, it follows that any finite set is *merely* decidable. *)</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 164
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition merely_decidable_finite X `{Finite X}
+: merely (Decidable X).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 165
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 166
+Time: 0.006s">
+<div class="time" style="width: 7.8947368421053%"></div>
+<pre>
+  apply O_decidable; exact _.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Induction over finite sets *)
+
+(** Most concrete applications of this don't actually require univalence, but the general version does.  For this reason the general statement is less useful (and less used in the sequel) than it might be. *)</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 172
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>Definition finite_ind_hprop `{Univalence}
+           (P : forall X, Finite X -&gt; Type)
+           `{forall X (fX:Finite X), IsHProp (P X _)}
+           (f0 : P Empty _)
+           (fs : forall X (fX:Finite X), P X _ -&gt; P (X + Unit)%type _)
+           (X : Type) `{Finite X}
+: P X _.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 179
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  assert (e := merely_equiv_fin X).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 180
+Time: 0.013s">
+<div class="time" style="width: 17.105263157895%"></div>
+<pre>
+  strip_truncations.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 181
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>
+  assert (p := transportD Finite P (path_universe e^-1) _).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 182
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (transport (P X) (path_ishprop _ _) (p _)).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 183
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  generalize (fcard X); intros n.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 184
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction n as [|n IH].</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 186
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact f0.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 186
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (transport (P (Fin n.+1)) (path_ishprop _ _) (fs _ _ IH)).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 187
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** The finite axiom of choice, and projectivity *)
+
+</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 191
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition finite_choice {X} `{Finite X} : HasChoice X.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 191
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 192
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros P oP f; clear oP.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 193
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  assert (e := merely_equiv_fin X).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 194
+Time: 0.006s">
+<div class="time" style="width: 7.8947368421053%"></div>
+<pre>
+  strip_truncations.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  set (P' := P o e^-1).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  assert (f' := (fun x =&gt; f (e^-1 x)) : forall x, merely (P' x)).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (Trunc_functor (X := forall x:Fin (fcard X), P' x) (-1) _ _).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 199
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros g x; exact (eissect e x # g (e x)).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 199
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> clearbody P'; clear f P e.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    generalize dependent (fcard X); intros n P f.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 201
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    induction n as [|n IH].</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 202
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 203
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (tr (Empty_ind P)).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 203
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 204
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> specialize (IH (P o inl) (f o inl)).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 204
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      assert (e := f (inr tt)).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 205
+Time: 0.016s">
+<div class="time" style="width: 21.052631578947%"></div>
+<pre>
+      strip_truncations.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (tr (sum_ind P IH (Unit_ind e))).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 207
+Time: 0.002s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Corollary isprojective_fin_n (n : nat) : IsProjective (Fin n).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 210
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 211
+Time: 0.002s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+  apply (iff_isoprojective_hasochoice _ (Fin n)).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 212
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact finite_choice.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 213
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 214
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Constructions on finite sets *)
+
+(** Finite sets are closed under sums, products, function spaces, and equivalence spaces.  There are multiple choices we could make regarding how to prove these facts.  Since we know what the cardinalities ought to be in all cases (since we know how to add, multiply, exponentiate, and take factorials of natural numbers), we could specify those off the bat, and then reduce to the case of canonical finite sets.  However, it's more amusing to instead prove finiteness of these constructions by "finite-set induction", and then *deduce* that their cardinalities are given by the corresponding operations on natural numbers (because they satisfy the same recurrences). *)
+
+(** *** Binary sums *)
+
+</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 221
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance finite_sum X Y `{Finite X} `{Finite Y}
+: Finite (X + Y).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 222
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 223
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  assert (e := merely_equiv_fin Y).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 224
+Time: 0.005s">
+<div class="time" style="width: 6.5789473684211%"></div>
+<pre>
+  strip_truncations.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 225
+Time: 0.003s">
+<div class="time" style="width: 3.9473684210526%"></div>
+<pre>
+  refine (finite_equiv _ (functor_sum idmap e^-1) _).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 226
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  generalize (fcard Y); intros n.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 227
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction n as [|n IH].</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 229
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (finite_equiv _ (sum_empty_r X)^-1 _).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 229
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 230
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (finite_equiv _ (equiv_sum_assoc X _ Unit) _).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 230
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 231
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Note that the cardinality function [fcard] actually computes.  The same will be true of all the other proofs in this section, though we don't always verify it. *)</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 233
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>Goal fcard (Fin 3 + Fin 4) = 7.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 233
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  reflexivity.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 234
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Abort.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 235
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>
+
+Definition fcard_sum X Y `{Finite X} `{Finite Y}
+: fcard (X + Y) = (fcard X + fcard Y).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 238
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 239
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_ @ nat_add_comm _ _).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 240
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  assert (e := merely_equiv_fin Y).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 241
+Time: 0.007s">
+<div class="time" style="width: 9.2105263157895%"></div>
+<pre>
+  strip_truncations.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 242
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>
+  refine (fcard_equiv' (1 +E e) @ _).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 243
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>
+  refine (_ @ ap (fun y =&gt; (y + fcard X)) (fcard_equiv e^-1)).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 244
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  generalize (fcard Y); intros n.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 245
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction n as [|n IH].</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 246
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 247
+Time: 0.002s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre> exact (fcard_equiv (sum_empty_r X)^-1).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 247
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 248
+Time: 0.002s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre> refine (fcard_equiv (equiv_sum_assoc _ _ _)^-1 @ _).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 248
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (ap S IH).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 249
+Time: 0.002s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 250
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Binary products *)
+
+</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 253
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance finite_prod X Y `{Finite X} `{Finite Y}
+: Finite (X * Y).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 254
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 255
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  assert (e := merely_equiv_fin Y).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 256
+Time: 0.005s">
+<div class="time" style="width: 6.5789473684211%"></div>
+<pre>
+  strip_truncations.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 257
+Time: 0.004s">
+<div class="time" style="width: 5.2631578947368%"></div>
+<pre>
+  refine (finite_equiv _ (functor_prod idmap e^-1) _).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 258
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  generalize (fcard Y); intros n.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 259
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction n as [|n IH].</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 260
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 261
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> refine (finite_equiv _ (prod_empty_r X)^-1 _).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 261
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 262
+Time: 0.003s">
+<div class="time" style="width: 3.9473684210526%"></div>
+<pre> refine (finite_equiv _ (sum_distrib_l X _ Unit)^-1 (finite_sum _ _)).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 262
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (finite_equiv _ (prod_unit_r X)^-1 _).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 263
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 264
+Time: 0.002s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+
+Definition fcard_prod X Y `{Finite X} `{Finite Y}
+: fcard (X * Y) = fcard X * fcard Y.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 267
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 268
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  assert (e := merely_equiv_fin X).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 269
+Time: 0.007s">
+<div class="time" style="width: 9.2105263157895%"></div>
+<pre>
+  strip_truncations.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 270
+Time: 0.003s">
+<div class="time" style="width: 3.9473684210526%"></div>
+<pre>
+  refine (fcard_equiv' (e *E 1) @ _).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 271
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>
+  refine (_ @ ap (fun x =&gt; x * fcard Y) (fcard_equiv e^-1)).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 272
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  generalize (fcard X); intros n.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 273
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction n as [|n IH].</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 274
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 275
+Time: 0.002s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre> refine (fcard_equiv (prod_empty_l Y)).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 275
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 276
+Time: 0.009s">
+<div class="time" style="width: 11.842105263158%"></div>
+<pre> refine (fcard_equiv (sum_distrib_r Y (Fin n) Unit) @ _).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 276
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (fcard_sum _ _ @ _).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 277
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    simpl.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 278
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (_ @ nat_add_comm _ _).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 279
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (ap011 nat_add _ _).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 280
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 281
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact IH.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 281
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 282
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply fcard_equiv', prod_unit_l.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 282
+Time: 0.003s">
+<div class="time" style="width: 3.9473684210526%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 283
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Function types *)
+
+(** Finite sets are closed under function types, and even dependent function types. *)
+
+</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 288
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance finite_forall `{Funext} {X} (Y : X -&gt; Type)
+       `{Finite X} `{forall x, Finite (Y x)}
+: Finite (forall x:X, Y x).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 290
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 291
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  assert (e := merely_equiv_fin X).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 292
+Time: 0.008s">
+<div class="time" style="width: 10.526315789474%"></div>
+<pre>
+  strip_truncations.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 293
+Time: 0.005s">
+<div class="time" style="width: 6.5789473684211%"></div>
+<pre>
+  simple refine (finite_equiv' _
+            (equiv_functor_forall' (P := fun x =&gt; Y (e^-1 x)) e _) _); try exact _.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 295
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 296
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x; refine (equiv_transport _ (eissect e x)).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 296
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 296
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>
+  set (Y' := Y o e^-1); change (Finite (forall x, Y' x)).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 297
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  assert (forall x, Finite (Y' x)) by exact _; clearbody Y'; clear e.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 298
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  generalize dependent (fcard X); intros n Y' ?.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 299
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction n as [|n IH].</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 300
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 301
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 301
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 302
+Time: 0.006s">
+<div class="time" style="width: 7.8947368421053%"></div>
+<pre> refine (finite_equiv _ (equiv_sum_ind Y') _).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 302
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply finite_prod.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 303
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 304
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply IH; exact _.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 304
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 305
+Time: 0.002s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre> refine (finite_equiv _ (@Unit_ind (fun u =&gt; Y' (inr u))) _).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 305
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      refine (isequiv_unit_ind (Y' o inr)).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 306
+Time: 0.002s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 307
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+#[local] Hint Extern 4 =&gt; progress (cbv beta iota) : typeclass_instances.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 309
+Time: 0.003s">
+<div class="time" style="width: 3.9473684210526%"></div>
+<pre>
+
+Definition fcard_arrow `{Funext} X Y `{Finite X} `{Finite Y}
+: fcard (X -&gt; Y) = nat_pow (fcard Y) (fcard X).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 312
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 313
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  assert (e := merely_equiv_fin X).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 314
+Time: 0.011s">
+<div class="time" style="width: 14.473684210526%"></div>
+<pre>
+  strip_truncations.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 315
+Time: 0.006s">
+<div class="time" style="width: 7.8947368421053%"></div>
+<pre>
+  refine (fcard_equiv (functor_arrow e idmap)^-1 @ _).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 316
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>
+  refine (_ @ ap (fun x =&gt; nat_pow (fcard Y) x) (fcard_equiv e)).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 317
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  generalize (fcard X); intros n.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 318
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction n as [|n IH].</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 319
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 320
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 320
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 321
+Time: 0.011s">
+<div class="time" style="width: 14.473684210526%"></div>
+<pre> refine (fcard_equiv (equiv_sum_ind (fun (_:Fin n.+1) =&gt; Y))^-1 @ _).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 321
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>
+    refine (fcard_prod _ _ @ _).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 322
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    lhs napply nat_mul_comm.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 323
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (ap011 nat_mul).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 324
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 325
+Time: 0.002s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre> refine (fcard_equiv (@Unit_ind (fun (_:Unit) =&gt; Y))^-1).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 325
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 326
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assumption.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 326
+Time: 0.006s">
+<div class="time" style="width: 7.8947368421053%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 327
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [fcard] still computes, despite the funext: *)</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 329
+Time: 0.005s">
+<div class="time" style="width: 6.5789473684211%"></div>
+<pre>Goal forall fs:Funext, fcard (Fin 3 -&gt; Fin 4) = 64.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 329
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  reflexivity.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 330
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Abort.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 331
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Automorphism types (i.e. symmetric groups) *)
+
+</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 334
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance finite_aut `{Funext} X `{Finite X}
+: Finite (X &lt;~&gt; X).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 335
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 336
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  assert (e := merely_equiv_fin X).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 337
+Time: 0.006s">
+<div class="time" style="width: 7.8947368421053%"></div>
+<pre>
+  strip_truncations.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 338
+Time: 0.008s">
+<div class="time" style="width: 10.526315789474%"></div>
+<pre>
+  refine (finite_equiv _
+            (equiv_functor_equiv e^-1 e^-1) _).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 340
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  generalize (fcard X); intros n.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 341
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction n as [|n IH].</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 342
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 343
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 343
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 344
+Time: 0.003s">
+<div class="time" style="width: 3.9473684210526%"></div>
+<pre> refine (finite_equiv _ (equiv_fin_equiv n n) _).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 344
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 345
+Time: 0.003s">
+<div class="time" style="width: 3.9473684210526%"></div>
+<pre>
+
+Definition fcard_aut `{Funext} X `{Finite X}
+: fcard (X &lt;~&gt; X) = factorial (fcard X).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 348
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 349
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  assert (e := merely_equiv_fin X).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 350
+Time: 0.006s">
+<div class="time" style="width: 7.8947368421053%"></div>
+<pre>
+  strip_truncations.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 351
+Time: 0.007s">
+<div class="time" style="width: 9.2105263157895%"></div>
+<pre>
+  refine (fcard_equiv
+            (equiv_functor_equiv e^-1 e^-1)^-1 @ _).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 353
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  generalize (fcard X); intros n.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 354
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction n as [|n IH].</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 355
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 356
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 356
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 357
+Time: 0.01s">
+<div class="time" style="width: 13.157894736842%"></div>
+<pre> refine (fcard_equiv (equiv_fin_equiv n n)^-1 @ _).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 357
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (fcard_prod _ _ @ _).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 358
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply ap011.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 359
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 360
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 360
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 361
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assumption.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 361
+Time: 0.003s">
+<div class="time" style="width: 3.9473684210526%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 362
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [fcard] still computes: *)</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 364
+Time: 0.013s">
+<div class="time" style="width: 17.105263157895%"></div>
+<pre>Goal forall fs:Funext, fcard (Fin 4 &lt;~&gt; Fin 4) = 24.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 364
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  reflexivity.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 365
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Abort.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 366
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Finite sums of natural numbers *)
+
+(** Perhaps slightly less obviously, finite sets are also closed under sigmas. *)
+
+</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 371
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance finite_sigma {X} (Y : X -&gt; Type)
+       `{Finite X} `{forall x, Finite (Y x)}
+: Finite { x:X &amp; Y x }.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 373
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 374
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  assert (e := merely_equiv_fin X).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 375
+Time: 0.006s">
+<div class="time" style="width: 7.8947368421053%"></div>
+<pre>
+  strip_truncations.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 376
+Time: 0.005s">
+<div class="time" style="width: 6.5789473684211%"></div>
+<pre>
+  refine (finite_equiv' _
+            (equiv_functor_sigma (equiv_inverse e)
+                                 (fun x (y:Y (e^-1 x)) =&gt; y)) _).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 379
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (** Unfortunately, because [compose] is currently beta-expanded, [set (Y' := Y o e^-1)] doesn't change the goal. *)
+ </pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 381
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>set (Y' := fun x =&gt; Y (e^-1 x)).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 381
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>
+  assert (forall x, Finite (Y' x)) by exact _; clearbody Y'; clear e.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 382
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  generalize dependent (fcard X); intros n Y' ?.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 383
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction n as [|n IH].</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 384
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 385
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (finite_equiv Empty pr1^-1 _).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 385
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 386
+Time: 0.005s">
+<div class="time" style="width: 6.5789473684211%"></div>
+<pre> refine (finite_equiv _ (equiv_sigma_sum (Fin n) Unit Y')^-1 _).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 386
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply finite_sum.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 387
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 388
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply IH; exact _.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 388
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 389
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre> exact (finite_equiv _ (equiv_contr_sigma _)^-1 _).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 389
+Time: 0.002s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 390
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Amusingly, this automatically gives us a way to add up a family of natural numbers indexed by any finite set.  (We could of course also define such an operation directly, probably using [merely_ind_hset].) *)
+
+</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 393
+Time: 0.003s">
+<div class="time" style="width: 3.9473684210526%"></div>
+<pre>Definition finadd {X} `{Finite X} (f : X -&gt; nat) : nat
+  := fcard { x:X &amp; Fin (f x) }.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 394
+Time: 0.003s">
+<div class="time" style="width: 3.9473684210526%"></div>
+<pre>
+
+Definition fcard_sigma {X} (Y : X -&gt; Type)
+       `{Finite X} `{forall x, Finite (Y x)}
+: fcard { x:X &amp; Y x } = finadd (fun x =&gt; fcard (Y x)).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 398
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 399
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  set (f := fun x =&gt; fcard (Y x)).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 400
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  set (g := fun x =&gt; merely_equiv_fin (Y x) : merely (Y x &lt;~&gt; Fin (f x))).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 401
+Time: 0.002s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+  apply finite_choice in g; [| exact _].</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 402
+Time: 0.007s">
+<div class="time" style="width: 9.2105263157895%"></div>
+<pre>
+  strip_truncations.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 403
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold finadd.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 404
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (fcard_equiv' (equiv_functor_sigma_id g)).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 405
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 406
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The sum of a finite constant family is the product by its cardinality. *)</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 408
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition finadd_const X `{Finite X} n
+: finadd (fun x:X =&gt; n) = fcard X * n.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 409
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 410
+Time: 0.002s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+  transitivity (fcard (X * Fin n)).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 411
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 412
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fcard_equiv' (equiv_sigma_prod0 X (Fin n))).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 412
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 413
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fcard_prod X (Fin n)).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 413
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 414
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Closure under sigmas and paths also implies closure under hfibers. *)</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 416
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition finite_hfiber {X Y} (f : X -&gt; Y) (y : Y)
+       `{Finite X} `{Finite Y}
+: Finite (hfiber f y).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 418
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 419
+Time: 0.005s">
+<div class="time" style="width: 6.5789473684211%"></div>
+<pre>
+  exact _.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 420
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 421
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Therefore, the cardinality of the domain of a map between finite sets is the sum of the cardinalities of its hfibers. *)</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 423
+Time: 0.006s">
+<div class="time" style="width: 7.8947368421053%"></div>
+<pre>Definition fcard_domain {X Y} (f : X -&gt; Y) `{Finite X} `{Finite Y}
+: fcard X = finadd (fun y =&gt; fcard (hfiber f y)).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 424
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 425
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_ @ fcard_sigma (hfiber f)).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 426
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (fcard_equiv' (equiv_fibration_replacement f)).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 427
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 428
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** In particular, the image of a map between finite sets is finite. *)</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 430
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition finite_image
+       {X Y} `{Finite X} `{Finite Y} (f : X -&gt; Y)
+: Finite (himage f).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 432
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 433
+Time: 0.011s">
+<div class="time" style="width: 14.473684210526%"></div>
+<pre>
+  exact _.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 434
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 435
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Finite products of natural numbers *)
+
+(** Similarly, closure of finite sets under [forall] automatically gives us a way to multiply a family of natural numbers indexed by any finite set.  Of course, if we defined this explicitly, it wouldn't need funext. *)
+
+</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 440
+Time: 0.004s">
+<div class="time" style="width: 5.2631578947368%"></div>
+<pre>Definition finmult `{Funext} {X} `{Finite X} (f : X -&gt; nat) : nat
+  := fcard (forall x:X, Fin (f x)).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 441
+Time: 0.003s">
+<div class="time" style="width: 3.9473684210526%"></div>
+<pre>
+
+Definition fcard_forall `{Funext} {X} (Y : X -&gt; Type)
+       `{Finite X} `{forall x, Finite (Y x)}
+: fcard (forall x:X, Y x) = finmult (fun x =&gt; fcard (Y x)).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 445
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 446
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  set (f := fun x =&gt; fcard (Y x)).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 447
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  set (g := fun x =&gt; merely_equiv_fin (Y x) : merely (Y x &lt;~&gt; Fin (f x))).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 448
+Time: 0.002s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+  apply finite_choice in g; [| exact _].</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 449
+Time: 0.012s">
+<div class="time" style="width: 15.789473684211%"></div>
+<pre>
+  strip_truncations.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 450
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold finmult.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 451
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (fcard_equiv' (equiv_functor_forall' (equiv_idmap X) g)).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 452
+Time: 0.002s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 453
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The product of a finite constant family is the exponential by its cardinality. *)</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 455
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition finmult_const `{Funext} X `{Finite X} n
+: finmult (fun x:X =&gt; n) = nat_pow n (fcard X).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 456
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 457
+Time: 0.014s">
+<div class="time" style="width: 18.421052631579%"></div>
+<pre>
+  exact (fcard_arrow X (Fin n)).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 458
+Time: 0.002s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 459
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+
+(** ** Finite subsets *)
+
+(** Closure under sigmas implies that a detachable subset of a finite set is finite. *)</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 464
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance finite_detachable_subset {X} `{Finite X} (P : X -&gt; Type)
+       `{forall x, IsHProp (P x)} `{forall x, Decidable (P x)}
+: Finite { x:X &amp; P x }.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 466
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 467
+Time: 0.002s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+  exact _.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 468
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 469
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Conversely, if a subset of a finite set is finite, then it is detachable.  We show first that an embedding between finite subsets has detachable image. *)</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 471
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition detachable_image_finite
+           {X Y} `{Finite X} `{Finite Y} (f : X -&gt; Y) `{IsEmbedding f}
+: forall y, Decidable (hfiber f y).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 473
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 474
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros y.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 475
+Time: 0.005s">
+<div class="time" style="width: 6.5789473684211%"></div>
+<pre>
+  assert (ff : Finite (hfiber f y)) by exact _.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 476
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct ff as [[|n] e].</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 477
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 478
+Time: 0.034s">
+<div class="time" style="width: 44.736842105263%"></div>
+<pre> right; intros u; strip_truncations; exact (e u).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 478
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 479
+Time: 0.014s">
+<div class="time" style="width: 18.421052631579%"></div>
+<pre> left; strip_truncations; exact (e^-1 (inr tt)).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 479
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 480
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition detachable_finite_subset {X} `{Finite X}
+           (P : X -&gt; Type) `{forall x, IsHProp (P x)}
+           {Pf : Finite ({ x:X &amp; P x })}
+: forall x, Decidable (P x).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 485
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 486
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 487
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  nrefine (decidable_equiv' _ (hfiber_fibration x P)^-1%equiv _).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 488
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  nrefine (detachable_image_finite pr1 x).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 489
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1,2: exact _.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 490
+Time: 0.002s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+  exact (mapinO_pr1 (Tr (-1))).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 491
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>  (** Why doesn't Coq find this? *)</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 491
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Defined.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 491
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Quotients *)
+
+(** The quotient of a finite set by a detachable equivalence relation is finite. *)
+
+</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 496
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section DecidableQuotients.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 496
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{Univalence} {X} `{Finite X}
+          (R : Relation X) `{is_mere_relation X R}
+          `{Reflexive _ R} `{Transitive _ R} `{Symmetric _ R}
+          {Rd : forall x y, Decidable (R x y)}.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 500
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance finite_quotient : Finite (Quotient R).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 502
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 503
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    assert (e := merely_equiv_fin X).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 504
+Time: 0.019s">
+<div class="time" style="width: 25%"></div>
+<pre>
+    strip_truncations.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 505
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>
+    pose (R' x y := R (e^-1 x) (e^-1 y)).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 506
+Time: 0.003s">
+<div class="time" style="width: 3.9473684210526%"></div>
+<pre>
+    assert (is_mere_relation _ R') by exact _.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 507
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    assert (Reflexive R') by (intros ?; unfold R'; apply reflexivity).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 508
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    assert (Symmetric R') by (intros ? ?; unfold R'; apply symmetry).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 509
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    assert (Transitive R') by (intros ? ? ?; unfold R'; exact transitivity).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 510
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    assert (R'd : forall x y, Decidable (R' x y))
+      by (intros ? ?; unfold R'; apply Rd).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 512
+Time: 0.004s">
+<div class="time" style="width: 5.2631578947368%"></div>
+<pre>
+    srefine (finite_equiv' _ (equiv_quotient_functor R' R e^-1 _) _).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 513
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: by try (intros; split).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 514
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    clearbody R'; clear e.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 515
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    generalize dependent (fcard X);
+      intros n; induction n as [|n IH]; intros R' ? ? ? ? ?.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 517
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 518
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre> refine (finite_equiv Empty _^-1 _).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 518
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (Quotient_rec R' _ Empty_rec (fun x _ _ =&gt; match x with end)).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 519
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 520
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> pose (R'' x y := R' (inl x) (inl y)).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 520
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>
+      assert (is_mere_relation _ R'') by exact _.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 521
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      assert (Reflexive R'') by (intros ?; unfold R''; apply reflexivity).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 522
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      assert (Symmetric R'') by (intros ? ?; unfold R''; apply symmetry).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 523
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      assert (Transitive R'') by (intros ? ? ?; unfold R''; exact transitivity).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 524
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      assert (forall x y, Decidable (R'' x y)) by (intros ? ?; unfold R''; apply R'd).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 525
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      assert (inlresp := (fun x y =&gt; idmap)
+                         : forall x y, R'' x y -&gt; R' (inl x) (inl y)).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 527
+Time: 0.036s">
+<div class="time" style="width: 47.368421052632%"></div>
+<pre>
+      destruct (dec (merely {x:Fin n &amp; R' (inl x) (inr tt)})) as [p|np].</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 528
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      {</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 529
+Time: 0.076s">
+<div class="time" style="width: 100%"></div>
+<pre> strip_truncations.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 529
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        destruct p as [x r].</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 530
+Time: 0.005s">
+<div class="time" style="width: 6.5789473684211%"></div>
+<pre>
+        refine (finite_equiv' (Quotient R'') _ _).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 531
+Time: 0.009s">
+<div class="time" style="width: 11.842105263158%"></div>
+<pre>
+        refine (Build_Equiv _ _ (Quotient_functor R'' R' inl inlresp) _).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 532
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply isequiv_surj_emb.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 533
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        -</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 534
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply BuildIsSurjection.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 534
+Time: 0.002s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+          refine (Quotient_ind_hprop R' _ _).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 535
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          intros [y|[]]; apply tr.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 536
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          +</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 537
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists (class_of R'' y); reflexivity.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 537
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          +</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 538
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists (class_of R'' x); simpl.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 538
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+            apply qglue, r.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 539
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        -</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 540
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply isembedding_isinj_hset; intros u.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 540
+Time: 0.01s">
+<div class="time" style="width: 13.157894736842%"></div>
+<pre>
+          refine (Quotient_ind_hprop R'' _ _); intros v.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 541
+Time: 0.005s">
+<div class="time" style="width: 6.5789473684211%"></div>
+<pre>
+          revert u; refine (Quotient_ind_hprop R'' _ _); intros u.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 542
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          simpl; intros q.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 543
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          apply qglue; unfold R''.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 544
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>
+          exact (related_quotient_paths R' (inl u) (inl v) q).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 545
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 545
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      {</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 546
+Time: 0.006s">
+<div class="time" style="width: 7.8947368421053%"></div>
+<pre> refine (finite_equiv' (Quotient R'' + Unit) _ _).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 546
+Time: 0.003s">
+<div class="time" style="width: 3.9473684210526%"></div>
+<pre>
+        refine (Build_Equiv _ _ (sum_ind (fun _ =&gt; Quotient R')
+                                        (Quotient_functor R'' R' inl inlresp)
+                                        (fun _ =&gt; class_of R' (inr tt))) _).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 549
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply isequiv_surj_emb.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 550
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        -</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 551
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply BuildIsSurjection.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 551
+Time: 0.002s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+          refine (Quotient_ind_hprop R' _ _).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 552
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          intros [y|[]]; apply tr.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 553
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          +</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 554
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists (inl (class_of R'' y)); reflexivity.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 554
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          +</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 555
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists (inr tt); reflexivity.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 555
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        -</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 556
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply isembedding_isinj_hset; intros u.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 556
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          refine (sum_ind _ _ _).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 557
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          +</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 558
+Time: 0.009s">
+<div class="time" style="width: 11.842105263158%"></div>
+<pre> refine (Quotient_ind_hprop R'' _ _); intros v.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 558
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+            revert u; refine (sum_ind _ _ _).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 559
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+            *</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 560
+Time: 0.009s">
+<div class="time" style="width: 11.842105263158%"></div>
+<pre> refine (Quotient_ind_hprop R'' _ _); intros u.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 560
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+              simpl; intros q.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 561
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+              apply ap, qglue; unfold R''.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 562
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>
+              exact (related_quotient_paths R' (inl u) (inl v) q).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 563
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+            *</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 564
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros []; simpl.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 564
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+              intros q.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 565
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>
+              apply related_quotient_paths in q; try exact _.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 566
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+              apply symmetry in q.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 567
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+              elim (np (tr (v ; q))).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 568
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          +</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 569
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros []; simpl.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 569
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+            destruct u as [u|[]]; simpl.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 570
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+            *</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 571
+Time: 0.011s">
+<div class="time" style="width: 14.473684210526%"></div>
+<pre> revert u; refine (Quotient_ind_hprop R'' _ _); intros u; simpl.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 571
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+              intros q.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 572
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>
+              apply related_quotient_paths in q; try exact _.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 573
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+              elim (np (tr (u;q))).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 574
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+            *</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 575
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros; reflexivity.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 575
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 575
+Time: 0.025s">
+<div class="time" style="width: 32.894736842105%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 576
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Therefore, the cardinality of [X] is the sum of the cardinalities of its equivalence classes. *)
+ </pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 579
+Time: 0.028s">
+<div class="time" style="width: 36.842105263158%"></div>
+<pre>Definition fcard_quotient
+  : fcard X = finadd (fun z:Quotient R =&gt; fcard {x:X &amp; in_class R z x}).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 580
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 581
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>
+    refine (fcard_domain (class_of R) @ _).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 582
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply ap, path_arrow; intros z; revert z.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 583
+Time: 0.004s">
+<div class="time" style="width: 5.2631578947368%"></div>
+<pre>
+    refine (Quotient_ind_hprop _ _ _); intros x; simpl.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 584
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply fcard_equiv'; unfold hfiber.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 585
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (equiv_functor_sigma_id _); intros y; simpl.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 586
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    symmetry.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 587
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (path_quotient R y x oE _).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 588
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply equiv_iff_hprop; apply symmetry.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 589
+Time: 0.004s">
+<div class="time" style="width: 5.2631578947368%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 590
+Time: 0.01s">
+<div class="time" style="width: 13.157894736842%"></div>
+<pre>
+
+End DecidableQuotients.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 592
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Injections *)
+
+(** An injection between finite sets induces an inequality between their cardinalities. *)</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 596
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition leq_inj_finite {X Y} {fX : Finite X} {fY : Finite Y}
+           (f : X -&gt; Y) (i : IsEmbedding f)
+: fcard X &lt;= fcard Y.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 598
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 599
+Time: 0.002s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+  assert (MapIn (Tr (-1)) f) by exact _.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 600
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> clear i.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 600
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct fX as [n e]; simpl.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 601
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct fY as [m e']; simpl.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 602
+Time: 0.017s">
+<div class="time" style="width: 22.368421052632%"></div>
+<pre>
+  strip_truncations.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 603
+Time: 0.003s">
+<div class="time" style="width: 3.9473684210526%"></div>
+<pre>
+  pose (g := e' o f o e^-1).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 604
+Time: 0.017s">
+<div class="time" style="width: 22.368421052632%"></div>
+<pre>
+  assert (MapIn (Tr (-1)) g) by (unfold g; exact _).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 605
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  clearbody g.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 606
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> clear e e'.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 606
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> generalize dependent m.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 606
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction n as [|n IHn].</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 607
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact _.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 608
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros m g ?.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 609
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  assert (i : IsInjective g) by (apply isinj_embedding; exact _).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 610
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct m as [|m].</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 611
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 612
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> elim (g (inr tt)).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 612
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 612
+Time: 0.002s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+  pose (h := (fin_transpose_last_with m (g (inr tt)))^-1 o g).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 613
+Time: 0.015s">
+<div class="time" style="width: 19.736842105263%"></div>
+<pre>
+  assert (MapIn (Tr (-1)) h) by (unfold h; exact _).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 614
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  assert (Ha : forall a:Fin n, is_inl (h (inl a))).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 615
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 616
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 616
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    remember (g (inl a)) as b eqn:p.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 617
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct b as [b|[]].</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 618
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 619
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assert (q : g (inl a) &lt;&gt; (g (inr tt))).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 619
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      {</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 620
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros r.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 620
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (inl_ne_inr _ _ (i _ _ r)).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 620
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 620
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite p in q; apply symmetric_neq in q.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 621
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      assert (r : h (inl a) = inl b).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 622
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      {</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 623
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> unfold h; apply moveR_equiv_V; symmetry.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 623
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        exact (fin_transpose_last_with_rest m (g (inr tt)) b q @ p^).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 624
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 624
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite r; exact tt.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 625
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 626
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assert (q : h (inl a) = g (inr tt)).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 626
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      {</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 627
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> unfold h; apply moveR_equiv_V; symmetry.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 627
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        refine (_ @ p^); apply fin_transpose_last_with_with.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 628
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 628
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite q.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 629
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>
+      destruct (is_inl_or_is_inr (g (inr tt))) as [l|r]; try assumption.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 630
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      assert (s := inr_un_inr _ r).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 631
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      revert s; generalize (un_inr (g (inr tt)) r); intros [] s.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 632
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      elim (inl_ne_inr _ _ (i _ _ (p @ s))).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 633
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 633
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  assert (Hb : forall b:Unit, is_inr (h (inr b))).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 634
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 635
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [].</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 635
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    assert (q : h (inr tt) = inr tt).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 636
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 637
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> unfold h; apply moveR_equiv_V; symmetry.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 637
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply fin_transpose_last_with_last.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 638
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 638
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite q; exact tt.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 639
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 639
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply leq_succ.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 640
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (IHn m (unfunctor_sum_l h Ha)
+             (mapinO_unfunctor_sum_l (Tr (-1)) h Ha Hb)).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 642
+Time: 0.01s">
+<div class="time" style="width: 13.157894736842%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 643
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Surjections  *)
+(** A surjection between finite sets induces an inequality between their cardinalities. *)</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 646
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition geq_surj_finite  {X Y} {fX : Finite X} {fY : Finite Y}
+           (f : X -&gt; Y) (i : IsSurjection f)
+  : fcard X &gt;= fcard Y.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 648
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 649
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct fX as [n e], fY as [m e']; simpl.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 650
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  assert (k := isprojective_fin_n m).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 651
+Time: 0.026s">
+<div class="time" style="width: 34.210526315789%"></div>
+<pre>
+  strip_truncations.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 652
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>
+  pose (g := e' o f o e^-1).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 653
+Time: 0.015s">
+<div class="time" style="width: 19.736842105263%"></div>
+<pre>
+  assert (k' : IsSurjection g) by exact _ .</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 654
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  clearbody g; clear i f.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 655
+Time: 0.005s">
+<div class="time" style="width: 6.5789473684211%"></div>
+<pre>
+  assert (j := k (Fin n) _ (Fin m) _ idmap g k').</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 656
+Time: 0.015s">
+<div class="time" style="width: 19.736842105263%"></div>
+<pre>
+  strip_truncations.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 657
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simpl; destruct j as [s is_section].</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 658
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> 
+  change n with (fcard (Fin n)).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 659
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  change m with (fcard (Fin m)).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 660
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (leq_inj_finite s).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 661
+Time: 0.003s">
+<div class="time" style="width: 3.9473684210526%"></div>
+<pre>
+  apply isembedding_isinj_hset, (isinj_section is_section).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 662
+Time: 0.002s">
+<div class="time" style="width: 2.6315789473684%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 663
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  
+  (** ** Enumerations *)
+
+(** A function from [nat] to a finite set must repeat itself eventually. *)</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 667
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section Enumeration.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 667
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{Funext} {X} `{Finite@{_ Set _} X} (e : nat -&gt; X).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 668
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Let er (n : nat) : Fin n -&gt; X
+    := fun k =&gt; e (nat_fin n k).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 671
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma finite_enumeration_stage (n : nat)
+  : IsEmbedding (er n)
+    + { n : nat &amp; { k : nat &amp; e n = e (n + k).+1 }}.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 675
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 676
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    induction n as [|n [IH|IH]].</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 677
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 678
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> left.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 678
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 678
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply hprop_inhabited_contr; intros [[] _].</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 679
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 680
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre> destruct (detachable_image_finite (er n) (er n.+1 (inr tt)))
+        as [[k p]|ne].</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 681
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 682
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> right.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 682
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        exists (nat_fin n k).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 683
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        exists (nat_fin_compl n k).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 684
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        rewrite nat_fin_compl_compl.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 685
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        exact p.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 686
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 687
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> left.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 687
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 687
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply hprop_allpath.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 688
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        intros k l.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 689
+Time: 0.005s">
+<div class="time" style="width: 6.5789473684211%"></div>
+<pre>
+        apply path_sigma_hprop.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 690
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>
+        destruct k as [[k|[]] p], l as [[l|[]] q]; simpl.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 691
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        *</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 692
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply isinj_embedding in IH.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 692
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          apply ap.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 693
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          apply IH.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 694
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          unfold er in p, q.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 695
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl in p, q.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 695
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          exact (p @ q^).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 696
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        *</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 697
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> refine (Empty_rec (ne _)).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 697
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          exists k.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 698
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          exact (p @ q^).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 699
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        *</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 700
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> refine (Empty_rec (ne _)).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 700
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          exists l.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 701
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+          exact (q @ p^).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 702
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        *</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 703
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 703
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 704
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> right; exact IH.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 704
+Time: 0.003s">
+<div class="time" style="width: 3.9473684210526%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 705
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition finite_enumeration_repeats
+  : { n : nat &amp; { k : nat &amp; e n = e (n + k).+1 }}.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 708
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 709
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct (finite_enumeration_stage (fcard X).+1) as [p|?].</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 710
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 711
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assert (q := leq_inj_finite (er (fcard X).+1) p); simpl in q.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 711
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      elim (lt_irrefl _ q).</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 712
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 713
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> assumption.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 713
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 714
+Time: 0.001s">
+<div class="time" style="width: 1.3157894736842%"></div>
+<pre>
+
+End Enumeration.</pre>
+</div>
+<div class="code" title="File: Finite.v
+Line: 717
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

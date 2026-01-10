@@ -1,0 +1,4539 @@
+<html>
+<head>
+<title>TriJoin.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for TriJoin.v</h1>
+
+<div class="code" title="File: TriJoin.v
+Line: 1
+Time: 0.084s">
+<div class="time" style="width: 31.111111111111%"></div>
+<pre>From HoTT Require Import Basics Types.Paths Join.Core Tactics.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 1
+Time: 0.005s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+From HoTT.WildCat Require Import Core Universe Equiv EquivGpd
+  ZeroGroupoid Yoneda FunctorCat NatTrans.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Induction and recursion principles for the triple join
+
+  We show that the triple join satisfies symmetrical induction and recursion principles and prove that the recursion principle gives an equivalence of 0-groupoids.  We use this in JoinAssoc.v to prove that the join is associative.  Our approach parallels what is done in the two-variable case in Join/Core.v, especially starting with [TriJoinRecData] here and [JoinRecData] there.  That case is much simpler, so should be read first. *)
+
+</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section TriJoinStructure.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {A B C : Type}.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 9
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition TriJoin := Join A (Join B C).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition join1 : A -&gt; TriJoin := joinl.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition join2 : B -&gt; TriJoin := fun b =&gt; (joinr (joinl b)).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition join3 : C -&gt; TriJoin := fun c =&gt; (joinr (joinr c)).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition join12 : forall a b, join1 a = join2 b := fun a b =&gt; jglue a (joinl b).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition join13 : forall a c, join1 a = join3 c := fun a c =&gt; jglue a (joinr c).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Definition join23 : forall b c, join2 b = join3 c := fun b c =&gt; ap joinr (jglue b c).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 18
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre>
+  Definition join123 : forall a b c, join12 a b @ join23 b c = join13 a c := fun a b c =&gt; triangle_v a (jglue b c).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+End TriJoinStructure.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments TriJoin A B C : clear implicits.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** [ap_trijoin] and [ap_trijoin_transport] *)
+
+(** Functions send triangles to triangles. *)</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 26
+Time: 0.002s">
+<div class="time" style="width: 0.74074074074074%"></div>
+<pre>Definition ap_triangle {X Y} (f : X -&gt; Y)
+  {a b c : X} {ab : a = b} {bc : b = c} {ac : a = c} (abc : ab @ bc = ac)
+  : ap f ab @ ap f bc = ap f ac
+  := (ap_pp f ab bc)^ @ ap (ap f) abc.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** This general result abstracts away the situation where [J] is [TriJoin A B C], [a] is [joinl a'] for some [a'], [jr] is [joinr : Join B C -&gt; J], [jg] is [fun w =&gt; jglue a' w], and [p] is [jglue b c].  By working in this generality, we can do induction on [p].  This also allows us to inline the proof of [triangle_v]. *)</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 31
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre>Definition ap_trijoin_general {J W P : Type} (f : J -&gt; P)
+  (a : J) (jr : W -&gt; J) (jg : forall w, a = jr w)
+  {b c : W} (p : b = c)
+  : ap f (jg b) @ ap f (ap jr p) = ap f (jg c).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply ap_triangle.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction p.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply concat_p1.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Functions send the canonical triangles in triple joins to triangles. *)</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 41
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre>Definition ap_trijoin {A B C P : Type} (f : TriJoin A B C -&gt; P)
+  (a : A) (b : B) (c : C)
+  : ap f (join12 a b) @ ap f (join23 b c) = ap f (join13 a c).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 44
+Time: 0.002s">
+<div class="time" style="width: 0.74074074074074%"></div>
+<pre>
+  napply ap_trijoin_general.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 46
+Time: 0.004s">
+<div class="time" style="width: 1.4814814814815%"></div>
+<pre>
+
+Definition ap_trijoin_general_transport {J W P : Type} (f : J -&gt; P)
+  (a : J) (jr : W -&gt; J) (jg : forall w, a = jr w)
+  {b c : W} (p : b = c)
+  : ap_trijoin_general f a jr jg p
+    = (1 @@ ap_compose _ f _)^ @ (transport_paths_Fr _ _)^ @ apD (fun x =&gt; ap f (jg x)) p.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 53
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre>
+  induction p.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold ap_trijoin_general; simpl.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 55
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre>
+  induction (jg b).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  reflexivity.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 57
+Time: 0.004s">
+<div class="time" style="width: 1.4814814814815%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 58
+Time: 0.005s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+
+Definition ap_trijoin_transport {A B C P : Type} (f : TriJoin A B C -&gt; P)
+  (a : A) (b : B) (c : C)
+  : ap_trijoin f a b c
+    = (1 @@ ap_compose _ f _)^ @ (transport_paths_Fr _ _)^ @ apD (fun x =&gt; ap f (jglue a x)) (jglue b c).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 64
+Time: 0.007s">
+<div class="time" style="width: 2.5925925925926%"></div>
+<pre>
+  napply ap_trijoin_general_transport.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 65
+Time: 0.004s">
+<div class="time" style="width: 1.4814814814815%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 66
+Time: 0.003s">
+<div class="time" style="width: 1.1111111111111%"></div>
+<pre>
+
+Definition ap_trijoin_general_V {J W P : Type} (f : J -&gt; P)
+  (a : J) (jr : W -&gt; J) (jg : forall w, a = jr w)
+  {b c : W} (p : b = c)
+  : ap_trijoin_general f a jr jg p^
+     = (1 @@ (ap (ap f) (ap_V jr p) @ ap_V f _)) @ moveR_pV _ _ _ (ap_trijoin_general f a jr jg p)^.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 73
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre>
+  induction p.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold ap_trijoin_general; cbn.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 75
+Time: 0.002s">
+<div class="time" style="width: 0.74074074074074%"></div>
+<pre>
+  by induction (jg b).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 76
+Time: 0.004s">
+<div class="time" style="width: 1.4814814814815%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 77
+Time: 0.008s">
+<div class="time" style="width: 2.962962962963%"></div>
+<pre>
+
+Definition ap_trijoin_V {A B C P : Type} (f : TriJoin A B C -&gt; P)
+  (a : A) (b : B) (c : C)
+  : ap_triangle f (triangle_v a (jglue b c)^)
+     = (1 @@ (ap (ap f) (ap_V joinr _) @ ap_V f _)) @ moveR_pV _ _ _ (ap_trijoin f a b c)^.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 83
+Time: 0.009s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+  napply ap_trijoin_general_V.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 84
+Time: 0.006s">
+<div class="time" style="width: 2.2222222222222%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** The induction principle for the triple join *)
+
+(** A lemma that handles the path algebra in the final step. *)</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 89
+Time: 0.023s">
+<div class="time" style="width: 8.5185185185185%"></div>
+<pre>Local Definition trijoin_ind_helper {A BC : Type} (P : Join A BC -&gt; Type)
+  (a : A) (b c : BC) (bc : b = c)
+  (j1' : P (joinl a)) (j2' : P (joinr b)) (j3' : P (joinr c))
+  (j12' : jglue a b # j1' = j2') (j13' : jglue a c # j1' = j3') (j23' : (ap joinr bc) # j2' = j3')
+  (j123' : transport_pp _ (jglue a b) (ap joinr bc) j1' @ ap (transport _ (ap joinr bc)) j12' @ j23'
+           = transport2 _ (triangle_v a bc) _ @ j13')
+  : ((apD (fun x : BC =&gt; transport P (jglue a x) j1') bc)^
+       @ ap (transport (fun x : BC =&gt; P (joinr x)) bc) j12')
+      @ ((transport_compose P joinr bc j2') @ j23') = j13'.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 98
+Time: 0.002s">
+<div class="time" style="width: 0.74074074074074%"></div>
+<pre>
+  induction bc; simpl.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 99
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre>
+  rewrite transport_pp_1 in j123'.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 100
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre>
+  cbn in *.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold transport; unfold transport in j123'.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 102
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre>
+  rewrite ap_idmap; rewrite ap_idmap in j123'.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 103
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre>
+  rewrite concat_pp_p in j123'.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply cancelL in j123'.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 105
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre>
+  rewrite 2 concat_1p.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact j123'.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 107
+Time: 0.013s">
+<div class="time" style="width: 4.8148148148148%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** An induction principle for the triple join. Note that the hypotheses are phrased completely in terms of the "constructors" of [TriJoin A B C]. *)</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 110
+Time: 0.007s">
+<div class="time" style="width: 2.5925925925926%"></div>
+<pre>Definition trijoin_ind (A B C : Type) (P : TriJoin A B C -&gt; Type)
+  (join1' : forall a, P (join1 a))
+  (join2' : forall b, P (join2 b))
+  (join3' : forall c, P (join3 c))
+  (join12' : forall a b, join12 a b # join1' a = join2' b)
+  (join13' : forall a c, join13 a c # join1' a = join3' c)
+  (join23' : forall b c, join23 b c # join2' b = join3' c)
+  (join123' : forall a b c, transport_pp _ (join12 a b) (join23 b c) (join1' a)
+                         @ ap (transport _ (join23 b c)) (join12' a b) @ join23' b c
+                       = transport2 _ (join123 a b c) _ @ join13' a c)
+  : forall x, P x.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 121
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre>
+  snapply Join_ind.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 122
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact join1'.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 124
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre> snapply Join_ind.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 125
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact join2'.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 125
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 126
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact join3'.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 126
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros b c.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 127
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre>
+      lhs rapply (transport_compose P).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 128
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply join23'.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 130
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro a.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 130
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre>
+    snapply Join_ind.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 131
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (join12' a).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (join13' a).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros b c; cbn beta zeta.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 134
+Time: 0.002s">
+<div class="time" style="width: 0.74074074074074%"></div>
+<pre>
+      lhs napply (transport_paths_FlFr_D (jglue b c)).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 135
+Time: 0.002s">
+<div class="time" style="width: 0.74074074074074%"></div>
+<pre>
+      lhs napply (1 @@ _).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 136
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre>
+      1: napply Join_ind_beta_jglue.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 137
+Time: 0.017s">
+<div class="time" style="width: 6.2962962962963%"></div>
+<pre>
+      apply trijoin_ind_helper, join123'.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 138
+Time: 0.038s">
+<div class="time" style="width: 14.074074074074%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** The recursion principle for the triple join, and many results about it *)
+
+(** We'll bundle up the arguments into a record. *)</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 143
+Time: 0.002s">
+<div class="time" style="width: 0.74074074074074%"></div>
+<pre>Record TriJoinRecData {A B C P : Type} := {
+    j1 : A -&gt; P;
+    j2 : B -&gt; P;
+    j3 : C -&gt; P;
+    j12 : forall a b, j1 a = j2 b;
+    j13 : forall a c, j1 a = j3 c;
+    j23 : forall b c, j2 b = j3 c;
+    j123 : forall a b c, j12 a b @ j23 b c = j13 a c;
+  }.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments TriJoinRecData : clear implicits.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments Build_TriJoinRecData {A B C P}%_type_scope (j1 j2 j3 j12 j13 j23 j123)%_function_scope.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 154
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition trijoin_rec {A B C P : Type} (f : TriJoinRecData A B C P)
+  : TriJoin A B C $-&gt; P.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Join_rec.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (j1 f).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> snapply Join_rec.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (j2 f).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 163
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (j3 f).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 163
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 164
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (j23 f).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 164
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 165
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro a.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 165
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply Join_ind; cbn beta.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 166
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (j12 f a).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (j13 f a).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros b c.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      lhs napply transport_paths_Fr.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 170
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre>
+      exact (1 @@ Join_rec_beta_jglue _ _ _ _ _ @ j123 f a b c).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 171
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Beta rules for the recursion principle. *)</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 174
+Time: 0.004s">
+<div class="time" style="width: 1.4814814814815%"></div>
+<pre>Definition trijoin_rec_beta_join12 {A B C P : Type} (f : TriJoinRecData A B C P) (a : A) (b : B)
+  : ap (trijoin_rec f) (join12 a b) = j12 f a b
+  := Join_rec_beta_jglue _ _ _ _ _.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 176
+Time: 0.004s">
+<div class="time" style="width: 1.4814814814815%"></div>
+<pre>
+
+Definition trijoin_rec_beta_join13 {A B C P : Type} (f : TriJoinRecData A B C P) (a : A) (c : C)
+  : ap (trijoin_rec f) (join13 a c) = j13 f a c
+  := Join_rec_beta_jglue _ _ _ _ _.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 180
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition trijoin_rec_beta_join23 {A B C P : Type} (f : TriJoinRecData A B C P) (b : B) (c : C)
+  : ap (trijoin_rec f) (join23 b c) = j23 f b c.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 183
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 184
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold trijoin_rec, join23.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 185
+Time: 0.003s">
+<div class="time" style="width: 1.1111111111111%"></div>
+<pre>
+  lhs_V napply (ap_compose joinr); simpl.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 186
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre>
+  apply Join_rec_beta_jglue.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 187
+Time: 0.01s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 188
+Time: 0.003s">
+<div class="time" style="width: 1.1111111111111%"></div>
+<pre>
+
+Local Lemma trijoin_rec_beta_join123_helper {A : Type} {x y z : A}
+  {u0 u1 : x = y} {p0 p1 r1 : y = z} {q0 s1 t1 : x = z}
+  (p : p0 = p1) (q : q0 = u0 @ p0) (r : p0 = r1)
+  (s : u1 @ r1 = s1) (t : s1 = t1) (u : u0 = u1)
+  : ((1 @@ p)^ @ q^) @ (((q @ (u @@ 1)) @ ((1 @@ r) @ s)) @ t)
+    = ((u @@ (p^ @ r)) @ s) @ t.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 196
+Time: 0.002s">
+<div class="time" style="width: 0.74074074074074%"></div>
+<pre>
+  induction u, t, s, r, p.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert q0 q; by apply paths_ind_r.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 198
+Time: 0.003s">
+<div class="time" style="width: 1.1111111111111%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 199
+Time: 0.003s">
+<div class="time" style="width: 1.1111111111111%"></div>
+<pre>
+
+Definition trijoin_rec_beta_join123 {A B C P : Type} (f : TriJoinRecData A B C P)
+  (a : A) (b : B) (c : C)
+  : ap_trijoin (trijoin_rec f) a b c
+    = (trijoin_rec_beta_join12 f a b @@ trijoin_rec_beta_join23 f b c)
+        @ j123 f a b c @ (trijoin_rec_beta_join13 f a c)^.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 205
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* Expand the LHS: *)
+ </pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 208
+Time: 0.009s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>lhs napply ap_trijoin_transport.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 208
+Time: 0.029s">
+<div class="time" style="width: 10.740740740741%"></div>
+<pre>
+  rewrite (apD_homotopic (Join_rec_beta_jglue _ _ _ _) (jglue b c)).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 209
+Time: 0.019s">
+<div class="time" style="width: 7.037037037037%"></div>
+<pre>
+  rewrite Join_ind_beta_jglue.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 210
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* Change [ap (transport __) _] on LHS. *)
+ </pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 212
+Time: 0.035s">
+<div class="time" style="width: 12.962962962963%"></div>
+<pre>rewrite (concat_p_pp _ (transport_paths_Fr (jglue b c) (j12 f a b)) _).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 212
+Time: 0.016s">
+<div class="time" style="width: 5.9259259259259%"></div>
+<pre>
+  rewrite (concat_Ap (transport_paths_Fr (jglue b c))).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 213
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* Everything that remains is pure path algebra. *)
+  (* [trijoin_rec_beta_join23] expands to something of the form [p^ @ r], so that's what is in the lemma.  One can unfold it to see this, but the [Qed] is a bit faster without this: *)
+  (* unfold trijoin_rec_beta_join23. *)
+  (* Note that one of the [ap]s on the LHS computes to [u @@ 1], so that's what is in the lemma: *)
+  (* change (ap (fun q =&gt; q @ ?x) ?u) with (u @@ @idpath _ x). *)
+ </pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 219
+Time: 0.039s">
+<div class="time" style="width: 14.444444444444%"></div>
+<pre>napply trijoin_rec_beta_join123_helper.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 219
+Time: 0.27s">
+<div class="time" style="width: 100%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 220
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We're next going to define a map in the other direction.  We do it via showing that [TriJoinRecData] is a 0-coherent 1-functor to [Type]. We'll later show that it is a 1-functor to 0-groupoids. *)</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 222
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition trijoinrecdata_fun {A B C P Q : Type} (g : P -&gt; Q) (f : TriJoinRecData A B C P)
+  : TriJoinRecData A B C Q.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 223
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 224
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_TriJoinRecData.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 226
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (g o j1 f).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 226
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 227
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (g o j2 f).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 227
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (g o j3 f).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 229
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fun a b =&gt; ap g (j12 f a b)).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 229
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 230
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fun a c =&gt; ap g (j13 f a c)).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 230
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 231
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fun b c =&gt; ap g (j23 f b c)).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 231
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 232
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a b c; cbn beta.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 232
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (ap_triangle g (j123 f a b c)).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 233
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* The last four goals above can also be handled by the induction tactics below, but it's useful to be concrete. *)</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 234
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Defined.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 234
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The triple join itself has canonical [TriJoinRecData]. *)</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 236
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre>Definition trijoinrecdata_trijoin (A B C : Type)
+  : TriJoinRecData A B C (Join A (Join B C))
+  := Build_TriJoinRecData join1 join2 join3 join12 join13 join23 join123.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 238
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Combining these gives a function going in the opposite direction to [trijoin_rec]. *)</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 240
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition trijoin_rec_inv {A B C P : Type} (f : TriJoin A B C -&gt; P)
+  : TriJoinRecData A B C P
+  := trijoinrecdata_fun f (trijoinrecdata_trijoin A B C).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 242
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Under [Funext], [trijoin_rec] and [trijoin_rec_inv] should be inverse equivalences.  We'll avoid [Funext] and show that they are equivalences of 0-groupoids, where we choose the path structures carefully. *)
+
+(** ** The graph structure on [TriJoinRecData A B C P] *)
+
+(** The type of fillers for a triangular prism with five 2d faces [abc], [abc'], [k12], [k13], [k23]. *)</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 248
+Time: 0.004s">
+<div class="time" style="width: 1.4814814814815%"></div>
+<pre>Definition prism {P : Type}
+  {a b c : P} {ab : a = b} {ac : a = c} {bc : b = c} (abc : ab @ bc = ac)
+  {a' b' c' : P} {ab' : a' = b'} {ac' : a' = c'} {bc' : b' = c'} (abc' : ab' @ bc' = ac')
+  {k1 : a = a'} {k2 : b = b'} {k3 : c = c'}
+  (k12 : ab @ k2 = k1 @ ab') (k13 : ac @ k3 = k1 @ ac') (k23 : bc @ k3 = k2 @ bc')
+  := concat_p_pp _ _ _ @ whiskerR abc k3 @ k13
+    = whiskerL ab k23
+    @ concat_p_pp _ _ _ @ whiskerR k12 bc'
+    @ concat_pp_p _ _ _ @ whiskerL k1 abc'.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 256
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The "identity" filler is slightly non-trivial, because the fillers for the squares, e.g. [ab @ 1 = 1 @ ab], must be non-trivial. *)</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 258
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre>Definition prism_id {P : Type}
+  {a b c : P} {ab : a = b} {ac : a = c} {bc : b = c} (abc : ab @ bc = ac)
+  : prism abc abc (equiv_p1_1q idpath) (equiv_p1_1q idpath) (equiv_p1_1q idpath).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 260
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 261
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre>
+  induction ab, bc, abc; simpl.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 262
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  reflexivity.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 263
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 264
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The paths between elements of [TriJoinRecData A B C P].  Under [Funext], this type will be equivalent to the identity type.  But without [Funext], this definition will be more useful. *)</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 266
+Time: 0.009s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>Record TriJoinRecPath {A B C P : Type} {f g : TriJoinRecData A B C P} := {
+    h1 : forall a, j1 f a = j1 g a;
+    h2 : forall b, j2 f b = j2 g b;
+    h3 : forall c, j3 f c = j3 g c;
+    h12 : forall a b, j12 f a b @ h2 b = h1 a @ j12 g a b;
+    h13 : forall a c, j13 f a c @ h3 c = h1 a @ j13 g a c;
+    h23 : forall b c, j23 f b c @ h3 c = h2 b @ j23 g b c;
+    h123 : forall a b c, prism (j123 f a b c) (j123 g a b c) (h12 a b) (h13 a c) (h23 b c);
+  }.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 274
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments TriJoinRecPath {A B C P} f g.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 276
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We also define data for [trijoin_rec] that unbundles the first three components.  This lets us talk about paths between two such when the first three components are definitionally equal. This is a common special case, and this set-up greatly simplifies a lot of path algebra in later proofs. *)</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 278
+Time: 0.002s">
+<div class="time" style="width: 0.74074074074074%"></div>
+<pre>Record TriJoinRecData' {A B C P : Type} {j1' : A -&gt; P} {j2' : B -&gt; P} {j3' : C -&gt; P} := {
+    j12' : forall a b, j1' a = j2' b;
+    j13' : forall a c, j1' a = j3' c;
+    j23' : forall b c, j2' b = j3' c;
+    j123' : forall a b c, j12' a b @ j23' b c = j13' a c;
+  }.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 283
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments TriJoinRecData' {A B C P} j1' j2' j3'.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 285
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments Build_TriJoinRecData' {A B C P}%_type_scope
+  (j1' j2' j3' j12' j13' j23' j123')%_function_scope.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 287
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre>
+
+Definition prism' {P : Type} {a b c : P}
+  {ab : a = b} {ac : a = c} {bc : b = c} (abc : ab @ bc = ac)
+  {ab' : a = b} {ac' : a = c} {bc' : b = c} (abc' : ab' @ bc' = ac')
+  (k12 : ab = ab') (k13 : ac = ac') (k23 : bc = bc')
+  := abc @ k13 = (k12 @@ k23) @ abc'.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 293
+Time: 0.004s">
+<div class="time" style="width: 1.4814814814815%"></div>
+<pre>
+
+Record TriJoinRecPath' {A B C P : Type} {j1' : A -&gt; P} {j2' : B -&gt; P} {j3' : C -&gt; P}
+  {f g : TriJoinRecData' j1' j2' j3'} := {
+    h12' : forall a b, j12' f a b = j12' g a b;
+    h13' : forall a c, j13' f a c = j13' g a c;
+    h23' : forall b c, j23' f b c = j23' g b c;
+    h123' : forall a b c, prism' (j123' f a b c) (j123' g a b c) (h12' a b) (h13' a c) (h23' b c);
+  }.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 301
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments TriJoinRecPath' {A B C P} {j1' j2' j3'} f g.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 303
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We can bundle and unbundle these types of data.  For unbundling, we just handle [TriJoinRecData] for now. *)
+
+</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 306
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre>Definition bundle_trijoinrecdata {A B C P : Type} {j1' : A -&gt; P} {j2' : B -&gt; P} {j3' : C -&gt; P}
+  (f : TriJoinRecData' j1' j2' j3')
+  : TriJoinRecData A B C P
+  := Build_TriJoinRecData j1' j2' j3' (j12' f) (j13' f) (j23' f) (j123' f).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 309
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre>
+
+Definition unbundle_trijoinrecdata {A B C P : Type} (f : TriJoinRecData A B C P)
+  : TriJoinRecData' (j1 f) (j2 f) (j3 f)
+  := Build_TriJoinRecData' (j1 f) (j2 f) (j3 f) (j12 f) (j13 f) (j23 f) (j123 f).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 313
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The proof by induction that is easily available to us here is what saves work in more complicated contexts. *)</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 315
+Time: 0.003s">
+<div class="time" style="width: 1.1111111111111%"></div>
+<pre>Definition bundle_prism {P : Type} {a b c : P}
+  {ab : a = b} {ac : a = c} {bc : b = c} (abc : ab @ bc = ac)
+  {ab' : a = b} {ac' : a = c} {bc' : b = c} (abc' : ab' @ bc' = ac')
+  (k12 : ab = ab') (k13 : ac = ac') (k23 : bc = bc')
+  (k123 : prism' abc abc' k12 k13 k23)
+  : prism abc abc' (equiv_p1_1q k12) (equiv_p1_1q k13) (equiv_p1_1q k23).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 320
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 321
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction ab.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 322
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction bc.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 323
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction abc.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 324
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction k12.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 325
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction k23.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 326
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction k13.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 327
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold prism' in k123.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 328
+Time: 0.002s">
+<div class="time" style="width: 0.74074074074074%"></div>
+<pre>
+  induction (moveR_Vp _ _ _ k123); clear k123.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 329
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simpl.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 330
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  reflexivity.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 331
+Time: 0.004s">
+<div class="time" style="width: 1.4814814814815%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 332
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition bundle_trijoinrecpath {A B C P : Type} {j1' : A -&gt; P} {j2' : B -&gt; P} {j3' : C -&gt; P}
+  {f g : TriJoinRecData' j1' j2' j3'} (h : TriJoinRecPath' f g)
+  : TriJoinRecPath (bundle_trijoinrecdata f) (bundle_trijoinrecdata g).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 336
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 337
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre>
+  snapply Build_TriJoinRecPath.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 338
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1, 2, 3: reflexivity.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 339
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre>
+  1, 2, 3: intros; apply equiv_p1_1q.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 340
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 341
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (h12' h).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 341
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 342
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (h13' h).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 342
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 343
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (h23' h).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 343
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 344
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn beta zeta.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 344
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros a b c.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 345
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre>
+    apply bundle_prism, (h123' h).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 346
+Time: 0.003s">
+<div class="time" style="width: 1.1111111111111%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 347
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A tactic that helps us apply the previous result. *)</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 349
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Ltac bundle_trijoinrecpath :=
+  hnf;
+  match goal with |- TriJoinRecPath ?F ?G =&gt;
+    refine (bundle_trijoinrecpath (f:=unbundle_trijoinrecdata F)
+                                  (g:=unbundle_trijoinrecdata G) _) end;
+  snapply Build_TriJoinRecPath'.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 354
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Using these paths, we can restate the beta rule for [trijoin_rec].  The statement using [TriJoinRecPath'] typechecks only because [trijoin_rec] computes definitionally on the path constructors. *)</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 356
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition trijoin_rec_beta' {A B C P : Type} (f : TriJoinRecData A B C P)
+  : TriJoinRecPath' (unbundle_trijoinrecdata (trijoin_rec_inv (trijoin_rec f)))
+                    (unbundle_trijoinrecdata f).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 358
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 359
+Time: 0.004s">
+<div class="time" style="width: 1.4814814814815%"></div>
+<pre>
+  snapply Build_TriJoinRecPath'; cbn.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 360
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 361
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply trijoin_rec_beta_join12.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 361
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 362
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply trijoin_rec_beta_join13.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 362
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 363
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply trijoin_rec_beta_join23.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 363
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 364
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a b c.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 364
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unfold prism'.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 365
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply moveR_pM.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 366
+Time: 0.014s">
+<div class="time" style="width: 5.1851851851852%"></div>
+<pre>
+    napply trijoin_rec_beta_join123.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 367
+Time: 0.004s">
+<div class="time" style="width: 1.4814814814815%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 368
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We can upgrade this to an unprimed path. This says that [trijoin_rec_inv] is split surjective. *)</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 370
+Time: 0.004s">
+<div class="time" style="width: 1.4814814814815%"></div>
+<pre>Definition trijoin_rec_beta {A B C P : Type} (f : TriJoinRecData A B C P)
+  : TriJoinRecPath (trijoin_rec_inv (trijoin_rec f)) f
+  := bundle_trijoinrecpath (trijoin_rec_beta' f).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 372
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** [trijoin_rec_inv] is an injective map between 0-groupoids *)
+
+(** We begin with a general purpose lemma. *)</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 376
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre>Definition triangle_ind {P : Type} (a : P)
+  (Q : forall (b c : P) (ab : a = b) (ac : a = c) (bc : b = c) (abc : ab @ bc = ac), Type)
+  (s : Q a a idpath idpath idpath idpath)
+  : forall b c ab ac bc abc, Q b c ab ac bc abc.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 379
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 380
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 381
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction ab.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 382
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction bc.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 383
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction abc.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 384
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply s.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 385
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 386
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We need to explicitly reason about the proof given by [transport_paths FlFr] so we give it a name here. *)</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 388
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre>Local Definition transport_paths_FlFr' {A B : Type} {f g : A -&gt; B} {x1 x2 : A}
+  (p : x1 = x2) (q : f x1 = g x1) (r : (f x2) = (g x2))
+  (h : (ap f p) @ r = q @ (ap g p))
+  : transport (fun x =&gt; f x = g x) p q = r.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 391
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 392
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre>
+  by transport_paths FlFr.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 393
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 394
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** This lemma handles the path algebra in the last goal of the next result. *)</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 396
+Time: 0.005s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>Local Definition isinj_trijoin_rec_inv_helper {J P : Type} {f g : J -&gt; P}
+  {a b c : J} {ab : a = b} {ac : a = c} {bc : b = c} {abc : ab @ bc = ac}
+  {H1 : f a = g a} {H2 : f b = g b} {H3 : f c = g c}
+  {H12 : ap f ab @ H2 = H1 @ ap g ab}
+  {H13 : ap f ac @ H3 = H1 @ ap g ac}
+  {H23 : ap f bc @ H3 = H2 @ ap g bc}
+  (H123 : prism (ap_triangle f abc) (ap_triangle g abc) H12 H13 H23)
+  : (transport_pp (fun x =&gt; f x = g x) ab bc H1 @ ap (transport (fun x =&gt; f x = g x) bc)
+       (transport_paths_FlFr' ab H1 H2 H12)) @ transport_paths_FlFr' bc H2 H3 H23
+    = transport2 (fun x =&gt; f x = g x) abc H1 @ transport_paths_FlFr' ac H1 H3 H13.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 405
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 406
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert b c ab ac bc abc H2 H3 H12 H13 H23 H123.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 407
+Time: 0.002s">
+<div class="time" style="width: 0.74074074074074%"></div>
+<pre>
+  napply triangle_ind; cbn.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 408
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre>
+  unfold ap_triangle, transport_paths_FlFr', transport; cbn -[concat_pp_p].</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 409
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre>
+  generalize dependent (f a); intro fa; clear f.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 410
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  generalize dependent (g a); intro ga; clear g a.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 411
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros H1 H2 H3 H12 H13 H23.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 412
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite ap_idmap.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 413
+Time: 0.002s">
+<div class="time" style="width: 0.74074074074074%"></div>
+<pre>
+  revert H12; equiv_intro (equiv_1p_q1 (p:=H2) (q:=H1)) H12'; induction H12'.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 414
+Time: 0.002s">
+<div class="time" style="width: 0.74074074074074%"></div>
+<pre>
+  revert H13; equiv_intro (equiv_1p_q1 (p:=H3) (q:=H2)) H13'; induction H13'.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 415
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre>
+  induction H3.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 416
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro H123.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 417
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold prism in H123.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 418
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre>
+  rewrite whiskerL_1p_1 in H123.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 419
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  cbn in *.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 420
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre>
+  rewrite ! concat_p1 in H123.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 421
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction H123.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 422
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  reflexivity.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 423
+Time: 0.018s">
+<div class="time" style="width: 6.6666666666667%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 424
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [trijoin_rec_inv] is essentially injective, as a map between 0-groupoids. *)</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 426
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition isinj_trijoin_rec_inv {A B C P : Type} {f g : TriJoin A B C -&gt; P}
+  (h : TriJoinRecPath (trijoin_rec_inv f) (trijoin_rec_inv g))
+  : f == g.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 428
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 429
+Time: 0.004s">
+<div class="time" style="width: 1.4814814814815%"></div>
+<pre>
+  snapply trijoin_ind.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 430
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: apply (h1 h).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 431
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: apply (h2 h).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 432
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: apply (h3 h).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 433
+Time: 0.002s">
+<div class="time" style="width: 0.74074074074074%"></div>
+<pre>
+  1, 2, 3: intros; napply transport_paths_FlFr'.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 434
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: apply (h12 h).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 435
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: apply (h13 h).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 436
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: apply (h23 h).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 437
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros a b c; cbn beta.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 438
+Time: 0.002s">
+<div class="time" style="width: 0.74074074074074%"></div>
+<pre>
+  apply isinj_trijoin_rec_inv_helper.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 439
+Time: 0.002s">
+<div class="time" style="width: 0.74074074074074%"></div>
+<pre>
+  exact (h123 h a b c).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 440
+Time: 0.009s">
+<div class="time" style="width: 3.3333333333333%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 441
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Lemmas and tactics about triangles and prisms 
+
+  We now introduce several lemmas and tactics that will dispense with some routine goals. The idea is that a generic triangle can be assumed to be trivial on the first vertex, and a generic prism can be assumed to be the identity on the domain. In order to apply the [triangle_ind] and [prism_ind] lemmas that make this precise, we need to generalize various terms in the goal. *)
+
+(** This destructs a seven component term [f], tries to generalize each piece evaluated appropriately, and clears all pieces.  If called with [a], [b] and [c] all valid terms, we expect all seven components to be generalized.  But one can also call it with one of [a], [b] and [c] a dummy value (e.g. [_X_]) that causes four of the [generalize] tactics to fail.  In this case, four components will be simply cleared, and three will be generalized and cleared, so this applies when the goal only depends on three of the seven components. *)</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 447
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Ltac generalize_some f a b c :=
+  let f1 := fresh in let f2 := fresh in let f3 := fresh in
+  let f12 := fresh in let f13 := fresh in let f23 := fresh in
+  let f123 := fresh in
+  destruct f as [f1 f2 f3 f12 f13 f23 f123]; cbn;
+  try generalize (f123 a b c); clear f123;
+  try generalize (f23 b c); clear f23;
+  try generalize (f13 a c); clear f13;
+  try generalize (f12 a b); clear f12;
+  try generalize (f3 c); clear f3;
+  try generalize (f2 b); clear f2;
+  try generalize (f1 a); clear f1.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 458
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* No easy way to skip the "last" one, since we don't know which will be the last to be generalized. *)
+
+(** Use this with [f : TriJoinRecData A B C P], [a : A], [b : B], [c : C]. *)</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 461
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Ltac triangle_ind f a b c :=
+  generalize_some f a b c;
+  intro f; (* [generalize_some] goes one step too far, so intro the last variable. *)
+  apply triangle_ind.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 464
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Use this with [f : TriJoinRecData A B C P]. Two of the arguments [a], [b] and [c] should be elements of [A], [B] and [C], respectively, and the third should be a dummy value (e.g. [_X_]) that causes the generalize tactic to fail.  It applies to goals that only depend on the components of [f] involving just two of [A], [B] and [C]. *)</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 466
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Ltac triangle_ind_two f a b c :=
+  generalize_some f a b c;
+  intro f; (* [generalize_some] goes one step too far, so intro the last variable. *)
+  apply paths_ind.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 469
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The prism analog of the function [triangle_ind] from earlier in the file. To prove something about all prisms, it's enough to prove it for the "identity" prism.  Note that we don't specialize to a prism concentrated on a single vertex, since sometimes we have to deal with a composite of two prisms. *)</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 471
+Time: 0.004s">
+<div class="time" style="width: 1.4814814814815%"></div>
+<pre>Definition prism_ind {P : Type} (a b c : P) (ab : a = b) (ac : a = c) (bc : b = c) (abc : ab @ bc = ac)
+  (Q : forall (a' b' c' : P) (ab' : a' = b') (ac' : a' = c') (bc' : b' = c') (abc' : ab' @ bc' = ac')
+         (k1 : a = a') (k2 : b = b') (k3 : c = c')
+         (k12 : ab @ k2 = k1 @ ab') (k13 : ac @ k3 = k1 @ ac') (k23 : bc @ k3 = k2 @ bc')
+         (k123 : prism abc abc' k12 k13 k23), Type)
+  (s : Q a b c ab ac bc abc idpath idpath idpath (equiv_p1_1q idpath) (equiv_p1_1q idpath) (equiv_p1_1q idpath) (prism_id abc))
+  : forall a' b' c' ab' ac' bc' abc' k1 k2 k3 k12 k13 k23 k123, Q a' b' c' ab' ac' bc' abc' k1 k2 k3 k12 k13 k23 k123.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 477
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 478
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 479
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre>
+  induction k1, k2, k3.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 480
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert k123.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 481
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre>
+  revert k12; equiv_intro (equiv_p1_1q (p:=ab) (q:=ab')) k12'; induction k12'.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 482
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre>
+  revert k13; equiv_intro (equiv_p1_1q (p:=ac) (q:=ac')) k13'; induction k13'.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 483
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre>
+  revert k23; equiv_intro (equiv_p1_1q (p:=bc) (q:=bc')) k23'; induction k23'.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 484
+Time: 0.003s">
+<div class="time" style="width: 1.1111111111111%"></div>
+<pre>
+  induction ab, bc, abc; simpl in *.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 485
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold prism; simpl.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 486
+Time: 0.002s">
+<div class="time" style="width: 0.74074074074074%"></div>
+<pre>
+  equiv_intro (equiv_concat_r (concat_1p (whiskerL 1 abc') @ whiskerL_1p_1 abc')^ idpath) k123'.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 487
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre>
+  induction k123'.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 488
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simpl.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 489
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact s.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 490
+Time: 0.01s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 491
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Use this with [f g : TriJoinRecData A B C P], [h : TriJoinRecPath f g] (so [g] is the *co*domain of [h]), [a : A], [b : B], [c : C]. *)</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 493
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Ltac prism_ind g h a b c :=
+  generalize_some h a b c;
+  generalize_some g a b c;
+  apply prism_ind.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 496
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Use this with [f g : TriJoinRecData A B C P], [h : TriJoinRecPath f g] (so [g] is the *co*domain of [h]).  Two of the arguments [a], [b] and [c] should be elements of [A], [B] and [C], respectively, and the third should be a dummy value (e.g. [_X_]) that causes the generalize tactic to fail.  It applies to goals that only depend on the components of [g] and [h] involving just two of [A], [B] and [C]. So it is dealing with one square face of the prism. *)</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 498
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Ltac prism_ind_two g h a b c :=
+  generalize_some h a b c;
+  generalize_some g a b c;
+  apply square_ind.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 501
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> (* From Join/Core.v *)
+
+(** ** Use the WildCat library to organize things *)
+
+(** We begin by showing that [TriJoinRecData A B C P] is a 0-groupoid, one piece at a time. *)</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 505
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isgraph_trijoinrecdata (A B C P : Type) : IsGraph (TriJoinRecData A B C P)
+  := {| Hom := TriJoinRecPath |}.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 506
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance is01cat_trijoinrecdata (A B C P : Type) : Is01Cat (TriJoinRecData A B C P).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 508
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 509
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply Build_Is01Cat.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 510
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 511
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro f.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 511
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre>
+    bundle_trijoinrecpath.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 512
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1, 2, 3: reflexivity.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 513
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros a b c; cbn beta.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 514
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (* Can finish with:  [by triangle_ind f a b c.] *)
+   </pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 516
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>unfold prism'.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 516
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    cbn.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 517
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply concat_p1_1p.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 518
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 519
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros f1 f2 f3 k2 k1.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 519
+Time: 0.002s">
+<div class="time" style="width: 0.74074074074074%"></div>
+<pre>
+    snapply Build_TriJoinRecPath; intros; cbn beta.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 520
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 521
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (h1 k1 a @ h1 k2 a).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 521
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 522
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (h2 k1 b @ h2 k2 b).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 522
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 523
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (h3 k1 c @ h3 k2 c).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 523
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 524
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> (* Some simple path algebra works as well. *)
+     </pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 525
+Time: 0.002s">
+<div class="time" style="width: 0.74074074074074%"></div>
+<pre>prism_ind_two f3 k2 a b _X_.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 525
+Time: 0.002s">
+<div class="time" style="width: 0.74074074074074%"></div>
+<pre>
+      prism_ind_two f2 k1 a b _X_.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 526
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      by triangle_ind_two f1 a b _X_.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 527
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 528
+Time: 0.002s">
+<div class="time" style="width: 0.74074074074074%"></div>
+<pre> prism_ind_two f3 k2 a _X_ c.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 528
+Time: 0.002s">
+<div class="time" style="width: 0.74074074074074%"></div>
+<pre>
+      prism_ind_two f2 k1 a _X_ c.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 529
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      by triangle_ind_two f1 a _X_ c.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 530
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 531
+Time: 0.002s">
+<div class="time" style="width: 0.74074074074074%"></div>
+<pre> prism_ind_two f3 k2 _X_ b c.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 531
+Time: 0.002s">
+<div class="time" style="width: 0.74074074074074%"></div>
+<pre>
+      prism_ind_two f2 k1 _X_ b c.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 532
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      by triangle_ind_two f1 _X_ b c.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 533
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 534
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre> cbn beta.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 534
+Time: 0.03s">
+<div class="time" style="width: 11.111111111111%"></div>
+<pre> prism_ind f3 k2 a b c.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 534
+Time: 0.093s">
+<div class="time" style="width: 34.444444444444%"></div>
+<pre>
+      prism_ind f2 k1 a b c.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 535
+Time: 0.062s">
+<div class="time" style="width: 22.962962962963%"></div>
+<pre>
+      by triangle_ind f1 a b c.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 536
+Time: 0.13s">
+<div class="time" style="width: 48.148148148148%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 537
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance is0gpd_trijoinrecdata (A B C P : Type) : Is0Gpd (TriJoinRecData A B C P).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 539
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 540
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply Build_Is0Gpd.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 541
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros f g h.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 542
+Time: 0.002s">
+<div class="time" style="width: 0.74074074074074%"></div>
+<pre>
+  snapply Build_TriJoinRecPath; intros; cbn beta.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 543
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 544
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (h1 h a)^.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 544
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 545
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (h2 h b)^.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 545
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 546
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (h3 h c)^.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 546
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 547
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> (* Some simple path algebra works as well. *)
+   </pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 548
+Time: 0.002s">
+<div class="time" style="width: 0.74074074074074%"></div>
+<pre>prism_ind_two g h a b _X_.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 548
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by triangle_ind_two f a b _X_.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 549
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 550
+Time: 0.002s">
+<div class="time" style="width: 0.74074074074074%"></div>
+<pre> prism_ind_two g h a _X_ c.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 550
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by triangle_ind_two f a _X_ c.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 551
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 552
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre> prism_ind_two g h _X_ b c.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 552
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by triangle_ind_two f _X_ b c.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 553
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 554
+Time: 0.023s">
+<div class="time" style="width: 8.5185185185185%"></div>
+<pre> prism_ind g h a b c.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 554
+Time: 0.028s">
+<div class="time" style="width: 10.37037037037%"></div>
+<pre>
+    by triangle_ind f a b c.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 555
+Time: 0.045s">
+<div class="time" style="width: 16.666666666667%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 556
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre>
+
+Definition trijoinrecdata_0gpd (A B C P : Type) : ZeroGpd
+  := Build_ZeroGpd (TriJoinRecData A B C P) _ _ _.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 559
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** [trijoinrecdata_0gpd A B C] is a 1-functor from [Type] to [ZeroGpd]
+
+  It's a 1-functor that lands in [ZeroGpd], and the morphisms of [ZeroGpd] are 0-functors, so it's easy to get confused about the levels. *)
+
+(** First we need to show that the induced map is a morphism in [ZeroGpd], i.e. that it is a 0-functor. *)</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 565
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance is0functor_trijoinrecdata_fun {A B C P Q : Type} (g : P -&gt; Q)
+  : Is0Functor (@trijoinrecdata_fun A B C P Q g).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 566
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 567
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply Build_Is0Functor.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 568
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros f1 f2 h.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 569
+Time: 0.003s">
+<div class="time" style="width: 1.1111111111111%"></div>
+<pre>
+  snapply Build_TriJoinRecPath; intros; cbn.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 570
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1, 2, 3: apply (ap g).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 571
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: apply (h1 h).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 572
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: apply (h2 h).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 573
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: apply (h3 h).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 574
+Time: 0.002s">
+<div class="time" style="width: 0.74074074074074%"></div>
+<pre>
+  1, 2, 3: refine ((ap_pp g _ _)^ @ _ @ ap_pp g _ _); apply (ap (ap g)).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 575
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: apply (h12 h).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 576
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> (* Or: prism_ind_12 f2 h a b. triangle_ind_12 f1 a b. reflexivity. *)
+ </pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 577
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>1: apply (h13 h).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 577
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: apply (h23 h).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 578
+Time: 0.03s">
+<div class="time" style="width: 11.111111111111%"></div>
+<pre>
+  prism_ind f2 h a b c.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 579
+Time: 0.016s">
+<div class="time" style="width: 5.9259259259259%"></div>
+<pre>
+  triangle_ind f1 a b c; cbn.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 580
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  reflexivity.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 581
+Time: 0.029s">
+<div class="time" style="width: 10.740740740741%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 582
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [trijoinrecdata_0gpd A B C] is a 0-functor from [Type] to [ZeroGpd] (one level up). *)</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 584
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance is0functor_trijoinrecdata_0gpd (A B C : Type) : Is0Functor (trijoinrecdata_0gpd A B C).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 584
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 585
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply Build_Is0Functor.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 586
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros P Q g.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 587
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (Build_Fun01 (trijoinrecdata_fun g)).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 588
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 589
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [trijoinrecdata_0gpd A B C] is a 1-functor from [Type] to [ZeroGpd]. *)</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 591
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre>Instance is1functor_trijoinrecdata_0gpd (A B C : Type) : Is1Functor (trijoinrecdata_0gpd A B C).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 591
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 592
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply Build_Is1Functor.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 593
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* If [g1 g2 : P -&gt; Q] are homotopic, then the induced maps are homotopic: *)
+ </pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 595
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>-</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 595
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros P Q g1 g2 h f; cbn in *.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 595
+Time: 0.002s">
+<div class="time" style="width: 0.74074074074074%"></div>
+<pre>
+    snapply Build_TriJoinRecPath; intros; cbn.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 596
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1, 2, 3: apply h.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 597
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1, 2, 3: apply concat_Ap.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 598
+Time: 0.003s">
+<div class="time" style="width: 1.1111111111111%"></div>
+<pre>
+    triangle_ind f a b c; cbn.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 599
+Time: 0.003s">
+<div class="time" style="width: 1.1111111111111%"></div>
+<pre>
+    by induction (h f).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 600
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* The identity map [P -&gt; P] is sent to a map homotopic to the identity. *)
+ </pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 602
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>-</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 602
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros P f; cbn.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 602
+Time: 0.002s">
+<div class="time" style="width: 0.74074074074074%"></div>
+<pre>
+    bundle_trijoinrecpath; intros; cbn.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 603
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1, 2, 3: apply ap_idmap.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 604
+Time: 0.003s">
+<div class="time" style="width: 1.1111111111111%"></div>
+<pre>
+    by triangle_ind f a b c.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 605
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* It respects composition. *)
+ </pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 607
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>-</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 607
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros P Q R g1 g2 f; cbn.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 607
+Time: 0.003s">
+<div class="time" style="width: 1.1111111111111%"></div>
+<pre>
+    bundle_trijoinrecpath; intros; cbn.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 608
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1, 2, 3: apply ap_compose.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 609
+Time: 0.008s">
+<div class="time" style="width: 2.962962962963%"></div>
+<pre>
+    by triangle_ind f a b c.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 610
+Time: 0.015s">
+<div class="time" style="width: 5.5555555555556%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 611
+Time: 0.002s">
+<div class="time" style="width: 0.74074074074074%"></div>
+<pre>
+
+Definition trijoinrecdata_0gpd_fun (A B C : Type) : Fun11 Type ZeroGpd
+  := Build_Fun11 _ _ (trijoinrecdata_0gpd A B C).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 614
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** By the Yoneda lemma, it follows from [TriJoinRecData] being a 1-functor that given [TriJoinRecData] in [J], we get a map [(J -&gt; P) $-&gt; (TriJoinRecData A B C P)] of 0-groupoids which is natural in [P]. Below we will specialize to the case where [J] is [TriJoin A B C] with the canonical [TriJoinRecData]. *)</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 616
+Time: 0.002s">
+<div class="time" style="width: 0.74074074074074%"></div>
+<pre>Definition trijoin_nattrans_recdata {A B C J : Type} (f : TriJoinRecData A B C J)
+  : NatTrans (opyon_0gpd J) (trijoinrecdata_0gpd_fun A B C).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 617
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 618
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre>
+  snapply Build_NatTrans.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 619
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 620
+Time: 0.002s">
+<div class="time" style="width: 0.74074074074074%"></div>
+<pre> rapply opyoneda_0gpd; exact f.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 620
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 621
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 621
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 622
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>  
+
+(** Thus we get a map [(TriJoin A B C -&gt; P) $-&gt; (TriJoinRecData A B C P)] of 0-groupoids, natural in [P]. The underlying map is [trijoin_rec_inv A B C P]. *)</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 624
+Time: 0.002s">
+<div class="time" style="width: 0.74074074074074%"></div>
+<pre>Definition trijoin_rec_inv_nattrans (A B C : Type)
+  : NatTrans (opyon_0gpd (TriJoin A B C)) (trijoinrecdata_0gpd_fun A B C)
+  := trijoin_nattrans_recdata (trijoinrecdata_trijoin A B C).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 626
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** This natural transformation is in fact a natural equivalence of 0-groupoids. *)</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 628
+Time: 0.002s">
+<div class="time" style="width: 0.74074074074074%"></div>
+<pre>Definition trijoin_rec_inv_natequiv (A B C : Type)
+  : NatEquiv (opyon_0gpd (TriJoin A B C)) (trijoinrecdata_0gpd_fun A B C).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 629
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 630
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_NatEquiv'.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 631
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: apply trijoin_rec_inv_nattrans.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 632
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro P.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 633
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply isequiv_0gpd_issurjinj.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 634
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply Build_IsSurjInj.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 635
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 636
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros f; cbn in f.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 636
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists (trijoin_rec f).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 637
+Time: 0.005s">
+<div class="time" style="width: 1.8518518518519%"></div>
+<pre>
+    apply trijoin_rec_beta.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 638
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 639
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (@isinj_trijoin_rec_inv A B C P).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 639
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 640
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** It will be handy to name the inverse natural equivalence. *)</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 642
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition trijoin_rec_natequiv (A B C : Type)
+  := natequiv_inverse (trijoin_rec_inv_natequiv A B C).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 643
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [trijoin_rec_natequiv A B C P] is an equivalence of 0-groupoids whose underlying function is definitionally [trijoin_rec]. *)</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 645
+Time: 0.002s">
+<div class="time" style="width: 0.74074074074074%"></div>
+<pre>Local Definition trijoin_rec_natequiv_check (A B C P : Type)
+  : equiv_fun_0gpd (trijoin_rec_natequiv A B C P) = @trijoin_rec A B C P
+  := idpath.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 647
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** It follows that [trijoin_rec A B C P] is a 0-functor. *)</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 649
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre>Instance is0functor_trijoin_rec (A B C P : Type) : Is0Functor (@trijoin_rec A B C P).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 649
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 650
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre>
+  change (Is0Functor (equiv_fun_0gpd (trijoin_rec_natequiv A B C P))).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 651
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact _.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 652
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 653
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** And that [trijoin_rec A B C] is natural.   The [$==] in the statement is just [==], but we use WildCat notation so that we can invert and compose these with WildCat notation. *)</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 655
+Time: 0.003s">
+<div class="time" style="width: 1.1111111111111%"></div>
+<pre>Definition trijoin_rec_nat (A B C : Type) {P Q : Type} (g : P -&gt; Q)
+  (f : TriJoinRecData A B C P)
+  : trijoin_rec (trijoinrecdata_fun g f) $== g o trijoin_rec f.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 657
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 658
+Time: 0.096s">
+<div class="time" style="width: 35.555555555556%"></div>
+<pre>
+  exact (isnat (trijoin_rec_natequiv A B C) g f).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 659
+Time: 0.002s">
+<div class="time" style="width: 0.74074074074074%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 660
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** It is also useful to record this. *)</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 662
+Time: 0.007s">
+<div class="time" style="width: 2.5925925925926%"></div>
+<pre>Definition issect_trijoin_rec_inv {A B C P : Type} (f : TriJoin A B C -&gt; P)
+  : trijoin_rec (trijoin_rec_inv f) $== f
+  := cate_issect (trijoin_rec_inv_natequiv A B C P) f.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 664
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** This comes up a lot as well, and if you inline the proof, you get an ugly goal. *)</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 666
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre>Definition moveR_trijoin_rec {A B C P : Type} {f : TriJoinRecData A B C P} {g : TriJoin A B C -&gt; P}
+  (p : f $== trijoin_rec_inv g)
+  : trijoin_rec f == g.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 668
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 669
+Time: 0.002s">
+<div class="time" style="width: 0.74074074074074%"></div>
+<pre>
+  exact (moveR_equiv_V_0gpd (trijoin_rec_inv_natequiv A B C P) p).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 670
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 671
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Functoriality of the triple join *)
+
+(** ** Precomposition of [TriJoinRecData] *)
+
+(** First observe that we can precompose [k : TriJoinRecData] with a triple of maps. *)</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 677
+Time: 0.003s">
+<div class="time" style="width: 1.1111111111111%"></div>
+<pre>Definition trijoinrecdata_tricomp {A B C A' B' C' P} (k : TriJoinRecData A B C P)
+  (f : A' -&gt; A) (g : B' -&gt; B) (h : C' -&gt; C)
+  : TriJoinRecData A' B' C' P
+  := {| j1 := j1 k o f; j2 := j2 k o g; j3 := j3 k o h;
+       j12 := fun a b =&gt; j12 k (f a) (g b);
+       j13 := fun a c =&gt; j13 k (f a) (h c);
+       j23 := fun b c =&gt; j23 k (g b) (h c);
+       j123 := fun a b c =&gt; j123 k (f a) (g b) (h c); |}.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 684
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Precomposition with a triple respects paths. *)</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 686
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre>Definition trijoinrecdata_tricomp_0fun {A B C A' B' C' P}
+  {k l : TriJoinRecData A B C P} (p : k $== l)
+  (f : A' -&gt; A) (g : B' -&gt; B) (h : C' -&gt; C)
+  : trijoinrecdata_tricomp k f g h $== trijoinrecdata_tricomp l f g h.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 689
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 690
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* This line is not needed, but clarifies the proof. *)
+ </pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 692
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>unfold trijoinrecdata_tricomp; destruct p.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 692
+Time: 0.007s">
+<div class="time" style="width: 2.5925925925926%"></div>
+<pre>
+  snapply Build_TriJoinRecPath; intros; cbn; apply_hyp.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 693
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* E.g., the first goal is [j1 k (f a) = j1 l (f a)], and this is solved by [h1 p (f a)]. We just precompose all fields of [p] with [f], [g] and [h]. *)</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 694
+Time: 0.01s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>Defined.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 694
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Homotopies between the triple are also respected. *)</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 696
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre>Definition trijoinrecdata_tricomp2 {A B C A' B' C' P} (k : TriJoinRecData A B C P)
+  {f f' : A' -&gt; A} {g g' : B' -&gt; B} {h h' : C' -&gt; C}
+  (p : f == f') (q : g == g') (r : h == h')
+  : trijoinrecdata_tricomp k f g h $== trijoinrecdata_tricomp k f' g' h'.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 699
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 700
+Time: 0.003s">
+<div class="time" style="width: 1.1111111111111%"></div>
+<pre>
+  snapply Build_TriJoinRecPath; intros; cbn.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 701
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 702
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply ap, p.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 702
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 703
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply ap, q.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 703
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 704
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply ap, r.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 704
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 705
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre> induction (p a), (q b); by apply equiv_p1_1q.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 705
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 706
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre> induction (p a), (r c); by apply equiv_p1_1q.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 706
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 707
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre> induction (q b), (r c); by apply equiv_p1_1q.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 707
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 708
+Time: 0.015s">
+<div class="time" style="width: 5.5555555555556%"></div>
+<pre> induction (p a), (q b), (r c); apply prism_id.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 708
+Time: 0.014s">
+<div class="time" style="width: 5.1851851851852%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 709
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Functoriality of [TriJoin] via [functor_trijoin] *)
+
+(** To define [functor_trijoin], we simply precompose the canonical [TriJoinRecData] with [f], [g] and [h]. For example, this has [j1 := join1 o f] and [j12 := fun a b =&gt; join12 (f a) (g b)]. *)</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 713
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre>Definition functor_trijoin {A B C A' B' C'} (f : A -&gt; A') (g : B -&gt; B') (h : C -&gt; C')
+  : TriJoin A B C -&gt; TriJoin A' B' C'
+  := trijoin_rec (trijoinrecdata_tricomp (trijoinrecdata_trijoin A' B' C') f g h).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 715
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We use [functor_trijoin] to express a partial functoriality of [trijoin_rec] in [A], [B] and [C]. *)</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 717
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre>Definition trijoin_rec_functor_trijoin {A B C A' B' C' P} (k : TriJoinRecData A' B' C' P)
+  (f : A -&gt; A') (g : B -&gt; B') (h : C -&gt; C')
+  : trijoin_rec k o functor_trijoin f g h == trijoin_rec (trijoinrecdata_tricomp k f g h).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 719
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 720
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* On the LHS, we use naturality of the [trijoin_rec] inside [functor_trijoin]: *)
+ </pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 722
+Time: 0.002s">
+<div class="time" style="width: 0.74074074074074%"></div>
+<pre>refine ((trijoin_rec_nat _ _ _ _ _)^$ $@ _).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 722
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (fmap trijoin_rec _).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 723
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* Just to clarify to the reader what is going on: *)
+ </pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 725
+Time: 0.004s">
+<div class="time" style="width: 1.4814814814815%"></div>
+<pre>change (?L $-&gt; ?R) with (trijoinrecdata_tricomp (trijoin_rec_inv (trijoin_rec k)) f g h $-&gt; R).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 725
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (trijoinrecdata_tricomp_0fun (trijoin_rec_beta k) f g h).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 726
+Time: 0.003s">
+<div class="time" style="width: 1.1111111111111%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 727
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Now we have all of the tools to efficiently prove functoriality. *)
+
+</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 730
+Time: 0.002s">
+<div class="time" style="width: 0.74074074074074%"></div>
+<pre>Definition functor_trijoin_compose {A B C A' B' C' A'' B'' C''}
+  (f : A -&gt; A') (g : B -&gt; B') (h : C -&gt; C')
+  (f' : A' -&gt; A'') (g' : B' -&gt; B'') (h' : C' -&gt; C'')
+  : functor_trijoin (f' o f) (g' o g) (h' o h) == functor_trijoin f' g' h' o functor_trijoin f g h.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 733
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 734
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  symmetry.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 735
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre>
+  napply trijoin_rec_functor_trijoin.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 736
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 737
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition functor_trijoin_idmap {A B C}
+  : functor_trijoin idmap idmap idmap == (idmap : TriJoin A B C -&gt; TriJoin A B C).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 740
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 741
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply moveR_trijoin_rec.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 742
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  change (trijoinrecdata_trijoin A B C $== trijoinrecdata_fun idmap (trijoinrecdata_trijoin A B C)).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 743
+Time: 0.004s">
+<div class="time" style="width: 1.4814814814815%"></div>
+<pre>
+  symmetry.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 744
+Time: 0.002s">
+<div class="time" style="width: 0.74074074074074%"></div>
+<pre>
+  exact (fmap_id (trijoinrecdata_0gpd A B C) _ (trijoinrecdata_trijoin A B C)).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 745
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 746
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre>
+
+Definition functor2_trijoin {A B C A' B' C'}
+  {f f' : A -&gt; A'} {g g' : B -&gt; B'} {h h' : C -&gt; C'}
+  (p : f == f') (q : g == g') (r : h == h')
+  : functor_trijoin f g h == functor_trijoin f' g' h'.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 751
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 752
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold functor_trijoin.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 753
+Time: 0.003s">
+<div class="time" style="width: 1.1111111111111%"></div>
+<pre>
+  tapply (fmap trijoin_rec).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 754
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (trijoinrecdata_tricomp2 _ p q r).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 755
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 756
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre>
+
+Instance isequiv_functor_trijoin {A B C A' B' C'}
+  (f : A -&gt; A') `{!IsEquiv f}
+  (g : B -&gt; B') `{!IsEquiv g}
+  (h : C -&gt; C') `{!IsEquiv h}
+  : IsEquiv (functor_trijoin f g h).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 762
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 763
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* This proof is almost identical to the proof of [isequiv_functor_join]. *)
+ </pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 765
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>snapply isequiv_adjointify.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 765
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 766
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (functor_trijoin f^-1 g^-1 h^-1).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 766
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 767
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> etransitivity.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 767
+Time: 0.003s">
+<div class="time" style="width: 1.1111111111111%"></div>
+<pre>
+    1: symmetry; apply functor_trijoin_compose.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 768
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    etransitivity.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 769
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: exact (functor2_trijoin (eisretr f) (eisretr g) (eisretr h)).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 770
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply functor_trijoin_idmap.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 771
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 772
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> etransitivity.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 772
+Time: 0.003s">
+<div class="time" style="width: 1.1111111111111%"></div>
+<pre>
+    1: symmetry; apply functor_trijoin_compose.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 773
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    etransitivity.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 774
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: exact (functor2_trijoin (eissect f) (eissect g) (eissect h)).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 775
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact functor_trijoin_idmap.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 776
+Time: 0.002s">
+<div class="time" style="width: 0.74074074074074%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 777
+Time: 0.014s">
+<div class="time" style="width: 5.1851851851852%"></div>
+<pre>
+
+Definition equiv_functor_trijoin {A B C A' B' C'}
+  (f : A &lt;~&gt; A') (g : B &lt;~&gt; B') (h : C &lt;~&gt; C')
+  : TriJoin A B C &lt;~&gt; TriJoin A' B' C'
+  := Build_Equiv _ _ (functor_trijoin f g h) _.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 782
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** The relationship between [functor_trijoin] and [functor_join]. *)
+
+(** While [functor_trijoin] is convenient to work with, we want to know that [functor_trijoin f g h] is homotopic to [functor_join f (functor_join g h)].  This is worked out using the next three results. *)
+
+(** A lemma that handles the path algebra in the next result. [BC] here is [Join B C] there, [bc] here is [jglue b c] there, [bc'] here is [jg g b c] there, and [beta_jg] here is [Join_rec_beta_jglue _ _ _ b c] there. *)</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 788
+Time: 0.006s">
+<div class="time" style="width: 2.2222222222222%"></div>
+<pre>Local Lemma ap_triangle_functor_join {A BC A' P} (f : A -&gt; A') (g : BC -&gt; P)
+  (a : A) {b c : BC} (bc : b = c) (bc' : g b = g c) (beta_jg : ap g bc = bc')
+  : ap_triangle (functor_join f g) (triangle_v a bc) @ functor_join_beta_jglue f g a c
+    = (functor_join_beta_jglue f g a b
+        @@ ((ap_compose joinr (functor_join f g) bc)^
+             @ (ap_compose g joinr bc @ ap (ap joinr) beta_jg)))
+       @ triangle_v (f a) bc'.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 794
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 795
+Time: 0.019s">
+<div class="time" style="width: 7.037037037037%"></div>
+<pre>
+  induction bc, beta_jg; simpl.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 796
+Time: 0.002s">
+<div class="time" style="width: 0.74074074074074%"></div>
+<pre>
+  transitivity (concat_p1 _ @ functor_join_beta_jglue f g a b).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 797
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 798
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre> refine (_ @@ 1).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 798
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unfold ap_triangle.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 799
+Time: 0.002s">
+<div class="time" style="width: 0.74074074074074%"></div>
+<pre>
+    apply moveR_Vp; symmetry.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 800
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (ap_pp_concat_p1 (functor_join f g) (jglue a b)).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 801
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 802
+Time: 0.002s">
+<div class="time" style="width: 0.74074074074074%"></div>
+<pre> apply moveR_Mp; symmetry.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 802
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (concat_p_pp _ _ _ @ whiskerR_p1 _).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 803
+Time: 0.07s">
+<div class="time" style="width: 25.925925925926%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 804
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We'll generalize the situation a bit to keep things less verbose.  [join_rec g] here will be [functor_join g h] in the next result.  Maybe this extra generality will also be useful sometime? *)</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 806
+Time: 0.004s">
+<div class="time" style="width: 1.4814814814815%"></div>
+<pre>Definition functor_join_join_rec {A B C A' P} (f : A -&gt; A') (g : JoinRecData B C P)
+  : functor_join f (join_rec g)
+    == trijoin_rec {| j1 := joinl o f; j2 := joinr o jl g; j3 := joinr o jr g;
+                      j12 := fun a b =&gt; jglue (f a) (jl g b);
+                      j13 := fun a c =&gt; jglue (f a) (jr g c);
+                      j23 := fun b c =&gt; ap joinr (jg g b c);
+                      j123 := fun a b c =&gt; triangle_v (f a) (jg g b c); |}.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 812
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 813
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* Recall that [trijoin_rec] is defined to be the inverse of [trijoin_rec_inv_natequiv ...]. *)
+ </pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 815
+Time: 0.002s">
+<div class="time" style="width: 0.74074074074074%"></div>
+<pre>refine (moveL_equiv_V_0gpd (trijoin_rec_inv_natequiv A B C _) _).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 815
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* The next two lines aren't needed, but clarify the goal. *)
+ </pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 817
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>unfold trijoin_rec_inv_natequiv, equiv_fun_0gpd; simpl.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 817
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre>
+  unfold trijoinrecdata_fun, trijoinrecdata_trijoin; simpl.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 818
+Time: 0.008s">
+<div class="time" style="width: 2.962962962963%"></div>
+<pre>
+  bundle_trijoinrecpath; intros; cbn.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 819
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 820
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (functor_join_beta_jglue f _ a (joinl b)).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 820
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 821
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (functor_join_beta_jglue f _ a (joinr c)).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 821
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 822
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> unfold join23.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 822
+Time: 0.001s">
+<div class="time" style="width: 0.37037037037037%"></div>
+<pre>
+    refine ((ap_compose joinr _ _)^ @ _).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 823
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    simpl.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 824
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (ap_compose _ joinr (jglue b c) @ _).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 825
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (ap (ap joinr) _).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 826
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply join_rec_beta_jg.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 827
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 828
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> unfold prism'.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 828
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    change (join123 a b c) with (triangle_v a (jglue b c)).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 829
+Time: 0.002s">
+<div class="time" style="width: 0.74074074074074%"></div>
+<pre>
+    exact (ap_triangle_functor_join f (join_rec g) a (jglue b c) (jg g b c) (Join_rec_beta_jglue _ _ _ b c)).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 830
+Time: 0.051s">
+<div class="time" style="width: 18.888888888889%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 831
+Time: 0.002s">
+<div class="time" style="width: 0.74074074074074%"></div>
+<pre>
+
+Definition functor_trijoin_as_functor_join {A B C A' B' C'}
+  (f : A -&gt; A') (g : B -&gt; B') (h : C -&gt; C')
+  : functor_join f (functor_join g h) == functor_trijoin f g h
+  := functor_join_join_rec f (functor_join_recdata g h).</pre>
+</div>
+<div class="code" title="File: TriJoin.v
+Line: 837
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

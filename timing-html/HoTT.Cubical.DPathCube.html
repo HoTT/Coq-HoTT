@@ -1,0 +1,587 @@
+<html>
+<head>
+<title>DPathCube.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for DPathCube.v</h1>
+
+<div class="code" title="File: DPathCube.v
+Line: 1
+Time: 0.027s">
+<div class="time" style="width: 27.835051546392%"></div>
+<pre>From HoTT Require Import Basics.</pre>
+</div>
+<div class="code" title="File: DPathCube.v
+Line: 1
+Time: 0.003s">
+<div class="time" style="width: 3.0927835051546%"></div>
+<pre>
+Require Import Cubical.DPath.</pre>
+</div>
+<div class="code" title="File: DPathCube.v
+Line: 2
+Time: 0.001s">
+<div class="time" style="width: 1.0309278350515%"></div>
+<pre>
+Require Import Cubical.PathSquare.</pre>
+</div>
+<div class="code" title="File: DPathCube.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Cubical.DPathSquare.</pre>
+</div>
+<div class="code" title="File: DPathCube.v
+Line: 4
+Time: 0.003s">
+<div class="time" style="width: 3.0927835051546%"></div>
+<pre>
+Require Import Cubical.PathCube.</pre>
+</div>
+<div class="code" title="File: DPathCube.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Declare Scope dcube_scope.</pre>
+</div>
+<div class="code" title="File: DPathCube.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Delimit Scope dcube_scope with dcube.</pre>
+</div>
+<div class="code" title="File: DPathCube.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* In this file we define a dependent cube *)
+
+(* Dependent cubes *)</pre>
+</div>
+<div class="code" title="File: DPathCube.v
+Line: 12
+Time: 0.009s">
+<div class="time" style="width: 9.2783505154639%"></div>
+<pre>Definition DPathCube {A} (B : A -&gt; Type)
+  {x000 x010 x100 x110 x001 x011 x101 x111 : A}
+  {p0i0 : x000 = x010} {p1i0 : x100 = x110}
+  {pi00 : x000 = x100} {pi10 : x010 = x110}
+  {p0i1 : x001 = x011} {p1i1 : x101 = x111}
+  {pi01 : x001 = x101} {pi11 : x011 = x111}
+  {p00i : x000 = x001} {p01i : x010 = x011}
+  {p10i : x100 = x101} {p11i : x110 = x111}
+  {s0ii : PathSquare p0i0 p0i1 p00i p01i}
+  {s1ii : PathSquare p1i0 p1i1 p10i p11i}
+  {sii0 : PathSquare p0i0 p1i0 pi00 pi10}
+  {sii1 : PathSquare p0i1 p1i1 pi01 pi11}
+  {si0i : PathSquare p00i p10i pi00 pi01}
+  {si1i : PathSquare p01i p11i pi10 pi11}
+  (cube : PathCube s0ii s1ii sii0 sii1 si0i si1i)
+  {b000 : B x000} {b010 : B x010} {b100 : B x100} {b110 : B x110}
+  {b001 : B x001} {b011 : B x011} {b101 : B x101} {b111 : B x111 }
+  {bp0i0 : DPath B p0i0 b000 b010} {bp1i0 : DPath B p1i0 b100 b110}
+  {bpi00 : DPath B pi00 b000 b100} {bpi10 : DPath B pi10 b010 b110}
+  {bp0i1 : DPath B p0i1 b001 b011} {bp1i1 : DPath B p1i1 b101 b111}
+  {bpi01 : DPath B pi01 b001 b101} {bpi11 : DPath B pi11 b011 b111}
+  {bp00i : DPath B p00i b000 b001} {bp01i : DPath B p01i b010 b011}
+  {bp10i : DPath B p10i b100 b101} {bp11i : DPath B p11i b110 b111}
+  (bs0ii : DPathSquare B s0ii bp0i0 bp0i1 bp00i bp01i)
+  (bs1ii : DPathSquare B s1ii bp1i0 bp1i1 bp10i bp11i)
+  (bsii0 : DPathSquare B sii0 bp0i0 bp1i0 bpi00 bpi10)
+  (bsii1 : DPathSquare B sii1 bp0i1 bp1i1 bpi01 bpi11)
+  (bsi0i : DPathSquare B si0i bp00i bp10i bpi00 bpi01)
+  (bsi1i : DPathSquare B si1i bp01i bp11i bpi10 bpi11) : Type.</pre>
+</div>
+<div class="code" title="File: DPathCube.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: DPathCube.v
+Line: 41
+Time: 0.004s">
+<div class="time" style="width: 4.1237113402062%"></div>
+<pre>
+  destruct cube.</pre>
+</div>
+<div class="code" title="File: DPathCube.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (PathCube bs0ii bs1ii bsii0 bsii1 bsi0i bsi1i).</pre>
+</div>
+<div class="code" title="File: DPathCube.v
+Line: 43
+Time: 0.003s">
+<div class="time" style="width: 3.0927835051546%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: DPathCube.v
+Line: 44
+Time: 0.097s">
+<div class="time" style="width: 100%"></div>
+<pre>
+
+Definition equiv_dc_const' {A B : Type}
+  {x000 x010 x100 x110 x001 x011 x101 x111 : A}
+  {p0i0 : x000 = x010} {p1i0 : x100 = x110}
+  {pi00 : x000 = x100} {pi10 : x010 = x110}
+  {p0i1 : x001 = x011} {p1i1 : x101 = x111}
+  {pi01 : x001 = x101} {pi11 : x011 = x111}
+  {p00i : x000 = x001} {p01i : x010 = x011}
+  {p10i : x100 = x101} {p11i : x110 = x111}
+  {s0ii : PathSquare p0i0 p0i1 p00i p01i}
+  {s1ii : PathSquare p1i0 p1i1 p10i p11i}
+  {sii0 : PathSquare p0i0 p1i0 pi00 pi10}
+  {sii1 : PathSquare p0i1 p1i1 pi01 pi11}
+  {si0i : PathSquare p00i p10i pi00 pi01}
+  {si1i : PathSquare p01i p11i pi10 pi11}
+  {cube : PathCube s0ii s1ii sii0 sii1 si0i si1i}
+  {b000 b010 b100 b110 b001 b011 b101 b111 : B}
+  {bp0i0 : DPath (fun _ =&gt; B) p0i0 b000 b010}
+  {bp1i0 : DPath (fun _ =&gt; B) p1i0 b100 b110}
+  {bpi00 : DPath (fun _ =&gt; B) pi00 b000 b100}
+  {bpi10 : DPath (fun _ =&gt; B) pi10 b010 b110}
+  {bp0i1 : DPath (fun _ =&gt; B) p0i1 b001 b011}
+  {bp1i1 : DPath (fun _ =&gt; B) p1i1 b101 b111}
+  {bpi01 : DPath (fun _ =&gt; B) pi01 b001 b101}
+  {bpi11 : DPath (fun _ =&gt; B) pi11 b011 b111}
+  {bp00i : DPath (fun _ =&gt; B) p00i b000 b001}
+  {bp01i : DPath (fun _ =&gt; B) p01i b010 b011}
+  {bp10i : DPath (fun _ =&gt; B) p10i b100 b101}
+  {bp11i : DPath (fun _ =&gt; B) p11i b110 b111}
+  {bs0ii : DPathSquare (fun _ =&gt; B) s0ii bp0i0 bp0i1 bp00i bp01i}
+  {bs1ii : DPathSquare (fun _ =&gt; B) s1ii bp1i0 bp1i1 bp10i bp11i}
+  {bsii0 : DPathSquare (fun _ =&gt; B) sii0 bp0i0 bp1i0 bpi00 bpi10}
+  {bsii1 : DPathSquare (fun _ =&gt; B) sii1 bp0i1 bp1i1 bpi01 bpi11}
+  {bsi0i : DPathSquare (fun _ =&gt; B) si0i bp00i bp10i bpi00 bpi01}
+  {bsi1i : DPathSquare (fun _ =&gt; B) si1i bp01i bp11i bpi10 bpi11}
+  : PathCube
+    (ds_const'^-1 bs0ii) (ds_const'^-1 bs1ii) (ds_const'^-1 bsii0)
+    (ds_const'^-1 bsii1) (ds_const'^-1 bsi0i) (ds_const'^-1 bsi1i)
+    &lt;~&gt; DPathCube (fun _ =&gt; B) cube bs0ii bs1ii bsii0 bsii1 bsi0i bsi1i.</pre>
+</div>
+<div class="code" title="File: DPathCube.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: DPathCube.v
+Line: 84
+Time: 0.007s">
+<div class="time" style="width: 7.2164948453608%"></div>
+<pre>
+  by destruct cube.</pre>
+</div>
+<div class="code" title="File: DPathCube.v
+Line: 85
+Time: 0.003s">
+<div class="time" style="width: 3.0927835051546%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: DPathCube.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation dc_const' := equiv_dc_const'.</pre>
+</div>
+<div class="code" title="File: DPathCube.v
+Line: 88
+Time: 0.036s">
+<div class="time" style="width: 37.113402061856%"></div>
+<pre>
+
+Definition equiv_dc_const {A B : Type}
+  {x000 x010 x100 x110 x001 x011 x101 x111 : A}
+  {p0i0 : x000 = x010} {p1i0 : x100 = x110}
+  {pi00 : x000 = x100} {pi10 : x010 = x110}
+  {p0i1 : x001 = x011} {p1i1 : x101 = x111}
+  {pi01 : x001 = x101} {pi11 : x011 = x111}
+  {p00i : x000 = x001} {p01i : x010 = x011}
+  {p10i : x100 = x101} {p11i : x110 = x111}
+  {s0ii : PathSquare p0i0 p0i1 p00i p01i}
+  {s1ii : PathSquare p1i0 p1i1 p10i p11i}
+  {sii0 : PathSquare p0i0 p1i0 pi00 pi10}
+  {sii1 : PathSquare p0i1 p1i1 pi01 pi11}
+  {si0i : PathSquare p00i p10i pi00 pi01}
+  {si1i : PathSquare p01i p11i pi10 pi11}
+  {cube : PathCube s0ii s1ii sii0 sii1 si0i si1i}
+  {b000 b010 b100 b110 b001 b011 b101 b111 : B}
+  {bp0i0 : b000 = b010} {bp1i0 : b100 = b110}
+  {bpi00 : b000 = b100} {bpi10 : b010 = b110}
+  {bp0i1 : b001 = b011} {bp1i1 : b101 = b111}
+  {bpi01 : b001 = b101} {bpi11 : b011 = b111}
+  {bp00i : b000 = b001} {bp01i : b010 = b011}
+  {bp10i : b100 = b101} {bp11i : b110 = b111}
+  {bs0ii : PathSquare bp0i0 bp0i1 bp00i bp01i}
+  {bs1ii : PathSquare bp1i0 bp1i1 bp10i bp11i}
+  {bsii0 : PathSquare bp0i0 bp1i0 bpi00 bpi10}
+  {bsii1 : PathSquare bp0i1 bp1i1 bpi01 bpi11}
+  {bsi0i : PathSquare bp00i bp10i bpi00 bpi01}
+  {bsi1i : PathSquare bp01i bp11i bpi10 bpi11}
+  : PathCube bs0ii bs1ii bsii0 bsii1 bsi0i bsi1i
+  &lt;~&gt; DPathCube (fun _ =&gt; B) cube (ds_const bs0ii) (ds_const bs1ii) (ds_const bsii0)
+     (ds_const bsii1) (ds_const bsi0i) (ds_const bsi1i).</pre>
+</div>
+<div class="code" title="File: DPathCube.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: DPathCube.v
+Line: 121
+Time: 0.004s">
+<div class="time" style="width: 4.1237113402062%"></div>
+<pre>
+  by destruct cube.</pre>
+</div>
+<div class="code" title="File: DPathCube.v
+Line: 122
+Time: 0.002s">
+<div class="time" style="width: 2.0618556701031%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: DPathCube.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation dc_const := equiv_dc_const.</pre>
+</div>
+<div class="code" title="File: DPathCube.v
+Line: 125
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Dependent Kan fillers *)
+
+</pre>
+</div>
+<div class="code" title="File: DPathCube.v
+Line: 128
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section Kan.</pre>
+</div>
+<div class="code" title="File: DPathCube.v
+Line: 128
+Time: 0.005s">
+<div class="time" style="width: 5.1546391752577%"></div>
+<pre>
+  Context {A} {x000 x010 x100 x110 x001 x011 x101 x111 : A}
+    {p0i0 : x000 = x010} {p1i0 : x100 = x110} {pi00 : x000 = x100}
+    {pi10 : x010 = x110} {p0i1 : x001 = x011} {p1i1 : x101 = x111}
+    {pi01 : x001 = x101} {pi11 : x011 = x111} {p00i : x000 = x001}
+    {p01i : x010 = x011} {p10i : x100 = x101} {p11i : x110 = x111}
+    {s1ii : PathSquare p1i0 p1i1 p10i p11i} {s0ii : PathSquare p0i0 p0i1 p00i p01i}
+    {sii0 : PathSquare p0i0 p1i0 pi00 pi10} {sii1 : PathSquare p0i1 p1i1 pi01 pi11}
+    {si0i : PathSquare p00i p10i pi00 pi01} {si1i : PathSquare p01i p11i pi10 pi11}
+    (c : PathCube s0ii s1ii sii0 sii1 si0i si1i)
+    {P : A -&gt; Type} {y000 y010 y100 y110 y001 y011 y101 y111}
+    {q0i0 : DPath P p0i0 y000 y010} {q1i0 : DPath P p1i0 y100 y110} {qi00 : DPath P pi00 y000 y100}
+    {qi10 : DPath P pi10 y010 y110} {q0i1 : DPath P p0i1 y001 y011} {q1i1 : DPath P p1i1 y101 y111}
+    {qi01 : DPath P pi01 y001 y101} {qi11 : DPath P pi11 y011 y111} {q00i : DPath P p00i y000 y001}
+    {q01i : DPath P p01i y010 y011} {q10i : DPath P p10i y100 y101} {q11i : DPath P p11i y110 y111}.</pre>
+</div>
+<div class="code" title="File: DPathCube.v
+Line: 142
+Time: 0.004s">
+<div class="time" style="width: 4.1237113402062%"></div>
+<pre>
+
+  Definition dc_fill_left
+    (t1ii : DPathSquare P s1ii q1i0 q1i1 q10i q11i)
+    (tii0 : DPathSquare P sii0 q0i0 q1i0 qi00 qi10) (tii1 : DPathSquare P sii1 q0i1 q1i1 qi01 qi11)
+    (ti0i : DPathSquare P si0i q00i q10i qi00 qi01) (ti1i : DPathSquare P si1i q01i q11i qi10 qi11)
+    : {t0ii : DPathSquare P s0ii q0i0 q0i1 q00i q01i &amp; DPathCube P c t0ii t1ii tii0 tii1 ti0i ti1i}.</pre>
+</div>
+<div class="code" title="File: DPathCube.v
+Line: 148
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: DPathCube.v
+Line: 149
+Time: 0.005s">
+<div class="time" style="width: 5.1546391752577%"></div>
+<pre>
+    destruct c.</pre>
+</div>
+<div class="code" title="File: DPathCube.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply cu_fill_left.</pre>
+</div>
+<div class="code" title="File: DPathCube.v
+Line: 151
+Time: 0.004s">
+<div class="time" style="width: 4.1237113402062%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: DPathCube.v
+Line: 152
+Time: 0.004s">
+<div class="time" style="width: 4.1237113402062%"></div>
+<pre>
+
+  Definition dc_fill_right
+    (t0ii : DPathSquare P s0ii q0i0 q0i1 q00i q01i)
+    (tii0 : DPathSquare P sii0 q0i0 q1i0 qi00 qi10) (tii1 : DPathSquare P sii1 q0i1 q1i1 qi01 qi11)
+    (ti0i : DPathSquare P si0i q00i q10i qi00 qi01) (ti1i : DPathSquare P si1i q01i q11i qi10 qi11)
+    : {t1ii : DPathSquare P s1ii q1i0 q1i1 q10i q11i &amp; DPathCube P c t0ii t1ii tii0 tii1 ti0i ti1i}.</pre>
+</div>
+<div class="code" title="File: DPathCube.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: DPathCube.v
+Line: 159
+Time: 0.004s">
+<div class="time" style="width: 4.1237113402062%"></div>
+<pre>
+    destruct c.</pre>
+</div>
+<div class="code" title="File: DPathCube.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply cu_fill_right.</pre>
+</div>
+<div class="code" title="File: DPathCube.v
+Line: 161
+Time: 0.001s">
+<div class="time" style="width: 1.0309278350515%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: DPathCube.v
+Line: 162
+Time: 0.004s">
+<div class="time" style="width: 4.1237113402062%"></div>
+<pre>
+
+  Definition dc_fill_top
+    (t0ii : DPathSquare P s0ii q0i0 q0i1 q00i q01i) (t1ii : DPathSquare P s1ii q1i0 q1i1 q10i q11i)
+                                                    (tii1 : DPathSquare P sii1 q0i1 q1i1 qi01 qi11)
+    (ti0i : DPathSquare P si0i q00i q10i qi00 qi01) (ti1i : DPathSquare P si1i q01i q11i qi10 qi11)
+    : {tii0 : DPathSquare P sii0 q0i0 q1i0 qi00 qi10 &amp; DPathCube P c t0ii t1ii tii0 tii1 ti0i ti1i}.</pre>
+</div>
+<div class="code" title="File: DPathCube.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: DPathCube.v
+Line: 169
+Time: 0.004s">
+<div class="time" style="width: 4.1237113402062%"></div>
+<pre>
+    destruct c.</pre>
+</div>
+<div class="code" title="File: DPathCube.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply cu_fill_top.</pre>
+</div>
+<div class="code" title="File: DPathCube.v
+Line: 171
+Time: 0.001s">
+<div class="time" style="width: 1.0309278350515%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: DPathCube.v
+Line: 172
+Time: 0.004s">
+<div class="time" style="width: 4.1237113402062%"></div>
+<pre>
+
+  Definition dc_fill_bottom
+    (t0ii : DPathSquare P s0ii q0i0 q0i1 q00i q01i) (t1ii : DPathSquare P s1ii q1i0 q1i1 q10i q11i)
+    (tii0 : DPathSquare P sii0 q0i0 q1i0 qi00 qi10)
+    (ti0i : DPathSquare P si0i q00i q10i qi00 qi01) (ti1i : DPathSquare P si1i q01i q11i qi10 qi11)
+    : {tii1 : DPathSquare P sii1 q0i1 q1i1 qi01 qi11 &amp; DPathCube P c t0ii t1ii tii0 tii1 ti0i ti1i}.</pre>
+</div>
+<div class="code" title="File: DPathCube.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: DPathCube.v
+Line: 179
+Time: 0.004s">
+<div class="time" style="width: 4.1237113402062%"></div>
+<pre>
+    destruct c.</pre>
+</div>
+<div class="code" title="File: DPathCube.v
+Line: 180
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply cu_fill_bottom.</pre>
+</div>
+<div class="code" title="File: DPathCube.v
+Line: 181
+Time: 0.001s">
+<div class="time" style="width: 1.0309278350515%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: DPathCube.v
+Line: 182
+Time: 0.012s">
+<div class="time" style="width: 12.371134020619%"></div>
+<pre>
+
+  Definition dc_fill_front
+    (t0ii : DPathSquare P s0ii q0i0 q0i1 q00i q01i) (t1ii : DPathSquare P s1ii q1i0 q1i1 q10i q11i)
+    (tii0 : DPathSquare P sii0 q0i0 q1i0 qi00 qi10) (tii1 : DPathSquare P sii1 q0i1 q1i1 qi01 qi11)
+                                                    (ti1i : DPathSquare P si1i q01i q11i qi10 qi11)
+    : {ti0i : DPathSquare P si0i q00i q10i qi00 qi01 &amp; DPathCube P c t0ii t1ii tii0 tii1 ti0i ti1i}.</pre>
+</div>
+<div class="code" title="File: DPathCube.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: DPathCube.v
+Line: 189
+Time: 0.005s">
+<div class="time" style="width: 5.1546391752577%"></div>
+<pre>
+    destruct c.</pre>
+</div>
+<div class="code" title="File: DPathCube.v
+Line: 190
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply cu_fill_front.</pre>
+</div>
+<div class="code" title="File: DPathCube.v
+Line: 191
+Time: 0.001s">
+<div class="time" style="width: 1.0309278350515%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: DPathCube.v
+Line: 192
+Time: 0.004s">
+<div class="time" style="width: 4.1237113402062%"></div>
+<pre>
+
+  Definition dc_fill_back
+    (t0ii : DPathSquare P s0ii q0i0 q0i1 q00i q01i) (t1ii : DPathSquare P s1ii q1i0 q1i1 q10i q11i)
+    (tii0 : DPathSquare P sii0 q0i0 q1i0 qi00 qi10) (tii1 : DPathSquare P sii1 q0i1 q1i1 qi01 qi11)
+    (ti0i : DPathSquare P si0i q00i q10i qi00 qi01)
+    : {ti1i : DPathSquare P si1i q01i q11i qi10 qi11 &amp; DPathCube P c t0ii t1ii tii0 tii1 ti0i ti1i}.</pre>
+</div>
+<div class="code" title="File: DPathCube.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: DPathCube.v
+Line: 199
+Time: 0.004s">
+<div class="time" style="width: 4.1237113402062%"></div>
+<pre>
+    destruct c.</pre>
+</div>
+<div class="code" title="File: DPathCube.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply cu_fill_back.</pre>
+</div>
+<div class="code" title="File: DPathCube.v
+Line: 201
+Time: 0.001s">
+<div class="time" style="width: 1.0309278350515%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: DPathCube.v
+Line: 202
+Time: 0.004s">
+<div class="time" style="width: 4.1237113402062%"></div>
+<pre>
+
+End Kan.</pre>
+</div>
+<div class="code" title="File: DPathCube.v
+Line: 205
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

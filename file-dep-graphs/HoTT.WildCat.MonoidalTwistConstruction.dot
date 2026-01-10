@@ -1,0 +1,50 @@
+digraph HoTT_WildCat_MonoidalTwistConstruction {
+  graph [ratio=0.5]
+  node [style=filled]
+MonoidalTwistConstruction_issymmetricmonoidal_twist [label="issymmetricmonoidal_twist", URL=<MonoidalTwistConstruction.html#issymmetricmonoidal_twist>, peripheries=3, fillcolor="#F070D1"] ;
+MonoidalTwistConstruction_ismonoidal_twist [label="ismonoidal_twist", URL=<MonoidalTwistConstruction.html#ismonoidal_twist>, fillcolor="#F070D1"] ;
+MonoidalTwistConstruction_hexagon_twist [label="hexagon_twist", URL=<MonoidalTwistConstruction.html#hexagon_twist>, fillcolor="#F070D1"] ;
+MonoidalTwistConstruction_pentagon_twist [label="pentagon_twist", URL=<MonoidalTwistConstruction.html#pentagon_twist>, fillcolor="#F070D1"] ;
+MonoidalTwistConstruction_triangle_twist [label="triangle_twist", URL=<MonoidalTwistConstruction.html#triangle_twist>, fillcolor="#F070D1"] ;
+MonoidalTwistConstruction_left_unitor_twist [label="left_unitor_twist", URL=<MonoidalTwistConstruction.html#left_unitor_twist>, fillcolor="#F070D1"] ;
+MonoidalTwistConstruction_associator_twist [label="associator_twist", URL=<MonoidalTwistConstruction.html#associator_twist>, fillcolor="#F070D1"] ;
+MonoidalTwistConstruction_associator_twist__unfold [label="associator_twist'_unfold", URL=<MonoidalTwistConstruction.html#associator_twist'_unfold>, fillcolor="#F070D1"] ;
+MonoidalTwistConstruction_associator_twist_ [label="associator_twist'", URL=<MonoidalTwistConstruction.html#associator_twist'>, fillcolor="#F070D1"] ;
+MonoidalTwistConstruction_moveR_fmap01_twistR [label="moveR_fmap01_twistR", URL=<MonoidalTwistConstruction.html#moveR_fmap01_twistR>, fillcolor="#F070D1"] ;
+MonoidalTwistConstruction_moveR_fmap01_twistL [label="moveR_fmap01_twistL", URL=<MonoidalTwistConstruction.html#moveR_fmap01_twistL>, peripheries=3, fillcolor="#F070D1"] ;
+MonoidalTwistConstruction_moveL_fmap01_twistR [label="moveL_fmap01_twistR", URL=<MonoidalTwistConstruction.html#moveL_fmap01_twistR>, fillcolor="#F070D1"] ;
+MonoidalTwistConstruction_moveL_fmap01_twistL [label="moveL_fmap01_twistL", URL=<MonoidalTwistConstruction.html#moveL_fmap01_twistL>, fillcolor="#F070D1"] ;
+MonoidalTwistConstruction_moveR_twistR [label="moveR_twistR", URL=<MonoidalTwistConstruction.html#moveR_twistR>, fillcolor="#F070D1"] ;
+MonoidalTwistConstruction_moveR_twistL [label="moveR_twistL", URL=<MonoidalTwistConstruction.html#moveR_twistL>, fillcolor="#F070D1"] ;
+MonoidalTwistConstruction_moveL_twistR [label="moveL_twistR", URL=<MonoidalTwistConstruction.html#moveL_twistR>, fillcolor="#F070D1"] ;
+MonoidalTwistConstruction_moveL_twistL [label="moveL_twistL", URL=<MonoidalTwistConstruction.html#moveL_twistL>, fillcolor="#F070D1"] ;
+MonoidalTwistConstruction_twist_nat_r [label="twist_nat_r", URL=<MonoidalTwistConstruction.html#twist_nat_r>, peripheries=3, fillcolor="#F070D1"] ;
+MonoidalTwistConstruction_twist_nat_m [label="twist_nat_m", URL=<MonoidalTwistConstruction.html#twist_nat_m>, fillcolor="#F070D1"] ;
+MonoidalTwistConstruction_twist_nat_l [label="twist_nat_l", URL=<MonoidalTwistConstruction.html#twist_nat_l>, peripheries=3, fillcolor="#F070D1"] ;
+MonoidalTwistConstruction_twiste [label="twiste", URL=<MonoidalTwistConstruction.html#twiste>, fillcolor="#F070D1"] ;
+  MonoidalTwistConstruction_issymmetricmonoidal_twist -> MonoidalTwistConstruction_ismonoidal_twist [] ;
+  MonoidalTwistConstruction_issymmetricmonoidal_twist -> MonoidalTwistConstruction_hexagon_twist [] ;
+  MonoidalTwistConstruction_ismonoidal_twist -> MonoidalTwistConstruction_pentagon_twist [] ;
+  MonoidalTwistConstruction_ismonoidal_twist -> MonoidalTwistConstruction_triangle_twist [] ;
+  MonoidalTwistConstruction_hexagon_twist -> MonoidalTwistConstruction_associator_twist [] ;
+  MonoidalTwistConstruction_pentagon_twist -> MonoidalTwistConstruction_associator_twist [] ;
+  MonoidalTwistConstruction_pentagon_twist -> MonoidalTwistConstruction_moveR_fmap01_twistR [] ;
+  MonoidalTwistConstruction_pentagon_twist -> MonoidalTwistConstruction_moveR_twistR [] ;
+  MonoidalTwistConstruction_pentagon_twist -> MonoidalTwistConstruction_moveR_twistL [] ;
+  MonoidalTwistConstruction_pentagon_twist -> MonoidalTwistConstruction_twist_nat_m [] ;
+  MonoidalTwistConstruction_triangle_twist -> MonoidalTwistConstruction_left_unitor_twist [] ;
+  MonoidalTwistConstruction_triangle_twist -> MonoidalTwistConstruction_associator_twist [] ;
+  MonoidalTwistConstruction_associator_twist -> MonoidalTwistConstruction_associator_twist__unfold [] ;
+  MonoidalTwistConstruction_associator_twist__unfold -> MonoidalTwistConstruction_associator_twist_ [] ;
+  MonoidalTwistConstruction_associator_twist_ -> MonoidalTwistConstruction_twiste [] ;
+  MonoidalTwistConstruction_moveR_fmap01_twistR -> MonoidalTwistConstruction_moveL_fmap01_twistR [] ;
+  MonoidalTwistConstruction_moveR_fmap01_twistL -> MonoidalTwistConstruction_moveL_fmap01_twistL [] ;
+  MonoidalTwistConstruction_moveL_fmap01_twistR -> MonoidalTwistConstruction_twiste [] ;
+  MonoidalTwistConstruction_moveL_fmap01_twistL -> MonoidalTwistConstruction_twiste [] ;
+  MonoidalTwistConstruction_moveR_twistR -> MonoidalTwistConstruction_moveL_twistR [] ;
+  MonoidalTwistConstruction_moveR_twistL -> MonoidalTwistConstruction_moveL_twistL [] ;
+  MonoidalTwistConstruction_moveL_twistR -> MonoidalTwistConstruction_twiste [] ;
+  MonoidalTwistConstruction_moveL_twistL -> MonoidalTwistConstruction_twiste [] ;
+subgraph cluster_MonoidalTwistConstruction { label="MonoidalTwistConstruction"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+MonoidalTwistConstruction_twiste; MonoidalTwistConstruction_twist_nat_l; MonoidalTwistConstruction_twist_nat_m; MonoidalTwistConstruction_twist_nat_r; MonoidalTwistConstruction_moveL_twistL; MonoidalTwistConstruction_moveL_twistR; MonoidalTwistConstruction_moveR_twistL; MonoidalTwistConstruction_moveR_twistR; MonoidalTwistConstruction_moveL_fmap01_twistL; MonoidalTwistConstruction_moveL_fmap01_twistR; MonoidalTwistConstruction_moveR_fmap01_twistL; MonoidalTwistConstruction_moveR_fmap01_twistR; MonoidalTwistConstruction_associator_twist_; MonoidalTwistConstruction_associator_twist__unfold; MonoidalTwistConstruction_associator_twist; MonoidalTwistConstruction_left_unitor_twist; MonoidalTwistConstruction_triangle_twist; MonoidalTwistConstruction_pentagon_twist; MonoidalTwistConstruction_hexagon_twist; MonoidalTwistConstruction_ismonoidal_twist; MonoidalTwistConstruction_issymmetricmonoidal_twist; };
+} /* END */

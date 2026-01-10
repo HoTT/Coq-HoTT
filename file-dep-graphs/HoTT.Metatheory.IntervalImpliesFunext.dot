@@ -1,0 +1,7 @@
+digraph HoTT_Metatheory_IntervalImpliesFunext {
+  graph [ratio=0.5]
+  node [style=filled]
+IntervalImpliesFunext_funext_type_from_interval [label="funext_type_from_interval", URL=<IntervalImpliesFunext.html#funext_type_from_interval>, peripheries=3, fillcolor="#F070D1"] ;
+subgraph cluster_IntervalImpliesFunext { label="IntervalImpliesFunext"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+IntervalImpliesFunext_funext_type_from_interval; };
+} /* END */

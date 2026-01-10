@@ -1,0 +1,2496 @@
+<html>
+<head>
+<title>GraphQuotient.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for GraphQuotient.v</h1>
+
+<div class="code" title="File: GraphQuotient.v
+Line: 1
+Time: 0.024s">
+<div class="time" style="width: 24.489795918367%"></div>
+<pre>Require Import Basics.Overture Basics.Tactics Basics.PathGroupoids Basics.Equivalences.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 1
+Time: 0.008s">
+<div class="time" style="width: 8.1632653061224%"></div>
+<pre>
+Require Import Types.Universe Types.Paths Types.Forall Types.Arrow Types.Sigma Cubical.DPath.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 2
+Time: 0.001s">
+<div class="time" style="width: 1.0204081632653%"></div>
+<pre>
+Require Import Homotopy.IdentitySystems.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Quotient of a graph *)
+
+(** ** Definition *)
+
+(** The quotient of a graph is one of the simplest HITs that can be found in HoTT. It consists of a base type and a relation on it, and for every witness of a relation between two points of the type, a path.
+
+We use graph quotients to build up all our other non-recursive HITs. Their simplicity means that we can easily prove results about them and generalise them to other HITs. *)
+
+</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Unset Elimination Schemes.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Module Export GraphQuotient.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+ Section GraphQuotient.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Universes i j u.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Constraint i &lt;= u, j &lt;= u.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context {A : Type@{i}}.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Private Inductive GraphQuotient (R : A -&gt; A -&gt; Type@{j}) : Type@{u} :=
+  | gq : A -&gt; GraphQuotient R.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Arguments gq {R} a.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {R : A -&gt; A -&gt; Type@{j}}.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Axiom gqglue : forall {a b : A},
+    R a b -&gt; paths (@gq R a) (gq b).</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 29
+Time: 0.001s">
+<div class="time" style="width: 1.0204081632653%"></div>
+<pre>
+
+  Definition GraphQuotient_ind
+    (P : GraphQuotient R -&gt; Type@{k})
+    (gq' : forall a, P (gq a))
+    (gqglue' : forall a b (s : R a b), gqglue s # gq' a = gq' b)
+    : forall x, P x := fun x =&gt;
+    match x with
+    | gq a =&gt; fun _ =&gt; gq' a
+    end gqglue'.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (** Above we did a match with output type a function, and then outside of the match we provided the argument [gqglue'].  If we instead end with [| gq a =&gt; gq' a end.], the definition will not depend on [gqglue'], which would be incorrect.  This is the idiom referred to in ../../test/bugs/github1758.v and github1759.v. *)
+
+ </pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 41
+Time: 0.001s">
+<div class="time" style="width: 1.0204081632653%"></div>
+<pre>Axiom GraphQuotient_ind_beta_gqglue
+  : forall (P : GraphQuotient R -&gt; Type@{k})
+    (gq' : forall a, P (gq a))
+    (gqglue' : forall a b (s : R a b), gqglue s # gq' a = gq' b)
+    (a b: A) (s : R a b),
+    apD (GraphQuotient_ind P gq' gqglue') (gqglue s) = gqglue' a b s.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+ End GraphQuotient.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+End GraphQuotient.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments gq {A R} a.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition GraphQuotient_rec {A R P} (c : A -&gt; P) (g : forall a b, R a b -&gt; c a = c b)
+  : GraphQuotient R -&gt; P.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply GraphQuotient_ind.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact c.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros a b s.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (transport_const _ _ @ g a b s).</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 60
+Time: 0.001s">
+<div class="time" style="width: 1.0204081632653%"></div>
+<pre>
+
+Definition GraphQuotient_rec_beta_gqglue {A R P}
+  (c : A -&gt; P) (g : forall a b, R a b -&gt; c a = c b)
+  (a b : A) (s : R a b)
+  : ap (GraphQuotient_rec c g) (gqglue s) = g a b s.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold GraphQuotient_rec.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (cancelL _ _ _ _ ).</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 68
+Time: 0.001s">
+<div class="time" style="width: 1.0204081632653%"></div>
+<pre>
+  refine ((apD_const _ _)^ @ _).</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 69
+Time: 0.002s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>
+  rapply GraphQuotient_ind_beta_gqglue.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 70
+Time: 0.004s">
+<div class="time" style="width: 4.0816326530612%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Descent *)
+
+(** We study "equifibrant" type families over a graph [A], with edges indexed by [R].  By univalence, the descent property tells us that these type families correspond to type families over the graph quotient, and we obtain an induction principle for such type families.  Dependent descent data over some particular descent data are "equifibrant" type families over this descent data.  The "equifibrancy" is only taken over the graph [A] and [R], but there is an extra level of dependency coming from the descent data.  In this case, we obtain an induction and recursion principle, but only with a computation rule for the recursion principle.
+
+The theory of descent is interesting to consider in itself.  However, we will use it as a means to structure the code, and to obtain induction and recursion principles that are valuable in proving the flattening lemma, and characterizing path spaces.  Thus we will gloss over the bigger picture, and not consider equivalences of descent data, nor homotopies of their sections.  We will also not elaborate on uniqueness of the induced families.
+
+It's possible to prove the results in the Descent, Flattening and Paths Sections without univalence, by replacing all equivalences with paths, but in practice these results will be used with equivalences as input, making the form below more convenient.  See https://github.com/HoTT/Coq-HoTT/pull/2147#issuecomment-2521570830 for further information. *)
+
+</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section Descent.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context `{Univalence}.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Descent data over a graph [A] and [R] is an "equifibrant" or "cartesian" type family [gqd_fam : A -&gt; Type].  If [a b : A] are related by [r : R a b], then the fibers [gqd_fam a] and [gqd_fam b] are equivalent, witnessed by [gqd_e]. *)
+ </pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Record gqDescent {A : Type} {R : A -&gt; A -&gt; Type} := {
+    gqd_fam (a : A) : Type;
+    gqd_e {a b : A} (r : R a b) : gqd_fam a &lt;~&gt; gqd_fam b
+  }.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Global Arguments gqDescent {A} R.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Let [A] and [R] be a graph. *)
+ </pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Context {A : Type} {R : A -&gt; A -&gt; Type}.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Descent data induces a type family over [GraphQuotient R]. *)
+ </pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition fam_gqdescent (Pe : gqDescent R)
+    : GraphQuotient R -&gt; Type.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply (GraphQuotient_rec (gqd_fam Pe)).</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros a b r.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (path_universe_uncurried (gqd_e Pe r)).</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** A type family over [GraphQuotient R] induces descent data. *)
+ </pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition gqdescent_fam (P : GraphQuotient R -&gt; Type) : gqDescent R.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply Build_gqDescent.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (P o gq).</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a b r.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (equiv_transport P (gqglue r)).</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Transporting over [fam_gqdescent] along [gqglue r] is given by [gqd_e]. *)
+ </pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition transport_fam_gqdescent_gqglue
+    (Pe : gqDescent R) {a b : A} (r : R a b) (pa : gqd_fam Pe a)
+    : transport (fam_gqdescent Pe) (gqglue r) pa = gqd_e Pe r pa.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    napply transport_path_universe'.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 118
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    napply GraphQuotient_rec_beta_gqglue.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** A section on the descent data is a fiberwise section that respects the equivalences. *)
+ </pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 123
+Time: 0.001s">
+<div class="time" style="width: 1.0204081632653%"></div>
+<pre>Record gqDescentSection {Pe : gqDescent R} := {
+    gqds_sect (a : A) : gqd_fam Pe a;
+    gqds_e {a b : A} (r : R a b)
+      : gqd_e Pe r (gqds_sect a) = gqds_sect b
+  }.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Global Arguments gqDescentSection Pe : clear implicits.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** A descent section induces a genuine section of [fam_gqdescent Pe]. *)
+ </pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition gqdescent_ind {Pe : gqDescent R}
+    (f : gqDescentSection Pe)
+    : forall (x : GraphQuotient R), fam_gqdescent Pe x.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 135
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply (GraphQuotient_ind _ (gqds_sect f)).</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros a b r.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 137
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (transport_fam_gqdescent_gqglue Pe r _ @ gqds_e f r).</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** We record its computation rule *)
+ </pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 142
+Time: 0.002s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>Definition gqdescent_ind_beta_gqglue {Pe : gqDescent R}
+    (f : gqDescentSection Pe) {a b : A} (r : R a b)
+    : apD (gqdescent_ind f) (gqglue r) = transport_fam_gqdescent_gqglue Pe r _ @ gqds_e f r
+    := GraphQuotient_ind_beta_gqglue _ (gqds_sect f) _ _ _ _.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 145
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Dependent descent data over descent data [Pe : gqDescent R] consists of a type family [gqdd_fam : forall (a : A), gqd_fam Pe a -&gt; Type] together with coherences [gqdd_e r pa]. *)
+ </pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 148
+Time: 0.001s">
+<div class="time" style="width: 1.0204081632653%"></div>
+<pre>Record gqDepDescent {Pe : gqDescent R} := {
+    gqdd_fam (a : A) (pa : gqd_fam Pe a) : Type;
+    gqdd_e {a b : A} (r :  R a b) (pa : gqd_fam Pe a)
+      : gqdd_fam a pa &lt;~&gt; gqdd_fam b (gqd_e Pe r pa)
+  }.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 152
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Global Arguments gqDepDescent Pe : clear implicits.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 154
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** A dependent type family over [fam_gqdescent Pe] induces dependent descent data over [Pe]. *)
+ </pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition gqdepdescent_fam {Pe : gqDescent R}
+    (Q : forall (x : GraphQuotient R), (fam_gqdescent Pe) x -&gt; Type)
+    : gqDepDescent Pe.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply Build_gqDepDescent.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro a; cbn.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (Q (gq a)).</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 163
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 164
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a b r pa.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 164
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (equiv_transportDD (fam_gqdescent Pe) Q
+               (gqglue r) (transport_fam_gqdescent_gqglue Pe r pa)).</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 166
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Dependent descent data over [Pe] induces a dependent type family over [fam_gqdescent Pe]. *)
+ </pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition fam_gqdepdescent {Pe : gqDescent R} (Qe : gqDepDescent Pe)
+    : forall (x : GraphQuotient R), (fam_gqdescent Pe x) -&gt; Type.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply GraphQuotient_ind.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 174
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (gqdd_fam Qe).</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 174
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 175
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a b r.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 175
+Time: 0.001s">
+<div class="time" style="width: 1.0204081632653%"></div>
+<pre>
+      napply (moveR_transport_p _ (gqglue r)).</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      funext pa.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 177
+Time: 0.001s">
+<div class="time" style="width: 1.0204081632653%"></div>
+<pre>
+      rhs napply transport_arrow_toconst.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rhs nrefine (ap (gqdd_fam Qe b) _).</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 179
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 180
+Time: 0.001s">
+<div class="time" style="width: 1.0204081632653%"></div>
+<pre> exact (path_universe (gqdd_e Qe r pa)).</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 180
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 181
+Time: 0.001s">
+<div class="time" style="width: 1.0204081632653%"></div>
+<pre> lhs napply (ap (fun x =&gt; (transport _ x _)) (inv_V (gqglue r))).</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 181
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        exact (transport_fam_gqdescent_gqglue _ _ _).</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 182
+Time: 0.001s">
+<div class="time" style="width: 1.0204081632653%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 183
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** A section of dependent descent data [Qe : gqDepDescent Pe] is a fiberwise section [gqdds_sect], together with coherences [gqdd_e]. *)
+ </pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 186
+Time: 0.001s">
+<div class="time" style="width: 1.0204081632653%"></div>
+<pre>Record gqDepDescentSection {Pe : gqDescent R} {Qe : gqDepDescent Pe} := {
+    gqdds_sect (a : A) (pa : gqd_fam Pe a) : gqdd_fam Qe a pa;
+    gqdds_e {a b : A} (r : R a b) (pa : gqd_fam Pe a)
+      : gqdd_e Qe r pa (gqdds_sect a pa) = gqdds_sect b (gqd_e Pe r pa)
+  }.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 190
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Global Arguments gqDepDescentSection {Pe} Qe.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 192
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** A dependent descent section induces a genuine section over the total space of [fam_gqdescent Pe]. *)
+ </pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition gqdepdescent_ind {Pe : gqDescent R}
+    {Q : forall (x : GraphQuotient R), (fam_gqdescent Pe) x -&gt; Type}
+    (f : gqDepDescentSection (gqdepdescent_fam Q))
+    : forall (x : GraphQuotient R) (px : fam_gqdescent Pe x), Q x px.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    Proof.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 199
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      napply (GraphQuotient_ind _ (gqdds_sect f) _).</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      intros a b r.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 201
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply dpath_forall.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 202
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      intro pa.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 203
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply (equiv_inj (transport (Q (gq b)) (transport_fam_gqdescent_gqglue Pe r pa))).</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 204
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rhs exact (apD (gqdds_sect f b) (transport_fam_gqdescent_gqglue Pe r pa)).</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 205
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (gqdds_e f r pa).</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 206
+Time: 0.001s">
+<div class="time" style="width: 1.0204081632653%"></div>
+<pre>
+    Defined.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 207
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The data for a section into a constant type family. *)
+ </pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 210
+Time: 0.001s">
+<div class="time" style="width: 1.0204081632653%"></div>
+<pre>Record gqDepDescentConstSection {Pe : gqDescent R} {Q : Type} := {
+    gqddcs_sect (a : A) (pa : gqd_fam Pe a) : Q;
+    gqddcs_e {a b : A} (r : R a b) (pa : gqd_fam Pe a)
+      : gqddcs_sect a pa = gqddcs_sect b (gqd_e Pe r pa)
+  }.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 214
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Global Arguments gqDepDescentConstSection Pe Q : clear implicits.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 216
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The data for a section of a constant family induces a section over the total space of [fam_gqdescent Pe]. *)
+ </pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 219
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition gqdepdescent_rec {Pe : gqDescent R} {Q : Type}
+    (f : gqDepDescentConstSection Pe Q)
+    : forall (x : GraphQuotient R), fam_gqdescent Pe x -&gt; Q.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 221
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 222
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply (GraphQuotient_ind _ (gqddcs_sect f)).</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 223
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros a b r.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 224
+Time: 0.001s">
+<div class="time" style="width: 1.0204081632653%"></div>
+<pre>
+    napply dpath_arrow.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro pa.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 226
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    lhs napply transport_const.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 227
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rhs napply (ap _ (transport_fam_gqdescent_gqglue Pe r pa)).</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (gqddcs_e f r pa).</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 229
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 230
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Here is the computation rule on paths. *)
+ </pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 233
+Time: 0.003s">
+<div class="time" style="width: 3.0612244897959%"></div>
+<pre>Definition gqdepdescent_rec_beta_gqglue {Pe : gqDescent R} {Q : Type}
+    (f : gqDepDescentConstSection Pe Q)
+    {a b : A} {pa : gqd_fam Pe a} {pb : gqd_fam Pe b} (r : R a b) (pr : gqd_e Pe r pa = pb)
+    : ap (sig_rec (gqdepdescent_rec f)) (path_sigma _ (gq a; pa) (gq b; pb) (gqglue r) (transport_fam_gqdescent_gqglue Pe r pa @ pr))
+      = gqddcs_e f r pa @ ap (gqddcs_sect f b) pr.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 237
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 238
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    Open Scope long_path_scope.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 239
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct pr.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 240
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rhs napply concat_p1.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 241
+Time: 0.006s">
+<div class="time" style="width: 6.1224489795918%"></div>
+<pre>
+    lhs napply ap_sig_rec_path_sigma.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 242
+Time: 0.009s">
+<div class="time" style="width: 9.1836734693878%"></div>
+<pre>
+    lhs napply (ap (fun x =&gt; _ (ap10 x _) @ _)).</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 243
+Time: 0.001s">
+<div class="time" style="width: 1.0204081632653%"></div>
+<pre>
+    1: napply GraphQuotient_ind_beta_gqglue.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 244
+Time: 0.006s">
+<div class="time" style="width: 6.1224489795918%"></div>
+<pre>
+    do 3 lhs napply concat_pp_p.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 245
+Time: 0.001s">
+<div class="time" style="width: 1.0204081632653%"></div>
+<pre>
+    apply moveR_Vp.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 246
+Time: 0.002s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>
+    lhs nrefine (1 @@ (1 @@ (_ @@ 1))).</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 247
+Time: 0.003s">
+<div class="time" style="width: 3.0612244897959%"></div>
+<pre>
+    1: napply (ap10_dpath_arrow (fam_gqdescent Pe) (fun _ =&gt; Q) (gqglue r)).</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 248
+Time: 0.002s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>
+    lhs nrefine (1 @@ _).</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 249
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 250
+Time: 0.002s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre> lhs napply (1 @@ concat_pp_p _ _ _).</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 250
+Time: 0.002s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>
+      lhs napply (1 @@ concat_pp_p _ _ _).</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 251
+Time: 0.001s">
+<div class="time" style="width: 1.0204081632653%"></div>
+<pre>
+      lhs napply concat_V_pp.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 252
+Time: 0.002s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>
+      lhs napply (1 @@ concat_pp_p _ _ _).</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 253
+Time: 0.001s">
+<div class="time" style="width: 1.0204081632653%"></div>
+<pre>
+      rewrite concat_p1.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 254
+Time: 0.001s">
+<div class="time" style="width: 1.0204081632653%"></div>
+<pre>
+      exact (1 @@ (1 @@ concat_pV_p _ _)).</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 255
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 255
+Time: 0.001s">
+<div class="time" style="width: 1.0204081632653%"></div>
+<pre>
+    napply concat_V_pp.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 256
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    Close Scope long_path_scope.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 257
+Time: 0.098s">
+<div class="time" style="width: 100%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 258
+Time: 0.048s">
+<div class="time" style="width: 48.979591836735%"></div>
+<pre>
+
+End Descent.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 260
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** The flattening lemma *)
+
+(** We saw above that given descent data [Pe] over a graph [A] and [R] we obtained a type family [fam_gqdescent Pe] over the graph quotient.  The flattening lemma describes the total space [sig (fam_gqdescent Pe)] of this type family as a graph quotient of [sig (gqd_fam Pe)] by a certain relation.  This follows from the work above, which shows that [sig (fam_gqdescent Pe)] has the same universal property as this graph quotient. *)
+
+</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 265
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section Flattening.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 265
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context `{Univalence} {A : Type} {R : A -&gt; A -&gt; Type} (Pe : gqDescent R).</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 267
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** We mimic the constructors of [GraphQuotient] for the total space.  Here is the point constructor, in curried form. *)
+ </pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 270
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition flatten_gqd {a : A} (pa : gqd_fam Pe a) : sig (fam_gqdescent Pe)
+    := (gq a; pa).</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 271
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** And here is the path constructor. *)
+ </pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 274
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition flatten_gqd_glue {a b : A} (r : R a b)
+    {pa : gqd_fam Pe a} {pb : gqd_fam Pe b} (pr : gqd_e Pe r pa = pb)
+    : flatten_gqd pa = flatten_gqd pb.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 276
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 277
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply path_sigma.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 278
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 279
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by apply gqglue.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 279
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 280
+Time: 0.001s">
+<div class="time" style="width: 1.0204081632653%"></div>
+<pre> lhs napply transport_fam_gqdescent_gqglue.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 280
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact pr.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 281
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 282
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Now that we've shown that [fam_gqdescent Pe] acts like a [GraphQuotient] of [sig (gqd_fam Pe)] by an appropriate relation, we can use this to prove the flattening lemma.  The maps back and forth are very easy so this could almost be a formal consequence of the induction principle. *)
+ </pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 285
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma equiv_gqd_flatten : sig (fam_gqdescent Pe) &lt;~&gt;
+    GraphQuotient (fun a b =&gt; {r : R a.1 b.1 &amp; gqd_e Pe r a.2 = b.2}).</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 286
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 287
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply equiv_adjointify.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 288
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 289
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> snapply sig_rec.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 289
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      snapply gqdepdescent_rec.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 290
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      snapply Build_gqDepDescentConstSection.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 291
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 292
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fun a x =&gt; gq (a; x)).</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 292
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 293
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a b r pa.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 293
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply gqglue; exact (r; 1).</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 294
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 295
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> snapply GraphQuotient_rec.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 295
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 296
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fun '(a; x) =&gt; (gq a; x)).</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 296
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 297
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [a x] [b y] [r pr]; cbn in r, pr; cbn.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 297
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        exact (flatten_gqd_glue r pr).</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 298
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 299
+Time: 0.002s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre> snapply GraphQuotient_ind.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 299
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      1: reflexivity.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 300
+Time: 0.007s">
+<div class="time" style="width: 7.1428571428571%"></div>
+<pre>
+      intros [a x] [b y] [r pr]; cbn in r, pr; cbn.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 301
+Time: 0.001s">
+<div class="time" style="width: 1.0204081632653%"></div>
+<pre>
+      destruct pr.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 302
+Time: 0.006s">
+<div class="time" style="width: 6.1224489795918%"></div>
+<pre>
+      transport_paths FFlr; apply equiv_p1_1q.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 303
+Time: 0.002s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>
+      rewrite GraphQuotient_rec_beta_gqglue.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 304
+Time: 0.004s">
+<div class="time" style="width: 4.0816326530612%"></div>
+<pre>
+      lhs napply gqdepdescent_rec_beta_gqglue.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 305
+Time: 0.001s">
+<div class="time" style="width: 1.0204081632653%"></div>
+<pre>
+      napply concat_p1.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 306
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 307
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [x px]; revert x px.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 307
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      snapply gqdepdescent_ind.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 308
+Time: 0.001s">
+<div class="time" style="width: 1.0204081632653%"></div>
+<pre>
+      snapply Build_gqDepDescentSection.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 309
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 310
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by intros a pa.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 310
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 311
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a b r pa; cbn.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 311
+Time: 0.002s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>
+        lhs napply transportDD_is_transport.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 312
+Time: 0.005s">
+<div class="time" style="width: 5.1020408163265%"></div>
+<pre>
+        transport_paths FFlr; apply equiv_p1_1q.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 313
+Time: 0.002s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>
+        rewrite &lt;- (concat_p1 (transport_fam_gqdescent_gqglue _ _ _)).</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 314
+Time: 0.011s">
+<div class="time" style="width: 11.224489795918%"></div>
+<pre>
+        rewrite gqdepdescent_rec_beta_gqglue.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 315
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> (* This needs to be in the form [transport_fam_gqdescent_gqglue Pe r pa @ p] to work, and the other [@ 1] introduced comes in handy as well. *)
+       </pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 316
+Time: 0.002s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>lhs napply (ap _ (concat_p1 _)).</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 316
+Time: 0.001s">
+<div class="time" style="width: 1.0204081632653%"></div>
+<pre>
+        exact (GraphQuotient_rec_beta_gqglue _ _ (a; pa) (b; _) (r; 1)).</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 317
+Time: 0.067s">
+<div class="time" style="width: 68.367346938776%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 318
+Time: 0.041s">
+<div class="time" style="width: 41.836734693878%"></div>
+<pre>
+
+End Flattening.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 320
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Characterization of path spaces*)
+
+(** A pointed type family over a graph quotient has an identity system structure precisely when its associated descent data satisfies Kraus and von Raumer's induction principle, https://arxiv.org/pdf/1901.06022. *)
+
+</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 325
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section Paths.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 325
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Let [A] and [R] be a graph, with a distinguished point [a0 : A].  Let [Pe : gqDescent R] be descent data over [A] and [R] with a distinguished point [p0 : gqd_fam Pe a0].  Assume that any dependent descent data [Qe : gqDepDescent Pe] with a distinguished point [q0 : gqdd_fam Qe a0 p0] has a section that respects the distinguished points.  This is the induction principle provided by Kraus and von Raumer. *)
+ </pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 328
+Time: 0.001s">
+<div class="time" style="width: 1.0204081632653%"></div>
+<pre>Context `{Univalence} {A : Type} {R : A -&gt; A -&gt; Type} (a0 : A)
+    (Pe : gqDescent R) (p0 : gqd_fam Pe a0)
+    (based_gqdepdescent_ind : forall (Qe : gqDepDescent Pe) (q0 : gqdd_fam Qe a0 p0),
+      gqDepDescentSection Qe)
+    (based_gqdepdescent_ind_beta : forall (Qe : gqDepDescent Pe) (q0 : gqdd_fam Qe a0 p0),
+      gqdds_sect (based_gqdepdescent_ind Qe q0) a0 p0 = q0).</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 333
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Under these hypotheses, we get an identity system structure on [fam_gqdescent Pe]. *)
+ </pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 336
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Instance idsys_flatten_gqdescent
+    : @IsIdentitySystem _ (gq a0) (fam_gqdescent Pe) p0.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 337
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 338
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply Build_IsIdentitySystem.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 339
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 340
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros Q q0 x p.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 340
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      snapply gqdepdescent_ind.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 341
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      by apply based_gqdepdescent_ind.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 342
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 343
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros Q q0; cbn.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 343
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      napply (based_gqdepdescent_ind_beta (gqdepdescent_fam Q)).</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 344
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 345
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** It follows that the fibers [fam_gqdescent Pe x] are equivalent to path spaces [(gq a0) = x]. *)
+ </pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 348
+Time: 0.001s">
+<div class="time" style="width: 1.0204081632653%"></div>
+<pre>Definition fam_gqdescent_equiv_path (x : GraphQuotient R)
+    : (gq a0) = x &lt;~&gt; fam_gqdescent Pe x
+    := @equiv_transport_identitysystem _ (gq a0) (fam_gqdescent Pe) p0 _ x.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 350
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End Paths.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 352
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Functoriality of graph quotients *)
+
+</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 355
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma functor_gq {A B : Type} (f : A -&gt; B)
+  {R : A -&gt; A -&gt; Type} {S : B -&gt; B -&gt; Type} (e : forall a b, R a b -&gt; S (f a) (f b))
+  : GraphQuotient R -&gt; GraphQuotient S.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 357
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 358
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply GraphQuotient_rec.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 359
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact (fun x =&gt; gq (f x)).</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 360
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros a b r.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 361
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply gqglue.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 362
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply e.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 363
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact r.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 364
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 365
+Time: 0.001s">
+<div class="time" style="width: 1.0204081632653%"></div>
+<pre>
+
+Definition functor_gq_beta_gqglue {A B : Type} (f : A -&gt; B)
+  {R : A -&gt; A -&gt; Type} {S : B -&gt; B -&gt; Type}
+  (e : forall a b, R a b -&gt; S (f a) (f b))
+  {a b : A} (s : R a b)
+  : ap (functor_gq f e) (gqglue s) = gqglue (e a b s)
+  := GraphQuotient_rec_beta_gqglue _ _ _ _ _.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 372
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Lemma functor_gq_idmap {A : Type} {R : A -&gt; A -&gt; Type}
+  : functor_gq (A:=A) (B:=A) (S:=R) idmap (fun a b r =&gt; r) == idmap.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 375
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 376
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply GraphQuotient_ind.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 377
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: reflexivity.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 378
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros a b r.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 379
+Time: 0.001s">
+<div class="time" style="width: 1.0204081632653%"></div>
+<pre>
+  transport_paths Flr.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 380
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply equiv_p1_1q.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 381
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  napply GraphQuotient_rec_beta_gqglue.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 382
+Time: 0.001s">
+<div class="time" style="width: 1.0204081632653%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 383
+Time: 0.002s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>
+
+Lemma functor_gq_compose {A B C : Type} (f : A -&gt; B) (g : B -&gt; C)
+  {R : A -&gt; A -&gt; Type} {S : B -&gt; B -&gt; Type} {T : C -&gt; C -&gt; Type}
+  (e : forall a b, R a b -&gt; S (f a) (f b)) (e' : forall a b, S a b -&gt; T (g a) (g b))
+  : functor_gq g e' o (functor_gq f e) == functor_gq (g o f) (fun a b r =&gt; e' _ _ (e _ _ r)).</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 388
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 389
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply GraphQuotient_ind.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 390
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: reflexivity.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 391
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros a b s; cbn beta.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 392
+Time: 0.004s">
+<div class="time" style="width: 4.0816326530612%"></div>
+<pre>
+  transport_paths FFlFr.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 393
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply equiv_p1_1q.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 394
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lhs napply ap.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 395
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: apply functor_gq_beta_gqglue.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 396
+Time: 0.002s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>
+  rhs napply (functor_gq_beta_gqglue (g o f)).</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 397
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  napply (functor_gq_beta_gqglue g).</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 398
+Time: 0.004s">
+<div class="time" style="width: 4.0816326530612%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 399
+Time: 0.001s">
+<div class="time" style="width: 1.0204081632653%"></div>
+<pre>
+
+Lemma functor2_gq {A B : Type} (f f' : A -&gt; B)
+  {R : A -&gt; A -&gt; Type} {S : B -&gt; B -&gt; Type}
+  (e : forall a b, R a b -&gt; S (f a) (f b)) (e' : forall a b, R a b -&gt; S (f' a) (f' b))
+  (p : f == f')
+  (q : forall a b r, transport011 S (p a) (p b) (e a b r) = e' a b r)
+  : functor_gq f e == functor_gq f' e'.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 406
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 407
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply GraphQuotient_ind.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 408
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 409
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl; intro.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 409
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply ap.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 410
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply p.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 411
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 412
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a b s; simpl.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 412
+Time: 0.001s">
+<div class="time" style="width: 1.0204081632653%"></div>
+<pre>
+    transport_paths (transport_paths_FlFr (gqglue s)).</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 413
+Time: 0.001s">
+<div class="time" style="width: 1.0204081632653%"></div>
+<pre>
+    rhs napply whiskerL.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 414
+Time: 0.001s">
+<div class="time" style="width: 1.0204081632653%"></div>
+<pre>
+    2: napply functor_gq_beta_gqglue.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 415
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    lhs napply whiskerR.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 416
+Time: 0.001s">
+<div class="time" style="width: 1.0204081632653%"></div>
+<pre>
+    1: napply functor_gq_beta_gqglue.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 417
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply moveL_Mp.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 418
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    symmetry.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 419
+Time: 0.001s">
+<div class="time" style="width: 1.0204081632653%"></div>
+<pre>
+    destruct (q a b s).</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 420
+Time: 0.001s">
+<div class="time" style="width: 1.0204081632653%"></div>
+<pre>
+    lhs napply (ap_transport011 _ _ (fun s _ =&gt; gqglue)).</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 421
+Time: 0.001s">
+<div class="time" style="width: 1.0204081632653%"></div>
+<pre>
+    rhs napply concat_p_pp.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 422
+Time: 0.001s">
+<div class="time" style="width: 1.0204081632653%"></div>
+<pre>
+    napply transport011_paths.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 423
+Time: 0.005s">
+<div class="time" style="width: 5.1020408163265%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 424
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Equivalence of graph quotients *)
+
+</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 427
+Time: 0.001s">
+<div class="time" style="width: 1.0204081632653%"></div>
+<pre>Instance isequiv_functor_gq {A B : Type} (f : A -&gt; B) `{IsEquiv _ _ f}
+  {R : A -&gt; A -&gt; Type} {S : B -&gt; B -&gt; Type} (e : forall a b, R a b -&gt; S (f a) (f b))
+  `{forall a b, IsEquiv (e a b)}
+  : IsEquiv (functor_gq f e).</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 430
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 431
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply isequiv_adjointify.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 432
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 433
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> napply (functor_gq f^-1).</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 433
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros a b s.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 434
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (e _ _)^-1.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 435
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (transport011 S (eisretr f a)^ (eisretr f b)^ s).</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 436
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 437
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 437
+Time: 0.001s">
+<div class="time" style="width: 1.0204081632653%"></div>
+<pre>
+    lhs napply functor_gq_compose.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 438
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rhs_V napply functor_gq_idmap.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 439
+Time: 0.001s">
+<div class="time" style="width: 1.0204081632653%"></div>
+<pre>
+    snapply functor2_gq; cbn beta.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 440
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: apply eisretr.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 441
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros a b s.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 442
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite (eisretr (e (f^-1 a) (f^-1 b))).</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 443
+Time: 0.002s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>
+    lhs_V napply transport011_pp.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 444
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by rewrite 2 concat_Vp.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 445
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 446
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 446
+Time: 0.001s">
+<div class="time" style="width: 1.0204081632653%"></div>
+<pre>
+    lhs napply functor_gq_compose.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 447
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rhs_V napply functor_gq_idmap.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 448
+Time: 0.002s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>
+    snapply functor2_gq; cbn beta.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 449
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: apply eissect.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 450
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros a b r.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 451
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite 2 eisadj.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 452
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite &lt;- 2 ap_V.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 453
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite &lt;- (transport011_compose S).</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 454
+Time: 0.001s">
+<div class="time" style="width: 1.0204081632653%"></div>
+<pre>
+    rewrite &lt;- (ap_transport011 (Q := fun x y =&gt; S (f x) (f y)) (eissect f a)^ (eissect f b)^ e).</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 455
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite (eissect (e (f^-1 (f a)) (f^-1 (f b)))).</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 456
+Time: 0.002s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>
+    lhs_V napply transport011_pp.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 457
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by rewrite 2 concat_Vp.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 458
+Time: 0.006s">
+<div class="time" style="width: 6.1224489795918%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 459
+Time: 0.002s">
+<div class="time" style="width: 2.0408163265306%"></div>
+<pre>
+
+Definition equiv_functor_gq {A B : Type} (f : A &lt;~&gt; B)
+  (R : A -&gt; A -&gt; Type) (S : B -&gt; B -&gt; Type) (e : forall a b, R a b &lt;~&gt; S (f a) (f b))
+  : GraphQuotient R &lt;~&gt; GraphQuotient S
+  := Build_Equiv _ _ (functor_gq f e) _.</pre>
+</div>
+<div class="code" title="File: GraphQuotient.v
+Line: 465
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

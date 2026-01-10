@@ -1,0 +1,1277 @@
+<html>
+<head>
+<title>Cone.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Cone.v</h1>
+
+<div class="code" title="File: Cone.v
+Line: 1
+Time: 0.027s">
+<div class="time" style="width: 100%"></div>
+<pre>From HoTT Require Import Basics.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 1
+Time: 0.013s">
+<div class="time" style="width: 48.148148148148%"></div>
+<pre>
+Require Import Types.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 2
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Diagrams.Graph.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 3
+Time: 0.009s">
+<div class="time" style="width: 33.333333333333%"></div>
+<pre>
+Require Import Diagrams.Diagram.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope path_scope.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Generalizable All Variables.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Cones *)
+
+(** A Cone over a diagram [D] to a type [X] is a family of maps from [X] to the types of [D] making the triangles formed with the arrows of [D] commuting. *)
+
+</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 12
+Time: 0.002s">
+<div class="time" style="width: 7.4074074074074%"></div>
+<pre>Class Cone (X : Type) {G : Graph} (D : Diagram G) := {
+  legs   : forall i, X -&gt; D i;
+  legs_comm : forall i j (g : G i j), (D _f g) o legs i == legs j;
+}.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments Build_Cone {X G D} legs legs_comm.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments legs {X G D} C i x : rename.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments legs_comm {X G D} C i j g x : rename.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Coercion legs : Cone &gt;-&gt; Funclass.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Section Cone.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context `{Funext} {X : Type} {G : Graph} {D : Diagram G}.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** [path_cone] says when two cones are equals (up to funext). *)
+
+ </pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 28
+Time: 0.003s">
+<div class="time" style="width: 11.111111111111%"></div>
+<pre>Definition path_cocone_naive {C1 C2 : Cone X D}
+    (P := fun q' =&gt; forall (i j : G) (g : G i j) (x : X),
+      D _f g (q' i x) = q' j x)
+    (path_legs : legs C1 = legs C2)
+    (path_legs_comm : transport P path_legs (legs_comm C1) = legs_comm C2)
+    : C1 = C2 :=
+    match path_legs_comm in (_ = v1)
+      return C1 = {|legs := legs C2; legs_comm := v1 |} 
+    with
+      | idpath =&gt; match path_legs in (_ = v0)
+        return C1 = {|legs := v0; legs_comm := path_legs # (legs_comm C1) |}
+      with
+        | idpath =&gt; 1
+      end
+    end.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 42
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+
+  Definition path_cone {C1 C2 : Cone X D}
+    (path_legs : forall i,  C1 i == C2 i)
+    (path_legs_comm : forall i j g x,
+      legs_comm C1 i j g x @ path_legs j x
+      = ap (D _f g) (path_legs i x) @ legs_comm C2 i j g x)
+    : C1 = C2.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 50
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+    destruct C1 as [legs pp_q], C2 as [r pp_r].</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (path_cocone_naive (path_forall _ _
+      (fun i =&gt; path_forall _ _ (path_legs i))) _).</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 53
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+    cbn; funext i j f x.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 54
+Time: 0.003s">
+<div class="time" style="width: 11.111111111111%"></div>
+<pre>
+    rewrite 4 transport_forall_constant, transport_paths_FlFr.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite concat_pp_p; apply moveR_Vp.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite ap_compose.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 57
+Time: 0.002s">
+<div class="time" style="width: 7.4074074074074%"></div>
+<pre>
+    rewrite 2 (ap_apply_lD2 (path_forall legs r
+      (fun i =&gt; path_forall (legs i) (r i) (path_legs i)))).</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 59
+Time: 0.004s">
+<div class="time" style="width: 14.814814814815%"></div>
+<pre>
+    rewrite 3 eisretr.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_legs_comm.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 61
+Time: 0.011s">
+<div class="time" style="width: 40.740740740741%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** ** Precomposition for cones *)
+
+  (** Given a cone [C] from [X] and a map from [Y] to [X], one can precompose each map of [C] to get a cone from [Y]. *)
+
+ </pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition cone_precompose (C : Cone X D) {Y : Type} (f : Y -&gt; X) : Cone Y D.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply Build_Cone; intro i.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: exact (C i o f).</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros j g x.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply legs_comm.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** ** Universality of a cone. *)
+
+  (** A limit will be the extremity of a universal cone. *)
+
+  (** A cone [C] over [D] from [X] is said universal when for all [Y] the map [cone_precompose] is an equivalence. In particular, given another cone [C'] over [D] from [X'] the inverse of the map allows us to recover a map [h] : [X] -&gt; [X'] such that [C'] is [C] precomposed with [h]. The fact that [cone_precompose] is an equivalence is an elegant way of stating the usual "unique existence" of category theory. *)
+
+ </pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 82
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>Class UniversalCone (C : Cone X D) := {
+    is_universal :: forall Y, IsEquiv (@cone_precompose C Y);
+    }.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Coercion is_universal : UniversalCone &gt;-&gt; Funclass.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 85
+Time: 0.004s">
+<div class="time" style="width: 14.814814814815%"></div>
+<pre>
+
+End Cone.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We now prove several functoriality results, first on cone and then on limits. *)
+
+</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section FunctorialityCone.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context `{Funext} {G : Graph}.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** ** Precomposition for cones *)
+
+  (** Identity and associativity for the precomposition of a cone with a map. *)
+
+ </pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition cone_precompose_identity {D : Diagram G} `(C : Cone X _ D)
+    : cone_precompose C idmap = C.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply path_cone; intro i.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros j g x; simpl.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply concat_p1_1p.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 105
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+
+  Definition cone_precompose_comp {D : Diagram G}
+    `(f : Z -&gt; Y) `(g : Y -&gt; X) (C : Cone X D)
+    : cone_precompose C (g o f)
+    = cone_precompose (cone_precompose C g) f.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply path_cone; intro i.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros j h x; simpl.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply concat_p1_1p.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** ** Postcomposition for cones *)
+
+  (** Given a cocone over [D2] and a Diagram map [m] : [D1] =&gt; [D2], one can postcompose each map of the cone by the corresponding one of [m] to get a cone over [D1]. *)
+
+ </pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 122
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition cone_postcompose {D1 D2 : Diagram G} (m : DiagramMap D1 D2) {X}
+    : (Cone X D1) -&gt; (Cone X D2).</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro C.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 125
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply Build_Cone; intro i.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 126
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: exact (m i o C i).</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros j g x; simpl.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 128
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    etransitivity.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: apply DiagramMap_comm.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 130
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply ap, legs_comm.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 131
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Identity and associativity for the postcomposition of a cone with a diagram map. *)
+
+ </pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition cone_postcompose_identity (D : Diagram G) (X : Type)
+    : cone_postcompose (X:=X) (diagram_idmap D) == idmap.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 137
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 138
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+    intro C; srapply path_cone; simpl.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros; simpl.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (_ @ (concat_1p _)^).</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (concat_p1 _ @ concat_1p _ @ ap_idmap _).</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 143
+Time: 0.002s">
+<div class="time" style="width: 7.4074074074074%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 144
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+
+  Definition cone_postcompose_comp {D1 D2 D3 : Diagram G}
+    (m2 : DiagramMap D2 D3) (m1 : DiagramMap D1 D2) (X : Type)
+    : (cone_postcompose (X:=X) m2) o (cone_postcompose m1)
+      == cone_postcompose (diagram_comp m2 m1).</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro C; simpl.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply path_cone.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 152
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros i j g x; simpl.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 154
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply equiv_p1_1q.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 155
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unfold CommutativeSquares.comm_square_comp.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (_ @ concat_p_pp _ _ _).</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply ap.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite ap_pp.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply ap.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    symmetry.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by apply ap_compose.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 162
+Time: 0.005s">
+<div class="time" style="width: 18.518518518519%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 163
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Associativity of a postcomposition and a precomposition. *)
+
+ </pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 167
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>Definition cone_postcompose_precompose {D1 D2 : Diagram G}
+             (m : DiagramMap D1 D2) `(f : Y -&gt; X) (C : Cone X D1)
+    : cone_precompose (cone_postcompose m C) f
+      = cone_postcompose m (cone_precompose C f).</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply path_cone; intro i.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros j g x; simpl.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 174
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply concat_p1_1p.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 175
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The postcomposition with a diagram equivalence is an equivalence. *)
+
+ </pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 180
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export] Instance cone_precompose_equiv {D1 D2 : Diagram G}
+    (m : D1 ~d~ D2) (X : Type) : IsEquiv (cone_postcompose (X:=X) m).</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 181
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 182
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply isequiv_adjointify.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 183
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: exact (cone_postcompose (diagram_equiv_inv m)).</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 184
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros C.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      etransitivity.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 186
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      -</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply cone_postcompose_comp.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      -</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite diagram_inv_is_section.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply cone_postcompose_identity.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 189
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 190
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros C.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 190
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      etransitivity.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 191
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      -</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 192
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply cone_postcompose_comp.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 192
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      -</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 193
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite diagram_inv_is_retraction.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 193
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply cone_postcompose_identity.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 194
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The precomposition with an equivalence is an equivalence. *)
+
+ </pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 199
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export] Instance cone_postcompose_equiv {D : Diagram G} `(f : Y &lt;~&gt; X)
+    : IsEquiv (fun C : Cone X D =&gt; cone_precompose C f).</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 201
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply isequiv_adjointify.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 202
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: exact (fun C =&gt; cone_precompose C f^-1).</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 203
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 204
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros C.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 204
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      etransitivity.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 205
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      -</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> symmetry.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply cone_precompose_comp.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 207
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      -</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> etransitivity.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        2: apply cone_precompose_identity.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 209
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply ap.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 210
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        funext x; apply eissect.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 211
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 212
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros C.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 212
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      etransitivity.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 213
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      -</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 214
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> symmetry.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 214
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply cone_precompose_comp.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 215
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      -</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 216
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> etransitivity.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 216
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        2: apply cone_precompose_identity.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 217
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply ap.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 218
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        funext x; apply eisretr.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 219
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 220
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** ** Universality preservation *)
+
+  (** Universality of a cone is preserved by composition with a (diagram) equivalence. *)
+
+ </pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 226
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>#[export] Instance cone_postcompose_equiv_universality {D1 D2 : Diagram G}
+    (m: D1 ~d~ D2) {X} (C : Cone X D1) (_ : UniversalCone C)
+    : UniversalCone (cone_postcompose (X:=X) m C).</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 229
+Time: 0.002s">
+<div class="time" style="width: 7.4074074074074%"></div>
+<pre>
+    srapply Build_UniversalCone; intro.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 230
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+    rewrite (path_forall _ _ (fun f =&gt; cone_postcompose_precompose m f C)).</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 231
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+    rapply isequiv_compose.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 232
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 233
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance cone_precompose_equiv_universality {D: Diagram G} `(f: Y &lt;~&gt; X)
+    (C : Cone X D) (_ : UniversalCone C)
+    : UniversalCone (cone_precompose C f).</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 237
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 238
+Time: 0.002s">
+<div class="time" style="width: 7.4074074074074%"></div>
+<pre>
+    srapply Build_UniversalCone; intro.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 239
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+    rewrite &lt;- (path_forall _ _ (fun g =&gt; cone_precompose_comp g f C)).</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 240
+Time: 0.002s">
+<div class="time" style="width: 7.4074074074074%"></div>
+<pre>
+    rapply isequiv_compose.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 241
+Time: 0.001s">
+<div class="time" style="width: 3.7037037037037%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 242
+Time: 0.006s">
+<div class="time" style="width: 22.222222222222%"></div>
+<pre>
+
+End FunctorialityCone.</pre>
+</div>
+<div class="code" title="File: Cone.v
+Line: 245
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+
+</pre>
+</div>
+</body>
+</html>
+

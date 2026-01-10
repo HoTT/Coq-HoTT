@@ -1,0 +1,11 @@
+digraph HoTT_Diagrams_ParallelPair {
+  graph [ratio=0.5]
+  node [style=filled]
+ParallelPair_Build_parallel_pair_cocone [label="Build_parallel_pair_cocone", URL=<ParallelPair.html#Build_parallel_pair_cocone>, peripheries=3, fillcolor="#F070D1"] ;
+ParallelPair_parallel_pair [label="parallel_pair", URL=<ParallelPair.html#parallel_pair>, fillcolor="#F070D1"] ;
+ParallelPair_parallel_pair_graph [label="parallel_pair_graph", URL=<ParallelPair.html#parallel_pair_graph>, fillcolor="#F070D1"] ;
+  ParallelPair_Build_parallel_pair_cocone -> ParallelPair_parallel_pair [] ;
+  ParallelPair_parallel_pair -> ParallelPair_parallel_pair_graph [] ;
+subgraph cluster_ParallelPair { label="ParallelPair"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+ParallelPair_parallel_pair_graph; ParallelPair_parallel_pair; ParallelPair_Build_parallel_pair_cocone; };
+} /* END */

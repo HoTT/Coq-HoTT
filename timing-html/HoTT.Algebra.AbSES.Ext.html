@@ -1,0 +1,1070 @@
+<html>
+<head>
+<title>Ext.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Ext.v</h1>
+
+<div class="code" title="File: Ext.v
+Line: 1
+Time: 0.061s">
+<div class="time" style="width: 46.923076923077%"></div>
+<pre>From HoTT Require Import Basics Types Truncations.Core.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 1
+Time: 0.005s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+From HoTT.WildCat Require Import Core Universe Opposite Bifunctor.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 2
+Time: 0.021s">
+<div class="time" style="width: 16.153846153846%"></div>
+<pre>
+Require Import Pointed.Core Pointed.pTrunc.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Truncations.SeparatedTrunc.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 4
+Time: 0.029s">
+<div class="time" style="width: 22.307692307692%"></div>
+<pre>
+Require Import AbelianGroup AbHom AbProjective.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 5
+Time: 0.014s">
+<div class="time" style="width: 10.769230769231%"></div>
+<pre>
+Require Import AbSES.Pullback AbSES.Pushout AbSES.BaerSum AbSES.Core.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope mc_scope.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope mc_add_scope.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 9
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * The set [Ext B A] of abelian group extensions *)
+
+</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Ext (B A : AbGroup@{u}) := pTr 0 (AbSES B A).</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 12
+Time: 0.002s">
+<div class="time" style="width: 1.5384615384615%"></div>
+<pre>
+
+Instance is0bifunctor_ext `{Univalence}
+  : Is0Bifunctor (Ext : AbGroup^op -&gt; AbGroup -&gt; pType)
+  := is0bifunctor_postcompose _ _ (bf:=is0bifunctor_abses).</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 16
+Time: 0.005s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+
+Instance is1bifunctor_ext `{Univalence}
+  : Is1Bifunctor (Ext : AbGroup^op -&gt; AbGroup -&gt; pType)
+  := is1bifunctor_postcompose _ _ (bf:=is1bifunctor_abses).</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** An extension [E : AbSES B A] is trivial in [Ext B A] if and only if [E] merely splits. *)</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 22
+Time: 0.001s">
+<div class="time" style="width: 0.76923076923077%"></div>
+<pre>Proposition iff_ab_ext_trivial_split `{Univalence} {B A : AbGroup} (E : AbSES B A)
+  : merely {s : GroupHomomorphism B E &amp; (projection _) $o s == idmap}
+           &lt;~&gt; (tr E = point (Ext B A)).</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (equiv_path_Tr _ _ oE _).</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 26
+Time: 0.003s">
+<div class="time" style="width: 2.3076923076923%"></div>
+<pre>
+  srapply equiv_iff_hprop;
+    apply Trunc_functor;
+    apply iff_abses_trivial_split.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 29
+Time: 0.001s">
+<div class="time" style="width: 0.76923076923077%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition Ext' (B A : AbGroup@{u}) := Tr 0 (AbSES' B A).</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 32
+Time: 0.002s">
+<div class="time" style="width: 1.5384615384615%"></div>
+<pre>
+
+Instance is0bifunctor_ext' `{Univalence}
+  : Is0Bifunctor (Ext' : AbGroup^op -&gt; AbGroup -&gt; Type)
+  := is0bifunctor_postcompose _ _ (bf:=is0bifunctor_abses').</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 36
+Time: 0.005s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+
+Instance is1bifunctor_ext' `{Univalence}
+  : Is1Bifunctor (Ext' : AbGroup^op -&gt; AbGroup -&gt; Type)
+  := is1bifunctor_postcompose _ _ (bf:=is1bifunctor_abses').</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [Ext B A] is an abelian group for any [A B : AbGroup]. The proof of commutativity is a bit faster if we separate out the proof that [Ext B A] is a group. *)</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition grp_ext `{Univalence} (B A : AbGroup@{u}) : Group.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 43
+Time: 0.001s">
+<div class="time" style="width: 0.76923076923077%"></div>
+<pre>
+  snapply (Build_Group (Ext B A)).</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros E F.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 45
+Time: 0.018s">
+<div class="time" style="width: 13.846153846154%"></div>
+<pre>
+    strip_truncations.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (tr (abses_baer_sum E F)).</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (point (Ext B A)).</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> unfold Inverse.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (Trunc_functor _ (abses_pullback (- grp_homo_id))).</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 51
+Time: 0.001s">
+<div class="time" style="width: 0.76923076923077%"></div>
+<pre> repeat split.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: apply istrunc_truncation.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    all: intro E.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>  1: intros F G.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 53
+Time: 0.13s">
+<div class="time" style="width: 100%"></div>
+<pre>
+    all: strip_truncations; unfold mon_unit, point; apply (ap tr).</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> symmetry; apply baer_sum_associative.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply baer_sum_unit_l.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply baer_sum_unit_r.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply baer_sum_inverse_r.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply baer_sum_inverse_l.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 59
+Time: 0.015s">
+<div class="time" style="width: 11.538461538462%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** The bifunctor [ab_ext] *)
+
+</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition ab_ext@{u v|u &lt; v} `{Univalence} (B : AbGroup@{u}^op) (A : AbGroup@{u}) : AbGroup@{v}.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply (Build_AbGroup (grp_ext@{u v} B A)).</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros E F.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 66
+Time: 0.032s">
+<div class="time" style="width: 24.615384615385%"></div>
+<pre>
+  strip_truncations; cbn.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply ap.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply baer_sum_commutative.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 69
+Time: 0.001s">
+<div class="time" style="width: 0.76923076923077%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance is0functor_abext01 `{Univalence} (B : AbGroup^op)
+  : Is0Functor (ab_ext B).</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply Build_Is0Functor; intros ? ? f.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_GroupHomomorphism.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 76
+Time: 0.002s">
+<div class="time" style="width: 1.5384615384615%"></div>
+<pre>
+  1: exact (fmap (Ext B) f).</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 77
+Time: 0.032s">
+<div class="time" style="width: 24.615384615385%"></div>
+<pre>
+  rapply Trunc_ind; intro E0.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 78
+Time: 0.017s">
+<div class="time" style="width: 13.076923076923%"></div>
+<pre>
+  rapply Trunc_ind; intro E1.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 79
+Time: 0.013s">
+<div class="time" style="width: 10%"></div>
+<pre>
+  apply (ap tr); cbn.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply baer_sum_pushout.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 81
+Time: 0.002s">
+<div class="time" style="width: 1.5384615384615%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance is0functor_abext10 `{Univalence} (A : AbGroup)
+  : Is0Functor (fun B : AbGroup^op =&gt; ab_ext B A).</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 86
+Time: 0.001s">
+<div class="time" style="width: 0.76923076923077%"></div>
+<pre>
+  srapply Build_Is0Functor; intros ? ? f; cbn.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_GroupHomomorphism.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 88
+Time: 0.002s">
+<div class="time" style="width: 1.5384615384615%"></div>
+<pre>
+  1: exact (fmap (fun (B : AbGroup^op) =&gt; Ext B A) f).</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 89
+Time: 0.033s">
+<div class="time" style="width: 25.384615384615%"></div>
+<pre>
+  rapply Trunc_ind; intro E0.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 90
+Time: 0.021s">
+<div class="time" style="width: 16.153846153846%"></div>
+<pre>
+  rapply Trunc_ind; intro E1.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 91
+Time: 0.006s">
+<div class="time" style="width: 4.6153846153846%"></div>
+<pre>
+  apply (ap tr); cbn.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply baer_sum_pullback.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 93
+Time: 0.003s">
+<div class="time" style="width: 2.3076923076923%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 94
+Time: 0.001s">
+<div class="time" style="width: 0.76923076923077%"></div>
+<pre>
+
+Instance is1functor_abext01 `{Univalence} (B : AbGroup^op)
+  : Is1Functor (ab_ext B).</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 98
+Time: 0.001s">
+<div class="time" style="width: 0.76923076923077%"></div>
+<pre>
+  snapply Build_Is1Functor.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros A C f g.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 100
+Time: 0.005s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+    exact (fmap2 (Ext B)).</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 102
+Time: 0.005s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre> exact (fmap_id (Ext B)).</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros A C D.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 103
+Time: 0.005s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+    exact (fmap_comp (Ext B)).</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 104
+Time: 0.001s">
+<div class="time" style="width: 0.76923076923077%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 105
+Time: 0.003s">
+<div class="time" style="width: 2.3076923076923%"></div>
+<pre>
+
+Instance is1functor_abext10 `{Univalence} (A : AbGroup)
+  : Is1Functor (fun B : AbGroup^op =&gt; ab_ext B A).</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 109
+Time: 0.002s">
+<div class="time" style="width: 1.5384615384615%"></div>
+<pre>
+  snapply Build_Is1Functor.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros B C f g.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 111
+Time: 0.006s">
+<div class="time" style="width: 4.6153846153846%"></div>
+<pre>
+    exact (fmap2 (fun B : AbGroup^op =&gt; Ext B A)).</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 113
+Time: 0.006s">
+<div class="time" style="width: 4.6153846153846%"></div>
+<pre> exact (fmap_id (fun B : AbGroup^op =&gt; Ext B A)).</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros B C D.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 114
+Time: 0.007s">
+<div class="time" style="width: 5.3846153846154%"></div>
+<pre>
+    exact (fmap_comp (fun B : AbGroup^op =&gt; Ext B A)).</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 115
+Time: 0.001s">
+<div class="time" style="width: 0.76923076923077%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 116
+Time: 0.002s">
+<div class="time" style="width: 1.5384615384615%"></div>
+<pre>
+
+Instance is0bifunctor_abext `{Univalence}
+  : Is0Bifunctor (A:=AbGroup^op) ab_ext
+  := Build_Is0Bifunctor'' _.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 120
+Time: 0.002s">
+<div class="time" style="width: 1.5384615384615%"></div>
+<pre>
+
+Instance is1bifunctor_abext `{Univalence}
+  : Is1Bifunctor (A:=AbGroup^op) ab_ext.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 124
+Time: 0.001s">
+<div class="time" style="width: 0.76923076923077%"></div>
+<pre>
+  snapply Build_Is1Bifunctor''.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 125
+Time: 0.001s">
+<div class="time" style="width: 0.76923076923077%"></div>
+<pre>
+  1,2: exact _.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 126
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros A B.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 127
+Time: 0.005s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+  exact (bifunctor_coh (Ext : AbGroup^op -&gt; AbGroup -&gt; pType)).</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 128
+Time: 0.001s">
+<div class="time" style="width: 0.76923076923077%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We can push out a fixed extension while letting the map vary, and this defines a group homomorphism. *)</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 131
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition abses_pushout_ext `{Univalence}
+  {B A G : AbGroup@{u}} (E : AbSES B A)
+  : GroupHomomorphism (ab_hom A G) (ab_ext B G).</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_GroupHomomorphism.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 135
+Time: 0.001s">
+<div class="time" style="width: 0.76923076923077%"></div>
+<pre>
+  1: exact (fun f =&gt; fmap01 (A:=AbGroup^op) Ext' _ f (tr E)).</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 136
+Time: 0.009s">
+<div class="time" style="width: 6.9230769230769%"></div>
+<pre>
+  intros f g; cbn.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 137
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  napply (ap tr).</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 138
+Time: 0.001s">
+<div class="time" style="width: 0.76923076923077%"></div>
+<pre>
+  exact (baer_sum_distributive_pushouts f g).</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 139
+Time: 0.001s">
+<div class="time" style="width: 0.76923076923077%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Extensions ending in a projective are trivial *)
+
+</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 143
+Time: 0.001s">
+<div class="time" style="width: 0.76923076923077%"></div>
+<pre>Proposition abext_trivial_projective `{Univalence}
+  (P : AbGroup) `{IsAbProjective P}
+  : forall A, forall E : AbSES P A, tr E = point (Ext P A).</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 145
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros A E.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 147
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply iff_ab_ext_trivial_split.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 148
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (fst (iff_isabprojective_surjections_split P) _ _ _ _).</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** It follows that when [P] is projective, [Ext P A] is contractible. *)</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 152
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance contr_abext_projective `{Univalence}
+  (P : AbGroup) `{IsAbProjective P} {A : AbGroup}
+  : Contr (Ext P A).</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 154
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 155
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (Build_Contr _ (point _)); intro E.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 156
+Time: 0.015s">
+<div class="time" style="width: 11.538461538462%"></div>
+<pre>
+  strip_truncations.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 157
+Time: 0.001s">
+<div class="time" style="width: 0.76923076923077%"></div>
+<pre>
+  symmetry; by apply abext_trivial_projective.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* Conversely, if all extensions ending in [P] are trivial, then [P] is projective. *)</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 161
+Time: 0.001s">
+<div class="time" style="width: 0.76923076923077%"></div>
+<pre>Proposition abext_projective_trivial `{Univalence} (P : AbGroup)
+  (ext_triv : forall A, forall E : AbSES P A, tr E = point (Ext P A))
+  : IsAbProjective P.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 163
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 164
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply iff_isabprojective_surjections_split.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 165
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros E p issurj_p.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 166
+Time: 0.002s">
+<div class="time" style="width: 1.5384615384615%"></div>
+<pre>
+  apply (iff_ab_ext_trivial_split (abses_from_surjection p))^-1.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply ext_triv.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Ext.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

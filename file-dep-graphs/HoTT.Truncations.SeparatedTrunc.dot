@@ -1,0 +1,17 @@
+digraph HoTT_Truncations_SeparatedTrunc {
+  graph [ratio=0.5]
+  node [style=filled]
+SeparatedTrunc_equiv_path_Tr [label="equiv_path_Tr", URL=<SeparatedTrunc.html#equiv_path_Tr>, peripheries=3, fillcolor="#F070D1"] ;
+SeparatedTrunc_path_Tr [label="path_Tr", URL=<SeparatedTrunc.html#path_Tr>, peripheries=3, fillcolor="#F070D1"] ;
+SeparatedTrunc_O_lex_leq_Tr [label="O_lex_leq_Tr", URL=<SeparatedTrunc.html#O_lex_leq_Tr>, fillcolor="#F070D1"] ;
+SeparatedTrunc_O_strong_leq_Tr [label="O_strong_leq_Tr", URL=<SeparatedTrunc.html#O_strong_leq_Tr>, fillcolor="#F070D1"] ;
+SeparatedTrunc_O_leq_Tr [label="O_leq_Tr", URL=<SeparatedTrunc.html#O_leq_Tr>, fillcolor="#F070D1"] ;
+SeparatedTrunc_O_eq_Tr [label="O_eq_Tr", URL=<SeparatedTrunc.html#O_eq_Tr>, fillcolor="#F070D1"] ;
+  SeparatedTrunc_equiv_path_Tr -> SeparatedTrunc_O_lex_leq_Tr [] ;
+  SeparatedTrunc_equiv_path_Tr -> SeparatedTrunc_O_eq_Tr [] ;
+  SeparatedTrunc_path_Tr -> SeparatedTrunc_O_eq_Tr [] ;
+  SeparatedTrunc_O_lex_leq_Tr -> SeparatedTrunc_O_strong_leq_Tr [] ;
+  SeparatedTrunc_O_strong_leq_Tr -> SeparatedTrunc_O_leq_Tr [] ;
+subgraph cluster_SeparatedTrunc { label="SeparatedTrunc"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+SeparatedTrunc_O_eq_Tr; SeparatedTrunc_O_leq_Tr; SeparatedTrunc_O_strong_leq_Tr; SeparatedTrunc_O_lex_leq_Tr; SeparatedTrunc_path_Tr; SeparatedTrunc_equiv_path_Tr; };
+} /* END */

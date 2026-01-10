@@ -1,0 +1,202 @@
+<html>
+<head>
+<title>AbPullback.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for AbPullback.v</h1>
+
+<div class="code" title="File: AbPullback.v
+Line: 1
+Time: 0.028s">
+<div class="time" style="width: 65.116279069767%"></div>
+<pre>From HoTT Require Import Basics.</pre>
+</div>
+<div class="code" title="File: AbPullback.v
+Line: 1
+Time: 0.018s">
+<div class="time" style="width: 41.860465116279%"></div>
+<pre>
+Require Import Limits.Pullback Cubical.PathSquare.</pre>
+</div>
+<div class="code" title="File: AbPullback.v
+Line: 2
+Time: 0.043s">
+<div class="time" style="width: 100%"></div>
+<pre>
+Require Export Algebra.Groups.GrpPullback.</pre>
+</div>
+<div class="code" title="File: AbPullback.v
+Line: 3
+Time: 0.022s">
+<div class="time" style="width: 51.162790697674%"></div>
+<pre>
+Require Import Algebra.AbGroups.AbelianGroup.</pre>
+</div>
+<div class="code" title="File: AbPullback.v
+Line: 4
+Time: 0.001s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre>
+Require Import WildCat.Core.</pre>
+</div>
+<div class="code" title="File: AbPullback.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope mc_add_scope.</pre>
+</div>
+<div class="code" title="File: AbPullback.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Pullbacks of abelian groups *)
+
+</pre>
+</div>
+<div class="code" title="File: AbPullback.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section AbPullback.</pre>
+</div>
+<div class="code" title="File: AbPullback.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* Variables are named to correspond with Limits.Pullback. *)
+ </pre>
+</div>
+<div class="code" title="File: AbPullback.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Context {A B C : AbGroup} (f : B $-&gt; A) (g : C $-&gt; A).</pre>
+</div>
+<div class="code" title="File: AbPullback.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  #[export] Instance ab_pullback_commutative
+    : Commutative (@group_sgop (grp_pullback f g)).</pre>
+</div>
+<div class="code" title="File: AbPullback.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: AbPullback.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unfold Commutative.</pre>
+</div>
+<div class="code" title="File: AbPullback.v
+Line: 17
+Time: 0.001s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre>
+    intros [b [c p]] [d [e q]].</pre>
+</div>
+<div class="code" title="File: AbPullback.v
+Line: 18
+Time: 0.001s">
+<div class="time" style="width: 2.3255813953488%"></div>
+<pre>
+    apply equiv_path_pullback; simpl.</pre>
+</div>
+<div class="code" title="File: AbPullback.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (commutativity _ _; commutativity _ _; _).</pre>
+</div>
+<div class="code" title="File: AbPullback.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply equiv_sq_path.</pre>
+</div>
+<div class="code" title="File: AbPullback.v
+Line: 21
+Time: 0.007s">
+<div class="time" style="width: 16.279069767442%"></div>
+<pre>
+    apply path_ishprop.</pre>
+</div>
+<div class="code" title="File: AbPullback.v
+Line: 22
+Time: 0.006s">
+<div class="time" style="width: 13.953488372093%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: AbPullback.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition ab_pullback : AbGroup := Build_AbGroup (grp_pullback f g) _.</pre>
+</div>
+<div class="code" title="File: AbPullback.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The corecursion principle is inherited from [Group]; use [grp_pullback_corec] and friends from Groups/GrpPullback.v. *)
+
+</pre>
+</div>
+<div class="code" title="File: AbPullback.v
+Line: 28
+Time: 0.003s">
+<div class="time" style="width: 6.9767441860465%"></div>
+<pre>End AbPullback.</pre>
+</div>
+<div class="code" title="File: AbPullback.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

@@ -1,0 +1,2078 @@
+<html>
+<head>
+<title>Adjoint.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Adjoint.v</h1>
+
+<div class="code" title="File: Adjoint.v
+Line: 1
+Time: 0.025s">
+<div class="time" style="width: 96.153846153846%"></div>
+<pre>Require Import Basics.Utf8 Basics.Overture Basics.Tactics Basics.Equivalences.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 1
+Time: 0.002s">
+<div class="time" style="width: 7.6923076923077%"></div>
+<pre>
+Require Import WildCat.Core.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 2
+Time: 0.003s">
+<div class="time" style="width: 11.538461538462%"></div>
+<pre>
+Require Import WildCat.NatTrans.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import WildCat.Equiv.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 4
+Time: 0.004s">
+<div class="time" style="width: 15.384615384615%"></div>
+<pre>
+Require Import WildCat.Prod.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import WildCat.Opposite.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 6
+Time: 0.017s">
+<div class="time" style="width: 65.384615384615%"></div>
+<pre>
+Require Import WildCat.Yoneda.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 7
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+Require Import WildCat.FunctorCat.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import WildCat.Universe.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 9
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Types.Prod.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Generalizable Variables C D F G.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Notions of adjunctions in wild categories. *)
+
+(** We try to capture a wild notion of (oo,1)-adjunctions since these are the ones that commonly appear in practice. Special cases include the standard 1-categorical adjunction.
+
+There are notions of 2-adjunction/biadjunction/higher adjunction but it is not clear if this generality is useful.
+
+We will define an adjunction to be an equivalence (in Type) between corresponding hom-types. This is a more immediately useful definition than others we can consider.
+
+We should also be able to define "F having a left adjoint" as the initial object of a slice category C / F. However this seems like too much work for now, and it is not immediately obvious how it ties back to the adjunction isomorphism.
+
+In the future, it ought to be possible to generalize this definition to live inside a given bicategory, however due to current structural issues in the WildCat library, writing down a usable definition of bicategory requires a lot of effort.
+*)
+
+(** * Definition of adjunction *)
+
+(** ** Definition of adjunction *)
+
+</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 30
+Time: 0.015s">
+<div class="time" style="width: 57.692307692308%"></div>
+<pre>Record Adjunction {C D : Type} (F : C -&gt; D) (G : D -&gt; C)
+  `{Is1Cat C, Is1Cat D, !Is0Functor F, !Is0Functor G} :=
+{
+  equiv_adjunction (x : C) (y : D) : (F x $-&gt; y) &lt;~&gt; (x $-&gt; G y) ;
+  (** Naturality condition in both variables separately. *)
+  (** The left variable is a bit trickier to state since we have opposite categories involved. *)
+  is1natural_equiv_adjunction_l (y : D)
+    :: Is1Natural (A := C^op) (yon y o F)
+        (** We have to explicitly give a witness to the functoriality of [yon y o F]. *)
+        (is0functor_F := is0functor_compose (A:=C^op) (B:=D^op) (C:=Type) _ _)
+        (yon (G y)) (fun x =&gt; equiv_adjunction x y) ;
+  (** Naturality in the right variable *)
+  is1natural_equiv_adjunction_r (x : C)
+    :: Is1Natural (opyon (F x)) (opyon x o G) (equiv_adjunction x) ;
+}.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments equiv_adjunction {C D F G
+  isgraph_C is2graph_C is01cat_C is1cat_C
+  isgraph_D is2graph_D is01cat_D is1cat_D
+  is0functor_F is0functor_G} adj x y : rename.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments is1natural_equiv_adjunction_l {C D F G
+  isgraph_C is2graph_C is01cat_C is1cat_C
+  isgraph_D is2graph_D is01cat_D is1cat_D
+  is0functor_F is0functor_G} adj y : rename.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments is1natural_equiv_adjunction_r {C D F G
+  isgraph_C is2graph_C is01cat_C is1cat_C
+  isgraph_D is2graph_D is01cat_D is1cat_D
+  is0functor_F is0functor_G} adj x : rename.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Notation "F ⊣ G" := (Adjunction F G).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+
+(** TODO: move but where? *)</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 62
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>Lemma fun01_profunctor {A B C D : Type} (F : A -&gt; B) (G : C -&gt; D)
+  `{Is0Functor A B F, Is0Functor C D G}
+  : Fun01 (A^op * C) (B^op * D).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply Build_Fun01.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact (functor_prod (F : A^op -&gt; B^op) G).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 67
+Time: 0.002s">
+<div class="time" style="width: 7.6923076923077%"></div>
+<pre>
+  rapply is0functor_prod_functor.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> (* Typeclass search gets confused by the opposite categories. *)</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Defined.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Natural equivalences coming from adjunctions. *)
+
+(** There are various bits of data we would like to extract from adjunctions. *)</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section AdjunctionData.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 72
+Time: 0.003s">
+<div class="time" style="width: 11.538461538462%"></div>
+<pre>
+  Context {C D : Type} {F : C -&gt; D} {G : D -&gt; C}
+    `{Is1Cat C, Is1Cat D, !HasMorExt C, !HasMorExt D,
+      !Is0Functor F, !Is0Functor G, !Is1Functor F, !Is1Functor G}
+    (adj : Adjunction F G).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 76
+Time: 0.003s">
+<div class="time" style="width: 11.538461538462%"></div>
+<pre>
+
+  Definition natequiv_adjunction_l (y : D)
+    : NatEquiv (A := C^op) (yon y o F)
+        (** We have to explicitly give a witness to the functoriality of [yon y o F]. *)
+        (is0functor_F := is0functor_compose (A:=C^op) (B:=D^op) (C:=Type) _ _)
+        (yon (G y)).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 83
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+    napply Build_NatEquiv.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (is1natural_equiv_adjunction_l adj).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 86
+Time: 0.004s">
+<div class="time" style="width: 15.384615384615%"></div>
+<pre>
+
+  Definition natequiv_adjunction_r (x : C)
+    : NatEquiv (opyon (F x)) (opyon x o G).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 90
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+    napply Build_NatEquiv.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (is1natural_equiv_adjunction_r adj).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** We also have the natural equivalence in both arguments at the same time. *)
+  (** In order to manage the typeclass instances, we have to bundle them up into Fun01. *)
+ </pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 97
+Time: 0.004s">
+<div class="time" style="width: 15.384615384615%"></div>
+<pre>Definition natequiv_adjunction
+    : NatEquiv (A := C^op * D)
+        (fun01_compose fun01_hom (fun01_profunctor F idmap))
+        (fun01_compose fun01_hom (fun01_profunctor idmap G)).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 101
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+    snapply Build_NatEquiv.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: intros [x y]; exact (equiv_adjunction adj x y).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 103
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+    snapply Build_Is1Natural.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 104
+Time: 0.006s">
+<div class="time" style="width: 23.076923076923%"></div>
+<pre>
+    intros [a b] [a' b'] [f g] K.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 105
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+    refine (_ @ ap (fun x : a $-&gt; G b' =&gt; x $o f)
+      (is1natural_equiv_adjunction_r adj a b b' g K)).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 107
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+    exact (is1natural_equiv_adjunction_l adj _ _ _ f (g $o K)).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 108
+Time: 0.005s">
+<div class="time" style="width: 19.230769230769%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The counit of an adjunction *)
+ </pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 112
+Time: 0.002s">
+<div class="time" style="width: 7.6923076923077%"></div>
+<pre>Definition adjunction_counit : NatTrans idmap (G o F).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply Build_NatTrans.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> hnf.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (equiv_adjunction adj x (F x) (Id _)).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 116
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+    snapply Build_Is1Natural.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros x x' f.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 118
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply GpdHom_path.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (_^ @ _ @ _).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 120
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+    1: exact (is1natural_equiv_adjunction_l adj _ _ _ f (Id _)).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 121
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    2: exact (is1natural_equiv_adjunction_r adj _ _ _ (fmap F f) (Id _)).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 122
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    simpl.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply equiv_ap'.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_hom.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 125
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply Square.vrefl.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 126
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The unit of an adjunction *)
+ </pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 130
+Time: 0.002s">
+<div class="time" style="width: 7.6923076923077%"></div>
+<pre>Definition adjunction_unit : NatTrans (F o G) idmap.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 130
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 131
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply Build_NatTrans.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> hnf.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros y.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 133
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+      exact ((equiv_adjunction adj (G y) y)^-1 (Id _)).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply Build_Is1Natural.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 135
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros y y' f.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply GpdHom_path.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 137
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (_^ @ _ @ _).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 138
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+    1: exact (is1natural_natequiv (natequiv_inverse
+        (natequiv_adjunction_l _)) (G y') _ (fmap G f) _).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 140
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+    2: exact (is1natural_natequiv (natequiv_inverse
+        (natequiv_adjunction_r _)) _ _ _ (Id _)).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    simpl.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply equiv_ap_inv'.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply path_hom.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 145
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply Square.vrefl.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 146
+Time: 0.003s">
+<div class="time" style="width: 11.538461538462%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 147
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+
+  Lemma triangle_helper1 x y f
+    : equiv_adjunction adj x y f = fmap G f $o adjunction_counit x.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 151
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+    refine (_ @ is1natural_equiv_adjunction_r adj _ _ _ _ _).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 152
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+    by cbv; rewrite (cat_idr_strong f).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 153
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 154
+Time: 0.002s">
+<div class="time" style="width: 7.6923076923077%"></div>
+<pre>
+
+  Lemma triangle_helper2 x y g
+    : (equiv_adjunction adj x y)^-1 g = adjunction_unit y $o fmap F g.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 158
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+    epose (n1 := is1natural_natequiv
+      (natequiv_inverse (natequiv_adjunction_l _)) _ _ _ _).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    clearbody n1; cbv in n1.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (_ @ n1).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 162
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+    by rewrite cat_idl_strong.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 163
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 164
+Time: 0.003s">
+<div class="time" style="width: 11.538461538462%"></div>
+<pre>
+
+  Definition adjunction_triangle1
+    : Transformation 
+        (nattrans_comp
+          (nattrans_prewhisker adjunction_unit F)
+          (nattrans_postwhisker F adjunction_counit))
+        (nattrans_id _).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros c.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 173
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+    change (?x $-&gt; _) with (x $-&gt; Id (F c)).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 174
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+    rewrite &lt;- (eissect (equiv_adjunction adj _ _) (Id (F c))).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 175
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+    cbv;rewrite &lt;- (triangle_helper2 _ (F c) (adjunction_counit _)).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (Id _).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 177
+Time: 0.002s">
+<div class="time" style="width: 7.6923076923077%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 178
+Time: 0.002s">
+<div class="time" style="width: 7.6923076923077%"></div>
+<pre>
+
+  Definition adjunction_triangle2
+    : Transformation
+        (nattrans_comp
+          (nattrans_postwhisker G adjunction_unit)
+          (nattrans_prewhisker adjunction_counit G))
+        (nattrans_id _).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 186
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros d.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 187
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+    change (?x $-&gt; _) with (x $-&gt; Id (G d)).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 188
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+    rewrite &lt;- (eisretr (equiv_adjunction adj _ _) (Id (G d))).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 189
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+    cbv;rewrite &lt;- (triangle_helper1 (G d) _ (adjunction_unit _)).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 190
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (Id _).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 191
+Time: 0.002s">
+<div class="time" style="width: 7.6923076923077%"></div>
+<pre>
+  Qed.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 192
+Time: 0.005s">
+<div class="time" style="width: 19.230769230769%"></div>
+<pre>
+
+End AdjunctionData.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 194
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Building adjunctions *)
+
+(** There are various ways to build an adjunction. *)
+
+(** A natural equivalence between functors [D -&gt; Type] which is also natural in the left. *)</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 200
+Time: 0.019s">
+<div class="time" style="width: 73.076923076923%"></div>
+<pre>Definition Build_Adjunction_natequiv_nat_left
+  {C D : Type} (F : C -&gt; D) (G : D -&gt; C)
+  `{Is1Cat C, Is1Cat D, !Is0Functor F, !Is0Functor G} 
+  (e : forall x, NatEquiv (opyon (F x)) (opyon x o G))
+  (is1nat_e : forall y, Is1Natural (A := C^op) (yon y o F)
+      (** We have to explicitly give a witness to the functoriality of [yon y o F]. *)
+      (is0functor_F := is0functor_compose (A:=C^op) (B:=D^op) (C:=Type) _ _)
+      (yon (G y)) (fun x =&gt; e _ y))
+  : Adjunction F G.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 209
+Time: 0.003s">
+<div class="time" style="width: 11.538461538462%"></div>
+<pre>
+  snapply Build_Adjunction.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 210
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact (fun x =&gt; e x).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 211
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact is1nat_e.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 212
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x; exact (is1natural_natequiv (e x)).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 213
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 214
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A natural equivalence between functors [C^op -&gt; Type] which is also natural in the left. *)</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 216
+Time: 0.009s">
+<div class="time" style="width: 34.615384615385%"></div>
+<pre>Definition Build_Adjunction_natequiv_nat_right
+  {C D : Type} (F : C -&gt; D) (G : D -&gt; C)
+  `{Is1Cat C, Is1Cat D, !Is0Functor F, !Is0Functor G} 
+  (e : forall y, NatEquiv (A := C^op) (yon y o F) (yon (G y))
+    (is0functor_F := is0functor_compose (A:=C^op) (B:=D^op) (C:=Type) _ _))
+  (is1nat_e : forall x, Is1Natural (opyon (F x)) (opyon x o G) (fun y =&gt; e y x))
+  : Adjunction F G.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 222
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 223
+Time: 0.003s">
+<div class="time" style="width: 11.538461538462%"></div>
+<pre>
+  snapply Build_Adjunction.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 224
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact (fun x y =&gt; e y x).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: intros y; exact (is1natural_natequiv (e y)).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 226
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact is1nat_e.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 227
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** TODO: A natural equivalence between functors [C^op * D -&gt; Type] *)
+
+</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 231
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section UnitCounitAdjunction.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 231
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** From the data of an adjunction: unit, counit, left triangle, right triangle *)
+ </pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 234
+Time: 0.017s">
+<div class="time" style="width: 65.384615384615%"></div>
+<pre>Context {C D : Type} (F : C -&gt; D) (G : D -&gt; C)
+  `{Is1Cat C, Is1Cat D, !Is0Functor F, !Is0Functor G,
+    !Is1Functor F, !Is1Functor G}
+  `{!HasMorExt C, !HasMorExt D}
+  (ε : NatTrans (F o G) idmap)
+  (η : NatTrans idmap (G o F))
+  (t1 : Transformation 
+    (nattrans_comp (nattrans_prewhisker ε F) (nattrans_postwhisker F η))
+    (nattrans_id _))
+  (t2 : Transformation
+    (nattrans_comp (nattrans_postwhisker G ε) (nattrans_prewhisker η G))
+    (nattrans_id _)).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 245
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** We can construct an equivalence between homs *)
+ </pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 248
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>Local Definition γ a b : (F a $-&gt; b) $&lt;~&gt; (a $-&gt; G b).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 248
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 249
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply equiv_adjointify.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 250
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: exact (fun x =&gt; fmap G x $o (η : _ $=&gt; _) a).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 251
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: exact (fun x =&gt; (ε : _ $=&gt; _) b $o fmap F x).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 252
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 253
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros f.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 253
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply path_hom; simpl.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 254
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+      refine ((fmap_comp G _ _ $@R _) $@ _).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 255
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      refine (cat_assoc _ _ _ $@ _).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 256
+Time: 0.013s">
+<div class="time" style="width: 50%"></div>
+<pre>
+      refine ((_ $@L (isnat η f)^$) $@ _).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 257
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      refine (cat_assoc_opp _ _ _ $@ _).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 258
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      refine (_ $@R _ $@ cat_idl _).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 259
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (t2 b).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 260
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 261
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros g.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 261
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply path_hom; simpl.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 262
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+      refine ((_ $@L fmap_comp F _ _) $@ _).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 263
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      refine (cat_assoc_opp _ _ _ $@ _).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 264
+Time: 0.002s">
+<div class="time" style="width: 7.6923076923077%"></div>
+<pre>
+      refine (((isnat ε g) $@R _) $@ _).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 265
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      refine (cat_assoc _ _ _ $@ _).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 266
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      refine (_ $@L _ $@ cat_idr _).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 267
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (t1 a).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 268
+Time: 0.002s">
+<div class="time" style="width: 7.6923076923077%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 269
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Which is natural in the left *)
+ </pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 272
+Time: 0.003s">
+<div class="time" style="width: 11.538461538462%"></div>
+<pre>Lemma is1natural_γ_l (y : D)
+    : Is1Natural (yon y o F) (yon (G y))
+      (is0functor_F := is0functor_compose (A:=C^op) (B:=D^op) (C:=Type) _ _)
+      (is0functor_G := is0functor_yon (G y))
+      (fun x : C^op =&gt; γ x y).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 276
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 277
+Time: 0.006s">
+<div class="time" style="width: 23.076923076923%"></div>
+<pre>
+    napply (is1natural_natequiv (natequiv_inverse
+      (Build_NatEquiv (yon (G y)) (yon y o F) (fun x =&gt; (γ x y)^-1$) _))).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 279
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+    napply is1natural_yoneda.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 280
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+    napply is1functor_compose.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 281
+Time: 0.002s">
+<div class="time" style="width: 7.6923076923077%"></div>
+<pre>
+    1: napply is1functor_op; exact _.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 282
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    napply is1functor_opyon.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 283
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact hasmorext_op.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 284
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 285
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** And natural in the right. *)
+ </pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 288
+Time: 0.003s">
+<div class="time" style="width: 11.538461538462%"></div>
+<pre>Lemma is1natural_γ_r x
+    : Is1Natural (opyon (F x)) (fun x0 : D =&gt; opyon x (G x0)) (γ x).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 289
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 290
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+    napply is1natural_opyoneda.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 291
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+    exact _.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 292
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 293
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Together this constructs an adjunction. *)
+ </pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 296
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Build_Adjunction_unit_counit : Adjunction F G.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 296
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 297
+Time: 0.003s">
+<div class="time" style="width: 11.538461538462%"></div>
+<pre>
+    snapply Build_Adjunction.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 298
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 299
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact γ.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 299
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 300
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact is1natural_γ_l.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 300
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 301
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact is1natural_γ_r.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 301
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 302
+Time: 0.003s">
+<div class="time" style="width: 11.538461538462%"></div>
+<pre>
+
+End UnitCounitAdjunction.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 304
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Properties of adjunctions *)
+
+(** ** Postcomposition adjunction *)
+(** There are at least two easy proofs of the following on paper:
+ 1. Using ends: Hom(F*x,y) ≃ ∫_c Hom(Fxc,yc) ≃ ∫_c Hom(xc,Gyc) ≃ Hom(x,G*y)
+ 2. 2-cat theory: postcomp (-)* is a 2-functor so preserves adjunctions.
+*)
+
+</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 313
+Time: 0.016s">
+<div class="time" style="width: 61.538461538462%"></div>
+<pre>Lemma adjunction_postcomp (C D J : Type)
+  `{HasEquivs C, HasEquivs D, Is01Cat J} (F : Fun11 C D) (G : Fun11 D C)
+  `{!HasMorExt C, !HasMorExt D, !HasMorExt (Fun01 J C), !HasMorExt (Fun01 J D)}
+  : F ⊣ G -&gt; fun11_fun01_postcomp (A:=J) F ⊣ fun11_fun01_postcomp (A:=J) G.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 316
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 317
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros adj.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 318
+Time: 0.011s">
+<div class="time" style="width: 42.307692307692%"></div>
+<pre>
+  srapply Build_Adjunction_unit_counit.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 319
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 320
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre> snapply Build_NatTrans.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 320
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 321
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros K.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 321
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+      exact (nattrans_prewhisker (adjunction_unit adj) K).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 322
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 323
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre> snapply Build_Is1Natural.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 323
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      intros K K' θ j.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 324
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply GpdHom_path.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 325
+Time: 0.002s">
+<div class="time" style="width: 7.6923076923077%"></div>
+<pre>
+      refine (_ @ is1natural_natequiv (natequiv_inverse
+        (natequiv_adjunction_r adj _)) _ _ _ _).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 327
+Time: 0.002s">
+<div class="time" style="width: 7.6923076923077%"></div>
+<pre>
+      refine ((is1natural_natequiv (natequiv_inverse
+        (natequiv_adjunction_l adj _)) _ _ _ _)^ @ _).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 329
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+      cbn; rapply ap.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 330
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      refine(cat_idl_strong _ @ _^).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 331
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply cat_idr_strong.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 332
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 333
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre> snapply Build_NatTrans.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 333
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 334
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros K.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 334
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+      exact (nattrans_prewhisker (adjunction_counit adj) K).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 335
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 336
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre> snapply Build_Is1Natural.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 336
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      intros K K' θ j.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 337
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply GpdHom_path.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 338
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+      refine (_ @ is1natural_natequiv
+        (natequiv_adjunction_r adj _) _ _ _ _).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 340
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+      refine ((is1natural_natequiv
+        (natequiv_adjunction_l adj _) _ _ _ _)^ @ _).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 342
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+      cbn; rapply ap.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 343
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      refine(cat_idl_strong _ @ _^).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 344
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply cat_idr_strong.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 345
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 346
+Time: 0.02s">
+<div class="time" style="width: 76.923076923077%"></div>
+<pre> exact (trans_prewhisker (adjunction_triangle1 adj)).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 346
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 347
+Time: 0.018s">
+<div class="time" style="width: 69.230769230769%"></div>
+<pre> exact (trans_prewhisker (adjunction_triangle2 adj)).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 347
+Time: 0.026s">
+<div class="time" style="width: 100%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 348
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We can compose adjunctions. Notice how the middle category must have equivalences. *)</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 350
+Time: 0.007s">
+<div class="time" style="width: 26.923076923077%"></div>
+<pre>Lemma adjunction_compose (A B C : Type)
+  (F : A -&gt; B) (G : B -&gt; A) (F' : B -&gt; C) (G' : C -&gt; B)
+  `{Is1Cat A, HasEquivs B, Is1Cat C}
+  `{!Is0Functor F, !Is0Functor G, !Is0Functor F', !Is0Functor G'}
+  : F ⊣ G -&gt; F' ⊣ G' -&gt; F' o F ⊣ G o G'.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 354
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 355
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros adj1 adj2.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 356
+Time: 0.003s">
+<div class="time" style="width: 11.538461538462%"></div>
+<pre>
+  snapply Build_Adjunction_natequiv_nat_right.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 357
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 358
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros y.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 358
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    nrefine (natequiv_compose (natequiv_adjunction_l adj1 _) _).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 359
+Time: 0.003s">
+<div class="time" style="width: 11.538461538462%"></div>
+<pre>
+    exact (natequiv_prewhisker (A:=A^op) (B:=B^op)
+      (natequiv_adjunction_l adj2 y) F).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 361
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 361
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 362
+Time: 0.006s">
+<div class="time" style="width: 23.076923076923%"></div>
+<pre>
+  rapply is1natural_comp.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 363
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 364
+Time: 0.004s">
+<div class="time" style="width: 15.384615384615%"></div>
+<pre> exact (is1natural_prewhisker G' (natequiv_adjunction_r adj1 x)).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 364
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  +</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 365
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre> napply is1natural_equiv_adjunction_r.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 365
+Time: 0.003s">
+<div class="time" style="width: 11.538461538462%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 366
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Replace the left functor in an adjunction by a naturally equivalent one. *)</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 368
+Time: 0.002s">
+<div class="time" style="width: 7.6923076923077%"></div>
+<pre>Lemma adjunction_natequiv_left {C D : Type} (F F' : C -&gt; D) (G : D -&gt; C)
+  `{Is1Cat C, HasEquivs D, !HasMorExt D,
+    !Is0Functor F, !Is0Functor F', !Is0Functor G} 
+  : NatEquiv F F' -&gt; F ⊣ G -&gt; F' ⊣ G.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 371
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 372
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros e adj.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 373
+Time: 0.002s">
+<div class="time" style="width: 7.6923076923077%"></div>
+<pre>
+  snapply Build_Adjunction_natequiv_nat_right.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 374
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 375
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros y.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 375
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (natequiv_compose (natequiv_adjunction_l adj _) _).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 376
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+    exact (natequiv_postwhisker _ (natequiv_op e)).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 377
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 377
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 378
+Time: 0.005s">
+<div class="time" style="width: 19.230769230769%"></div>
+<pre>
+  rapply is1natural_comp.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 379
+Time: 0.002s">
+<div class="time" style="width: 7.6923076923077%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 380
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Replace the right functor in an adjunction by a naturally equivalent one. *)</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 382
+Time: 0.002s">
+<div class="time" style="width: 7.6923076923077%"></div>
+<pre>Lemma adjunction_natequiv_right {C D : Type} (F : C -&gt; D) (G G' : D -&gt; C)
+  `{HasEquivs C, Is1Cat D, !HasMorExt C,
+    !Is0Functor F, !Is0Functor G, !Is0Functor G'} 
+  : NatEquiv G G' -&gt; F ⊣ G -&gt; F ⊣ G'.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 385
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 386
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros e adj.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 387
+Time: 0.002s">
+<div class="time" style="width: 7.6923076923077%"></div>
+<pre>
+  snapply Build_Adjunction_natequiv_nat_left.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 388
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 389
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros x.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 389
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (natequiv_compose _ (natequiv_adjunction_r adj _)).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 390
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (natequiv_postwhisker _ e).</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 391
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 391
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros y.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 392
+Time: 0.005s">
+<div class="time" style="width: 19.230769230769%"></div>
+<pre>
+  rapply is1natural_comp.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 393
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  2: exact _.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 394
+Time: 0.002s">
+<div class="time" style="width: 7.6923076923077%"></div>
+<pre>
+  rapply is1natural_yoneda.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 395
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Adjoint.v
+Line: 397
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+
+</pre>
+</div>
+</body>
+</html>
+

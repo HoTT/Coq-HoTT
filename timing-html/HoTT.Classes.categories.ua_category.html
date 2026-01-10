@@ -1,0 +1,518 @@
+<html>
+<head>
+<title>ua_category.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for ua_category.v</h1>
+
+<div class="code" title="File: ua_category.v
+Line: 1
+Time: 0.048s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import
+  HoTT.Types
+  HoTT.Categories.Category.Core
+  HoTT.Categories.Category.Univalent
+  HoTT.Classes.theory.ua_isomorphic.</pre>
+</div>
+<div class="code" title="File: ua_category.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+
+Import Morphisms.CategoryMorphismsNotations isomorphic_notations.</pre>
+</div>
+<div class="code" title="File: ua_category.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope category.</pre>
+</div>
+<div class="code" title="File: ua_category.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Given any signature [σ], there is a precategory of set algebras
+    and homomorphisms for that signature. *)
+
+</pre>
+</div>
+<div class="code" title="File: ua_category.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma precategory_algebra `{Funext} (σ : Signature) : PreCategory.</pre>
+</div>
+<div class="code" title="File: ua_category.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: ua_category.v
+Line: 15
+Time: 0.005s">
+<div class="time" style="width: 10.416666666667%"></div>
+<pre>
+  apply (@Build_PreCategory
+           (SetAlgebra σ) Homomorphism hom_id (@hom_compose σ));
+    [intros; by apply path_hset_homomorphism .. | exact _].</pre>
+</div>
+<div class="code" title="File: ua_category.v
+Line: 18
+Time: 0.001s">
+<div class="time" style="width: 2.0833333333333%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: ua_category.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Category isomorphic implies algebra isomorphic. *)
+
+</pre>
+</div>
+<div class="code" title="File: ua_category.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma catiso_to_uaiso `{Funext} {σ} {A B : object (precategory_algebra σ)}
+  : A &lt;~=~&gt; B → A ≅ B.</pre>
+</div>
+<div class="code" title="File: ua_category.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: ua_category.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [f [a b c]].</pre>
+</div>
+<div class="code" title="File: ua_category.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unshelve eapply (@BuildIsomorphic _ _ _ f).</pre>
+</div>
+<div class="code" title="File: ua_category.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros s.</pre>
+</div>
+<div class="code" title="File: ua_category.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (isequiv_adjointify (f s) (a s) _ _).</pre>
+</div>
+<div class="code" title="File: ua_category.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: ua_category.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (apD10_homomorphism c s).</pre>
+</div>
+<div class="code" title="File: ua_category.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: ua_category.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (apD10_homomorphism b s).</pre>
+</div>
+<div class="code" title="File: ua_category.v
+Line: 30
+Time: 0.001s">
+<div class="time" style="width: 2.0833333333333%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: ua_category.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Algebra isomorphic implies category isomorphic. *)
+
+</pre>
+</div>
+<div class="code" title="File: ua_category.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma uaiso_to_catiso `{Funext} {σ} {A B : object (precategory_algebra σ)}
+  : A ≅ B → A &lt;~=~&gt; B.</pre>
+</div>
+<div class="code" title="File: ua_category.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: ua_category.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [f F G].</pre>
+</div>
+<div class="code" title="File: ua_category.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> set (h := BuildHomomorphism f).</pre>
+</div>
+<div class="code" title="File: ua_category.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (@Morphisms.Build_Isomorphic _ A B h).</pre>
+</div>
+<div class="code" title="File: ua_category.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (@Morphisms.Build_IsIsomorphism _ A B h (hom_inv h)).</pre>
+</div>
+<div class="code" title="File: ua_category.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: ua_category.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply path_hset_homomorphism.</pre>
+</div>
+<div class="code" title="File: ua_category.v
+Line: 40
+Time: 0.001s">
+<div class="time" style="width: 2.0833333333333%"></div>
+<pre> funext s x.</pre>
+</div>
+<div class="code" title="File: ua_category.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply eissect.</pre>
+</div>
+<div class="code" title="File: ua_category.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: ua_category.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply path_hset_homomorphism.</pre>
+</div>
+<div class="code" title="File: ua_category.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> funext s x.</pre>
+</div>
+<div class="code" title="File: ua_category.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply eisretr.</pre>
+</div>
+<div class="code" title="File: ua_category.v
+Line: 41
+Time: 0.002s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: ua_category.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Category isomorphic and algebra isomorphic is equivalent. *)
+
+</pre>
+</div>
+<div class="code" title="File: ua_category.v
+Line: 45
+Time: 0.001s">
+<div class="time" style="width: 2.0833333333333%"></div>
+<pre>Instance isequiv_catiso_to_uaiso `{Funext} {σ : Signature}
+  (A B : object (precategory_algebra σ))
+  : IsEquiv (@catiso_to_uaiso _ σ A B).</pre>
+</div>
+<div class="code" title="File: ua_category.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: ua_category.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (isequiv_adjointify catiso_to_uaiso uaiso_to_catiso _ _).</pre>
+</div>
+<div class="code" title="File: ua_category.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: ua_category.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [f F G].</pre>
+</div>
+<div class="code" title="File: ua_category.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by apply path_hset_isomorphic.</pre>
+</div>
+<div class="code" title="File: ua_category.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: ua_category.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [f F].</pre>
+</div>
+<div class="code" title="File: ua_category.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by apply Morphisms.path_isomorphic.</pre>
+</div>
+<div class="code" title="File: ua_category.v
+Line: 51
+Time: 0.001s">
+<div class="time" style="width: 2.0833333333333%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: ua_category.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [Morphisms.idtoiso] factorizes as the composition of equivalences. *)
+
+</pre>
+</div>
+<div class="code" title="File: ua_category.v
+Line: 55
+Time: 0.004s">
+<div class="time" style="width: 8.3333333333333%"></div>
+<pre>Lemma path_idtoiso_isomorphic_id `{Funext} {σ : Signature}
+  (A B : object (precategory_algebra σ))
+  : @Morphisms.idtoiso (precategory_algebra σ) A B
+    = catiso_to_uaiso^-1 o isomorphic_id o (path_setalgebra A B)^-1.</pre>
+</div>
+<div class="code" title="File: ua_category.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: ua_category.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  funext p.</pre>
+</div>
+<div class="code" title="File: ua_category.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct p.</pre>
+</div>
+<div class="code" title="File: ua_category.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by apply Morphisms.path_isomorphic.</pre>
+</div>
+<div class="code" title="File: ua_category.v
+Line: 60
+Time: 0.001s">
+<div class="time" style="width: 2.0833333333333%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: ua_category.v
+Line: 61
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The precategory of set algebras and homomorphisms for a signature
+    is a (univalent) category. *)
+
+</pre>
+</div>
+<div class="code" title="File: ua_category.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma iscategory_algebra `{Univalence} (σ : Signature)
+  : IsCategory (precategory_algebra σ).</pre>
+</div>
+<div class="code" title="File: ua_category.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: ua_category.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros A B.</pre>
+</div>
+<div class="code" title="File: ua_category.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite path_idtoiso_isomorphic_id.</pre>
+</div>
+<div class="code" title="File: ua_category.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply @isequiv_compose.</pre>
+</div>
+<div class="code" title="File: ua_category.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: ua_category.v
+Line: 71
+Time: 0.002s">
+<div class="time" style="width: 4.1666666666667%"></div>
+<pre> rapply isequiv_compose.</pre>
+</div>
+<div class="code" title="File: ua_category.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: ua_category.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply isequiv_inverse.</pre>
+</div>
+<div class="code" title="File: ua_category.v
+Line: 72
+Time: 0.001s">
+<div class="time" style="width: 2.0833333333333%"></div>
+<pre>
+Qed.</pre>
+</div>
+<div class="code" title="File: ua_category.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition category_algebra `{Univalence} (σ : Signature) : Category
+  := Build_Category (iscategory_algebra σ).</pre>
+</div>
+<div class="code" title="File: ua_category.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

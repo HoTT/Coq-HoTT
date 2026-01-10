@@ -1,0 +1,26 @@
+digraph HoTT_HIT_Interval {
+  graph [ratio=0.5]
+  node [style=filled]
+Interval_Interval_interval_ind_beta_seg [label="interval_ind_beta_seg", URL=<Interval.html#Interval.interval_ind_beta_seg>, fillcolor="#FACDEF"] ;
+Interval_Interval_interval_ind [label="interval_ind", URL=<Interval.html#Interval.interval_ind>, fillcolor="#F070D1"] ;
+Interval_Interval_seg [label="seg", URL=<Interval.html#Interval.seg>, fillcolor="#FACDEF"] ;
+Interval_Interval_one [label="one", URL=<Interval.html#Interval.one>, fillcolor="#7FAAFF"] ;
+Interval_Interval_zero [label="zero", URL=<Interval.html#Interval.zero>, fillcolor="#7FAAFF"] ;
+Interval_Interval_interval [label="interval", URL=<Interval.html#Interval.interval>, fillcolor="#E2CDFA"] ;
+Interval_contr_interval [label="contr_interval", URL=<Interval.html#contr_interval>, peripheries=3, fillcolor="#F070D1"] ;
+Interval_interval_rec_beta_seg [label="interval_rec_beta_seg", URL=<Interval.html#interval_rec_beta_seg>, peripheries=3, fillcolor="#F070D1"] ;
+Interval_interval_rec [label="interval_rec", URL=<Interval.html#interval_rec>, fillcolor="#F070D1"] ;
+  Interval_Interval_interval_ind_beta_seg -> Interval_Interval_interval_ind [] ;
+  Interval_Interval_interval_ind -> Interval_Interval_seg [] ;
+  Interval_Interval_seg -> Interval_Interval_one [] ;
+  Interval_Interval_seg -> Interval_Interval_zero [] ;
+  Interval_Interval_seg -> Interval_Interval_interval [] ;
+  Interval_contr_interval -> Interval_Interval_interval_ind [] ;
+  Interval_interval_rec_beta_seg -> Interval_Interval_interval_ind_beta_seg [] ;
+  Interval_interval_rec_beta_seg -> Interval_interval_rec [] ;
+  Interval_interval_rec -> Interval_Interval_interval_ind [] ;
+subgraph cluster_Interval { label="Interval"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+subgraph cluster_Interval_Interval { label="Interval"; fillcolor="#FFFFA3"; labeljust=l; style=filled 
+Interval_Interval_interval; Interval_Interval_zero; Interval_Interval_one; Interval_Interval_seg; Interval_Interval_interval_ind; Interval_Interval_interval_ind_beta_seg; };
+Interval_interval_rec; Interval_interval_rec_beta_seg; Interval_contr_interval; };
+} /* END */

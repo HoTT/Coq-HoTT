@@ -1,0 +1,2448 @@
+<html>
+<head>
+<title>PullbackFiberSequence.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for PullbackFiberSequence.v</h1>
+
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 1
+Time: 0.045s">
+<div class="time" style="width: 24.064171122995%"></div>
+<pre>From HoTT Require Import Basics Types HSet HFiber Limits.Pullback.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 1
+Time: 0.006s">
+<div class="time" style="width: 3.2085561497326%"></div>
+<pre>
+From HoTT.WildCat Require Import Core NatTrans.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 2
+Time: 0.047s">
+<div class="time" style="width: 25.133689839572%"></div>
+<pre>
+Require Import Pointed.Core Homotopy.ExactSequence.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 3
+Time: 0.014s">
+<div class="time" style="width: 7.4866310160428%"></div>
+<pre>
+Require Import Groups.QuotientGroup.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 4
+Time: 0.013s">
+<div class="time" style="width: 6.951871657754%"></div>
+<pre>
+Require Import AbGroups.AbelianGroup AbGroups.AbPullback AbGroups.Biproduct.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 5
+Time: 0.003s">
+<div class="time" style="width: 1.6042780748663%"></div>
+<pre>
+Require Import AbSES.Core AbSES.Pullback.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 6
+Time: 0.002s">
+<div class="time" style="width: 1.0695187165775%"></div>
+<pre> 
+Require Import Modalities.Identity Modalities.Modality Truncations.Core.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope pointed_scope.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 9
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope mc_add_scope.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * The fiber sequence induced by pulling back along a short exact sequence *)
+
+(** We show that pulling back along a short exact sequence [E : AbSES C B] produces a fiber sequence [AbSES C A -&gt; AbSES E A -&gt; AbSES B A]. The associated long exact sequence of homotopy groups recovers the usual (contravariant) six-term exact sequence of Ext groups.
+
+We will prove the analog of exactness in terms of path data, and deduce the usual notion. *)
+
+(** If a short exact sequence [A -&gt; F -&gt; E] becomes trivial after pulling back along an inclusion [i : B -&gt; E], then there is a "transpose" short exact sequence [B -&gt; F -&gt; F/B]. We begin by constructing the map [B -&gt; F]. *)</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 18
+Time: 0.007s">
+<div class="time" style="width: 3.7433155080214%"></div>
+<pre>Definition abses_pullback_inclusion_transpose_map {A B E : AbGroup}
+      (i : B $-&gt; E) `{IsEmbedding i}
+      (F : AbSES E A) (p : abses_pullback i F $== pt)
+  : B $-&gt; F
+  := grp_pullback_pr1 _ _ $o p^$.1 $o ab_biprod_inr.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The comparison map [A + B $-&gt; F] is an embedding.  This comes up twice so we factor it out as a lemma. *)</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 24
+Time: 0.004s">
+<div class="time" style="width: 2.1390374331551%"></div>
+<pre>Local Instance abses_pullback_inclusion_lemma {A B E : AbGroup}
+      (i : B $-&gt; E) `{IsEmbedding i}
+      (F : AbSES E A) (p : abses_pullback i F $== pt)
+  : IsEmbedding (grp_pullback_pr1 _ _ $o p^$.1).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 28
+Time: 0.001s">
+<div class="time" style="width: 0.53475935828877%"></div>
+<pre>
+  napply (istruncmap_compose (-1) p^$.1 (grp_pullback_pr1 (projection F) i)).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 29
+Time: 0.014s">
+<div class="time" style="width: 7.4866310160428%"></div>
+<pre>
+  all: rapply istruncmap_mapinO_tr.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 30
+Time: 0.002s">
+<div class="time" style="width: 1.0695187165775%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The map [B -&gt; F] is an inclusion. *)</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 33
+Time: 0.002s">
+<div class="time" style="width: 1.0695187165775%"></div>
+<pre>Local Instance abses_pullback_inclusion_transpose_embedding {A B E : AbGroup}
+      (i : B $-&gt; E) `{IsEmbedding i}
+      (F : AbSES E A) (p : abses_pullback i F $== pt)
+  : IsEmbedding (abses_pullback_inclusion_transpose_map i F p).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 37
+Time: 0.006s">
+<div class="time" style="width: 3.2085561497326%"></div>
+<pre>
+  rapply (istruncmap_compose _ (ab_biprod_inr)).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 38
+Time: 0.001s">
+<div class="time" style="width: 0.53475935828877%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We define the cokernel [F/B], which is what we need below. *)</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 41
+Time: 0.002s">
+<div class="time" style="width: 1.0695187165775%"></div>
+<pre>Definition abses_pullback_inclusion_transpose_endpoint' {A B E : AbGroup}
+           (i : B $-&gt; E) `{IsEmbedding i}
+           (F : AbSES E A) (p : abses_pullback i F $== pt)
+  : AbGroup
+  := ab_cokernel_embedding (abses_pullback_inclusion_transpose_map i F p).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The composite map [B -&gt; F -&gt; E] is homotopic to the original inclusion [i : B -&gt; E]. *)</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 47
+Time: 0.002s">
+<div class="time" style="width: 1.0695187165775%"></div>
+<pre>Lemma abses_pullback_inclusion_transpose_beta {A B E : AbGroup}
+      (i : B $-&gt; E) `{IsEmbedding i}
+      (F : AbSES E A) (p : abses_pullback i F $== pt)
+  : projection F $o (abses_pullback_inclusion_transpose_map i F p) == i.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro b.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 52
+Time: 0.001s">
+<div class="time" style="width: 0.53475935828877%"></div>
+<pre>
+  change b with (ab_biprod_pr2 (A:=A) (mon_unit, b)).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (pullback_commsq _ _ _ @ ap i _).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (snd p^$.2 _)^.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 55
+Time: 0.003s">
+<div class="time" style="width: 1.6042780748663%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Short exact sequences in the fiber of [inclusion E] descend along [projection E]. *)</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 58
+Time: 0.001s">
+<div class="time" style="width: 0.53475935828877%"></div>
+<pre>Definition abses_pullback_trivial_preimage `{Univalence} {A B C : AbGroup} (E : AbSES C B)
+           (F : AbSES (middle E) A) (p : abses_pullback (inclusion E) F $== pt)
+  : AbSES C A.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 61
+Time: 0.001s">
+<div class="time" style="width: 0.53475935828877%"></div>
+<pre>
+  snapply Build_AbSES.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (abses_pullback_inclusion_transpose_endpoint' (inclusion E) F p).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (grp_quotient_map $o inclusion F).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 65
+Time: 0.001s">
+<div class="time" style="width: 0.53475935828877%"></div>
+<pre> srapply (ab_cokernel_embedding_rec _ (projection E $o projection F)).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro b.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 66
+Time: 0.001s">
+<div class="time" style="width: 0.53475935828877%"></div>
+<pre>
+    refine (ap (projection E) (abses_pullback_inclusion_transpose_beta (inclusion E) F p b) @ _).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 67
+Time: 0.001s">
+<div class="time" style="width: 0.53475935828877%"></div>
+<pre>
+    apply iscomplex_abses.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply isembedding_istrivial_kernel.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros a q0.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (* Since [inclusion F a] is killed by [grp_quotient_map], its in the image of [B]. *)
+   </pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 72
+Time: 0.005s">
+<div class="time" style="width: 2.6737967914439%"></div>
+<pre>pose proof (in_coset := related_quotient_paths _ _ _ q0).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (* Cleaning up the context facilitates later steps. *)
+   </pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 74
+Time: 0.001s">
+<div class="time" style="width: 0.53475935828877%"></div>
+<pre>destruct in_coset as [b q1]; rewrite grp_unit_r in q1.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (* Since both [inclusion F] and [B -&gt; F] factor through the mono [ab_biprod A B -&gt; F], we can lift [q1] to [ab_biprod A B]. *)
+   </pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 76
+Time: 0.001s">
+<div class="time" style="width: 0.53475935828877%"></div>
+<pre>assert (q2 : ab_biprod_inr  b = ab_biprod_inl (-a)).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: {</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 77
+Time: 0.001s">
+<div class="time" style="width: 0.53475935828877%"></div>
+<pre> apply (isinj_embedding (grp_pullback_pr1 _ _ $o p^$.1)).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+         -</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply abses_pullback_inclusion_lemma.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact _.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+         -</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 79
+Time: 0.001s">
+<div class="time" style="width: 0.53475935828877%"></div>
+<pre> nrefine (q1 @ _); symmetry.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 79
+Time: 0.002s">
+<div class="time" style="width: 1.0695187165775%"></div>
+<pre>
+           refine (ap (grp_pullback_pr1 _ _) (fst p^$.2 (-a)) @ _).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 80
+Time: 0.002s">
+<div class="time" style="width: 1.0695187165775%"></div>
+<pre>
+           exact (grp_homo_inv _ _).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (* Using [q2], we conclude. *)
+   </pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 83
+Time: 0.002s">
+<div class="time" style="width: 1.0695187165775%"></div>
+<pre>pose proof (q3 := ap (-) (fst ((equiv_path_prod _ _)^-1 q2))); cbn in q3.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact ((inverse_involutive _)^ @ q3^ @ grp_inv_unit).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 85
+Time: 0.001s">
+<div class="time" style="width: 0.53475935828877%"></div>
+<pre> apply (cancelR_conn_map (Tr (-1)) grp_quotient_map).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 85
+Time: 0.001s">
+<div class="time" style="width: 0.53475935828877%"></div>
+<pre>
+    1: exact _.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    simpl.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 87
+Time: 0.04s">
+<div class="time" style="width: 21.390374331551%"></div>
+<pre>
+    exact _.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 89
+Time: 0.002s">
+<div class="time" style="width: 1.0695187165775%"></div>
+<pre> snapply Build_IsExact.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 90
+Time: 0.006s">
+<div class="time" style="width: 3.2085561497326%"></div>
+<pre> srapply phomotopy_homotopy_hset.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      intro a; simpl.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      refine (ap (projection E) _ @ _).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 92
+Time: 0.001s">
+<div class="time" style="width: 0.53475935828877%"></div>
+<pre>
+      1: apply iscomplex_abses.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply grp_homo_unit.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 94
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 95
+Time: 0.001s">
+<div class="time" style="width: 0.53475935828877%"></div>
+<pre> intros [y q].</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 95
+Time: 0.001s">
+<div class="time" style="width: 0.53475935828877%"></div>
+<pre>
+      apply (@contr_inhabited_hprop _ _).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      (* We choose a preimage by [grp_quotient_map]. *)
+     </pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>assert (f : merely (hfiber grp_quotient_map y)).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      1: apply center, issurj_class_of.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 99
+Time: 0.003s">
+<div class="time" style="width: 1.6042780748663%"></div>
+<pre>
+      revert_opaque f; apply Trunc_rec; intros [f q0].</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      (* Since [projection F f] is in the kernel of [projection E], we find a preimage in [B]. *)
+     </pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>assert (b : merely (hfiber (inclusion E) (projection F f))).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      1: {</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 103
+Time: 0.006s">
+<div class="time" style="width: 3.2085561497326%"></div>
+<pre> tapply isexact_preimage.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+           exact (ap _ q0 @ q).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 104
+Time: 0.003s">
+<div class="time" style="width: 1.6042780748663%"></div>
+<pre>
+      revert_opaque b; apply Trunc_rec; intros [b q1].</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      (* The difference [f - b] in [F] is in the kernel of [projection F], hence lies in [A]. *)
+     </pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 107
+Time: 0.002s">
+<div class="time" style="width: 1.0695187165775%"></div>
+<pre>assert (a : merely (hfiber (inclusion F)
+                                 (sg_op f (-(grp_pullback_pr1 _ _ (p^$.1 (ab_biprod_inr b))))))).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      1: {</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 109
+Time: 0.006s">
+<div class="time" style="width: 3.2085561497326%"></div>
+<pre> tapply isexact_preimage.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+           refine (grp_homo_op _ _ _ @ _).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+           refine (ap (fun x =&gt; _ + x) (grp_homo_inv _ _) @ _).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 111
+Time: 0.002s">
+<div class="time" style="width: 1.0695187165775%"></div>
+<pre>
+           refine (ap (fun x =&gt; _ - x) (abses_pullback_inclusion_transpose_beta (inclusion E) F p b @ q1) @ _).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 112
+Time: 0.001s">
+<div class="time" style="width: 0.53475935828877%"></div>
+<pre>
+           apply right_inverse.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 113
+Time: 0.004s">
+<div class="time" style="width: 2.1390374331551%"></div>
+<pre>
+      revert_opaque a; apply Trunc_rec; intros [a q2].</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      (* It remains to show that [a] is the desired preimage. *)
+     </pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>refine (tr (a; _)).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 116
+Time: 0.001s">
+<div class="time" style="width: 0.53475935828877%"></div>
+<pre>
+      let T := type of y in apply (@path_sigma_hprop T).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      1: intros ?; apply istrunc_paths; apply group_isgroup.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 118
+Time: 0.001s">
+<div class="time" style="width: 0.53475935828877%"></div>
+<pre>
+      refine (ap grp_quotient_map q2 @ _ @ q0).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      refine (grp_homo_op _ _ _ @ _).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply grp_moveR_Mg.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 121
+Time: 0.001s">
+<div class="time" style="width: 0.53475935828877%"></div>
+<pre>
+      refine (_ @ (left_inverse _)^).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 122
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply qglue.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exists b.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      refine (_ @ (grp_unit_r _)^).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 125
+Time: 0.009s">
+<div class="time" style="width: 4.8128342245989%"></div>
+<pre>
+      exact (inverse_involutive _)^.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 126
+Time: 0.103s">
+<div class="time" style="width: 55.080213903743%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** That [abses_pullback_trivial_preimage E F p] pulls back to [F] is immediate from [abses_pullback_component1_id] and the following map. As such, we've shown that sequences which become trivial after pulling back along [inclusion E] are in the image of pullback along [projection E]. *)
+
+</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 130
+Time: 0.001s">
+<div class="time" style="width: 0.53475935828877%"></div>
+<pre>Definition abses_pullback_inclusion0_map' `{Univalence} {A B C : AbGroup} (E : AbSES C B)
+           (F : AbSES (middle E) A) (p : abses_pullback (inclusion E) F $== pt)
+  : AbSESMorphism F (abses_pullback_trivial_preimage E F p).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply Build_AbSESMorphism.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 135
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact grp_homo_id.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 135
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact grp_quotient_map.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 137
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (projection E).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 137
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 138
+Time: 0.009s">
+<div class="time" style="width: 4.8128342245989%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 139
+Time: 0.001s">
+<div class="time" style="width: 0.53475935828877%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** For exactness we need not only a preimage of [F] but a preimage of [(F,p)] along [cxfib]. We now define and prove this in terms of path data. *)
+
+(** The analog of [cxfib] induced by pullback in terms of path data. *)</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition cxfib' {A B C : AbGroup} (E : AbSES C B)
+  : AbSES C A -&gt; graph_hfiber (abses_pullback (A:=A) (inclusion E)) pt.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 145
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro Y.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 147
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exists (abses_pullback (projection E) Y).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 148
+Time: 0.001s">
+<div class="time" style="width: 0.53475935828877%"></div>
+<pre>
+  refine (abses_pullback_compose' _ _ Y $@ _).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (abses_pullback_homotopic' _ grp_homo_const _ Y $@ _).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: rapply iscomplex_abses.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 151
+Time: 0.002s">
+<div class="time" style="width: 1.0695187165775%"></div>
+<pre>
+  symmetry; apply abses_pullback_const'.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 152
+Time: 0.001s">
+<div class="time" style="width: 0.53475935828877%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 153
+Time: 0.002s">
+<div class="time" style="width: 1.0695187165775%"></div>
+<pre>
+
+Definition hfiber_cxfib' {A B C : AbGroup} (E : AbSES C B)
+           (F : AbSES (middle E) A) (p : abses_pullback (inclusion E) F $== pt)
+  := {Y : AbSES C A &amp; hfiber_abses_path (cxfib' E Y) (F; p)}.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* This is just [idpath], but Coq takes too long to see that. *)</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 159
+Time: 0.008s">
+<div class="time" style="width: 4.2780748663102%"></div>
+<pre>Local Definition pr2_cxfib' `{Univalence} {A B C : AbGroup} {E : AbSES C B} (U : AbSES C A)
+  : equiv_ptransformation_phomotopy (iscomplex_abses_pullback' _ _ (iscomplex_abses E)) U
+    = equiv_path_abses_iso (cxfib' E U).2.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 162
+Time: 0.003s">
+<div class="time" style="width: 1.6042780748663%"></div>
+<pre>
+  change (equiv_ptransformation_phomotopy (iscomplex_abses_pullback' _ _ (iscomplex_abses E)) U)
+    with (equiv_path_abses_iso ((iscomplex_abses_pullback' _ _ (iscomplex_abses E)).1 U)).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 164
+Time: 0.01s">
+<div class="time" style="width: 5.3475935828877%"></div>
+<pre>
+  apply (ap equiv_path_abses_iso).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 165
+Time: 0.002s">
+<div class="time" style="width: 1.0695187165775%"></div>
+<pre>
+  tapply path_hom.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 166
+Time: 0.003s">
+<div class="time" style="width: 1.6042780748663%"></div>
+<pre>
+  refine (_ $@R abses_pullback_compose' (inclusion E) (projection E) U);
+    unfold trans_comp.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 168
+Time: 0.003s">
+<div class="time" style="width: 1.6042780748663%"></div>
+<pre>
+  refine (_ $@R abses_pullback_homotopic' (projection E $o inclusion E) grp_homo_const (iscomplex_abses E) U).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 169
+Time: 0.009s">
+<div class="time" style="width: 4.8128342245989%"></div>
+<pre>
+  reflexivity.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 170
+Time: 0.046s">
+<div class="time" style="width: 24.598930481283%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Making [abses_pullback'] opaque speeds up the following proof. *)</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Opaque abses_pullback'.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 173
+Time: 0.002s">
+<div class="time" style="width: 1.0695187165775%"></div>
+<pre>
+
+Local Definition eq_cxfib_cxfib' `{Univalence} {A B C : AbGroup} {E : AbSES C B} (U : AbSES C A)
+  : cxfib (iscomplex_pullback_abses E) U = equiv_hfiber_abses _ _ (cxfib' E U).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 177
+Time: 0.002s">
+<div class="time" style="width: 1.0695187165775%"></div>
+<pre>
+  srapply path_sigma.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: reflexivity.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 179
+Time: 0.004s">
+<div class="time" style="width: 2.1390374331551%"></div>
+<pre>
+  nrefine (concat_p1 _ @ _).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 180
+Time: 0.011s">
+<div class="time" style="width: 5.8823529411765%"></div>
+<pre>
+  nrefine (concat_1p _ @ _).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 181
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  cbn zeta.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 182
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold equiv_hfiber_abses, equiv_functor_sigma_id, equiv_functor_sigma', equiv_functor_sigma, equiv_fun, functor_sigma, ".2".</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 183
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* The goal looks identical to [pr2_cxfib'], but the implicit argument to [@paths] is expressed differently, which is why the next line isn't faster. *)
+ </pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 185
+Time: 0.062s">
+<div class="time" style="width: 33.155080213904%"></div>
+<pre>exact (@pr2_cxfib' _ A B C E U).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 185
+Time: 0.068s">
+<div class="time" style="width: 36.363636363636%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 186
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Transparent abses_pullback'.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 188
+Time: 0.003s">
+<div class="time" style="width: 1.6042780748663%"></div>
+<pre>
+
+Definition equiv_hfiber_cxfib' `{Univalence} {A B C : AbGroup} {E : AbSES C B}
+           (F : AbSES (middle E) A) (p : abses_pullback (inclusion E) F $== pt)
+  : hfiber_cxfib' E F p &lt;~&gt; hfiber (cxfib (iscomplex_pullback_abses E))
+                  (equiv_hfiber_abses _ pt (F;p)).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 193
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 194
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply equiv_functor_sigma_id; intro U; lazy beta.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_ oE equiv_hfiber_abses_pullback _ _ _).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_ oE equiv_ap' (equiv_hfiber_abses _ pt) _ _).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 197
+Time: 0.023s">
+<div class="time" style="width: 12.299465240642%"></div>
+<pre>
+  apply equiv_concat_l.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 198
+Time: 0.034s">
+<div class="time" style="width: 18.181818181818%"></div>
+<pre>
+  apply eq_cxfib_cxfib'.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 199
+Time: 0.007s">
+<div class="time" style="width: 3.7433155080214%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The type of paths in [hfiber_cxfib'] in terms of path data. *)</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 202
+Time: 0.001s">
+<div class="time" style="width: 0.53475935828877%"></div>
+<pre>Definition path_hfiber_cxfib' {A B C : AbGroup} {E : AbSES C B}
+           {F : AbSES (middle E) A} {p : abses_pullback (inclusion E) F $== pt}
+           (X Y : hfiber_cxfib' (B:=B) E F p)
+  : Type.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 205
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (sig (fun q0 : X.1 $== Y.1 =&gt; _)).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 207
+Time: 0.003s">
+<div class="time" style="width: 1.6042780748663%"></div>
+<pre>
+  exact ((fmap (abses_pullback (projection E)) q0)^$ $@ X.2.1 $== Y.2.1).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 208
+Time: 0.003s">
+<div class="time" style="width: 1.6042780748663%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 209
+Time: 0.015s">
+<div class="time" style="width: 8.0213903743316%"></div>
+<pre>
+
+Definition transport_hfiber_abses_path_cxfib'_l `{Univalence} {A B C : AbGroup} {E : AbSES C B}
+           (F : AbSES (middle E) A) (p : abses_pullback (inclusion E) F $== pt)
+           (U V : hfiber_cxfib' E F p) (q : U.1 = V.1)
+  : (transport (fun Y : AbSES C A =&gt; hfiber_abses_path (cxfib' E Y) (F; p)) q U.2).1
+    = fmap (abses_pullback (projection E)) (equiv_path_abses_iso^-1 q^) $@ U.2.1.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 215
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 216
+Time: 0.001s">
+<div class="time" style="width: 0.53475935828877%"></div>
+<pre>
+  induction q.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 217
+Time: 0.001s">
+<div class="time" style="width: 0.53475935828877%"></div>
+<pre>
+  refine (ap pr1 (transport_1 _ _) @ _).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 218
+Time: 0.005s">
+<div class="time" style="width: 2.6737967914439%"></div>
+<pre>
+  refine (_ @ ap (fun x =&gt; fmap (abses_pullback (projection E)) x $@ _) equiv_path_absesV_1^).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 219
+Time: 0.004s">
+<div class="time" style="width: 2.1390374331551%"></div>
+<pre>
+  refine (_ @ ap (fun x =&gt; x $@ _) (fmap_id_strong _ _)^).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 220
+Time: 0.001s">
+<div class="time" style="width: 0.53475935828877%"></div>
+<pre>
+  exact (cat_idr_strong _)^.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 221
+Time: 0.05s">
+<div class="time" style="width: 26.737967914439%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 222
+Time: 0.001s">
+<div class="time" style="width: 0.53475935828877%"></div>
+<pre>
+
+Definition equiv_path_hfiber_cxfib' `{Univalence} {A B C : AbGroup} {E : AbSES C B}
+           (F : AbSES (middle E) A) (p : abses_pullback (inclusion E) F $== pt)
+           (U V : hfiber_cxfib' E F p)
+  : path_hfiber_cxfib' U V &lt;~&gt; U = V.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 227
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (equiv_path_sigma _ _ _ oE _).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 229
+Time: 0.001s">
+<div class="time" style="width: 0.53475935828877%"></div>
+<pre>
+  srapply (equiv_functor_sigma' equiv_path_abses_iso);
+    intro q; lazy beta.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 231
+Time: 0.076s">
+<div class="time" style="width: 40.641711229947%"></div>
+<pre>
+  refine (equiv_path_sigma_hprop _ _ oE _).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 232
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (equiv_concat_l _ _ oE _).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 233
+Time: 0.001s">
+<div class="time" style="width: 0.53475935828877%"></div>
+<pre>
+  1: apply transport_hfiber_abses_path_cxfib'_l.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 234
+Time: 0.042s">
+<div class="time" style="width: 22.459893048128%"></div>
+<pre>
+  refine (equiv_path_sigma_hprop _ _ oE equiv_concat_l _ _ oE _).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 235
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: {</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 236
+Time: 0.007s">
+<div class="time" style="width: 3.7433155080214%"></div>
+<pre> refine (ap (fun x =&gt; (fmap (abses_pullback _) x $@ _).1) _).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 236
+Time: 0.001s">
+<div class="time" style="width: 0.53475935828877%"></div>
+<pre>
+       nrefine (ap _ (abses_path_data_V q) @ _).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 237
+Time: 0.031s">
+<div class="time" style="width: 16.577540106952%"></div>
+<pre>
+       apply eissect.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 238
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 238
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (equiv_concat_l _ _ oE _).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 239
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: {</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 240
+Time: 0.003s">
+<div class="time" style="width: 1.6042780748663%"></div>
+<pre> refine (ap (fun x =&gt; (x $@ _).1) _).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 240
+Time: 0.012s">
+<div class="time" style="width: 6.4171122994652%"></div>
+<pre>
+       tapply gpd_strong_1functor_V.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 241
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 241
+Time: 0.003s">
+<div class="time" style="width: 1.6042780748663%"></div>
+<pre>
+  apply equiv_path_groupisomorphism.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 242
+Time: 0.096s">
+<div class="time" style="width: 51.336898395722%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 243
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The fibre of [cxfib'] over [(F;p)] is inhabited. *)</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 245
+Time: 0.001s">
+<div class="time" style="width: 0.53475935828877%"></div>
+<pre>Definition hfiber_cxfib'_inhabited `{Univalence} {A B C : AbGroup} (E : AbSES C B)
+      (F : AbSES (middle E) A) (p : abses_pullback (inclusion E) F $== pt)
+  : hfiber_cxfib' E F p.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 247
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 248
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exists (abses_pullback_trivial_preimage E F p).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 249
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srefine (_^$; _).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 250
+Time: 0.007s">
+<div class="time" style="width: 3.7433155080214%"></div>
+<pre>
+  1: by rapply (abses_pullback_component1_id' (abses_pullback_inclusion0_map' E F p)).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 251
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lazy beta; unfold pr2.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 252
+Time: 0.004s">
+<div class="time" style="width: 2.1390374331551%"></div>
+<pre>
+  refine (cat_assoc _ _ _ $@ _).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 253
+Time: 0.001s">
+<div class="time" style="width: 0.53475935828877%"></div>
+<pre>
+  refine (cat_assoc _ _ _ $@ _).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 254
+Time: 0.001s">
+<div class="time" style="width: 0.53475935828877%"></div>
+<pre>
+  apply gpd_moveR_Vh.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 255
+Time: 0.001s">
+<div class="time" style="width: 0.53475935828877%"></div>
+<pre>
+  apply gpd_moveL_hM.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 256
+Time: 0.007s">
+<div class="time" style="width: 3.7433155080214%"></div>
+<pre>
+  apply equiv_ab_biprod_ind_homotopy.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 257
+Time: 0.058s">
+<div class="time" style="width: 31.016042780749%"></div>
+<pre>
+  split; apply equiv_path_pullback_rec_hset; split; cbn.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 258
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 259
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro a.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 259
+Time: 0.003s">
+<div class="time" style="width: 1.6042780748663%"></div>
+<pre>
+    exact (ap (class_of _ o pullback_pr1) (fst p^$.2 a)).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 260
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 261
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro a.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 261
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact ((snd p^$.2 _)^).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 262
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 263
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro b; apply qglue.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 263
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists (-b).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 264
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply grp_moveL_Vg.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 265
+Time: 0.002s">
+<div class="time" style="width: 1.0695187165775%"></div>
+<pre>
+    refine ((grp_homo_op (grp_pullback_pr1 _ _ $o p^$.1 $o ab_biprod_inr) _ _)^ @ _).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 266
+Time: 0.001s">
+<div class="time" style="width: 0.53475935828877%"></div>
+<pre>
+    exact (ap _ (right_inverse _) @ grp_homo_unit _ @ (grp_homo_unit _)^).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 267
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 268
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro b.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 268
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (snd p^$.2 _)^.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 269
+Time: 0.187s">
+<div class="time" style="width: 100%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 270
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** To conclude exactness in terms of path data, we show that the fibre is a proposition, hence contractible. *)
+
+(** Given a point [(Y;Q)] in the fiber of [cxfib'] over [(F;p)] there is an induced map as follows. *)</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 274
+Time: 0.002s">
+<div class="time" style="width: 1.0695187165775%"></div>
+<pre>Local Definition hfiber_cxfib'_induced_map {A B C : AbGroup} (E : AbSES C B)
+      (F : AbSES (middle E) A) (p : abses_pullback (inclusion E) F $== pt)
+      (Y : hfiber_cxfib' E F p)
+  : ab_biprod A B $-&gt; abses_pullback (projection E) Y.1.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 277
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 278
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct Y as [Y q].</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 279
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (grp_homo_compose _ (grp_iso_inverse p.1)).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 280
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_ $o grp_pullback_pr1 _ _).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 281
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (q.1^$.1).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 282
+Time: 0.002s">
+<div class="time" style="width: 1.0695187165775%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 283
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** There is "another" obvious induced map. *)</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 285
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition abses_pullback_splits_induced_map' {A B C : AbGroup}
+           (E : AbSES C B) (Y : AbSES C A)
+  : ab_biprod A B $-&gt; abses_pullback (projection E) Y.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 287
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 288
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply (ab_biprod_rec (inclusion _)).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 289
+Time: 0.013s">
+<div class="time" style="width: 6.951871657754%"></div>
+<pre>
+  srapply grp_pullback_corec.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 290
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 291
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact grp_homo_const.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 291
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 292
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (inclusion E).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 292
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 293
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro x.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 293
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (grp_homo_unit _ @ _).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 294
+Time: 0.001s">
+<div class="time" style="width: 0.53475935828877%"></div>
+<pre>
+    symmetry; apply iscomplex_abses.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 295
+Time: 0.001s">
+<div class="time" style="width: 0.53475935828877%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 296
+Time: 0.004s">
+<div class="time" style="width: 2.1390374331551%"></div>
+<pre>
+
+Lemma fmap_hfiber_abses_lemma `{Univalence} {A B B' : AbGroup} (f : B' $-&gt; B)
+           (X Y : graph_hfiber (abses_pullback (A:=A) f) pt) (Q : hfiber_abses_path X Y)
+  : fmap (abses_pullback f) Q.1^$ $o Y.2^$ $== X.2^$.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 300
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 301
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  generalize Q.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 302
+Time: 0.031s">
+<div class="time" style="width: 16.577540106952%"></div>
+<pre>
+  equiv_intro (equiv_hfiber_abses_pullback _ X Y)^-1%equiv p;
+    induction p.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 304
+Time: 0.003s">
+<div class="time" style="width: 1.6042780748663%"></div>
+<pre>
+  refine ((_ $@R _) $@ _).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 305
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 306
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> Unshelve.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 306
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    2: exact (Id _).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 307
+Time: 0.001s">
+<div class="time" style="width: 0.53475935828877%"></div>
+<pre>
+    refine (fmap2 _ _ $@ fmap_id _ _).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 308
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro x; reflexivity.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 309
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 309
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (cat_idl _).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 310
+Time: 0.007s">
+<div class="time" style="width: 3.7433155080214%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 311
+Time: 0.002s">
+<div class="time" style="width: 1.0695187165775%"></div>
+<pre>
+
+Lemma induced_map_eq `{Univalence} {A B C : AbGroup} (E : AbSES C B)
+      (F : AbSES (middle E) A) (p : abses_pullback (inclusion E) F $== pt)
+      (Y : hfiber_cxfib' E F p)
+  : hfiber_cxfib'_induced_map E F p Y == abses_pullback_splits_induced_map' E Y.1.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 316
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 317
+Time: 0.002s">
+<div class="time" style="width: 1.0695187165775%"></div>
+<pre>
+  intros [a b]; cbn.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 318
+Time: 0.003s">
+<div class="time" style="width: 1.6042780748663%"></div>
+<pre>
+  refine (ap pullback_pr1 (fmap_hfiber_abses_lemma _ _ (F;p) Y.2 _) @ _).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 319
+Time: 0.016s">
+<div class="time" style="width: 8.5561497326203%"></div>
+<pre>
+  srapply equiv_path_pullback_hset; split; cbn.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 320
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 321
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (grp_unit_r _)^.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 321
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 322
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (grp_unit_l _)^.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 322
+Time: 0.034s">
+<div class="time" style="width: 18.181818181818%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 323
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Given another point [(Y,Q)] in the fibre of [cxfib'] over [(F;p)], we get path data in [AbSES C A]. *)</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 325
+Time: 0.002s">
+<div class="time" style="width: 1.0695187165775%"></div>
+<pre>Lemma hfiber_cxfib'_induced_path'0 `{Univalence} {A B C : AbGroup} (E : AbSES C B)
+      (F : AbSES (middle E) A) (p : abses_pullback (inclusion E) F $== pt)
+      (Y : hfiber_cxfib' E F p)
+  : abses_pullback_trivial_preimage E F p $== Y.1.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 328
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 329
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct Y as [Y Q].</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 330
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply abses_path_data_to_iso;
+    srefine (_; (_,_)).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 332
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 333
+Time: 0.005s">
+<div class="time" style="width: 2.6737967914439%"></div>
+<pre> snapply (ab_cokernel_embedding_rec _ (grp_pullback_pr1 _ _$o (Q.1^$).1)).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 333
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1-3: exact _.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 334
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro f.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 335
+Time: 0.003s">
+<div class="time" style="width: 1.6042780748663%"></div>
+<pre>
+    nrefine (ap _ (induced_map_eq E F p (Y;Q) _) @ _); cbn.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 336
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (grp_unit_r _ @ grp_homo_unit _).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 337
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 338
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro a.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 338
+Time: 0.001s">
+<div class="time" style="width: 0.53475935828877%"></div>
+<pre>
+    refine (_ @ ap (grp_pullback_pr1 _ _) (fst (Q.1^$).2 a)).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 339
+Time: 0.001s">
+<div class="time" style="width: 0.53475935828877%"></div>
+<pre>
+    exact (grp_quotient_rec_beta' _ F _ _ (inclusion F a)).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 340
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 341
+Time: 0.028s">
+<div class="time" style="width: 14.973262032086%"></div>
+<pre> napply (conn_map_elim _ grp_quotient_map).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 341
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: apply issurj_class_of.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 342
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: intros ?; apply istrunc_paths; apply group_isgroup.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 343
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro f.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 344
+Time: 0.002s">
+<div class="time" style="width: 1.0695187165775%"></div>
+<pre>
+    refine (ap (projection E) (snd (Q.1^$).2 f) @ _); unfold pr1.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 345
+Time: 0.003s">
+<div class="time" style="width: 1.6042780748663%"></div>
+<pre>
+    exact (pullback_commsq _ _ ((Q.1^$).1 f))^.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 346
+Time: 0.048s">
+<div class="time" style="width: 25.668449197861%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 347
+Time: 0.001s">
+<div class="time" style="width: 0.53475935828877%"></div>
+<pre>
+
+Lemma hfiber_cxfib'_induced_path' `{Univalence} {A B C : AbGroup} (E : AbSES C B)
+      (F : AbSES (middle E) A) (p : abses_pullback (inclusion E) F $== pt)
+      (Y : hfiber_cxfib' E F p)
+  : path_hfiber_cxfib' (hfiber_cxfib'_inhabited E F p) Y.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 352
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 353
+Time: 0.005s">
+<div class="time" style="width: 2.6737967914439%"></div>
+<pre>
+  exists (hfiber_cxfib'_induced_path'0 E F p Y).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 354
+Time: 0.017s">
+<div class="time" style="width: 9.0909090909091%"></div>
+<pre>
+  tapply gpd_moveR_Vh.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 355
+Time: 0.005s">
+<div class="time" style="width: 2.6737967914439%"></div>
+<pre>
+  tapply gpd_moveL_hM.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 356
+Time: 0.002s">
+<div class="time" style="width: 1.0695187165775%"></div>
+<pre>
+  rapply gpd_moveR_Vh.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 357
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro x.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 358
+Time: 0.009s">
+<div class="time" style="width: 4.8128342245989%"></div>
+<pre>
+  srapply equiv_path_pullback_hset; split.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 359
+Time: 0.001s">
+<div class="time" style="width: 0.53475935828877%"></div>
+<pre>
+  2: exact (snd Y.2.1^$.2 x)^.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 360
+Time: 0.001s">
+<div class="time" style="width: 0.53475935828877%"></div>
+<pre>
+  reflexivity.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 361
+Time: 0.038s">
+<div class="time" style="width: 20.320855614973%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 362
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** It follows that [hfiber_cxfib'] is contractible. *)</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 364
+Time: 0.001s">
+<div class="time" style="width: 0.53475935828877%"></div>
+<pre>Lemma contr_hfiber_cxfib' `{Univalence} {A B C : AbGroup} (E : AbSES C B)
+      (F : AbSES (middle E) A) (p : abses_pullback (inclusion E) F $== pt)
+  : Contr (hfiber_cxfib' E F p).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 366
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 367
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  srapply Build_Contr.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 368
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: apply hfiber_cxfib'_inhabited.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 369
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [Y q].</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 370
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply equiv_path_hfiber_cxfib'.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 371
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply hfiber_cxfib'_induced_path'.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 372
+Time: 0.001s">
+<div class="time" style="width: 0.53475935828877%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 373
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** From this we deduce exactness. *)</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 375
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance isexact_abses_pullback `{Univalence} {A B C : AbGroup} {E : AbSES C B}
+  : IsExact purely (abses_pullback_pmap (A:=A) (projection E)) (abses_pullback_pmap (inclusion E)).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 376
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 377
+Time: 0.009s">
+<div class="time" style="width: 4.8128342245989%"></div>
+<pre>
+  srapply Build_IsExact.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 378
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: apply iscomplex_pullback_abses.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 379
+Time: 0.004s">
+<div class="time" style="width: 2.1390374331551%"></div>
+<pre>
+  srapply (equiv_ind (equiv_hfiber_abses (abses_pullback (inclusion E)) (point (AbSES B A)))).</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 380
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [F p].</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 381
+Time: 0.001s">
+<div class="time" style="width: 0.53475935828877%"></div>
+<pre>
+  rapply contr_equiv'.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 382
+Time: 0.001s">
+<div class="time" style="width: 0.53475935828877%"></div>
+<pre>
+  1: apply equiv_hfiber_cxfib'.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 383
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply contr_hfiber_cxfib'.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 384
+Time: 0.002s">
+<div class="time" style="width: 1.0695187165775%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: PullbackFiberSequence.v
+Line: 386
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

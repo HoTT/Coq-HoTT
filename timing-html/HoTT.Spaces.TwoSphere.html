@@ -1,0 +1,377 @@
+<html>
+<head>
+<title>TwoSphere.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for TwoSphere.v</h1>
+
+<div class="code" title="File: TwoSphere.v
+Line: 1
+Time: 0.024s">
+<div class="time" style="width: 14.201183431953%"></div>
+<pre>Require Import Basics.Overture Basics.Tactics Basics.PathGroupoids.</pre>
+</div>
+<div class="code" title="File: TwoSphere.v
+Line: 1
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope path_scope.</pre>
+</div>
+<div class="code" title="File: TwoSphere.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Theorems about the 2-sphere [S^2]. *)
+
+(* ** Definition of the 2-sphere. *)
+
+</pre>
+</div>
+<div class="code" title="File: TwoSphere.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Module Export TwoSphere.</pre>
+</div>
+<div class="code" title="File: TwoSphere.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Private Inductive TwoSphere : Type0 :=
+    | base : TwoSphere.</pre>
+</div>
+<div class="code" title="File: TwoSphere.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Axiom surf : idpath base = idpath base.</pre>
+</div>
+<div class="code" title="File: TwoSphere.v
+Line: 13
+Time: 0.001s">
+<div class="time" style="width: 0.59171597633136%"></div>
+<pre>
+
+  Definition TwoSphere_ind (P : TwoSphere -&gt; Type)
+    (b : P base) (s : idpath b = transport2 P surf b)
+    : forall (x : TwoSphere), P x
+    := fun x =&gt; match x with base =&gt; fun _ =&gt; b end s.</pre>
+</div>
+<div class="code" title="File: TwoSphere.v
+Line: 18
+Time: 0.002s">
+<div class="time" style="width: 1.1834319526627%"></div>
+<pre>
+
+  Axiom TwoSphere_ind_beta_surf : forall (P : TwoSphere -&gt; Type)
+    (b : P base) (s : idpath b = transport2 P surf b),
+    apD02 (TwoSphere_ind P b s) surf = s @ (concat_p1 _)^.</pre>
+</div>
+<div class="code" title="File: TwoSphere.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End TwoSphere.</pre>
+</div>
+<div class="code" title="File: TwoSphere.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* ** The non-dependent eliminator *)
+
+</pre>
+</div>
+<div class="code" title="File: TwoSphere.v
+Line: 27
+Time: 0.001s">
+<div class="time" style="width: 0.59171597633136%"></div>
+<pre>Definition TwoSphere_rec (P : Type) (b : P) (s : idpath b = idpath b)
+  : TwoSphere -&gt; P
+  := TwoSphere_ind (fun _ =&gt; P) b (s @ (transport2_const surf b) @ (concat_p1 _)).</pre>
+</div>
+<div class="code" title="File: TwoSphere.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition TwoSphere_rec_beta_surf (P : Type) (b : P) (s : idpath b = idpath b)
+  : ap02 (TwoSphere_rec P b s) surf = s.</pre>
+</div>
+<div class="code" title="File: TwoSphere.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: TwoSphere.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (cancel2L (transport2_const surf b)).</pre>
+</div>
+<div class="code" title="File: TwoSphere.v
+Line: 34
+Time: 0.001s">
+<div class="time" style="width: 0.59171597633136%"></div>
+<pre>
+  apply (cancelL (apD_const (TwoSphere_rec P b s) (idpath base))).</pre>
+</div>
+<div class="code" title="File: TwoSphere.v
+Line: 35
+Time: 0.001s">
+<div class="time" style="width: 0.59171597633136%"></div>
+<pre>
+  apply (cancelR _ _ (concat_p_pp _ (transport_const _ b) _)^).</pre>
+</div>
+<div class="code" title="File: TwoSphere.v
+Line: 36
+Time: 0.002s">
+<div class="time" style="width: 1.1834319526627%"></div>
+<pre>
+  apply (cancelR _ _ (whiskerL (transport2 _ surf b) (apD_const _ _)^)).</pre>
+</div>
+<div class="code" title="File: TwoSphere.v
+Line: 37
+Time: 0.002s">
+<div class="time" style="width: 1.1834319526627%"></div>
+<pre>
+  refine ((apD02_const (TwoSphere_rec P b s) surf)^ @ _).</pre>
+</div>
+<div class="code" title="File: TwoSphere.v
+Line: 38
+Time: 0.002s">
+<div class="time" style="width: 1.1834319526627%"></div>
+<pre>
+  refine ((TwoSphere_ind_beta_surf _ _ _) @ _).</pre>
+</div>
+<div class="code" title="File: TwoSphere.v
+Line: 39
+Time: 0.005s">
+<div class="time" style="width: 2.9585798816568%"></div>
+<pre>
+  refine (_ @ (ap (fun w =&gt; _ @ w) 
+                  (triangulator 
+                     (transport2 (fun _ : TwoSphere =&gt; P) surf b) _))).</pre>
+</div>
+<div class="code" title="File: TwoSphere.v
+Line: 42
+Time: 0.002s">
+<div class="time" style="width: 1.1834319526627%"></div>
+<pre> 
+  cbn.</pre>
+</div>
+<div class="code" title="File: TwoSphere.v
+Line: 43
+Time: 0.001s">
+<div class="time" style="width: 0.59171597633136%"></div>
+<pre> refine (_ @ (ap (fun w =&gt; (w @ _) @ _) (concat_1p _)^)).</pre>
+</div>
+<div class="code" title="File: TwoSphere.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  
+  refine (_ @ (concat_p_pp _ _ _)).</pre>
+</div>
+<div class="code" title="File: TwoSphere.v
+Line: 45
+Time: 0.001s">
+<div class="time" style="width: 0.59171597633136%"></div>
+<pre>
+  refine (_ @ (ap (fun w =&gt; _ @ w) (concat_pp_p _ _ _))).</pre>
+</div>
+<div class="code" title="File: TwoSphere.v
+Line: 46
+Time: 0.001s">
+<div class="time" style="width: 0.59171597633136%"></div>
+<pre>
+  refine (_ @ (ap (fun w =&gt; _ @ (w @ _)) (concat_Vp _)^)).</pre>
+</div>
+<div class="code" title="File: TwoSphere.v
+Line: 47
+Time: 0.002s">
+<div class="time" style="width: 1.1834319526627%"></div>
+<pre>
+  refine (_ @ (ap (fun w =&gt; _ @ (w @ _)) 
+                  (concat_pV (concat_p1 
+                                (transport2 (fun _ : TwoSphere =&gt; P) surf b @ 1))))).</pre>
+</div>
+<div class="code" title="File: TwoSphere.v
+Line: 50
+Time: 0.001s">
+<div class="time" style="width: 0.59171597633136%"></div>
+<pre>
+  refine (_ @ (ap (fun w =&gt; _ @ w) (concat_p_pp _ _ _))).</pre>
+</div>
+<div class="code" title="File: TwoSphere.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_ @ (concat_pp_p _ _ _)).</pre>
+</div>
+<div class="code" title="File: TwoSphere.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply moveR_pV.</pre>
+</div>
+<div class="code" title="File: TwoSphere.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_ @ (concat_p_pp _ _ _)).</pre>
+</div>
+<div class="code" title="File: TwoSphere.v
+Line: 53
+Time: 0.002s">
+<div class="time" style="width: 1.1834319526627%"></div>
+<pre>
+  refine (_ @ (ap (fun w =&gt; _ @ w) (whiskerR_p1 _)^)).</pre>
+</div>
+<div class="code" title="File: TwoSphere.v
+Line: 54
+Time: 0.003s">
+<div class="time" style="width: 1.7751479289941%"></div>
+<pre> f_ap.</pre>
+</div>
+<div class="code" title="File: TwoSphere.v
+Line: 54
+Time: 0.001s">
+<div class="time" style="width: 0.59171597633136%"></div>
+<pre>
+  refine ((ap (fun w =&gt; w @ _) (whiskerL_1p_1 _)^) @ _).</pre>
+</div>
+<div class="code" title="File: TwoSphere.v
+Line: 55
+Time: 0.001s">
+<div class="time" style="width: 0.59171597633136%"></div>
+<pre>
+  refine ((ap (fun w =&gt; _ @ w) (whiskerR_p1 _)^) @ _).</pre>
+</div>
+<div class="code" title="File: TwoSphere.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn.</pre>
+</div>
+<div class="code" title="File: TwoSphere.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine ((concat_p_pp _ _ _) @ _).</pre>
+</div>
+<div class="code" title="File: TwoSphere.v
+Line: 57
+Time: 0.003s">
+<div class="time" style="width: 1.7751479289941%"></div>
+<pre> f_ap.</pre>
+</div>
+<div class="code" title="File: TwoSphere.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine ((ap (fun w =&gt; _ @ w) (concat_1p _)) @ _).</pre>
+</div>
+<div class="code" title="File: TwoSphere.v
+Line: 58
+Time: 0.001s">
+<div class="time" style="width: 0.59171597633136%"></div>
+<pre>
+  refine ((concat_whisker 1 _ _ 1 (transport2_const surf b) s)^ @ _).</pre>
+</div>
+<div class="code" title="File: TwoSphere.v
+Line: 59
+Time: 0.001s">
+<div class="time" style="width: 0.59171597633136%"></div>
+<pre>
+  
+  symmetry.</pre>
+</div>
+<div class="code" title="File: TwoSphere.v
+Line: 61
+Time: 0.001s">
+<div class="time" style="width: 0.59171597633136%"></div>
+<pre>
+  refine ((ap (fun w =&gt; w @@ _) (concat_p1 _)^) @ _).</pre>
+</div>
+<div class="code" title="File: TwoSphere.v
+Line: 62
+Time: 0.005s">
+<div class="time" style="width: 2.9585798816568%"></div>
+<pre>
+  refine ((ap (fun w =&gt; _ @@ w) (concat_1p _)^) @ _).</pre>
+</div>
+<div class="code" title="File: TwoSphere.v
+Line: 63
+Time: 0.001s">
+<div class="time" style="width: 0.59171597633136%"></div>
+<pre>
+  refine ((concat_concat2 _ _ _ _)^ @ _).</pre>
+</div>
+<div class="code" title="File: TwoSphere.v
+Line: 64
+Time: 0.002s">
+<div class="time" style="width: 1.1834319526627%"></div>
+<pre> f_ap.</pre>
+</div>
+<div class="code" title="File: TwoSphere.v
+Line: 64
+Time: 0.169s">
+<div class="time" style="width: 100%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: TwoSphere.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

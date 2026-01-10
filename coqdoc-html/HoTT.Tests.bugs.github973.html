@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Tests.bugs.github973</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Tests.bugs.github973</h1>
+
+<div class="code">
+<span class="id" title="keyword">From</span> <span class="id" title="var">HoTT</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.html#"><span class="id" title="library">Basics</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <a id="vec" class="idref" href="#vec"><span class="id" title="definition, inductive"><span id="vec_rect" class="id"><span id="vec_ind" class="id"><span id="vec_rec" class="id"><span id="vec_sind" class="id">vec</span></span></span></span></span></a> (<a id="A:1" class="idref" href="#A:1"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>) : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="keyword">Type</span> :=<br/>
+| <a id="nil" class="idref" href="#nil"><span class="id" title="constructor">nil</span></a> : <a class="idref" href="HoTT.Tests.bugs.github973.html#vec:2"><span class="id" title="inductive">vec</span></a> <a class="idref" href="HoTT.Tests.bugs.github973.html#A:1"><span class="id" title="variable">A</span></a> 0<br/>
+| <a id="cons" class="idref" href="#cons"><span class="id" title="constructor">cons</span></a> : <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a id="n:4" class="idref" href="#n:4"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Tests.bugs.github973.html#A:1"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Tests.bugs.github973.html#vec:2"><span class="id" title="inductive">vec</span></a> <a class="idref" href="HoTT.Tests.bugs.github973.html#A:1"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Tests.bugs.github973.html#n:4"><span class="id" title="variable">n</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Tests.bugs.github973.html#vec:2"><span class="id" title="inductive">vec</span></a> <a class="idref" href="HoTT.Tests.bugs.github973.html#A:1"><span class="id" title="variable">A</span></a> (<a class="idref" href="HoTT.Basics.Overture.html#S"><span class="id" title="constructor">S</span></a> <a class="idref" href="HoTT.Tests.bugs.github973.html#n:4"><span class="id" title="variable">n</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="hd" class="idref" href="#hd"><span class="id" title="definition">hd</span></a> (<a id="A:5" class="idref" href="#A:5"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>) (<a id="n:6" class="idref" href="#n:6"><span class="id" title="binder">n</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#nat"><span class="id" title="inductive">nat</span></a>) (<a id="v:7" class="idref" href="#v:7"><span class="id" title="binder">v</span></a> : <a class="idref" href="HoTT.Tests.bugs.github973.html#vec"><span class="id" title="inductive">vec</span></a> <a class="idref" href="HoTT.Tests.bugs.github973.html#A:5"><span class="id" title="variable">A</span></a> (<a class="idref" href="HoTT.Basics.Overture.html#S"><span class="id" title="constructor">S</span></a> <a class="idref" href="HoTT.Tests.bugs.github973.html#n:6"><span class="id" title="variable">n</span></a>)) : <a class="idref" href="HoTT.Tests.bugs.github973.html#A:5"><span class="id" title="variable">A</span></a> :=<br/>
+<span class="id" title="keyword">match</span> <a class="idref" href="HoTT.Tests.bugs.github973.html#v:7"><span class="id" title="variable">v</span></a> <span class="id" title="tactic">in</span> (<a class="idref" href="HoTT.Tests.bugs.github973.html#vec"><span class="id" title="inductive">vec</span></a> <span class="id" title="var">_</span> (<a class="idref" href="HoTT.Basics.Overture.html#S"><span class="id" title="constructor">S</span></a> <span class="id" title="var">n</span>)) <span class="id" title="keyword">return</span> <a class="idref" href="HoTT.Tests.bugs.github973.html#A:5"><span class="id" title="variable">A</span></a> <span class="id" title="keyword">with</span><br/>
+| <a class="idref" href="HoTT.Tests.bugs.github973.html#cons"><span class="id" title="constructor">cons</span></a> <span class="id" title="var">_</span> <span class="id" title="var">h</span> <span class="id" title="var">_</span> ⇒ <span class="id" title="var">h</span><br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

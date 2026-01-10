@@ -1,0 +1,14 @@
+digraph HoTT_Colimits_Colimit_Coequalizer {
+  graph [ratio=0.5]
+  node [style=filled]
+Colimit_Coequalizer_equiv_Coeq_Coequalizer [label="equiv_Coeq_Coequalizer", URL=<Colimit_Coequalizer.html#equiv_Coeq_Coequalizer>, peripheries=3, fillcolor="#F070D1"] ;
+Colimit_Coequalizer_iscoequalizer_Coeq [label="iscoequalizer_Coeq", URL=<Colimit_Coequalizer.html#iscoequalizer_Coeq>, fillcolor="#F070D1"] ;
+Colimit_Coequalizer_cocone_Coeq [label="cocone_Coeq", URL=<Colimit_Coequalizer.html#cocone_Coeq>, fillcolor="#F070D1"] ;
+Colimit_Coequalizer_Coequalizer [label="Coequalizer", URL=<Colimit_Coequalizer.html#Coequalizer>, fillcolor="#F070D1"] ;
+Colimit_Coequalizer_IsCoequalizer [label="IsCoequalizer", URL=<Colimit_Coequalizer.html#IsCoequalizer>, peripheries=3, fillcolor="#F070D1"] ;
+  Colimit_Coequalizer_equiv_Coeq_Coequalizer -> Colimit_Coequalizer_iscoequalizer_Coeq [] ;
+  Colimit_Coequalizer_equiv_Coeq_Coequalizer -> Colimit_Coequalizer_Coequalizer [] ;
+  Colimit_Coequalizer_iscoequalizer_Coeq -> Colimit_Coequalizer_cocone_Coeq [] ;
+subgraph cluster_Colimit_Coequalizer { label="Colimit_Coequalizer"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Colimit_Coequalizer_IsCoequalizer; Colimit_Coequalizer_Coequalizer; Colimit_Coequalizer_cocone_Coeq; Colimit_Coequalizer_iscoequalizer_Coeq; Colimit_Coequalizer_equiv_Coeq_Coequalizer; };
+} /* END */

@@ -1,0 +1,7624 @@
+<html>
+<head>
+<title>Theory.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Theory.v</h1>
+
+<div class="code" title="File: Theory.v
+Line: 1
+Time: 0.026s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import Basics.Overture Basics.Tactics Basics.PathGroupoids Basics.Trunc
+  Basics.Equivalences Basics.Decidable Basics.Iff.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 2
+Time: 0.008s">
+<div class="time" style="width: 30.769230769231%"></div>
+<pre>
+Require Import Types.Paths Types.Unit Types.Prod Types.Sigma Types.Sum
+  Types.Empty Types.Option.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 4
+Time: 0.002s">
+<div class="time" style="width: 7.6923076923077%"></div>
+<pre>
+Require Export Spaces.List.Core Spaces.Nat.Core.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Set Universe Minimization ToSet.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Set Polymorphic Inductive Cumulativity.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Theory of Lists and List Operations *)
+
+(** In this file we collect lemmas about lists and their operations. We don't include those in [List.Core] so that file can stay lightweight on dependencies. *)
+
+(** We generally try to keep the order the same as the concepts appeared in [List.Core]. *)
+
+</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Local Open Scope list_scope.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope nat_scope.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Length *)
+
+(** A list of length zero must be the empty list. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition length_0 {A : Type} (l : list A) (H : length l = 0)
+  : l = nil.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct l.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> discriminate.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Concatenation *)
+
+(** Concatenating the empty list on the right is the identity. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition app_nil {A : Type} (l : list A)
+  : l ++ nil = l.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction l as [|a l IHl].</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simpl; f_ap.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Associativity of list concatenation. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition app_assoc {A : Type} (x y z : list A)
+  : app x (app y z) = app (app x y) z.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction x as [|a x IHx] in |- *.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (ap (cons a) IHx).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The type of lists has a monoidal structure given by concatenation. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 46
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>Definition list_pentagon {A : Type} (w x y z : list A)
+  : app_assoc w x (y ++ z) @ app_assoc (w ++ x) y z
+    = ap (fun l =&gt; w ++ l) (app_assoc x y z)
+    @ app_assoc w (x ++ y) z
+    @ ap (fun l =&gt; l ++ z) (app_assoc w x y).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  symmetry.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction w as [|? w IHw] in x, y, z |- *.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply equiv_p1_1q.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    lhs napply concat_p1.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply ap_idmap.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 57
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 58
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+    rhs_V napply ap_pp.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 59
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rhs_V exact (ap (ap (cons a)) (IHw x y z)).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 60
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+    rhs napply ap_pp.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 61
+Time: 0.003s">
+<div class="time" style="width: 11.538461538462%"></div>
+<pre>
+    f_ap.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 63
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre> rhs napply ap_pp.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 63
+Time: 0.003s">
+<div class="time" style="width: 11.538461538462%"></div>
+<pre>
+      f_ap.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply ap_compose.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 65
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+    lhs_V napply ap_compose.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 66
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+    napply (ap_compose (fun l =&gt; l ++ z)).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 67
+Time: 0.012s">
+<div class="time" style="width: 46.153846153846%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The length of a concatenated list is the sum of the lengths of the two lists. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition length_app {A : Type} (l l' : list A)
+  : length (l ++ l') = length l + length l'.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 72
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction l as [|a l IHl] using list_ind.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simpl.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (ap S IHl).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** An element of a concatenated list is equivalently either in the first list or in the second list. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition equiv_inlist_app {A : Type} (l l' : list A) (x : A)
+  : InList x l + InList x l' &lt;~&gt; InList x (l ++ l').</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction l as [|a l IHl].</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply sum_empty_l.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn; nrefine (_ oE equiv_sum_assoc _ _ _).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by apply equiv_functor_sum_l.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Folding *)
+
+(** A left fold over a concatenated list is equivalent to folding over the first followed by folding over the second. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma fold_left_app {A B : Type} (f : A -&gt; B -&gt; A) (l l' : list B) (i : A)
+  : fold_left f (l ++ l') i = fold_left f l' (fold_left f l i).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction l in i |- *.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 94
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply IHl.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A right fold over a concatenated list is equivalent to folding over the second followed by folding over the first. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma fold_right_app {A B : Type} (f : B -&gt; A -&gt; A) (i : A) (l l' : list B)
+  : fold_right f i (l ++ l') = fold_right f (fold_right f i l') l.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 99
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction l in i |- *.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (ap (f a) (IHl _)).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Maps *)
+
+(** The length of a mapped list is the same as the length of the original list. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition length_list_map {A B : Type} (f : A -&gt; B) (l : list A)
+  : length (list_map f l) = length l.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction l as [|x l IHl] using list_ind.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 112
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (ap S IHl).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A function applied to an element of a list is an element of the mapped list. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition inlist_map {A B : Type} (f : A -&gt; B) (l : list A) (x : A)
+  : InList x l -&gt; InList (f x) (list_map f l).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 118
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simple_list_induction l y l IHl.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: contradiction.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 121
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [p | i].</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 122
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> left.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>  exact (ap f p).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> right.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (IHl i).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 125
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** An element of a mapped list is equal to the function applied to some element of the original list. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition inlist_map' {A B : Type} (f : A -&gt; B) (l : list A) (x : B)
+  : InList x (list_map f l) -&gt; { y : A &amp; prod (f y = x) (InList y l) }.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 128
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 129
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction l as [|y l IHl].</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 130
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: contradiction.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 131
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [p | i].</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (y; (p, inl idpath)).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (IHl i) as [y' [p i']].</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (y'; (p, inr i')).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 135
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Mapping a function over a concatenated list is the concatenation of the mapped lists. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition list_map_app {A B : Type} (f : A -&gt; B) (l l' : list A)
+  : list_map f (l ++ l') = list_map f l ++ list_map f l'.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction l as [|a l IHl].</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simpl; f_ap.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A function that acts as the identity on the elements of a list is the identity on the mapped list. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma list_map_id {A : Type} (f : A -&gt; A) (l : list A)
+  (Hf : forall x, InList x l -&gt; f x = x)
+  :  list_map f l = l.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 148
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction l as [|x l IHl].</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 152
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 152
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    napply ap011.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 154
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (Hf _ (inl idpath)).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 154
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 155
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply IHl.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 155
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      intros y Hy.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply Hf.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      by right.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A [list_map] of a composition is the composition of the maps. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition list_map_compose {A B C} (f : A -&gt; B) (g : B -&gt; C) (l : list A)
+  : list_map (fun x =&gt; g (f x)) l = list_map g (list_map f l).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 163
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction l as [|a l IHl].</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 164
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 165
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simpl; f_ap.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 166
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** TODO: generalize as max *)
+(** The length of a [list_map2] is the same as the length of the original lists. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition length_list_map2@{i j k|} {A : Type@{i}} {B : Type@{j}} {C : Type@{k}}
+  (f : A -&gt; B -&gt; C) defl defr l1 l2
+  : length l1 = length l2
+    -&gt; length (list_map2 f defl defr l1 l2) = length l1.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 174
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros p.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 175
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction l1 as [|x l1 IHl1] in l2, p |- * using list_ind@{i j}.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct l2.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 179
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> inversion p.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 179
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 180
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct l2.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 180
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 181
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> inversion p.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 181
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 182
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn; f_ap.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 182
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      by apply IHl1, path_nat_succ.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 183
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 184
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** An element of a [list_map2] is the result of applying the function to some elements of the original lists. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 186
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>Definition inlist_map2@{i j k u | i &lt;= u, j &lt;= u, k &lt;= u}
+  {A : Type@{i}} {B : Type@{j}} {C : Type@{k}}
+  (f : A -&gt; B -&gt; C) defl defr l1 l2 x
+  : InList x (list_map2 f defl defr l1 l2) -&gt; length l1 = length l2
+    -&gt; { y : A &amp; { z : B &amp;
+                        prod@{k u} ((f y z) = x) (InList y l1 * InList z l2) } }.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 191
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 192
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros H p.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 193
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction l1 as [|y l1 IHl1] in l2, x, H, p |- * using list_ind@{i u}.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 194
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct l2.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: contradiction.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    inversion p.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct l2 as [| z].</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: inversion p.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 199
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct H as [q | i].</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: exact (y; z; (q, (inl idpath, inl idpath))).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 201
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct (IHl1 l2 x i) as [y' [z' [q [r s]]]].</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 202
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: apply path_nat_succ, p.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 203
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (y'; z'; (q, (inr r, inr s))).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 204
+Time: 0.003s">
+<div class="time" style="width: 11.538461538462%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 205
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [list_map2] is a [list_map] if the first list is a repeated value. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 207
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition list_map2_repeat_l {A B C} (f : A -&gt; B -&gt; C) (x : A) l {defl defr}
+  : list_map2 f defl defr (repeat x (length l)) l = list_map (f x) l.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 209
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction l as [|y l IHl].</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 210
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 211
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 211
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 212
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn; f_ap.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 212
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 213
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [list_map2] is a [list_map] if the second list is a repeated value. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 215
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition list_map2_repeat_r {A B C} (f : A -&gt; B -&gt; C) (y : B) l {defl defr}
+  : list_map2 f defl defr l (repeat y (length l)) = list_map (fun x =&gt; f x y) l.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 216
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 217
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction l as [|x l IHl].</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 218
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 219
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 219
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 220
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn; f_ap.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 220
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 221
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Reversal *)
+
+(** The length of [reverse_acc] is the sum of the lengths of the two lists. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 225
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition length_reverse_acc@{i|} {A : Type@{i}} (acc l : list A)
+  : length (reverse_acc acc l) = length acc + length l.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 226
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 227
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  symmetry.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction l as [|x l IHl] in acc |- * using list_ind@{i i}.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 229
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 230
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply nat_add_zero_r.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 230
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 231
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rhs_V napply IHl.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 231
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply nat_add_succ_r.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 232
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 233
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The length of [reverse] is the same as the length of the original list. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 235
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition length_reverse {A : Type} (l : list A)
+  : length (reverse l) = length l.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 236
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 237
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rapply length_reverse_acc.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 238
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 239
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The [list_map] of a [reverse_acc] is the [reverse_acc] of the [list_map] of the two lists. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 241
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition list_map_reverse_acc {A B : Type}
+  (f : A -&gt; B) (l l' : list A)
+  : list_map f (reverse_acc l' l) = reverse_acc (list_map f l') (list_map f l).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 243
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 244
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert l'; simple_list_induction l a l IHl; intro l'.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 245
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 246
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply IHl.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 247
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 248
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The [list_map] of a reversed list is the reversed [list_map]. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 250
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition list_map_reverse {A B} (f : A -&gt; B) (l : list A)
+  : list_map f (reverse l) = reverse (list_map f l).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 251
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 252
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  napply list_map_reverse_acc.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 253
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 254
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [reverse_acc] is the same as concatenating the reversed list with the accumulator. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 256
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition reverse_acc_cons {A : Type} (l l' : list A)
+  : reverse_acc l' l = reverse l ++ l'.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 257
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 258
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction l as [|a l IHl] in l' |- *.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 259
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 260
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lhs napply IHl.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 261
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lhs napply (app_assoc _ [a]).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 262
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+  f_ap; symmetry.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 263
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply IHl.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 264
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 265
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The [reverse] of a [cons] is the concatenation of the [reverse] with the head. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 267
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition reverse_cons {A : Type} (a : A) (l : list A)
+  : reverse (a :: l) = reverse l ++ [a].</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 268
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 269
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction l as [|b l IHl] in a |- *.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 270
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 271
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite IHl.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 272
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite &lt;- app_assoc.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 273
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  cbn; apply reverse_acc_cons.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 274
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 275
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The [reverse] of a concatenated list is the concatenation of the reversed lists in reverse order. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 277
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition reverse_app {A : Type} (l l' : list A)
+  : reverse (l ++ l') = reverse l' ++ reverse l.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 278
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 279
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction l as [|a l IHl] in l' |- *.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 280
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: symmetry; apply app_nil.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 281
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simpl.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 282
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lhs napply reverse_cons.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 283
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rhs napply ap.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 284
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  2: napply reverse_cons.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 285
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rhs napply app_assoc.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 286
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  napply (ap (fun l =&gt; l ++ [a])).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 287
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (IHl l').</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 288
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 289
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [reverse] is involutive. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 291
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition reverse_reverse {A : Type} (l : list A)
+  : reverse (reverse l) = l.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 292
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 293
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction l.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 294
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 295
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lhs napply ap.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 296
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: napply reverse_cons.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 297
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lhs napply reverse_app.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 298
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (ap _ IHl).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 299
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 300
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Getting elements *)
+
+(** A variant of [nth] that returns an element of the list and a proof that it is the [n]-th element. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 304
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition nth_lt@{i|} {A : Type@{i}} (l : list A) (n : nat)
+  (H : n &lt; length l)
+  : { x : A &amp; nth l n = Some x }.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 306
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 307
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction l as [|a l IHa] in n, H |- * using list_ind@{i i}.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 308
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: destruct (not_lt_zero_r _ H).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 309
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct n.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 310
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: by exists a.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 311
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply IHa.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 312
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply leq_pred'.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 313
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact H.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 314
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 315
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A variant of [nth] that always returns an element when we know that the index is in the list. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 317
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition nth' {A : Type} (l : list A) (n : nat) (H : n &lt; length l) : A
+  := pr1 (nth_lt l n H).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 318
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The [nth'] element doesn't depend on the proof that [n &lt; length l]. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 320
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition nth'_nth' {A} (l : list A) (n : nat) (H H' : n &lt; length l)
+  : nth' l n H = nth' l n H'.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 321
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 322
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply ap, path_ishprop.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 323
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 324
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Two equal lists have the same elements in the same positions. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 326
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition nth'_path_list {A : Type} {l1 l2 : list A}
+  (p : l1 = l2) {n : nat} (Hn1 : n &lt; length l1) (Hn2 : n &lt; length l2)
+  : nth' l1 n Hn1 = nth' l2 n Hn2.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 328
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 329
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct p.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 330
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by apply nth'_nth'.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 331
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 332
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The [nth'] element of a list is in the list. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 334
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition inlist_nth'@{i|} {A : Type@{i}} (l : list A) (n : nat)
+  (H : n &lt; length l)
+  : InList (nth' l n H) l.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 336
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 337
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction l as [|a l IHa] in n, H |- * using list_ind@{i i}.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 338
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: destruct (not_lt_zero_r _ H).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 339
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct n.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 340
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: by left.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 341
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  right.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 342
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply IHa.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 343
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 344
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The [nth'] element of a list is the same as the one given by [nth]. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 346
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition nth_nth' {A} (l : list A) (n : nat) (H : n &lt; length l)
+  : nth l n = Some (nth' l n H).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 347
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 348
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (nth_lt l n H).2.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 349
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 350
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The [nth'] element of a [cons] indexed at [n.+1] is the same as the [nth'] element of the tail indexed at [n]. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 352
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition nth'_cons {A : Type} (l : list A) (n : nat) (x : A)
+  (H : n &lt; length l) (H' : n.+1 &lt; length (x :: l))
+  : nth' (x :: l) n.+1 H' = nth' l n H.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 354
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 355
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply isinj_some.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 356
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  nrefine (_^ @ _ @ _).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 357
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1,3: rapply nth_nth'.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 358
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  reflexivity.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 359
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 360
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The [nth' n] element of a concatenated list [l ++ l'] where [n &lt; length l] is the [nth'] element of [l]. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 362
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition nth'_app@{i|} {A : Type@{i}} (l l' : list A) (n : nat)
+  (H : n &lt; length l) (H' : n &lt; length (l ++ l'))
+  : nth' (l ++ l') n H' = nth' l n H.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 364
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 365
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction l as [|a l IHl] in l', n, H, H' |- * using list_ind@{i i}.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 366
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: destruct (not_lt_zero_r _ H).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 367
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct n.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 368
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 369
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by apply IHl.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 370
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 371
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The index of an element in a list is the [n] such that the [nth'] element is the element. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 373
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition index_of@{i|} {A : Type@{i}} (l : list A) (x : A)
+  : InList x l
+    -&gt; sig@{Set i} (fun n : nat =&gt; { H : n &lt; length l &amp; nth' l n H = x }).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 375
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 376
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction l as [|a l IHl] using list_ind@{i i}.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 377
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: intros x'; destruct x'.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 378
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [| i].</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 379
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 380
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> revert a p.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 380
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply paths_ind_r@{i i}.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 381
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snrefine (exist@{i i} _ 0 _).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 382
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snrefine (exist _ _ idpath).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 383
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply leq_succ.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 384
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact _.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 385
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 386
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (IHl i) as [n [H H']].</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 386
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snrefine (exist@{i i} _ n.+1 _).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 387
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snrefine (_; _); cbn.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 388
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: apply leq_succ, H.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 389
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    refine (_ @ H').</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 390
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply nth'_cons.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 391
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 392
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The [nth] element of a map is the function applied optionally to the [nth] element of the original list. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 394
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition nth_list_map@{i j|} {A : Type@{i}} {B : Type@{j}}
+  (f : A -&gt; B) (l : list A) (n : nat)
+  : nth (list_map f l) n = functor_option f (nth l n).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 396
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 397
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction l as [|a l IHl] in n |- * using list_ind@{i j}.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 398
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: by destruct n.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 399
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct n.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 400
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 401
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply IHl.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 402
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 403
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The [nth'] element of a [list_map] is the function applied to the [nth'] element of the original list. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 405
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition nth'_list_map@{i j|} {A : Type@{i}} {B : Type@{j}}
+  (f : A -&gt; B) (l : list A) (n : nat) (H : n &lt; length l)
+  (H' : n &lt; length (list_map f l))
+  : nth' (list_map f l) n H' = f (nth' l n H).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 408
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 409
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction l as [|a l IHl] in n, H, H' |- * using list_ind@{i j}.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 410
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: destruct (not_lt_zero_r _ H).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 411
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct n.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 412
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 413
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply IHl.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 414
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 415
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The [nth'] element of a [list_map2] is the function applied to the [nth'] elements of the original lists. The length of the two lists is required to be the same. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 417
+Time: 0.017s">
+<div class="time" style="width: 65.384615384615%"></div>
+<pre>Definition nth'_list_map2 {A B C : Type}
+  (f : A -&gt; B -&gt; C) (l1 : list A) (l2 : list B)
+  (n : nat) defl defr (H : n &lt; length l1) (H' : n &lt; length l2)
+  (H'' : n &lt; length (list_map2 f defl defr l1 l2))
+  (p : length l1 = length l2)
+  : f (nth' l1 n H) (nth' l2 n H') = nth' (list_map2 f defl defr l1 l2) n H''.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 422
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 423
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert l2 n defl defr H H' H'' p;
+    simple_list_induction l1 a l1 IHl1;
+    intros l2 n defl defr H H' H'' p.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 426
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 427
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct l2 as [|b l2].</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 427
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 428
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (not_lt_zero_r _ H).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 428
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 429
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> inversion p.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 429
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 430
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct l2 as [|b l2].</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 430
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 431
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> inversion p.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 431
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 432
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct n.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 432
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 433
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 433
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 434
+Time: 0.004s">
+<div class="time" style="width: 15.384615384615%"></div>
+<pre> erewrite 3 nth'_cons.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 434
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply IHl1.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 435
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        by apply path_nat_succ.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 436
+Time: 0.003s">
+<div class="time" style="width: 11.538461538462%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 437
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The [nth'] element of a [repeat] is the repeated value. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 439
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition nth'_repeat@{i|} {A : Type@{i}} (x : A) (i n : nat)
+  (H : i &lt; length (repeat x n))
+  : nth' (repeat x n) i H = x.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 441
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 442
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction n as [|n IHn] in i, H |- * using nat_ind@{i}.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 443
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: destruct (not_lt_zero_r _ H).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 444
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct i.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 445
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 446
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply IHn.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 447
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 448
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Two lists are equal if their [nth'] elements are equal. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 450
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition path_list_nth'@{i|} {A : Type@{i}} (l l' : list A)
+  (p : length l = length l')
+  : (forall n (H : n &lt; length l), nth' l n H = nth' l' n (p # H))
+    -&gt; l = l'.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 453
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 454
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros H.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 455
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction l as [|a l IHl] in l', p, H |- * using list_ind@{i i}.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 456
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 457
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct l'.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 457
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 458
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 458
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 459
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> discriminate.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 459
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 459
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct l' as [|a' l'].</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 460
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: discriminate.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 461
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+  f_ap.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 462
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 463
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (H 0 _).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 463
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 464
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> snapply IHl.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 464
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: by apply path_nat_succ.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 465
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros n Hn.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 466
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snrefine ((nth'_cons l n a Hn _)^ @ _).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 467
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: apply leq_succ, Hn.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 468
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    lhs napply H.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 469
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    napply nth'_cons.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 470
+Time: 0.002s">
+<div class="time" style="width: 7.6923076923077%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 471
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The [nth n] element of a concatenated list [l ++ l'] where [n &lt; length l] is the [nth] element of [l]. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 473
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition nth_app@{i|} {A : Type@{i}} (l l' : list A) (n : nat)
+  (H : n &lt; length l)
+  : nth (l ++ l') n = nth l n.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 475
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 476
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction l as [|a l IHl] in l', n, H |- * using list_ind@{i i}.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 477
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: destruct (not_lt_zero_r _ H).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 478
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct n.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 479
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 480
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by apply IHl, leq_pred'.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 481
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 482
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The [nth i] element where [pred (length l) = i] is the last element of the list. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 484
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition nth_last {A : Type} (l : list A) (i : nat) (p : nat_pred (length l) = i)
+  : nth l i = last l.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 485
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 486
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct p.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 487
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction l as [|a l IHl].</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 488
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 489
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct l as [|b l].</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 490
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 491
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  cbn; exact IHl.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 492
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 493
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The last element of a list with an element appended is the appended element. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 495
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition last_app {A : Type} (l : list A) (x : A)
+  : last (l ++ [x]) = Some x.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 496
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 497
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction l as [|a l IHl] in x |- *.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 498
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 499
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct l.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 500
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 501
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  cbn; apply IHl.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 502
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 503
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition nth'_last_app@{i|} {A : Type@{i}} (l : list A) (a : A)
+  (H : length l &lt; length (l ++ [a]))
+  : nth' (l ++ [a]) (length l) H = a.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 507
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 508
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert a H; simple_list_induction l a' l IHl; intros a H.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 509
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 510
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply IHl.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 511
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 512
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Removing elements *)
+
+(** These functions allow surgery to be performed on a given list. *)
+
+(** *** Drop *)
+
+(** [drop n l] removes the first [n] elements of [l]. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 520
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Fixpoint drop {A : Type} (n : nat) (l : list A) : list A :=
+  match n with
+  | 0 =&gt; l
+  | n.+1 =&gt; drop n (tail l)
+  end.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 524
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A [drop] of zero elements is the identity, by definition. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 526
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition drop_0 {A : Type} (l : list A) : drop 0 l = l := idpath.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 526
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A [drop] of one element is the tail of the list, by definition. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 528
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition drop_1 {A : Type} (l : list A) : drop 1 l = tail l := idpath.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 528
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A [drop] of the empty list is the empty list. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 530
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition drop_nil {A : Type} (n : nat)
+  : drop n (@nil A) = nil.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 531
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 532
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by induction n.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 533
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 534
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A [drop] of [n] elements with [length l &lt;= n] is the empty list. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 536
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition drop_length_leq@{i|} {A : Type@{i}} (n : nat) (l : list A)
+  (H : length l &lt;= n)
+  : drop n l = nil.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 538
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 539
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction l as [|a l IHl] in H, n |- * using list_ind@{i i}.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 540
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: apply drop_nil.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 541
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct n.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 542
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: destruct (not_lt_zero_r _ H).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 543
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  cbn; apply IHl.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 544
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply leq_pred'.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 545
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact H.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 546
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 547
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The length of a [drop n] is the length of the original list minus [n]. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 549
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition length_drop@{i|} {A : Type@{i}} (n : nat) (l : list A)
+  : length (drop n l) = length l - n.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 550
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 551
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction l as [|a l IHl] in n |- * using list_ind@{i i}.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 552
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: by rewrite drop_nil.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 553
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct n.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 554
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 555
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (IHl n).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 556
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 557
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** An element of a [drop] is an element of the original list. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 559
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition drop_inlist@{i|} {A : Type@{i}} (n : nat) (l : list A) (x : A)
+  : InList x (drop n l) -&gt; InList x l.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 560
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 561
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros H.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 562
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction l as [|a l IHl] in n, H, x |- * using list_ind@{i i}.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 563
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: rewrite drop_nil in H; contradiction.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 564
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct n.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 565
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact H.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 566
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  right; exact (IHl _ _ H).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 567
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 568
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Take *)
+
+(** [take n l] keeps the first [n] elements of [l] and returns [l] if [n &gt;= length l]. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 572
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Fixpoint take {A : Type} (n : nat) (l : list A) : list A :=
+  match n, l with
+  | n.+1, x :: l =&gt; x :: take n l
+  | _, _ =&gt; nil
+  end.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 576
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A [take] of zero elements is the empty list, by definition. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 578
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition take_0 {A : Type} (l : list A) : take 0 l = nil := idpath.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 578
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A [take] of the empty list is the empty list. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 580
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition take_nil {A : Type} (n : nat) : take n (@nil A) = nil.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 580
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 581
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by destruct n.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 582
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 583
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A [take] of [n] elements with [length l &lt;= n] is the original list. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 585
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition take_length_leq@{i|} {A : Type@{i}} (n : nat) (l : list A)
+  (H : length l &lt;= n)
+  : take n l = l.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 587
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 588
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction l as [|a l IHl] in H, n |- * using list_ind@{i i}.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 589
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: apply take_nil.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 590
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct n.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 591
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: destruct (not_lt_zero_r _ H).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 592
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  cbn; f_ap.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 593
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by apply IHl, leq_pred'.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 594
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 595
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The length of a [take n] is the minimum of [n] and the length of the original list. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 597
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition length_take@{i|} {A : Type@{i}} (n : nat) (l : list A)
+  : length (take n l) = nat_min n (length l).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 598
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 599
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction l as [|a l IHl] in n |- * using list_ind@{i i}.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 600
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 601
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite take_nil.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 601
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite nat_min_r.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 602
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 603
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    cbn; exact _.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 604
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 604
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct n.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 605
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 606
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  cbn; f_ap.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 607
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 608
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The length of a [take] is less than or equal to the length of the list. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 610
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition length_take_leq {A : Type} {n : nat} (l : list A)
+  : length (take n l) &lt;= length l
+  := transport (fun x =&gt; x &lt;= length l) (length_take n l)^ (leq_nat_min_r _ _).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 612
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** An element of a [take] is an element of the original list. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 614
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition take_inlist@{i|} {A : Type@{i}} (n : nat) (l : list A) (x : A)
+  : InList x (take n l) -&gt; InList x l.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 615
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 616
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros H.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 617
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction l as [|a l IHl] in n, H, x |- * using list_ind@{i i}.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 618
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: rewrite take_nil in H; contradiction.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 619
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct n.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 620
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 621
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn in H.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 621
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> contradiction.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 621
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 621
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct H as [-&gt; | H].</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 622
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 623
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> left; reflexivity.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 623
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 624
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> right; exact (IHl _ _ H).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 624
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 625
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Applying a [take] twice with [m] and [n] is the same as applying it once with [nat_min m n]. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 627
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition take_take_min {A : Type} {m n : nat} (l : list A)
+  : take n (take m l) = take (nat_min n m) l.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 628
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 629
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction n in m, l |- *.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 630
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 631
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct m.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 632
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 633
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct l as [|a l'].</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 634
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: by rewrite !take_nil.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 635
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  cbn.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 636
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply ap, IHn.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 636
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 637
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [take] is commutative in [n]. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 639
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition take_comm {A : Type} {m n : nat} (l : list A)
+  : take n (take m l) = take m (take n l).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 640
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 641
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+  by rewrite !take_take_min, nat_min_comm.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 642
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 643
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A [take n] does not change under concatenation if [n] is less than or equal to the length of the first list. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 645
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition take_app {A : Type} {n : nat} (l1 l2 : list A) (hn : n &lt;= length l1)
+  : take n l1 = take n (l1 ++ l2).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 646
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 647
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction n in l1, l2, hn |- *.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 648
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 649
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 649
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 650
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct l1 as [|a l1].</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 650
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 651
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> contradiction (not_lt_zero_r _ hn).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 651
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 652
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> cbn.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 652
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply ap, IHn, leq_pred', hn.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 653
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 654
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Remove *)
+
+(** [remove n l] removes the [n]-th element of [l]. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 658
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition remove {A : Type} (n : nat) (l : list A) : list A
+  := take n l ++ drop n.+1 l.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 659
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Removing the first element of a list is the tail of the list. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 661
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition remove_0 {A : Type} (l : list A) : remove 0 l = tail l := idpath.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 661
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Removing the [n]-th element of a list with [length l &lt;= n] is the original list. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 663
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition remove_length_leq {A : Type} (n : nat) (l : list A)
+  (H : length l &lt;= n)
+  : remove n l = l.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 665
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 666
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold remove.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 667
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite take_length_leq.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 668
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  2: exact _.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 669
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite drop_length_leq.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 670
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+  2: exact _.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 671
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply app_nil.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 672
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 673
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The length of a [remove n] is the length of the original list minus one. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 675
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition length_remove@{i|} {A : Type@{i}} (n : nat) (l : list A)
+  (H : n &lt; length l)
+  : length (remove n l) = nat_pred (length l).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 677
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 678
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold remove.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 679
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite length_app@{i}.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 680
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite length_take.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 681
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite length_drop.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 682
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite nat_min_l.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 683
+Time: 0.005s">
+<div class="time" style="width: 19.230769230769%"></div>
+<pre>
+  2: exact (leq_trans _ H).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 684
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite &lt;- nat_sub_l_add_r.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 685
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  2: exact _.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 686
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lhs napply nat_sub_succ_r.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 687
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply ap.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 688
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply nat_add_sub_cancel_l.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 689
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 690
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** An element of a [remove] is an element of the original list. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 692
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition remove_inlist {A : Type} (n : nat) (l : list A) (x : A)
+  : InList x (remove n l) -&gt; InList x l.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 693
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 694
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold remove.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 695
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros p.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 696
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply equiv_inlist_app in p.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 697
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert p.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 698
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply sum_rec.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 699
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 700
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply take_inlist.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 700
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 701
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply drop_inlist.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 701
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 702
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** *** Filter *)
+
+(** Produce the list of elements of a list that satisfy a decidable predicate. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 706
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>Fixpoint list_filter@{u v|} {A : Type@{u}} (l : list A) (P : A -&gt; Type@{v})
+  (dec : forall x, Decidable (P x))
+  : list A
+  := match l with
+    | nil =&gt; nil
+    | x :: l =&gt;
+      if dec x then x :: list_filter l P dec
+        else list_filter l P dec
+    end.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 714
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition inlist_filter@{u v k | u &lt;= k, v &lt;= k} {A : Type@{u}} (l : list A)
+  (P : A -&gt; Type@{v}) (dec : forall x, Decidable (P x)) (x : A)
+  : iff@{u k k} (InList x (list_filter l P dec)) (InList x l /\ P x).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 718
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 719
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simple_list_induction l a l IHl.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 720
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 721
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 721
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply iff_inverse.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 722
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply iff_equiv.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 723
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply prod_empty_l@{v}.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 724
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 725
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 725
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    napply iff_compose.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 726
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    2: {</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 727
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply iff_inverse.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 727
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+         apply iff_equiv.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 728
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+         exact (sum_distrib_r@{k k k _ _ _ k k} _ _ _).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 729
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 729
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct (dec a) as [p|p].</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 730
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 731
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 731
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      snapply iff_compose.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 732
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      1: exact (sum (a = x) (prod (InList@{u} x l) (P x))).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 733
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      1: split; apply functor_sum; only 1,3: exact idmap; apply IHl.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 734
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      split; apply functor_sum@{k k k k}; only 2,4: exact idmap.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 735
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 736
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [].</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 736
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        exact (idpath, p).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 737
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 738
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact fst.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 738
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 739
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> napply iff_compose.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 739
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      1: exact IHl.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 740
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply iff_inverse.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 741
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply iff_equiv.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 742
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      nrefine (equiv_compose'@{k k k} (sum_empty_l@{k} _) _).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 743
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      snapply equiv_functor_sum'@{k k k k k k}.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 744
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      2: exact equiv_idmap.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 745
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply equiv_to_empty.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 746
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      by intros [[] r].</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 747
+Time: 0.002s">
+<div class="time" style="width: 7.6923076923077%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 748
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition list_filter_app {A : Type} (l l' : list A) (P : A -&gt; Type)
+  (dec : forall x, Decidable (P x))
+  : list_filter (l ++ l') P dec = list_filter l P dec ++ list_filter l' P dec.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 752
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 753
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simple_list_induction l a l IHl.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 754
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 755
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 755
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 756
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl; destruct (dec a); trivial.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 756
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    simpl; f_ap.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 757
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 758
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Sequences *)
+
+(** The length of a reverse sequence of [n] numbers is [n]. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 762
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition length_seq_rev@{} (n : nat)
+  : length (seq_rev n) = n.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 763
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 764
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction n as [|n IHn].</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 765
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 766
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  cbn; f_ap.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 767
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 768
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The length of a sequence of [n] numbers is [n]. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 770
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition length_seq@{} (n : nat)
+  : length (seq n) = n.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 771
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 772
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lhs napply length_reverse.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 773
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply length_seq_rev.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 774
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 775
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The reversed sequence of [n.+1] numbers is the [n] followed by the rest of the reversed sequence. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 777
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition seq_rev_cons@{} (n : nat)
+  : seq_rev n.+1 = n :: seq_rev n
+  := idpath.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 779
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The sequence of [n.+1] numbers is the sequence of [n] numbers concatenated with [[n]]. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 781
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition seq_succ@{} (n : nat)
+  : seq n.+1 = seq n ++ [n].</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 782
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 783
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply reverse_cons.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 784
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 785
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Alternate definition of [seq_rev] that keeps the proofs of the entries being [&lt; n]. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 787
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition seq_rev'@{} (n : nat) : list {k : nat &amp; k &lt; n}.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 787
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 788
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  transparent assert (f : (forall n, {k : nat &amp; k &lt; n}
+    -&gt; {k : nat &amp; k &lt; n.+1})).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 790
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 791
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros m.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 791
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply (functor_sigma idmap).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 792
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros k H.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 793
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (leq_succ_r H).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 794
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 794
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction n as [|n IHn].</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 795
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact nil.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 796
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  nrefine ((n; _) :: list_map (f n) IHn).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 797
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact _.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 798
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 799
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Alternate definition of [seq] that keeps the proofs of the entries being [&lt; n]. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 801
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition seq'@{} (n : nat) : list {k : nat &amp; k &lt; n}
+  := reverse (seq_rev' n).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 802
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The length of [seq_rev' n] is [n]. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 804
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition length_seq_rev'@{} (n : nat)
+  : length (seq_rev' n) = n.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 805
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 806
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction n as [|n IHn].</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 807
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 808
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  cbn; f_ap.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 809
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lhs napply length_list_map.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 810
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact IHn.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 811
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 812
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The length of [seq' n] is [n]. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 814
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition length_seq'@{} (n : nat)
+  : length (seq' n) = n.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 815
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 816
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lhs napply length_reverse.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 817
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply length_seq_rev'.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 818
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 819
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The [list_map] of first projections on [seq_rev' n] is [seq_rev n]. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 821
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition seq_rev_seq_rev'@{} (n : nat)
+  : list_map pr1 (seq_rev' n) = seq_rev n.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 822
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 823
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction n as [|n IHn].</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 824
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 825
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simpl; f_ap.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 826
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lhs_V napply list_map_compose.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 827
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact IHn.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 828
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 829
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The [list_map] of first projections on [seq' n] is [seq n]. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 831
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition seq_seq'@{} (n : nat)
+  : list_map pr1 (seq' n) = seq n.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 832
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 833
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lhs napply list_map_reverse_acc.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 834
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (ap reverse).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 835
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply seq_rev_seq_rev'.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 836
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 837
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The [nth] element of a [seq_rev] is [n - i.+1]. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 839
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition nth_seq_rev@{} {n i} (H : i &lt; n)
+  : nth (seq_rev n) i = Some (n - i.+1).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 840
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 841
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction i as [|i IHi] in n, H |- *.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 842
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 843
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> induction n.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 843
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: destruct (not_lt_zero_r _ H).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 844
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    cbn; by rewrite nat_sub_zero_r.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 845
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 846
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> induction n as [|n IHn].</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 846
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: destruct (not_lt_zero_r _ H).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 847
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by apply IHi, leq_pred'.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 848
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 849
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The [nth] element of a [seq] is [i]. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 851
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition nth_seq@{} {n i} (H : i &lt; n)
+  : nth (seq n) i = Some i.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 852
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 853
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction n.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 854
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: destruct (not_lt_zero_r _ H).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 855
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite seq_succ.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 856
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct (dec (i &lt; n)) as [H'|H'].</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 857
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 858
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> lhs napply nth_app.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 858
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    1: by rewrite length_seq.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 859
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by apply IHn.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 860
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 861
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply geq_iff_not_lt in H'.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 861
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply leq_pred' in H.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 862
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct (leq_antisym H H').</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 863
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    lhs napply nth_last.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 864
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 865
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> rewrite length_app.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 865
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      rewrite nat_add_comm.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 866
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply length_seq.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 867
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 867
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    napply last_app.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 868
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 869
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The [nth'] element of a [seq'] is [i]. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 871
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition nth'_seq'@{} (n i : nat) (H : i &lt; length (seq' n))
+  : (nth' (seq' n) i H).1 = i.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 872
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 873
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unshelve lhs_V napply nth'_list_map.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 874
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: by rewrite length_list_map.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 875
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unshelve lhs napply (ap011D (fun x y =&gt; nth' x _ y) _ idpath).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 876
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  2: apply seq_seq'.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 877
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply isinj_some.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 878
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lhs_V napply nth_nth'.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 879
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply nth_seq.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 880
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by rewrite length_seq' in H.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 881
+Time: 0.002s">
+<div class="time" style="width: 7.6923076923077%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 882
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition inlist_seq@{} (n : nat) x
+  : InList x (seq n) &lt;~&gt; (x &lt; n).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 885
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 886
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simple_induction n n IHn.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 887
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  {</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 888
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> symmetry; apply equiv_to_empty.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 888
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply not_lt_zero_r.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 889
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 889
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (_ oE equiv_transport _ (seq_succ _)).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 890
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  nrefine (_ oE (equiv_inlist_app _ _ _)^-1).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 891
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  nrefine (_ oE equiv_functor_sum' (B':=x = n) IHn _).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 892
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  2: {</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 893
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 893
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+       exact (equiv_path_inverse _ _ oE sum_empty_r@{Set} _).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 894
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 894
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  nrefine (_ oE equiv_leq_lt_or_eq^-1).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 895
+Time: 0.003s">
+<div class="time" style="width: 11.538461538462%"></div>
+<pre>
+  rapply equiv_iff_hprop.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 896
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 897
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Turning a finite sequence into a list. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 899
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Build_list {A : Type} (n : nat)
+  (f : forall (i : nat), (i &lt; n) -&gt; A)
+  : list A
+  := list_map (fun '(i; Hi) =&gt; f i Hi) (seq' n).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 902
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition length_Build_list {A : Type} (n : nat)
+  (f : forall (i : nat), (i &lt; n) -&gt; A)
+  : length (Build_list n f) = n.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 906
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 907
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lhs napply length_list_map.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 908
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply length_seq'.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 909
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 910
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition nth'_Build_list {A : Type} {n : nat}
+  (f : forall (i : nat), (i &lt; n) -&gt; A) {i : nat} (Hi : i &lt; n)
+  (Hi' : i &lt; length (Build_list n f))
+  : nth' (Build_list n f) i Hi' = f i Hi.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 915
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 916
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unshelve lhs snrefine (nth'_list_map _ _ _ (_^ # Hi) _).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 917
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: napply length_seq'.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 918
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply ap011D.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 919
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: napply nth'_seq'.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 920
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rapply path_ishprop.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 921
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 922
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Restriction of an infinite sequence to a list of specified length. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 924
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition list_restrict {A : Type} (s : nat -&gt; A) (n : nat) : list A
+  := Build_list n (fun m _ =&gt; s m).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 925
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition length_list_restrict {A : Type} (s : nat -&gt; A) (n : nat)
+  : length (list_restrict s n) = n
+  := length_Build_list _ _.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 929
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [nth'] of the restriction of a sequence is the corresponding term of the sequence. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 931
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition nth'_list_restrict {A : Type} (s : nat -&gt; A) {n : nat}
+  {i : nat} (Hi : i &lt; length (list_restrict s n))
+  : nth' (list_restrict s n) i Hi = s i.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 933
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 934
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+  unshelve lhs snapply nth'_list_map.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 935
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 936
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact ((length_list_restrict _ _ @ (length_seq' n)^) # Hi).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 936
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 937
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (ap s (nth'_seq' _ _ _)).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 937
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 938
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Repeat *)
+
+(** The length of a repeated list is the number of repetitions. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 942
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition length_repeat@{i|} {A : Type@{i}} (n : nat) (x : A)
+  : length (repeat x n) = n.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 943
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 944
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction n using nat_ind@{i}.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 945
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 946
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 946
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 947
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (ap S IHn).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 947
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 948
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** An element of a repeated list is equal to the repeated element. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 950
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition inlist_repeat@{i|} {A : Type@{i}} (n : nat) (x y : A)
+  : InList y (repeat x n) -&gt; y = x.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 951
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 952
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction n as [|n IHn].</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 953
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1:contradiction.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 954
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [p | i].</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 955
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 956
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by symmetry.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 956
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 957
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by apply IHn.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 957
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 958
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Restricting a sequence to [n.+1] terms has a computation rule. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 960
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition list_restrict_succ {A : Type} (s : nat -&gt; A) (n : nat)
+  : list_restrict s n.+1 = list_restrict s n ++ [s n].</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 961
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 962
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  unfold list_restrict, Build_list.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 963
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lhs napply list_map_compose.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 964
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite seq_seq'.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 965
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  rewrite seq_succ.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 966
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lhs napply list_map_app.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 967
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simpl.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 968
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply (ap (fun z =&gt; z ++ [s n])).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 969
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  symmetry.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 970
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lhs napply list_map_compose.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 971
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply ap, seq_seq'.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 972
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 973
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Forall *)
+
+(** If a predicate holds for all elements of a list, then the [for_all] predicate holds for the list. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 977
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition for_all_inlist {A : Type} (P : A -&gt; Type) l
+  : (forall x, InList x l -&gt; P x) -&gt; for_all P l.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 978
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 979
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simple_list_induction l h t IHl; intros H; cbn; trivial; split.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 980
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 981
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply H.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 981
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by left.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 982
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 983
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply IHl.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 983
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros y i.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 984
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply H.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 985
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by right.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 986
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 987
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Conversely, if [for_all P l] then each element of the list satisfies [P]. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 989
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition inlist_for_all {A : Type} {P : A -&gt; Type}
+  (l : list A)
+  : for_all P l -&gt; forall x, InList x l -&gt; P x.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 991
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 992
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simple_list_induction l x l IHl.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 993
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 994
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> contradiction.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 994
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 995
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [Hx Hl] y [-&gt; | i].</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 995
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 996
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact Hx.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 996
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 997
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply IHl.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 997
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      1: exact Hl.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 998
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact i.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 999
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1000
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** If a predicate [P] implies a predicate [Q] composed with a function [f], then [for_all P l] implies [for_all Q (list_map f l)]. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1002
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition for_all_list_map {A B : Type} (P : A -&gt; Type) (Q : B -&gt; Type)
+  (f : A -&gt; B) (Hf : forall x, P x -&gt; Q (f x))
+  : forall l, for_all P l -&gt; for_all Q (list_map f l).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1004
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1005
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simple_list_induction l x l IHl; simpl; trivial.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1006
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [Hx Hl].</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1007
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  split; auto.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1008
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1009
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A variant of [for_all_map P Q f] where [Q] is [P o f]. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1011
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition for_all_list_map' {A B : Type} (P : B -&gt; Type) (f : A -&gt; B)
+  : forall l, for_all (P o f) l -&gt; for_all P (list_map f l).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1012
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1013
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by apply for_all_list_map.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1014
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1015
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** If a predicate [P] and a predicate [Q] together imply a predicate [R], then [for_all P l] and [for_all Q l] together imply [for_all R l]. There are also some side conditions for the default elements. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1017
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>Lemma for_all_list_map2 {A B C : Type}
+  (P : A -&gt; Type) (Q : B -&gt; Type) (R : C -&gt; Type)
+  (f : A -&gt; B -&gt; C) (Hf : forall x y, P x -&gt; Q y -&gt; R (f x y))
+  def_l (Hdefl : forall l1, for_all P l1 -&gt; for_all R (def_l l1))
+  def_r (Hdefr : forall l2, for_all Q l2 -&gt; for_all R (def_r l2))
+  (l1 : list A) (l2 : list B)
+  : for_all P l1 -&gt; for_all Q l2
+    -&gt; for_all R (list_map2 f def_l def_r l1 l2).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1024
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1025
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert l2;
+    simple_list_induction l1 x l1 IHl1;
+    intro l2.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1028
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1029
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct l2 as [|y l2]; cbn; auto.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1029
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1030
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1030
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre> destruct l2 as [|y l2]; intros [Hx Hl1];
+      [intros _ | intros [Hy Hl2] ]; simpl; auto.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1031
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply Hdefl.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1032
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    simpl; auto.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1033
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1034
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A simpler variant of [for_all_map2] where both lists have the same length and the side conditions on the default elements can be avoided. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1036
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>Definition for_all_list_map2' {A B C : Type}
+  (P : A -&gt; Type) (Q : B -&gt; Type) (R : C -&gt; Type)
+  (f : A -&gt; B -&gt; C) (Hf : forall x y, P x -&gt; Q y -&gt; R (f x y))
+  {def_l def_r} {l1 : list A} {l2 : list B}
+  (p : length l1 = length l2)
+  : for_all P l1 -&gt; for_all Q l2
+    -&gt; for_all R (list_map2 f def_l def_r l1 l2).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1042
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1043
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert l2 p;
+    simple_list_induction l1 x l1 IHl1;
+    intros l2 p.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1046
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1047
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct l2.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1047
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1048
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1048
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1049
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> discriminate.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1049
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1050
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct l2 as [|y l2].</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1050
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1051
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> discriminate.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1051
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    +</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1052
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [Hx Hl1] [Hy Hl2].</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1052
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      split.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1053
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1054
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by apply Hf.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1054
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      *</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1055
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply IHl1; trivial.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1055
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply path_nat_succ.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1056
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        exact p.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1057
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1058
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The left fold of [f] on a list [l] for which [for_all Q l] satisfies [P] if [P] and [Q] imply [P] composed with [f]. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1060
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Lemma fold_left_preserves {A B : Type}
+  (P : A -&gt; Type) (Q : B -&gt; Type) (f : A -&gt; B -&gt; A)
+  (Hf : forall x y, P x -&gt; Q y -&gt; P (f x y))
+  (acc : A) (Ha : P acc) (l : list B) (Hl : for_all Q l)
+  : P (fold_left f l acc).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1064
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1065
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert acc Ha Hl;
+    simple_list_induction l x l IHl;
+    intros acc Ha Hl.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1068
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1069
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact Ha.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1069
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1070
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1070
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct Hl as [Qx Hl].</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1071
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply IHl; auto.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1072
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1073
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** [for_all] preserves the truncation predicate. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1075
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition istrunc_for_all {A : Type}
+  {n : trunc_index} (P : A -&gt; Type) (l : list A)
+  : for_all (fun x =&gt; IsTrunc n (P x)) l -&gt; IsTrunc n (for_all P l).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1077
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1078
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction l as [|x l IHl]; simpl.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1079
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1080
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct n; exact _.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1080
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1081
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [Hx Hl].</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1081
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply IHl in Hl.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1082
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact _.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1083
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1084
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance istrunc_for_all' {A : Type} {n : trunc_index}
+  (P : A -&gt; Type) (l : list A)
+  `{forall x, IsTrunc n (P x)}
+  : IsTrunc n (for_all P l).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1089
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1090
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by apply istrunc_for_all, for_all_inlist.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1091
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1092
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** If a predicate holds for an element, then it holds [for_all] the elements of the repeated list. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1094
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition for_all_repeat {A : Type} {n : nat}
+  (P : A -&gt; Type) (x : A)
+  : P x -&gt; for_all P (repeat x n).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1096
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1097
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros H.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1098
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction n as [|n IHn].</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1099
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact tt.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (H, IHn).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We can form a list of pairs of a sigma type given a list and a for_all predicate over it. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition list_sigma {A : Type} (P : A -&gt; Type) (l : list A) (p : for_all P l)
+  : list {x : A &amp; P x}.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  induction l as [|x l IHl] in p |- *.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact nil.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct p as [Hx Hl].</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact ((x; Hx) :: IHl Hl).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The length of a list of sigma types is the same as the original list. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1113
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>Definition length_list_sigma {A : Type} {P : A -&gt; Type} {l : list A} {p : for_all P l}
+  : length (list_sigma P l p) = length l.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert p; simple_list_induction l x l IHl; intro p.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: reflexivity.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct p as [Hx Hl].</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1118
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  cbn; f_ap.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply IHl.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1121
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** If a predicate [P] is decidable then so is [for_all P]. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance decidable_for_all {A : Type} (P : A -&gt; Type)
+  `{forall x, Decidable (P x)} (l : list A)
+  : Decidable (for_all P l).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1125
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1126
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+  simple_list_induction l x l IHl; exact _.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1128
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** If a predicate [P] is decidable then so is [list_exists P]. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1130
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance decidable_list_exists {A : Type} (P : A -&gt; Type)
+  `{forall x, Decidable (P x)} (l : list A)
+  : Decidable (list_exists P l).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1133
+Time: 0.001s">
+<div class="time" style="width: 3.8461538461538%"></div>
+<pre>
+  simple_list_induction l x l IHl; exact _.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1135
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition inlist_list_exists {A : Type} (P : A -&gt; Type) (l : list A)
+  : list_exists P l -&gt; exists (x : A), InList x l /\ P x.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simple_list_induction l x l IHl.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1140
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: done.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1141
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simpl.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [Px | ex].</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1143
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exists x.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by split; [left|].</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1145
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct (IHl ex) as [x' [H Px']].</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1146
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists x'.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1147
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by split; [right|].</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1148
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition list_exists_inlist {A : Type} (P : A -&gt; Type) (l : list A)
+  : forall (x : A), InList x l -&gt; P x -&gt; list_exists P l.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1152
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simple_list_induction l x l IHl.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1154
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: trivial.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1155
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  simpl; intros y H p; revert H.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply functor_sum.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fun r =&gt; r^ # p).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros H.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    by apply (IHl y).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition list_exists_seq {n : nat} (P : nat -&gt; Type)
+  (H : forall k, P k -&gt; k &lt; n)
+  : (exists k, P k) &lt;-&gt; list_exists P (seq n).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1165
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1166
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  split.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1167
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros [k p].</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1168
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply (list_exists_inlist P _ k _ p).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1169
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply inlist_seq, H.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact p.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros H1.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply inlist_list_exists in H1.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    destruct H1 as [k [Hk p]].</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1174
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exists k.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1175
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact p.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1176
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** An upper bound on witnesses of a decidable predicate makes the sigma type decidable. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1179
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition decidable_exists_nat (n : nat) (P : nat -&gt; Type)
+  (H1 : forall k, P k -&gt; k &lt; n)
+  (H2 : forall k, Decidable (P k))
+  : Decidable (exists k, P k).</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1182
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1183
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  napply decidable_iff.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1184
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: apply iff_inverse; napply list_exists_seq.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact H1.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1186
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact _.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** A common special case.  See also [decidable_search] in Misc/BoundedSearch.v for a similar result with different dependencies. *)</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1190
+Time: 0.002s">
+<div class="time" style="width: 7.6923076923077%"></div>
+<pre>Definition decidable_exists_bounded_nat (n : nat) (P : nat -&gt; Type)
+  (H2 : forall k, Decidable (P k))
+  : Decidable { k : nat &amp; prod (k &lt; n) (P k) }
+  := decidable_exists_nat n _ (fun k =&gt; fst) _.</pre>
+</div>
+<div class="code" title="File: Theory.v
+Line: 1194
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

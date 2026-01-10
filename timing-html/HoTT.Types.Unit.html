@@ -1,0 +1,505 @@
+<html>
+<head>
+<title>Unit.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Unit.v</h1>
+
+<div class="code" title="File: Unit.v
+Line: 1
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>(** * Theorems about the unit type *)
+
+</pre>
+</div>
+<div class="code" title="File: Unit.v
+Line: 2
+Time: 0.023s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import Basics.Overture Basics.Equivalences.</pre>
+</div>
+<div class="code" title="File: Unit.v
+Line: 2
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Local Open Scope path_scope.</pre>
+</div>
+<div class="code" title="File: Unit.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Set Universe Minimization ToSet.</pre>
+</div>
+<div class="code" title="File: Unit.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Generalizable Variables A.</pre>
+</div>
+<div class="code" title="File: Unit.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Eta conversion *)
+
+</pre>
+</div>
+<div class="code" title="File: Unit.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition eta_unit (z : Unit) : tt = z
+  := match z with tt =&gt; 1 end.</pre>
+</div>
+<div class="code" title="File: Unit.v
+Line: 11
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Paths *)
+
+(* This is all kind of ridiculous, but it fits the pattern. *)
+
+</pre>
+</div>
+<div class="code" title="File: Unit.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition path_unit_uncurried (z z' : Unit) : Unit -&gt; z = z'
+  := fun _ =&gt; match z, z' with tt, tt =&gt; 1 end.</pre>
+</div>
+<div class="code" title="File: Unit.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition path_unit (z z' : Unit) : z = z'
+  := path_unit_uncurried z z' tt.</pre>
+</div>
+<div class="code" title="File: Unit.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition eta_path_unit {z z' : Unit} (p : z = z') :
+  path_unit z z' = p.</pre>
+</div>
+<div class="code" title="File: Unit.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Unit.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct p.</pre>
+</div>
+<div class="code" title="File: Unit.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> destruct z.</pre>
+</div>
+<div class="code" title="File: Unit.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Unit.v
+Line: 25
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Unit.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance isequiv_path_unit (z z' : Unit) : IsEquiv (path_unit_uncurried z z') | 0.</pre>
+</div>
+<div class="code" title="File: Unit.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Unit.v
+Line: 29
+Time: 0.001s">
+<div class="time" style="width: 4.3478260869565%"></div>
+<pre>
+  refine (Build_IsEquiv _ _ (path_unit_uncurried z z') (fun _ =&gt; tt)
+    (fun p:z=z' =&gt;
+      match p in (_ = z') return (path_unit_uncurried z z' tt = p) with
+        | idpath =&gt; match z as z return (path_unit_uncurried z z tt = 1) with
+                    | tt =&gt; 1
+                  end
+      end)
+    (fun x =&gt; match x with tt =&gt; 1 end) _).</pre>
+</div>
+<div class="code" title="File: Unit.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros []; destruct z, z'; reflexivity.</pre>
+</div>
+<div class="code" title="File: Unit.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Unit.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition equiv_path_unit (z z' : Unit) : Unit &lt;~&gt; (z = z')
+  := Build_Equiv _ _ (path_unit_uncurried z z') _.</pre>
+</div>
+<div class="code" title="File: Unit.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Transport *)
+
+(** Is a special case of transporting in a constant fibration. *)
+
+(** ** Universal mapping properties *)
+
+(* The positive universal property *)</pre>
+</div>
+<div class="code" title="File: Unit.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Arguments Unit_ind [A] a u : rename.</pre>
+</div>
+<div class="code" title="File: Unit.v
+Line: 50
+Time: 0.001s">
+<div class="time" style="width: 4.3478260869565%"></div>
+<pre>
+
+Instance isequiv_unit_ind `{Funext} (A : Unit -&gt; Type)
+: IsEquiv (@Unit_ind A) | 0
+  := isequiv_adjointify _
+  (fun f : forall u:Unit, A u =&gt; f tt)
+  (fun f : forall u:Unit, A u =&gt; path_forall (@Unit_ind A (f tt)) f
+                                             (fun x =&gt; match x with tt =&gt; 1 end))
+  (fun _ =&gt; 1).</pre>
+</div>
+<div class="code" title="File: Unit.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance isequiv_unit_rec `{Funext} (A : Type)
+: IsEquiv (@Unit_ind (fun _ =&gt; A)) | 0
+  := isequiv_unit_ind (fun _ =&gt; A).</pre>
+</div>
+<div class="code" title="File: Unit.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+#[local]
+Hint Extern 4 =&gt; progress (cbv beta iota) : typeclass_instances.</pre>
+</div>
+<div class="code" title="File: Unit.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition equiv_unit_rec `{Funext} (A : Type)
+  : A &lt;~&gt; (Unit -&gt; A)
+  := (Build_Equiv _ _ (@Unit_ind (fun _ =&gt; A)) _).</pre>
+</div>
+<div class="code" title="File: Unit.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* For various reasons, it is typically more convenient to define functions out of the unit as constant maps, rather than [Unit_ind]. *)</pre>
+</div>
+<div class="code" title="File: Unit.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Notation unit_name x := (fun (_ : Unit) =&gt; x).</pre>
+</div>
+<div class="code" title="File: Unit.v
+Line: 71
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance isequiv_unit_name@{i j} `{Funext} (A : Type@{i})
+: @IsEquiv@{i j} _ (Unit -&gt; _) (fun (a:A) =&gt; unit_name a).</pre>
+</div>
+<div class="code" title="File: Unit.v
+Line: 74
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Unit.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (isequiv_adjointify _ (fun f : Unit -&gt; _ =&gt; f tt) _ _).</pre>
+</div>
+<div class="code" title="File: Unit.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Unit.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros f; apply path_forall@{i i j}; intros x.</pre>
+</div>
+<div class="code" title="File: Unit.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply ap@{i i}, path_unit.</pre>
+</div>
+<div class="code" title="File: Unit.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Unit.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros a; reflexivity.</pre>
+</div>
+<div class="code" title="File: Unit.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Unit.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* The negative universal property *)</pre>
+</div>
+<div class="code" title="File: Unit.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition unit_coind {A : Type} : Unit -&gt; (A -&gt; Unit)
+  := fun _ _ =&gt; tt.</pre>
+</div>
+<div class="code" title="File: Unit.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Instance isequiv_unit_coind `{Funext} (A : Type) : IsEquiv (@unit_coind A) | 0.</pre>
+</div>
+<div class="code" title="File: Unit.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Unit.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  refine (isequiv_adjointify _ (fun f =&gt; tt) _ _).</pre>
+</div>
+<div class="code" title="File: Unit.v
+Line: 87
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Unit.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro f.</pre>
+</div>
+<div class="code" title="File: Unit.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply path_forall; intros x; apply path_unit.</pre>
+</div>
+<div class="code" title="File: Unit.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Unit.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro x; destruct x; reflexivity.</pre>
+</div>
+<div class="code" title="File: Unit.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Unit.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition equiv_unit_coind `{Funext} (A : Type)
+  : Unit &lt;~&gt; (A -&gt; Unit)
+  := Build_Equiv _ _ (@unit_coind A) _.</pre>
+</div>
+<div class="code" title="File: Unit.v
+Line: 94
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Truncation *)
+
+(* The Unit type is contractible *)</pre>
+</div>
+<div class="code" title="File: Unit.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Instance contr_unit : Contr Unit | 0 := Build_Contr _ tt (fun t : Unit =&gt; match t with tt =&gt; 1 end).</pre>
+</div>
+<div class="code" title="File: Unit.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Equivalences *)
+
+(** A contractible type is equivalent to [Unit]. *)</pre>
+</div>
+<div class="code" title="File: Unit.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition equiv_contr_unit `{Contr A} : A &lt;~&gt; Unit
+  := equiv_contr_contr.</pre>
+</div>
+<div class="code" title="File: Unit.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(* Conversely, a type equivalent to [Unit] is contractible. We don't make this an instance because Coq would have to guess the equivalence.  And when it has a map in mind, it would try to use [isequiv_contr_contr], which would cause a cycle. *)</pre>
+</div>
+<div class="code" title="File: Unit.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition contr_equiv_unit (A : Type) (f : A &lt;~&gt; Unit) : Contr A
+  := contr_equiv' Unit f^-1%equiv.</pre>
+</div>
+<div class="code" title="File: Unit.v
+Line: 106
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The constant map to [Unit].  We define this so we can get rid of an unneeded universe variable that Coq generates when [const tt] is used in a context that doesn't have [Universe Minimization ToSet] as this file does. If we ever set that globally, then we could get rid of this and remove some imports of this file. *)</pre>
+</div>
+<div class="code" title="File: Unit.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition const_tt (A : Type) := @const A Unit tt.</pre>
+</div>
+<div class="code" title="File: Unit.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

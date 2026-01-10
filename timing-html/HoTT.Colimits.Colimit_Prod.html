@@ -1,0 +1,351 @@
+<html>
+<head>
+<title>Colimit_Prod.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Colimit_Prod.v</h1>
+
+<div class="code" title="File: Colimit_Prod.v
+Line: 1
+Time: 0.028s">
+<div class="time" style="width: 100%"></div>
+<pre>From HoTT Require Import Basics.</pre>
+</div>
+<div class="code" title="File: Colimit_Prod.v
+Line: 1
+Time: 0.012s">
+<div class="time" style="width: 42.857142857143%"></div>
+<pre>
+Require Import Types.</pre>
+</div>
+<div class="code" title="File: Colimit_Prod.v
+Line: 2
+Time: 0.009s">
+<div class="time" style="width: 32.142857142857%"></div>
+<pre>
+Require Import Diagrams.Diagram.</pre>
+</div>
+<div class="code" title="File: Colimit_Prod.v
+Line: 3
+Time: 0.008s">
+<div class="time" style="width: 28.571428571429%"></div>
+<pre>
+Require Import Colimits.Colimit.</pre>
+</div>
+<div class="code" title="File: Colimit_Prod.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Colimits.Colimit_Sigma.</pre>
+</div>
+<div class="code" title="File: Colimit_Prod.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Require Import Diagrams.Graph.</pre>
+</div>
+<div class="code" title="File: Colimit_Prod.v
+Line: 6
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Colimit of product by a constant type *)
+
+(** Given a diagram [D], one of his colimits [Q] and a type [A], one can consider the diagram of the products of the types of [D] and [A]. Then, a colimit of such a diagram is [A * Q]. *)
+
+(** This is the constant case of the file [Colimit_Sigma] and we reuse its results. *)
+
+</pre>
+</div>
+<div class="code" title="File: Colimit_Prod.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section ColimitProd.</pre>
+</div>
+<div class="code" title="File: Colimit_Prod.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context `{Funext} {G : Graph} (D : Diagram G) (A : Type).</pre>
+</div>
+<div class="code" title="File: Colimit_Prod.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition prod_diagram : Diagram G.</pre>
+</div>
+<div class="code" title="File: Colimit_Prod.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Colimit_Prod.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    srapply Build_Diagram.</pre>
+</div>
+<div class="code" title="File: Colimit_Prod.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Colimit_Prod.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (fun i =&gt; A * (D i)).</pre>
+</div>
+<div class="code" title="File: Colimit_Prod.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Colimit_Prod.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> simpl; intros i j f x.</pre>
+</div>
+<div class="code" title="File: Colimit_Prod.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (fst x, D _f f (snd x)).</pre>
+</div>
+<div class="code" title="File: Colimit_Prod.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Colimit_Prod.v
+Line: 23
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition diagram_equiv_prod_sigma
+    : sigma_diagram (fun _ : A =&gt; D) ~d~ prod_diagram.</pre>
+</div>
+<div class="code" title="File: Colimit_Prod.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Colimit_Prod.v
+Line: 27
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unshelve econstructor.</pre>
+</div>
+<div class="code" title="File: Colimit_Prod.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Colimit_Prod.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> srapply Build_DiagramMap; cbn.</pre>
+</div>
+<div class="code" title="File: Colimit_Prod.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: Colimit_Prod.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro i; apply equiv_sigma_prod0.</pre>
+</div>
+<div class="code" title="File: Colimit_Prod.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: Colimit_Prod.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> reflexivity.</pre>
+</div>
+<div class="code" title="File: Colimit_Prod.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Colimit_Prod.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro i; cbn.</pre>
+</div>
+<div class="code" title="File: Colimit_Prod.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply equiv_sigma_prod0.</pre>
+</div>
+<div class="code" title="File: Colimit_Prod.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Colimit_Prod.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Lemma iscolimit_prod {Q : Type} (HQ : IsColimit D Q)
+  : IsColimit prod_diagram (A * Q).</pre>
+</div>
+<div class="code" title="File: Colimit_Prod.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: Colimit_Prod.v
+Line: 38
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    eapply iscolimit_postcompose_equiv.</pre>
+</div>
+<div class="code" title="File: Colimit_Prod.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Colimit_Prod.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply equiv_sigma_prod0.</pre>
+</div>
+<div class="code" title="File: Colimit_Prod.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: Colimit_Prod.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> eapply iscolimit_precompose_equiv.</pre>
+</div>
+<div class="code" title="File: Colimit_Prod.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: Colimit_Prod.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> symmetry; exact diagram_equiv_prod_sigma.</pre>
+</div>
+<div class="code" title="File: Colimit_Prod.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      +</pre>
+</div>
+<div class="code" title="File: Colimit_Prod.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> by apply iscolimit_sigma.</pre>
+</div>
+<div class="code" title="File: Colimit_Prod.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: Colimit_Prod.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+End ColimitProd.</pre>
+</div>
+<div class="code" title="File: Colimit_Prod.v
+Line: 47
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+
