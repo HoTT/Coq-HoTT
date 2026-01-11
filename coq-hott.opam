@@ -31,6 +31,6 @@ build: [
 ]
 dev-repo: "git+https://github.com/HoTT/HoTT.git"
 depends: [
-  "dune" {>= "3.13"}
+  "dune" {>= "3.14"}
   ("rocq-core" {>= "9.0"} & "coq-core" {>= "9.0"})
 ]
