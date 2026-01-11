@@ -2,7 +2,7 @@
 opam-version: "2.0"
 synopsis: "The Homotopy Type Theory library"
 description: """
-To use the HoTT library, the following flags must be passed to coqc:
+To use the HoTT library, the following flags must be passed to rocq:
   -noinit -indices-matter
 To use the HoTT library in a project, add the following to _CoqProject:
   -arg -noinit
