@@ -12,7 +12,7 @@ Makefile.coq: Makefile _CoqProject
 # Generate _CoqProject file
 	bash etc/generate_coqproject.sh
 # Generate Makefile
-	$(COQBIN)coq_makefile -f _CoqProject -o Makefile.coq
+	$(COQBIN)rocq makefile -f _CoqProject -o Makefile.coq
 
 # We replace the html target with real-html, because we want to make
 # the timestamp file.  We use patsubst rather than subst to do this so
