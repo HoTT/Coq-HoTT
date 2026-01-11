@@ -25,4 +25,4 @@
  (description
   "To use the HoTT library, the following flags must be passed to rocq:\n  -noinit -indices-matter\nTo use the HoTT library in a project, add the following to _CoqProject:\n  -arg -noinit\n  -arg -indices-matter\n")
  (depends
-  (rocq (>= 9.0.0))))
+  (rocq-core (>= 9.0))))
