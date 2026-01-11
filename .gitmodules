@@ -3,4 +3,4 @@
 	url = https://github.com/JasonGross/coq-scripts.git
 [submodule "etc/alectryon"]
 	path = etc/alectryon
-	url = https://github.com/JasonGross/alectryon.git
+	url = https://github.com/cpitclaudel/alectryon.git

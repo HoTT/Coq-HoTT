@@ -184,7 +184,8 @@ jobs:
         coq_version: ${{ env.coq-version-supported }}
         ocaml_version: ${{ env.ocaml-version }}
         custom_script: |
-          opam install -y coq-serapi
+          opam update
+          opam install -y coq-lsp.0.2.5+9.0
           sudo apt-get -o Acquire::Retries=30 update -q
           sudo apt-get -o Acquire::Retries=30 install python3-pip python3-venv autoconf -y --allow-unauthenticated
           startGroup "Workaround permission issue" # https://github.com/coq-community/docker-coq-action#permissions
