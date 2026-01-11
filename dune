@@ -48,6 +48,23 @@
   (alias_rec theories/all)
   _CoqProject))
 
+; Alectryon documentation
+; Run with: dune build @alectryon
+
+(rule
+ (target alectryon_rules.sexp)
+ (deps
+  (glob_files theories/*.v)
+  (glob_files theories/**/*.v)
+  (glob_files contrib/*.v))
+ (action
+  (with-stdout-to %{target}
+   (chdir %{project_root}
+    (run etc/gen-alectryon-rules/gen_alectryon_rules.exe)))))
+
+(subdir alectryon-html
+ (dynamic_include ../alectryon_rules.sexp))
+
 ; Tags for emacs
 
 (rule

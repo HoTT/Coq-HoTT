@@ -159,7 +159,7 @@ jobs:
 # - coqchk: Runs coqchk
 # - install: Tests install target
 
-  # alectryon doc job (using Nix for reproducible builds)
+  # alectryon doc job (using Nix + dune for reproducible builds)
   doc-alectryon:
     runs-on: ubuntu-latest
     steps:
@@ -171,14 +171,11 @@ jobs:
       with:
         primary-key: nix-${{ runner.os }}-${{ hashFiles('flake.lock') }}
         restore-prefixes-first-match: nix-${{ runner.os }}-
-    - name: add problem matchers
+    - name: Build alectryon docs with dune
       run: |
-        echo "::add-matcher::etc/coq-scripts/github/alectryon-error.json"
-    - name: Build and run alectryon
-      run: |
-        nix develop .#coq_9_0 -c make alectryon ALECTRYON_EXTRAFLAGS=--traceback
+        nix develop .#coq_9_0 -c dune build @alectryon
     - name: tar alectryon artifact
-      run: tar -cf alectryon-html.tar alectryon-html
+      run: tar -cf alectryon-html.tar -C _build/default alectryon-html
     - name: upload alectryon artifact
       uses: actions/upload-artifact@v4
       with:
