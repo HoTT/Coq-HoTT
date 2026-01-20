@@ -20,6 +20,7 @@ Require Export WildCat.DisplayedEquiv.
 Require Export WildCat.Pullbacks.
 Require Export WildCat.AbEnriched.
 Require Export WildCat.EpiStable.
+Require Export WildCat.HomologicalAlgebra.
 
 Require Export WildCat.SetoidRewrite.
 
