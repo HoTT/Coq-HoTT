@@ -766,7 +766,7 @@ Section Baby_Dragon.
 
       set (D' := baby_dragon_trunc_left n D).
       elt_lift_epic (bot_r D' fin_last $o top_r D' fin_last)
-          (bot_r D' fin_last $o m_last) t_penult lt_penult.
+                    (bot_r D' fin_last $o m_last) t_penult lt_penult.
 
       elt_lift_exact (top_l D (fsucc fin_last)) (bot_r D (fin_incl fin_last))
         (m_last - top_r D (fin_incl fin_last) $o t_penult) t_last lt_last
@@ -820,8 +820,7 @@ Section Baby_Dragon.
       apply cat_postwhisker.
 
       set (D' := baby_dragon_trunc_right n D).
-      rapply (ismonic' (bot_r D' fin_zero
-                          $o top_r D' fin_zero)).
+      rapply (ismonic' (bot_r D' fin_zero $o top_r D' fin_zero)).
       1: rapply (monic_homotopic _ _ (sq _ _)).
       lhs_V' napply (sq D' fin_zero $@R _).
       unfold D'.
