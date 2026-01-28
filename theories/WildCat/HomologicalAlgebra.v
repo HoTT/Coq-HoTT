@@ -53,8 +53,7 @@ Section FourLemma.
       rewrite ld.
       rewrite cat_assoc_opp.
       rewrite complex_cde'.
-      apply precomp_zero.
-    }
+      apply precomp_zero. }
 
     (* The element [c] is not necessarily the correct lift of [c'].  We correct this by lifting the element [c' - h $o c] using exactness of the bottom row. This yields an element [b' : elt _ B']. *)
     elt_lift_exact bc' cd' (c' - h $o c) b' lb' using clear sq3 lc ld d.
@@ -62,8 +61,7 @@ Section FourLemma.
       rewrite postcomp_op_inv.
       rewrite_with_assoc sq3^$.
       rewrite lc, ld.
-      apply inverse_r_0gpd.
-    }
+      apply inverse_r_0gpd. }
 
     (* Since we know that the map [g : B $-> B'] is epi, we can lift [b'] to an element [b : elt _ B]. *)
     elt_lift_epic g b' b lb.
@@ -92,15 +90,13 @@ Section FourLemma.
     { apply (ismonic' j).
       rewrite_with_assoc sq4.
       rewrite p.
-      apply postcomp_zero.
-    }
+      apply postcomp_zero. }
 
     (* Next we lift [h $o c] to [b' : elt _ B']. *)
     elt_lift_exact bc' cd' (h $o c) b' lb' using clear sq3 p.
     { rewrite_with_assoc sq3^$.
       rewrite lc.
-      exact p.
-    }
+      exact p. }
 
     (* We lift [b'] to [b : elt _ B]. *)
     elt_lift_epic g b' b lb.
@@ -110,8 +106,7 @@ Section FourLemma.
     { apply (ismonic h).
       rewrite_with_assoc sq2.
       rewrite lb.
-      exact lb'.
-    }
+      exact lb'. }
 
     (* So [d] lifts all the way to [B].  Since [B -> C -> D] is a complex, [d] is zero. *)
     lhs_V' napply lc.
@@ -189,8 +184,7 @@ Section ThreeByThree.
       elt_lift_exact f1i f1j (fi1 $o x01) x10 lx10 using clear sq2 p.
       { rewrite_with_assoc sq2^$.
         lhs' napply (_ $@L p).
-        apply postcomp_zero.
-      }
+        apply postcomp_zero. }
 
       elt_lift_exact fi0 fj0 x10 x00 lx00 using clear sq3 q.
       { apply (ismonic' f2i).
@@ -198,8 +192,7 @@ Section ThreeByThree.
         lhs' napply (_ $@L lx10).
         lhs' napply cat_assoc_opp.
         lhs' napply (q $@R _).
-        apply precomp_zero.
-      }
+        apply precomp_zero. }
 
       provide_lift x00.
       apply (ismonic fi1).
@@ -224,8 +217,7 @@ Section ThreeByThree.
       lhs' napply (_ $@L lx11).
       lhs_V' napply cat_assoc.
       lhs' napply (complex_f_2 $@R _).
-      apply precomp_zero.
-    }
+      apply precomp_zero. }
 
     elt_lift_epic fj0 x20 x10 lx10.
 
@@ -233,8 +225,7 @@ Section ThreeByThree.
     { lhs' rapply postcomp_op_inv.
       rewrite_with_assoc sq3.
       rewrite lx10.
-      apply (inverse_r_homotopy_0gpd lx20^$).
-    }
+      apply (inverse_r_homotopy_0gpd lx20^$). }
 
     provide_lift x01.
     apply (ismonic fi2).
@@ -262,8 +253,7 @@ Section ThreeByThree.
     { apply (ismonic' f2i).
       rewrite_with_assoc sq3^$.
       lhs' napply (_ $@L p).
-      apply postcomp_zero.
-    }
+      apply postcomp_zero. }
 
     lhs_V' napply lx00.
     rhs_V' napply (postcomp_zero fi0).
@@ -280,14 +270,13 @@ Section ThreeByThree.
     `{!CatIsAbExact f2i f2j} `{!CatIsAbExact fi1 fj1}
     : CatIsAbExact f1i f1j.
   Proof.
-    refine {| isabcomplex := cpx |}.
+    snapply (Build_CatIsAbExact _ _ _ _ _ cpx).
     intros P x11 p.
 
     elt_lift_exact f2i f2j (fj1 $o x11) x20 lx20 using clear sq4.
     { rewrite_with_assoc sq4^$.
       lhs' napply (_ $@L p).
-      apply postcomp_zero.
-    }
+      apply postcomp_zero. }
 
     elt_lift_epic fj0 x20 x10 lx10.
 
@@ -296,8 +285,7 @@ Section ThreeByThree.
       apply inverse_r_homotopy_0gpd.
       rewrite_with_assoc sq3.
       rhs' napply (_ $@L lx10).
-      exact lx20^$.
-    }
+      exact lx20^$. }
 
     elt_lift_exact f0i f0j x01 x00 lx00 using clear sq2 p cpx.
     { apply (ismonic' fi2).
@@ -308,8 +296,7 @@ Section ThreeByThree.
       rewrite cat_assoc_opp.
       rewrite cpx.
       rewrite precomp_zero.
-      apply inverse_r_0gpd.
-    }
+      apply inverse_r_0gpd. }
 
     provide_lift ((fi0 $o x00) + x10).
     lhs' napply postcomp_op.
@@ -335,8 +322,7 @@ Section ThreeByThree.
       apply inverse_r_homotopy_0gpd.
       rhs_V' napply cat_assoc.
       rhs' napply (sq4 $@R _).
-      exact lx11^$.
-    }
+      exact lx11^$. }
 
     elt_lift_epic f0j x02 x01 lx01.
 
@@ -384,16 +370,14 @@ Section Spider.
     elt_lift_exact bx xa (ax $o a1) b1 lb1 using clear tr1 p.
     { lhs' napply cat_assoc_opp.
       lhs' napply (tr1 $@R _).
-      exact p.
-    }
+      exact p. }
 
     assert (b1_is_zero : b1 $== 0).
     { apply (ismonic' b).
       lhs_V' napply (tr2 $@R _).
       rewrite_with_assoc_opp lb1.
       lhs' apply (isabcomplex $@R _).
-      apply precomp_zero.
-    }
+      apply precomp_zero. }
 
     lhs_V' napply lb1.
     lhs' napply (_ $@L b1_is_zero).
@@ -412,8 +396,7 @@ Section Spider.
     { rewrite postcomp_op_inv.
       rewrite <- cat_assoc, tr2.
       rewrite <- lb1.
-      apply inverse_r_0gpd.
-    }
+      apply inverse_r_0gpd. }
 
     provide_lift a1.
     lhs_V' napply (tr1 $@R _).
@@ -460,7 +443,7 @@ Section Snail.
     `{!CatIsAbExact yx xw} `{!CatIsAbExact y yz}
     : CatIsAbExact w wz.
   Proof.
-    napply Build_CatIsAbExact.
+    snapply Build_CatIsAbExact.
     - lhs' napply (_ $@L tr1).
       rewrite_with_assoc sq1.
       lhs' apply (_ $@L isabcomplex).
@@ -471,15 +454,13 @@ Section Snail.
       elt_lift_exact y yz (xy $o x) y1 ly1 using clear sq1 p.
       { rewrite_with_assoc sq1^$.
         lhs' napply (_ $@L lx).
-        exact p.
-      }
+        exact p. }
 
       elt_lift_exact wx xy (x - yx $o y1) w1 lw1 using clear tr2 ly1.
       { lhs' rapply postcomp_op_inv.
         rewrite <- cat_assoc, <- tr2.
         rewrite ly1.
-        apply inverse_r_0gpd.
-      }
+        apply inverse_r_0gpd. }
 
       provide_lift w1.
       lhs' napply (tr1 $@R _).
@@ -533,12 +514,14 @@ Section TwoByThree.
       lhs' apply (_ $@L isabcomplex).
       apply postcomp_zero.
     - intros P b2 p.
+
       elt_lift_epic b b2 b1 lb1.
+
       elt_lift_exact f1 g1 b1 a1 la1 using clear sq2.
       { apply (ismonic' c).
         rewrite_with_assoc sq2.
-        by lhs' napply (_ $@L lb1).
-      }
+        by lhs' napply (_ $@L lb1). }
+
       provide_lift (a $o a1).
       rewrite_with_assoc sq1^$.
       by lhs' napply (_ $@L la1).
@@ -560,8 +543,7 @@ Section TwoByThree.
       elt_lift_exact f2 g2 (b $o b1) a2 la2 using clear sq2 p.
       { rewrite_with_assoc sq2^$.
         lhs' napply (_ $@L p).
-        apply postcomp_zero.
-      }
+        apply postcomp_zero. }
 
       elt_lift_epic a a2 a1 la1.
 
@@ -629,15 +611,13 @@ Section Diamond.
       rewrite_with_assoc sq.
       rewrite trl.
       rewrite cat_assoc, lh, p.
-      apply postcomp_zero.
-    }
+      apply postcomp_zero. }
 
     assert (la' : ah $o a $== h).
     { apply (ismonic hb).
       lhs_V' napply cat_assoc.
       rewrite <- tru.
-      exact la.
-    }
+      exact la. }
 
     lhs_V' napply lh.
     lhs_V' napply (_ $@L la').
@@ -660,8 +640,7 @@ Section Diamond.
       lhs' napply (de $@L lf).
       lhs_V' napply cat_assoc.
       lhs' rapply (isabcomplex $@R c).
-      napply precomp_zero.
-    }
+      napply precomp_zero. }
 
     elt_lift_epic hg g h lh.
 
@@ -764,21 +743,20 @@ Section Baby_Dragon.
 
       elt_lift_epic (bot_l D fin_last) b_last m_last lm_last.
 
-      set (D' := baby_dragon_trunc_left n D).
+      pose (D' := baby_dragon_trunc_left n D).
       elt_lift_epic (bot_r D' fin_last $o top_r D' fin_last)
                     (bot_r D' fin_last $o m_last) t_penult lt_penult.
+      unfold D' in t_penult, lt_penult; clear D'.
 
       elt_lift_exact (top_l D (fsucc fin_last)) (bot_r D (fin_incl fin_last))
         (m_last - top_r D (fin_incl fin_last) $o t_penult) t_last lt_last
         using clear IHn lt_penult.
       { lhs' napply postcomp_op_inv.
         rewrite <- cat_assoc.
-        cbn in lt_penult.
         rewrite <- lt_penult.
         apply inverse_r_0gpd. }
 
       provide_lift t_last.
-
       lhs_V' napply (sq D fin_last $@R _).
       lhs' napply cat_assoc.
       lhs' napply (_ $@L lt_last).
@@ -818,13 +796,11 @@ Section Baby_Dragon.
       lhs_V' napply lift_t'.
       rhs_V' napply (postcomp_zero (top_l D (fsucc fin_zero))).
       apply cat_postwhisker.
-
       set (D' := baby_dragon_trunc_right n D).
       rapply (ismonic' (bot_r D' fin_zero $o top_r D' fin_zero)).
-      1: rapply (monic_homotopic _ _ (sq _ _)).
+      { rapply (monic_homotopic _ _ (sq _ _)). }
       lhs_V' napply (sq D' fin_zero $@R _).
-      unfold D'.
-
+      unfold D'; clear D'.
       rewrite_with_assoc_opp lift_t'.
       lhs' apply (isabcomplex $@R _).
       apply precomp_zero.

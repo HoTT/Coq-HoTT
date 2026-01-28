@@ -302,10 +302,8 @@ Section EpiStableLemmas.
     rhs_V' napply lx'.
     napply cat_postwhisker.
     apply (ismonic (g $o f)).
-
     lhs' napply cat_assoc.
     rhs' napply cat_assoc.
-
     lhs' napply (g $@L lx).
     rhs' napply (g $@L lx').
     exact p.
