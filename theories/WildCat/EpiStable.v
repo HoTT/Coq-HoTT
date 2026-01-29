@@ -1,8 +1,7 @@
-Require Import WildCat.SetoidRewrite.
-Require Import Basics.Overture Basics.Tactics Basics.Equivalences.
-Require Import WildCat.Core WildCat.Equiv WildCat.EquivGpd WildCat.PointedCat
-  WildCat.Yoneda WildCat.Graph WildCat.ZeroGroupoid WildCat.Pullbacks
-  WildCat.AbEnriched WildCat.FunctorCat.
+From HoTT.Basics Require Import Overture Tactics Equivalences.
+From HoTT.WildCat Require Import Core SetoidRewrite Equiv EquivGpd PointedCat
+  Yoneda Graph ZeroGroupoid Pullbacks
+  AbEnriched FunctorCat.
 
 (** * Epi-stable categories *)
 
@@ -186,7 +185,7 @@ End AbEpiStable.
 
 (** ** Tactics *)
 
-(** The [fix_left] tactic is the key to smooth diagram chasing in an [IsAbEpiStable] category.  Given [lift : Lift ? ?]; we extract the lifted element using the provided name [d] and the proof it is a lift using the name [l].  Then we update all other generalized elements to have the same domain as [d].  We could also have a limited version of this tactic for an [IsEpiStable] category. *)
+(** The [fix_left] tactic is the key to smooth diagram chasing in an [IsAbEpiStable] category.  Given [lift : Lift ? ?]; we extract the lifted element using the provided name [d] and the proof it is a lift using the name [l].  Then we update all other generalized elements to have the same domain as [d].  We could also have a limited version of this tactic for an [IsEpiStable] category.  For examples of this tactic in use, see the EpiStableLemmas section below and the file HomologicalAlgebra.v. *)
 Ltac fix_lift lift d l :=
   let P2 := fresh "P" in
   let e := fresh "e" in
@@ -273,3 +272,53 @@ Ltac rewrite_with_assoc h :=
 (** Similar, with the other parenthesization. *)
 Ltac rewrite_with_assoc_opp h :=
   rewrite (cat_assoc _ _ _ $@ cat_postwhisker _ h $@ cat_assoc_opp _ _ _).
+
+(** We can prove some lemmas about these categories using diagram chasing. *)
+
+Section EpiStableLemmas.
+
+  Context {A : Type} `{IsEpiStable A}.
+
+  (** Morphisms that are both mono and epi are not necessarily iso.  The two-out-of-three property is not true for monos and epis in general, but it holds for maps that are both monos and epi in EpiStable categories. *)
+
+  Context {X Y Z : A} (f : X $-> Y) (g : Y $-> Z).
+
+  (** We already know the following implications:
+    - [f] mono/epi + [g] mono/epi => [g $o f] mono/epi
+    - [g $o f] mono => [f] mono
+    - [g $o f] epi => [g] epi
+
+    It remains to show:
+    - [g $o f] mono + [f] epi => [g] mono
+    - [g $o f] epi + [g] mono => [f] epi *)
+
+  Definition monic_cancel_epic `{!Monic (g $o f)} `{!Epic f} : Monic g.
+  Proof.
+    apply monic_via_elt; intros P y y' p.
+
+    elt_lift_epic f y x lx; elt_lift_epic f y' x' lx'.
+
+    lhs_V' napply lx.
+    rhs_V' napply lx'.
+    napply cat_postwhisker.
+    apply (ismonic (g $o f)).
+    lhs' napply cat_assoc.
+    rhs' napply cat_assoc.
+    lhs' napply (g $@L lx).
+    rhs' napply (g $@L lx').
+    exact p.
+  Defined.
+
+  Definition epic_cancel_monic `{!Epic (g $o f)} `{!Monic g} : Epic f.
+  Proof.
+    apply epic_elt_lift; intros P y.
+
+    elt_lift_epic (g $o f) (g $o y) x lx.
+
+    provide_lift x.
+    rapply ismonic.
+    lhs' napply cat_assoc_opp.
+    exact lx.
+  Defined.
+
+End EpiStableLemmas.
