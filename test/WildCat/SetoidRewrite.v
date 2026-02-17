@@ -1,5 +1,3 @@
-#[warnings="-deprecated-from-Coq"]
-From Coq Require Init.Tactics. (* TODO: Can remove this line and previous once Rocq 9.0 is our minimum. *)
 From HoTT Require Import Basics.Overture Basics.Tactics.
 From HoTT.WildCat Require Import Core NatTrans Equiv SetoidRewrite.
 

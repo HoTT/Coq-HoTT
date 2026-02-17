@@ -2,13 +2,8 @@
 
 (** This file uses the setoid rewriting machinery from the Coq standard library to allow rewriting in wild-categories.  Examples are given in test/WildCat/SetoidRewrite.v and theories/WildCat/HomologicalAlgebra.v. *)
 
-(** Init.Tactics contains the definition of the Coq stdlib typeclass_inferences database.  With Coq 8.x, it must be imported before Basics.Overture.  Otherwise, the typeclasses hintdb is cleared, breaking typeclass inference.  Because of this, this file also needs to be the first file Require'd in any file that uses it.  Moreover, if Foo Requires this file, then Foo must also be the first file Require'd in any file that Requires Foo, and so on.  Once we assume Rocq 9.0 as our minimum, these comments can be removed. *)
-
-#[warnings="-deprecated-from-Coq"]
-From Coq Require Init.Tactics.
 From HoTT Require Import Basics.Overture Basics.Tactics.
-#[warnings="-deprecated-from-Coq"]
-From Coq Require Setoids.Setoid.
+From Corelib Require Setoids.Setoid.
 Import CMorphisms.ProperNotations.
 From HoTT Require Import WildCat.Core.
 
