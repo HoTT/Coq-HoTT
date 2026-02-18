@@ -159,51 +159,23 @@ jobs:
 # - coqchk: Runs coqchk
 # - install: Tests install target
 
-   # alectryon job
+  # alectryon doc job (using Nix + dune for reproducible builds)
   doc-alectryon:
-    needs: build
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
       with:
         submodules: recursive
-    # Download artifact
-    - uses: actions/download-artifact@v4
+    - uses: nixbuild/nix-quick-install-action@v30
+    - uses: nix-community/cache-nix-action@v6
       with:
-        name: workspace-${{ env.coq-version-supported }}
-    # Unpack Tar
-    - run: tar -xf workspace.tar
-    - name: add problem matchers
+        primary-key: nix-${{ runner.os }}-${{ hashFiles('flake.lock') }}
+        restore-prefixes-first-match: nix-${{ runner.os }}-
+    - name: Build alectryon docs with dune
       run: |
-        #echo "::add-matcher::etc/coq-scripts/github/coq-oneline-error.json" # now via a script
-        #echo "::add-matcher::etc/coq-scripts/github/coqdoc.json" # disabled for now, since they don't have file names
-        echo "::add-matcher::etc/coq-scripts/github/alectryon-error.json"
-        #echo "::add-matcher::etc/coq-scripts/github/alectryon-warning.json" # too noisy right now, cf https://github.com/cpitclaudel/alectryon/issues/34 and https://github.com/cpitclaudel/alectryon/issues/33
-    - uses: coq-community/docker-coq-action@v1.5.1
-      with:
-        coq_version: ${{ env.coq-version-supported }}
-        ocaml_version: ${{ env.ocaml-version }}
-        custom_script: |
-          opam install -y coq-serapi
-          sudo apt-get -o Acquire::Retries=30 update -q
-          sudo apt-get -o Acquire::Retries=30 install python3-pip python3-venv autoconf -y --allow-unauthenticated
-          startGroup "Workaround permission issue" # https://github.com/coq-community/docker-coq-action#permissions
-            sudo chown -R 1000:1000 .
-          endGroup
-          # Create and activate a virtual environment
-          python3 -m venv myenv
-          source myenv/bin/activate
-          # Install the required Python packages in the virtual environment
-          python -m pip install --upgrade pip
-          python -m pip install pygments dominate beautifulsoup4 docutils==0.17.1
-          echo "::remove-matcher owner=coq-problem-matcher::" # remove problem matcher installed by Coq docker action, so we don't get duplicate warning annotations
-          make alectryon ALECTRYON_EXTRAFLAGS=--traceback
-    - name: Revert permissions
-      # to avoid a warning at cleanup time - https://github.com/coq-community/docker-coq-action#permissions
-      if: ${{ always() }}
-      run: sudo chown -R 1001:116 .
+        nix develop .#coq_9_0 -c dune build @alectryon
     - name: tar alectryon artifact
-      run: tar -cf alectryon-html.tar alectryon-html
+      run: tar -cf alectryon-html.tar -C _build/default alectryon-html
     - name: upload alectryon artifact
       uses: actions/upload-artifact@v4
       with:

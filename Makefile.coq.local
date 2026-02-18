@@ -172,7 +172,7 @@ alectryon-html/index.html alectryon-html/toc.html alectryon-html/coqdoc.css : al
 
 alectryon-html-done.timestamp: $(ALL_VOFILES) $(ALL_VFILES)
 	@ mkdir -p alectryon-html
-	$(TIMER) $(ALECTRYON) --frontend coq+rst --backend webpage --sertop-arg=--no_prelude --sertop-arg=--indices-matter $(COQLIBS_NOML) --output-directory alectryon-html --cache-directory alectryon-cache --long-line-threshold=99999 $(ALECTRYON_EXTRAFLAGS) $(ALL_VFILES)
+	$(TIMER) $(ALECTRYON) --frontend coq+rst --backend webpage --coq-driver coqlsp --output-directory alectryon-html --cache-directory alectryon-cache --long-line-threshold=99999 $(ALECTRYON_EXTRAFLAGS) $(ALL_VFILES)
 	touch alectryon-html-done.timestamp
 
 alectryon-html:
