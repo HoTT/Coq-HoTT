@@ -32,10 +32,10 @@
    HoTT
    -Q
    contrib
-   HoTT.Contrib
+   HoTT_Contrib
    -Q
    test
-   HoTT.Tests
+   HoTT_Tests
    %{deps}
    -o)))
 
