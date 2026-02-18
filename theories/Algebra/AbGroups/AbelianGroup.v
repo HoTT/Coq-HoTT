@@ -1,5 +1,6 @@
 From HoTT Require Import Basics Types.
 From HoTT.WildCat Require Import Core Universe Equiv Induced PointedCat.
+Require Import Truncations.Core Modalities.ReflectiveSubuniverse.
 Require Import Spaces.Nat.Core Spaces.Int.
 Require Export Classes.interfaces.canonical_names (Zero, zero, Plus, plus, Negate, negate, Involutive, involutive).
 Require Export Classes.interfaces.abstract_algebra (IsAbGroup(..), abgroup_group, abgroup_commutative).
@@ -275,8 +276,12 @@ Definition ab_mul_natural {A B : AbGroup}
   : f o ab_mul n == ab_mul n o f
   := grp_pow_natural f n.
 
-(** The image of an inclusion is a normal subgroup. *)
-Definition ab_image_embedding {A B : AbGroup} (f : A $-> B) `{IsEmbedding f} : NormalSubgroup B
+(** The image of a homomorphism as a normal subgroup. *)
+Definition ab_image {A : Group} {B : AbGroup} (f : A $-> B) : NormalSubgroup B
+  := {| normalsubgroup_subgroup := grp_image f; normalsubgroup_isnormal := _ |}.
+
+(** The image of an inclusion as a normal subgroup. *)
+Definition ab_image_embedding {A : Group} {B : AbGroup} (f : A $-> B) `{IsEmbedding f} : NormalSubgroup B
   := {| normalsubgroup_subgroup := grp_image_embedding f; normalsubgroup_isnormal := _ |}.
 
 Definition ab_image_in_embedding {A B : AbGroup} (f : A $-> B) `{IsEmbedding f}
@@ -299,3 +304,30 @@ Proof.
   induction q.
   exact (p g).
 Defined.
+
+(** An epimorphism of abelian groups is surjective.  This is likely true for general groups as well, but the proof is more complicated, probably needing an argument like the one given by Trimble, using a lemma by Lumsdaine, here: https://mathoverflow.net/questions/41208/are-all-group-monomorphisms-regular-constructively .  However, the elementary proof for abelian groups also works when the domain is non-abelian, at the cost of having to explicitly state what we mean by epimorphism in this case.  We state this version first. *)
+Definition grp_issurj_epi_ab `{Univalence} {A : Group} {B : AbGroup} (f : A $-> B)
+  {ef : forall (C : AbGroup) (g h : Hom (A:=Group) B C), g $o f $== h $o f -> g $== h}
+  : IsSurjection f.
+Proof.
+  apply issurj_ismaximal_image.
+  apply (ismaximalsubgroup_istrivial_grp_quotient_map _ (ab_image f)).
+  (* The previous line uses univalence, the rest do not. *)
+  change (grp_quotient_map (N:=ab_image f) $== grp_homo_const).
+  rapply (ef (ab_cokernel f)).
+  intro b.
+  apply grp_quotient_map_trivial.
+  apply (grp_homo_image_in f b).
+Defined.
+
+(** The version when both [A] and [B] are abelian immediately follows, where here we assume that [f] is epic in the category of abelian groups. *)
+Definition ab_issurj_epi `{Univalence} {A B : AbGroup} (f : A $-> B) {ef : Epic f}
+  : IsSurjection f
+  := @grp_issurj_epi_ab _ A B f ef.
+
+(** We can also restate [grp_issurj_epi] using the a priori stronger assumption that [f] is epic in the category of groups. *)
+Definition grp_issurj_epi' `{Univalence} {A : Group} {B : AbGroup} (f : A $-> B) {ef : Epic f}
+  : IsSurjection f
+  := @grp_issurj_epi_ab _ A B f (ef o abgroup_group).
+
+(** Note that by [issurj_pullback_pr2], every surjection is an epimorphism in the wild category [Type], so it follows that a surjection of groups or abelian groups is an epimorphism in [Group] or [AbGroup]. *)
