@@ -34,30 +34,53 @@ Ltac decide :=
 
 Definition decidable_true {A : Type}
   (a : A)
-  (P : forall (p : Decidable A), Type)
+  (P : forall (d : Decidable A), Type)
   (p : forall x, P (inl x))
-  : forall p, P p.
+  : forall d, P d.
 Proof.
   intros [x|n].
   - apply p.
   - contradiction n.
 Defined.
 
+Definition decidable_hprop_true {A : Type} `{IsHProp A}
+  (a : A)
+  (P : forall (d : Decidable A), Type)
+  (p : P (inl a))
+  : forall d, P d.
+Proof.
+  apply (decidable_true a).
+  intro a'.
+  by destruct (path_ishprop a a').
+Defined.
+
 (** Replace a term [p] of the form [Decidable A] with [inl x] if we have a term [a : A] showing that [A] is true. *)
-Ltac decidable_true p a :=
-  generalize p;
+Ltac decidable_true d a :=
+  generalize d;
   rapply (decidable_true a);
   try intro.
 
 Definition decidable_false {A : Type}
   (n : not A)
-  (P : forall (p : Decidable A), Type)
+  (P : forall (d : Decidable A), Type)
   (p : forall n', P (inr n'))
-  : forall p, P p.
+  : forall d, P d.
 Proof.
   intros [x|n'].
   - contradiction n.
   - apply p.
+Defined.
+
+(** Note that if [Funext] is in the context, the [IsHProp (not A)] hypothesis will automatically be satisfied. *)
+Definition decidable_hprop_false {A : Type} `{IsHProp (not A)}
+  (n : not A)
+  (P : forall (d : Decidable A), Type)
+  (p : P (inr n))
+  : forall d, P d.
+Proof.
+  apply (decidable_false n).
+  intro n'.
+  by destruct (path_ishprop n n').
 Defined.
 
 (** Replace a term [p] of the form [Decidable A] with [inr na] if we have a term [n : not A] showing that [A] is false. *)
