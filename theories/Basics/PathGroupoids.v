@@ -848,6 +848,16 @@ Proof.
   apply concat_1p.
 Defined.
 
+(** We can see [concat_A1p] and [concat_pA1] as saying that for [e] a left or right unit of some multiplication [*], the unitor [e * x = x] is natural. [concat_Ap_assoc] proves that for an associative multiplication, the associator is natural. *)
+Definition concat_Ap_assoc {A: Type} (op : A -> A -> A)
+  (assoc : forall x y z, op x (op y z) = op (op x y) z)
+  (x x' y y' z z' : A) (f : x = x') (g : y = y') (h : z = z')
+  : (ap011 op f (ap011 op g h)) @ assoc x' y' z' = assoc x y z @ ap011 op (ap011 op f g) h.
+Proof.
+  destruct f, g, h.
+  exact (concat_1p_p1 _).
+Defined.
+
 (** It would be nice to have a consistent way to name the different ways in which this can be dependent.  The following are a sort of half-hearted attempt. *)
 
 Definition ap011D {A B C} (f : forall (a:A), B a -> C)
