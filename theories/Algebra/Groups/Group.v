@@ -969,17 +969,18 @@ Definition grp_prod : Group -> Group -> Group.
 Proof.
   intros G H.
   snapply (Build_Group (G * H)).
-  4: repeat split.
   - intros [g1 h1] [g2 h2].
     exact (g1 * g2, h1 * h2).
   - exact (1, 1).
   - exact (functor_prod inv inv).
-  - exact _.
-  - intros x y z; apply path_prod'; apply simple_associativity.
-  - intros x; apply path_prod'; apply left_identity.
-  - intros x; apply path_prod'; apply right_identity.
-  - intros x; apply path_prod'; apply left_inverse.
-  - intros x; apply path_prod'; apply right_inverse.
+  - split.
+    + repeat split.
+      * exact _.
+      * intros x y z; apply path_prod'; apply simple_associativity.
+      * intros x; apply path_prod'; apply left_identity.
+      * intros x; apply path_prod'; apply right_identity.
+    + intros x; apply path_prod'; apply left_inverse.
+    + intros x; apply path_prod'; apply right_inverse.
 Defined.
 
 (** Maps into the direct product can be built by mapping separately into each factor. *)

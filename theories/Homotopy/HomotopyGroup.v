@@ -46,8 +46,7 @@ Instance is1functor_homotopygroup_type_ptype (n : nat)
   definitionally equal to [Pi 1 (iterated_loops n X)] *)
 Definition Pi1 (X : pType) : Group.
 Proof.
-  srapply (Build_Group (Tr 0 (loops X)));
-    repeat split.
+  srapply (Build_Group (Tr 0 (loops X))).
   (** Operation *)
   - intros x y.
     strip_truncations.
@@ -57,33 +56,35 @@ Proof.
   (** Inverse *)
   - srapply Trunc_rec; intro x.
     exact (tr x^).
-  (** [IsHSet] *)
-  - exact _.
-  (** Associativity *)
-  - intros x y z.
-    strip_truncations.
-    cbn; apply ap.
-    apply concat_p_pp.
-  (** Left identity *)
-  - intro x.
-    strip_truncations.
-    cbn; apply ap.
-    apply concat_1p.
-  (** Right identity *)
-  - intro x.
-    strip_truncations.
-    cbn; apply ap.
-    apply concat_p1.
-  (** Left inverse *)
-  - intro x.
-    strip_truncations.
-    apply (ap tr).
-    apply concat_Vp.
-  (** Right inverse *)
-  - intro x.
-    strip_truncations.
-    apply (ap tr).
-    apply concat_pV.
+  - split.
+    + repeat split.
+      (** [IsHSet] *)
+      * exact _.
+      (** Associativity *)
+      * intros x y z.
+        strip_truncations.
+        cbn; apply ap.
+        apply concat_p_pp.
+      (** Left identity *)
+      * intro x.
+        strip_truncations.
+        cbn; apply ap.
+        apply concat_1p.
+      (** Right identity *)
+      * intro x.
+        strip_truncations.
+        cbn; apply ap.
+        apply concat_p1.
+    (** Left inverse *)
+    + intro x.
+      strip_truncations.
+      apply (ap tr).
+      apply concat_Vp.
+    (** Right inverse *)
+    + intro x.
+      strip_truncations.
+      apply (ap tr).
+      apply concat_pV.
 Defined.
 
 (** Definition of the nth homotopy group *)
