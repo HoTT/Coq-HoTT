@@ -1342,3 +1342,46 @@ Proof.
   apply equiv_iff_hprop_uncurried.
   split; exact _.
 Defined.
+
+(** ** Subgroups of direct products *)
+
+Definition subgroup_grp_prod_l {G H : Group} (K : Subgroup G)
+  : Subgroup (grp_prod G H)
+  := subgroup_image grp_prod_inl K.
+
+Definition subgroup_grp_prod_r {G H : Group} (K : Subgroup H)
+  : Subgroup (grp_prod G H)
+  := subgroup_image grp_prod_inr K.
+
+(** These two subgroups have trivial intersection. *)
+Instance istrivial_intersection_subgroup_grp_prod {G H : Group}
+  (J : Subgroup G) (K : Subgroup H)
+  : IsTrivialGroup
+    (subgroup_intersection (subgroup_grp_prod_l J) (subgroup_grp_prod_r K)).
+Proof.
+  intros [x y] [Jx Ky].
+  strip_truncations.
+  destruct Jx as [j p], Ky as [k q].
+  apply path_prod.
+  - exact (ap fst q^).
+  - exact (ap snd p^).
+Defined.
+
+(** TODO: use [pred_eq] *)
+(** The maximal subgroup of a direct product may be decomposed as the subgroup product of the factor subgroups. *)
+Definition subgroup_eq_grp_prod_maximal {G H : Group}
+  : forall x, maximal_subgroup (grp_prod G H) x
+    <-> subgroup_product
+          (subgroup_grp_prod_l (maximal_subgroup G))
+          (subgroup_grp_prod_r (maximal_subgroup H)) x.
+Proof.
+  intros x; split.
+  - intros _; destruct x as [x y].
+    rewrite grp_prod_decompose.
+    apply subgroup_in_op.
+    + apply subgroup_product_incl_l.
+      by rapply subgroup_image_in.
+    + apply subgroup_product_incl_r.
+      by rapply subgroup_image_in.
+  - intros; exact tt.
+Defined.
