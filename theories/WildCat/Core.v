@@ -284,6 +284,12 @@ Record RetractionOf {A} `{Is1Cat A} {a b : A} (f : a $-> b) :=
     is_retraction : comp_left_inverse $o f $== Id a
   }.
 
+Class AreInverse {A} `{Is1Cat A} {a b : A} (f : a $-> b) (g : b $-> a) :=
+  {
+    inv_issect : g $o f $== Id a;
+    inv_isretr : f $o g $== Id b;
+  }.
+
 (** Often, the coherences are actually equalities rather than homotopies. *)
 Class Is1Cat_Strong (A : Type)`{!IsGraph A, !Is2Graph A, !Is01Cat A} :=
 {
@@ -488,10 +494,13 @@ Arguments is1functor_compose {A B C}
 (** ** Wild 1-groupoids *)
 
 Class Is1Gpd (A : Type) `{Is1Cat A, !Is0Gpd A} :=
-{
-  gpd_issect : forall {a b : A} (f : a $-> b), f^$ $o f $== Id a ;
-  gpd_isretr : forall {a b : A} (f : a $-> b), f $o f^$ $== Id b ;
-}.
+  is1gpd :: forall {a b : A} (f : a $-> b), AreInverse f f^$.
+
+Definition gpd_issect {A : Type} `{Is1Gpd A} {a b : A} (f : a $-> b) :=
+  inv_issect (f:=f) (g:=f^$).
+
+Definition gpd_isretr {A : Type} `{Is1Gpd A} {a b : A} (f : a $-> b) :=
+  inv_isretr (f:=f) (g:=f^$).
 
 (** Some more convenient equalities for morphisms in a 1-groupoid. The naming scheme is similar to [PathGroupoids.v].*)
 
