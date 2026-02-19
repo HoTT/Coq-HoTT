@@ -128,4 +128,58 @@
   %{bin:hyperfine}
   (file file_to_bench))
  (action
-  (run echo "Starting bench. This may take a while.")))
+  (echo "Starting bench. This may take a while.\n")))
+
+; Timing report
+
+(rule
+ (aliases timing-hint)
+ (deps (universe) %{bin:lua} %{bin:rsync})
+ (action
+  (echo "Timing library. This may take a while...")))
+
+(rule
+ (alias timing)
+ (targets
+  (dir timing-output)
+  (dir timing-html))
+ (deps
+  (universe)
+  (alias timing-hint)
+  etc/generate_coqproject.sh
+  etc/time2html
+  Makefile
+  Makefile.coq.local
+  Makefile.coq.local-early
+  (sandbox always)
+  (sandbox preserve_file_kind)
+  (glob_files_rec ./theories/*.v)
+  (glob_files_rec ./contrib/*.v)
+  (glob_files_rec ./test/*.v))
+ (action
+  (progn
+   (setenv
+    GENERATE_COQPROJECT_FOR_DUNE
+    true
+    (ignore-outputs
+     (progn
+      (run %{bin:make} timing-html)
+      (run %{bin:make} copy-timing-files))))
+   (echo " Done.\n"))))
+
+(rule
+ (alias timing-report)
+ (deps
+  timing-output
+  (:find_slow etc/find_slow_lines.sh)
+  %{bin:find}
+  %{bin:awk}
+  (sandbox always)
+  (sandbox preserve_file_kind))
+ (action
+  (progn
+   (echo "Generating report...")
+   (with-outputs-to
+    timing-report.txt
+    (run %{bin:bash} %{find_slow} timing-output))
+   (echo " Done."))))
