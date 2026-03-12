@@ -73,75 +73,6 @@ Section IdentityLaws.
 
 End IdentityLaws.
 
-(** ** Swap morphism for biproducts *)
-
-Section BiproductSwap.
-  Context (C : SemiAdditiveCategory).
-
-  (** The swap morphism for biproducts. *)
-  Definition biproduct_swap (A : object C)
-    : morphism C (A ⊕ A) (A ⊕ A)
-    := biproduct_sum_pair (outr _) (outl _).
-
-  (** Swapping components of a biproduct morphism. *)
-  Lemma biproduct_prod_swap (A B : object C) (f g : morphism C A B)
-    : biproduct_sum_pair g f
-      = (biproduct_swap B o biproduct_sum_pair f g)%morphism.
-  Proof.
-    symmetry.
-    rapply biproduct_prod_unique.
-    - rewrite <- Category.Core.associativity.
-      unfold biproduct_swap, biproduct_sum_pair.
-      rewrite biproduct_prod_beta_l.
-      rapply biproduct_prod_beta_r.
-    - rewrite <- Category.Core.associativity.
-      unfold biproduct_swap, biproduct_sum_pair.
-      rewrite biproduct_prod_beta_r.
-      rapply biproduct_prod_beta_l.
-  Qed.
-
-  (** Swap composed with left injection gives right injection. *)
-  Lemma swap_inl (Y : object C)
-    : (biproduct_swap Y o Biproducts.inl _)%morphism = Biproducts.inr _.
-  Proof.
-    unfold biproduct_swap, biproduct_sum_pair.
-    rewrite biproduct_prod_comp.
-    rewrite (beta_l (biproduct_is _)).
-    rewrite (mixed_r (biproduct_is _)).
-    rewrite biproduct_prod_zero_l.
-    rewrite Category.Core.right_identity.
-    reflexivity.
-  Qed.
-
-  (** Swap composed with right injection gives left injection. *)
-  Lemma swap_inr (Y : object C)
-    : (biproduct_swap Y o Biproducts.inr _)%morphism = Biproducts.inl _.
-  Proof.
-    unfold biproduct_swap, biproduct_sum_pair.
-    rewrite biproduct_prod_comp.
-    rewrite (mixed_l (biproduct_is _)).
-    rewrite (beta_r (biproduct_is _)).
-    rewrite biproduct_prod_zero_r.
-    rewrite Category.Core.right_identity.
-    reflexivity.
-  Qed.
-
-  (** The codiagonal is invariant under swapping. *)
-  Lemma codiagonal_swap_invariant (Y : object C)
-    : (biproduct_codiagonal Y o biproduct_swap Y)%morphism
-      = biproduct_codiagonal Y.
-  Proof.
-    rapply (biproduct_coprod_unique _).
-    - rewrite Category.Core.associativity.
-      rewrite swap_inl.
-      rapply biproduct_coprod_beta_r.
-    - rewrite Category.Core.associativity.
-      rewrite swap_inr.
-      rapply biproduct_coprod_beta_l.
-  Qed.
-
-End BiproductSwap.
-
 (** ** Commutativity of morphism addition *)
 
 Theorem morphism_addition_commutative (C : SemiAdditiveCategory)
@@ -150,9 +81,9 @@ Theorem morphism_addition_commutative (C : SemiAdditiveCategory)
 Proof.
   intros f g.
   unfold sgop_morphism.
-  rewrite (biproduct_prod_swap C X Y f g).
+  rewrite (biproduct_prod_swap f g).
   rewrite <- Category.Core.associativity.
-  rewrite codiagonal_swap_invariant.
+  rewrite biproduct_codiagonal_swap_invariant.
   reflexivity.
 Qed.
 
