@@ -161,6 +161,7 @@ Qed.
 Section Associativity.
   Context (C : SemiAdditiveCategory).
 
+  (** Addition is natural in the domain. *)
   Lemma addition_precompose
     (X Y W : object C) (f g : morphism C X Y) (a : morphism C W X)
     : (sgop_morphism C X Y f g o a)%morphism
@@ -172,6 +173,7 @@ Section Associativity.
     reflexivity.
   Qed.
 
+  (** Addition is natural in the codomain. *)
   Lemma addition_postcompose
     (X Y Y' : object C) (f g : morphism C X Y) (a : morphism C Y Y')
     : (a o sgop_morphism C X Y f g)%morphism
@@ -205,6 +207,7 @@ Section Associativity.
       reflexivity.
   Qed.
 
+  (** Associativity follows by functoriality of pairing and codiagonal. *)
   Theorem morphism_addition_associative
     (X Y : object C) (f g h : morphism C X Y)
     : ((f + g) + h = f + (g + h))%morphism.

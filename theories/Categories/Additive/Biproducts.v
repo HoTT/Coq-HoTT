@@ -258,6 +258,28 @@ Section SelfBiproductOperations.
     : morphism C BYY Y
     := biproduct_coprod_mor BYY Y 1%morphism 1%morphism.
 
+  (** The left injection is pairing with zero on the right. *)
+  Lemma biproduct_inl_sum_pair {Y : object C}
+    `{BYY : @Biproduct C Z Y Y}
+    : inl BYY = biproduct_sum_pair 1%morphism (zero_morphism Y Y).
+  Proof.
+    symmetry.
+    unfold biproduct_sum_pair.
+    rewrite biproduct_prod_zero_r.
+    apply right_identity.
+  Qed.
+
+  (** The right injection is pairing with zero on the left. *)
+  Lemma biproduct_inr_sum_pair {Y : object C}
+    `{BYY : @Biproduct C Z Y Y}
+    : inr BYY = biproduct_sum_pair (zero_morphism Y Y) 1%morphism.
+  Proof.
+    symmetry.
+    unfold biproduct_sum_pair.
+    rewrite biproduct_prod_zero_l.
+    apply right_identity.
+  Qed.
+
   (** The codiagonal is natural in the codomain. *)
   Lemma biproduct_codiagonal_natural {Y Y' : object C}
     `{BYY : @Biproduct C Z Y Y}
@@ -293,6 +315,7 @@ Section SelfBiproductOperations.
       reflexivity.
   Qed.
 
+  (** A self-biproduct map sends the left injection to the left summand map. *)
   Lemma biproduct_sum_map_inl {Y Y' : object C}
     `{BYY : @Biproduct C Z Y Y} `{BYY' : @Biproduct C Z Y' Y'}
     (a b : morphism C Y Y')
@@ -317,6 +340,7 @@ Section SelfBiproductOperations.
       apply biproduct_prod_zero_r.
   Qed.
 
+  (** A self-biproduct map sends the right injection to the right summand map. *)
   Lemma biproduct_sum_map_inr {Y Y' : object C}
     `{BYY : @Biproduct C Z Y Y} `{BYY' : @Biproduct C Z Y' Y'}
     (a b : morphism C Y Y')
@@ -341,6 +365,7 @@ Section SelfBiproductOperations.
       apply biproduct_prod_zero_l.
   Qed.
 
+  (** The codiagonal of a self-biproduct map is the corresponding copairing. *)
   Lemma biproduct_codiagonal_factor_through_sum_map {Y Y' : object C}
     `{BYY : @Biproduct C Z Y Y} `{BYY' : @Biproduct C Z Y' Y'}
     (a b : morphism C Y Y')
