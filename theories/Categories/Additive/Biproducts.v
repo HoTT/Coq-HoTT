@@ -233,6 +233,135 @@ Section BiproductOperations.
 
 End BiproductOperations.
 
+(** * Self-biproduct operations *)
+
+Section SelfBiproductOperations.
+  Context {C : PreCategory} `{Z : ZeroObject C}.
+
+  (** Pairing into a self-biproduct. *)
+  Definition biproduct_sum_pair {X Y : object C}
+    `{BYY : @Biproduct C Z Y Y}
+    (f g : morphism C X Y)
+    : morphism C X BYY
+    := biproduct_prod_mor BYY X f g.
+
+  (** A morphism induced on self-biproducts by maps on the two summands. *)
+  Definition biproduct_sum_map {Y Y' : object C}
+    `{BY : @Biproduct C Z Y Y} `{BY' : @Biproduct C Z Y' Y'}
+    (a b : morphism C Y Y')
+    : morphism C BY BY'
+    := biproduct_prod_mor BY' BY (a o outl BY) (b o outr BY).
+
+  (** The codiagonal of a self-biproduct. *)
+  Definition biproduct_codiagonal (Y : object C)
+    `{BYY : @Biproduct C Z Y Y}
+    : morphism C BYY Y
+    := biproduct_coprod_mor BYY Y 1%morphism 1%morphism.
+
+  (** The codiagonal is natural in the codomain. *)
+  Lemma biproduct_codiagonal_natural {Y Y' : object C}
+    `{BYY : @Biproduct C Z Y Y}
+    (a : morphism C Y Y')
+    : (a o biproduct_codiagonal Y)%morphism
+      = biproduct_coprod_mor BYY Y' a a.
+  Proof.
+    unfold biproduct_codiagonal.
+    rewrite biproduct_coprod_comp.
+    repeat rewrite right_identity.
+    reflexivity.
+  Qed.
+
+  (** Pairing is natural in the codomain. *)
+  Lemma biproduct_sum_pair_natural {X Y Y' : object C}
+    `{BYY : @Biproduct C Z Y Y} `{BYY' : @Biproduct C Z Y' Y'}
+    (a : morphism C Y Y') (f g : morphism C X Y)
+    : biproduct_sum_pair (a o f) (a o g)
+      = (biproduct_sum_map a a o biproduct_sum_pair f g)%morphism.
+  Proof.
+    symmetry.
+    unfold biproduct_sum_pair, biproduct_sum_map.
+    rapply biproduct_prod_unique.
+    - rewrite <- associativity.
+      rewrite biproduct_prod_beta_l.
+      rewrite associativity.
+      rewrite biproduct_prod_beta_l.
+      reflexivity.
+    - rewrite <- associativity.
+      rewrite biproduct_prod_beta_r.
+      rewrite associativity.
+      rewrite biproduct_prod_beta_r.
+      reflexivity.
+  Qed.
+
+  Lemma biproduct_sum_map_inl {Y Y' : object C}
+    `{BYY : @Biproduct C Z Y Y} `{BYY' : @Biproduct C Z Y' Y'}
+    (a b : morphism C Y Y')
+    : (biproduct_sum_map a b o inl BYY)%morphism
+      = (inl BYY' o a)%morphism.
+  Proof.
+    etransitivity (biproduct_sum_pair a (zero_morphism Y Y')).
+    - rapply biproduct_prod_unique.
+      + rewrite <- associativity.
+        unfold biproduct_sum_map.
+        rewrite biproduct_prod_beta_l.
+        rewrite associativity.
+        rewrite (beta_l (biproduct_is BYY)).
+        apply right_identity.
+      + rewrite <- associativity.
+        unfold biproduct_sum_map.
+        rewrite biproduct_prod_beta_r.
+        rewrite associativity.
+        rewrite (mixed_r (biproduct_is BYY)).
+        apply zero_morphism_right.
+    - unfold biproduct_sum_pair.
+      apply biproduct_prod_zero_r.
+  Qed.
+
+  Lemma biproduct_sum_map_inr {Y Y' : object C}
+    `{BYY : @Biproduct C Z Y Y} `{BYY' : @Biproduct C Z Y' Y'}
+    (a b : morphism C Y Y')
+    : (biproduct_sum_map a b o inr BYY)%morphism
+      = (inr BYY' o b)%morphism.
+  Proof.
+    etransitivity (biproduct_sum_pair (zero_morphism Y Y') b).
+    - rapply biproduct_prod_unique.
+      + rewrite <- associativity.
+        unfold biproduct_sum_map.
+        rewrite biproduct_prod_beta_l.
+        rewrite associativity.
+        rewrite (mixed_l (biproduct_is BYY)).
+        apply zero_morphism_right.
+      + rewrite <- associativity.
+        unfold biproduct_sum_map.
+        rewrite biproduct_prod_beta_r.
+        rewrite associativity.
+        rewrite (beta_r (biproduct_is BYY)).
+        apply right_identity.
+    - unfold biproduct_sum_pair.
+      apply biproduct_prod_zero_l.
+  Qed.
+
+  Lemma biproduct_codiagonal_factor_through_sum_map {Y Y' : object C}
+    `{BYY : @Biproduct C Z Y Y} `{BYY' : @Biproduct C Z Y' Y'}
+    (a b : morphism C Y Y')
+    : (biproduct_codiagonal Y' o biproduct_sum_map a b)%morphism
+      = biproduct_coprod_mor BYY Y' a b.
+  Proof.
+    rapply (biproduct_coprod_unique BYY Y' a b).
+    - rewrite associativity.
+      rewrite biproduct_sum_map_inl.
+      rewrite <- associativity.
+      rewrite biproduct_coprod_beta_l.
+      apply left_identity.
+    - rewrite associativity.
+      rewrite biproduct_sum_map_inr.
+      rewrite <- associativity.
+      rewrite biproduct_coprod_beta_r.
+      apply left_identity.
+  Qed.
+
+End SelfBiproductOperations.
+
 (** * Export hints *)
 
 Hint Resolve 
