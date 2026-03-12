@@ -385,6 +385,34 @@ Section SelfBiproductOperations.
       apply left_identity.
   Qed.
 
+  (** The codiagonal of a pair with zero on the right recovers the left map. *)
+  Lemma biproduct_codiagonal_sum_pair_zero_r {X Y : object C}
+    `{BYY : @Biproduct C Z Y Y}
+    (f : morphism C X Y)
+    : (biproduct_codiagonal Y
+       o biproduct_sum_pair f (zero_morphism X Y))%morphism = f.
+  Proof.
+    unfold biproduct_codiagonal, biproduct_sum_pair.
+    rewrite biproduct_prod_zero_r.
+    rewrite <- associativity.
+    rewrite biproduct_coprod_beta_l.
+    apply left_identity.
+  Qed.
+
+  (** The codiagonal of a pair with zero on the left recovers the right map. *)
+  Lemma biproduct_codiagonal_sum_pair_zero_l {X Y : object C}
+    `{BYY : @Biproduct C Z Y Y}
+    (f : morphism C X Y)
+    : (biproduct_codiagonal Y
+       o biproduct_sum_pair (zero_morphism X Y) f)%morphism = f.
+  Proof.
+    unfold biproduct_codiagonal, biproduct_sum_pair.
+    rewrite biproduct_prod_zero_l.
+    rewrite <- associativity.
+    rewrite biproduct_coprod_beta_r.
+    apply left_identity.
+  Qed.
+
   (** ** Symmetry of self-biproducts *)
 
   (** The swap morphism exchanges the two summands of a self-biproduct. *)

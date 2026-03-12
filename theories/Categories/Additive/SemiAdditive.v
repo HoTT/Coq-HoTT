@@ -53,22 +53,16 @@ Section IdentityLaws.
   Theorem zero_left_identity (X Y : object C) (f : morphism C X Y)
     : sgop_morphism C X Y (zero_morphism X Y) f = f.
   Proof.
-    unfold sgop_morphism, biproduct_codiagonal, biproduct_sum_pair.
-    rewrite biproduct_prod_zero_l.
-    rewrite <- Category.Core.associativity.
-    rewrite biproduct_coprod_beta_r.
-    rapply Category.Core.left_identity.
+    unfold sgop_morphism.
+    rapply biproduct_codiagonal_sum_pair_zero_l.
   Qed.
 
   (** Zero is a right identity for morphism addition. *)
   Theorem zero_right_identity (X Y : object C) (f : morphism C X Y)
     : sgop_morphism C X Y f (zero_morphism X Y) = f.
   Proof.
-    unfold sgop_morphism, biproduct_codiagonal, biproduct_sum_pair.
-    rewrite biproduct_prod_zero_r.
-    rewrite <- Category.Core.associativity.
-    rewrite biproduct_coprod_beta_l.
-    rapply Category.Core.left_identity.
+    unfold sgop_morphism.
+    rapply biproduct_codiagonal_sum_pair_zero_r.
   Qed.
 
 End IdentityLaws.
@@ -146,29 +140,21 @@ Section Associativity.
     unfold sgop_morphism at 1.
     etransitivity
       ((biproduct_codiagonal Y
-        o biproduct_sum_pair ((f + g)%morphism)
-            ((zero_morphism X Y + h)%morphism))%morphism).
-    { refine (
-        ap011 (fun x y =>
-          (biproduct_codiagonal Y o biproduct_sum_pair x y)%morphism)
-          (idpath _)
-          ((@zero_left_identity C X Y h)^)
-      ). }
-    rewrite <- (addition_of_pairs X Y f g (zero_morphism X Y) h).
-    rewrite (addition_postcompose
-               X
-               (Y ⊕ Y)
-               Y
-               (biproduct_sum_pair f (zero_morphism X Y))
-               (biproduct_sum_pair g h)
-               (biproduct_codiagonal Y)).
-    unfold biproduct_codiagonal, biproduct_sum_pair.
-    rewrite biproduct_prod_zero_r.
-    rewrite <- Category.Core.associativity.
-    rewrite biproduct_coprod_beta_l.
-    rewrite Category.Core.left_identity.
-    fold (sgop_morphism C X Y g h).
-    reflexivity.
+        o biproduct_sum_pair (sgop_morphism C X Y f g)
+            (sgop_morphism C X Y (zero_morphism X Y) h))%morphism).
+    - rewrite (zero_left_identity C X Y h).
+      reflexivity.
+    - rewrite <- (addition_of_pairs X Y f g (zero_morphism X Y) h).
+      rewrite (addition_postcompose
+                 X
+                 (Y ⊕ Y)
+                 Y
+                 (biproduct_sum_pair f (zero_morphism X Y))
+                 (biproduct_sum_pair g h)
+                 (biproduct_codiagonal Y)).
+      rewrite biproduct_codiagonal_sum_pair_zero_r.
+      fold (sgop_morphism C X Y g h).
+      reflexivity.
   Qed.
 
 End Associativity.
