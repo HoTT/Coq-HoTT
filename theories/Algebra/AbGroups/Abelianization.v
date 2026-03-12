@@ -1,5 +1,6 @@
 From HoTT Require Import Basics Types Truncations.Core.
-Require Import Cubical.DPath WildCat.
+From HoTT.WildCat Require Import Core Equiv EquivGpd.
+Require Import Cubical.DPath.
 Require Import Colimits.Coeq.
 Require Import Algebra.AbGroups.AbelianGroup.
 Require Import Modalities.ReflectiveSubuniverse.

@@ -1214,6 +1214,16 @@ Proof.
   apply grp_image_in.
 Defined.
 
+(** Conversely, if the image of a group homomorphism is maximal, then the homomorphism is surjective. *)
+Definition issurj_ismaximal_image {G H : Group}
+  (f : G $-> H) {max : IsMaximalSubgroup (G:=H) (grp_image f)}
+  : IsSurjection f.
+Proof.
+  intro h.
+  rapply contr_inhabited_hprop.
+  exact (max h).
+Defined.
+
 (** ** Image of a subgroup under a group homomorphism *)
 
 (** The image of a subgroup under group homomorphism. *) 

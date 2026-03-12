@@ -1,6 +1,6 @@
 From HoTT Require Import Basics.
 Require Import Types.
-Require Import WildCat.
+From HoTT.WildCat Require Import Core Universe PointedCat NatTrans Yoneda.
 Require Import Pointed.Core.
 Require Import Pointed.Loops.
 Require Import Pointed.pTrunc.
@@ -33,7 +33,7 @@ Definition psusp (X : Type) : pType
 (** [psusp] has a functorial action. *)
 (** TODO: make this a displayed functor *)
 Instance is0functor_psusp : Is0Functor psusp
-  := Build_Is0Functor _ _ _ _ psusp (fun X Y f
+  := Build_Is0Functor psusp (fun X Y f
       => Build_pMap (functor_susp f) 1).
 
 (** [psusp] is a 1-functor. *)

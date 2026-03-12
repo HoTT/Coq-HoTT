@@ -1,4 +1,6 @@
-From HoTT Require Import Basics Types.Paths WildCat Join.Core Tactics.
+From HoTT Require Import Basics Types.Paths Join.Core Tactics.
+From HoTT.WildCat Require Import Core Universe Equiv EquivGpd
+  ZeroGroupoid Yoneda FunctorCat NatTrans.
 
 (** * Induction and recursion principles for the triple join
 
@@ -617,9 +619,7 @@ Instance is0functor_trijoinrecdata_0gpd (A B C : Type) : Is0Functor (trijoinrecd
 Proof.
   apply Build_Is0Functor.
   intros P Q g.
-  snapply Build_Fun01.
-  - exact (trijoinrecdata_fun g).
-  - apply is0functor_trijoinrecdata_fun.
+  exact (Build_Fun01 (trijoinrecdata_fun g)).
 Defined.
 
 (** [trijoinrecdata_0gpd A B C] is a 1-functor from [Type] to [ZeroGpd]. *)
@@ -711,7 +711,7 @@ Definition moveR_trijoin_rec {A B C P : Type} {f : TriJoinRecData A B C P} {g : 
   (p : f $== trijoin_rec_inv g)
   : trijoin_rec f == g.
 Proof.
-  exact (moveR_equiv_V_0gpd (trijoin_rec_inv_natequiv A B C P) _ _ p).
+  exact (moveR_equiv_V_0gpd (trijoin_rec_inv_natequiv A B C P) p).
 Defined.
 
 (** * Functoriality of the triple join *)
@@ -865,7 +865,7 @@ Definition functor_join_join_rec {A B C A' P} (f : A -> A') (g : JoinRecData B C
                       j123 := fun a b c => triangle_v (f a) (jg g b c); |}.
 Proof.
   (* Recall that [trijoin_rec] is defined to be the inverse of [trijoin_rec_inv_natequiv ...]. *)
-  refine (moveL_equiv_V_0gpd (trijoin_rec_inv_natequiv A B C _) _ _ _).
+  refine (moveL_equiv_V_0gpd (trijoin_rec_inv_natequiv A B C _) _).
   (* The next two lines aren't needed, but clarify the goal. *)
   unfold trijoin_rec_inv_natequiv, equiv_fun_0gpd; simpl.
   unfold trijoinrecdata_fun, trijoinrecdata_trijoin; simpl.

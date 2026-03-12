@@ -1,7 +1,7 @@
 From HoTT Require Import Basics Types.
 Require Import SuccessorStructure.
-Require Import WildCat.
-Require Import Pointed.
+From HoTT.WildCat Require Import Core PointedCat Square Equiv.
+From HoTT.Pointed Require Import Core pMap pEquiv pFiber pTrunc Loops.
 Require Import Modalities.Identity Modalities.Descent.
 Require Import Truncations.
 Require Import HFiber.
@@ -439,7 +439,6 @@ Definition square_pfib_pequiv_cxfib {F X Y : pType}
   (i : F ->* X) (f : X ->* Y) `{IsExact purely F X Y i f}
   : pequiv_pmap_idmap o* i ==* pfib f o* pequiv_cxfib.
 Proof.
-  unfold Square.
   refine (pmap_postcompose_idmap _ @* _).
   symmetry; apply pfib_cxfib.
 Defined.

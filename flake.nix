@@ -5,45 +5,52 @@
     nixpkgs.url = "github:NixOS/nixpkgs/master";
 
     flake-utils.url = "github:numtide/flake-utils";
+
+    dune = {
+      url = "github:ocaml/dune";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, flake-utils }:
+  outputs = { self, nixpkgs, flake-utils, dune }:
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
-        makeDevShell = { coq ? pkgs.coq }:
+        makeDevShell = { coq ? pkgs.coq, rocqPackages ? coq.passthru.rocqPackages or null }:
           let
             coqPackages = pkgs.mkCoqPackages coq // {
               __attrsFailEvaluation = true;
             };
+            ocamlPackages = coq.passthru.ocamlPackages or pkgs.ocamlPackages;
           in
           { extraPackages ? [ coqPackages.coq-lsp ] }:
           pkgs.mkShell {
             buildInputs =
-              [ pkgs.dune_3 pkgs.ocaml ] ++ extraPackages ++ [ coq ];
+              [
+                dune.packages.${system}.default
+                ocamlPackages.ocaml
+                ocamlPackages.findlib
+                pkgs.pkg-config
+              ] ++ extraPackages ++ [ coq ]
+              ++ pkgs.lib.optionals (rocqPackages != null) [ rocqPackages.rocq-core ];
           };
       in
       {
         packages.default = pkgs.coqPackages.mkCoqDerivation {
           pname = "hott";
-          version = "8.20";
+          version = "9.0";
           src = self;
           useDune = true;
         };
 
         devShells.default =
           makeDevShell
+            { coq = pkgs.coq_9_1; }
+            { };
+
+        devShells.coq_9_0 =
+          makeDevShell
             { coq = pkgs.coq_9_0; }
-            { };
-
-        devShells.coq_8_20 =
-          makeDevShell
-            { coq = pkgs.coq_8_20; }
-            { };
-
-        devShells.coq_8_19 =
-          makeDevShell
-            { coq = pkgs.coq_8_19; }
             { };
 
         # To use, pass --impure to nix develop

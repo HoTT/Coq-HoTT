@@ -1,4 +1,6 @@
-From HoTT Require Import Basics Types WildCat Join.Core Join.TriJoin Spaces.Nat.Core.
+From HoTT Require Import Basics Types Join.Core Join.TriJoin Spaces.Nat.Core.
+From HoTT.WildCat Require Import Core Universe Equiv ZeroGroupoid
+  Yoneda FunctorCat NatTrans Monoidal.
 
 (** * The associativity of [Join]
 
@@ -12,7 +14,7 @@ From HoTT Require Import Basics Types WildCat Join.Core Join.TriJoin Spaces.Nat.
 Definition trijoinrecdata_twist (A B C P : Type)
   : trijoinrecdata_0gpd A B C P $-> trijoinrecdata_0gpd B A C P.
 Proof.
-  snapply Build_Fun01.
+  snapply Build_Fun01'.
   (* The map of types [TriJoinRecData A B C P -> TriJoinRecData B A C P]: *)
   - cbn.
     intros [f1 f2 f3 f12 f13 f23 f123].
@@ -24,8 +26,7 @@ Proof.
       apply moveR_Vp.
       symmetry; apply f123.
   (* It respects the paths. *)
-  - apply Build_Is0Functor.
-    intros f g h; cbn in *.
+  - intros f g h; cbn in *.
     snapply Build_TriJoinRecPath; intros; simpl.
     1, 2, 3, 5, 6: apply h.
     + cbn zeta.

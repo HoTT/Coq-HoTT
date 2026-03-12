@@ -1,5 +1,6 @@
-From HoTT Require Import Basics Types WildCat Truncations
+From HoTT Require Import Basics Types Truncations
   Pointed.Core Pointed.pEquiv Pointed.Loops Pointed.pModality.
+From HoTT.WildCat Require Import Core Equiv.
 
 Local Open Scope pointed_scope.
 

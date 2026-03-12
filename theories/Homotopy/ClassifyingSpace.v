@@ -1,7 +1,8 @@
 From HoTT Require Import Basics Types.
-Require Import Pointed WildCat.
+From HoTT.WildCat Require Import Core Universe Equiv NatTrans Yoneda.
+Require Import Pointed.
 Require Import Cubical.DPath Cubical.PathSquare Cubical.DPathSquare.
-Require Import Algebra.AbGroups.
+Require Import Algebra.AbGroups.AbelianGroup.
 Require Import Homotopy.HSpace.Core.
 Require Import TruncType.
 Require Import Truncations.Core Truncations.Connectedness.

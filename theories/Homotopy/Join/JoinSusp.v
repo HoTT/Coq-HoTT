@@ -1,6 +1,6 @@
 From HoTT Require Import Basics Types.
 Require Import Join.Core Join.JoinAssoc Suspension Spaces.Spheres.
-Require Import WildCat.
+From HoTT.WildCat Require Import Core Universe Equiv.
 Require Import Spaces.Nat.Core.
 
 (** * [Join Bool A] is equivalent to [Susp A]

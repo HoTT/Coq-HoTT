@@ -1,5 +1,6 @@
 From HoTT Require Import Basics Types.
-Require Import WildCat Pointed.Core.
+From HoTT.WildCat Require Import Core Universe Opposite Bifunctor.
+Require Import Pointed.Core.
 Require Import AbGroups.AbelianGroup AbGroups.Biproduct AbGroups.AbHom.
 Require Import AbSES.Core AbSES.Pullback AbSES.Pushout AbSES.DirectSum.
 Require Import Homotopy.HSpace.Core.

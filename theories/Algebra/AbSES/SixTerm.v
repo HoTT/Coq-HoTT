@@ -1,7 +1,11 @@
-From HoTT Require Import Basics Types WildCat HSet Pointed.Core Pointed.pTrunc Pointed.pEquiv
+From HoTT Require Import Basics Types.
+From HoTT.WildCat Require Import Core Opposite Equiv Bifunctor.
+Require Import Pointed.Core Pointed.pTrunc Pointed.pEquiv
   Modalities.ReflectiveSubuniverse Truncations.Core Truncations.SeparatedTrunc
-  AbGroups Homotopy.ExactSequence Spaces.Int Spaces.FreeInt
-  AbSES.Core AbSES.Pullback AbSES.Pushout BaerSum Ext PullbackFiberSequence.
+  AbGroups Homotopy.ExactSequence Spaces.Int Spaces.FreeInt.
+From HoTT.Algebra.AbSES Require Import Core Pullback Pushout BaerSum
+  Ext PullbackFiberSequence.
+Require Import HSet.
 
 (** * The contravariant six-term sequence of Ext *)
 

@@ -2,11 +2,13 @@ Require Import Basics.Equivalences Basics.Overture Basics.Tactics.
 Require Import Types.Bool Types.Prod Types.Forall.
 Require Import WildCat.Bifunctor WildCat.Core WildCat.Equiv WildCat.EquivGpd
                WildCat.Forall WildCat.NatTrans WildCat.Opposite
-               WildCat.Universe WildCat.Yoneda WildCat.ZeroGroupoid
+               WildCat.Universe WildCat.Yoneda WildCat.Graph WildCat.ZeroGroupoid
                WildCat.Monoidal WildCat.MonoidalTwistConstruction
                WildCat.FunctorCat.
 
 (** * Categories with products *)
+
+(** ** Indexed products *)
 
 Definition cat_prod_corec_inv {I A : Type} `{Is1Cat A}
   (prod : A) (x : I -> A) (z : A) (pr : forall i, prod $-> x i)
@@ -17,7 +19,7 @@ Proof.
   exact (fmap (fun x => yon_0gpd x z) (pr i)).
 Defined.
 
-(* A product of an [I]-indexed family of objects of a category is an object of the category with an [I]-indexed family of projections such that the induced map is an equivalence. *)
+(** A product of an [I]-indexed family of objects of a category is an object of the category with an [I]-indexed family of projections such that the induced map is an equivalence. *)
 Class Product (I : Type) {A : Type} `{Is1Cat A} {x : I -> A} := Build_Product' {
   cat_prod : A;
   cat_pr : forall i : I, cat_prod $-> x i;
@@ -88,11 +90,10 @@ Section Lemmata.
   Proof.
     snapply Build_Is0Functor.
     intros a b f.
-    snapply Build_Fun01.
+    snapply Build_Fun01'.
     - intros g i.
       exact (f $o g i).
-    - snapply Build_Is0Functor.
-      intros g h p i.
+    - intros g h p i.
       exact (f $@L p i).
   Defined.
 
@@ -219,7 +220,7 @@ Proof.
     napply cat_assoc_opp.
 Defined.
 
-(** *** Categories with specific kinds of products *)
+(** *** An empty product is terminal *)
 
 Definition isterminal_prodempty {A : Type} {z : A}
   `{Product Empty A (fun _ => z)}
@@ -229,10 +230,10 @@ Proof.
   snrefine (cat_prod_corec _ _; fun f => cat_prod_pr_eta _ _); intros [].
 Defined.
 
-(** *** Binary products *)
+(** ** Binary products *)
 
 Class BinaryProduct {A : Type} `{Is1Cat A} (x y : A)
-  := binary_product :: Product Bool (fun b => if b then x else y).
+  := binary_product :: Product Bool (Bool_rec _ x y).
 
 (** A category with binary products is a category with a binary product for each pair of objects. *)
 Class HasBinaryProducts (A : Type) `{Is1Cat A}
@@ -240,14 +241,14 @@ Class HasBinaryProducts (A : Type) `{Is1Cat A}
 
 Instance hasbinaryproducts_hasproductsbool {A : Type} `{HasProducts Bool A}
   : HasBinaryProducts A
-  := fun x y => has_products (fun b : Bool => if b then x else y).
+  := fun x y => has_products (Bool_rec _ x y).
 
 Section BinaryProducts.
 
   Context {A : Type} `{Is1Cat A} {x y : A} `{!BinaryProduct x y}.
 
   Definition cat_binprod' : A
-    := cat_prod Bool (fun b : Bool => if b then x else y).
+    := cat_prod Bool (Bool_rec _ x y).
 
   Definition cat_pr1 : cat_binprod' $-> x := cat_pr true.
 
@@ -314,7 +315,7 @@ Definition Build_BinaryProduct {A : Type} `{Is1Cat A} {x y : A}
     cat_pr2 $o cat_binprod_corec z f g $== g)
   (cat_binprod_eta_pr : forall (z : A) (f g : z $-> cat_binprod'),
     cat_pr1 $o f $== cat_pr1 $o g -> cat_pr2 $o f $== cat_pr2 $o g -> f $== g)
-  : Product Bool (fun b => if b then x else y).
+  : Product Bool (Bool_rec _ x y).
 Proof.
   snapply (Build_Product _ cat_binprod').
   - intros [|].
@@ -562,7 +563,7 @@ Definition cat_pr2_fmap11_binprod {A : Type} `{HasBinaryProducts A}
 
 (** *** Diagonal *)
 
-(** Annoyingly this doesn't follow directly from the general diagonal since [fun b => if b then x else x] is not definitionally equal to [fun _ => x]. *)
+(** Annoyingly this doesn't follow directly from the general diagonal since [Bool_rec _ x x] is not definitionally equal to [fun _ => x]. *)
 Definition cat_binprod_diag {A : Type}
   `{Is1Cat A} (x : A) `{!BinaryProduct x x}
   : x $-> cat_binprod' x x.
@@ -679,7 +680,7 @@ Section Symmetry.
 
 End Symmetry.
 
-(** *** Associativity of binary products *)
+(** *** Binary product gives a symmetric monoidal structure *)
 
 Section Associativity.
 
@@ -788,7 +789,7 @@ Section Associativity.
 
   Local Existing Instance symmetricbraiding_binprod.
 
-  Local Instance associator_cat_binprod : Associator cat_binprod.
+  #[export] Instance associator_cat_binprod : Associator cat_binprod.
   Proof.
     snapply associator_twist.
     - exact _.
@@ -1000,9 +1001,26 @@ Section Associativity.
 
 End Associativity.
 
+(** ** Examples *)
+
 (** *** Products in Type *)
 
 (** Since we use the Yoneda lemma in this file, we therefore depend on WildCat.Universe which means these instances have to live here. *)
+
+(** Assuming [Funext], [Type] has all products. *)
+Instance hasallproducts_type `{Funext} : HasAllProducts Type.
+Proof.
+  intros I x.
+  snapply Build_Product.
+  - exact (forall (i : I), x i).
+  - intros i f. exact (f i).
+  - intros A f a i. exact (f i a).
+  - reflexivity.
+  - intros A f g p a.
+    exact (path_forall _ _ (fun i => p i a)).
+Defined.
+
+(** It follows that [Type] has binary products, but we prove this separately to avoid [Funext]. *)
 Instance hasbinaryproducts_type : HasBinaryProducts Type.
 Proof.
   intros X Y.
@@ -1019,15 +1037,33 @@ Proof.
     + exact (q x).
 Defined.
 
-(** Assuming [Funext], [Type] has all products. *)
-Instance hasallproducts_type `{Funext} : HasAllProducts Type.
+(** *** Products in ZeroGpd *)
+
+(** Since we use products in ZeroGpd to define general products, we must depend on ZeroGroupoid, which means that these instances have to live here. *)
+
+(** Note that this does not rely on [Funext], since the 1-cells in the product 0-groupoid are *defined* to be homotopies. *)
+Instance hasallproducts_0gpd : HasAllProducts ZeroGpd.
 Proof.
   intros I x.
   snapply Build_Product.
-  - exact (forall (i : I), x i).
-  - intros i f. exact (f i).
-  - intros A f a i. exact (f i a).
+  - exact (prod_0gpd I x).
+  - exact prod_0gpd_pr.
+  - intro G. apply equiv_prod_0gpd_corec.
   - reflexivity.
-  - intros A f g p a.
-    exact (path_forall _ _ (fun i => p i a)).
+  - intros G f g p.  intro a.  intro i.
+    exact (p i a).
+Defined.
+
+(** This follows from the previous result, but we prove it separately because using these custom binary products can make certain things easier, and can sometimes avoid the need to use [Funext]. *)
+Instance hasbinaryproducts_0gpd : HasBinaryProducts ZeroGpd.
+Proof.
+  intros G H.
+  snapply Build_BinaryProduct.
+  - exact (binprod_0gpd G H).
+  - apply binprod_0gpd_pr1.
+  - apply binprod_0gpd_pr2.
+  - intro K. exact (fun f g => (equiv_binprod_0gpd_corec G H K (f, g))).
+  - reflexivity.
+  - reflexivity.
+  - intros K f g p q. intro k. exact (p k, q k).
 Defined.

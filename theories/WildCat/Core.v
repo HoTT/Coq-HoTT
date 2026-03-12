@@ -86,6 +86,7 @@ Definition GpdHom_path {A} `{Is0Gpd A} {a b : A} (p : a = b) : a $== b
 Class Is0Functor {A B : Type} `{IsGraph A} `{IsGraph B} (F : A -> B)
   := { fmap : forall (a b : A) (f : a $-> b), F a $-> F b }.
 
+Arguments Build_Is0Functor {A B isgraph_A isgraph_B} F fmap : rename.
 Arguments fmap {A B isgraph_A isgraph_B} F {is0functor_F a b} f : rename.
 
 Class Is2Graph (A : Type) `{IsGraph A}
@@ -149,13 +150,125 @@ Definition cat_comp2 {A} `{Is1Cat A} {a b c : A}
 
 Notation "q $@@ p" := (cat_comp2 q p).
 
-(** Monomorphisms and epimorphisms. *)
+(** Epimorphisms and monomorphisms. *)
 
-Definition Monic {A} `{Is1Cat A} {b c: A} (f : b $-> c)
-  := forall a (g h : a $-> b), f $o g $== f $o h -> g $== h.
+Class Epic {A} `{Is1Cat A} {a b : A} (f : a $-> b)
+  := isepic : forall {c} (g h : b $-> c), g $o f $== h $o f -> g $== h.
 
-Definition Epic {A} `{Is1Cat A} {a b : A} (f : a $-> b)
-  := forall c (g h : b $-> c), g $o f $== h $o f -> g $== h.
+Arguments isepic {A}%_type_scope {IsGraph0 Is2Graph0 Is01Cat0 H a b} f {Epic c} g h _.
+
+Section Epimorphisms.
+
+  Context {A : Type} `{Is1Cat A}.
+
+  #[export]
+  Instance epic_id (P : A) : Epic (Id P).
+  Proof.
+    intros B b b' h.
+    exact ((cat_idr _)^$ $@ h $@ cat_idr _).
+  Defined.
+
+  Definition epic_homotopic {P P'} (f g : P $-> P') `{!Epic f} (h : f $== g)
+    : Epic g.
+  Proof.
+    intros Q x x' h'.
+    apply (isepic f).
+    exact ((x $@L h) $@ h' $@ (x' $@L h^$)).
+  Defined.
+
+  #[export]
+  Instance epic_compose {P P' P'' : A} (f : P $-> P') (g : P' $-> P'')
+    `{!Epic f} `{!Epic g}
+    : Epic (g $o f).
+  Proof.
+    intros Q x x' h.
+    apply (isepic g).
+    apply (isepic f).
+    exact ((cat_assoc f g x) $@ h $@ (cat_assoc_opp f g x')).
+  Defined.
+
+  Definition epic_cancel {P P' P'' : A} (f : P $-> P') (g : P' $-> P'')
+    `{!Epic (g $o f)}
+    : Epic g.
+  Proof.
+    intros Q x x' h.
+    rapply isepic.
+    exact ((cat_assoc_opp f g x) $@ (h $@R f) $@ (cat_assoc f g x')).
+  Defined.
+
+  Definition Epi (P' P : A) := { e : P' $-> P & Epic e }.
+
+  Definition hom_epi {P' P} (e : Epi P' P) := pr1 e : P' $-> P.
+  Coercion hom_epi : Epi >-> Hom.
+
+  #[export]
+  Instance epic_epi {P' P} (e : Epi P' P) : Epic e := pr2 e.
+
+  Definition id_epi P : Epi P P := (Id P; epic_id P).
+
+End Epimorphisms.
+
+Notation "P' $->> P" := (Epi P' P) (at level 99).
+
+(** Monomorphisms could be defined as epimorphisms in the opposite category, which would allow us to reuse the proofs below.  We'd have to move the material on epis and monos to a separate file. *)
+
+Class Monic {A} `{Is1Cat A} {b c: A} (f : b $-> c)
+  := ismonic : forall {a} (g h : a $-> b), f $o g $== f $o h -> g $== h.
+
+Arguments ismonic {A}%_type_scope {IsGraph0 Is2Graph0 Is01Cat0 H b c} f {Monic a} g h _.
+
+Section Monomorphisms.
+
+  Context {A : Type} `{Is1Cat A}.
+
+  #[export]
+  Instance monic_id (P : A) : Monic (Id P).
+  Proof.
+    intros B b b' h.
+    exact ((cat_idl _)^$ $@ h $@ cat_idl _).
+  Defined.
+
+  Definition monic_homotopic {P P'} (f g : P $-> P') `{!Monic f} (h : f $== g)
+    : Monic g.
+  Proof.
+    intros Q x x' h'.
+    apply (ismonic f).
+    exact ((h $@R x) $@ h' $@ (h^$ $@R x')).
+  Defined.
+
+  #[export]
+  Instance monic_compose {P P' P'' : A} (f : P $-> P') (g : P' $-> P'')
+    `{!Monic f} `{!Monic g}
+    : Monic (g $o f).
+  Proof.
+    intros Q x x' h.
+    apply (ismonic f).
+    apply (ismonic g).
+    exact ((cat_assoc_opp x f g) $@ h $@ (cat_assoc x' f g)).
+  Defined.
+
+  Definition monic_cancel {P P' P'' : A} (f : P $-> P') (g : P' $-> P'')
+    `{!Monic (g $o f)}
+    : Monic f.
+  Proof.
+    intros Q x x' h.
+    rapply ismonic.
+    exact ((cat_assoc x f g) $@ (g $@L h) $@ (cat_assoc_opp x' f g)).
+  Defined.
+
+  Definition Mono (P' P : A) := { e : P' $-> P & Monic e }.
+
+  Definition hom_mono {P' P} (m : Mono P' P) := pr1 m : P' $-> P.
+  Coercion hom_mono : Mono >-> Hom.
+
+  #[export]
+  Instance monic_mono {P' P} (e : Mono P' P) : Monic e := pr2 e.
+
+  Definition id_mono P : Mono P P := (Id P; monic_id P).
+
+End Monomorphisms.
+
+Notation "P' $>-> P" := (Mono P' P) (at level 99).
 
 (** Section might be a clearer name but it's better to avoid confusion with Coq keywords. *)
 

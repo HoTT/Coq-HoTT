@@ -1,6 +1,7 @@
 From HoTT Require Import Basics Types.
 Require Import Homotopy.IdentitySystems.
-Require Import WildCat.
+From HoTT.WildCat Require Import Core PointedCat TwoOneCat NatTrans
+  Universe Products Equiv Yoneda.
 Require Import Truncations.Core.
 Require Import ReflectiveSubuniverse.
 Require Import Extensions.

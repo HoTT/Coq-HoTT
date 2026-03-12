@@ -5,6 +5,7 @@ Require Import WildCat.NatTrans WildCat.MonoidalTwistConstruction.
 Require Import Algebra.Groups.Group Algebra.Groups.QuotientGroup.
 Require Import Algebra.AbGroups.AbelianGroup Algebra.AbGroups.Biproduct.
 Require Import Algebra.AbGroups.AbHom Algebra.AbGroups.FreeAbelianGroup.
+Require Import Algebra.AbGroups.Coequalizer.
 Require Import Algebra.AbGroups.Abelianization Algebra Algebra.Groups.FreeGroup.
 Require Import Colimits.Quotient.
 Require Import Spaces.List.Core Spaces.Int.

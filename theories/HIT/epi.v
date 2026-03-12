@@ -109,11 +109,15 @@ transitivity (g (f x)).
 - transitivity (h (f x));auto with path_hints. by apply ap.
 Qed.
 
-Corollary issurj_isepi_funext {X Y} (f:X->Y) : IsSurjection f -> isepi_funext f.
+(** We give a direct proof of this result that avoids using [Univalence]. *)
+Definition issurj_isepi_funext {X Y} (f : X -> Y) : IsSurjection f -> isepi_funext f.
 Proof.
   intro s.
-  apply equiv_isepi_isepi_funext.
-  by apply issurj_isepi.
+  intros Z g0 g1 p y.
+  pose proof (xr := @center _ (s y)).
+  strip_truncations.
+  destruct xr as [x r].
+  exact (ap g0 r^ @ p x @ ap g1 r).
 Defined.
 
 (** Old-style proof using polymorphic Omega. Needs resizing for the [isepi] proof to live in the
@@ -141,33 +145,39 @@ Defined.
 
 Section isepi_issurj.
   Context {X Y : HSet} (f : X -> Y) (Hisepi : isepi f).
-  Definition epif := equiv_isepi_isepi' _ Hisepi.
-  Definition fam (c : setcone f) : HProp.
+
+  Definition fam : setcone f -> HProp.
   Proof.
+    apply Trunc_rec.
     pose (fib y := hexists (fun x : X => f x = y)).
-    apply (fun f => @Trunc_rec _ _ HProp _ f c).
     refine (Pushout_rec HProp fib (fun _ => Unit_hp) (fun x => _)).
-    (** Prove that the truncated sigma is equivalent to Unit *)
-    pose (contr_inhabited_hprop (fib (f x)) (tr (x; idpath))) as i.
-    apply path_hprop. simpl. simpl in i.
-    exact (equiv_contr_unit).
+    apply path_hprop.
+    napply equiv_contr_unit.
+    rapply contr_inhabited_hprop.
+    exact (tr (x; idpath)).
   Defined.
 
   Lemma isepi_issurj : IsSurjection f.
   Proof.
     intros y.
-    pose (i := isepi'_contr_cone _ epif).
-
-    assert (X0 : forall x : setcone f, fam x = fam (setcone_point f)).
-    { intros. apply contr_dom_equiv. exact i. }
-    specialize (X0 (tr (push (inl y)))). simpl in X0.
-    unfold IsConnected.
-    refine (transport (fun A => Contr A) (ap trunctype_type X0)^ _); exact _.
+    assert (fam_eq : fam (tr (push (inl y))) = fam (setcone_point f)).
+    { apply contr_dom_equiv.
+      apply isepi'_contr_cone.
+      by apply equiv_isepi_isepi'. }
+    simpl in fam_eq; unfold IsConnected.
+    refine (transport (fun A => Contr A) (ap trunctype_type fam_eq)^ _); exact _.
   Defined.
 End isepi_issurj.
 
+Corollary isepi_funext_issurj {X Y : HSet} (f : X -> Y) (H : isepi_funext f)
+  : IsSurjection f.
+Proof.
+  apply isepi_issurj.
+  by apply equiv_isepi_isepi_funext.
+Defined.
+
 Lemma isepi_isequiv X Y (f : X -> Y) `{IsEquiv _ _ f}
-: isepi f.
+  : isepi f.
 Proof.
   intros ? g h H'.
   apply ap10 in H'.
@@ -179,4 +189,5 @@ Proof.
     * apply H'.
     * by rewrite eisretr.
 Qed.
+
 End AssumingUA.

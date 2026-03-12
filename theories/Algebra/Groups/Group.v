@@ -16,7 +16,7 @@ Require Export Classes.interfaces.abstract_algebra (IsGroup(..), group_monoid, i
     IsSemiGroupPreserving, preserves_sg_op, IsUnitPreserving, preserves_mon_unit).
 Require Export Classes.theory.groups.
 Require Import Pointed.Core.
-Require Import WildCat.
+From HoTT.WildCat Require Import Core Universe Equiv Induced PointedCat Products.
 Require Import Spaces.Nat.Core Spaces.Int.
 Require Import Truncations.Core.
 

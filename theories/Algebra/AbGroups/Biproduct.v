@@ -1,5 +1,5 @@
 From HoTT Require Import Basics Types Truncations.Core.
-Require Import WildCat.
+From HoTT.WildCat Require Import Core Equiv Bifunctor.
 Require Import HSet.
 Require Import AbelianGroup.
 Require Import Modalities.ReflectiveSubuniverse.

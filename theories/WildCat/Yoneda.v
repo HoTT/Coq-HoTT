@@ -192,7 +192,7 @@ Definition opyon_cancel {A : Type} `{Is01Cat A} (a b : A)
 
 Definition opyon1 {A : Type} `{Is01Cat A} (a : A) : Fun01 A Type.
 Proof.
-  exact (Build_Fun01 _ _ (opyon a)).
+  exact (Build_Fun01 (opyon a)).
 Defined.
 
 Definition opyon11 {A : Type} `{Is1Cat A} `{!HasMorExt A} (a : A) : Fun11 A Type.
@@ -241,8 +241,7 @@ Instance is0functor_hom_0gpd {A : Type} `{Is1Cat A}
 Proof.
   napply Build_Is0Functor.
   intros [a1 a2] [b1 b2] [f1 f2]; unfold op in *; cbn in *.
-  rapply (Build_Fun01 (opyon_0gpd a1 a2) (opyon_0gpd b1 b2)
-          (cat_postcomp b1 f2 o cat_precomp a2 f1)).
+  rapply (Build_Fun01 (cat_postcomp b1 f2 o cat_precomp a2 f1)).
 Defined.
 
 Instance is1functor_hom_0gpd {A : Type} `{Is1Cat A}
@@ -280,7 +279,7 @@ Instance is0functor_opyon_0gpd {A : Type} `{Is1Cat A} (a : A)
 Proof.
   apply Build_Is0Functor.
   intros b c f.
-  exact (Build_Fun01 (opyon_0gpd a b) (opyon_0gpd a c) (cat_postcomp a f)).
+  exact (Build_Fun01 (cat_postcomp a f)).
 Defined.
 
 Instance is1functor_opyon_0gpd {A : Type} `{Is1Cat A} (a : A)
@@ -300,8 +299,7 @@ Definition opyoneda_0gpd {A : Type} `{Is1Cat A} (a : A)
   : F a -> (opyon_0gpd a $=> F).
 Proof.
   intros x b.
-  refine (Build_Fun01 (opyon_0gpd a b) (F b) (fun f => fmap F f x)).
-  rapply Build_Is0Functor.
+  refine (Build_Fun01' (A:=opyon_0gpd a b) (B:=F b) (fun f => fmap F f x) _).
   intros f1 f2 h.
   exact (fmap2 F h x).
 Defined.

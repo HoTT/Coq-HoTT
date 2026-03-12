@@ -1,6 +1,7 @@
 From HoTT Require Import Basics Types Limits.Pullback Cubical.PathSquare.
+Require Import Truncations.Core ReflectiveSubuniverse HIT.epi.
 Require Import Algebra.Groups.Group.
-Require Import WildCat.Core.
+Require Import WildCat.Core WildCat.Pullbacks WildCat.EpiStable.
 
 (** Pullbacks of groups are formalized by equipping the set-pullback with the desired group structure. The universal property in the category of groups is proved by saying that the corecursion principle [grp_pullback_corec] is an equivalence. *) 
 
@@ -241,3 +242,21 @@ Section IsEquivGrpPullbackCorec.
   Defined.
 
 End IsEquivGrpPullbackCorec.
+
+(** The category of groups of 1-pullbacks in the wild sense.  Note that we do not need [Funext] for this. *)
+Instance haspullbacks_group : HasPullbacks Group.
+Proof.
+  intros A B C f g.
+  snapply Build_CatPullback.
+  - exact (grp_pullback f g).
+  - apply grp_pullback_pr1.
+  - apply grp_pullback_pr2.
+  - apply pullback_commsq.
+  - apply grp_pullback_corec'.
+  - simpl. reflexivity.
+  - cbn. reflexivity.
+  - intros Z k h p1 p2.
+    srapply (pullback_homotopic k h p1 p2).
+    intro z.
+    apply path_ishprop. (* Here we use that [C] is 0-truncated. *)
+Defined.

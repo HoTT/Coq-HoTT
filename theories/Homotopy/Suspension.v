@@ -1,7 +1,8 @@
 From HoTT Require Import Basics.
 Require Import Types.
 Require Import Cubical.DPath Cubical.DPathSquare.
-Require Import WildCat.
+From HoTT.WildCat Require Import Core Forall Universe Paths Sigma
+  EquivGpd NatTrans.
 Require Import Colimits.Pushout.
 Require Import Homotopy.NullHomotopy.
 Require Import Truncations.Core.
@@ -243,7 +244,7 @@ Proof.
 Defined.
 
 Instance is0functor_susp : Is0Functor Susp
-  := Build_Is0Functor _ _ _ _ Susp (@functor_susp).
+  := Build_Is0Functor Susp (@functor_susp).
 
 Instance is1functor_susp : Is1Functor Susp
   := Build_Is1Functor _ _ _ _ _ _ _ _ _ _ Susp _
@@ -418,7 +419,7 @@ Section UnivPropNat.
   Local Instance is0functor_functor_Susp_ind_data
     : Is0Functor functor_Susp_ind_data.
   Proof.
-    exact (is0functor_sigma _ _
+    exact (is0functor_functor_sigma_id _ _
            (fun NS => functor_Susp_ind_data' NS o functor_Susp_ind_data'' NS)).
   Defined.
 

@@ -1,7 +1,6 @@
-Require Import Basics.Overture Basics.Tactics
-               Basics.PathGroupoids.
-Require Import WildCat.Core WildCat.Equiv WildCat.EquivGpd
-               WildCat.Forall WildCat.Graph WildCat.Induced WildCat.FunctorCat.
+Require Import Basics.Overture Basics.Tactics Basics.PathGroupoids.
+From HoTT.WildCat Require Import Core Equiv EquivGpd Prod UnitCat
+  Forall Graph Induced FunctorCat.
 
 (** * The wild 1-category of 0-groupoids. *)
 
@@ -72,14 +71,27 @@ Proof.
   exact ((cat_eissect f x)^$ $@ fmap (equiv_fun_0gpd f^-1$) h $@ cat_eissect f y).
 Defined.
 
-(** This is one example of many things that could be ported from Basics/Equivalences.v. *)
-Definition moveR_equiv_V_0gpd {G H : ZeroGpd} (f : G $<~> H) (x : H) (y : G) (p : x $== equiv_fun_0gpd f y)
+Definition isinj_isequiv_0gpd {G H : ZeroGpd} (f : G $-> H) `{!Cat_IsBiInv f}
+  {x y : G} (h : f x $== f y)
+  : x $== y
+  := isinj_equiv_0gpd (Build_Cat_BiInv _ _ _ _ _ _ _ f _) h.
+
+(** These are some examples of things that could be ported from Basics/Equivalences.v. *)
+Definition moveR_equiv_V_0gpd {G H : ZeroGpd} (f : G $<~> H) {x : H} {y : G} (p : x $== equiv_fun_0gpd f y)
   : equiv_fun_0gpd f^-1$ x $== y
   := fmap (equiv_fun_0gpd f^-1$) p $@ cat_eissect f y.
 
-Definition moveL_equiv_V_0gpd {G H : ZeroGpd} (f : G $<~> H) (x : H) (y : G) (p : equiv_fun_0gpd f y $== x)
+Definition moveL_equiv_V_0gpd {G H : ZeroGpd} (f : G $<~> H) {x : H} {y : G} (p : equiv_fun_0gpd f y $== x)
   : y $== equiv_fun_0gpd f^-1$ x
   := (cat_eissect f y)^$ $@ fmap (equiv_fun_0gpd f^-1$) p.
+
+Definition moveR_equiv_M_0gpd {G H : ZeroGpd} (f : G $<~> H) {x : G} {y : H} (p : x $== equiv_fun_0gpd f^-1$ y)
+  : equiv_fun_0gpd f x $== y
+  := fmap (equiv_fun_0gpd f) p $@ cat_eisretr f y.
+
+Definition moveL_equiv_M_0gpd {G H : ZeroGpd} (f : G $<~> H) {x : G} {y : H} (p : equiv_fun_0gpd f^-1$ y $== x)
+  : y $== equiv_fun_0gpd f x
+  := (cat_eisretr f y)^$ $@ fmap (equiv_fun_0gpd f) p.
 
 (** ** [f] is an equivalence of 0-groupoids iff [IsSurjInj f]
 
@@ -103,9 +115,9 @@ Definition isequiv_0gpd_issurjinj {G H : ZeroGpd} (F : G $-> H)
 Proof.
   destruct e as [e0 e1]; unfold SplEssSurj in e0.
   stapply catie_adjointify.
-  - snapply Build_Fun01.
+  - snapply Build_Fun01'.
     1: exact (fun y => (e0 y).1).
-    snapply Build_Is0Functor; cbn beta.
+    cbn beta.
     intros y1 y2 m.
     apply e1.
     exact ((e0 y1).2 $@ m $@ ((e0 y2).2)^$).
@@ -114,6 +126,23 @@ Proof.
     apply e1.
     apply e0.
 Defined.
+
+(** ** Induced 0-groupoid structures *)
+
+Definition zerogpd_induced {A : Type} {G : ZeroGpd} (f : A -> G)
+  : ZeroGpd
+  := Build_ZeroGpd A (isgraph_induced f) (is01cat_induced f) (is0gpd_induced f).
+
+Definition zerogpd_induced_map {A : Type} {G : ZeroGpd} (f : A -> G)
+  : zerogpd_induced f $-> G.
+Proof.
+  napply (Build_Fun01' f).
+  intros a b; exact idmap.
+Defined.
+
+(** ** Products of families of 0-groupoids *)
+
+(** Here we define products of families of 0-groupoids. *)
 
 (** [I]-indexed products for an [I]-indexed family of 0-groupoids. *)
 Definition prod_0gpd (I : Type) (G : I -> ZeroGpd) : ZeroGpd.
@@ -126,9 +155,7 @@ Definition prod_0gpd_pr {I : Type} {G : I -> ZeroGpd}
   : forall i, prod_0gpd I G $-> G i.
 Proof.
   intros i.
-  snapply Build_Fun01.
-  1: exact (fun f => f i).
-  snapply Build_Is0Functor; cbn beta.
+  apply (Build_Fun01' (fun f => f i)); cbn beta.
   intros f g p.
   exact (p i).
 Defined.
@@ -139,20 +166,14 @@ Definition equiv_prod_0gpd_corec {I : Type} {G : ZeroGpd} {H : I -> ZeroGpd}
 Proof.
   snapply Build_Equiv.
   { intro f.
-    snapply Build_Fun01.
-    1: exact (fun x i => f i x).
-    snapply Build_Is0Functor; cbn beta.
-    intros x y p i; simpl.
+    apply (Build_Fun01' (fun x i => f i x)).
+    intros x y p i.
     exact (fmap (f i) p). }
   snapply Build_IsEquiv.
-  - intro f.
+  { intro f.
     intros i.
-    exact (prod_0gpd_pr i $o f).
-  - intro f.
-    reflexivity.
-  - intro f.
-    reflexivity.
-  - reflexivity.
+    exact (prod_0gpd_pr i $o f). }
+  all: reflexivity.
 Defined.
 
 (** Indexed products of groupoids with equivalent indices and fiberwise equivalent factors are equivalent. *)
@@ -162,24 +183,151 @@ Definition cate_prod_0gpd {I J : Type} (ie : I <~> J)
   : prod_0gpd I G $<~> prod_0gpd J H.
 Proof.
   snapply cate_adjointify.
-  - snapply Build_Fun01.
+  - snapply Build_Fun01'.
     + intros h j.
       exact (transport H (eisretr ie j) (cate_fun (f (ie^-1 j)) (h _))).
-    + napply Build_Is0Functor.
-      intros g h p j.
-      destruct (eisretr ie j).
-      refine (_ $o Hom_path (transport_1 _ _)).
-      apply Build_Fun01.
-      exact (p _).
+    + cbn. intros g h p j.
+      destruct (eisretr ie j); simpl.
+      exact (fmap _ (p _)).
   - exact (equiv_prod_0gpd_corec (fun i => (f i)^-1$ $o prod_0gpd_pr (ie i))).
-  - intros h j.
-    cbn.
-    destruct (eisretr ie j).
+  - intros h j; cbn.
+    destruct (eisretr ie j); simpl.
     exact (cate_isretr (f _) _).
-  - intros g i.
-    cbn.
+  - intros g i; cbn.
     refine (_ $o Hom_path
             (ap (cate_fun (f i)^-1$) (transport2 _ (eisadj ie i) _))).
-    destruct (eissect ie i).
+    destruct (eissect ie i); simpl.
     exact (cate_issect (f _) _).
+Defined.
+
+(** ** Binary products of 0-groupoids *)
+
+(** Binary products can be obtained from indexed products by indexing over [Bool], and indeed this follows from [hasbinaryproducts_hasproductsbool] in WildCat.Products.  However, we can avoid [Funext] in [equiv_binprod_0gpd_corec] if we separately define binary products of 0-groupoids using the product of types. *)
+
+Section BinProd.
+
+  Context (G H : ZeroGpd).
+
+  (** This uses instances from WildCat.Prod. *)
+  Definition binprod_0gpd : ZeroGpd
+    := Build_ZeroGpd (G * H) _ _ _.
+
+  (* Helper function to produce a term of binprod_0gpd. *)
+  Definition binprod_0gpd_pair (g : G) (h : H) : binprod_0gpd
+    := (g, h).
+
+  (** The projections. *)
+  Definition binprod_0gpd_pr1 : binprod_0gpd $-> G.
+  Proof.
+    snapply (Build_Fun01' fst).
+    intros f g.  exact fst.
+  Defined.
+
+  Definition binprod_0gpd_pr2 : binprod_0gpd $-> H.
+  Proof.
+    snapply (Build_Fun01' snd).
+    intros f g.  exact snd.
+  Defined.
+
+  (** The universal property of the product of 0-groupoids holds almost definitionally. *)
+  Definition equiv_binprod_0gpd_corec (K : ZeroGpd)
+    : (K $-> G) * (K $-> H) <~> (K $-> binprod_0gpd).
+  Proof.
+    snapply Build_Equiv.
+    { intros [f g].
+      snapply (Build_Fun01' (fun k => (f k, g k))); cbn.
+      intros x y p.  exact (fmap f p, fmap g p). }
+    snapply Build_IsEquiv.
+    1: exact (fun f => (binprod_0gpd_pr1 $o f, binprod_0gpd_pr2 $o f)).
+    all: reflexivity.
+  Defined.
+
+End BinProd.
+
+(** ** The terminal 0-groupoid *)
+
+Definition Unit_0gpd : ZeroGpd := Build_ZeroGpd Unit _ _ _.
+
+Instance is_terminal_unit_0gpd : IsTerminal Unit_0gpd.
+Proof.
+  intro A.
+  pose proof (f:=Build_Fun01 (fun _ : A => tt)).
+  exists f.
+  intros g a; simpl.
+  exact tt.
+Defined.
+
+(** ** Pullbacks of 0-groupoids *)
+
+Section ZeroGpdPullback.
+
+  Context {G H K : ZeroGpd} (g : G $-> K) (h : H $-> K).
+
+  (* The underlying type for the pullback of 0-groupoids is [{x : G & { y : H & g x $== h y }}].
+
+  The pullbacks we define here do not assume any 2-cells, so the 1-cells in the pullback only involve the corners [G] and [H] and can therefore be induced from the product of these 0-groupoids.  (Because of this, this definition would not give the correct notion of pullback of types when we regard types as 0-groupoids.) *)
+
+  Definition pullback_0gpd : ZeroGpd
+    := @zerogpd_induced {x : G & { y : H & g x $== h y }} (binprod_0gpd G H)
+        (fun '(x; (y; p)) => (x, y)).
+
+  Definition pullback_0gpd_pr1 : pullback_0gpd $-> G
+    := binprod_0gpd_pr1 G H $o zerogpd_induced_map _.
+
+  Definition pullback_0gpd_pr2 : pullback_0gpd $-> H
+    := binprod_0gpd_pr2 G H $o zerogpd_induced_map _.
+
+  Definition pullback_0gpd_glue : g $o pullback_0gpd_pr1 $== h $o pullback_0gpd_pr2
+    := fun '(x; (y; p)) => p.
+
+  (** The universal property of the product of 0-groupoids holds almost definitionally. *)
+  Definition equiv_pullback_0gpd_corec {Z : ZeroGpd}
+    : { f1 : Z $-> G & { f2 : Z $-> H & g $o f1 $== h $o f2 }}
+        <~> (Z $-> pullback_0gpd).
+  Proof.
+    snapply Build_Equiv.
+    { intros [f1 [f2 q]].
+      snapply Build_Fun01'.
+      + exact (fun z => (f1 z; (f2 z; q z))).
+      + intros z z' p; cbn beta.
+        exact (fmap f1 p, fmap f2 p). }
+    snapply Build_IsEquiv.
+    { intro f.
+      srefine (pullback_0gpd_pr1 $o f; pullback_0gpd_pr2 $o f; _).
+      cbn beta.
+      exact (fun z => pullback_0gpd_glue (f z)). }
+    all: reflexivity.
+  Defined.
+
+  (** The square brackets denote a non-maximally inserted implicit argument. *)
+  Definition pullback_0gpd_homotopic [Z : ZeroGpd]
+    (j k : Z $-> pullback_0gpd)
+    (p1 : pullback_0gpd_pr1 $o j $== pullback_0gpd_pr1 $o k)
+    (p2 : pullback_0gpd_pr2 $o j $== pullback_0gpd_pr2 $o k)
+    : j $== k
+    := fun z => (p1 z, p2 z).
+
+End ZeroGpdPullback.
+
+(** Taking pullbacks of 0-groupoids is symmetric. *)
+Definition flip_pullback_0gpd {G H K : ZeroGpd} (g : G $-> K) (h : H $-> K)
+  : pullback_0gpd g h $-> pullback_0gpd h g.
+Proof.
+  snapply Build_Fun01'.
+  - intros [x [y p]]; exact (y; (x; p^$)).
+  - cbn. intros ? ? [q1 q2]; exact (q2, q1).
+Defined.
+
+Definition involutive_flip_pullback_0gpd {G H K : ZeroGpd} (g : G $-> K) (h : H $-> K)
+  : flip_pullback_0gpd g h $o flip_pullback_0gpd h g $== Id _.
+Proof.
+  intros ?; cbn; split; reflexivity.
+Defined.
+
+Definition cate_flip_pullback_0gpd {G H K : ZeroGpd} (g : G $-> K) (h : H $-> K)
+  : pullback_0gpd g h $<~> pullback_0gpd h g.
+Proof.
+  snapply cate_adjointify.
+  1,2: apply flip_pullback_0gpd.
+  1,2: apply involutive_flip_pullback_0gpd.
 Defined.
