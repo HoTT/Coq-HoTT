@@ -246,11 +246,11 @@ Section SelfBiproductOperations.
     := biproduct_prod_mor BYY X f g.
 
   (** A morphism induced on self-biproducts by maps on the two summands. *)
-  Definition biproduct_sum_map {Y Y' : object C}
-    `{BY : @Biproduct C Z Y Y} `{BY' : @Biproduct C Z Y' Y'}
-    (a b : morphism C Y Y')
-    : morphism C BY BY'
-    := biproduct_prod_mor BY' BY (a o outl BY) (b o outr BY).
+  Definition biproduct_sum_map {X Y X' Y' : object C}
+    `{BXY : @Biproduct C Z X Y} `{BXY' : @Biproduct C Z X' Y'}
+    (a : morphism C X X') (b : morphism C Y Y')
+    : morphism C BXY BXY'
+    := biproduct_prod_mor BXY' BXY (a o outl BXY) (b o outr BXY).
 
   (** The codiagonal of a self-biproduct. *)
   Definition biproduct_codiagonal (Y : object C)
