@@ -294,53 +294,51 @@ Section SelfBiproductOperations.
   Qed.
 
   (** A self-biproduct map sends the left injection to the left summand map. *)
-  Lemma biproduct_sum_map_inl {Y Y' : object C}
-    `{BYY : @Biproduct C Z Y Y} `{BYY' : @Biproduct C Z Y' Y'}
-    (a b : morphism C Y Y')
-    : (biproduct_sum_map a b o inl BYY)%morphism
-      = (inl BYY' o a)%morphism.
+  Lemma biproduct_sum_map_inl {X Y X' Y' : object C}
+    `{BXY : @Biproduct C Z X Y} `{BX'Y' : @Biproduct C Z X' Y'}
+    (a : morphism C X X') (b : morphism C Y Y')
+    : (biproduct_sum_map a b o inl BXY)%morphism
+      = (inl BX'Y' o a)%morphism.
   Proof.
-    etransitivity (biproduct_sum_pair a (zero_morphism Y Y')).
-    - rapply biproduct_prod_unique.
+    etransitivity (biproduct_prod_mor BX'Y' X a (zero_morphism X Y')).
+    - rapply (biproduct_prod_unique BX'Y').
       + rewrite <- associativity.
         unfold biproduct_sum_map.
-        rewrite biproduct_prod_beta_l.
+        rewrite (biproduct_prod_beta_l BX'Y').
         rewrite associativity.
-        rewrite (beta_l (biproduct_is BYY)).
+        rewrite (beta_l (biproduct_is BXY)).
         apply right_identity.
       + rewrite <- associativity.
         unfold biproduct_sum_map.
-        rewrite biproduct_prod_beta_r.
+        rewrite (biproduct_prod_beta_r BX'Y').
         rewrite associativity.
-        rewrite (mixed_r (biproduct_is BYY)).
+        rewrite (mixed_r (biproduct_is BXY)).
         apply zero_morphism_right.
-    - unfold biproduct_sum_pair.
-      apply biproduct_prod_zero_r.
+    - apply (biproduct_prod_zero_r BX'Y').
   Qed.
 
   (** A self-biproduct map sends the right injection to the right summand map. *)
-  Lemma biproduct_sum_map_inr {Y Y' : object C}
-    `{BYY : @Biproduct C Z Y Y} `{BYY' : @Biproduct C Z Y' Y'}
-    (a b : morphism C Y Y')
-    : (biproduct_sum_map a b o inr BYY)%morphism
-      = (inr BYY' o b)%morphism.
+  Lemma biproduct_sum_map_inr {X Y X' Y' : object C}
+    `{BXY : @Biproduct C Z X Y} `{BX'Y' : @Biproduct C Z X' Y'}
+    (a : morphism C X X') (b : morphism C Y Y')
+    : (biproduct_sum_map a b o inr BXY)%morphism
+      = (inr BX'Y' o b)%morphism.
   Proof.
-    etransitivity (biproduct_sum_pair (zero_morphism Y Y') b).
-    - rapply biproduct_prod_unique.
+    etransitivity (biproduct_prod_mor BX'Y' Y (zero_morphism Y X') b).
+    - rapply (biproduct_prod_unique BX'Y').
       + rewrite <- associativity.
         unfold biproduct_sum_map.
-        rewrite biproduct_prod_beta_l.
+        rewrite (biproduct_prod_beta_l BX'Y').
         rewrite associativity.
-        rewrite (mixed_l (biproduct_is BYY)).
+        rewrite (mixed_l (biproduct_is BXY)).
         apply zero_morphism_right.
       + rewrite <- associativity.
         unfold biproduct_sum_map.
-        rewrite biproduct_prod_beta_r.
+        rewrite (biproduct_prod_beta_r BX'Y').
         rewrite associativity.
-        rewrite (beta_r (biproduct_is BYY)).
+        rewrite (beta_r (biproduct_is BXY)).
         apply right_identity.
-    - unfold biproduct_sum_pair.
-      apply biproduct_prod_zero_l.
+    - apply (biproduct_prod_zero_l BX'Y').
   Qed.
 
   (** The codiagonal of a self-biproduct map is the corresponding copairing. *)
