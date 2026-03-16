@@ -94,7 +94,7 @@ Section Associativity.
   Proof.
     unfold sgop_morphism, biproduct_codiagonal, biproduct_sum_pair.
     rewrite Category.Core.associativity.
-    rewrite (@biproduct_prod_comp C semiadditive_zero Y Y _ W X f g a).
+    rewrite (@biproduct_prod_mor_nat C semiadditive_zero Y Y _ W X f g a).
     reflexivity.
   Qed.
 

@@ -202,7 +202,7 @@ Section BiproductOperations.
   Qed.
 
   (** Product pairing is natural in the domain. *)
-  Lemma biproduct_prod_comp (V W : object C)
+  Lemma biproduct_prod_mor_nat (V W : object C)
     (f : morphism C W X) (g : morphism C W Y) (h : morphism C V W)
     : (biproduct_prod_mor W f g o h)%morphism
       = biproduct_prod_mor V (f o h) (g o h).
@@ -217,7 +217,7 @@ Section BiproductOperations.
   Qed.
 
   (** Coproduct copairing is natural in the codomain. *)
-  Lemma biproduct_coprod_comp (W V : object C)
+  Lemma biproduct_coprod_mor_nat (W V : object C)
     (f : morphism C X W) (g : morphism C Y W) (h : morphism C W V)
     : (h o biproduct_coprod_mor W f g)%morphism
       = biproduct_coprod_mor V (h o f) (h o g).
@@ -288,7 +288,7 @@ Section SelfBiproductOperations.
       = biproduct_coprod_mor BYY Y' a a.
   Proof.
     unfold biproduct_codiagonal.
-    rewrite biproduct_coprod_comp.
+    rewrite biproduct_coprod_mor_nat.
     repeat rewrite right_identity.
     reflexivity.
   Qed.
@@ -446,7 +446,7 @@ Section SelfBiproductOperations.
     : (biproduct_swap Y o inl BYY)%morphism = inr BYY.
   Proof.
     unfold biproduct_swap, biproduct_sum_pair.
-    rewrite biproduct_prod_comp.
+    rewrite biproduct_prod_mor_nat.
     rewrite (mixed_r (biproduct_is BYY)).
     rewrite (beta_l (biproduct_is BYY)).
     rewrite biproduct_prod_zero_l.
@@ -460,7 +460,7 @@ Section SelfBiproductOperations.
     : (biproduct_swap Y o inr BYY)%morphism = inl BYY.
   Proof.
     unfold biproduct_swap, biproduct_sum_pair.
-    rewrite biproduct_prod_comp.
+    rewrite biproduct_prod_mor_nat.
     rewrite (beta_r (biproduct_is BYY)).
     rewrite (mixed_l (biproduct_is BYY)).
     rewrite biproduct_prod_zero_r.
