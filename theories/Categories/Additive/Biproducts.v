@@ -233,6 +233,8 @@ Section BiproductOperations.
 
 End BiproductOperations.
 
+Arguments biproduct_prod_mor {C Z X Y} B {W} f g.
+
 (** * Self-biproduct operations *)
 
 Section SelfBiproductOperations.
@@ -243,14 +245,14 @@ Section SelfBiproductOperations.
     `{BYY : @Biproduct C Z Y Y}
     (f g : morphism C X Y)
     : morphism C X BYY
-    := biproduct_prod_mor BYY X f g.
+    := biproduct_prod_mor BYY f g.
 
   (** A morphism induced on self-biproducts by maps on the two summands. *)
   Definition biproduct_sum_map {X Y X' Y' : object C}
     `{BXY : @Biproduct C Z X Y} `{BXY' : @Biproduct C Z X' Y'}
     (a : morphism C X X') (b : morphism C Y Y')
     : morphism C BXY BXY'
-    := biproduct_prod_mor BXY' BXY (a o outl BXY) (b o outr BXY).
+    := biproduct_prod_mor BXY' (a o outl BXY) (b o outr BXY).
 
   (** The codiagonal of a self-biproduct. *)
   Definition biproduct_codiagonal (Y : object C)
@@ -300,7 +302,7 @@ Section SelfBiproductOperations.
     : (biproduct_sum_map a b o inl BXY)%morphism
       = (inl BX'Y' o a)%morphism.
   Proof.
-    etransitivity (biproduct_prod_mor BX'Y' X a (zero_morphism X Y')).
+    etransitivity (biproduct_prod_mor BX'Y' a (zero_morphism X Y')).
     - rapply (biproduct_prod_unique BX'Y').
       + rewrite <- associativity.
         unfold biproduct_sum_map.
@@ -324,7 +326,7 @@ Section SelfBiproductOperations.
     : (biproduct_sum_map a b o inr BXY)%morphism
       = (inr BX'Y' o b)%morphism.
   Proof.
-    etransitivity (biproduct_prod_mor BX'Y' Y (zero_morphism Y X') b).
+    etransitivity (biproduct_prod_mor BX'Y' (zero_morphism Y X') b).
     - rapply (biproduct_prod_unique BX'Y').
       + rewrite <- associativity.
         unfold biproduct_sum_map.
@@ -395,14 +397,14 @@ Section SelfBiproductOperations.
   Definition biproduct_swap {X Y : object C}
     `{BXY : @Biproduct C Z X Y} `{BYX : @Biproduct C Z Y X}
     : morphism C BXY BYX
-    := biproduct_prod_mor BYX BXY (outr BXY) (outl BXY).
+    := biproduct_prod_mor BYX (outr BXY) (outl BXY).
 
   (** Swapping components of a self-biproduct pairing. *)
   Lemma biproduct_prod_swap {X Y W : object C}
     `{BXY : @Biproduct C Z X Y} `{BYX : @Biproduct C Z Y X}
     (f : morphism C W X) (g : morphism C W Y)
-    : biproduct_prod_mor BYX W g f
-      = (biproduct_swap o biproduct_prod_mor BXY W f g)%morphism.
+    : biproduct_prod_mor BYX g f
+      = (biproduct_swap o biproduct_prod_mor BXY f g)%morphism.
   Proof.
     symmetry.
     rapply (biproduct_prod_unique BYX).
