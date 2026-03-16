@@ -416,62 +416,60 @@ Section SelfBiproductOperations.
   (** ** Symmetry of self-biproducts *)
 
   (** The swap morphism exchanges the two summands of a self-biproduct. *)
-  Definition biproduct_swap (Y : object C)
-    `{BYY : @Biproduct C Z Y Y}
-    : morphism C BYY BYY
-    := biproduct_sum_pair (outr BYY) (outl BYY).
+  Definition biproduct_swap {X Y : object C}
+    `{BXY : @Biproduct C Z X Y} `{BYX : @Biproduct C Z Y X}
+    : morphism C BXY BYX
+    := biproduct_prod_mor BYX BXY (outr BXY) (outl BXY).
 
   (** Swapping components of a self-biproduct pairing. *)
-  Lemma biproduct_prod_swap {X Y : object C}
-    `{BYY : @Biproduct C Z Y Y}
-    (f g : morphism C X Y)
-    : biproduct_sum_pair g f
-      = (biproduct_swap Y o biproduct_sum_pair f g)%morphism.
+  Lemma biproduct_prod_swap {X Y W : object C}
+    `{BXY : @Biproduct C Z X Y} `{BYX : @Biproduct C Z Y X}
+    (f : morphism C W X) (g : morphism C W Y)
+    : biproduct_prod_mor BYX W g f
+      = (biproduct_swap o biproduct_prod_mor BXY W f g)%morphism.
   Proof.
     symmetry.
-    rapply biproduct_prod_unique.
+    rapply (biproduct_prod_unique BYX).
     - rewrite <- associativity.
-      unfold biproduct_swap, biproduct_sum_pair.
-      rewrite biproduct_prod_beta_l.
-      apply biproduct_prod_beta_r.
+      unfold biproduct_swap.
+      rewrite (biproduct_prod_beta_l BYX).
+      apply (biproduct_prod_beta_r BXY).
     - rewrite <- associativity.
-      unfold biproduct_swap, biproduct_sum_pair.
-      rewrite biproduct_prod_beta_r.
-      apply biproduct_prod_beta_l.
+      unfold biproduct_swap.
+      rewrite (biproduct_prod_beta_r BYX).
+      apply (biproduct_prod_beta_l BXY).
   Qed.
 
   (** Swapping after the left injection gives the right injection. *)
-  Lemma biproduct_swap_inl {Y : object C}
-    `{BYY : @Biproduct C Z Y Y}
-    : (biproduct_swap Y o inl BYY)%morphism = inr BYY.
+  Lemma biproduct_swap_inl {X Y : object C}
+    `{BXY : @Biproduct C Z X Y} `{BYX : @Biproduct C Z Y X}
+    : (biproduct_swap o inl BXY)%morphism = inr BYX.
   Proof.
-    unfold biproduct_swap, biproduct_sum_pair.
-    rewrite biproduct_prod_mor_nat.
-    rewrite (mixed_r (biproduct_is BYY)).
-    rewrite (beta_l (biproduct_is BYY)).
-    rewrite biproduct_prod_zero_l.
-    rewrite right_identity.
-    reflexivity.
+    unfold biproduct_swap.
+    rewrite (biproduct_prod_mor_nat BYX).
+    rewrite (mixed_r (biproduct_is BXY)).
+    rewrite (beta_l (biproduct_is BXY)).
+    rewrite (biproduct_prod_zero_l BYX).
+    apply right_identity.
   Qed.
 
   (** Swapping after the right injection gives the left injection. *)
-  Lemma biproduct_swap_inr {Y : object C}
-    `{BYY : @Biproduct C Z Y Y}
-    : (biproduct_swap Y o inr BYY)%morphism = inl BYY.
+  Lemma biproduct_swap_inr {X Y : object C}
+    `{BXY : @Biproduct C Z X Y} `{BYX : @Biproduct C Z Y X}
+    : (biproduct_swap o inr BXY)%morphism = inl BYX.
   Proof.
-    unfold biproduct_swap, biproduct_sum_pair.
-    rewrite biproduct_prod_mor_nat.
-    rewrite (beta_r (biproduct_is BYY)).
-    rewrite (mixed_l (biproduct_is BYY)).
-    rewrite biproduct_prod_zero_r.
-    rewrite right_identity.
-    reflexivity.
+    unfold biproduct_swap.
+    rewrite (biproduct_prod_mor_nat BYX).
+    rewrite (beta_r (biproduct_is BXY)).
+    rewrite (mixed_l (biproduct_is BXY)).
+    rewrite (biproduct_prod_zero_r BYX).
+    apply right_identity.
   Qed.
 
   (** The codiagonal is invariant under swapping the two summands. *)
   Lemma biproduct_codiagonal_swap_invariant {Y : object C}
     `{BYY : @Biproduct C Z Y Y}
-    : (biproduct_codiagonal Y o biproduct_swap Y)%morphism
+    : (biproduct_codiagonal Y o biproduct_swap)%morphism
       = biproduct_codiagonal Y.
   Proof.
     rapply (biproduct_coprod_unique BYY Y 1%morphism 1%morphism).

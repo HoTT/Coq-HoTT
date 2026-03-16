@@ -74,7 +74,7 @@ Theorem morphism_addition_commutative (C : SemiAdditiveCategory)
   : Commutative (@sgop_morphism C X Y).
 Proof.
   intros f g.
-  unfold sgop_morphism.
+  unfold sgop_morphism, biproduct_sum_pair.
   rewrite (biproduct_prod_swap f g).
   rewrite <- Category.Core.associativity.
   rewrite biproduct_codiagonal_swap_invariant.
