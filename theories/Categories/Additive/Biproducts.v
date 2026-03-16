@@ -273,6 +273,30 @@ Section SelfBiproductOperations.
     reflexivity.
   Qed.
 
+  (** The functorial biproduct map commutes with pairing. *)
+  Lemma biproduct_sum_map_prod {X Y X' Y' W : object C}
+    `{BXY : @Biproduct C Z X Y} `{BX'Y' : @Biproduct C Z X' Y'}
+    (a : morphism C X X') (b : morphism C Y Y')
+    (f : morphism C W X) (g : morphism C W Y)
+    : biproduct_prod_mor BX'Y' (a o f) (b o g)
+      = (biproduct_sum_map a b o biproduct_prod_mor BXY f g)%morphism.
+  Proof.
+    symmetry.
+    rapply (biproduct_prod_unique BX'Y').
+    - rewrite <- associativity.
+      unfold biproduct_sum_map.
+      rewrite (biproduct_prod_beta_l BX'Y').
+      rewrite associativity.
+      rewrite (biproduct_prod_beta_l BXY).
+      reflexivity.
+    - rewrite <- associativity.
+      unfold biproduct_sum_map.
+      rewrite (biproduct_prod_beta_r BX'Y').
+      rewrite associativity.
+      rewrite (biproduct_prod_beta_r BXY).
+      reflexivity.
+  Qed.
+
   (** Pairing is natural in the codomain. *)
   Lemma biproduct_sum_pair_natural {X Y Y' : object C}
     `{BYY : @Biproduct C Z Y Y} `{BYY' : @Biproduct C Z Y' Y'}
@@ -280,19 +304,8 @@ Section SelfBiproductOperations.
     : biproduct_sum_pair (a o f) (a o g)
       = (biproduct_sum_map a a o biproduct_sum_pair f g)%morphism.
   Proof.
-    symmetry.
-    unfold biproduct_sum_pair, biproduct_sum_map.
-    rapply biproduct_prod_unique.
-    - rewrite <- associativity.
-      rewrite biproduct_prod_beta_l.
-      rewrite associativity.
-      rewrite biproduct_prod_beta_l.
-      reflexivity.
-    - rewrite <- associativity.
-      rewrite biproduct_prod_beta_r.
-      rewrite associativity.
-      rewrite biproduct_prod_beta_r.
-      reflexivity.
+    unfold biproduct_sum_pair.
+    apply biproduct_sum_map_prod.
   Qed.
 
   (** A self-biproduct map sends the left injection to the left summand map. *)
