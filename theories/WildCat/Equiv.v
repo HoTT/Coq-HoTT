@@ -84,7 +84,7 @@ Defined.
 
 Notation "f ^-1$" := (cate_inv f).
 
-(** * Opposite categories preserve having equivalences. *)
+(** ** Opposite categories preserve having equivalences. *)
 Instance hasequivs_op {A} `{HasEquivs A} : HasEquivs A^op.
 Proof.
   snapply Build_HasEquivs; intros a b; unfold op in a, b; cbn.
@@ -629,7 +629,7 @@ Proof.
   - intro p; by induction p.
 Defined.
 
-(** * Initial objects and terminal objects are all respectively equivalent. *)
+(** ** Initial objects and terminal objects are all respectively equivalent. *)
 
 Lemma cate_isinitial A `{HasEquivs A} (x y : A)
   : IsInitial x -> IsInitial y -> x $<~> y.
@@ -659,7 +659,7 @@ Definition isterminal_cate A `{HasEquivs A} (x y : A)
   : y $<~> x -> IsTerminal x -> IsTerminal y
   := isinitial_cate A^op x y.
 
-(** * There is a default notion of equivalence for a 1-category, namely bi-invertibility. *)
+(** ** There is a default notion of equivalence for a 1-category, namely bi-invertibility. *)
 
 (** We do not use the half-adjoint definition, since we can't prove adjointification for that definition. *)
 
