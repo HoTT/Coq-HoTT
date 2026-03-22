@@ -13,7 +13,6 @@ Definition Square@{u v w} {A : Type@{u}} `{Is1Cat@{u w v} A} {x00 x20 x02 x22 : 
   : Type@{w}
   := f21 $o f10 $== f12 $o f01.
 
-
 Section Squares.
   (* We declare a context with a lot of variables: the first component is horizontal, the second vertical.
     x00 f10 x20 f30 x40
@@ -87,7 +86,7 @@ End Squares.
 
 Section Squares2.
 
-  (** We declare the context again, now that we can reuse some declarations where the variables have been inserted. This would not need to be done if Coq could generalize variables within sections. Currently this is possible in Lean and Agda. *)
+  (** We declare the context again, so that we can reuse some declarations where the variables have been inserted. This would not need to be done if Coq could generalize variables within sections. Currently this is possible in Lean and Agda. *)
   Context {A : Type} `{HasEquivs A}
     {x x' x00 x20 x40 x02 x22 x42 x04 x24 x44 : A}
     {f10 f10' : x00 $-> x20} {f30 : x20 $-> x40} 
