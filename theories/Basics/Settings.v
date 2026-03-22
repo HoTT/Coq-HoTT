@@ -5,9 +5,14 @@
 (** ** Plugins *)
 
 (** Load the Ltac plugin. This is the tactic language we use for proofs. *)
-Declare ML Module "ltac_plugin:rocq-runtime.plugins.ltac".
+Declare ML Module "rocq-runtime.plugins.ltac".
 (** Load the number string notation plugin. Allowing us to write numbers like [1234]. *)
-Declare ML Module "number_string_notation_plugin:rocq-runtime.plugins.number_string_notation".
+Declare ML Module "rocq-runtime.plugins.number_string_notation".
+
+(** Load the Ltac2 plugin, an alternate tactic language for proofs. *)
+Declare ML Module "rocq-runtime.plugins.ltac2".
+(** This is just for testing; we would only add the next line for files that need it. *)
+From Ltac2 Require Import Ltac2.
 
 (** ** Proofs *)
 

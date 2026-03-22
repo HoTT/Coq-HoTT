@@ -816,7 +816,7 @@ Section AssumeStuff.
       : Equiv@{nr nr} (prod@{nr x} ({ m : N & m <= n} -> X) X) ({ m : N & m <= succ n} -> X).
     Proof.
       refine (_ oE @equiv_sum_ind@{x nr nr nr nr p p p}
-                _ {m:N&m<=n} Unit (fun _ => X) oE _).
+                _ { m : N & m <= n } Unit (fun _ => X) oE _).
       - apply equiv_precompose'.
         apply equiv_N_segment_succ.
       - apply equiv_functor_prod_l.
