@@ -79,6 +79,11 @@ Section Lemmata.
   Definition cat_coprod_in_eta {z : A} {f g : cat_coprod I x $-> z}
     : (forall i, f $o cat_in i $== g $o cat_in i) -> f $== g
     := cat_prod_pr_eta I (A:=A^op) (x:=x).
+
+  (** A categorical equivalence out of a coproduct induces a coproduct structure on the codomain. *)
+  Definition cat_coprod_coprod_equiv `{!HasEquivs A} (y : A) (f : cat_coprod I x $<~> y)
+    : Coproduct I x
+    := cat_prod_equiv_prod _ (A:=A^op) (x:=x) _ f.
 End Lemmata.
 
 (** *** Codiagonal / fold map *)
@@ -346,7 +351,7 @@ Definition cat_bincoprod_fmap01_rec {A : Type}
 
 Definition cat_bincoprod_fmap10_rec {A : Type}
   `{Is1Cat A, !HasBinaryCoproducts A} {w x y z : A}
-  (f : y $-> x) (g : x $-> w) (h : z $-> w) 
+  (f : y $-> x) (g : x $-> w) (h : z $-> w)
   : cat_bincoprod_rec g h $o fmap10 (fun x y => cat_bincoprod x y) f z
     $== cat_bincoprod_rec (g $o f) h
   := @cat_binprod_fmap10_corec A^op _ _ _ _
@@ -421,20 +426,28 @@ Instance hasbinarycoproducts_type : HasBinaryCoproducts Type
 
 (** ** Canonical coproduct-product map *)
 
-(** There is a canonical map from a coproduct to a product when the indexing set has decidable equality and the category is pointed. *)
+(** There is a canonical map from a coproduct to a product when the indexing set has decidable equality and the category is pointed.  We factor out the components of this map into a separate definition to make goals involving [cat_coprod_prod] easier to read. *)
+Definition cat_coprod_prod_component {I : Type} `{DecidablePaths I} {A : Type}
+  `{IsPointedCat A}
+  (x : I -> A) (i j : I)
+  : x i $-> x j.
+Proof.
+  destruct (dec_paths i j) as [p|].
+  - destruct p.
+    exact (Id _).
+  - exact zero_morphism.
+Defined.
+
 Definition cat_coprod_prod {I : Type} `{DecidablePaths I} {A : Type}
   `{Is1Cat A, !IsPointedCat A}
   (x : I -> A) `{!Coproduct I x, !Product I x}
-  : cat_coprod I x $-> cat_prod I x. 
+  : cat_coprod I x $-> cat_prod I x.
 Proof.
   apply cat_coprod_rec.
   intros i.
   apply cat_prod_corec.
-  intros a.
-  destruct (dec_paths i a) as [p|].
-  - destruct p.
-    exact (Id _).
-  - exact zero_morphism.
+  intros j.
+  exact (cat_coprod_prod_component x i j).
 Defined.
 
 Definition cat_bincoprod_binprod {A : Type} `{Is1Cat A, !IsPointedCat A}
@@ -450,5 +463,5 @@ Definition coproduct_op {I A : Type} (x : I -> A)
   `{Is1Cat A} {H' : Product I x}
   : Coproduct I (A:=A^op) x
   := H'.
-  
+
 Hint Immediate coproduct_op : typeclass_instances.
