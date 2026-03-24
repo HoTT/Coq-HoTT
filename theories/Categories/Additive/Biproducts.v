@@ -4,8 +4,8 @@
     to additive category theory.
 *)
 
-From HoTT Require Import Basics Types.
-From HoTT.Categories Require Import Category Functor.
+From HoTT Require Import Basics.Overture Basics.Tactics.
+From HoTT.Categories Require Import Category.Core.
 From HoTT.Categories.Additive Require Import ZeroObjects.
 
 Local Notation fst_type := Basics.Overture.fst.
@@ -171,7 +171,308 @@ Section BiproductOperations.
     : h = biproduct_prod_mor W f g
     := ap pr1 (contr (h; (Hl, Hr)))^.
 
+  (** Product pairing with zero on right equals left injection composed. *)
+  Lemma biproduct_prod_zero_r (W : object C) (h : morphism C W X)
+    : biproduct_prod_mor W h (zero_morphism W Y)
+      = (inl B o h)%morphism.
+  Proof.
+    symmetry.
+    rapply biproduct_prod_unique.
+    - rewrite <- associativity.
+      rewrite (beta_l (biproduct_is B)).
+      apply left_identity.
+    - rewrite <- associativity.
+      rewrite (mixed_r (biproduct_is B)).
+      apply zero_morphism_left.
+  Qed.
+
+  (** Product pairing with zero on left equals right injection composed. *)
+  Lemma biproduct_prod_zero_l (W : object C) (h : morphism C W Y)
+    : biproduct_prod_mor W (zero_morphism W X) h
+      = (inr B o h)%morphism.
+  Proof.
+    symmetry.
+    rapply biproduct_prod_unique.
+    - rewrite <- associativity.
+      rewrite (mixed_l (biproduct_is B)).
+      apply zero_morphism_left.
+    - rewrite <- associativity.
+      rewrite (beta_r (biproduct_is B)).
+      apply left_identity.
+  Qed.
+
+  (** Product pairing is natural in the domain. *)
+  Lemma biproduct_prod_mor_nat (V W : object C)
+    (f : morphism C W X) (g : morphism C W Y) (h : morphism C V W)
+    : (biproduct_prod_mor W f g o h)%morphism
+      = biproduct_prod_mor V (f o h) (g o h).
+  Proof.
+    rapply biproduct_prod_unique.
+    - rewrite <- associativity.
+      rewrite biproduct_prod_beta_l.
+      reflexivity.
+    - rewrite <- associativity.
+      rewrite biproduct_prod_beta_r.
+      reflexivity.
+  Qed.
+
+  (** Coproduct copairing is natural in the codomain. *)
+  Lemma biproduct_coprod_mor_nat (W V : object C)
+    (f : morphism C X W) (g : morphism C Y W) (h : morphism C W V)
+    : (h o biproduct_coprod_mor W f g)%morphism
+      = biproduct_coprod_mor V (h o f) (h o g).
+  Proof.
+    rapply biproduct_coprod_unique.
+    - rewrite associativity.
+      rewrite biproduct_coprod_beta_l.
+      reflexivity.
+    - rewrite associativity.
+      rewrite biproduct_coprod_beta_r.
+      reflexivity.
+  Qed.
+
 End BiproductOperations.
+
+Arguments biproduct_prod_mor {C Z X Y} B {W} f g.
+
+(** * Self-biproduct operations *)
+
+Section SelfBiproductOperations.
+  Context {C : PreCategory} `{Z : ZeroObject C}.
+
+  (** Pairing into a self-biproduct. *)
+  Definition biproduct_sum_pair {X Y : object C}
+    `{BYY : @Biproduct C Z Y Y}
+    (f g : morphism C X Y)
+    : morphism C X BYY
+    := biproduct_prod_mor BYY f g.
+
+  (** A morphism induced on self-biproducts by maps on the two summands. *)
+  Definition biproduct_sum_map {X Y X' Y' : object C}
+    `{BXY : @Biproduct C Z X Y} `{BXY' : @Biproduct C Z X' Y'}
+    (a : morphism C X X') (b : morphism C Y Y')
+    : morphism C BXY BXY'
+    := biproduct_prod_mor BXY' (a o outl BXY) (b o outr BXY).
+
+  (** The codiagonal of a self-biproduct. *)
+  Definition biproduct_codiagonal (Y : object C)
+    `{BYY : @Biproduct C Z Y Y}
+    : morphism C BYY Y
+    := biproduct_coprod_mor BYY Y 1%morphism 1%morphism.
+
+  (** The codiagonal is natural in the codomain. *)
+  Lemma biproduct_codiagonal_natural {Y Y' : object C}
+    `{BYY : @Biproduct C Z Y Y}
+    (a : morphism C Y Y')
+    : (a o biproduct_codiagonal Y)%morphism
+      = biproduct_coprod_mor BYY Y' a a.
+  Proof.
+    unfold biproduct_codiagonal.
+    rewrite biproduct_coprod_mor_nat.
+    repeat rewrite right_identity.
+    reflexivity.
+  Qed.
+
+  (** The functorial biproduct map commutes with pairing. *)
+  Lemma biproduct_sum_map_prod {X Y X' Y' W : object C}
+    `{BXY : @Biproduct C Z X Y} `{BX'Y' : @Biproduct C Z X' Y'}
+    (a : morphism C X X') (b : morphism C Y Y')
+    (f : morphism C W X) (g : morphism C W Y)
+    : biproduct_prod_mor BX'Y' (a o f) (b o g)
+      = (biproduct_sum_map a b o biproduct_prod_mor BXY f g)%morphism.
+  Proof.
+    symmetry.
+    rapply (biproduct_prod_unique BX'Y').
+    - rewrite <- associativity.
+      unfold biproduct_sum_map.
+      rewrite (biproduct_prod_beta_l BX'Y').
+      rewrite associativity.
+      rewrite (biproduct_prod_beta_l BXY).
+      reflexivity.
+    - rewrite <- associativity.
+      unfold biproduct_sum_map.
+      rewrite (biproduct_prod_beta_r BX'Y').
+      rewrite associativity.
+      rewrite (biproduct_prod_beta_r BXY).
+      reflexivity.
+  Qed.
+
+  (** Pairing is natural in the codomain. *)
+  Lemma biproduct_sum_pair_natural {X Y Y' : object C}
+    `{BYY : @Biproduct C Z Y Y} `{BYY' : @Biproduct C Z Y' Y'}
+    (a : morphism C Y Y') (f g : morphism C X Y)
+    : biproduct_sum_pair (a o f) (a o g)
+      = (biproduct_sum_map a a o biproduct_sum_pair f g)%morphism.
+  Proof.
+    unfold biproduct_sum_pair.
+    apply biproduct_sum_map_prod.
+  Qed.
+
+  (** A self-biproduct map sends the left injection to the left summand map. *)
+  Lemma biproduct_sum_map_inl {X Y X' Y' : object C}
+    `{BXY : @Biproduct C Z X Y} `{BX'Y' : @Biproduct C Z X' Y'}
+    (a : morphism C X X') (b : morphism C Y Y')
+    : (biproduct_sum_map a b o inl BXY)%morphism
+      = (inl BX'Y' o a)%morphism.
+  Proof.
+    etransitivity (biproduct_prod_mor BX'Y' a (zero_morphism X Y')).
+    - rapply (biproduct_prod_unique BX'Y').
+      + rewrite <- associativity.
+        unfold biproduct_sum_map.
+        rewrite (biproduct_prod_beta_l BX'Y').
+        rewrite associativity.
+        rewrite (beta_l (biproduct_is BXY)).
+        apply right_identity.
+      + rewrite <- associativity.
+        unfold biproduct_sum_map.
+        rewrite (biproduct_prod_beta_r BX'Y').
+        rewrite associativity.
+        rewrite (mixed_r (biproduct_is BXY)).
+        apply zero_morphism_right.
+    - apply (biproduct_prod_zero_r BX'Y').
+  Qed.
+
+  (** A self-biproduct map sends the right injection to the right summand map. *)
+  Lemma biproduct_sum_map_inr {X Y X' Y' : object C}
+    `{BXY : @Biproduct C Z X Y} `{BX'Y' : @Biproduct C Z X' Y'}
+    (a : morphism C X X') (b : morphism C Y Y')
+    : (biproduct_sum_map a b o inr BXY)%morphism
+      = (inr BX'Y' o b)%morphism.
+  Proof.
+    etransitivity (biproduct_prod_mor BX'Y' (zero_morphism Y X') b).
+    - rapply (biproduct_prod_unique BX'Y').
+      + rewrite <- associativity.
+        unfold biproduct_sum_map.
+        rewrite (biproduct_prod_beta_l BX'Y').
+        rewrite associativity.
+        rewrite (mixed_l (biproduct_is BXY)).
+        apply zero_morphism_right.
+      + rewrite <- associativity.
+        unfold biproduct_sum_map.
+        rewrite (biproduct_prod_beta_r BX'Y').
+        rewrite associativity.
+        rewrite (beta_r (biproduct_is BXY)).
+        apply right_identity.
+    - apply (biproduct_prod_zero_l BX'Y').
+  Qed.
+
+  (** The codiagonal of a self-biproduct map is the corresponding copairing. *)
+  Lemma biproduct_codiagonal_factor_through_sum_map {Y Y' : object C}
+    `{BYY : @Biproduct C Z Y Y} `{BYY' : @Biproduct C Z Y' Y'}
+    (a b : morphism C Y Y')
+    : (biproduct_codiagonal Y' o biproduct_sum_map a b)%morphism
+      = biproduct_coprod_mor BYY Y' a b.
+  Proof.
+    rapply (biproduct_coprod_unique BYY Y' a b).
+    - rewrite associativity.
+      rewrite biproduct_sum_map_inl.
+      rewrite <- associativity.
+      rewrite biproduct_coprod_beta_l.
+      apply left_identity.
+    - rewrite associativity.
+      rewrite biproduct_sum_map_inr.
+      rewrite <- associativity.
+      rewrite biproduct_coprod_beta_r.
+      apply left_identity.
+  Qed.
+
+  (** The codiagonal of a pair with zero on the right recovers the left map. *)
+  Lemma biproduct_codiagonal_sum_pair_zero_r {X Y : object C}
+    `{BYY : @Biproduct C Z Y Y}
+    (f : morphism C X Y)
+    : (biproduct_codiagonal Y
+       o biproduct_sum_pair f (zero_morphism X Y))%morphism = f.
+  Proof.
+    unfold biproduct_codiagonal, biproduct_sum_pair.
+    rewrite biproduct_prod_zero_r.
+    rewrite <- associativity.
+    rewrite biproduct_coprod_beta_l.
+    apply left_identity.
+  Qed.
+
+  (** The codiagonal of a pair with zero on the left recovers the right map. *)
+  Lemma biproduct_codiagonal_sum_pair_zero_l {X Y : object C}
+    `{BYY : @Biproduct C Z Y Y}
+    (f : morphism C X Y)
+    : (biproduct_codiagonal Y
+       o biproduct_sum_pair (zero_morphism X Y) f)%morphism = f.
+  Proof.
+    unfold biproduct_codiagonal, biproduct_sum_pair.
+    rewrite biproduct_prod_zero_l.
+    rewrite <- associativity.
+    rewrite biproduct_coprod_beta_r.
+    apply left_identity.
+  Qed.
+
+  (** ** Symmetry of self-biproducts *)
+
+  (** The swap morphism exchanges the two summands of a self-biproduct. *)
+  Definition biproduct_swap {X Y : object C}
+    `{BXY : @Biproduct C Z X Y} `{BYX : @Biproduct C Z Y X}
+    : morphism C BXY BYX
+    := biproduct_prod_mor BYX (outr BXY) (outl BXY).
+
+  (** Swapping components of a self-biproduct pairing. *)
+  Lemma biproduct_prod_swap {X Y W : object C}
+    `{BXY : @Biproduct C Z X Y} `{BYX : @Biproduct C Z Y X}
+    (f : morphism C W X) (g : morphism C W Y)
+    : biproduct_prod_mor BYX g f
+      = (biproduct_swap o biproduct_prod_mor BXY f g)%morphism.
+  Proof.
+    symmetry.
+    rapply (biproduct_prod_unique BYX).
+    - rewrite <- associativity.
+      unfold biproduct_swap.
+      rewrite (biproduct_prod_beta_l BYX).
+      apply (biproduct_prod_beta_r BXY).
+    - rewrite <- associativity.
+      unfold biproduct_swap.
+      rewrite (biproduct_prod_beta_r BYX).
+      apply (biproduct_prod_beta_l BXY).
+  Qed.
+
+  (** Swapping after the left injection gives the right injection. *)
+  Lemma biproduct_swap_inl {X Y : object C}
+    `{BXY : @Biproduct C Z X Y} `{BYX : @Biproduct C Z Y X}
+    : (biproduct_swap o inl BXY)%morphism = inr BYX.
+  Proof.
+    unfold biproduct_swap.
+    rewrite (biproduct_prod_mor_nat BYX).
+    rewrite (mixed_r (biproduct_is BXY)).
+    rewrite (beta_l (biproduct_is BXY)).
+    rewrite (biproduct_prod_zero_l BYX).
+    apply right_identity.
+  Qed.
+
+  (** Swapping after the right injection gives the left injection. *)
+  Lemma biproduct_swap_inr {X Y : object C}
+    `{BXY : @Biproduct C Z X Y} `{BYX : @Biproduct C Z Y X}
+    : (biproduct_swap o inr BXY)%morphism = inl BYX.
+  Proof.
+    unfold biproduct_swap.
+    rewrite (biproduct_prod_mor_nat BYX).
+    rewrite (beta_r (biproduct_is BXY)).
+    rewrite (mixed_l (biproduct_is BXY)).
+    rewrite (biproduct_prod_zero_r BYX).
+    apply right_identity.
+  Qed.
+
+  (** The codiagonal is invariant under swapping the two summands. *)
+  Lemma biproduct_codiagonal_swap_invariant {Y : object C}
+    `{BYY : @Biproduct C Z Y Y}
+    : (biproduct_codiagonal Y o biproduct_swap)%morphism
+      = biproduct_codiagonal Y.
+  Proof.
+    rapply (biproduct_coprod_unique BYY Y 1%morphism 1%morphism).
+    - rewrite associativity.
+      rewrite biproduct_swap_inl.
+      apply biproduct_coprod_beta_r.
+    - rewrite associativity.
+      rewrite biproduct_swap_inr.
+      apply biproduct_coprod_beta_l.
+  Qed.
+
+End SelfBiproductOperations.
 
 (** * Export hints *)
 
