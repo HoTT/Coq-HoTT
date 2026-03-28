@@ -1,6 +1,7 @@
-(lang dune 3.13)
+(lang dune 3.14)
 
 (using coq 0.8)
+(using directory-targets 0.1)
 
 (name coq-hott)
 

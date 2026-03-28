@@ -31,6 +31,12 @@
                 ocamlPackages.ocaml
                 ocamlPackages.findlib
                 pkgs.pkg-config
+                (pkgs.python3.withPackages (ps: [
+                  ps.pygments
+                  ps.dominate
+                  ps.beautifulsoup4
+                  ps.docutils
+                ]))
               ] ++ extraPackages ++ [ coq ]
               ++ pkgs.lib.optionals (rocqPackages != null) [ rocqPackages.rocq-core ];
           };
