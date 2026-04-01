@@ -613,8 +613,8 @@ Definition coprod_ump2 {A B X} : (A -> X) * (B -> X) -> (A + B -> X) :=
   prod_ind (fun _ => A + B -> X) (fun f g => sum_ind (fun _ => X) f g).
 
 Definition Book_2_9 {A B X} `{Funext} : (A -> X) * (B -> X) <~> (A + B -> X).
-  apply (equiv_adjointify coprod_ump2 coprod_ump1).
 Proof.
+  apply (equiv_adjointify coprod_ump2 coprod_ump1).
   - intros f.
     apply path_forall.
     intros [a | b]; reflexivity.
