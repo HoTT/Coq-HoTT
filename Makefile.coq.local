@@ -57,7 +57,7 @@ CORE_DPDFILES=$(patsubst theories.%,file-dep-graphs/HoTT.%,$(subst /,.,$(CORE_VF
 # The list of files from contrib
 CONTRIB_VOFILES=$(CONTRIB_VFILES:.v=.$(VO))
 CONTRIB_GLOBFILES=$(CONTRIB_VFILES:.v=.glob)
-CONTRIB_HTMLFILES=$(patsubst contrib.%,html/HoTT.Contrib.%,$(subst /,.,$(CONTRIB_VFILES:.v=.html)))
+CONTRIB_HTMLFILES=$(patsubst contrib.%,html/HoTT_Contrib.%,$(subst /,.,$(CONTRIB_VFILES:.v=.html)))
 CONTRIB_TIMING_HTMLFILES=$(patsubst html/%,timing-html/%,$(CONTRIB_HTMLFILES))
 
 # I'm not sure why we needs = rather than :=, but we seem to
@@ -160,7 +160,7 @@ $(CORE_TIMING_HTMLFILES) $(CATEGORY_TIMING_HTMLFILES): timing-html/HoTT.%.html :
 	$(SHOW)'TIME2HTML HoTT.$* > $@'
 	$(HIDE) etc/time2html "$(<:.vo=.v.timing)" "$(<:.vo=.v)" > $@
 
-$(CONTRIB_TIMING_HTMLFILES): timing-html/HoTT.Contrib.%.html : contrib/$$(subst .,/,$$*).vo etc/time2html
+$(CONTRIB_TIMING_HTMLFILES): timing-html/HoTT_Contrib.%.html : contrib/$$(subst .,/,$$*).vo etc/time2html
 	@ mkdir -p $(dir $@)
 	$(SHOW)'TIME2HTML $* > $@'
 	$(HIDE) etc/time2html "$(<:.vo=.v.timing)" "$(<:.vo=.v)" > $@

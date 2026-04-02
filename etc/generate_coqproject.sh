@@ -25,8 +25,8 @@ COQPROJECT_HEADER=\
 # found in etc/. It is set to be untracked by git.
 ###############################################################################
 -R theories HoTT
--Q contrib HoTT.Contrib
--Q test HoTT.Tests
+-Q contrib HoTT_Contrib
+-Q test HoTT_Tests
 
 -arg -noinit
 -arg -indices-matter
@@ -38,8 +38,8 @@ if [ "$GENERATE_COQPROJECT_FOR_DUNE" == "true" ]; then
   COQPROJECT_HEADER="$COQPROJECT_HEADER
 # Dune compatibility
 -R _build/default/theories HoTT
--Q _build/default/contrib HoTT.Contrib
--Q _build/default/test HoTT.Tests
+-Q _build/default/contrib HoTT_Contrib
+-Q _build/default/test HoTT_Tests
 "
 fi
 
