@@ -27,7 +27,7 @@ Class HasEquivs (A : Type) `{Is1Cat A} :=
     (r : f $o g $== Id b) (s : g $o f $== Id a), CatIsEquiv' a b f;
 }.
 
-(** Since apparently a field of a record can't be the source of a coercion (Coq complains about the uniform inheritance condition, although as officially stated that condition appears to be satisfied), we redefine all the fields of [HasEquivs]. *)
+(** While in recent versions of Rocq, it is ok to have a field of a Record/Class as the source of a coercion, doing so still causes mysterious breakage in the library in at least one spot.  See https://github.com/HoTT/Coq-HoTT/issues/1541.  Things work if we redefine the [CatEquiv'] and [cate_fun'] fields.  For consistency, we redefine all the fields of [HasEquivs] that mention them.  (Only two fields don't mention them, but we redefine them for another reason mentioned below.) *)
 
 Definition CatEquiv {A} `{HasEquivs A} (a b : A)
   := @CatEquiv' A _ _ _ _ _ a b.
@@ -42,7 +42,7 @@ Definition cate_fun {A} `{HasEquivs A} {a b : A} (f : a $<~> b)
 
 Coercion cate_fun : CatEquiv >-> Hom.
 
-(* Being an equivalence should be a typeclass, but we have to redefine it to work around https://github.com/coq/coq/issues/8994 . *)
+(** Being an equivalence should be a typeclass, but we have to redefine it to work around https://github.com/coq/coq/issues/8994 .  This is almost fixed, but without the wrapper, typeclass search still fails to find hypotheses in the context.  See https://github.com/HoTT/Coq-HoTT/issues/1541.  For consistency, we redefine all fields that mention [CatIsEquiv']. *)
 Class CatIsEquiv {A} `{HasEquivs A} {a b : A} (f : a $-> b)
   := catisequiv : CatIsEquiv' a b f.
 
@@ -84,7 +84,7 @@ Defined.
 
 Notation "f ^-1$" := (cate_inv f).
 
-(** * Opposite categories preserve having equivalences. *)
+(** ** Opposite categories preserve having equivalences. *)
 Instance hasequivs_op {A} `{HasEquivs A} : HasEquivs A^op.
 Proof.
   snapply Build_HasEquivs; intros a b; unfold op in a, b; cbn.
@@ -629,7 +629,7 @@ Proof.
   - intro p; by induction p.
 Defined.
 
-(** * Initial objects and terminal objects are all respectively equivalent. *)
+(** ** Initial objects and terminal objects are all respectively equivalent. *)
 
 Lemma cate_isinitial A `{HasEquivs A} (x y : A)
   : IsInitial x -> IsInitial y -> x $<~> y.
@@ -659,7 +659,7 @@ Definition isterminal_cate A `{HasEquivs A} (x y : A)
   : y $<~> x -> IsTerminal x -> IsTerminal y
   := isinitial_cate A^op x y.
 
-(** * There is a default notion of equivalence for a 1-category, namely bi-invertibility. *)
+(** ** There is a default notion of equivalence for a 1-category, namely bi-invertibility. *)
 
 (** We do not use the half-adjoint definition, since we can't prove adjointification for that definition. *)
 
