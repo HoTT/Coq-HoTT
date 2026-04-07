@@ -9,8 +9,6 @@ Declare ML Module "rocq-runtime.plugins.ltac".
 (** Load the number string notation plugin. Allowing us to write numbers like [1234]. *)
 Declare ML Module "rocq-runtime.plugins.number_string_notation".
 
-(** Load the Ltac2 plugin, an alternate tactic language for proofs. *)
-Declare ML Module "rocq-runtime.plugins.ltac2".
 (** This is just for testing; we would only add the next line for files that need it. *)
 From Ltac2 Require Import Ltac2.
 
