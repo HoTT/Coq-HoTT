@@ -6,4 +6,5 @@
 
 (coq.theory
  (name HoTT)
- (package coq-hott))
+ (package coq-hott)
+ (theories Ltac2))
