@@ -4,7 +4,7 @@ Require Import Category.Core Functor.Core.
 Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
-Set Asymmetric Patterns.
+Set Asymmetric Patterns. #[warning="-unknown-option"] Set Asymmetric Patterns No Implicits.
 
 Section identity.
   (** There is an identity functor.  It does the obvious thing. *)
