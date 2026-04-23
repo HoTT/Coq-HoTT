@@ -4,7 +4,7 @@ Require Import Category.Core Functor.Core FunctorCategory.Core Functor.Pointwise
 Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
-Set Asymmetric Patterns.
+Set Asymmetric Patterns. #[warning="-unknown-option"] Set Asymmetric Patterns No Implicits.
 
 Local Open Scope category_scope.
 Local Open Scope type_scope.

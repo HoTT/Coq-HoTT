@@ -7,7 +7,7 @@ Require Import HoTT.Types HoTT.Basics.
 Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
-Set Asymmetric Patterns.
+Set Asymmetric Patterns. #[warning="-unknown-option"] Set Asymmetric Patterns No Implicits.
 
 Local Notation pr1_type := Overture.pr1 (only parsing).
 

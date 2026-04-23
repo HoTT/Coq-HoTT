@@ -6,7 +6,7 @@ Require Import Types.Prod.
 Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
-Set Asymmetric Patterns.
+Set Asymmetric Patterns. #[warning="-unknown-option"] Set Asymmetric Patterns No Implicits.
 
 Local Open Scope category_scope.
 Local Open Scope morphism_scope.

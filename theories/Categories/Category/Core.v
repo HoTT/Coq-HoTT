@@ -4,7 +4,7 @@ Require Export Overture Basics.Notations.
 Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
-Set Asymmetric Patterns.
+Set Asymmetric Patterns. #[warning="-unknown-option"] Set Asymmetric Patterns No Implicits.
 
 Declare Scope morphism_scope.
 Declare Scope category_scope.

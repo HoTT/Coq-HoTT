@@ -42,7 +42,7 @@ Global Set Printing Primitive Projection Parameters.
 (** ** Pattern Matching *)
 
 (** This flag removes parameters from constructors in patterns that appear in a match statement. *)
-Global Set Asymmetric Patterns.
+Global Set Asymmetric Patterns. #[warning="-unknown-option"] Global Set Asymmetric Patterns No Implicits.
 
 (** ** Unification *)
 
