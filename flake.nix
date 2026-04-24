@@ -48,6 +48,11 @@
             { coq = pkgs.coq_9_1; }
             { };
 
+        devShells.coq_9_2 =
+          makeDevShell
+            { coq = pkgs.coq_9_2; }
+            { extraPackages = [ ]; };
+
         devShells.coq_9_0 =
           makeDevShell
             { coq = pkgs.coq_9_0; }
