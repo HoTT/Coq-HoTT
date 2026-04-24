@@ -10,6 +10,7 @@ Require Import Functor.Identity.
 
 Set Implicit Arguments.
 Generalizable All Variables.
+
 Local Open Scope morphism_scope.
 Local Open Scope category_scope.
 Local Open Scope functor_scope.
