@@ -7,7 +7,9 @@ Require Import Basics.Trunc.
 Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
-Set Asymmetric Patterns. #[warning="-unknown-option"] Set Asymmetric Patterns No Implicits.
+Set Asymmetric Patterns.
+#[warning="-unknown-option"]
+Set Asymmetric Patterns No Implicits.
 
 Local Open Scope morphism_scope.
 
