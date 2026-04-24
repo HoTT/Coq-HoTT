@@ -6,7 +6,8 @@ Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
 Set Asymmetric Patterns.
-#[warning="-unknown-option"] Set Asymmetric Patterns No Implicits.
+#[warning="-unknown-option"]
+Set Asymmetric Patterns No Implicits.
 
 Local Notation fst_type := fst.
 Local Notation snd_type := snd.

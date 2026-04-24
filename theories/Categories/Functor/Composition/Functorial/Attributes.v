@@ -13,7 +13,8 @@ Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
 Set Asymmetric Patterns.
-#[warning="-unknown-option"] Set Asymmetric Patterns No Implicits.
+#[warning="-unknown-option"]
+Set Asymmetric Patterns No Implicits.
 
 Local Open Scope category_scope.
 Local Open Scope natural_transformation_scope.

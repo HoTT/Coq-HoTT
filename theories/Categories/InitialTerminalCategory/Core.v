@@ -7,7 +7,8 @@ Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
 Set Asymmetric Patterns.
-#[warning="-unknown-option"] Set Asymmetric Patterns No Implicits.
+#[warning="-unknown-option"]
+Set Asymmetric Patterns No Implicits.
 Local Unset Primitive Projections. (* suppress a warning about [IsTerminalCategory] *)
 
 Notation initial_category := (nat_category 0) (only parsing).
