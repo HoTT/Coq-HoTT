@@ -1,4 +1,4 @@
-(coq.theory
+(rocq.theory
  (name HoTT_Contrib)
  (package coq-hott)
  (theories HoTT))
