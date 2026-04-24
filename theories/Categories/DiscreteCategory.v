@@ -4,7 +4,9 @@ Require Import HoTT.Basics GroupoidCategory.Core.
 Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
-Set Asymmetric Patterns. #[warning="-unknown-option"] Set Asymmetric Patterns No Implicits.
+Set Asymmetric Patterns.
+#[warning="-unknown-option"]
+Set Asymmetric Patterns No Implicits.
 
 (** A discrete category is a groupoid which is a 0-type *)
 Module Export Core.

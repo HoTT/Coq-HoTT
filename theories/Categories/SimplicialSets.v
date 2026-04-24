@@ -9,7 +9,9 @@ Require Import Functor.Identity Functor.Composition.Core Functor.Composition.Law
 Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
-Set Asymmetric Patterns. #[warning="-unknown-option"] Set Asymmetric Patterns No Implicits.
+Set Asymmetric Patterns.
+#[warning="-unknown-option"]
+Set Asymmetric Patterns No Implicits.
 
 Local Open Scope functor_scope.
 Local Open Scope category_scope.

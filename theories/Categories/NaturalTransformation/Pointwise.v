@@ -6,7 +6,9 @@ Require Import Functor.Pointwise.Core.
 Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
-Set Asymmetric Patterns. #[warning="-unknown-option"] Set Asymmetric Patterns No Implicits.
+Set Asymmetric Patterns.
+#[warning="-unknown-option"]
+Set Asymmetric Patterns No Implicits.
 
 (** Recall that a "pointwise" functor is a functor [Aᴮ → Cᴰ] induced
     by functors [D → B] and [A → C].  Given two functors [D → B] and a
