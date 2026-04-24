@@ -43,7 +43,7 @@ Global Set Printing Primitive Projection Parameters.
 
 (** This flag removes parameters from constructors in patterns that appear in a match statement. *)
 Global Set Asymmetric Patterns.
-(** The warning clause here and in other parts of the library can be removed once our minimum Rocq version is 9.3. *)
+(** The warning clause here can be removed once our minimum Rocq version is 9.3. *)
 #[warning="-unknown-option"]
 Global Set Asymmetric Patterns No Implicits.
 
