@@ -9,7 +9,8 @@ Require Import NaturalTransformation.Identity.
 Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
-Set Asymmetric Patterns. #[warning="-unknown-option"] Set Asymmetric Patterns No Implicits.
+Set Asymmetric Patterns.
+#[warning="-unknown-option"] Set Asymmetric Patterns No Implicits.
 
 Declare Scope pseudonatural_transformation_scope.
 Delimit Scope pseudonatural_transformation_scope with pseudonatural_transformation.

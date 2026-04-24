@@ -8,7 +8,8 @@ Require ProductLaws.
 Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
-Set Asymmetric Patterns. #[warning="-unknown-option"] Set Asymmetric Patterns No Implicits.
+Set Asymmetric Patterns.
+#[warning="-unknown-option"] Set Asymmetric Patterns No Implicits.
 
 (** Construction of the functor [_∘_ : (C → D) × (D → E) → (C → E)] and its curried variant *)
 Section functorial_composition.
