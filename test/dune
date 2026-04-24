@@ -1,4 +1,4 @@
-(coq.theory
+(rocq.theory
  (name HoTT.Tests)
  (theories HoTT Ltac2))
 

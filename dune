@@ -26,7 +26,8 @@
   (glob_files_rec ./*.vo))
  (action
   (run
-   coqchk
+   rocq
+   check
    -R
    ./theories
    HoTT
@@ -63,12 +64,12 @@
  (action
   (run etc/emacs/run-etags.sh %{vfile})))
 
-; Common flags for Coq
+; Common flags for Rocq
 
 (env
  (dev
-  (coq
-   (coqdoc_flags
+  (rocq
+   (rocqdoc_flags
     :standard
     --interpolate
     --utf8
@@ -76,8 +77,8 @@
     --parse-comments)
    (flags -noinit -indices-matter -color on)))
  (_
-  (coq
-   (coqdoc_flags
+  (rocq
+   (rocqdoc_flags
     :standard
     --interpolate
     --utf8
@@ -116,7 +117,7 @@
      (copy %{file} benched_file.v)
      (run
       %{bin:hyperfine}
-      "%{bin:coqc} -R %{project_root}/theories HoTT -noinit -indices-matter benched_file.v")))
+      "%{bin:rocq} compile -R %{project_root}/theories HoTT -noinit -indices-matter benched_file.v")))
    (echo "Bench finished, report at %{target}:\n\n")
    (cat %{target}))))
 
