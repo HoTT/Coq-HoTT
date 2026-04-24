@@ -254,4 +254,4 @@ clean::
 	$(SHOW)"RM *.DOT"
 	$(HIDE)rm -f $(ALL_DOTFILES)
 	rm -f $(EXTRA_CLEANFILES)
-	find theories contrib test \( -name \*.vo -o -name \*.glob -o -name \*.timing \) -delete
+	find theories contrib test \( -name \*.vo -o -name \*.glob -o -name \*.timing -o -name \*.aux \) -delete
