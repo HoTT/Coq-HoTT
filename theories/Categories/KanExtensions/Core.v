@@ -4,10 +4,8 @@ Require Import FunctorCategory.Core.
 Require Import Functor.Composition.Functorial.Core.
 Require Import UniversalProperties.
 
-Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
-Set Asymmetric Patterns. #[warning="-unknown-option"] Set Asymmetric Patterns No Implicits.
 
 Local Open Scope category_scope.
 
@@ -126,8 +124,6 @@ Section kan_extensions.
       p* h : C --> C' --> D
 >>
    *)
-
-
   (** *** Pullback-along functor *)
   Context `{Funext}.
   Variables C C' D : PreCategory.

@@ -10,6 +10,4 @@ Require InitialTerminalCategory.Functors.
 Require InitialTerminalCategory.NaturalTransformations.
 (** ** Pseudofunctors from initial and terminal categories *)
 Require InitialTerminalCategory.Pseudofunctors.
-
-
 Require Export InitialTerminalCategory.Notations.

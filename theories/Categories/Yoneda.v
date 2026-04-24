@@ -12,10 +12,8 @@ Require Import FunctorCategory.Core.
 Require Import NaturalTransformation.Paths.
 Require Import HoTT.Tactics.
 
-Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
-Set Asymmetric Patterns. #[warning="-unknown-option"] Set Asymmetric Patterns No Implicits.
 
 Local Open Scope morphism_scope.
 Local Open Scope category_scope.
@@ -120,8 +118,6 @@ Section coyoneda_lemma.
                 _)
              (F a)
     := fun phi => phi a 1%morphism. *)
-
-
     Definition coyoneda_functor
     : Functor (A -> set_cat)
               (A -> set_cat)

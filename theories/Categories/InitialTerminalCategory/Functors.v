@@ -4,10 +4,8 @@ Require Import InitialTerminalCategory.Core.
 Require Import NatCategory.
 Require Import HoTT.Basics.
 
-Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
-Set Asymmetric Patterns. #[warning="-unknown-option"] Set Asymmetric Patterns No Implicits.
 
 Section functors.
   Variable C : PreCategory.

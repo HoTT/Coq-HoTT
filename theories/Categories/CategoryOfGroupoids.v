@@ -4,10 +4,8 @@ Require Import Cat.Core.
 Require Import GroupoidCategory.Core.
 Require Import Functor.Paths.
 
-Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
-Set Asymmetric Patterns. #[warning="-unknown-option"] Set Asymmetric Patterns No Implicits.
 
 Local Open Scope functor_scope.
 

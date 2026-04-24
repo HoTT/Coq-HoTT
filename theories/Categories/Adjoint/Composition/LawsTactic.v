@@ -4,10 +4,8 @@ Require Import Functor.Composition.Laws.
 Require Import Adjoint.UnitCounit Adjoint.Paths.
 Require Import PathGroupoids HoTT.Tactics Types.Prod Types.Forall.
 
-Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
-Set Asymmetric Patterns. #[warning="-unknown-option"] Set Asymmetric Patterns No Implicits.
 
 Ltac law_t :=
   rewrite !transport_path_prod'; simpl;

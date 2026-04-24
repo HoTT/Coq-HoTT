@@ -2,10 +2,8 @@
 Require Import Category.Objects InitialTerminalCategory.Core InitialTerminalCategory.Functors Functor.Core Category.Strict Functor.Paths.
 Require Import Functor.Identity Functor.Composition.Core Functor.Composition.Laws.
 
-Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
-Set Asymmetric Patterns. #[warning="-unknown-option"] Set Asymmetric Patterns No Implicits.
 
 Local Open Scope functor_scope.
 

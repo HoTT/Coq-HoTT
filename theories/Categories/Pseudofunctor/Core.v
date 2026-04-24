@@ -5,10 +5,8 @@ Require Import Functor.Composition.Core Functor.Identity.
 Require Import NaturalTransformation.Composition.Core NaturalTransformation.Composition.Laws.
 Require Import FunctorCategory.Core.
 
-Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
-Set Asymmetric Patterns. #[warning="-unknown-option"] Set Asymmetric Patterns No Implicits.
 
 Local Open Scope morphism_scope.
 

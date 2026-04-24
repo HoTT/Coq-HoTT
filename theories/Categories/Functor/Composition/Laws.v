@@ -3,10 +3,8 @@ Require Import Category.Core Functor.Core Functor.Composition.Core Functor.Ident
 Require Import Functor.Paths.
 Require Import Basics.PathGroupoids Basics.Tactics.
 
-Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
-Set Asymmetric Patterns. #[warning="-unknown-option"] Set Asymmetric Patterns No Implicits.
 
 Local Open Scope morphism_scope.
 

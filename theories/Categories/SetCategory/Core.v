@@ -2,10 +2,8 @@
 Require Import Category.Strict.
 Require Import HoTT.Basics HoTT.Types TruncType.
 
-Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
-Set Asymmetric Patterns. #[warning="-unknown-option"] Set Asymmetric Patterns No Implicits.
 
 Notation cat_of obj :=
   (@Build_PreCategory obj

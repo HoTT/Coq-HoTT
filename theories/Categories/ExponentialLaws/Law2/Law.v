@@ -6,10 +6,8 @@ Require Import Functor.Identity Functor.Composition.Core.
 Require Import Types.Prod ExponentialLaws.Tactics.
 Require Import ExponentialLaws.Law2.Functors.
 
-Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
-Set Asymmetric Patterns. #[warning="-unknown-option"] Set Asymmetric Patterns No Implicits.
 
 Local Open Scope functor_scope.
 
@@ -17,8 +15,6 @@ Local Open Scope functor_scope.
 Section Law2.
   Context `{Funext}.
   Variables D C1 C2 : PreCategory.
-
-
 
   Lemma helper1 (c : Functor C1 D * Functor C2 D)
   : ((1 o (Basics.Overture.fst c + Basics.Overture.snd c) o inl C1 C2)%functor,

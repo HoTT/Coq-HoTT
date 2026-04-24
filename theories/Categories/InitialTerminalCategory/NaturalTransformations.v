@@ -3,10 +3,8 @@ Require Import Category.Core Functor.Core NaturalTransformation.Core NaturalTran
 Require Import InitialTerminalCategory.Core InitialTerminalCategory.Functors.
 Require Import Contractible.
 
-Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
-Set Asymmetric Patterns. #[warning="-unknown-option"] Set Asymmetric Patterns No Implicits.
 
 Section NaturalTransformations.
   Variable C : PreCategory.

@@ -2,10 +2,8 @@
 Require Import Category.Core.
 Require Import HoTT.Basics HoTT.Types HSet.
 
-Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
-Set Asymmetric Patterns. #[warning="-unknown-option"] Set Asymmetric Patterns No Implicits.
 
 Local Open Scope category_scope.
 Local Open Scope morphism_scope.
@@ -119,8 +117,6 @@ Local Notation "a <=_{ x } b" := (is_structure_homomorphism _ x x (identity x) a
 Local Notation "a <= b" := (a <=_{ _ } b)%long_structure : structure_scope.
 
 (** By (iii) and (iv), this is a preorder with [P x] its type of objects. *)
-
-
 (** *** Being a structure homomorphism is a preorder *)
 #[export] Instance preorder_is_structure_homomorphism
        X (P : NotionOfStructure X) x

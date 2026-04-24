@@ -1,10 +1,8 @@
 (** * Definition of natural transformation *)
 Require Import Category.Core Functor.Core.
 
-Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
-Set Asymmetric Patterns. #[warning="-unknown-option"] Set Asymmetric Patterns No Implicits.
 
 Declare Scope natural_transformation_scope.
 Delimit Scope natural_transformation_scope with natural_transformation.

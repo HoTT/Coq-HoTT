@@ -3,10 +3,8 @@ Require Import Category.Core Functor.Core NaturalTransformation.Core.
 Require Import FunctorCategory.Core NaturalTransformation.Paths Functor.Composition.Core NaturalTransformation.Composition.Core.
 Require Import Functor.Pointwise.Core.
 
-Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
-Set Asymmetric Patterns. #[warning="-unknown-option"] Set Asymmetric Patterns No Implicits.
 
 (** Recall that a "pointwise" functor is a functor [Aᴮ → Cᴰ] induced
     by functors [D → B] and [A → C].  Given two functors [D → B] and a
