@@ -1,0 +1,8 @@
+(lang dune 3.21)
+
+; Dune 3.21 and 3.22 use a command-line form that Rocq 9.0 does not support.
+
+(context
+ (default
+  (paths
+   (PATH etc/rocq-compat :standard))))

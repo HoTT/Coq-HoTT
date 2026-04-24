@@ -1,0 +1,27 @@
+#!/bin/sh
+
+# Dune 3.21 and 3.22 call [rocq --config], but Rocq 9.0 only supports
+# [rocq c --config].  Find the next [rocq] on PATH to avoid calling this
+# wrapper recursively.
+real_rocq=
+old_ifs=$IFS
+IFS=:
+for directory in ${PATH-}; do
+  [ -n "$directory" ] || directory=.
+  candidate=$directory/rocq
+  if [ -x "$candidate" ] && [ ! "$candidate" -ef "$0" ]; then
+    real_rocq=$candidate
+    break
+  fi
+done
+IFS=$old_ifs
+
+if [ -z "$real_rocq" ]; then
+  echo "rocq compatibility wrapper: real rocq executable not found" >&2
+  exit 127
+fi
+
+if [ "${1-}" = --config ]; then
+  exec "$real_rocq" c "$@"
+fi
+exec "$real_rocq" "$@"
