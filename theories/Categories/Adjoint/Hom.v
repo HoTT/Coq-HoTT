@@ -8,14 +8,8 @@ Require Import Functor.Composition.Core.
 Require Import FunctorCategory.Morphisms.
 Require Import Functor.Identity.
 
-Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
-Set Asymmetric Patterns.
-#[warning="-unknown-option"]
-Set Asymmetric Patterns No Implicits.
-
-
 Local Open Scope morphism_scope.
 Local Open Scope category_scope.
 Local Open Scope functor_scope.

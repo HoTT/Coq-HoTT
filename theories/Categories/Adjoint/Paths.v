@@ -5,12 +5,8 @@ Require Import Adjoint.UnitCounit Adjoint.Core NaturalTransformation.Paths.
 Require Import Types Trunc.
 Require Import Basics.Tactics.
 
-Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
-Set Asymmetric Patterns.
-#[warning="-unknown-option"]
-Set Asymmetric Patterns No Implicits.
 
 Local Open Scope morphism_scope.
 Local Open Scope natural_transformation_scope.
@@ -21,8 +17,6 @@ Section path_adjunction.
   Variables C D : PreCategory.
   Variable F : Functor C D.
   Variable G : Functor D C.
-
-
 
   Notation adjunction_sig :=
     { eta : NaturalTransformation 1 (G o F)

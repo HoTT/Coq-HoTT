@@ -4,12 +4,8 @@ Require Import Category.Univalent.
 Require Import Category.Sigma.Core Category.Sigma.OnObjects Category.Sigma.OnMorphisms.
 Require Import HoTT.Types HoTT.Basics.
 
-Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
-Set Asymmetric Patterns.
-#[warning="-unknown-option"]
-Set Asymmetric Patterns No Implicits.
 
 Local Notation pr1_type := Overture.pr1 (only parsing).
 

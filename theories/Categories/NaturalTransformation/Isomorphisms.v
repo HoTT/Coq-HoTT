@@ -7,18 +7,12 @@ Require Import FunctorCategory.Core.
 Require Import NaturalTransformation.Paths.
 Require Import Basics.Tactics.
 
-Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
-Set Asymmetric Patterns.
-#[warning="-unknown-option"]
-Set Asymmetric Patterns No Implicits.
 
 Local Open Scope category_scope.
 Local Open Scope natural_transformation_scope.
 Local Open Scope morphism_scope.
-
-
 Local Ltac iso_whisker_t :=
   path_natural_transformation;
   try rewrite <- composition_of, <- identity_of;

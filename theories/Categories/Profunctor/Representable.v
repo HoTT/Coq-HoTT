@@ -1,12 +1,8 @@
 (** * Representable profunctors *)
 Require Import Category.Core Functor.Core Functor.Prod.Core Profunctor.Core Functor.Dual Profunctor.Identity Functor.Composition.Core Functor.Identity.
 
-Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
-Set Asymmetric Patterns.
-#[warning="-unknown-option"]
-Set Asymmetric Patterns No Implicits.
 
 Local Open Scope functor_scope.
 Local Open Scope profunctor_scope.

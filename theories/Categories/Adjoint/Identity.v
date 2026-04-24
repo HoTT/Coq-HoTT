@@ -3,12 +3,8 @@ Require Import Category.Core.
 Require Import Functor.Identity NaturalTransformation.Identity.
 Require Import Adjoint.UnitCounit Adjoint.Core.
 
-Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
-Set Asymmetric Patterns.
-#[warning="-unknown-option"]
-Set Asymmetric Patterns No Implicits.
 
 Section identity.
   (** There is an identity adjunction.  It does the obvious thing. *)

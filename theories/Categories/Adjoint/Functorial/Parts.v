@@ -5,12 +5,8 @@ Require Import NaturalTransformation.Composition.Core NaturalTransformation.Comp
 Require Import Functor.Dual NaturalTransformation.Dual.
 Require Import Adjoint.Core Adjoint.UnitCounit Adjoint.Dual.
 
-Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
-Set Asymmetric Patterns.
-#[warning="-unknown-option"]
-Set Asymmetric Patterns No Implicits.
 
 Local Open Scope natural_transformation_scope.
 Local Open Scope morphism_scope.

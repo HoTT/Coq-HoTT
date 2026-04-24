@@ -1,12 +1,8 @@
 (** * Definition of a functor *)
 Require Import Category.Core.
 
-Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
-Set Asymmetric Patterns.
-#[warning="-unknown-option"]
-Set Asymmetric Patterns No Implicits.
 
 Declare Scope functor_scope.
 Delimit Scope functor_scope with functor.

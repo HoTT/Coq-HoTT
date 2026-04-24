@@ -9,12 +9,8 @@ Require Import FunctorCategory.Morphisms NaturalTransformation.Isomorphisms.
 Require Import Category.Morphisms NaturalTransformation.Paths.
 Require Import Basics.PathGroupoids Basics.Trunc.
 
-Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
-Set Asymmetric Patterns.
-#[warning="-unknown-option"]
-Set Asymmetric Patterns No Implicits.
 
 Local Open Scope path_scope.
 Local Open Scope morphism_scope.

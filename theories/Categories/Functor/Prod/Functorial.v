@@ -2,12 +2,8 @@
 Require Import Category.Core Functor.Core Functor.Prod.Core FunctorCategory.Core Category.Prod NaturalTransformation.Prod NaturalTransformation.Composition.Core.
 Require Import NaturalTransformation.Paths.
 
-Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
-Set Asymmetric Patterns.
-#[warning="-unknown-option"]
-Set Asymmetric Patterns No Implicits.
 
 Local Open Scope natural_transformation_scope.
 

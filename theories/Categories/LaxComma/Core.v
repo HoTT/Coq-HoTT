@@ -13,14 +13,8 @@ Import Functor.Identity.FunctorIdentityNotations.
 Import Pseudofunctor.Identity.PseudofunctorIdentityNotations.
 Import LaxComma.CoreLaws.LaxCommaCategory.
 
-Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
-Set Asymmetric Patterns.
-#[warning="-unknown-option"]
-Set Asymmetric Patterns No Implicits.
-
-
 Local Open Scope morphism_scope.
 Local Open Scope category_scope.
 
@@ -96,8 +90,6 @@ Instance isstrict_oplax_comma_category `{fs : Funext} A B S T HA HB H
       hnf in *.
       destruct i, i'.
       simpl in *.
-
-
     #[export] Instance comma_category_IsCategory `{IsCategory A, IsCategory B}
     : IsCategory comma_category.
     Proof.

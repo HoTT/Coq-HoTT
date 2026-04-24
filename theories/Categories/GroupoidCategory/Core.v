@@ -2,14 +2,8 @@
 Require Import Category.Morphisms Category.Strict.
 Require Import Trunc PathGroupoids Basics.Tactics.
 
-Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
-Set Asymmetric Patterns.
-#[warning="-unknown-option"]
-Set Asymmetric Patterns No Implicits.
-
-
 Local Open Scope category_scope.
 
 (** A groupoid is a precategory where every morphism is an isomorphism.  Since 1-types are 1-groupoids, we can construct the category corresponding to the 1-groupoid of a 1-type. *)

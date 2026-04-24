@@ -8,12 +8,8 @@ Require Import NaturalTransformation.Paths.
 Require Import NatCategory.
 Require Import PathGroupoids.
 
-Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
-Set Asymmetric Patterns.
-#[warning="-unknown-option"]
-Set Asymmetric Patterns No Implicits.
 
 Section pseudofunctors.
   (** ** Constant functor from any terminal category *)

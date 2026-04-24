@@ -4,20 +4,14 @@ Require Import HoTT.Basics.Equivalences HoTT.Basics.PathGroupoids HoTT.Basics.Tr
 Require Import HoTT.Types.Sigma HoTT.Types.Arrow HoTT.Types.Forall.
 Require Import HoTT.Tactics.
 
-Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
-Set Asymmetric Patterns.
-#[warning="-unknown-option"]
-Set Asymmetric Patterns No Implicits.
 
 Local Open Scope morphism_scope.
 Local Open Scope category_scope.
 
 Section path_category.
   Local Open Scope path_scope.
-
-
   (** We add a prime ([']) as an arbitrary convention to denote that
       we are talking about equality of functions (less convenient for
       use) rather than pointwise equality of functions (more

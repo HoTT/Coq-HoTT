@@ -2,12 +2,8 @@
 Require Import Category.Core Functor.Core NaturalTransformation.Core.
 Require Import Equivalences HoTT.Types Trunc Basics.Tactics.
 
-Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
-Set Asymmetric Patterns.
-#[warning="-unknown-option"]
-Set Asymmetric Patterns No Implicits.
 
 Local Open Scope morphism_scope.
 Local Open Scope natural_transformation_scope.
@@ -17,8 +13,6 @@ Section path_natural_transformation.
 
   Variables C D : PreCategory.
   Variables F G : Functor C D.
-
-
 
   (** ** Equivalence between record and sigma versions of natural transformation *)
   Lemma equiv_sig_natural_transformation

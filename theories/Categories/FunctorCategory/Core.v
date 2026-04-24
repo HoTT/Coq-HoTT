@@ -3,12 +3,8 @@ Require Import Category.Strict Functor.Core NaturalTransformation.Core Functor.P
 (** These must come last, so that [identity], [compose], etc., refer to natural transformations. *)
 Require Import NaturalTransformation.Composition.Core NaturalTransformation.Identity NaturalTransformation.Composition.Laws NaturalTransformation.Paths. 
 
-Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
-Set Asymmetric Patterns.
-#[warning="-unknown-option"]
-Set Asymmetric Patterns No Implicits.
 
 (** ** Definition of [C → D] *)
 Section functor_category.

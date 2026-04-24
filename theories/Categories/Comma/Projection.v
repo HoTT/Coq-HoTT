@@ -9,12 +9,8 @@ Local Set Warnings "-notation-overridden". (* work around bug #5567, https://coq
 Import Comma.Core.
 Local Set Warnings "notation-overridden". (* work around bug #5567, https://coq.inria.fr/bugs/show_bug.cgi?id=5567, notation-overridden,parsing should not trigger for only printing notations *)
 
-Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
-Set Asymmetric Patterns.
-#[warning="-unknown-option"]
-Set Asymmetric Patterns No Implicits.
 
 Local Open Scope functor_scope.
 Local Open Scope category_scope.

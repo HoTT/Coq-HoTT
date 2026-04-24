@@ -5,12 +5,8 @@ Require Import Adjoint.UniversalMorphisms.Core.
 Require Import FunctorCategory.Core.
 Require Import Adjoint.Core.
 
-Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
-Set Asymmetric Patterns.
-#[warning="-unknown-option"]
-Set Asymmetric Patterns No Implicits.
 
 Section kan_extension_functors.
   Context `{Funext}.
@@ -31,8 +27,6 @@ Section kan_extension_functors.
     : left_kan_extension_functor -| pullback_along D p
       := adjunction__of__initial_morphism has_left_kan_extensions.
   End lan.
-
-
   (** ** Right Kan extension functor *)
   Section ran.
     Context `(has_right_kan_extensions

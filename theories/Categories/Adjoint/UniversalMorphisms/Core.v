@@ -9,12 +9,8 @@ Import Comma.Core.
 Local Set Warnings "notation-overridden".
 Require Import UniversalProperties Comma.Dual InitialTerminalCategory.Core InitialTerminalCategory.Functors.
 
-Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
-Set Asymmetric Patterns.
-#[warning="-unknown-option"]
-Set Asymmetric Patterns No Implicits.
 
 Local Open Scope morphism_scope.
 

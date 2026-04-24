@@ -1,12 +1,8 @@
 (** * Profunctors *)
 Require Import Category.Core Functor.Core Category.Prod Category.Dual SetCategory.Core.
 
-Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
-Set Asymmetric Patterns.
-#[warning="-unknown-option"]
-Set Asymmetric Patterns No Implicits.
 
 Declare Scope profunctor_scope.
 Delimit Scope profunctor_scope with profunctor.

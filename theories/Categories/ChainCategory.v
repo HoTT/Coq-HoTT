@@ -4,12 +4,8 @@ Require Import Category.Sigma.Univalent.
 Require Import Category.Morphisms Category.Univalent Category.Strict.
 Require Import HoTT.Basics HoTT.Types HoTT.Spaces.Nat.Core.
 
-Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
-Set Asymmetric Patterns.
-#[warning="-unknown-option"]
-Set Asymmetric Patterns No Implicits.
 
 Local Open Scope nat_scope.
 
@@ -66,8 +62,6 @@ Module Utf8.
   Notation "[ ∞ ]" := omega : category_scope.
   Notation "[ 'ω' ]" := omega : category_scope.
 End Utf8.
-
-
 Module Export Strict.
   Definition isstrict_omega : IsStrictCategory omega.
   Proof.

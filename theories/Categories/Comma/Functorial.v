@@ -11,14 +11,8 @@ Local Set Warnings "notation-overridden".
 Import Functor.Identity.FunctorIdentityNotations NaturalTransformation.Identity.NaturalTransformationIdentityNotations.
 Require Import HoTT.Tactics PathGroupoids Types.Forall.
 
-Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
-Set Asymmetric Patterns.
-#[warning="-unknown-option"]
-Set Asymmetric Patterns No Implicits.
-
-
 Local Open Scope morphism_scope.
 Local Open Scope category_scope.
 

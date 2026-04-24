@@ -3,12 +3,8 @@ Require Import Category.Core Functor.Core FunctorCategory.Core Functor.Identity 
 Require Import InitialTerminalCategory.Core InitialTerminalCategory.Functors InitialTerminalCategory.NaturalTransformations.
 Require Import HoTT.Basics HoTT.Types.
 
-Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
-Set Asymmetric Patterns.
-#[warning="-unknown-option"]
-Set Asymmetric Patterns No Implicits.
 
 Local Open Scope functor_scope.
 

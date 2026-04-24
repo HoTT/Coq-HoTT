@@ -6,12 +6,8 @@ Require Import Functor.Composition.Core.
 Require Import NaturalTransformation.Composition.Core NaturalTransformation.Composition.Laws.
 Require Import NaturalTransformation.Identity.
 
-Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
-Set Asymmetric Patterns.
-#[warning="-unknown-option"]
-Set Asymmetric Patterns No Implicits.
 
 Declare Scope pseudonatural_transformation_scope.
 Delimit Scope pseudonatural_transformation_scope with pseudonatural_transformation.
@@ -66,8 +62,6 @@ Module PseudonaturalTransformationParts.
     Variable X : PreCategory.
 
     Variables F G : Pseudofunctor X.
-
-
     Definition A : PreCategory
       := (forall x : X, F x -> G x)%category.
     Definition B : PreCategory

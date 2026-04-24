@@ -6,14 +6,8 @@ Require Functor.Identity.
 Require Import Category.Strict.
 Import Functor.Identity.FunctorIdentityNotations.
 
-Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
-Set Asymmetric Patterns.
-#[warning="-unknown-option"]
-Set Asymmetric Patterns No Implicits.
-
-
 Local Open Scope morphism_scope.
 Local Open Scope category_scope.
 
@@ -163,8 +157,6 @@ Module Import CommaCategory.
       apply contr_inhabited_hprop; try reflexivity.
       typeclasses eauto.
     Qed.
-
-
     Lemma issig_morphism abf a'b'f'
     : (morphism_sig_T abf a'b'f')
         <~> morphism abf a'b'f'.
@@ -287,8 +279,6 @@ Qed.
       hnf in *.
       destruct i, i'.
       simpl in *.
-
-
     #[export] Instance comma_category_IsCategory `{IsCategory A, IsCategory B}
     : IsCategory comma_category.
     Proof.

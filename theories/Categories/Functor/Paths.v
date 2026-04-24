@@ -2,12 +2,8 @@
 Require Import Category.Core Functor.Core.
 Require Import HoTT.Basics HoTT.Types HoTT.Tactics.
 
-Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
-Set Asymmetric Patterns.
-#[warning="-unknown-option"]
-Set Asymmetric Patterns No Implicits.
 
 Local Open Scope path_scope.
 Local Open Scope morphism_scope.
@@ -17,8 +13,6 @@ Section path_functor.
   Context `{Funext}.
 
   Variables C D : PreCategory.
-
-
 
   Local Notation functor_sig_T :=
     { OO : C -> D

@@ -3,12 +3,8 @@ Require Import Category.Core DiscreteCategory IndiscreteCategory.
 Require Import Types.Unit Trunc Types.Sum Types.Empty.
 Require Import Basics.Nat.
 
-Set Universe Polymorphism.
 Set Implicit Arguments.
 Generalizable All Variables.
-Set Asymmetric Patterns.
-#[warning="-unknown-option"]
-Set Asymmetric Patterns No Implicits.
 Local Open Scope nat_scope.
 
 Module Export Core.
