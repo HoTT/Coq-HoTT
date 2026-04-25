@@ -12,6 +12,7 @@ concurrency:
 env:
   coq-version-supported: '9.0'
   coq-version-9-1: '9.1'
+  coq-version-9-2: '9.2'
   ocaml-version: '4.14-flambda'
   deployment-branch: 'gh-pages'
 
@@ -40,6 +41,7 @@ jobs:
         coq-version:
           - '9.0'
           - '9.1'
+          - '9.2'
           - 'dev'
         os:
           - ubuntu-latest
@@ -65,6 +67,7 @@ jobs:
         coq-version:
           - '9.0'
           - '9.1'
+          - '9.2'
           - 'dev'
         os:
           - ubuntu-latest
@@ -97,6 +100,7 @@ jobs:
         coq-version:
           - '9.0'
           - '9.1'
+          - '9.2'
         include:
           - coq-version: 'dev'
             extra-gh-reportify: '--warnings'
@@ -399,6 +403,7 @@ jobs:
         coq-version:
           - '9.0'
           - '9.1'
+          - '9.2'
           - 'dev'
     runs-on: ubuntu-latest
     steps:
@@ -437,6 +442,7 @@ jobs:
         coq-version:
           - '9.0'
           - '9.1'
+          - '9.2'
           - 'dev'
     runs-on: ubuntu-latest
     steps:
@@ -547,6 +553,9 @@ jobs:
     - uses: geekyeggo/delete-artifact@v5
       with:
         name: workspace-9.1
+    - uses: geekyeggo/delete-artifact@v5
+      with:
+        name: workspace-9.2
     - uses: geekyeggo/delete-artifact@v5
       with:
         name: workspace-dev
