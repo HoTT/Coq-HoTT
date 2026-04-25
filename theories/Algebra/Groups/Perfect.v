@@ -16,7 +16,7 @@ Local Open Scope group_scope.
 Class IsPerfect (G : Group) := contr_abel_isperfect :: IsTrivialGroup (abel G).
 
 (** A group is perfect if its commutator subgroup is the maximal subgroup. *)
-Global Instance isperfect_maximal_commutator (G : Group)
+#[export] Instance isperfect_maximal_commutator (G : Group)
   : IsMaximalSubgroup [G, G] -> IsPerfect G.
 Proof.
   intros max.
@@ -33,7 +33,7 @@ Definition ismaximalsubgroup_commutator_isperfect `{Univalence} (G : Group)
   : IsPerfect G -> IsMaximalSubgroup [G, G].
 Proof.
   intros p.
-  nrapply (ismaximalsubgroup_istrivial_grp_quotient _ (normalsubgroup_derived _)).
+  napply (ismaximalsubgroup_istrivial_grp_quotient _ (normalsubgroup_derived _)).
   srapply (istrivial_grp_iso (abel G)).
   nrefine (_^-1$ $oE _ $oE _).
   1,3: apply grp_iso_subgroup_group_maximal.
@@ -49,14 +49,14 @@ Definition isperfect_simple_nonabelian `{Univalence}
   (na : ~ Commutative (A:=G) (.*.))
   : IsPerfect G.
 Proof.
-  (** Since [G] is simple, we can assume the commutator [ [G, G] ] is either trivial or maximal. *)
+  (* Since [G] is simple, we can assume the commutator [ [G, G] ] is either trivial or maximal. *)
   destruct (s [G, G] _) as [triv | max].
   2: by apply isperfect_maximal_commutator.
   contradiction na.
   intros x y.
-  lhs nrapply grp_commutator_swap_op.
-  lhs_V nrapply grp_assoc.
-  rhs_V nrapply grp_unit_l.
+  lhs napply grp_commutator_swap_op.
+  lhs_V napply grp_assoc.
+  rhs_V napply grp_unit_l.
   apply (ap (.* _)).
   apply triv.
   by apply subgroup_commutator_in.
@@ -75,7 +75,7 @@ Proof.
   generalize (perf x); revert x.
   change ([G / N, G / N] (grp_quotient_map ?x))
     with (subgroup_preimage grp_quotient_map [G / N, G / N] x).
-  snrapply subgroup_commutator_rec.
+  snapply subgroup_commutator_rec.
   intros x y _ _.
   change ([G / N, G / N] (grp_quotient_map (grp_commutator x y))).
   rewrite grp_homo_commutator.
