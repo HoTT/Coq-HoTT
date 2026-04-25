@@ -4,7 +4,7 @@
 
 ; Main theory stanza telling dune how the HoTT library is compiled
 
-(coq.theory
+(rocq.theory
  (name HoTT)
  (package coq-hott)
  (theories Ltac2))
