@@ -31,6 +31,12 @@
                 ocamlPackages.ocaml
                 ocamlPackages.findlib
                 pkgs.pkg-config
+                (pkgs.python3.withPackages (ps: [
+                  ps.pygments
+                  ps.dominate
+                  ps.beautifulsoup4
+                  ps.docutils
+                ]))
               ] ++ extraPackages ++ [ coq ]
               ++ pkgs.lib.optionals (rocqPackages != null) [ rocqPackages.rocq-core ];
           };
@@ -43,26 +49,30 @@
           useDune = true;
         };
 
-        devShells.default =
-          makeDevShell
-            { coq = pkgs.coq_9_1; }
-            { };
+        devShells = rec {
+          default = coq_9_1;
 
-        devShells.coq_9_2 =
-          makeDevShell
-            { coq = pkgs.coq_9_2; }
-            { extraPackages = [ ]; };
+          devShells.coq_9_2 =
+            makeDevShell
+              { coq = pkgs.coq_9_2; }
+              { extraPackages = [ ]; };
 
-        devShells.coq_9_0 =
-          makeDevShell
-            { coq = pkgs.coq_9_0; }
-            { };
+          coq_9_1 =
+            makeDevShell
+              { coq = pkgs.coq_9_1; }
+              { };
 
-        # To use, pass --impure to nix develop
-        devShells.coq_master =
-          makeDevShell
-            { coq = pkgs.coq.override { version = "master"; }; }
-            { extraPackages = [ ]; };
+          coq_9_0 =
+            makeDevShell
+              { coq = pkgs.coq_9_0; }
+              { };
+
+          # To use, pass --impure to nix develop
+          coq_master =
+            makeDevShell
+              { coq = pkgs.coq.override { version = "master"; }; }
+              { extraPackages = [ ]; };
+        };
 
         formatter = pkgs.nixpkgs-fmt;
       });
