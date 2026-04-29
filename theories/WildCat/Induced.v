@@ -68,6 +68,13 @@ Section Induced_category.
     + intros g h. exact (Id _).
   Defined.
 
+  Definition is1gpd_induced `{Is1Gpd B} : Is1Gpd A.
+  Proof.
+    snapply Build_Is1Gpd; intros_of_type A; cbn.
+    + exact gpd_issect.
+    + exact gpd_isretr.
+  Defined.
+
   Instance hasmorext_induced `{HasMorExt B} : HasMorExt A.
   Proof.
     intros a b; cbn. rapply isequiv_Htpy_path.
