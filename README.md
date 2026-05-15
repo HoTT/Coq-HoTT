@@ -51,6 +51,11 @@ For **recommended text editors** see [our recommended editors
 list](./INSTALL.md#4-editors). Other methods of developing in `coq` will work as
 long as the correct arguments are passed.
 
+# Documentation
+
+The library can be browsed on the web using the Coqdoc and Alectryon documentation
+which is linked to from the [wiki][23].
+
 # Contributing
 
 Contributions to the HoTT library are very welcome! For style guidelines and
@@ -68,8 +73,8 @@ messages. And of course, no warranty!
 More information can be found in the [Wiki][22].
 
 
-[1]: https://github.com/HoTT/HoTT/workflows/CI/badge.svg?branch=master
-[2]: https://github.com/HoTT/HoTT/actions?query=workflow%3ACI+branch%3Amaster
+[1]: https://github.com/HoTT/Coq-HoTT/workflows/CI/badge.svg?branch=master
+[2]: https://github.com/HoTT/Coq-HoTT/actions?query=workflow%3ACI+branch%3Amaster
 [3]: https://img.shields.io/badge/zulip-join_chat-brightgreen.svg
 [4]: https://hott.zulipchat.com/
 
@@ -84,7 +89,9 @@ More information can be found in the [Wiki][22].
 
 [12]: https://arxiv.org/abs/1610.04591
 [13]: http://cpp2017.mpi-sws.org/
-[14]: https://github.com/HoTT/HoTT/wiki/Publications-based-on-the-HoTT-library
+[14]: https://github.com/HoTT/Coq-HoTT/wiki/Publications-based-on-the-HoTT-library
 [15]: https://github.com/coq/platform/releases
 
-[22]: https://github.com/HoTT/HoTT/wiki
+[23]: https://github.com/HoTT/Coq-HoTT/wiki#documentation
+
+[22]: https://github.com/HoTT/Coq-HoTT/wiki
