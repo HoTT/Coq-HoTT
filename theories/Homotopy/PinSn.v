@@ -18,8 +18,6 @@ Local Open Scope pointed_scope.
 Section Pi1S1.
   Context `{Univalence}.
 
-  Local Open Scope pointed_scope.
-
   Theorem pi1_circle : Pi 1 [Circle, base] ≅ abgroup_Z.
   Proof.
     (** We give the isomorphism backwards, so we check the operation is preserved coming from the integer side. *)
@@ -57,9 +55,10 @@ Section Pi2S2.
   Proof.
     refine (pi1_s1 $oE _).
     change (Pi 2 ?X) with (Pi 1 (loops X)).
-    refine (compose_cate (b:=Pi 1 (pTr 1 (loops (psphere 2)))) _ _).
-    1: exact (emap (Pi 1) ptr_loops_s2_s1).
-    apply grp_iso_pi_Tr.
+    symmetry; exact (grp_iso_Pi_connected_hspace (psphere 1)).
+    (* The last line can also be replaced with
+         exact (compose_cate (A:=Group) (emap (Pi 1) ptr_loops_s2_s1)
+                                        (grp_iso_pi_Tr _ _)). *)
   Defined.
 
 End Pi2S2.
@@ -82,6 +81,6 @@ Section PinSn.
     apply (isconnmap_pred_add n.-2).
     rewrite 2 trunc_index_add_succ.
     change (IsConnMap (Tr (n +2+ n)) (loop_susp_unit (psphere n.+2))).
-    exact _. (* [conn_map_loop_susp_unit] *)
+    rapply conn_map_loop_susp_unit.
   Defined.
 End PinSn.

@@ -1,5 +1,7 @@
 From HoTT Require Import Basics Types Pointed Truncations.
 Require Import HSpace Suspension ExactSequence HomotopyGroup.
+(* Group not imported, as it confuses Rocq regarding [*.] notation. *)
+Require Algebra.Groups.Group.
 Require Import WildCat.Core WildCat.Universe WildCat.Equiv Modalities.ReflectiveSubuniverse Modalities.Descent.
 Require Import HSet Spaces.Nat.Core.
 Require Import Homotopy.Join Colimits.Pushout.
@@ -7,7 +9,6 @@ Require Import Homotopy.Join Colimits.Pushout.
 Local Open Scope pointed_scope.
 Local Open Scope trunc_scope.
 Local Open Scope mc_mult_scope.
-
 
 (** * The Hopf construction *)
 
@@ -24,7 +25,7 @@ Proof.
   - simpl. exact pt.
 Defined.
 
-(** *** Total space of the Hopf construction *)
+(** ** Total space of the Hopf construction *)
 
 (** The total space of the Hopf construction on [Susp X] is the join of [X] with itself. Note that we need both left and right multiplication to be equivalences. This is true when [X] is a 0-connected H-space for example. (This is lemma 8.5.7 in the HoTT book). *)
 Definition pequiv_hopf_total_join `{Univalence} (X : pType)
@@ -60,7 +61,7 @@ Proof.
   apply transport_path_universe.
 Defined.
 
-(** The connecting map associated to the Hopf construction of [X] is a retraction of [loop_susp_unit X] (Proposition 2.19 in https://arxiv.org/abs/2301.02636v1). *)
+(** The connecting map [loops (psusp X) ->* X] associated to the Hopf construction of [X] is a retraction of [loop_susp_unit X] (Proposition 2.19 in https://arxiv.org/abs/2301.02636v1). *)
 Proposition hopf_retraction `{Univalence} (X : pType)
   `{IsHSpace X} `{forall a, IsEquiv (a *.)}
   : connecting_map_family (hopf_construction X) o* loop_susp_unit X
@@ -78,8 +79,7 @@ Defined.
 
 (** It follows from [hopf_retraction] and Freudenthal's theorem that [loop_susp_unit] induces an equivalence on [Pi (2n+1)] for [n]-connected H-spaces (with n >= 0). Note that [X] is automatically left-invertible. *)
 Proposition isequiv_Pi_connected_hspace `{Univalence}
-  {n : nat} (X : pType) `{IsConnected n X}
-  `{IsHSpace X}
+  {n : nat} (X : pType) `{IsConnected n X} `{IsHSpace X}
   : IsEquiv (fmap (pPi (n + n).+1) (loop_susp_unit X)).
 Proof.
   napply isequiv_surj_emb.
@@ -92,6 +92,13 @@ Proof.
     napply isembedding_pi_psect.
     apply hopf_retraction.
 Defined.
+
+(** Since the above equivalence is also a group homomorphism, we get an isomorphism of groups.  (We could also express the conclusion using the wild-category notation [$<~>], but then the goal would involve [HomotopyGroup_type _] instead of literally being in the category [Group].) *)
+Definition grp_iso_Pi_connected_hspace `{Univalence}
+  {n : nat} (X : pType) `{IsConnected n X} `{IsHSpace X}
+  : Group.GroupIsomorphism (Pi (n + n).+1 X) (Pi (n + n).+1 (loops (psusp X)))
+  := Group.Build_GroupIsomorphism _ _ (fmap (Pi (n + n).+1) (loop_susp_unit X))
+      (isequiv_Pi_connected_hspace X).
 
 (** By Freudenthal, [loop_susp_unit] induces an equivalence on lower homotopy groups as well, so it is a (2n+1)-equivalence.  We formalize it below with [m = n-1], and allow [n] to start at [-1].  We prove it using a more general result about reflective subuniverses, [OO_inverts_conn_map_factor_conn_map], but one could also use homotopy groups and the truncated Whitehead theorem. *)
 Definition freudenthal_hspace' `{Univalence}

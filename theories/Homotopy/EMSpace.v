@@ -130,7 +130,7 @@ Section EilenbergMacLane.
       K( (Pi n.+2 X) n.+2)
    <~>* K( (Pi n.+1 (loops X)), n.+2)
    = pTr n.+2 (psusp K( (Pi n.+1 (loops X)), n.+1))  [by definition]
-   <~>* pTr n.+2 (psusp (loops X))
+   <~>* pTr n.+2 (psusp (loops X))                   [by induction]
    <~>* pTr n.+2 X
    <~>* X
 >>
