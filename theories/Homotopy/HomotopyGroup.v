@@ -34,6 +34,8 @@ Instance is01cat_homotopygroup_type (n : nat)
   : Is01Cat (HomotopyGroup_type n) := ltac:(destruct n; exact _).
 Instance is1cat_homotopygroup_type (n : nat)
   : Is1Cat (HomotopyGroup_type n) := ltac:(destruct n; exact _).
+Instance hasequivs_homotopygroup_type (n : nat)
+  : HasEquivs (HomotopyGroup_type n) := ltac:(destruct n; exact _).
 Instance is0functor_homotopygroup_type_ptype (n : nat)
   : Is0Functor (HomotopyGroup_type_ptype n)
   := ltac:(destruct n; exact _).

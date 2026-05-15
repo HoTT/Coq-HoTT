@@ -8,7 +8,6 @@ Local Open Scope pointed_scope.
 Local Open Scope trunc_scope.
 Local Open Scope mc_mult_scope.
 
-
 (** * The Hopf construction *)
 
 (** We define the Hopf construction associated to a left-invertible H-space, and use it to prove that H-spaces satisfy a strengthened version of Freudenthal's theorem (see [freudenthal_hspace] below). *)
@@ -24,7 +23,7 @@ Proof.
   - simpl. exact pt.
 Defined.
 
-(** *** Total space of the Hopf construction *)
+(** ** Total space of the Hopf construction *)
 
 (** The total space of the Hopf construction on [Susp X] is the join of [X] with itself. Note that we need both left and right multiplication to be equivalences. This is true when [X] is a 0-connected H-space for example. (This is lemma 8.5.7 in the HoTT book). *)
 Definition pequiv_hopf_total_join `{Univalence} (X : pType)
@@ -60,7 +59,7 @@ Proof.
   apply transport_path_universe.
 Defined.
 
-(** The connecting map associated to the Hopf construction of [X] is a retraction of [loop_susp_unit X] (Proposition 2.19 in https://arxiv.org/abs/2301.02636v1). *)
+(** The connecting map [loops (psusp X) ->* X] associated to the Hopf construction of [X] is a retraction of [loop_susp_unit X] (Proposition 2.19 in https://arxiv.org/abs/2301.02636v1). *)
 Proposition hopf_retraction `{Univalence} (X : pType)
   `{IsHSpace X} `{forall a, IsEquiv (a *.)}
   : connecting_map_family (hopf_construction X) o* loop_susp_unit X
@@ -78,8 +77,7 @@ Defined.
 
 (** It follows from [hopf_retraction] and Freudenthal's theorem that [loop_susp_unit] induces an equivalence on [Pi (2n+1)] for [n]-connected H-spaces (with n >= 0). Note that [X] is automatically left-invertible. *)
 Proposition isequiv_Pi_connected_hspace `{Univalence}
-  {n : nat} (X : pType) `{IsConnected n X}
-  `{IsHSpace X}
+  {n : nat} (X : pType) `{IsConnected n X} `{IsHSpace X}
   : IsEquiv (fmap (pPi (n + n).+1) (loop_susp_unit X)).
 Proof.
   napply isequiv_surj_emb.

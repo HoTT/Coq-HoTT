@@ -18,8 +18,6 @@ Local Open Scope pointed_scope.
 Section Pi1S1.
   Context `{Univalence}.
 
-  Local Open Scope pointed_scope.
-
   Theorem pi1_circle : Pi 1 [Circle, base] ≅ abgroup_Z.
   Proof.
     (** We give the isomorphism backwards, so we check the operation is preserved coming from the integer side. *)
@@ -82,6 +80,6 @@ Section PinSn.
     apply (isconnmap_pred_add n.-2).
     rewrite 2 trunc_index_add_succ.
     change (IsConnMap (Tr (n +2+ n)) (loop_susp_unit (psphere n.+2))).
-    exact _. (* [conn_map_loop_susp_unit] *)
+    rapply conn_map_loop_susp_unit.
   Defined.
 End PinSn.
