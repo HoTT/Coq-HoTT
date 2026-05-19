@@ -385,7 +385,7 @@ Section eh_p_pp.
   Proof.
     apply moveR_Vp in H_urnat_yz0, H_urnat_yz1, H_wlrnat_x_yz.
     destruct H_urnat_yz0, H_urnat_yz1, H_wlrnat_x_yz.
-    clear H_urnat_yz0 H_urnat_yz1 H_wlrnat_x_yz.
+    try clear H_urnat_yz0 H_urnat_yz1 H_wlrnat_x_yz.
     destruct wrpp_yz0, wrpp_yz1.
     clear wrpp_yz0 wrpp_yz1.
     revert x0 ulnat_x0.
@@ -403,7 +403,7 @@ Section eh_p_pp.
     revert z1 urnat_z1.
     snapply equiv_path_ind_rlucancel.
     destruct wry0, wry1, wrz0, wrz1.
-    clear wry0 wry1 wrz0 wrz1.
+    clear wry0 wry1.
     revert wlx2 wlrnat_x_z.
     snapply equiv_path_ind_rlucancel.
     revert wlx1 wlrnat_x_y.
@@ -492,7 +492,7 @@ Section eh_pp_p.
   Proof.
     apply moveR_Vp in H_ulnat_xy0, H_ulnat_xy1, H_wlrnat_xy_z.
     destruct H_ulnat_xy0, H_ulnat_xy1, H_wlrnat_xy_z.
-    clear H_ulnat_xy0 H_ulnat_xy1 H_wlrnat_xy_z.
+    try clear H_ulnat_xy0 H_ulnat_xy1 H_wlrnat_xy_z.
     destruct wlpp_xy0, wlpp_xy1.
     clear wlpp_xy0 wlpp_xy1.
     revert x0 ulnat_x0.
@@ -510,13 +510,12 @@ Section eh_pp_p.
     revert z2 urnat_z2.
     snapply equiv_path_ind_rlucancel.
     destruct wlx0, wlx1, wly0, wly1.
-    clear wlx0 wlx1 wly0 wly1.
+    try clear wlx0 wlx1 wly0 wly1.
     revert wrz2 wlrnat_x_z.
     snapply equiv_path_ind_lrucancel.
     revert wrz1 wlrnat_y_z.
     snapply equiv_path_ind_lrucancel.
     destruct wrz0.
-    clear wrz0.
     reflexivity.
   Defined.
 
@@ -598,7 +597,7 @@ Section eh_V.
     apply moveL_Vp, moveL_pV in wlrnat_V_x_y.
     apply symmetry in wlrnat_V_x_y.
     destruct wlrnat_V_x_y.
-    clear wlrnat_V_x_y.
+    try clear wlrnat_V_x_y.
     clear H_whiskerR_wlrnat_x_y.
     revert ulnat_x0 ehlnat_1p_x0.
     snapply equiv_path_ind_rlucancel.
@@ -629,7 +628,7 @@ Section eh_V.
     snapply equiv_path_ind_rlucancel.
 
     destruct wry0, wry1, wlx1.
-    clear wry0 wry1 wlx1.
+    clear wry0 wry1.
     revert wlx0.
     snapply equiv_path_ind_lrucancel.
     reflexivity.
@@ -726,16 +725,16 @@ Section Ehrnat_p1_pp.
   Proof.
     apply moveR_Vp in H_urnat_yz, H_ulnat_yz, H_ehrnat_yz.
     destruct H_urnat_yz, H_ulnat_yz, H_ehrnat_yz.
-    clear H_urnat_yz H_ulnat_yz H_ehrnat_yz.
+    try clear H_urnat_yz H_ulnat_yz H_ehrnat_yz.
     apply moveR_Vp in ehrnat_p1_y, ehrnat_p1_z.
     destruct ehrnat_p1_y, ehrnat_p1_z.
-    clear ehrnat_p1_y ehrnat_p1_z.
+    try clear ehrnat_p1_y ehrnat_p1_z.
     destruct H_a02, H_c02.
     clear H_a02 H_c02.
     destruct wrpp_yz, wlpp_yz.
     clear wrpp_yz wlpp_yz.
     destruct a01, a12, b01, b12, c01, c12.
-    clear a01 a12 b01 b12 c01 c12.
+    try clear a01 a12 b01 b12 c01 c12.
     revert y ulnat_y.
     snapply equiv_path_ind_rlucancel.
     revert z ulnat_z.
@@ -745,7 +744,7 @@ Section Ehrnat_p1_pp.
     revert wlz ehrnat_z.
     snapply equiv_path_ind_rlucancel.
     destruct wry, wrz.
-    clear wry wrz.
+    try clear wry wrz.
     reflexivity.
   Defined.
 
@@ -861,10 +860,10 @@ Section wlrnat_V_p_pp.
   Proof.
     apply moveR_Vp in H_ehrnat_yz0, H_ehrnat_yz1.
     destruct H_ehrnat_yz0, H_ehrnat_yz1.
-    clear H_ehrnat_yz0 H_ehrnat_yz1.
+    try clear H_ehrnat_yz0 H_ehrnat_yz1.
     apply moveR_Vp in H_wlrnat_x_yz, H_wlrnat_yz_x.
     destruct H_wlrnat_x_yz, H_wlrnat_yz_x.
-    clear H_wlrnat_x_yz H_wlrnat_yz_x.
+    try clear H_wlrnat_x_yz H_wlrnat_yz_x.
     destruct a01, b01, c01, d01, e01, f01.
     clear a01 b01 c01 d01 e01 f01.
     pose (H_whiskerR_wlrnat_x_y := moveL_Mp _ _ _ (moveL_pV _ _ _ (whiskerR_p1 wlrnat_x_y))).
@@ -874,16 +873,16 @@ Section wlrnat_V_p_pp.
     apply moveL_Vp, moveL_pV in wlrnat_V_x_y.
     apply symmetry in wlrnat_V_x_y.
     destruct wlrnat_V_x_y.
-    clear wlrnat_V_x_y.
+    try clear wlrnat_V_x_y.
     apply moveL_pV in wlrnat_V_x_z.
     apply (concat H_whiskerR_wlrnat_x_z^) in wlrnat_V_x_z.
     apply moveL_Vp, moveL_pV in wlrnat_V_x_z.
     apply symmetry in wlrnat_V_x_z.
     destruct wlrnat_V_x_z.
-    clear wlrnat_V_x_z.
+    try clear wlrnat_V_x_z.
     clear H_whiskerR_wlrnat_x_y H_whiskerR_wlrnat_x_z.
     destruct wrpp_yz0, wlpp_yz0, wrpp_yz1, wlpp_yz1.
-    clear wrpp_yz0 wlpp_yz0 wrpp_yz1 wlpp_yz1.
+    try clear wrpp_yz0 wlpp_yz0 wrpp_yz1 wlpp_yz1.
     revert wlrnat_y_x wlrnat_z_x.
     revert wrx0 ehlnat_x0.
     snapply equiv_path_ind_rlucancel.
@@ -900,13 +899,13 @@ Section wlrnat_V_p_pp.
     revert wlz1 ehrnat_z1.
     snapply equiv_path_ind_rlucancel.
     destruct wry0, wry1, wrz0, wrz1.
-    clear wry0 wry1 wrz0 wrz1.
+    try clear wry0 wry1 wrz0 wrz1.
     revert wlx0.
     snapply equiv_path_ind_lrucancel.
     revert wlx1.
     snapply equiv_path_ind_lrucancel.
     destruct wlx2.
-    clear wlx2.
+    try clear wlx2.
     reflexivity.
   Defined.
 
