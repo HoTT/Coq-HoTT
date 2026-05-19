@@ -1241,6 +1241,10 @@ Definition whiskerR_p1 {A : Type} {x y : A} {p q : x = y} (h : p = q) :
       1
     end end.
 
+Definition whiskerR_p1' {A : Type} {x y : A} {p q : x = y} (h : p = q) :
+  whiskerR h 1 = concat_p1 p @ (h @ (concat_p1 q)^)
+  := moveL_Mp _ _ _ (moveL_pV _ _ _ (whiskerR_p1 h)).
+
 Definition whiskerR_1p {A : Type} {x y z : A} (p : x = y) (q : y = z) :
   whiskerR 1 q = 1 :> (p @ q = p @ q)
   :=
@@ -1258,6 +1262,10 @@ Definition whiskerL_1p {A : Type} {x y : A} {p q : x = y} (h : p = q) :
     match p with idpath =>
       1
     end end.
+
+Definition whiskerL_1p' {A : Type} {x y : A} {p q : x = y} (h : p = q) :
+  whiskerL 1 h = concat_1p p @ (h @ (concat_1p q)^)
+  := moveL_Mp _ _ _ (moveL_pV _ _ _ (whiskerL_1p h)).
 
 Definition whiskerR_p1_1 {A} {x : A} (h : idpath x = idpath x)
 : whiskerR h 1 = h.

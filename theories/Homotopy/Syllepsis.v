@@ -477,13 +477,11 @@ Definition eh_V_gen
       wlrnat_y_x @ rlucancel_inv (urnat_x0 [-] ulnat_y0) in
     EH_x_y @ EH_y_x = 1.
 Proof.
-  pose (H_whiskerR_wlrnat_x_y := moveL_Mp _ _ _ (moveL_pV _ _ _ (whiskerR_p1 wlrnat_x_y))).
   apply moveL_pV in wlrnat_V_x_y.
-  apply (concat H_whiskerR_wlrnat_x_y^) in wlrnat_V_x_y.
+  apply (concat (whiskerR_p1' wlrnat_x_y)^) in wlrnat_V_x_y.
   apply moveL_Vp, moveL_pV in wlrnat_V_x_y.
   apply symmetry in wlrnat_V_x_y.
   destruct wlrnat_V_x_y.
-  clear H_whiskerR_wlrnat_x_y.
   revert ulnat_x0 ehlnat_1p_x0.
   snapply equiv_path_ind_rlucancel.
   revert ulnat_x1 ehlnat_1p_x1.
@@ -680,19 +678,16 @@ Proof.
   apply moveR_Vp in H_wlrnat_x_yz, H_wlrnat_yz_x.
   destruct H_wlrnat_x_yz, H_wlrnat_yz_x.
   destruct a01, b01, c01, d01, e01, f01.
-  pose (H_whiskerR_wlrnat_x_y := moveL_Mp _ _ _ (moveL_pV _ _ _ (whiskerR_p1 wlrnat_x_y))).
-  pose (H_whiskerR_wlrnat_x_z := moveL_Mp _ _ _ (moveL_pV _ _ _ (whiskerR_p1 wlrnat_x_z))).
   apply moveL_pV in wlrnat_V_x_y.
-  apply (concat H_whiskerR_wlrnat_x_y^) in wlrnat_V_x_y.
+  apply (concat (whiskerR_p1' wlrnat_x_y)^) in wlrnat_V_x_y.
   apply moveL_Vp, moveL_pV in wlrnat_V_x_y.
   apply symmetry in wlrnat_V_x_y.
   destruct wlrnat_V_x_y.
   apply moveL_pV in wlrnat_V_x_z.
-  apply (concat H_whiskerR_wlrnat_x_z^) in wlrnat_V_x_z.
+  apply (concat (whiskerR_p1' wlrnat_x_z)^) in wlrnat_V_x_z.
   apply moveL_Vp, moveL_pV in wlrnat_V_x_z.
   apply symmetry in wlrnat_V_x_z.
   destruct wlrnat_V_x_z.
-  clear H_whiskerR_wlrnat_x_y H_whiskerR_wlrnat_x_z.
   destruct wrpp_yz0, wlpp_yz0, wrpp_yz1, wlpp_yz1.
   revert wlrnat_y_x wlrnat_z_x.
   revert wrx0 ehlnat_x0.
@@ -786,8 +781,7 @@ Proof.
   snapply (_ oE equiv_path_inverse _ _).
   snapply (_ oE equiv_moveR_pV _ _ _).
   snapply (_ oE equiv_moveR_Mp _ _ _).
-  snapply (_ oE equiv_concat_l _ _).
-  3: exact (moveL_Mp _ _ _ (moveL_pV _ _ _ (whiskerR_p1 s))).
+  snapply (_ oE equiv_concat_l (whiskerR_p1' s) _).
   exact (equiv_moveR_pM _ _ _).
 Defined.
 
