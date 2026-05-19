@@ -254,7 +254,7 @@ Proof.
   apply rlucancel, lrucancel_sVs_1.
 Defined.
 
-(** We now prove that [wlrnat p (q @ r)] suitably relates to [wlrnat p q] and [wlrnat q p]. *)
+(** We now prove that [wlrnat p (q @ r)] suitably relates to [wlrnat p q] and [wlrnat p r]. *)
 Definition wlrnat_p_pp {X} {a b c : X} {u v w : a = b} {x y : b = c} (p : x = y) (q : u = v) (r : v = w)
   : (wlrnat p q [I] wlrnat p r) @ whiskerR (whiskerR_pp _ q r)^ _ =
   whiskerL _ (whiskerR_pp _ q r)^ @ wlrnat p (q @ r).
@@ -270,7 +270,7 @@ Proof.
   by destruct p, q, r.
 Defined.
 
-(** We now prove that [wrlnat p q] suitably relates to [wlrnat q p]. *)
+(** We now prove that [wlrnat p q] suitably relates to [wlrnat q p]. *)
 Definition wlrnat_V {X} {a : X} {u v x y : idpath a = idpath a} p q
   : whiskerR (wlrnat p q) (eh v y) @ (ehrnat q x [-] ehlnat v p) =
   (ehlnat u p [-] ehrnat q y) @ whiskerL (eh u x) (wlrnat q p)^.
