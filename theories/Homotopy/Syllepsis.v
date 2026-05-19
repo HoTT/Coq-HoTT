@@ -566,7 +566,7 @@ Definition Ehrnat_p1_pp
   {wlpp_yz : wly @ wlz = wlyz}
   (H_a02 : a01 @ a12 = a02)
   (H_c02 : c01 @ c12 = c02)
-  (*& 3-paths *)
+  (* 3-paths *)
   (H_ehrnat_yz : (ehrnat_y [-] ehrnat_z) @ whiskerL _ wlpp_yz =
     whiskerR wrpp_yz _ @ ehrnat_yz)
   (H_ulnat_yz : (ulnat_y [-] ulnat_z) = whiskerR wlpp_yz _ @ ulnat_yz)
@@ -723,7 +723,7 @@ Proof.
   by destruct p, r.
 Defined.
 
-(** Next we prove a coherence law relating [eh_V p (q @ r)] to [eh_V p q] and [eh_V p q]. *)
+(** Next we prove a coherence law relating [eh_V p (q @ r)] to [eh_V p q] and [eh_V p r]. *)
 
 (* The following tactics will be used to make the proof faster, but with only minor modifications, the proof goes through without these tactics. The final tactic [generalize_goal] takes a goal of the form [forall a b c ..., expression] and asserts a new goal [forall P, _ -> forall a b c ..., P a b c ...] which can be used to prove the original goal. During the proof, the underscore gets replaced by a special case of [P].  Because [expression] has been replaced with a generic function, the proof of the new goal can be more efficient than the proof of the special case, especially when there are around 84 variables. *)
 
