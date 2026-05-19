@@ -2,7 +2,7 @@ Require Import Basics.Overture Basics.Tactics Types.Forall WildCat.Monoidal.
 Require Import WildCat.Core WildCat.Bifunctor WildCat.Prod WildCat.Equiv.
 Require Import WildCat.NatTrans WildCat.Square WildCat.Opposite.
 
-(** * Building Symmetric Monoidal Categories *)
+(** * Twist Construction for Symmetric Monoidal Categories *)
 
 (** The following construction is what we call the "twist construction". It is a way to build a symmetric monoidal category from simpler pieces than the axioms ask for.
 
