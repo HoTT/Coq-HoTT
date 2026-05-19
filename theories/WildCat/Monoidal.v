@@ -97,7 +97,6 @@ Class SymmetricBraiding {A : Type} `{Is1Cat A}
   braiding_symmetricbraiding :: Braiding F;
   braid_braid : forall a b, braid a b $o braid b a $== Id (F b a);
 }.
-(** We could have used [::>] in [braiding_symmetricbraiding] instead however due to bug https://github.com/coq/coq/issues/18971 the coercion isn't registered, so we have to register it manually instead. *)
 Coercion braiding_symmetricbraiding : SymmetricBraiding >-> Braiding.
 Arguments braid_braid {A _ _ _ _ F _ _ _} a b.
 
@@ -115,18 +114,17 @@ Arguments hexagon_identity {A _ _ _ _ _} F {_ _}.
 
 (** *** Hexagon identity with inverse associators *)
 
-(** ** Monoidal Categories *)
-
 Class HexagonIdentityInverseAssoc {A : Type} `{HasEquivs A}
   (F : A -> A -> A)
   `{!Is0Bifunctor F, !Is1Bifunctor F, !Associator F, !Braiding F}
   (** The other hexagon identity for an associator and a braiding. *)
   := hexagon_identity_inv_assoc a b c
   : fmap01 F b (braid a c) $o (associator b a c)^-1$ $o fmap10 F (braid a b) c
-      $== (associator b c a)^-1$ $o braid a (F b c) $o (associator a b c)^-1$. 
-
+      $== (associator b c a)^-1$ $o braid a (F b c) $o (associator a b c)^-1$.
 Coercion hexagon_identity_inv_assoc : HexagonIdentityInverseAssoc >-> Funclass.
 Arguments hexagon_identity_inv_assoc {A _ _ _ _ _} F {_ _}.
+
+(** ** Monoidal Categories *)
 
 (** A monoidal 1-category is a 1-category with equivalences together with the following: *)
 Class IsMonoidal (A : Type) `{HasEquivs A}
@@ -170,7 +168,7 @@ Class IsSymmetricMonoidal (A : Type) `{HasEquivs A}
   cat_symm_tensor_hexagon :: HexagonIdentity cat_tensor;
 }.
 
-(** *** Theory about [Associator] *)
+(** ** Theory about [Associator] *)
 
 Section Associator.
   Context {A : Type} `{HasEquivs A} {F : A -> A -> A}
@@ -535,6 +533,7 @@ Definition issymmetricmonoidal_op' {A : Type} (tensor : A -> A -> A) (unit : A)
   := issymmetricmonoidal_op (A:=A^op) tensor unit.
 
 (** ** Further Coherence Conditions *)
+
 (** In Mac Lane's original axiomatisation of a monoidal category, 3 extra coherence conditions were given in addition to the pentagon and triangle identities. It was later shown by Kelly that these axioms are redundant and follow from the rest. We reproduce these arguments here. *)
 
 (** The left unitor of a tensor can be decomposed as an associator and a functorial action of the tensor on a left unitor. *)
