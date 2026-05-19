@@ -23,7 +23,7 @@ Section CycleConstruction.
       (f : a $-> a') (g : b $-> b') (h : c $-> c'),
       cycle a' b' c' $o fmap11 cat_tensor f (fmap11 cat_tensor g h)
       $== fmap11 cat_tensor h (fmap11 cat_tensor f g) $o cycle a b c)
-    
+
     (right_unitor : RightUnitor cat_tensor cat_tensor_unit)
     (cycle_unitor : forall a b,
       fmap01 cat_tensor a (right_unitor b)
@@ -31,7 +31,7 @@ Section CycleConstruction.
       $== braid b a
         $o fmap01 cat_tensor b (right_unitor a)
         $o cycle a cat_tensor_unit b)
-    
+
     (cycle_octagon : forall a b c d,
       fmap01 cat_tensor d (braid (cat_tensor a b) c)
         $o cycle (cat_tensor a b) c d
@@ -41,11 +41,11 @@ Section CycleConstruction.
         $o cycle a (cat_tensor b c) d
         $o fmap01 cat_tensor a (braid d (cat_tensor b c))
         $o fmap01 cat_tensor a (cycle b c d))
-    
+
     (cycle_braid : forall a b c,
       fmap01 cat_tensor a (braid b c)
       $== cycle _ _ _ $o fmap01 cat_tensor c (braid a b) $o cycle _ _ _).
-  
+
   Local Instance catie_cycle a b c : CatIsEquiv (cycle a b c)
     := catie_adjointify
         (cycle a b c)
@@ -55,26 +55,26 @@ Section CycleConstruction.
 
   Local Definition cyclee a b c
     : cat_tensor a (cat_tensor b c) $<~> cat_tensor c (cat_tensor a b)
-    := Build_CatEquiv (cycle a b c). 
+    := Build_CatEquiv (cycle a b c).
 
   (** *** Movement lemmas *)
-  
+
   Definition moveL_cycleR a b c d f (g : _ $-> d)
     : f $o cycle b c a $o cycle c a b $== g -> f $== g $o cycle a b c.
   Proof.
     intros p.
     apply (cate_epic_equiv (cyclee b c a)).
-    refine ((_ $@L _) $@ _ $@ (_ $@L _^$)). 
+    refine ((_ $@L _) $@ _ $@ (_ $@L _^$)).
     1,3: apply cate_buildequiv_fun.
     nrefine (_ $@ cat_assoc_opp _ _ _).
     apply (cate_epic_equiv (cyclee c a b)).
-    refine ((_ $@L _) $@ _ $@ (_ $@L _^$)). 
+    refine ((_ $@L _) $@ _ $@ (_ $@L _^$)).
     1,3: apply cate_buildequiv_fun.
     nrefine (_ $@ cat_assoc_opp _ _ _).
     refine (p $@ (cat_idr _)^$ $@ (g $@L _^$)).
     apply cycle_cycle_cycle.
   Defined.
-  
+
   Definition moveL_cycle_cycleR a b c d f (g : _ $-> d)
     : f $o cycle c a b $== g -> f $== g $o cycle a b c $o cycle b c a.
   Proof.
@@ -84,7 +84,7 @@ Section CycleConstruction.
   Defined.
 
   (** *** The associator *)
-  
+
   Instance associator_cycle : Associator cat_tensor.
   Proof.
     snapply Build_Associator.
@@ -94,23 +94,23 @@ Section CycleConstruction.
       cbn zeta; unfold fst, snd.
       change (?w $o ?x $== ?y $o ?z) with (Square z w x y).
       napply hconcatL.
-      1: nrefine (_ $@ (_ $@@ _)). 
+      1: nrefine (_ $@ (_ $@@ _)).
       1,2,3: apply cate_buildequiv_fun.
       napply hconcatR.
-      2: nrefine (_ $@ (_ $@@ _)). 
+      2: nrefine (_ $@ (_ $@@ _)).
       2,3,4: apply cate_buildequiv_fun.
       napply vconcat.
       1: apply cycle_nat.
       apply braid_nat.
   Defined.
-  
+
   Local Notation α := associator_cycle.
-  
+
   Definition associator_cycle_unfold a b c
     : cate_fun (α a b c) $== braid c (cat_tensor a b) $o cycle a b c
     := cate_buildequiv_fun _
       $@ (cate_buildequiv_fun _ $@@ cate_buildequiv_fun _).
-  
+
   (** *** Unitors *)
 
   (** Since we assume the [right_unitor] exists, we can derive the [left_unitor] from it together with [braid]. *)
@@ -148,7 +148,7 @@ Section CycleConstruction.
   Defined.
 
   (** *** Pentagon *)
-  
+
   Instance pentagon_cycle : PentagonIdentity cat_tensor.
   Proof.
     intros a b c d.
@@ -196,11 +196,11 @@ Section CycleConstruction.
     symmetry.
     apply cycle_braid.
   Defined.
-  
+
   Instance ismonoidal_cycle
     : IsMonoidal A cat_tensor cat_tensor_unit
     := {}.
-  
+
   Instance issymmetricmonoidal_cycle
     : IsSymmetricMonoidal A cat_tensor cat_tensor_unit
     := {}.
