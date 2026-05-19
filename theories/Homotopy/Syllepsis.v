@@ -279,102 +279,75 @@ Proof.
   exact (lrucancel 1).
 Defined.
 
-(** Coherence #1: We now prove that [eh p (q @ r)] suitably relates to [eh p q] and [eh p r]. *)
-Section eh_p_pp.
-
-  Context {X : Type}.
-
+(** We now prove that [eh p (q @ r)] suitably relates to [eh p q] and [eh p r]. *)
+Definition eh_p_pp_gen
+  {X : Type}
   (* 0-paths *)
-  Context {a b c d e f : X}.
-
+  {a b c d e f : X}
   (* 1-paths *)
-  Context {wlx0 x0 : a = b}.
-  Context {wlx1 x1 : c = d}.
-  Context {wlx2 x2 : e = f}.
-
-  Context {wry0 y0 : b = d}.
-  Context {wry1 y1 : a = c}.
-
-  Context {wrz0 z0 : d = f}.
-  Context {wrz1 z1 : c = e}.
-
-  Context {wryz0 : b = f}.
-  Context {wryz1 : a = e}.
-
+  {wlx0 x0 : a = b}
+  {wlx1 x1 : c = d}
+  {wlx2 x2 : e = f}
+  {wry0 y0 : b = d}
+  {wry1 y1 : a = c}
+  {wrz0 z0 : d = f}
+  {wrz1 z1 : c = e}
+  {wryz0 : b = f}
+  {wryz1 : a = e}
   (* 2-paths *)
-  Context {ulnat_x0 : wlx0 @ 1 = 1 @ x0}.
-  Context {ulnat_x1 : wlx1 @ 1 = 1 @ x1}.
-  Context {ulnat_x2 : wlx2 @ 1 = 1 @ x2}.
-
-  Context {urnat_y0 : wry0 @ 1 = 1 @ y0}.
-  Context {urnat_y1 : wry1 @ 1 = 1 @ y1}.
-
-  Context {urnat_z0 : wrz0 @ 1 = 1 @ z0}.
-  Context {urnat_z1 : wrz1 @ 1 = 1 @ z1}.
-
-  Context {urnat_yz0 : wryz0 @ 1 = 1 @ (y0 @ z0)}.
-  Context {urnat_yz1 : wryz1 @ 1 = 1 @ (y1 @ z1)}.
-
-  Context {wlrnat_x_y : wlx0 @ wry0 = wry1 @ wlx1}.
-  Context {wlrnat_x_z : wlx1 @ wrz0 = wrz1 @ wlx2}.
-  Context {wlrnat_x_yz : wlx0 @ wryz0 = wryz1 @ wlx2}.
-
-  Context {wrpp_yz0 : wry0 @ wrz0 = wryz0}.
-  Context {wrpp_yz1 : wry1 @ wrz1 = wryz1}.
-
+  {ulnat_x0 : wlx0 @ 1 = 1 @ x0}
+  {ulnat_x1 : wlx1 @ 1 = 1 @ x1}
+  {ulnat_x2 : wlx2 @ 1 = 1 @ x2}
+  {urnat_y0 : wry0 @ 1 = 1 @ y0}
+  {urnat_y1 : wry1 @ 1 = 1 @ y1}
+  {urnat_z0 : wrz0 @ 1 = 1 @ z0}
+  {urnat_z1 : wrz1 @ 1 = 1 @ z1}
+  {urnat_yz0 : wryz0 @ 1 = 1 @ (y0 @ z0)}
+  {urnat_yz1 : wryz1 @ 1 = 1 @ (y1 @ z1)}
+  {wlrnat_x_y : wlx0 @ wry0 = wry1 @ wlx1}
+  {wlrnat_x_z : wlx1 @ wrz0 = wrz1 @ wlx2}
+  {wlrnat_x_yz : wlx0 @ wryz0 = wryz1 @ wlx2}
+  {wrpp_yz0 : wry0 @ wrz0 = wryz0}
+  {wrpp_yz1 : wry1 @ wrz1 = wryz1}
   (* 3-paths *)
-  Hypothesis H_urnat_yz0
-    : (urnat_y0 [-] urnat_z0) = whiskerR wrpp_yz0 _ @ urnat_yz0.
-
-  Hypothesis H_urnat_yz1
-    : (urnat_y1 [-] urnat_z1) = whiskerR wrpp_yz1 _ @ urnat_yz1.
-
-  Hypothesis H_wlrnat_x_yz
-    : (wlrnat_x_y [I] wlrnat_x_z) @ whiskerR wrpp_yz1 _ =
-    whiskerL _ wrpp_yz0 @ wlrnat_x_yz.
-
-  (* the coherence *)
-  Definition eh_p_pp_gen
-    : let EH_x_y := (rlucancel_inv (ulnat_x0 [-] urnat_y0))^ @
+  (H_urnat_yz0 : (urnat_y0 [-] urnat_z0) = whiskerR wrpp_yz0 _ @ urnat_yz0)
+  (H_urnat_yz1 : (urnat_y1 [-] urnat_z1) = whiskerR wrpp_yz1 _ @ urnat_yz1)
+  (H_wlrnat_x_yz : (wlrnat_x_y [I] wlrnat_x_z) @ whiskerR wrpp_yz1 _ =
+    whiskerL _ wrpp_yz0 @ wlrnat_x_yz)
+  : let EH_x_y := (rlucancel_inv (ulnat_x0 [-] urnat_y0))^ @
       wlrnat_x_y @ rlucancel_inv (urnat_y1 [-] ulnat_x1) in
     let EH_x_z := (rlucancel_inv (ulnat_x1 [-] urnat_z0))^ @
       wlrnat_x_z @ rlucancel_inv (urnat_z1 [-] ulnat_x2) in
     let EH_x_yz := (rlucancel_inv (ulnat_x0 [-] urnat_yz0))^ @
       wlrnat_x_yz @ rlucancel_inv (urnat_yz1 [-] ulnat_x2) in
     EH_x_yz @ (concat_pp_p _ _ _ @ whiskerL _ EH_x_z^) =
-    concat_p_pp _ _ _ @ whiskerR EH_x_y _ @ concat_pp_p _ _ _.
-  Proof.
-    apply moveR_Vp in H_urnat_yz0, H_urnat_yz1, H_wlrnat_x_yz.
-    destruct H_urnat_yz0, H_urnat_yz1, H_wlrnat_x_yz.
-    try clear H_urnat_yz0 H_urnat_yz1 H_wlrnat_x_yz.
-    destruct wrpp_yz0, wrpp_yz1.
-    clear wrpp_yz0 wrpp_yz1.
-    revert x0 ulnat_x0.
-    snapply equiv_path_ind_rlucancel.
-    revert x1 ulnat_x1.
-    snapply equiv_path_ind_rlucancel.
-    revert x2 ulnat_x2.
-    snapply equiv_path_ind_rlucancel.
-    revert y0 urnat_y0.
-    snapply equiv_path_ind_rlucancel.
-    revert y1 urnat_y1.
-    snapply equiv_path_ind_rlucancel.
-    revert z0 urnat_z0.
-    snapply equiv_path_ind_rlucancel.
-    revert z1 urnat_z1.
-    snapply equiv_path_ind_rlucancel.
-    destruct wry0, wry1, wrz0, wrz1.
-    clear wry0 wry1.
-    revert wlx2 wlrnat_x_z.
-    snapply equiv_path_ind_rlucancel.
-    revert wlx1 wlrnat_x_y.
-    snapply equiv_path_ind_rlucancel.
-    destruct wlx0.
-    clear wlx0.
-    reflexivity.
-  Defined.
-
-End eh_p_pp.
+      concat_p_pp _ _ _ @ whiskerR EH_x_y _ @ concat_pp_p _ _ _.
+Proof.
+  apply moveR_Vp in H_urnat_yz0, H_urnat_yz1, H_wlrnat_x_yz.
+  destruct H_urnat_yz0, H_urnat_yz1, H_wlrnat_x_yz.
+  destruct wrpp_yz0, wrpp_yz1.
+  revert x0 ulnat_x0.
+  snapply equiv_path_ind_rlucancel.
+  revert x1 ulnat_x1.
+  snapply equiv_path_ind_rlucancel.
+  revert x2 ulnat_x2.
+  snapply equiv_path_ind_rlucancel.
+  revert y0 urnat_y0.
+  snapply equiv_path_ind_rlucancel.
+  revert y1 urnat_y1.
+  snapply equiv_path_ind_rlucancel.
+  revert z0 urnat_z0.
+  snapply equiv_path_ind_rlucancel.
+  revert z1 urnat_z1.
+  snapply equiv_path_ind_rlucancel.
+  destruct wry0, wry1, wrz0, wrz1.
+  revert wlx2 wlrnat_x_z.
+  snapply equiv_path_ind_rlucancel.
+  revert wlx1 wlrnat_x_y.
+  snapply equiv_path_ind_rlucancel.
+  destruct wlx0.
+  reflexivity.
+Defined.
 
 Theorem eh_p_pp {X} {a : X} (p q r : idpath a = idpath a)
   : eh p (q @ r) @ (concat_pp_p _ _ _ @ whiskerL _ (eh p r)^) =
@@ -386,101 +359,75 @@ Proof.
   - exact (wlrnat_p_pp p q r).
 Defined.
 
-(* Coherence #1: We now prove that "eh (p @ q) r" suitably relates to "eh p r" and "eh q r". *)
-Section eh_pp_p.
-
-  Context {X : Type}.
-
+(** We now prove that "eh (p @ q) r" suitably relates to "eh p r" and "eh q r". *)
+Definition eh_pp_p_gen
+  {X : Type}
   (* 0-paths *)
-  Context {a b c d e f : X}.
-
+  {a b c d e f : X}
   (* 1-paths *)
-  Context {wlx0 x0 : a = b}.
-  Context {wlx1 x1 : d = e}.
-
-  Context {wly0 y0 : b = c}.
-  Context {wly1 y1 : e = f}.
-
-  Context {wrz0 z0 : c = f}.
-  Context {wrz1 z1 : b = e}.
-  Context {wrz2 z2 : a = d}.
-
-  Context {wlxy0 : a = c}.
-  Context {wlxy1 : d = f}.
-
+  {wlx0 x0 : a = b}
+  {wlx1 x1 : d = e}
+  {wly0 y0 : b = c}
+  {wly1 y1 : e = f}
+  {wrz0 z0 : c = f}
+  {wrz1 z1 : b = e}
+  {wrz2 z2 : a = d}
+  {wlxy0 : a = c}
+  {wlxy1 : d = f}
   (* 2-paths *)
-  Context {ulnat_x0 : wlx0 @ 1 = 1 @ x0}.
-  Context {ulnat_x1 : wlx1 @ 1 = 1 @ x1}.
-
-  Context {ulnat_y0 : wly0 @ 1 = 1 @ y0}.
-  Context {ulnat_y1 : wly1 @ 1 = 1 @ y1}.
-
-  Context {urnat_z0 : wrz0 @ 1 = 1 @ z0}.
-  Context {urnat_z1 : wrz1 @ 1 = 1 @ z1}.
-  Context {urnat_z2 : wrz2 @ 1 = 1 @ z2}.
-
-  Context {ulnat_xy0 : wlxy0 @ 1 = 1 @ (x0 @ y0)}.
-  Context {ulnat_xy1 : wlxy1 @ 1 = 1 @ (x1 @ y1)}.
-
-  Context {wlrnat_x_z : wlx0 @ wrz1 = wrz2 @ wlx1}.
-  Context {wlrnat_y_z : wly0 @ wrz0 = wrz1 @ wly1}.
-  Context {wlrnat_xy_z : wlxy0 @ wrz0 = wrz2 @ wlxy1}.
-
-  Context {wlpp_xy0 : wlx0 @ wly0 = wlxy0}.
-  Context {wlpp_xy1 : wlx1 @ wly1 = wlxy1}.
-
+  {ulnat_x0 : wlx0 @ 1 = 1 @ x0}
+  {ulnat_x1 : wlx1 @ 1 = 1 @ x1}
+  {ulnat_y0 : wly0 @ 1 = 1 @ y0}
+  {ulnat_y1 : wly1 @ 1 = 1 @ y1}
+  {urnat_z0 : wrz0 @ 1 = 1 @ z0}
+  {urnat_z1 : wrz1 @ 1 = 1 @ z1}
+  {urnat_z2 : wrz2 @ 1 = 1 @ z2}
+  {ulnat_xy0 : wlxy0 @ 1 = 1 @ (x0 @ y0)}
+  {ulnat_xy1 : wlxy1 @ 1 = 1 @ (x1 @ y1)}
+  {wlrnat_x_z : wlx0 @ wrz1 = wrz2 @ wlx1}
+  {wlrnat_y_z : wly0 @ wrz0 = wrz1 @ wly1}
+  {wlrnat_xy_z : wlxy0 @ wrz0 = wrz2 @ wlxy1}
+  {wlpp_xy0 : wlx0 @ wly0 = wlxy0}
+  {wlpp_xy1 : wlx1 @ wly1 = wlxy1}
   (* 3-paths *)
-  Hypothesis H_ulnat_xy0
-    : (ulnat_x0 [-] ulnat_y0) = whiskerR wlpp_xy0 _ @ ulnat_xy0.
-
-  Hypothesis H_ulnat_xy1
-    : (ulnat_x1 [-] ulnat_y1) = whiskerR wlpp_xy1 _ @ ulnat_xy1.
-
-  Hypothesis H_wlrnat_xy_z
-    : (wlrnat_x_z [-] wlrnat_y_z) @ whiskerL _ wlpp_xy1 =
-    whiskerR wlpp_xy0 _ @ wlrnat_xy_z.
-
-  (* the coherence *)
-  Definition eh_pp_p_gen
-    : let EH_x_z := (rlucancel_inv (ulnat_x0 [-] urnat_z1))^ @
+  (H_ulnat_xy0 : (ulnat_x0 [-] ulnat_y0) = whiskerR wlpp_xy0 _ @ ulnat_xy0)
+  (H_ulnat_xy1 : (ulnat_x1 [-] ulnat_y1) = whiskerR wlpp_xy1 _ @ ulnat_xy1)
+  (H_wlrnat_xy_z : (wlrnat_x_z [-] wlrnat_y_z) @ whiskerL _ wlpp_xy1 =
+    whiskerR wlpp_xy0 _ @ wlrnat_xy_z)
+  : let EH_x_z := (rlucancel_inv (ulnat_x0 [-] urnat_z1))^ @
       wlrnat_x_z @ rlucancel_inv (urnat_z2 [-] ulnat_x1) in
     let EH_y_z := (rlucancel_inv (ulnat_y0 [-] urnat_z0))^ @
       wlrnat_y_z @ rlucancel_inv (urnat_z1 [-] ulnat_y1) in
     let EH_xy_z := (rlucancel_inv (ulnat_xy0 [-] urnat_z0))^ @
       wlrnat_xy_z @ rlucancel_inv (urnat_z2 [-] ulnat_xy1) in
     EH_xy_z @ (concat_p_pp _ _ _ @ whiskerR EH_x_z^ _) =
-    concat_pp_p _ _ _ @ whiskerL _ EH_y_z @ concat_p_pp _ _ _.
-  Proof.
-    apply moveR_Vp in H_ulnat_xy0, H_ulnat_xy1, H_wlrnat_xy_z.
-    destruct H_ulnat_xy0, H_ulnat_xy1, H_wlrnat_xy_z.
-    try clear H_ulnat_xy0 H_ulnat_xy1 H_wlrnat_xy_z.
-    destruct wlpp_xy0, wlpp_xy1.
-    clear wlpp_xy0 wlpp_xy1.
-    revert x0 ulnat_x0.
-    snapply equiv_path_ind_rlucancel.
-    revert x1 ulnat_x1.
-    snapply equiv_path_ind_rlucancel.
-    revert y0 ulnat_y0.
-    snapply equiv_path_ind_rlucancel.
-    revert y1 ulnat_y1.
-    snapply equiv_path_ind_rlucancel.
-    revert z0 urnat_z0.
-    snapply equiv_path_ind_rlucancel.
-    revert z1 urnat_z1.
-    snapply equiv_path_ind_rlucancel.
-    revert z2 urnat_z2.
-    snapply equiv_path_ind_rlucancel.
-    destruct wlx0, wlx1, wly0, wly1.
-    try clear wlx0 wlx1 wly0 wly1.
-    revert wrz2 wlrnat_x_z.
-    snapply equiv_path_ind_lrucancel.
-    revert wrz1 wlrnat_y_z.
-    snapply equiv_path_ind_lrucancel.
-    destruct wrz0.
-    reflexivity.
-  Defined.
-
-End eh_pp_p.
+      concat_pp_p _ _ _ @ whiskerL _ EH_y_z @ concat_p_pp _ _ _.
+Proof.
+  apply moveR_Vp in H_ulnat_xy0, H_ulnat_xy1, H_wlrnat_xy_z.
+  destruct H_ulnat_xy0, H_ulnat_xy1, H_wlrnat_xy_z.
+  destruct wlpp_xy0, wlpp_xy1.
+  revert x0 ulnat_x0.
+  snapply equiv_path_ind_rlucancel.
+  revert x1 ulnat_x1.
+  snapply equiv_path_ind_rlucancel.
+  revert y0 ulnat_y0.
+  snapply equiv_path_ind_rlucancel.
+  revert y1 ulnat_y1.
+  snapply equiv_path_ind_rlucancel.
+  revert z0 urnat_z0.
+  snapply equiv_path_ind_rlucancel.
+  revert z1 urnat_z1.
+  snapply equiv_path_ind_rlucancel.
+  revert z2 urnat_z2.
+  snapply equiv_path_ind_rlucancel.
+  destruct wlx0, wlx1, wly0, wly1.
+  revert wrz2 wlrnat_x_z.
+  snapply equiv_path_ind_lrucancel.
+  revert wrz1 wlrnat_y_z.
+  snapply equiv_path_ind_lrucancel.
+  destruct wrz0.
+  reflexivity.
+Defined.
 
 Theorem eh_pp_p {X} {a : X} (p q r : idpath a = idpath a)
   : eh (p @ q) r @ (concat_p_pp _ _ _ @ whiskerR (eh p r)^ _) =
@@ -492,110 +439,84 @@ Proof.
   - exact (wlrnat_pp_p p q r).
 Defined.
 
-(* Syllepsis: We now prove that "eh p q" is suitably related to "eh q p". *)
-Section eh_V.
-
-  Context {X : Type}.
-
+(** The syllepsis: We now prove that "eh p q" is suitably related to "eh q p". *)
+Definition eh_V_gen
+  {X : Type}
   (* 0-paths *)
-  Context {a b c d : X}.
-
+  {a b c d : X}
   (* 1-paths *)
-  Context {wlx0 x0 wrx0 : a = b}.
-  Context {wlx1 x1 wrx1 : c = d}.
-  
-  Context {wly0 y0 wry0 : b = d}.
-  Context {wly1 y1 wry1 : a = c}.
-
+  {wlx0 x0 wrx0 : a = b}
+  {wlx1 x1 wrx1 : c = d}
+  {wly0 y0 wry0 : b = d}
+  {wly1 y1 wry1 : a = c}
   (* 2-paths *)
-  Context {ulnat_x0 : wlx0 @ 1 = 1 @ x0}.
-  Context {urnat_x0 : wrx0 @ 1 = 1 @ x0}.
-  Context {ulnat_x1 : wlx1 @ 1 = 1 @ x1}.
-  Context {urnat_x1 : wrx1 @ 1 = 1 @ x1}.
-
-  Context {ulnat_y0 : wly0 @ 1 = 1 @ y0}.
-  Context {urnat_y0 : wry0 @ 1 = 1 @ y0}.
-  Context {ulnat_y1 : wly1 @ 1 = 1 @ y1}.
-  Context {urnat_y1 : wry1 @ 1 = 1 @ y1}.
-
-  Context {ehlnat_x0 : wlx0 @ 1 = 1 @ wrx0}.
-  Context {ehlnat_x1 : wlx1 @ 1 = 1 @ wrx1}.
-
-  Context {ehrnat_y0 : wry0 @ 1 = 1 @ wly0}.
-  Context {ehrnat_y1 : wry1 @ 1 = 1 @ wly1}.
-
-  Context {wlrnat_x_y : wlx0 @ wry0 = wry1 @ wlx1}.
-  Context {wlrnat_y_x : wly1 @ wrx1 = wrx0 @ wly0}.
-
+  {ulnat_x0 : wlx0 @ 1 = 1 @ x0}
+  {urnat_x0 : wrx0 @ 1 = 1 @ x0}
+  {ulnat_x1 : wlx1 @ 1 = 1 @ x1}
+  {urnat_x1 : wrx1 @ 1 = 1 @ x1}
+  {ulnat_y0 : wly0 @ 1 = 1 @ y0}
+  {urnat_y0 : wry0 @ 1 = 1 @ y0}
+  {ulnat_y1 : wly1 @ 1 = 1 @ y1}
+  {urnat_y1 : wry1 @ 1 = 1 @ y1}
+  {ehlnat_x0 : wlx0 @ 1 = 1 @ wrx0}
+  {ehlnat_x1 : wlx1 @ 1 = 1 @ wrx1}
+  {ehrnat_y0 : wry0 @ 1 = 1 @ wly0}
+  {ehrnat_y1 : wry1 @ 1 = 1 @ wly1}
+  {wlrnat_x_y : wlx0 @ wry0 = wry1 @ wlx1}
+  {wlrnat_y_x : wly1 @ wrx1 = wrx0 @ wly0}
   (* 3-paths *)
-  Hypothesis ehlnat_1p_x0
-    : (ehlnat_x0 [I] urnat_x0) @ 1  = 1 @ ulnat_x0.
-
-  Hypothesis ehlnat_1p_x1
-    : (ehlnat_x1 [I] urnat_x1) @ 1 = 1 @ ulnat_x1.
-
-  Hypothesis ehrnat_p1_y0
-    : (ehrnat_y0 [I] ulnat_y0) @ 1 = 1 @ urnat_y0.
-
-  Hypothesis ehrnat_p1_y1
-    : (ehrnat_y1 [I] ulnat_y1) @ 1 = 1 @ urnat_y1.
-
-  Hypothesis wlrnat_V_x_y
-    : whiskerR wlrnat_x_y _ @ (ehrnat_y1 [-] ehlnat_x1) =
-    (ehlnat_x0 [-] ehrnat_y0) @ whiskerL _ wlrnat_y_x^.
-
-  (** The syllepsis *)
-  Definition eh_V_gen
-    : let EH_x_y := (rlucancel_inv (ulnat_x0 [-] urnat_y0))^ @
+  (ehlnat_1p_x0 : (ehlnat_x0 [I] urnat_x0) @ 1  = 1 @ ulnat_x0)
+  (ehlnat_1p_x1 : (ehlnat_x1 [I] urnat_x1) @ 1 = 1 @ ulnat_x1)
+  (ehrnat_p1_y0 : (ehrnat_y0 [I] ulnat_y0) @ 1 = 1 @ urnat_y0)
+  (ehrnat_p1_y1 : (ehrnat_y1 [I] ulnat_y1) @ 1 = 1 @ urnat_y1)
+  (wlrnat_V_x_y : whiskerR wlrnat_x_y _ @ (ehrnat_y1 [-] ehlnat_x1) =
+    (ehlnat_x0 [-] ehrnat_y0) @ whiskerL _ wlrnat_y_x^)
+  : let EH_x_y := (rlucancel_inv (ulnat_x0 [-] urnat_y0))^ @
       wlrnat_x_y @ rlucancel_inv (urnat_y1 [-] ulnat_x1) in
     let EH_y_x := (rlucancel_inv (ulnat_y1 [-] urnat_x1))^ @
       wlrnat_y_x @ rlucancel_inv (urnat_x0 [-] ulnat_y0) in
     EH_x_y @ EH_y_x = 1.
-  Proof.
-    pose (H_whiskerR_wlrnat_x_y := moveL_Mp _ _ _ (moveL_pV _ _ _ (whiskerR_p1 wlrnat_x_y))).
-    apply moveL_pV in wlrnat_V_x_y.
-    apply (concat H_whiskerR_wlrnat_x_y^) in wlrnat_V_x_y.
-    apply moveL_Vp, moveL_pV in wlrnat_V_x_y.
-    apply symmetry in wlrnat_V_x_y.
-    destruct wlrnat_V_x_y.
-    try clear wlrnat_V_x_y.
-    clear H_whiskerR_wlrnat_x_y.
-    revert ulnat_x0 ehlnat_1p_x0.
-    snapply equiv_path_ind_rlucancel.
-    revert ulnat_x1 ehlnat_1p_x1.
-    snapply equiv_path_ind_rlucancel.
-    revert urnat_y0 ehrnat_p1_y0.
-    snapply equiv_path_ind_rlucancel.
-    revert urnat_y1 ehrnat_p1_y1.
-    snapply equiv_path_ind_rlucancel.
+Proof.
+  pose (H_whiskerR_wlrnat_x_y := moveL_Mp _ _ _ (moveL_pV _ _ _ (whiskerR_p1 wlrnat_x_y))).
+  apply moveL_pV in wlrnat_V_x_y.
+  apply (concat H_whiskerR_wlrnat_x_y^) in wlrnat_V_x_y.
+  apply moveL_Vp, moveL_pV in wlrnat_V_x_y.
+  apply symmetry in wlrnat_V_x_y.
+  destruct wlrnat_V_x_y.
+  clear H_whiskerR_wlrnat_x_y.
+  revert ulnat_x0 ehlnat_1p_x0.
+  snapply equiv_path_ind_rlucancel.
+  revert ulnat_x1 ehlnat_1p_x1.
+  snapply equiv_path_ind_rlucancel.
+  revert urnat_y0 ehrnat_p1_y0.
+  snapply equiv_path_ind_rlucancel.
+  revert urnat_y1 ehrnat_p1_y1.
+  snapply equiv_path_ind_rlucancel.
 
-    revert x0 urnat_x0.
-    snapply equiv_path_ind_rlucancel.
-    revert x1 urnat_x1.
-    snapply equiv_path_ind_rlucancel.
-    revert y0 ulnat_y0.
-    snapply equiv_path_ind_rlucancel.
-    revert y1 ulnat_y1.
-    snapply equiv_path_ind_rlucancel.
+  revert x0 urnat_x0.
+  snapply equiv_path_ind_rlucancel.
+  revert x1 urnat_x1.
+  snapply equiv_path_ind_rlucancel.
+  revert y0 ulnat_y0.
+  snapply equiv_path_ind_rlucancel.
+  revert y1 ulnat_y1.
+  snapply equiv_path_ind_rlucancel.
 
-    revert wlrnat_y_x.
-    revert wrx0 ehlnat_x0.
-    snapply equiv_path_ind_rlucancel.
-    revert wrx1 ehlnat_x1.
-    snapply equiv_path_ind_rlucancel.
-    revert wly0 ehrnat_y0.
-    snapply equiv_path_ind_rlucancel.
-    revert wly1 ehrnat_y1.
-    snapply equiv_path_ind_rlucancel.
+  revert wlrnat_y_x.
+  revert wrx0 ehlnat_x0.
+  snapply equiv_path_ind_rlucancel.
+  revert wrx1 ehlnat_x1.
+  snapply equiv_path_ind_rlucancel.
+  revert wly0 ehrnat_y0.
+  snapply equiv_path_ind_rlucancel.
+  revert wly1 ehrnat_y1.
+  snapply equiv_path_ind_rlucancel.
 
-    destruct wry0, wry1, wlx1.
-    clear wry0 wry1.
-    revert wlx0.
-    snapply equiv_path_ind_lrucancel.
-    reflexivity.
-  Defined.
-
-End eh_V.
+  destruct wry0, wry1, wlx1.
+  revert wlx0.
+  snapply equiv_path_ind_lrucancel.
+  reflexivity.
+Defined.
 
 Theorem eh_V {X} {a : X} (p q : idpath (idpath a) = idpath (idpath a))
   : eh p q @ eh q p = 1.
@@ -609,107 +530,72 @@ Proof.
 Defined.
 
 (** Given [ehrnat_p1 y] and [ehrnat_p1 z], we can explicitly construct [ehrnat_p1 (y @ z)]. *)
-Section Ehrnat_p1_pp.
-
-  Context {X : Type}.
-
+(** The composite iso *)
+Definition Ehrnat_p1_pp
+  {X : Type}
   (** 0-paths *)
-  Context {a0 a1 a2 : X}.
-  Context {b0 b1 b2 : X}.
-  Context {c0 c1 c2 : X}.
-
+  {a0 a1 a2 : X}
+  {b0 b1 b2 : X}
+  {c0 c1 c2 : X}
   (** 1-paths *)
-  Context {wry : a0 = b0}.
-  Context {wrz : b0 = c0}.
-
-  Context {wly : a1 = b1}.
-  Context {wlz : b1 = c1}.
-
-  Context {y : a2 = b2}.
-  Context {z : b2 = c2}.
-
-  Context {wryz : a0 = c0}.
-  Context {wlyz : a1 = c1}.
-
-  Context {a01 : a0 = a1}.
-  Context {a12 : a1 = a2}.
-
-  Context {b01 : b0 = b1}.
-  Context {b12 : b1 = b2}.
-
-  Context {c01 : c0 = c1}.
-  Context {c12 : c1 = c2}.
-
-  Context {a02 : a0 = a2}.
-  Context {c02 : c0 = c2}.
-  
+  {wry : a0 = b0}
+  {wrz : b0 = c0}
+  {wly : a1 = b1}
+  {wlz : b1 = c1}
+  {y : a2 = b2}
+  {z : b2 = c2}
+  {wryz : a0 = c0}
+  {wlyz : a1 = c1}
+  {a01 : a0 = a1}
+  {a12 : a1 = a2}
+  {b01 : b0 = b1}
+  {b12 : b1 = b2}
+  {c01 : c0 = c1}
+  {c12 : c1 = c2}
+  {a02 : a0 = a2}
+  {c02 : c0 = c2}
   (** 2-paths *)
-  Context {ehrnat_y : wry @ b01 = a01 @ wly}.
-  Context {ehrnat_z : wrz @ c01 = b01 @ wlz}.
-  Context {ehrnat_yz : wryz @ c01 = a01 @ wlyz}.
-
-  Context {ulnat_y : wly @ b12 = a12 @ y}.
-  Context {ulnat_z : wlz @ c12 = b12 @ z}.
-  Context {ulnat_yz : wlyz @ c12 = a12 @ (y @ z)}.
-
-  Context {urnat_y : wry @ (b01 @ b12) = a02 @ y}.
-  Context {urnat_z : wrz @ c02 = (b01 @ b12) @ z}.
-  Context {urnat_yz : wryz @ c02 = a02 @ (y @ z)}.
-
-  Context {wrpp_yz : wry @ wrz = wryz}.
-  Context {wlpp_yz : wly @ wlz = wlyz}.
-
-  Context (H_a02 : a01 @ a12 = a02).
-  Context (H_c02 : c01 @ c12 = c02).
-
+  {ehrnat_y : wry @ b01 = a01 @ wly}
+  {ehrnat_z : wrz @ c01 = b01 @ wlz}
+  {ehrnat_yz : wryz @ c01 = a01 @ wlyz}
+  {ulnat_y : wly @ b12 = a12 @ y}
+  {ulnat_z : wlz @ c12 = b12 @ z}
+  {ulnat_yz : wlyz @ c12 = a12 @ (y @ z)}
+  {urnat_y : wry @ (b01 @ b12) = a02 @ y}
+  {urnat_z : wrz @ c02 = (b01 @ b12) @ z}
+  {urnat_yz : wryz @ c02 = a02 @ (y @ z)}
+  {wrpp_yz : wry @ wrz = wryz}
+  {wlpp_yz : wly @ wlz = wlyz}
+  (H_a02 : a01 @ a12 = a02)
+  (H_c02 : c01 @ c12 = c02)
   (*& 3-paths *)
-  Hypothesis H_ehrnat_yz
-    : (ehrnat_y [-] ehrnat_z) @ whiskerL _ wlpp_yz =
-    whiskerR wrpp_yz _ @ ehrnat_yz.
-
-  Hypothesis H_ulnat_yz
-    : (ulnat_y [-] ulnat_z) = whiskerR wlpp_yz _ @ ulnat_yz.
-
-  Hypothesis H_urnat_yz
-    : (urnat_y [-] urnat_z) = whiskerR wrpp_yz _ @ urnat_yz.
-
-  Variable ehrnat_p1_y
-    : (ehrnat_y [I] ulnat_y) @ whiskerR H_a02 _ = 1 @ urnat_y.
-
-  Variable ehrnat_p1_z
-    : (ehrnat_z [I] ulnat_z) @ 1 = whiskerL _ H_c02 @ urnat_z.
-
-  (** The composite iso *)
-  Definition Ehrnat_p1_pp
-    : (ehrnat_yz [I] ulnat_yz) @ whiskerR H_a02 _ =
-    whiskerL _ H_c02 @ urnat_yz.
-  Proof.
-    apply moveR_Vp in H_urnat_yz, H_ulnat_yz, H_ehrnat_yz.
-    destruct H_urnat_yz, H_ulnat_yz, H_ehrnat_yz.
-    try clear H_urnat_yz H_ulnat_yz H_ehrnat_yz.
-    apply moveR_Vp in ehrnat_p1_y, ehrnat_p1_z.
-    destruct ehrnat_p1_y, ehrnat_p1_z.
-    try clear ehrnat_p1_y ehrnat_p1_z.
-    destruct H_a02, H_c02.
-    clear H_a02 H_c02.
-    destruct wrpp_yz, wlpp_yz.
-    clear wrpp_yz wlpp_yz.
-    destruct a01, a12, b01, b12, c01, c12.
-    try clear a01 a12 b01 b12 c01 c12.
-    revert y ulnat_y.
-    snapply equiv_path_ind_rlucancel.
-    revert z ulnat_z.
-    snapply equiv_path_ind_rlucancel.
-    revert wly ehrnat_y.
-    snapply equiv_path_ind_rlucancel.
-    revert wlz ehrnat_z.
-    snapply equiv_path_ind_rlucancel.
-    destruct wry, wrz.
-    try clear wry wrz.
-    reflexivity.
-  Defined.
-
-End Ehrnat_p1_pp.
+  (H_ehrnat_yz : (ehrnat_y [-] ehrnat_z) @ whiskerL _ wlpp_yz =
+    whiskerR wrpp_yz _ @ ehrnat_yz)
+  (H_ulnat_yz : (ulnat_y [-] ulnat_z) = whiskerR wlpp_yz _ @ ulnat_yz)
+  (H_urnat_yz : (urnat_y [-] urnat_z) = whiskerR wrpp_yz _ @ urnat_yz)
+  (ehrnat_p1_y : (ehrnat_y [I] ulnat_y) @ whiskerR H_a02 _ = 1 @ urnat_y)
+  (ehrnat_p1_z : (ehrnat_z [I] ulnat_z) @ 1 = whiskerL _ H_c02 @ urnat_z)
+  : (ehrnat_yz [I] ulnat_yz) @ whiskerR H_a02 _ =
+  whiskerL _ H_c02 @ urnat_yz.
+Proof.
+  apply moveR_Vp in H_urnat_yz, H_ulnat_yz, H_ehrnat_yz.
+  destruct H_urnat_yz, H_ulnat_yz, H_ehrnat_yz.
+  apply moveR_Vp in ehrnat_p1_y, ehrnat_p1_z.
+  destruct ehrnat_p1_y, ehrnat_p1_z.
+  destruct H_a02, H_c02.
+  destruct wrpp_yz, wlpp_yz.
+  destruct a01, a12, b01, b12, c01, c12.
+  revert y ulnat_y.
+  snapply equiv_path_ind_rlucancel.
+  revert z ulnat_z.
+  snapply equiv_path_ind_rlucancel.
+  revert wly ehrnat_y.
+  snapply equiv_path_ind_rlucancel.
+  revert wlz ehrnat_z.
+  snapply equiv_path_ind_rlucancel.
+  destruct wry, wrz.
+  reflexivity.
+Defined.
 
 Definition ehrnat_p1_pp {X} {a : X} {u v : idpath a = idpath a} (q : u = 1) (r : 1 = v)
   : Ehrnat_p1_pp (eh_p1 u) (eh_p1 v) (ehrnat_pp q r 1) (ulnat_pp q r) (urnat_pp q r)
@@ -722,155 +608,115 @@ Proof.
 Defined.
 
 (** Given [wlrnat_V x y] and [wlrnat_V x z], we can explicitly construct [wlrnat_V x (y @ z)]. *)
-Section wlrnat_V_p_pp.
-
-  Context {X : Type}.
-
+(** The composite square *)
+Definition Wlrnat_V_p_pp
+  {X : Type}
   (** 0-paths *)
-  Context {a0 b0 c0 d0 e0 f0 : X}.
-  Context {a1 b1 c1 d1 e1 f1 : X}.
-
+  {a0 b0 c0 d0 e0 f0 : X}
+  {a1 b1 c1 d1 e1 f1 : X}
   (** 1-paths *)
-  Context {wlx0 : a0 = b0}.
-  Context {wlx1 : c0 = d0}.
-  Context {wlx2 : e0 = f0}.
-
-  Context {wrx0 : a1 = b1}.
-  Context {wrx1 : c1 = d1}.
-  Context {wrx2 : e1 = f1}.
-
-  Context {wry0 : b0 = d0}.
-  Context {wly0 : b1 = d1}.
-  Context {wry1 : a0 = c0}.
-  Context {wly1 : a1 = c1}.
-
-  Context {wrz0 : d0 = f0}.
-  Context {wlz0 : d1 = f1}.
-  Context {wrz1 : c0 = e0}.
-  Context {wlz1 : c1 = e1}.
-
-  Context {a01 : a0 = a1}.
-  Context {b01 : b0 = b1}.
-  Context {c01 : c0 = c1}.
-  Context {d01 : d0 = d1}.
-  Context {e01 : e0 = e1}.
-  Context {f01 : f0 = f1}.
-
-  Context {wryz0 : b0 = f0}.
-  Context {wlyz0 : b1 = f1}.
-  Context {wryz1 : a0 = e0}.
-  Context {wlyz1 : a1 = e1}.
-
+  {wlx0 : a0 = b0}
+  {wlx1 : c0 = d0}
+  {wlx2 : e0 = f0}
+  {wrx0 : a1 = b1}
+  {wrx1 : c1 = d1}
+  {wrx2 : e1 = f1}
+  {wry0 : b0 = d0}
+  {wly0 : b1 = d1}
+  {wry1 : a0 = c0}
+  {wly1 : a1 = c1}
+  {wrz0 : d0 = f0}
+  {wlz0 : d1 = f1}
+  {wrz1 : c0 = e0}
+  {wlz1 : c1 = e1}
+  {a01 : a0 = a1}
+  {b01 : b0 = b1}
+  {c01 : c0 = c1}
+  {d01 : d0 = d1}
+  {e01 : e0 = e1}
+  {f01 : f0 = f1}
+  {wryz0 : b0 = f0}
+  {wlyz0 : b1 = f1}
+  {wryz1 : a0 = e0}
+  {wlyz1 : a1 = e1}
   (** 2-paths *)
-  Context {ehlnat_x0 : wlx0 @ b01 = a01 @ wrx0}.
-  Context {ehlnat_x1 : wlx1 @ d01 = c01 @ wrx1}.
-  Context {ehlnat_x2 : wlx2 @ f01 = e01 @ wrx2}.
-
-  Context {ehrnat_y0 : wry0 @ d01 = b01 @ wly0}.
-  Context {ehrnat_y1 : wry1 @ c01 = a01 @ wly1}.
-
-  Context {ehrnat_z0 : wrz0 @ f01 = d01 @ wlz0}.
-  Context {ehrnat_z1 : wrz1 @ e01 = c01 @ wlz1}.
-
-  Context {ehrnat_yz0 : wryz0 @ f01 = b01 @ wlyz0}.
-  Context {ehrnat_yz1 : wryz1 @ e01 = a01 @ wlyz1}.
-
-  Context {wlrnat_x_y : wlx0 @ wry0 = wry1 @ wlx1}.
-  Context {wlrnat_y_x : wly1 @ wrx1 = wrx0 @ wly0}.
-
-  Context {wlrnat_x_z : wlx1 @ wrz0 = wrz1 @ wlx2}.
-  Context {wlrnat_z_x : wlz1 @ wrx2 = wrx1 @ wlz0}.
-
-  Context {wlrnat_x_yz : wlx0 @ wryz0 = wryz1 @ wlx2}.
-  Context {wlrnat_yz_x : wlyz1 @ wrx2 = wrx0 @ wlyz0}.
-
-  Context {wrpp_yz0 : wry0 @ wrz0 = wryz0}.
-  Context {wlpp_yz0 : wly0 @ wlz0 = wlyz0}.
-  Context {wrpp_yz1 : wry1 @ wrz1 = wryz1}.
-  Context {wlpp_yz1 : wly1 @ wlz1 = wlyz1}.
-
+  {ehlnat_x0 : wlx0 @ b01 = a01 @ wrx0}
+  {ehlnat_x1 : wlx1 @ d01 = c01 @ wrx1}
+  {ehlnat_x2 : wlx2 @ f01 = e01 @ wrx2}
+  {ehrnat_y0 : wry0 @ d01 = b01 @ wly0}
+  {ehrnat_y1 : wry1 @ c01 = a01 @ wly1}
+  {ehrnat_z0 : wrz0 @ f01 = d01 @ wlz0}
+  {ehrnat_z1 : wrz1 @ e01 = c01 @ wlz1}
+  {ehrnat_yz0 : wryz0 @ f01 = b01 @ wlyz0}
+  {ehrnat_yz1 : wryz1 @ e01 = a01 @ wlyz1}
+  {wlrnat_x_y : wlx0 @ wry0 = wry1 @ wlx1}
+  {wlrnat_y_x : wly1 @ wrx1 = wrx0 @ wly0}
+  {wlrnat_x_z : wlx1 @ wrz0 = wrz1 @ wlx2}
+  {wlrnat_z_x : wlz1 @ wrx2 = wrx1 @ wlz0}
+  {wlrnat_x_yz : wlx0 @ wryz0 = wryz1 @ wlx2}
+  {wlrnat_yz_x : wlyz1 @ wrx2 = wrx0 @ wlyz0}
+  {wrpp_yz0 : wry0 @ wrz0 = wryz0}
+  {wlpp_yz0 : wly0 @ wlz0 = wlyz0}
+  {wrpp_yz1 : wry1 @ wrz1 = wryz1}
+  {wlpp_yz1 : wly1 @ wlz1 = wlyz1}
   (** 3-paths *)
-  Hypothesis H_ehrnat_yz0
-    : (ehrnat_y0 [-] ehrnat_z0) @ whiskerL _ wlpp_yz0 =
-    whiskerR wrpp_yz0 _ @ ehrnat_yz0.
-
-  Hypothesis H_ehrnat_yz1
-    : (ehrnat_y1 [-] ehrnat_z1) @ whiskerL _ wlpp_yz1 =
-    whiskerR wrpp_yz1 _ @ ehrnat_yz1.
-
-  Hypothesis H_wlrnat_x_yz
-    : (wlrnat_x_y [I] wlrnat_x_z) @ whiskerR wrpp_yz1 _ =
-    whiskerL _ wrpp_yz0 @ wlrnat_x_yz.
-
-  Hypothesis H_wlrnat_yz_x
-    : (wlrnat_y_x [-] wlrnat_z_x) @ whiskerL _ wlpp_yz0 =
-    whiskerR wlpp_yz1 _ @ wlrnat_yz_x.
-
-  Variable wlrnat_V_x_y
-    : whiskerR wlrnat_x_y _ @ (ehrnat_y1 [-] ehlnat_x1) =
-    (ehlnat_x0 [-] ehrnat_y0) @ whiskerL _ wlrnat_y_x^.
-
-  Variable wlrnat_V_x_z
-    : whiskerR wlrnat_x_z _ @ (ehrnat_z1 [-] ehlnat_x2) =
-    (ehlnat_x1 [-] ehrnat_z0) @ whiskerL _ wlrnat_z_x^.
-
-  (** The composite square *)
-  Definition Wlrnat_V_p_pp
-    : whiskerR wlrnat_x_yz _ @ (ehrnat_yz1 [-] ehlnat_x2) =
-    (ehlnat_x0 [-] ehrnat_yz0) @ whiskerL _ wlrnat_yz_x^.
-  Proof.
-    apply moveR_Vp in H_ehrnat_yz0, H_ehrnat_yz1.
-    destruct H_ehrnat_yz0, H_ehrnat_yz1.
-    try clear H_ehrnat_yz0 H_ehrnat_yz1.
-    apply moveR_Vp in H_wlrnat_x_yz, H_wlrnat_yz_x.
-    destruct H_wlrnat_x_yz, H_wlrnat_yz_x.
-    try clear H_wlrnat_x_yz H_wlrnat_yz_x.
-    destruct a01, b01, c01, d01, e01, f01.
-    clear a01 b01 c01 d01 e01 f01.
-    pose (H_whiskerR_wlrnat_x_y := moveL_Mp _ _ _ (moveL_pV _ _ _ (whiskerR_p1 wlrnat_x_y))).
-    pose (H_whiskerR_wlrnat_x_z := moveL_Mp _ _ _ (moveL_pV _ _ _ (whiskerR_p1 wlrnat_x_z))).
-    apply moveL_pV in wlrnat_V_x_y.
-    apply (concat H_whiskerR_wlrnat_x_y^) in wlrnat_V_x_y.
-    apply moveL_Vp, moveL_pV in wlrnat_V_x_y.
-    apply symmetry in wlrnat_V_x_y.
-    destruct wlrnat_V_x_y.
-    try clear wlrnat_V_x_y.
-    apply moveL_pV in wlrnat_V_x_z.
-    apply (concat H_whiskerR_wlrnat_x_z^) in wlrnat_V_x_z.
-    apply moveL_Vp, moveL_pV in wlrnat_V_x_z.
-    apply symmetry in wlrnat_V_x_z.
-    destruct wlrnat_V_x_z.
-    try clear wlrnat_V_x_z.
-    clear H_whiskerR_wlrnat_x_y H_whiskerR_wlrnat_x_z.
-    destruct wrpp_yz0, wlpp_yz0, wrpp_yz1, wlpp_yz1.
-    try clear wrpp_yz0 wlpp_yz0 wrpp_yz1 wlpp_yz1.
-    revert wlrnat_y_x wlrnat_z_x.
-    revert wrx0 ehlnat_x0.
-    snapply equiv_path_ind_rlucancel.
-    revert wrx1 ehlnat_x1.
-    snapply equiv_path_ind_rlucancel.
-    revert wrx2 ehlnat_x2.
-    snapply equiv_path_ind_rlucancel.
-    revert wly0 ehrnat_y0.
-    snapply equiv_path_ind_rlucancel.
-    revert wly1 ehrnat_y1.
-    snapply equiv_path_ind_rlucancel.
-    revert wlz0 ehrnat_z0.
-    snapply equiv_path_ind_rlucancel.
-    revert wlz1 ehrnat_z1.
-    snapply equiv_path_ind_rlucancel.
-    destruct wry0, wry1, wrz0, wrz1.
-    try clear wry0 wry1 wrz0 wrz1.
-    revert wlx0.
-    snapply equiv_path_ind_lrucancel.
-    revert wlx1.
-    snapply equiv_path_ind_lrucancel.
-    destruct wlx2.
-    try clear wlx2.
-    reflexivity.
-  Defined.
-
-End wlrnat_V_p_pp.
+  (H_ehrnat_yz0 : (ehrnat_y0 [-] ehrnat_z0) @ whiskerL _ wlpp_yz0 =
+    whiskerR wrpp_yz0 _ @ ehrnat_yz0)
+  (H_ehrnat_yz1 : (ehrnat_y1 [-] ehrnat_z1) @ whiskerL _ wlpp_yz1 =
+    whiskerR wrpp_yz1 _ @ ehrnat_yz1)
+  (H_wlrnat_x_yz : (wlrnat_x_y [I] wlrnat_x_z) @ whiskerR wrpp_yz1 _ =
+    whiskerL _ wrpp_yz0 @ wlrnat_x_yz)
+  (H_wlrnat_yz_x : (wlrnat_y_x [-] wlrnat_z_x) @ whiskerL _ wlpp_yz0 =
+    whiskerR wlpp_yz1 _ @ wlrnat_yz_x)
+  (wlrnat_V_x_y : whiskerR wlrnat_x_y _ @ (ehrnat_y1 [-] ehlnat_x1) =
+    (ehlnat_x0 [-] ehrnat_y0) @ whiskerL _ wlrnat_y_x^)
+  (wlrnat_V_x_z : whiskerR wlrnat_x_z _ @ (ehrnat_z1 [-] ehlnat_x2) =
+    (ehlnat_x1 [-] ehrnat_z0) @ whiskerL _ wlrnat_z_x^)
+  : whiskerR wlrnat_x_yz _ @ (ehrnat_yz1 [-] ehlnat_x2) =
+  (ehlnat_x0 [-] ehrnat_yz0) @ whiskerL _ wlrnat_yz_x^.
+Proof.
+  apply moveR_Vp in H_ehrnat_yz0, H_ehrnat_yz1.
+  destruct H_ehrnat_yz0, H_ehrnat_yz1.
+  apply moveR_Vp in H_wlrnat_x_yz, H_wlrnat_yz_x.
+  destruct H_wlrnat_x_yz, H_wlrnat_yz_x.
+  destruct a01, b01, c01, d01, e01, f01.
+  pose (H_whiskerR_wlrnat_x_y := moveL_Mp _ _ _ (moveL_pV _ _ _ (whiskerR_p1 wlrnat_x_y))).
+  pose (H_whiskerR_wlrnat_x_z := moveL_Mp _ _ _ (moveL_pV _ _ _ (whiskerR_p1 wlrnat_x_z))).
+  apply moveL_pV in wlrnat_V_x_y.
+  apply (concat H_whiskerR_wlrnat_x_y^) in wlrnat_V_x_y.
+  apply moveL_Vp, moveL_pV in wlrnat_V_x_y.
+  apply symmetry in wlrnat_V_x_y.
+  destruct wlrnat_V_x_y.
+  apply moveL_pV in wlrnat_V_x_z.
+  apply (concat H_whiskerR_wlrnat_x_z^) in wlrnat_V_x_z.
+  apply moveL_Vp, moveL_pV in wlrnat_V_x_z.
+  apply symmetry in wlrnat_V_x_z.
+  destruct wlrnat_V_x_z.
+  clear H_whiskerR_wlrnat_x_y H_whiskerR_wlrnat_x_z.
+  destruct wrpp_yz0, wlpp_yz0, wrpp_yz1, wlpp_yz1.
+  revert wlrnat_y_x wlrnat_z_x.
+  revert wrx0 ehlnat_x0.
+  snapply equiv_path_ind_rlucancel.
+  revert wrx1 ehlnat_x1.
+  snapply equiv_path_ind_rlucancel.
+  revert wrx2 ehlnat_x2.
+  snapply equiv_path_ind_rlucancel.
+  revert wly0 ehrnat_y0.
+  snapply equiv_path_ind_rlucancel.
+  revert wly1 ehrnat_y1.
+  snapply equiv_path_ind_rlucancel.
+  revert wlz0 ehrnat_z0.
+  snapply equiv_path_ind_rlucancel.
+  revert wlz1 ehrnat_z1.
+  snapply equiv_path_ind_rlucancel.
+  destruct wry0, wry1, wrz0, wrz1.
+  revert wlx0.
+  snapply equiv_path_ind_lrucancel.
+  revert wlx1.
+  snapply equiv_path_ind_lrucancel.
+  destruct wlx2.
+  reflexivity.
+Defined.
 
 Definition wlrnat_V_p_pp {X} {a : X} {u v w : idpath a = idpath a} (p : 1 = w) (q : u = 1) (r : 1 = v)
   : Wlrnat_V_p_pp (ehrnat_pp q r _) (ehrnat_pp q r _) (wlrnat_p_pp p q r) (wlrnat_pp_p q r p)
