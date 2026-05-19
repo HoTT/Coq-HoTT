@@ -1,15 +1,13 @@
 From HoTT Require Import Basics Types.
 
-(** Vertical composition of squares *)
-Section concat_square_vert.
+(** Vertical and horizontal composition of squares *)
+Section concat_square.
 
   Context {X : Type}.
 
-  (** 0-paths *)
   Context {a0 b0 c0 : X}.
   Context {a1 b1 c1 : X}.
 
-  (** 1-paths *)
   Context {a01 : a0 = a1}.
   Context {b01 : b0 = b1}.
   Context {c01 : c0 = c1}.
@@ -20,12 +18,10 @@ Section concat_square_vert.
   Context {bc0 : b0 = c0}.
   Context {bc1 : b1 = c1}.
 
-  (** 2-paths *)
-  Context (p : ab0 @ b01 = a01 @ ab1).
-  Context (q : bc0 @ c01 = b01 @ bc1).
-
-  Local Definition concat_square_vert :
-    (ab0 @ bc0) @ c01 = a01 @ (ab1 @ bc1).
+  Local Definition concat_square_vert
+    (p : ab0 @ b01 = a01 @ ab1)
+    (q : bc0 @ c01 = b01 @ bc1)
+    : (ab0 @ bc0) @ c01 = a01 @ (ab1 @ bc1).
   Proof.
     refine (concat_pp_p _ _ _ @ _).
     refine (whiskerL _ q @ _).
@@ -34,36 +30,10 @@ Section concat_square_vert.
     apply concat_pp_p.
   Defined.
 
-End concat_square_vert.
-
-Infix "[-]" := (concat_square_vert) (at level 60).
-
-(** Horizontal composition of squares *)
-Section concat_square_hor.
-
-  Context {X : Type}.
-
-  (** 0-paths *)
-  Context {a0 b0 c0 : X}.
-  Context {a1 b1 c1 : X}.
-
-  (** 1-paths *)
-  Context {a01 : a0 = a1}.
-  Context {b01 : b0 = b1}.
-  Context {c01 : c0 = c1}.
-
-  Context {ab0 : a0 = b0}.
-  Context {ab1 : a1 = b1}.
-
-  Context {bc0 : b0 = c0}.
-  Context {bc1 : b1 = c1}.
-
-  (** 2-paths *)
-  Context (p : a01 @ ab1 = ab0 @ b01).
-  Context (q : b01 @ bc1 = bc0 @ c01).
-
-  Local Definition concat_square_hor :
-    a01 @ (ab1 @ bc1) = (ab0 @ bc0) @ c01.
+  Local Definition concat_square_hor
+    (p : a01 @ ab1 = ab0 @ b01)
+    (q : b01 @ bc1 = bc0 @ c01)
+    : a01 @ (ab1 @ bc1) = (ab0 @ bc0) @ c01.
   Proof.
     refine (concat_p_pp _ _ _ @ _).
     refine (whiskerR p _ @ _).
@@ -72,8 +42,9 @@ Section concat_square_hor.
     apply concat_p_pp.
   Defined.
 
-End concat_square_hor.
+End concat_square.
 
+Infix "[-]" := (concat_square_vert) (at level 60).
 Infix "[I]" := (concat_square_hor) (at level 60).
 
 (** We give custom names to the following equivalences: *)
