@@ -87,19 +87,19 @@ Section CycleConstruction.
   
   Instance associator_cycle : Associator cat_tensor.
   Proof.
-    snrapply Build_Associator.
+    snapply Build_Associator.
     - exact (fun a b c => braide _ _ $oE cyclee a b c).
-    - snrapply Build_Is1Natural.
+    - snapply Build_Is1Natural.
       intros [[a b] c] [[a' b'] c'] [[f g] h]; simpl in f, g, h.
       cbn zeta; unfold fst, snd.
       change (?w $o ?x $== ?y $o ?z) with (Square z w x y).
-      nrapply hconcatL.
+      napply hconcatL.
       1: nrefine (_ $@ (_ $@@ _)). 
       1,2,3: apply cate_buildequiv_fun.
-      nrapply hconcatR.
+      napply hconcatR.
       2: nrefine (_ $@ (_ $@@ _)). 
       2,3,4: apply cate_buildequiv_fun.
-      nrapply vconcat.
+      napply vconcat.
       1: apply cycle_nat.
       apply braid_nat.
   Defined.
@@ -117,13 +117,13 @@ Section CycleConstruction.
   (** TODO: This is currently identical to [left_unitor_twist] in MonoidalTwistConstruction.v.  We should remove the duplication. *)
   Instance left_unitor_cycle : LeftUnitor cat_tensor cat_tensor_unit.
   Proof.
-    snrapply Build_NatEquiv'.
-    - snrapply Build_NatTrans.
+    snapply Build_NatEquiv'.
+    - snapply Build_NatTrans.
       + exact (fun a => right_unitor a $o braid cat_tensor_unit a).
-      + snrapply Build_Is1Natural.
+      + snapply Build_Is1Natural.
         intros a b f.
         change (?w $o ?x $== ?y $o ?z) with (Square z w x y).
-        nrapply vconcat.
+        napply vconcat.
         2: rapply (isnat right_unitor f).
         rapply braid_nat_r.
     - intros a.
