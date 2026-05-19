@@ -114,6 +114,7 @@ Section CycleConstruction.
   (** *** Unitors *)
 
   (** Since we assume the [right_unitor] exists, we can derive the [left_unitor] from it together with [braid]. *)
+  (** TODO: This is currently identical to [left_unitor_twist] in MonoidalTwistConstruction.v.  We should remove the duplication. *)
   Instance left_unitor_cycle : LeftUnitor cat_tensor cat_tensor_unit.
   Proof.
     snrapply Build_NatEquiv'.
@@ -127,7 +128,7 @@ Section CycleConstruction.
         rapply braid_nat_r.
     - intros a.
       rapply compose_catie'.
-      rapply catie_braid.
+      exact (catie_braid _ _).
   Defined.
 
   (** *** Triangle *)
