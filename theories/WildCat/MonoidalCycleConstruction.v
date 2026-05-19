@@ -63,16 +63,11 @@ Section CycleConstruction.
     : f $o cycle b c a $o cycle c a b $== g -> f $== g $o cycle a b c.
   Proof.
     intros p.
-    apply (cate_epic_equiv (cyclee b c a)).
-    refine ((_ $@L _) $@ _ $@ (_ $@L _^$)).
-    1,3: apply cate_buildequiv_fun.
-    nrefine (_ $@ cat_assoc_opp _ _ _).
-    apply (cate_epic_equiv (cyclee c a b)).
-    refine ((_ $@L _) $@ _ $@ (_ $@L _^$)).
-    1,3: apply cate_buildequiv_fun.
-    nrefine (_ $@ cat_assoc_opp _ _ _).
-    refine (p $@ (cat_idr _)^$ $@ (g $@L _^$)).
-    apply cycle_cycle_cycle.
+    rhs_V' exact (_ $@L cate_buildequiv_fun _).
+    rapply cate_moveL_eM.
+    lhs' exact (_ $@L cate_inv_adjointify _ _ _ _).
+    lhs' napply cat_assoc_opp.
+    exact p.
   Defined.
 
   Definition moveL_cycle_cycleR a b c d f (g : _ $-> d)
@@ -89,9 +84,9 @@ Section CycleConstruction.
   Proof.
     snapply Build_Associator.
     - exact (fun a b c => braide _ _ $oE cyclee a b c).
-    - snapply Build_Is1Natural.
+    - cbn zeta.
+      snapply Build_Is1Natural.
       intros [[a b] c] [[a' b'] c'] [[f g] h]; simpl in f, g, h.
-      cbn zeta; unfold fst, snd.
       change (?w $o ?x $== ?y $o ?z) with (Square z w x y).
       napply hconcatL.
       1: nrefine (_ $@ (_ $@@ _)).
