@@ -56,8 +56,8 @@ Definition rlucancel_inv {X} {a b : X} {p q : a = b} := (@rlucancel X a b p q)^-
 
 (** This special case of [equiv_path_ind] comes up a lot. *)
 Definition equiv_path_ind_rlucancel {X} (a b : X) (p : a = b)
-           (P : forall (q : a = b), p @ 1 = 1 @ q -> Type)
-           (r : P p (rlucancel 1))
+  (P : forall (q : a = b), p @ 1 = 1 @ q -> Type)
+  (r : P p (rlucancel 1))
   : forall (q : a = b) (s : p @ 1 = 1 @ q), P q s.
 Proof.
   snapply (equiv_path_ind (fun _ => rlucancel)).
@@ -66,8 +66,8 @@ Defined.
 
 (** This special case of [equiv_path_ind] comes up a lot. *)
 Definition equiv_path_ind_lrucancel {X} (a b : X) (p : a = b)
-           (P : forall (q : a = b), 1 @ p = q @ 1 -> Type)
-           (r : P p (lrucancel 1))
+  (P : forall (q : a = b), 1 @ p = q @ 1 -> Type)
+  (r : P p (lrucancel 1))
   : forall (q : a = b) (s : 1 @ p = q @ 1), P q s.
 Proof.
   snapply (equiv_path_ind (fun _ => lrucancel)).
@@ -75,55 +75,57 @@ Proof.
 Defined.
 
 (** Interaction of the above equivalences with square composition. *)
-Definition rlucancel_sVs_1_pp {X} {a b c : X} {p : a = b} {q : b = c} {r} (theta : p @ q = r) :
-  (rlucancel 1 [-] rlucancel 1) @ whiskerL _ theta = whiskerR theta _ @ (rlucancel 1).
+Definition rlucancel_sVs_1_pp {X} {a b c : X} {p : a = b} {q : b = c}
+  {r} (theta : p @ q = r)
+  : (rlucancel 1 [-] rlucancel 1) @ whiskerL _ theta = whiskerR theta _ @ (rlucancel 1).
 Proof.
   by destruct theta, p, q.
 Defined.
 
-Definition lrucancel_sHs_1_pp {X} {a b c : X} {p : a = b} {q : b = c} {r} (theta : p @ q = r) :
-  (lrucancel 1 [I] lrucancel 1) @ whiskerR theta _ = whiskerL _ theta @ (lrucancel 1).
+Definition lrucancel_sHs_1_pp {X} {a b c : X} {p : a = b} {q : b = c}
+  {r} (theta : p @ q = r)
+  : (lrucancel 1 [I] lrucancel 1) @ whiskerR theta _ = whiskerL _ theta @ (lrucancel 1).
 Proof.
   by destruct theta, p, q.
 Defined.
 
-Definition rlucancel_sHs_1 {X} {a b : X} (p : a = b) :
-  (rlucancel 1 [I] rlucancel 1) = rlucancel (idpath p).
+Definition rlucancel_sHs_1 {X} {a b : X} (p : a = b)
+  : (rlucancel 1 [I] rlucancel 1) = rlucancel (idpath p).
 Proof.
   by destruct p.
 Defined.
 
-Definition lrucancel_sVs_1 {X} {a b : X} (p : a = b) :
-  (lrucancel 1 [-] lrucancel 1) = lrucancel (idpath p).
+Definition lrucancel_sVs_1 {X} {a b : X} (p : a = b)
+  : (lrucancel 1 [-] lrucancel 1) = lrucancel (idpath p).
 Proof.
   by destruct p.
 Defined.
 
 (** Naturality of composition with 1. *)
-Definition ulnat {X} {a b : X} {u v : a = b} (p : u = v) :
-  whiskerL 1 p @ concat_1p v = concat_1p u @ p.
+Definition ulnat {X} {a b : X} {u v : a = b} (p : u = v)
+  : whiskerL 1 p @ concat_1p v = concat_1p u @ p.
 Proof.
   destruct p.
   exact (lrucancel 1).
-Defined. 
+Defined.
 
-Definition urnat {X} {a b : X} {u v : a = b} (p : u = v) :
-  whiskerR p 1 @ concat_p1 v = concat_p1 u @ p.
+Definition urnat {X} {a b : X} {u v : a = b} (p : u = v)
+  : whiskerR p 1 @ concat_p1 v = concat_p1 u @ p.
 Proof.
   destruct p.
   exact (lrucancel 1).
 Defined.
 
 (** Exchange law for whiskering on the left and on the right. *)
-Definition wlrnat {X} {a b c : X} {u v : a = b} {x y : b = c} p q :
-  whiskerL u p @ whiskerR q y = whiskerR q x @ whiskerL v p.
+Definition wlrnat {X} {a b c : X} {u v : a = b} {x y : b = c} p q
+  : whiskerL u p @ whiskerR q y = whiskerR q x @ whiskerL v p.
 Proof.
   by destruct p, q.
 Defined.
 
 (** Eckmann-Hilton.  This is also proved as [eckmann_hilton] in PathGroupoids.v, but we need this particular proof in order to prove the syllepsis. *)
-Theorem eh {X} {a : X} (p q : idpath a = idpath a) :
-  p @ q = q @ p.
+Theorem eh {X} {a : X} (p q : idpath a = idpath a)
+  : p @ q = q @ p.
 Proof.
   refine (_ @ rlucancel_inv (urnat q [-] ulnat p)).
   refine ((rlucancel_inv (ulnat p [-] urnat q))^ @ _).
@@ -131,107 +133,107 @@ Proof.
 Defined.
 
 (** Eckmann-Hilton on reflexivity. *)
-Local Definition eh_1p_gen {X} {a b : X} {u v : a = b} (p : u = v) {q} (theta : whiskerR p 1 @ 1 = 1 @ q) :
-  (rlucancel_inv (1 [-] theta))^ @ wlrnat 1 p @ rlucancel_inv (theta [-] 1) @ concat_p1 q = concat_1p q.
+Local Definition eh_1p_gen {X} {a b : X} {u v : a = b} (p : u = v) {q} (theta : whiskerR p 1 @ 1 = 1 @ q)
+  : (rlucancel_inv (1 [-] theta))^ @ wlrnat 1 p @ rlucancel_inv (theta [-] 1) @ concat_p1 q = concat_1p q.
 Proof.
   revert q theta.
   snapply equiv_path_ind_rlucancel.
   by destruct p.
 Defined.
 
-Definition eh_1p {X} {a : X} (p : idpath a = idpath a) :
-  eh 1 p @ concat_p1 p = concat_1p p.
+Definition eh_1p {X} {a : X} (p : idpath a = idpath a)
+  : eh 1 p @ concat_p1 p = concat_1p p.
 Proof.
   exact (eh_1p_gen p (urnat p)).
 Defined.
 
-Local Definition eh_p1_gen {X} {a b : X} {u v : a = b} (p : u = v) {q} (theta : whiskerL 1 p @ 1 = 1 @ q) :
-  (rlucancel_inv (theta [-] 1))^ @ wlrnat p 1 @ rlucancel_inv (1 [-] theta) @ concat_1p q = concat_p1 q.
+Local Definition eh_p1_gen {X} {a b : X} {u v : a = b} (p : u = v) {q} (theta : whiskerL 1 p @ 1 = 1 @ q)
+  : (rlucancel_inv (theta [-] 1))^ @ wlrnat p 1 @ rlucancel_inv (1 [-] theta) @ concat_1p q = concat_p1 q.
 Proof.
   revert q theta.
   snapply equiv_path_ind_rlucancel.
   by destruct p.
 Defined.
 
-Definition eh_p1 {X} {a : X} (p : idpath a = idpath a) :
-  eh p 1 @ concat_1p p = concat_p1 p.
+Definition eh_p1 {X} {a : X} (p : idpath a = idpath a)
+  : eh p 1 @ concat_1p p = concat_p1 p.
 Proof.
   exact (eh_p1_gen p (ulnat p)).
 Defined.
 
 (** Naturality of Eckmann-Hilton. *)
-Definition ehlnat {X} {a : X} (u : idpath a = idpath a) {x y} (p : x = y) :
-  whiskerL u p @ eh u y = eh u x @ whiskerR p u.
+Definition ehlnat {X} {a : X} (u : idpath a = idpath a) {x y} (p : x = y)
+  : whiskerL u p @ eh u y = eh u x @ whiskerR p u.
 Proof.
   destruct p.
   exact (lrucancel 1).
 Defined.
 
-Definition ehrnat {X} {a : X} {u v} (p : u = v) (x : idpath a = idpath a) :
-  whiskerR p x @ eh v x = eh u x @ whiskerL x p.
+Definition ehrnat {X} {a : X} {u v} (p : u = v) (x : idpath a = idpath a)
+  : whiskerR p x @ eh v x = eh u x @ whiskerL x p.
 Proof.
   destruct p.
   exact (lrucancel 1).
 Defined.
 
 (** Naturality of Eckmann-Hilton when the fixed path is 1. *)
-Definition ehlnat_1p {X} {a : X} {u v : idpath a = idpath a} (p : u = v) :
-  (ehlnat 1 p [I] urnat p) @ whiskerR (eh_1p u) _ = whiskerL _ (eh_1p v) @ ulnat p.
+Definition ehlnat_1p {X} {a : X} {u v : idpath a = idpath a} (p : u = v)
+  : (ehlnat 1 p [I] urnat p) @ whiskerR (eh_1p u) _ = whiskerL _ (eh_1p v) @ ulnat p.
 Proof.
   destruct p.
   apply lrucancel_sHs_1_pp.
 Defined.
 
-Definition ehrnat_p1 {X} {a : X} {u v : idpath a = idpath a} (p : u = v) :
-  (ehrnat p 1 [I] ulnat p) @ whiskerR (eh_p1 u) _ = whiskerL _ (eh_p1 v) @ urnat p.
+Definition ehrnat_p1 {X} {a : X} {u v : idpath a = idpath a} (p : u = v)
+  : (ehrnat p 1 [I] ulnat p) @ whiskerR (eh_p1 u) _ = whiskerL _ (eh_p1 v) @ urnat p.
 Proof.
   destruct p.
   apply lrucancel_sHs_1_pp.
 Defined.
 
 (* These lemmas should probably be in the library in some form. *)
-Local Definition concat_p_pp_pp_p {A} {u v x y : A} (p : u = v) (q : v = x) (r : x = y) :
-  concat_p_pp p q r @ concat_pp_p p q r = 1.
+Local Definition concat_p_pp_pp_p {A} {u v x y : A} (p : u = v) (q : v = x) (r : x = y)
+  : concat_p_pp p q r @ concat_pp_p p q r = 1.
 Proof.
   by destruct p, q, r.
 Defined.
 
-Local Definition concat_pp_p_p_pp {A} {u v x y : A} (p : u = v) (q : v = x) (r : x = y) :
-  concat_pp_p p q r @ concat_p_pp p q r = 1.
+Local Definition concat_pp_p_p_pp {A} {u v x y : A} (p : u = v) (q : v = x) (r : x = y)
+  : concat_pp_p p q r @ concat_p_pp p q r = 1.
 Proof.
   by destruct p, q, r.
 Defined.
 
 (* These lemmas are in the library but with worse computational behavior. *)
-Local Definition whiskerL_pp {A} {a b c : A} (u : a = b) {v w z : b = c} (p : v = w) (q : w = z) :
-  whiskerL u (p @ q) = whiskerL u p @ whiskerL u q.
+Local Definition whiskerL_pp {A} {a b c : A} (u : a = b) {v w z : b = c} (p : v = w) (q : w = z)
+  : whiskerL u (p @ q) = whiskerL u p @ whiskerL u q.
 Proof.
   by destruct p, q.
 Defined.
 
-Local Definition whiskerR_pp {A} {a b c : A} {u v w : a = b} (z : b = c) (p : u = v) (q : v = w) :
-  whiskerR (p @ q) z = whiskerR p z @ whiskerR q z.
+Local Definition whiskerR_pp {A} {a b c : A} {u v w : a = b} (z : b = c) (p : u = v) (q : v = w)
+  : whiskerR (p @ q) z = whiskerR p z @ whiskerR q z.
 Proof.
   by destruct p, q.
 Defined.
 
 (** We now prove that [ulnat (p @ q)] suitably relates to [ulnat p] and [ulnat q]. *)
-Definition ulnat_pp {X} {a b : X} {u v w : a = b} (p : u = v) (q : v = w) :
-  ulnat p [-] ulnat q = whiskerR (whiskerL_pp _ p q)^ _ @ ulnat (p @ q).
+Definition ulnat_pp {X} {a b : X} {u v w : a = b} (p : u = v) (q : v = w)
+  : ulnat p [-] ulnat q = whiskerR (whiskerL_pp _ p q)^ _ @ ulnat (p @ q).
 Proof.
   by destruct p, q, u.
 Defined.
 
 (** We now prove that [urnat (p @ q)] suitably relates to [urnat p] and [urnat q]. *)
-Definition urnat_pp {X} {a b : X} {u v w : a = b} (p : u = v) (q : v = w) :
-  urnat p [-] urnat q = whiskerR (whiskerR_pp _ p q)^ _ @ urnat (p @ q).
+Definition urnat_pp {X} {a b : X} {u v w : a = b} (p : u = v) (q : v = w)
+  : urnat p [-] urnat q = whiskerR (whiskerR_pp _ p q)^ _ @ urnat (p @ q).
 Proof.
   by destruct p, q, u.
 Defined.
 
 (** We now prove that [ehlnat u (p @ q)] suitably relates to [ehlnat u p] and [ehlnat u q]. *)
-Definition ehlnat_pp {X} {a : X} (u : idpath a = idpath a) {v w : idpath a = idpath a} (p : v = 1) (q : 1 = w) :
-  (ehlnat u p [-] ehlnat u q) @ whiskerL _ (whiskerR_pp _ p q)^ =
+Definition ehlnat_pp {X} {a : X} (u : idpath a = idpath a) {v w : idpath a = idpath a} (p : v = 1) (q : 1 = w)
+  : (ehlnat u p [-] ehlnat u q) @ whiskerL _ (whiskerR_pp _ p q)^ =
   (whiskerR (whiskerL_pp _ p q)^ _) @ ehlnat u (p @ q).
 Proof.
   revert v p.
@@ -241,8 +243,8 @@ Proof.
 Defined.
 
 (** We now prove that [ehrnat (p @ q) w] suitably relates to [ehrnat p w] and [ehrnat q w]. *)
-Definition ehrnat_pp {X} {a : X} {u v : idpath a = idpath a} (p : u = 1) (q : 1 = v) (w : idpath a = idpath a) :
-  (ehrnat p w [-] ehrnat q w) @ whiskerL _ (whiskerL_pp _ p q)^ =
+Definition ehrnat_pp {X} {a : X} {u v : idpath a = idpath a} (p : u = 1) (q : 1 = v) (w : idpath a = idpath a)
+  : (ehrnat p w [-] ehrnat q w) @ whiskerL _ (whiskerL_pp _ p q)^ =
   (whiskerR (whiskerR_pp _ p q)^ _) @ ehrnat (p @ q) w.
 Proof.
   revert u p.
@@ -253,24 +255,24 @@ Proof.
 Defined.
 
 (** We now prove that [wlrnat p (q @ r)] suitably relates to [wlrnat p q] and [wlrnat q p]. *)
-Definition wlrnat_p_pp {X} {a b c : X} {u v w : a = b} {x y : b = c} (p : x = y) (q : u = v) (r : v = w) :
-  (wlrnat p q [I] wlrnat p r) @ whiskerR (whiskerR_pp _ q r)^ _ =
+Definition wlrnat_p_pp {X} {a b c : X} {u v w : a = b} {x y : b = c} (p : x = y) (q : u = v) (r : v = w)
+  : (wlrnat p q [I] wlrnat p r) @ whiskerR (whiskerR_pp _ q r)^ _ =
   whiskerL _ (whiskerR_pp _ q r)^ @ wlrnat p (q @ r).
 Proof.
   by destruct p, q, r.
 Defined.
 
 (** We now prove that [wlrnat (p @ q) r] suitably relates to [wlrnat p r] and [wlrnat q r]. *)
-Definition wlrnat_pp_p {X} {a b c : X} {u v : a = b} {x y z : b = c} (p : x = y) (q : y = z) (r : u = v) :
-  (wlrnat p r [-] wlrnat q r) @ whiskerL _ (whiskerL_pp _ p q)^ =
+Definition wlrnat_pp_p {X} {a b c : X} {u v : a = b} {x y z : b = c} (p : x = y) (q : y = z) (r : u = v)
+  : (wlrnat p r [-] wlrnat q r) @ whiskerL _ (whiskerL_pp _ p q)^ =
   whiskerR (whiskerL_pp _ p q)^ _ @ wlrnat (p @ q) r.
 Proof.
   by destruct p, q, r.
 Defined.
 
 (** We now prove that [wrlnat p q] suitably relates to [wlrnat q p]. *)
-Definition wlrnat_V {X} {a : X} {u v x y : idpath a = idpath a} p q :
-  whiskerR (wlrnat p q) (eh v y) @ (ehrnat q x [-] ehlnat v p) =
+Definition wlrnat_V {X} {a : X} {u v x y : idpath a = idpath a} p q
+  : whiskerR (wlrnat p q) (eh v y) @ (ehrnat q x [-] ehlnat v p) =
   (ehlnat u p [-] ehrnat q y) @ whiskerL (eh u x) (wlrnat q p)^.
 Proof.
   destruct p, q.
@@ -321,19 +323,19 @@ Section eh_p_pp.
   Context {wrpp_yz1 : wry1 @ wrz1 = wryz1}.
 
   (* 3-paths *)
-  Hypothesis H_urnat_yz0 :
-    (urnat_y0 [-] urnat_z0) = whiskerR wrpp_yz0 _ @ urnat_yz0.
+  Hypothesis H_urnat_yz0
+    : (urnat_y0 [-] urnat_z0) = whiskerR wrpp_yz0 _ @ urnat_yz0.
 
-  Hypothesis H_urnat_yz1 :
-    (urnat_y1 [-] urnat_z1) = whiskerR wrpp_yz1 _ @ urnat_yz1.
+  Hypothesis H_urnat_yz1
+    : (urnat_y1 [-] urnat_z1) = whiskerR wrpp_yz1 _ @ urnat_yz1.
 
-  Hypothesis H_wlrnat_x_yz :
-    (wlrnat_x_y [I] wlrnat_x_z) @ whiskerR wrpp_yz1 _ =
+  Hypothesis H_wlrnat_x_yz
+    : (wlrnat_x_y [I] wlrnat_x_z) @ whiskerR wrpp_yz1 _ =
     whiskerL _ wrpp_yz0 @ wlrnat_x_yz.
 
   (* the coherence *)
-  Definition eh_p_pp_gen :
-    let EH_x_y := (rlucancel_inv (ulnat_x0 [-] urnat_y0))^ @
+  Definition eh_p_pp_gen
+    : let EH_x_y := (rlucancel_inv (ulnat_x0 [-] urnat_y0))^ @
       wlrnat_x_y @ rlucancel_inv (urnat_y1 [-] ulnat_x1) in
     let EH_x_z := (rlucancel_inv (ulnat_x1 [-] urnat_z0))^ @
       wlrnat_x_z @ rlucancel_inv (urnat_z1 [-] ulnat_x2) in
@@ -374,8 +376,8 @@ Section eh_p_pp.
 
 End eh_p_pp.
 
-Theorem eh_p_pp {X} {a : X} (p q r : idpath a = idpath a) :
-  eh p (q @ r) @ (concat_pp_p _ _ _ @ whiskerL _ (eh p r)^) =
+Theorem eh_p_pp {X} {a : X} (p q r : idpath a = idpath a)
+  : eh p (q @ r) @ (concat_pp_p _ _ _ @ whiskerL _ (eh p r)^) =
   concat_p_pp _ _ _ @ whiskerR (eh p q) _ @ concat_pp_p _ _ _.
 Proof.
   napply eh_p_pp_gen.
@@ -428,19 +430,19 @@ Section eh_pp_p.
   Context {wlpp_xy1 : wlx1 @ wly1 = wlxy1}.
 
   (* 3-paths *)
-  Hypothesis H_ulnat_xy0 :
-    (ulnat_x0 [-] ulnat_y0) = whiskerR wlpp_xy0 _ @ ulnat_xy0.
+  Hypothesis H_ulnat_xy0
+    : (ulnat_x0 [-] ulnat_y0) = whiskerR wlpp_xy0 _ @ ulnat_xy0.
 
-  Hypothesis H_ulnat_xy1 :
-    (ulnat_x1 [-] ulnat_y1) = whiskerR wlpp_xy1 _ @ ulnat_xy1.
+  Hypothesis H_ulnat_xy1
+    : (ulnat_x1 [-] ulnat_y1) = whiskerR wlpp_xy1 _ @ ulnat_xy1.
 
-  Hypothesis H_wlrnat_xy_z :
-    (wlrnat_x_z [-] wlrnat_y_z) @ whiskerL _ wlpp_xy1 =
+  Hypothesis H_wlrnat_xy_z
+    : (wlrnat_x_z [-] wlrnat_y_z) @ whiskerL _ wlpp_xy1 =
     whiskerR wlpp_xy0 _ @ wlrnat_xy_z.
 
   (* the coherence *)
-  Definition eh_pp_p_gen :
-    let EH_x_z := (rlucancel_inv (ulnat_x0 [-] urnat_z1))^ @
+  Definition eh_pp_p_gen
+    : let EH_x_z := (rlucancel_inv (ulnat_x0 [-] urnat_z1))^ @
       wlrnat_x_z @ rlucancel_inv (urnat_z2 [-] ulnat_x1) in
     let EH_y_z := (rlucancel_inv (ulnat_y0 [-] urnat_z0))^ @
       wlrnat_y_z @ rlucancel_inv (urnat_z1 [-] ulnat_y1) in
@@ -480,8 +482,8 @@ Section eh_pp_p.
 
 End eh_pp_p.
 
-Theorem eh_pp_p {X} {a : X} (p q r : idpath a = idpath a) :
-  eh (p @ q) r @ (concat_p_pp _ _ _ @ whiskerR (eh p r)^ _) =
+Theorem eh_pp_p {X} {a : X} (p q r : idpath a = idpath a)
+  : eh (p @ q) r @ (concat_p_pp _ _ _ @ whiskerR (eh p r)^ _) =
   concat_pp_p _ _ _ @ whiskerL _ (eh q r) @ concat_p_pp _ _ _.
 Proof.
   napply eh_pp_p_gen.
@@ -526,25 +528,25 @@ Section eh_V.
   Context {wlrnat_y_x : wly1 @ wrx1 = wrx0 @ wly0}.
 
   (* 3-paths *)
-  Hypothesis ehlnat_1p_x0 :
-    (ehlnat_x0 [I] urnat_x0) @ 1  = 1 @ ulnat_x0.
+  Hypothesis ehlnat_1p_x0
+    : (ehlnat_x0 [I] urnat_x0) @ 1  = 1 @ ulnat_x0.
 
-  Hypothesis ehlnat_1p_x1 :
-    (ehlnat_x1 [I] urnat_x1) @ 1 = 1 @ ulnat_x1.
+  Hypothesis ehlnat_1p_x1
+    : (ehlnat_x1 [I] urnat_x1) @ 1 = 1 @ ulnat_x1.
 
-  Hypothesis ehrnat_p1_y0 :
-    (ehrnat_y0 [I] ulnat_y0) @ 1 = 1 @ urnat_y0.
+  Hypothesis ehrnat_p1_y0
+    : (ehrnat_y0 [I] ulnat_y0) @ 1 = 1 @ urnat_y0.
 
-  Hypothesis ehrnat_p1_y1 :
-    (ehrnat_y1 [I] ulnat_y1) @ 1 = 1 @ urnat_y1.
+  Hypothesis ehrnat_p1_y1
+    : (ehrnat_y1 [I] ulnat_y1) @ 1 = 1 @ urnat_y1.
 
-  Hypothesis wlrnat_V_x_y :
-    whiskerR wlrnat_x_y _ @ (ehrnat_y1 [-] ehlnat_x1) =
+  Hypothesis wlrnat_V_x_y
+    : whiskerR wlrnat_x_y _ @ (ehrnat_y1 [-] ehlnat_x1) =
     (ehlnat_x0 [-] ehrnat_y0) @ whiskerL _ wlrnat_y_x^.
 
   (** The syllepsis *)
-  Definition eh_V_gen :
-    let EH_x_y := (rlucancel_inv (ulnat_x0 [-] urnat_y0))^ @
+  Definition eh_V_gen
+    : let EH_x_y := (rlucancel_inv (ulnat_x0 [-] urnat_y0))^ @
       wlrnat_x_y @ rlucancel_inv (urnat_y1 [-] ulnat_x1) in
     let EH_y_x := (rlucancel_inv (ulnat_y1 [-] urnat_x1))^ @
       wlrnat_y_x @ rlucancel_inv (urnat_x0 [-] ulnat_y0) in
@@ -595,8 +597,8 @@ Section eh_V.
 
 End eh_V.
 
-Theorem eh_V {X} {a : X} (p q : idpath (idpath a) = idpath (idpath a)) :
-  eh p q @ eh q p = 1.
+Theorem eh_V {X} {a : X} (p q : idpath (idpath a) = idpath (idpath a))
+  : eh p q @ eh q p = 1.
 Proof.
   napply eh_V_gen.
   - exact (ehlnat_1p p).
@@ -661,25 +663,25 @@ Section Ehrnat_p1_pp.
   Context (H_c02 : c01 @ c12 = c02).
 
   (*& 3-paths *)
-  Hypothesis H_ehrnat_yz :
-    (ehrnat_y [-] ehrnat_z) @ whiskerL _ wlpp_yz =
+  Hypothesis H_ehrnat_yz
+    : (ehrnat_y [-] ehrnat_z) @ whiskerL _ wlpp_yz =
     whiskerR wrpp_yz _ @ ehrnat_yz.
 
-  Hypothesis H_ulnat_yz :
-    (ulnat_y [-] ulnat_z) = whiskerR wlpp_yz _ @ ulnat_yz.
+  Hypothesis H_ulnat_yz
+    : (ulnat_y [-] ulnat_z) = whiskerR wlpp_yz _ @ ulnat_yz.
 
-  Hypothesis H_urnat_yz :
-    (urnat_y [-] urnat_z) = whiskerR wrpp_yz _ @ urnat_yz.
+  Hypothesis H_urnat_yz
+    : (urnat_y [-] urnat_z) = whiskerR wrpp_yz _ @ urnat_yz.
 
-  Variable ehrnat_p1_y :
-    (ehrnat_y [I] ulnat_y) @ whiskerR H_a02 _ = 1 @ urnat_y.
+  Variable ehrnat_p1_y
+    : (ehrnat_y [I] ulnat_y) @ whiskerR H_a02 _ = 1 @ urnat_y.
 
-  Variable ehrnat_p1_z :
-    (ehrnat_z [I] ulnat_z) @ 1 = whiskerL _ H_c02 @ urnat_z.
+  Variable ehrnat_p1_z
+    : (ehrnat_z [I] ulnat_z) @ 1 = whiskerL _ H_c02 @ urnat_z.
 
   (** The composite iso *)
-  Definition Ehrnat_p1_pp :
-    (ehrnat_yz [I] ulnat_yz) @ whiskerR H_a02 _ =
+  Definition Ehrnat_p1_pp
+    : (ehrnat_yz [I] ulnat_yz) @ whiskerR H_a02 _ =
     whiskerL _ H_c02 @ urnat_yz.
   Proof.
     apply moveR_Vp in H_urnat_yz, H_ulnat_yz, H_ehrnat_yz.
@@ -709,8 +711,8 @@ Section Ehrnat_p1_pp.
 
 End Ehrnat_p1_pp.
 
-Definition ehrnat_p1_pp {X} {a : X} {u v : idpath a = idpath a} (q : u = 1) (r : 1 = v) :
-  Ehrnat_p1_pp (eh_p1 u) (eh_p1 v) (ehrnat_pp q r 1) (ulnat_pp q r) (urnat_pp q r)
+Definition ehrnat_p1_pp {X} {a : X} {u v : idpath a = idpath a} (q : u = 1) (r : 1 = v)
+  : Ehrnat_p1_pp (eh_p1 u) (eh_p1 v) (ehrnat_pp q r 1) (ulnat_pp q r) (urnat_pp q r)
     (ehrnat_p1 q) (ehrnat_p1 r) =
   ehrnat_p1 (q @ r).
 Proof.
@@ -788,33 +790,33 @@ Section wlrnat_V_p_pp.
   Context {wlpp_yz1 : wly1 @ wlz1 = wlyz1}.
 
   (** 3-paths *)
-  Hypothesis H_ehrnat_yz0 :
-    (ehrnat_y0 [-] ehrnat_z0) @ whiskerL _ wlpp_yz0 =
+  Hypothesis H_ehrnat_yz0
+    : (ehrnat_y0 [-] ehrnat_z0) @ whiskerL _ wlpp_yz0 =
     whiskerR wrpp_yz0 _ @ ehrnat_yz0.
 
-  Hypothesis H_ehrnat_yz1 :
-    (ehrnat_y1 [-] ehrnat_z1) @ whiskerL _ wlpp_yz1 =
+  Hypothesis H_ehrnat_yz1
+    : (ehrnat_y1 [-] ehrnat_z1) @ whiskerL _ wlpp_yz1 =
     whiskerR wrpp_yz1 _ @ ehrnat_yz1.
 
-  Hypothesis H_wlrnat_x_yz :
-    (wlrnat_x_y [I] wlrnat_x_z) @ whiskerR wrpp_yz1 _ =
+  Hypothesis H_wlrnat_x_yz
+    : (wlrnat_x_y [I] wlrnat_x_z) @ whiskerR wrpp_yz1 _ =
     whiskerL _ wrpp_yz0 @ wlrnat_x_yz.
 
-  Hypothesis H_wlrnat_yz_x :
-    (wlrnat_y_x [-] wlrnat_z_x) @ whiskerL _ wlpp_yz0 =
+  Hypothesis H_wlrnat_yz_x
+    : (wlrnat_y_x [-] wlrnat_z_x) @ whiskerL _ wlpp_yz0 =
     whiskerR wlpp_yz1 _ @ wlrnat_yz_x.
 
-  Variable wlrnat_V_x_y :
-    whiskerR wlrnat_x_y _ @ (ehrnat_y1 [-] ehlnat_x1) =
+  Variable wlrnat_V_x_y
+    : whiskerR wlrnat_x_y _ @ (ehrnat_y1 [-] ehlnat_x1) =
     (ehlnat_x0 [-] ehrnat_y0) @ whiskerL _ wlrnat_y_x^.
 
-  Variable wlrnat_V_x_z :
-    whiskerR wlrnat_x_z _ @ (ehrnat_z1 [-] ehlnat_x2) =
+  Variable wlrnat_V_x_z
+    : whiskerR wlrnat_x_z _ @ (ehrnat_z1 [-] ehlnat_x2) =
     (ehlnat_x1 [-] ehrnat_z0) @ whiskerL _ wlrnat_z_x^.
 
   (** The composite square *)
-  Definition Wlrnat_V_p_pp :
-    whiskerR wlrnat_x_yz _ @ (ehrnat_yz1 [-] ehlnat_x2) =
+  Definition Wlrnat_V_p_pp
+    : whiskerR wlrnat_x_yz _ @ (ehrnat_yz1 [-] ehlnat_x2) =
     (ehlnat_x0 [-] ehrnat_yz0) @ whiskerL _ wlrnat_yz_x^.
   Proof.
     apply moveR_Vp in H_ehrnat_yz0, H_ehrnat_yz1.
@@ -870,8 +872,8 @@ Section wlrnat_V_p_pp.
 
 End wlrnat_V_p_pp.
 
-Definition wlrnat_V_p_pp {X} {a : X} {u v w : idpath a = idpath a} (p : 1 = w) (q : u = 1) (r : 1 = v) :
-  Wlrnat_V_p_pp (ehrnat_pp q r _) (ehrnat_pp q r _) (wlrnat_p_pp p q r) (wlrnat_pp_p q r p)
+Definition wlrnat_V_p_pp {X} {a : X} {u v w : idpath a = idpath a} (p : 1 = w) (q : u = 1) (r : 1 = v)
+  : Wlrnat_V_p_pp (ehrnat_pp q r _) (ehrnat_pp q r _) (wlrnat_p_pp p q r) (wlrnat_pp_p q r p)
     (wlrnat_V p q) (wlrnat_V p r) =
   wlrnat_V p (q @ r).
 Proof.
@@ -1052,14 +1054,14 @@ Definition eh_V_p_pp_gen {X : Type}
                               (ehlnat_x0 [-] ehrnat_yz0) @ whiskerL _ wlrnat_yz_x^}
 
            (* 4-paths *)
-           (H_ehrnat_p1_yz0 :
-             Ehrnat_p1_pp 1 1 H_ehrnat_yz0 H_ulnat_yz0 H_urnat_yz0 ehrnat_p1_y0 ehrnat_p1_z0 =
+           (H_ehrnat_p1_yz0
+             : Ehrnat_p1_pp 1 1 H_ehrnat_yz0 H_ulnat_yz0 H_urnat_yz0 ehrnat_p1_y0 ehrnat_p1_z0 =
                ehrnat_p1_yz0)
-           (H_ehrnat_p1_yz1 :
-             Ehrnat_p1_pp 1 1 H_ehrnat_yz1 H_ulnat_yz1 H_urnat_yz1 ehrnat_p1_y1 ehrnat_p1_z1 =
+           (H_ehrnat_p1_yz1
+             : Ehrnat_p1_pp 1 1 H_ehrnat_yz1 H_ulnat_yz1 H_urnat_yz1 ehrnat_p1_y1 ehrnat_p1_z1 =
                ehrnat_p1_yz1)
-           (H_wlrnat_V_x_yz :
-             Wlrnat_V_p_pp H_ehrnat_yz0 H_ehrnat_yz1 H_wlrnat_x_yz H_wlrnat_yz_x wlrnat_V_x_y wlrnat_V_x_z =
+           (H_wlrnat_V_x_yz
+             : Wlrnat_V_p_pp H_ehrnat_yz0 H_ehrnat_yz1 H_wlrnat_x_yz H_wlrnat_yz_x wlrnat_V_x_y wlrnat_V_x_z =
                wlrnat_V_x_yz)
   : let eh_x_y := concat_p_pp x0 y0 z0 @
                  whiskerR (((rlucancel_inv (ulnat_x0 [-] urnat_y0))^ @ wlrnat_x_y) @
@@ -1172,8 +1174,8 @@ Proof.
   reflexivity.
 Qed.
 
-Definition eh_V_p_pp {X} {a : X} (p q r : idpath (idpath a) = idpath (idpath a)) :
-  whiskerR (concat_p1 _ @@ concat_p1 _) _ @ whiskerR (eh_V p (q @ r)) _ @ lrucancel 1 @
+Definition eh_V_p_pp {X} {a : X} (p q r : idpath (idpath a) = idpath (idpath a))
+  : whiskerR (concat_p1 _ @@ concat_p1 _) _ @ whiskerR (eh_V p (q @ r)) _ @ lrucancel 1 @
   whiskerL _ (Syllepsis.concat_pp_p_p_pp _ _ _)^ @ whiskerL _ (concat_p1 _ @@ concat_p1 _)^ =
   (eh_p_pp_gen (urnat_pp q r) (urnat_pp q r) (wlrnat_p_pp p q r) [-]
    lrucancel (whiskerL _ (ap (fun p => whiskerL q p) (moveL_V1 _ _ (eh_V p r))))) [-]
