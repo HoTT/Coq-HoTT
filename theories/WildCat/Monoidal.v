@@ -97,7 +97,6 @@ Class SymmetricBraiding {A : Type} `{Is1Cat A}
   braiding_symmetricbraiding :: Braiding F;
   braid_braid : forall a b, braid a b $o braid b a $== Id (F b a);
 }.
-(** We could have used [::>] in [braiding_symmetricbraiding] instead however due to bug https://github.com/coq/coq/issues/18971 the coercion isn't registered, so we have to register it manually instead. *)
 Coercion braiding_symmetricbraiding : SymmetricBraiding >-> Braiding.
 Arguments braid_braid {A _ _ _ _ F _ _ _} a b.
 
@@ -112,6 +111,18 @@ Class HexagonIdentity {A : Type} `{HasEquivs A}
       $== associator a b c $o braid (F b c) a $o associator b c a.
 Coercion hexagon_identity : HexagonIdentity >-> Funclass.
 Arguments hexagon_identity {A _ _ _ _ _} F {_ _}.
+
+(** *** Hexagon identity with inverse associators *)
+
+Class HexagonIdentityInverseAssoc {A : Type} `{HasEquivs A}
+  (F : A -> A -> A)
+  `{!Is0Bifunctor F, !Is1Bifunctor F, !Associator F, !Braiding F}
+  (** The other hexagon identity for an associator and a braiding. *)
+  := hexagon_identity_inv_assoc a b c
+  : fmap01 F b (braid a c) $o (associator b a c)^-1$ $o fmap10 F (braid a b) c
+      $== (associator b c a)^-1$ $o braid a (F b c) $o (associator a b c)^-1$.
+Coercion hexagon_identity_inv_assoc : HexagonIdentityInverseAssoc >-> Funclass.
+Arguments hexagon_identity_inv_assoc {A _ _ _ _ _} F {_ _}.
 
 (** ** Monoidal Categories *)
 
@@ -157,7 +168,7 @@ Class IsSymmetricMonoidal (A : Type) `{HasEquivs A}
   cat_symm_tensor_hexagon :: HexagonIdentity cat_tensor;
 }.
 
-(** *** Theory about [Associator] *)
+(** ** Theory about [Associator] *)
 
 Section Associator.
   Context {A : Type} `{HasEquivs A} {F : A -> A -> A}
@@ -436,6 +447,42 @@ Definition symmetricbraiding_op' {A : Type} {F : A -> A -> A}
     H' : !SymmetricBraiding (A:=A^op) F}
   : SymmetricBraiding F
   := symmetricbraiding_op (A:=A^op) (F := F).
+  
+(** Symmetric monoidal categories also satisfy the other hexagon axiom. This is very close to the hexagon axiom of the opposite monoidal category. *)
+Instance cat_symm_tensor_hexagon_inv_assoc
+  {A : Type} {F : A -> A -> A} {unit : A}
+  `{IsSymmetricMonoidal A F unit}
+  : HexagonIdentityInverseAssoc F.
+Proof.
+  intros a b c.
+  snrefine (_ $@ ((_ $@L _) $@R _)).
+  2: exact ((braide _ _)^-1$).
+  2: { napply cate_moveR_V1.
+    symmetry.
+    nrefine ((_ $@R _) $@ _).
+    1: napply cate_buildequiv_fun.
+    rapply braid_braid. }
+  nrefine (cat_assoc _ _ _ $@ _).
+  snrefine ((_ $@R _) $@ _).
+  { refine (emap _ _)^-1$.
+    rapply braide. }
+  { symmetry.
+    refine (cate_inv_adjointify _ _ _ _ $@ fmap2 _ _).
+    napply cate_inv_adjointify. }
+  snrefine ((_ $@L (_ $@L _)) $@ _).
+  { refine (emap (flip F c) _)^-1$.
+    rapply braide. }
+  { symmetry.
+    refine (cate_inv_adjointify _ _ _ _ $@ fmap2 _ _).
+    napply cate_inv_adjointify. }
+  nrefine (_ $@ cat_assoc_opp _ _ _).
+  refine ((_ $@L _)^$ $@ _^$ $@ cate_inv2 _ $@ _ $@ (_ $@L _)).
+  1,2,4,5: rapply cate_inv_compose'.
+  refine (_ $@ (_ $@@ _) $@ _ $@ (_ $@R _)^$ $@ _^$).
+  1-3,5-6: rapply cate_buildequiv_fun.
+  refine ((fmap02 _ _ _ $@@ ((_ $@ fmap20 _ _ _) $@R _)) $@ cat_symm_tensor_hexagon a b c $@ ((_ $@L _^$) $@R _)).
+  1-4: napply cate_buildequiv_fun.
+Defined.
 
 (** ** Opposite Monoidal Categories *)
 
@@ -476,31 +523,8 @@ Proof.
   - rapply ismonoidal_op.
   - exact symmetricbraiding_op.
   - intros a b c; unfold op in a, b, c; simpl.
-    snrefine (_ $@ (_ $@L (_ $@R _))).
-    2: exact ((braide _ _)^-1$).
-    2: { napply cate_moveR_V1.
-      symmetry.
-      nrefine ((_ $@R _) $@ _).
-      1: napply cate_buildequiv_fun.
-      rapply braid_braid. }
-    snrefine ((_ $@R _) $@ _).
-    { refine (emap _ _)^-1$.
-      rapply braide. }
-    { symmetry.
-      refine (cate_inv_adjointify _ _ _ _ $@ fmap2 _ _).
-      napply cate_inv_adjointify. }
-    snrefine ((_ $@L (_ $@L _)) $@ _).
-    { refine (emap (flip tensor c) _)^-1$.
-      rapply braide. }
-    { symmetry.
-      refine (cate_inv_adjointify _ _ _ _ $@ fmap2 _ _).
-      napply cate_inv_adjointify. }
-    refine ((_ $@L _)^$ $@ _^$ $@ cate_inv2 _ $@ _ $@ (_ $@L _)).
-    1,2,4,5: rapply cate_inv_compose'.
-    refine (_ $@ (_ $@@ _) $@ _ $@ (_ $@R _)^$ $@ _^$).
-    1-3,5-6: rapply cate_buildequiv_fun.
-    refine ((fmap02 _ _ _ $@@ ((_ $@ fmap20 _ _ _) $@R _)) $@ cat_symm_tensor_hexagon a b c $@ ((_ $@L _^$) $@R _)).
-    1-4: napply cate_buildequiv_fun.
+    nrefine (cat_assoc_opp _ _ _ $@ _ $@ cat_assoc _ _ _).
+    napply cat_symm_tensor_hexagon_inv_assoc.
 Defined.
 
 Definition issymmetricmonoidal_op' {A : Type} (tensor : A -> A -> A) (unit : A)
@@ -509,6 +533,7 @@ Definition issymmetricmonoidal_op' {A : Type} (tensor : A -> A -> A) (unit : A)
   := issymmetricmonoidal_op (A:=A^op) tensor unit.
 
 (** ** Further Coherence Conditions *)
+
 (** In Mac Lane's original axiomatisation of a monoidal category, 3 extra coherence conditions were given in addition to the pentagon and triangle identities. It was later shown by Kelly that these axioms are redundant and follow from the rest. We reproduce these arguments here. *)
 
 (** The left unitor of a tensor can be decomposed as an associator and a functorial action of the tensor on a left unitor. *)
