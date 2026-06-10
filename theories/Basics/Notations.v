@@ -96,6 +96,9 @@ Reserved Infix "mod" (at level 40, no associativity).
 Reserved Notation "p ~ 1" (at level 1, left associativity, format "p '~' '1'").
 Reserved Notation "p ~ 0" (at level 1, left associativity, format "p '~' '0'").
 
+(** Categories *)
+Reserved Infix "⊕" (at level 40, left associativity).
+
 (** Pointed *)
 Reserved Infix "@*" (at level 30).
 Reserved Infix "@@*" (at level 30).
