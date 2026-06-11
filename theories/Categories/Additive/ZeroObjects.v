@@ -4,9 +4,10 @@
     concepts for additive and stable category theory.
 *)
 
-From HoTT Require Import Basics Types.
-From HoTT.Categories Require Import Category Functor NaturalTransformation.
-From HoTT.Categories Require Import InitialTerminalCategory.
+From HoTT Require Import Basics.Overture Basics.PathGroupoids Basics.Tactics.
+From HoTT.Categories Require Import Category.Core Category.Objects.
+
+Local Open Scope morphism_scope.
 
 (** * Zero objects
     
@@ -53,7 +54,7 @@ Lemma morphism_through_zero_is_zero {C : PreCategory}
   {Z : ZeroObject C} {X Y : object C}
   (f : morphism C X Z)
   (g : morphism C Z Y)
-  : (g o f)%morphism = zero_morphism X Y.
+  : g o f = zero_morphism X Y.
 Proof.
   unfold zero_morphism.
   apply ap011.
@@ -67,9 +68,9 @@ Qed.
 Lemma zero_morphism_right {C : PreCategory} {Z : ZeroObject C}
   {X Y W : object C}
   (g : morphism C Y W)
-  : (g o zero_morphism X Y)%morphism = zero_morphism X W.
+  : g o zero_morphism X Y = zero_morphism X W.
 Proof.
-  rewrite <- Category.Core.associativity.
+  rewrite <- associativity.
   apply morphism_through_zero_is_zero.
 Qed.
 
@@ -77,9 +78,9 @@ Qed.
 Lemma zero_morphism_left {C : PreCategory} {Z : ZeroObject C}
   {X Y W : object C}
   (f : morphism C X Y)
-  : (zero_morphism Y W o f)%morphism = zero_morphism X W.
+  : zero_morphism Y W o f = zero_morphism X W.
 Proof.
-  rewrite Category.Core.associativity.
+  rewrite associativity.
   apply morphism_through_zero_is_zero.
 Qed.
 
