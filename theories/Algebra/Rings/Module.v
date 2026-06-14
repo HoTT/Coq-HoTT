@@ -529,6 +529,20 @@ Definition rm_image {R : Ring} {M N : RightModule R} (f : M $-> N)
   : RightSubmodule N
   := lm_image (R:=rng_op R) f.
 
+(** ** Corestriction to a submodule *)
+
+(** A homomorphism whose image lands in a submodule corestricts to it. *)
+Definition lm_corestrict {R : Ring} {L M : LeftModule R} (P : LeftSubmodule M)
+  (h : L $-> M) (hP : forall l, P (h l))
+  : L $-> P.
+Proof.
+  snapply Build_LeftModuleHomomorphism'.
+  - exact (fun l => (h l; hP l)).
+  - intros r x y; apply path_sigma_hprop; cbn.
+    exact (grp_homo_op h (r *L x) y
+           @ ap (fun z => z + h y) (@lm_homo_lact _ _ _ h r x)).
+Defined.
+
 (** ** Quotient Modules *)
 
 (** The quotient abelian group of a module and a submodule has a natural ring action. *)
@@ -607,8 +621,7 @@ Definition rm_first_iso `{Funext} {R : Ring} {M N : RightModule R} (f : M $-> N)
 
 (** ** Direct products *)
 
-(** TODO: generalise to biproducts *)
-(** The direct product of modules *)
+(** The direct product of modules. *)
 Definition lm_prod {R : Ring} : LeftModule R -> LeftModule R -> LeftModule R.
 Proof.
   intros M N.
@@ -682,6 +695,48 @@ Defined.
 Instance hasbinaryproducts_rightmodule {R : Ring}
   : HasBinaryProducts (RightModule R)
   := hasbinaryproducts_leftmodule (R:=rng_op R).
+
+(** The direct product is also a coproduct: the injections and the recursor. *)
+
+Definition lm_prod_inl {R : Ring} {M N : LeftModule R} : M $-> lm_prod M N.
+Proof.
+  snapply Build_LeftModuleHomomorphism.
+  - exact grp_prod_inl.
+  - intros r m; snapply path_prod'.
+    + reflexivity.
+    + exact (lm_zero_r r)^.
+Defined.
+
+Definition lm_prod_inr {R : Ring} {M N : LeftModule R} : N $-> lm_prod M N.
+Proof.
+  snapply Build_LeftModuleHomomorphism.
+  - exact grp_prod_inr.
+  - intros r n; snapply path_prod'.
+    + exact (lm_zero_r r)^.
+    + reflexivity.
+Defined.
+
+Definition lm_prod_rec {R : Ring} {M N L : LeftModule R}
+  (f : M $-> L) (g : N $-> L)
+  : lm_prod M N $-> L.
+Proof.
+  snapply Build_LeftModuleHomomorphism.
+  - exact (ab_biprod_rec f g).
+  - intros r mn; cbn.
+    refine (ap011 (+) (@lm_homo_lact _ _ _ f r (fst mn))
+                      (@lm_homo_lact _ _ _ g r (snd mn)) @ _).
+    exact (lm_dist_l r (f (fst mn)) (g (snd mn)))^.
+Defined.
+
+Definition lm_prod_rec_beta_inl {R : Ring} {M N L : LeftModule R}
+  (f : M $-> L) (g : N $-> L) (m : M)
+  : lm_prod_rec f g (lm_prod_inl m) = f m
+  := ab_biprod_rec_beta_inl f g m.
+
+Definition lm_prod_rec_beta_inr {R : Ring} {M N L : LeftModule R}
+  (f : M $-> L) (g : N $-> L) (n : N)
+  : lm_prod_rec f g (lm_prod_inr n) = g n
+  := ab_biprod_rec_beta_inr f g n.
 
 (** ** Finite Sums *)
 

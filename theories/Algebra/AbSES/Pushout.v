@@ -1,5 +1,6 @@
 From HoTT Require Import Basics Types Truncations.Core.
 From HoTT.WildCat Require Import Core Universe Opposite NatTrans.
+Require Import Universes.HSet.
 Require Import Pointed.Core Homotopy.ExactSequence HIT.epi.
 Require Import Modalities.ReflectiveSubuniverse.
 Require Import AbelianGroup AbPushout AbHom AbGroups.Biproduct.
@@ -450,4 +451,24 @@ Proof.
   - by apply abses_pushout_phomotopic.
   - apply abses_pushout_pmap_id.
   - apply abses_pushout_pcompose.
+Defined.
+
+(** If a pushout [abses_pushout alpha E] is trivial, then [alpha] factors through [inclusion E]. *)
+Lemma abses_pushout_trivial_factors_inclusion `{Univalence}
+  {B A A' : AbGroup} (alpha : A $-> A') (E : AbSES B A)
+  : abses_pushout alpha E = pt -> exists phi, alpha = phi $o inclusion E.
+Proof.
+  equiv_intros (equiv_path_abses (E:=abses_pushout alpha E) (F:=pt)) p.
+  destruct p as [phi [p q]].
+  exists (ab_biprod_pr1 $o phi $o ab_pushout_inr).
+  apply equiv_path_grouphomomorphism; intro a.
+  (* We embed into the biproduct and prove equality there. *)
+  apply (isinj_embedding (@ab_biprod_inl A' B) _).
+  refine ((p (alpha a))^ @ _).
+  refine (ap phi _ @ _).
+  1: exact (left_square (abses_pushout_morphism E alpha) a).
+  apply (path_prod' idpath).
+  refine ((q _)^ @ _).
+  refine (right_square (abses_pushout_morphism E alpha) _ @ _); cbn.
+  apply isexact_inclusion_projection.
 Defined.
