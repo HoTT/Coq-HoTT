@@ -57,25 +57,7 @@ Defined.
 
 (** *** Exactness of [ab_hom E G -> ab_hom A G -> Ext B G] *)
 
-(** If a pushout [abses_pushout alpha E] is trivial, then [alpha] factors through [inclusion E]. *)
-Lemma abses_pushout_trivial_factors_inclusion `{Univalence}
-  {B A A' : AbGroup} (alpha : A $-> A') (E : AbSES B A)
-  : abses_pushout alpha E = pt -> exists phi, alpha = phi $o inclusion E.
-Proof.
-  equiv_intros (equiv_path_abses (E:=abses_pushout alpha E) (F:=pt)) p.
-  destruct p as [phi [p q]].
-  exists (ab_biprod_pr1 $o phi $o ab_pushout_inr).
-  apply equiv_path_grouphomomorphism; intro a.
-  (* We embed into the biproduct and prove equality there. *)
-  apply (isinj_embedding (@ab_biprod_inl A' B) _).
-  refine ((p (alpha a))^ @ _).
-  refine (ap phi _ @ _).
-  1: exact (left_square (abses_pushout_morphism E alpha) a).
-  apply (path_prod' idpath).
-  refine ((q _)^ @ _).
-  refine (right_square (abses_pushout_morphism E alpha) _ @ _); cbn.
-  apply isexact_inclusion_projection.
-Defined.
+(** [abses_pushout_trivial_factors_inclusion] now lives in [AbSES.Pushout]. *)
 
 Instance isexact_ext_contra_sixterm_iii@{u v +} `{Univalence}
   {B A G : AbGroup@{u}} (E : AbSES@{u v} B A)

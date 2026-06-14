@@ -244,6 +244,20 @@ Proof.
   exact (contr_inhabited_hprop _ (p x y)).
 Defined.
 
+(** Any map from a merely inhabited type to a 0-connected type is
+    surjective. *)
+Definition issurjection_is0connected `{Univalence}
+  (X Y : Type) (mX : merely X) `{IsConnected 0 Y} (f : X -> Y)
+  : IsSurjection f.
+Proof.
+  intro y.
+  rapply contr_inhabited_hprop.
+  strip_truncations.
+  pose proof (p := merely_path_is0connected Y (f mX) y).
+  strip_truncations.
+  exact (tr (mX; p)).
+Defined.
+
 (** The path component of a point [x : X] is connected. *)
 Instance is0connected_component {X : Type} (x : X)
   : IsConnected 0 { z : X & merely (z = x) }.
