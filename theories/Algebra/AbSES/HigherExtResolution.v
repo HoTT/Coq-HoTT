@@ -1,5 +1,4 @@
 From HoTT Require Import Basics Types Truncations.Core.
-From HoTT.WildCat Require Import Core.
 Require Import Spaces.Nat.Core.
 Require Import AbGroups.AbelianGroup AbGroups.AbProjective.
 Require Import Algebra.AbSES.Core Algebra.AbSES.HigherExt.
@@ -26,22 +25,6 @@ Proof.
   strip_truncations; destruct hsurj as [y py].
   refine (py^ @ ap (abses_ext_splice m.+1 zeta) (hK y) @ _).
   exact (grp_homo_unit (grp_homo_abses_ext_splice m.+1 zeta)).
-Defined.
-
-(** Iterating once: a length-two projective resolution
-    [L -> P1 -> K] and [K -> P0 -> B] forces [Ext^{n+3}(B,-)] to vanish when
-    [L] is projective. *)
-Definition abses_ext_vanish_two `{Univalence} {L K B : AbGroup}
-  (eta : AbSES K L) (zeta : AbSES B K)
-  `{IsAbProjective (middle eta)} `{IsAbProjective (middle zeta)}
-  `{IsAbProjective L} {A : AbGroup} (n : nat)
-  (x : abses_ext n.+3 B A)
-  : x = abses_ext_zero n.+3 B A.
-Proof.
-  refine (abses_ext_vanish_step zeta n.+1 _ x).
-  intro y.
-  exact (abses_ext_vanish_step eta n
-           (fun z => abses_ext_projective_vanish n z) y).
 Defined.
 
 (** A projective resolution of length [k]: a tower of short exact sequences with
