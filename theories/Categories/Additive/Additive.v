@@ -39,30 +39,16 @@ Coercion additive_semiadditive : AdditiveCategory >-> SemiAdditiveCategory.
 (** ** Hom-sets are abelian groups *)
 
 Section HomAbGroup.
-  Context {A : AdditiveCategory} {X Y : object A}.
-
-  (** The inverse law on the other side follows by commutativity. *)
-  Definition additive_inverse_r (f : morphism A X Y)
-    : f + (- f) = 0
-    := morphism_addition_commutative f (- f) @ additive_inverse_l f.
-
-  #[export] Instance isabgroup_morphisms : IsAbGroup (morphism A X Y).
-  Proof.
-    split.
-    - split.
-      + exact _.
-      + exact additive_inverse_l.
-      + exact additive_inverse_r.
-    - exact _.
-  Defined.
+  Context {A : AdditiveCategory} (X Y : object A).
 
   (** The bundled abelian group of morphisms from [X] to [Y]. *)
   Definition abgroup_hom : AbGroup
-    := Build_AbGroup' (morphism A X Y) _ _ _ _.
+    := Build_AbGroup' (morphism A X Y) _ _ _ additive_inverse_l.
+
+  #[export] Instance isabgroup_morphisms : IsAbGroup (morphism A X Y)
+    := @isabgroup_abgroup abgroup_hom.
 
 End HomAbGroup.
-
-Arguments abgroup_hom {A} X Y.
 
 (** ** Negation and composition *)
 
@@ -79,7 +65,7 @@ Definition inverse_precompose {A : AdditiveCategory} {X Y W : object A}
 Proof.
   apply inverse_morphism_unique.
   lhs_V napply addition_precompose.
-  refine (ap (fun g => g o a) (additive_inverse_l f) @ _).
+  lhs napply (ap (fun g => g o a) (additive_inverse_l f)).
   napply zero_morphism_left.
 Qed.
 
@@ -90,7 +76,7 @@ Definition inverse_postcompose {A : AdditiveCategory} {X Y W : object A}
 Proof.
   apply inverse_morphism_unique.
   lhs_V napply addition_postcompose.
-  refine (ap (fun g => a o g) (additive_inverse_l f) @ _).
+  lhs napply (ap (fun g => a o g) (additive_inverse_l f)).
   napply zero_morphism_right.
 Qed.
 
@@ -138,10 +124,7 @@ Proof.
   snapply Build_AdditiveFunctor.
   - exact 1%functor.
   - intros X Y.
-    split.
-    + intros f g.
-      reflexivity.
-    + reflexivity.
+    rapply id_monoid_morphism.
 Defined.
 
 (** Additive functors compose. *)
@@ -152,10 +135,5 @@ Proof.
   snapply Build_AdditiveFunctor.
   - exact (G o F)%functor.
   - intros X Y.
-    split.
-    + intros f g.
-      refine (ap (fun h => morphism_of G h) (preserves_sg_op f g) @ _).
-      exact (preserves_sg_op _ _).
-    + refine (ap (fun h => morphism_of G h) preserves_mon_unit @ _).
-      exact preserves_mon_unit.
+    rapply compose_monoid_morphism.
 Defined.
