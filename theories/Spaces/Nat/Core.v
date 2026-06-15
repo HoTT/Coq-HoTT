@@ -357,6 +357,15 @@ Proof.
     exact IHn.
 Defined.
 
+(** A product of natural numbers is zero only if one of the factors is. *)
+Definition nat_mul_is_zero@{} {n m : nat} (p : n * m = 0) : (n = 0) + (m = 0).
+Proof.
+  destruct n as [|n]; [ exact (inl idpath) | ].
+  destruct m as [|m]; [ exact (inr idpath) | ].
+  napply Empty_rec.
+  exact (neq_nat_zero_succ _ (p^ @ nat_mul_succ_l n m.+1 @ nat_add_succ_l m _)).
+Defined.
+
 (** Multiplication of natural numbers is commutative. *)
 Definition nat_mul_comm@{} n m : n * m = m * n.
 Proof.

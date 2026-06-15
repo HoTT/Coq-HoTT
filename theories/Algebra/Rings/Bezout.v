@@ -84,6 +84,14 @@ Proof.
   exact (ap011 (+) p1 p2 @ (rng_dist_r c1 c2 d)^).
 Defined.
 
+Definition rng_divides_negate_r {R : CRing} {a b : R}
+  (p : rng_divides a b) : rng_divides a (- b).
+Proof.
+  strip_truncations; destruct p as [c pc].
+  apply tr; exists (- c).
+  exact (ap (fun w => - w) pc @ (rng_mult_negate_l c a)^).
+Defined.
+
 (** ** A finitely generated ideal of a Bézout ring is principal *)
 
 (** A gcd of the [X i] lying in the ideal they generate and dividing each. *)

@@ -240,19 +240,6 @@ Section Operations.
     := abses_es_pullback n ab_diagonal
          (abses_es_pushout n ab_codiagonal (abses_es_direct_sum n E F)).
 
-  (** The biproduct with the trivial group is the identity, projecting away
-      the trivial factor. *)
-  Definition ab_biprod_trivial_r (A : AbGroup@{u})
-    : GroupIsomorphism (ab_biprod A abgroup_trivial) A.
-  Proof.
-    snapply Build_GroupIsomorphism.
-    - exact ab_biprod_pr1.
-    - snapply isequiv_adjointify.
-      + exact (fun a => (a, mon_unit)).
-      + reflexivity.
-      + intro x; srapply path_prod; [ reflexivity | apply path_contr ].
-  Defined.
-
   (** Adding the split trivial summand on the deep end and projecting away the
       trivial factor leaves a short exact sequence unchanged, up to reindexing
       the base along the projection. *)

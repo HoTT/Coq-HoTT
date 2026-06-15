@@ -1,5 +1,5 @@
 From HoTT Require Import Basics Types AbelianGroup AbPushout
-  WildCat.Core Modalities.ReflectiveSubuniverse Truncations.Core.
+  WildCat.Core Truncations.Core.
 
 (** * Injective abelian groups *)
 

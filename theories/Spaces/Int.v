@@ -783,3 +783,58 @@ Proof.
     rhs_V napply int_nat_add.
     exact (ap _ IHn).
 Defined.
+
+(** ** Absolute value *)
+
+(** The absolute value of an integer, as a natural number. *)
+Definition int_abs (x : Int) : nat :=
+  match x with
+  | negS n => S n
+  | posS n => S n
+  | _ => O
+  end.
+
+Definition int_abs_of_nat (n : nat) : int_abs (int_of_nat n) = n.
+Proof.
+  by destruct n.
+Defined.
+
+Definition int_abs_neg (x : Int) : int_abs (int_neg x) = int_abs x.
+Proof.
+  by destruct x.
+Defined.
+
+(** Every integer is its absolute value up to sign. *)
+Definition int_abs_decomp (x : Int)
+  : ((x = int_of_nat (int_abs x)) + (x = int_neg (int_of_nat (int_abs x))))%type.
+Proof.
+  destruct x.
+  - exact (inr idpath).
+  - exact (inl idpath).
+  - exact (inl idpath).
+Defined.
+
+(** The absolute value of a product of two natural numbers. *)
+Definition int_abs_of_nat_mul (a b : nat)
+  : int_abs (int_mul (int_of_nat a) (int_of_nat b)) = (a * b)%nat
+  := ap int_abs (int_nat_mul a b) @ int_abs_of_nat (a * b)%nat.
+
+(** Absolute value is multiplicative. *)
+Definition int_abs_mul (x y : Int)
+  : int_abs (int_mul x y) = (int_abs x * int_abs y)%nat.
+Proof.
+  destruct (int_abs_decomp x) as [px | px], (int_abs_decomp y) as [py | py];
+    lhs napply (ap int_abs (ap011 int_mul px py)).
+  - napply int_abs_of_nat_mul.
+  - lhs napply (ap int_abs (int_mul_neg_r _ _)).
+    lhs napply int_abs_neg.
+    napply int_abs_of_nat_mul.
+  - lhs napply (ap int_abs (int_mul_neg_l _ _)).
+    lhs napply int_abs_neg.
+    napply int_abs_of_nat_mul.
+  - lhs napply (ap int_abs (int_mul_neg_l _ _)).
+    lhs napply int_abs_neg.
+    lhs napply (ap int_abs (int_mul_neg_r _ _)).
+    lhs napply int_abs_neg.
+    napply int_abs_of_nat_mul.
+Defined.

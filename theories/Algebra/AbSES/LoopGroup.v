@@ -1,7 +1,7 @@
 From HoTT Require Import Basics Types Truncations.Core HFiber.
 From HoTT.WildCat Require Import Core Equiv.
 Require Import Pointed.
-Require Import AbelianGroup AbGroups.Biproduct AbHom.
+Require Import AbelianGroup AbHom.
 Require Import Algebra.AbSES.Core Algebra.AbSES.Pullback Algebra.AbSES.BaerSum.
 Require Import Homotopy.HomotopyGroup Homotopy.ClassifyingSpace Homotopy.EMSpace
   Homotopy.Cover.

@@ -1,6 +1,4 @@
-From HoTT Require Import Basics Types Truncations.Core.
-From HoTT.WildCat Require Import Core.
-Require Import Algebra.AbGroups.AbelianGroup.
+From HoTT Require Import Basics Truncations.Core.
 Require Import Algebra.Rings.Ring Algebra.Rings.Module Algebra.Rings.Vector.
 
 Local Open Scope mc_add_scope.

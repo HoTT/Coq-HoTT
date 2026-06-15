@@ -1,8 +1,7 @@
 From HoTT Require Import Basics Types.
 From HoTT.WildCat Require Import Core.
-Require Import Truncations.Core.
 Require Import Colimits.Quotient.
-Require Import AbGroups.AbelianGroup AbGroups.AbHom.
+Require Import AbGroups.AbelianGroup.
 Require Import Algebra.AbSES.Core Algebra.AbSES.Pushout Algebra.AbSES.Pullback
   Algebra.AbSES.BaerSum Algebra.AbSES.HigherExt.
 Require Import Groups.Group.
