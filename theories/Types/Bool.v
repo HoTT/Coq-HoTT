@@ -15,7 +15,7 @@ Scheme Bool_rec := Minimality for Bool Sort Type.
 (* For compatibility with Coq's [induction] *)
 Definition Bool_rect := Bool_ind.
 
-Add Printing If Bool.
+Register Bool as core.bool.type.
 
 Declare Scope bool_scope.
 
