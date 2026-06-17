@@ -499,18 +499,3 @@ Proof.
   - exact abses_pullback_pmap_id.
   - symmetry; apply abses_pullback_pcompose.
 Defined.
-
-(** Dual to [abses_pushout_trivial_factors_inclusion]: if a pullback
-    [abses_pullback beta E] is trivial, then [beta] factors through
-    [projection E].  The splitting of the trivial pullback provides the
-    factoring map through the pullback's middle. *)
-Definition abses_pullback_trivial_factors_projection `{Univalence}
-  {A B B' : AbGroup} (beta : B' $-> B) (E : AbSES B A)
-  : abses_pullback beta E = pt -> exists phi, beta = projection E $o phi.
-Proof.
-  intro h.
-  destruct (snd (iff_abses_trivial_split (abses_pullback beta E)) h) as [s hs].
-  exists (component2 (abses_pullback_morphism E beta) $o s).
-  apply equiv_path_grouphomomorphism; intro b.
-  exact (right_square (abses_pullback_morphism E beta) (s b) @ ap beta (hs b))^.
-Defined.
