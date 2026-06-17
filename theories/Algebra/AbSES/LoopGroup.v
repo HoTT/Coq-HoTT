@@ -13,14 +13,8 @@ Local Open Scope mc_add_scope.
 
 (** * The fundamental group of [AbSES B A]
 
-    [AbSES.Core] gives an equivalence of types
-    [loops_abses : (B $-> A) <~> loops (AbSES B A)].  We show that it is an
-    isomorphism of groups: concatenation of loops corresponds to addition of
-    homomorphisms.  The Baer sum laws hold at the level of [AbSES B A], so
-    translation by [E] is a self-equivalence taking the split sequence to
-    [E], and the fundamental group is [ab_hom B A] at every basepoint.  It
-    follows that each path component of [AbSES B A] is a classifying space
-    [K(ab_hom B A, 1)]. *)
+    The fundamental group of [AbSES B A] at any basepoint is [ab_hom B A],
+    and each path component is a classifying space [K(ab_hom B A, 1)]. *)
 
 Section LoopGroup.
   Context `{Univalence} {B A : AbGroup@{u}}.

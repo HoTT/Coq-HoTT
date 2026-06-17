@@ -12,18 +12,9 @@ Require Import Modalities.Identity Modalities.Descent.
 
 (** * Classification of short exact sequences
 
-    Following Christensen and Flaten, "Ext groups in homotopy type theory"
-    (arXiv:2305.09639, Theorem 2.2.2), short exact sequences [A -> E -> B]
-    of abelian groups are classified by pointed maps [K(B,2) ->* K(A,3)].
-
-    Applying [K(-,n.+1)] to a short exact sequence yields a fiber sequence
-    of Eilenberg-Mac Lane spaces, whose connecting map is the classifying
-    map [abses_classifying_map].  Conversely, the homotopy groups of the
-    fiber of a pointed map recover a short exact sequence [abses_pfiber].
-    We show these are mutually inverse, giving the equivalence
-    [equiv_abses_classifying_map].  We deduce that [Ext B A] is the set of
-    components of the classifying mapping type, and that [AbSES B A] and
-    [Ext B A] are essentially small. *)
+    Short exact sequences [A -> E -> B] of abelian groups are classified by
+    pointed maps [K(B,2) ->* K(A,3)] (Christensen and Flaten, "Ext groups in
+    homotopy type theory", Theorem 2.2.2). *)
 
 Local Open Scope pointed_scope.
 
@@ -110,8 +101,7 @@ Section EMFiberSequence.
     exact (contr_pi_succ_istrunc n K(B, n.+1)).
   Defined.
 
-  (** [Pi n.+1] of the comparison map [cxfib] is surjective, by exactness
-      of [A -> E -> B] transported along [pi_em_fmap]. *)
+  (** [Pi n.+1] of the comparison map [cxfib] is surjective. *)
   Local Definition issurj_pi_cxfib
     : IsSurjection (fmap (Pi n.+1) (cxfib iscomplex_em_abses)).
   Proof.
@@ -251,10 +241,8 @@ Definition abses_classifying_map `{Univalence} {B A : AbGroup@{u}}
     sequence [A -> Pi 2 (pfiber f) -> B], by rotating the fiber sequence of
     [f] and taking homotopy groups. *)
 
-(** The retraction law for [grp_iso_inverse], stated so that both sides
-    use the group-homomorphism spelling.  Unifying the equivalence-inverse
-    and [grp_iso_inverse] spellings on large terms is expensive, so we
-    bridge them once here, on an abstract isomorphism. *)
+(** The retraction law for [grp_iso_inverse], in the group-homomorphism
+    spelling. *)
 Local Definition grp_iso_retr {G H : Group} (e : GroupIsomorphism G H)
   (x : H)
   : e (grp_iso_inverse e x) = x.
@@ -472,8 +460,7 @@ Section PfiberDeloop.
          (groupiso_pi_functor 2 pequiv_em_pfiber_psi)
          (equiv_g_pi_n_em (abgroup_pi_pfiber 1 psi) 2).
 
-  (** The bridge, twisted by [eta_pfiber_psi] so that the projection
-      square below holds by construction. *)
+  (** The bridge, twisted by [eta_pfiber_psi]. *)
   Local Definition pequiv_em_pfiber_psi'
     : K(abgroup_pi_pfiber 1 psi, 3) <~>* pfiber psi.
   Proof.
@@ -566,8 +553,7 @@ Section PfiberDeloop.
 
   (** Through the bridge, [cxfib] of the extracted sequence is the
       connecting identification of [psi], modulo the loop identification
-      of [K(A,3)].  Both sides are determined by their effect on [Pi 3],
-      since [Pi 3] of the double fiber inclusion is an embedding. *)
+      of [K(A,3)]. *)
   Local Definition path_cxfib_connect_psi
     : pequiv_pfiber pequiv_em_pfiber_psi' pequiv_pmap_idmap
         square_em_proj_pfib_psi
@@ -667,9 +653,8 @@ Section PfiberDeloop.
     exact (connecting_map_pfib2 psi).
   Defined.
 
-  (** Negation on [K(B,2)], realised as loop inversion conjugated by the
-      loop identification.  This is the sign by which the classifying map
-      of the extracted sequence differs from the delooping equivalence. *)
+  (** Negation on [K(B,2)], as loop inversion conjugated by the loop
+      identification. *)
   Local Definition pequiv_neg_em : K(B, 2) <~>* K(B, 2)
     := (pequiv_loops_em_em B 2)^-1*
        o*E (loops_inv K(B, 3) o*E pequiv_loops_em_em B 2).
@@ -752,10 +737,7 @@ Section ClassifyingRoundTrip.
       pequiv_pmap_idmap _).
   Defined.
 
-  (** Hence the fiber of the classifying map is [loops K(E,3)]: transport
-      the fiber along [rt1_square] and the presentation of the connecting
-      map, identify the double fiber via [pfiber2_loops], and invert.  The
-      inversion makes both round-trip squares commute. *)
+  (** The fiber of the classifying map is [loops K(E,3)]. *)
   Local Definition pequiv_pfiber_classifying
     : pfiber (abses_classifying_map E) <~>* loops K(E, 3).
   Proof.
@@ -913,8 +895,7 @@ Section ClassifyingRoundTrip.
     exact CORE.
   Defined.
 
-  (** The projection square of the round trip.  The last step unfolds
-      [equiv_g_pi_n_em B 2] definitionally. *)
+  (** The projection square of the round trip. *)
   Local Definition rt1_proj_square (x : Pi 2 (pfiber (abses_classifying_map E)))
     : abses_pfiber_proj 0 (abses_classifying_map E) x
       = projection E (rt1_middle x).
@@ -951,15 +932,12 @@ End ClassifyingRoundTrip.
 
 (** ** The classification theorem
 
-    [abses_classifying_map] is an equivalence, with inverse [abses_pfiber].
-    This is Theorem 2.2.2 of Christensen-Flaten. *)
+    [abses_classifying_map] is an equivalence, with inverse [abses_pfiber]. *)
 
 Section Classification.
   Context `{Univalence} {B A : AbGroup@{u}}.
 
-  (** A section of the classifying map: the delooping preimage of [f]
-      untwisted by the sign extracts to a sequence whose classifying map
-      is [f].  This uses the [psi := K(B,3) ->* K(A,4)] analysis. *)
+  (** A section of the classifying map. *)
   Local Definition abses_classifying_section (f : K(B, 2) ->* K(A, 3))
     : abses_classifying_map
         (abses_pfiber 1 ((equiv_deloop_em_pmap B A)^-1
@@ -975,9 +953,7 @@ Section Classification.
     apply pmap_precompose_idmap.
   Defined.
 
-  (** The second round trip: since [abses_pfiber 0] is a retraction of
-      [abses_classifying_map] (the first round trip) and the above is a
-      section, the two agree and the section round trip holds. *)
+  (** The second round trip. *)
   Local Definition abses_classifying_map_pfiber (f : K(B, 2) ->* K(A, 3))
     : abses_classifying_map (abses_pfiber 0 f) = f.
   Proof.
@@ -1003,10 +979,7 @@ Section Classification.
     : Ext B A <~> Tr 0 (K(B, 2) ->* K(A, 3))
     := Trunc_functor_equiv 0 equiv_abses_classifying_map.
 
-  (** Since the classifying mapping type lives in the universe of [A] and
-      [B], the a priori large type [AbSES B A] is essentially small, as is
-      [Ext B A].  In particular both are independent of the universe in
-      which the extensions are formed (Remark 2.2.5). *)
+  (** [AbSES B A] is essentially small, and so is [Ext B A] (Remark 2.2.5). *)
   Definition issmall_abses : IsSmall@{u _} (AbSES B A)
     := issmall_equiv_issmall (equiv_abses_classifying_map)^-1%equiv
          (issmall_in _).
@@ -1019,15 +992,11 @@ End Classification.
 
 (** ** Naturality of the classifying map
 
-    A morphism of short exact sequences induces, after applying [K(-,3)],
-    a commuting square relating the two classifying maps.  Taking the
-    [B]-component to be the identity gives naturality in [A] (pushout);
-    taking the [A]-component to be the identity gives naturality in [B]
-    (pullback). *)
+    A morphism of short exact sequences induces a commuting square relating
+    the two classifying maps. *)
 
-(** Inverting the [cxfib] equivalences below would otherwise force the
-    elaborator to reduce the large witnesses that they are equivalences;
-    we keep those witnesses opaque so that the inverses stay inert. *)
+(** Keep the [cxfib] equivalence witnesses opaque so their inverses stay
+    inert. *)
 Opaque isequiv_cxfib_em isequiv_cxfib.
 
 Section Naturality.
@@ -1068,8 +1037,7 @@ Section Naturality.
          (em_fmap (projection F) 3) (isexact_em_abses F 2).
 
   (** The fiber-inclusion comparison commutes with the morphism on
-      fibers.  Both sides are determined on [Pi 3], where the double-fiber
-      inclusion is an embedding, reducing to the inclusion square. *)
+      fibers. *)
   Local Definition em_cxfib_square
     : functor_pfiber (em_proj_square^*) o* em_cxfib_E
       = em_cxfib_F o* em_fmap (component1 phi) 3.
