@@ -442,9 +442,9 @@ Global Opaque isequiv_bloop.
 Instance contr_pclassifyingspace `{Univalence} (G : Group) `{Contr G}
   : Contr (B G).
 Proof.
-  (* The map to [pUnit] is an equivalence, since it is one on loops. *)
+  rapply (contr_equiv' pUnit (Build_Equiv _ _ pconst _)).
+  (* The map from [pUnit] is an equivalence, since it is one on loops, as both have contractible loop spaces. *)
   pose proof (contr_equiv' G equiv_g_loops_bg).
-  rapply (contr_equiv' pUnit (equiv_inverse (Build_Equiv _ _ pconst _))).
   rapply isequiv_is0connected_isequiv_loops.
 Defined.
 
