@@ -30,8 +30,7 @@ Proof.
   srapply O_strong_leq_trans_l.
 Defined.
 
-(** For some reason, this causes typeclass search to spin. *)
-Local Instance O_lex_leq_Tr `{Univalence} (n : trunc_index)
+#[export] Instance O_lex_leq_Tr `{Univalence} (n : trunc_index)
   : Tr n <<< Tr n.+1.
 Proof.
   intros A; unshelve econstructor; intros P' P_inO;

@@ -108,11 +108,8 @@ Defined.
 
 Definition conn_point_incl `{Univalence} {n : trunc_index} {A : Type} (a0:A)
   `{IsConnected n.+1 A}
-  : IsConnMap n (unit_name a0).
-Proof.
-  rapply (OO_cancelL_conn_map (Tr n.+1) (Tr n) (unit_name a0) (const_tt A)).
-  apply O_lex_leq_Tr.
-Defined.
+  : IsConnMap n (unit_name a0)
+  := OO_cancelL_conn_map (Tr n.+1) (Tr n) (unit_name a0) (const_tt A).
 
 (** [conn_point_incl] can be made an instance, but at the time of writing, this doesn't cause any additional goals to be solved compared to making it an immediate hint, so we do the latter. *)
 #[export] Hint Immediate conn_point_incl : typeclass_instances.
