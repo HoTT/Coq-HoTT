@@ -29,6 +29,14 @@ A handy benchmark: under our indexing, the map [S1 -> 1] is 0-connected but not 
 
 One reason for our choice is that this way, the n-truncated and n-connected maps are the modal and modally-connected maps for the n-truncation modality.  Many of the basic lemmas about connected maps are in fact true for any modality, and can be found in [Modality.v].  Thus, here we consider mainly properties that involve the interaction of connectedness at different truncation levels. *)
 
+(** ** Connectedness of maps between connected types *)
+
+(** If [X] is n-connected and [Y] is (n+1)-connected, then any map [X -> Y] is n-connected. *)
+Definition isconnmap_isconnected `{Univalence} (n : trunc_index)
+  (X Y : Type) `{IsConnected n X} `{IsConnected n.+1 Y} (f : X -> Y)
+  : IsConnMap n f
+  := OO_conn_map_isconnected (Tr n.+1) (Tr n) f.
+
 (** ** Truncatedness of the type of extensions *)
 
 (** A key lemma on the interaction between connectedness and truncatedness: suppose one is trying to extend along an n-connected map, into a k-truncated family of types (k ≥ n).  Then the space of possible extensions is (k–n–2)-truncated.
