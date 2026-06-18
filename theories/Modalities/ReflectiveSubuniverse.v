@@ -2038,6 +2038,12 @@ Proof.
   apply (ooextendable_O_inverts O2); exact _.
 Defined.
 
+(** In particular, we get that [O1 A] is equivalent to [O1 (O2 A)]. *)
+Definition equiv_O_functor_to_O_O_leq@{i1 i2}
+           (O1 : ReflectiveSubuniverse@{i1}) (O2 : ReflectiveSubuniverse@{i2}) `{O_leq@{i1 i2 i1} O1 O2}
+           (A : Type@{i1})
+  : O1 A <~> O1 (O2 A)
+  := Build_Equiv _ _ _ (O_inverts_O_leq O1 O2 (to O2 A)).
 
 (** ** Equality of (reflective) subuniverses *)
 
