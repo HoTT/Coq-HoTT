@@ -282,7 +282,7 @@ Section EilenbergMacLane.
     induction n as [|n IHn].
     - exact (isconnmap_fmap_pclassifyingspace f).
     - snapply isconnmap_isconnmap_ap_surj.
-      + exact (issurjection_is0connected _ _ (tr (point _)) _).
+      + rapply (isconnmap_isconnected (-1)).
       + assert (c : IsConnMap n (fmap loops (em_fmap f n.+2))).
         { napply (conn_map_homotopic _
             ((pequiv_loops_em_em G' n.+1 o* em_fmap f n.+1)
