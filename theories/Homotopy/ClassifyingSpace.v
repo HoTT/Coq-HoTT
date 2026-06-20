@@ -462,7 +462,7 @@ Proof.
   (* By [isconnmap_isconnmap_ap_surj] it suffices to show that [fmap B f]
      and its [ap]s are surjective; both follow from surjectivity of [f]. *)
   snapply isconnmap_isconnmap_ap_surj.
-  - exact (issurjection_is0connected _ _ (tr bbase) _).
+  - rapply (isconnmap_isconnected (-1)).
   - rapply (conn_point_elim (-1) (A:=B G)).
     rapply (conn_point_elim (-1) (A:=B G)).
     srapply (equiv_ind equiv_g_loops_bg).
