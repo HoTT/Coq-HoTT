@@ -509,11 +509,12 @@ Definition ppMap (A B : pType) : pType
 
 Infix "->**" := ppMap : pointed_scope.
 
-Lemma pmap_punit_pconst {A : pType} (f : A ->* pUnit) : pconst ==* f.
+Lemma phomotopy_pconst_contr {A B : pType} `{Contr B} (f : A ->* B)
+  : pconst ==* f.
 Proof.
-  srapply Build_pHomotopy.
-  1: intro; apply path_unit.
-  apply path_contr.
+  snapply Build_pHomotopy.
+  - intro x; apply path_contr.
+  - apply path_contr.
 Defined.
 
 Lemma punit_pmap_pconst {A : pType} (f : pUnit ->* A) : pconst ==* f.
@@ -594,7 +595,7 @@ Proof.
     exact punit_pmap_pconst.
   + intro B.
     exists pconst.
-    exact pmap_punit_pconst.
+    exact phomotopy_pconst_contr.
 Defined.
 
 (** The constant map is definitionally equal to the zero_morphism of a pointed category *)

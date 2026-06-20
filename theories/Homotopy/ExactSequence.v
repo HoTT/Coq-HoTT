@@ -494,8 +494,7 @@ Defined.
 
 (** ** Naturality and rotation of the connecting map *)
 
-(** The fiber functor of the tautological [cxfib] square is the
-    identity. *)
+(** The fiber functor of the tautological [cxfib] square is the identity. *)
 Definition pequiv_pfiber_cxfib_taut {X Y : pType} (f : X ->* Y)
   : pequiv_pfiber pequiv_cxfib pequiv_pmap_idmap
       (square_pfib_pequiv_cxfib (pfib f) f)
@@ -511,8 +510,7 @@ Proof.
   - reflexivity.
 Defined.
 
-(** The connecting map of the tautological fiber sequence is natural in
-    arbitrary squares of pointed maps. *)
+(** The connecting map of the tautological fiber sequence is natural in arbitrary squares of pointed maps. *)
 Definition connecting_map_natural_functor {X Y X' Y' : pType}
   {f : X ->* Y} {f' : X' ->* Y'} {h : X' ->* X} {k : Y' ->* Y}
   (q : k o* f' ==* f o* h)
@@ -560,8 +558,7 @@ Definition connecting_map_natural {X Y X' Y' : pType}
     ==* connecting_map (pfib f) f o* fmap loops k
   := connecting_map_natural_functor q.
 
-(** Through [cxfib], the connecting map of an exact sequence agrees with
-    the connecting map of the tautological fiber sequence. *)
+(** Through [cxfib], the connecting map of an exact sequence agrees with the connecting map of the tautological fiber sequence. *)
 Definition connecting_map_cxfib {F X Y : pType}
   (i : F ->* X) (f : X ->* Y) `{IsExact purely F X Y i f}
   : pequiv_cxfib o* connecting_map i f ==* connecting_map (pfib f) f.
@@ -592,9 +589,7 @@ Proof.
   exact (peisretr _).
 Defined.
 
-(** Through [pfiber2_loops], the connecting map of the doubly-iterated
-    tautological fiber sequence is loop inversion followed by [loops] of
-    the map. *)
+(** Through [pfiber2_loops], the connecting map of the doubly-iterated tautological fiber sequence is loop inversion followed by [loops] of the map. *)
 Definition connecting_map_pfib2 {F X : pType} (i : F ->* X)
   : pfiber2_loops i o* connecting_map (pfib (pfib i)) (pfib i)
     ==* fmap loops i o* loops_inv F.
@@ -620,8 +615,7 @@ Proof.
   apply pmap_precompose_idmap.
 Defined.
 
-(** Through [pfiber2_loops], the double fiber projection of an exact
-    sequence is loop inversion followed by [loops] of the projection. *)
+(** Through [pfiber2_loops], the double fiber projection of an exact sequence is loop inversion followed by [loops] of the projection. *)
 Definition pfiber2_loops_pfib2 {F X Y : pType}
   (i : F ->* X) (f : X ->* Y) `{IsExact purely F X Y i f}
   : ((pfiber2_loops f)
