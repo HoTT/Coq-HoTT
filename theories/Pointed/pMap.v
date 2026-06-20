@@ -44,7 +44,7 @@ Proof.
   refine (_ @* precompose_pconst f).
   apply pmap_postwhisker.
   symmetry.
-  apply pmap_punit_pconst.
+  apply phomotopy_pconst_contr.
 Defined.
 
 (* We note that the inverse of [path_pmap] computes definitionally on reflexivity, and hence [path_pmap] itself computes typally so.  *)

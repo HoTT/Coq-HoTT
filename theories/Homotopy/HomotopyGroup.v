@@ -350,3 +350,14 @@ Proof.
   exact (fmap_id (pPi n) X x).
 Defined.
 
+(** The [n.+2]-nd homotopy group of an [n.+1]-truncated type vanishes. *)
+Definition contr_pi_succ_istrunc `{Univalence} (n : nat) (X : pType)
+  `{IsTrunc n.+1 X}
+  : Contr (Pi n.+2 X).
+Proof.
+  pose proof (c := equiv_istrunc_contr_iterated_loops n.+2 X _ (point _)).
+  apply (Build_Contr _ (tr (center _))).
+  srapply Trunc_ind; intro a.
+  exact (ap tr (contr a)).
+Defined.
+

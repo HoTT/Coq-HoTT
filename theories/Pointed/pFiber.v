@@ -126,8 +126,7 @@ Proof.
   - reflexivity.
 Qed.
 
-(** The value of [pfiber2_loops] on a general element of the double
-    fiber. *)
+(** The value of [pfiber2_loops] on a general element of the double fiber. *)
 Definition pfiber2_loops_beta {C D : Type} {c0 : C} {d0 : D}
   (g : C -> D) (de : g c0 = d0) (c : C) (w : g c = d0) (v : c = c0)
   : pfiber2_loops (Build_pMap (A:=[C, c0]) (B:=[D, d0]) g de)
@@ -138,8 +137,7 @@ Proof.
   exact ((concat_1p w)^ @ ap (concat 1) (concat_1p w)^).
 Defined.
 
-(** The path algebra underlying the pointwise part of
-    [pfiber2_loops_natural], with all endpoints free. *)
+(** The path algebra underlying the pointwise part of [pfiber2_loops_natural], with all endpoints free. *)
 Local Definition pfiber2_loops_natural_core {D : Type} {y x : D}
   (X : y = x) (l : x = x)
   : X^ @ (1 @ (((1 @ (1 @ X)^)^ @ l) @ 1)) = 1 @ (l @ 1).
@@ -148,8 +146,7 @@ Proof.
   exact (ap (concat 1) (concat_1p _ @ whiskerR (concat_1p l) 1)).
 Defined.
 
-(** [pfiber2_loops] commutes with the fiber functor of a square, for an
-    arbitrary square of pointed maps. *)
+(** [pfiber2_loops] commutes with the fiber functor of a square, for an arbitrary square of pointed maps. *)
 Definition pfiber2_loops_natural_functor {A B C D : pType}
   {f : A ->* B} {g : C ->* D} {h : A ->* C} {k : B ->* D}
   (p : k o* f ==* g o* h)
@@ -179,8 +176,7 @@ Proof.
     reflexivity.
 Defined.
 
-(** The same for an equivalence square; the underlying double-fiber map is
-    [functor_pfiber] of the same square. *)
+(** The same for an equivalence square; the underlying double-fiber map is [functor_pfiber] of the same square. *)
 Definition pfiber2_loops_natural {A B C D : pType}
   {f : A ->* B} {g : C ->* D} (h : A <~>* C) (k : B <~>* D)
   (p : k o* f ==* g o* h)

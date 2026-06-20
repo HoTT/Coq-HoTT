@@ -119,9 +119,7 @@ Section EilenbergMacLane.
     by destruct (equiv_path_group e).
   Defined.
 
-  (** The action of [K(-,n)] on group homomorphisms, giving the functoriality
-      of [K(-,n)].  Note that [fmap B] and the WildCat functoriality of
-      [psusp] and [pTr] constrain the two groups to a single universe. *)
+  (** The action of [K(-,n)] on group homomorphisms, giving the functoriality of [K(-,n)].  Note that [fmap B] and the WildCat functoriality of [psusp] and [pTr] constrain the two groups to a single universe. *)
   Definition em_fmap {G G' : AbGroup} (f : GroupHomomorphism G G') (n : nat)
     : K(G, n) ->* K(G', n).
   Proof.
@@ -165,11 +163,7 @@ Section EilenbergMacLane.
       exact (pointed_htpy IH).
   Defined.
 
-  (** At positive levels, [pequiv_loops_em_em] is the canonical comparison
-      map: the loop-suspension unit followed by [loops] of the truncation
-      map.  This presentation makes its naturality transparent, without
-      reference to the Hopf-construction input used to show that it is an
-      equivalence. *)
+  (** At positive levels, [pequiv_loops_em_em] is the canonical comparison map: the loop-suspension unit followed by [loops] of the truncation map.  This presentation makes its naturality transparent, without reference to the Hopf-construction input used to show that it is an equivalence. *)
   Definition loops_em_em_ptr_unit (G : AbGroup) (n : nat)
     : pequiv_loops_em_em G n.+1
       ==* fmap loops ptr o* loop_susp_unit K(G, n.+1).
@@ -183,8 +177,7 @@ Section EilenbergMacLane.
     all: exact (pmap_prewhisker _ (ptr_loops_commutes _ _)).
   Defined.
 
-  (** [em_fmap] commutes with the loop-space identifications, so it is a
-      map of spectra. *)
+  (** [em_fmap] commutes with the loop-space identifications, so it is a map of spectra. *)
   Definition em_fmap_loops_natural {G G' : AbGroup}
     (f : GroupHomomorphism G G') (n : nat)
     : fmap loops (em_fmap f n.+1) o* pequiv_loops_em_em G n
@@ -203,8 +196,7 @@ Section EilenbergMacLane.
       exact (pmap_compose_assoc _ _ _)^*.
   Defined.
 
-  (** [equiv_g_pi_n_em] at level [n.+1] unfolds to the level-[n] map
-      conjugated by [groupiso_pi_loops] and [pequiv_loops_em_em]. *)
+  (** [equiv_g_pi_n_em] at level [n.+1] unfolds to the level-[n] map conjugated by [groupiso_pi_loops] and [pequiv_loops_em_em]. *)
   Local Definition equiv_g_pi_n_em_succ (G : AbGroup) (n : nat) (x : G)
     : equiv_g_pi_n_em G n.+1 x
       = grp_iso_inverse (groupiso_pi_loops _ _)
@@ -212,8 +204,7 @@ Section EilenbergMacLane.
             (equiv_g_pi_n_em G n x))
     := idpath.
 
-  (** The action of [em_fmap f n.+1] on [Pi n.+1] agrees with [f] under the
-      identifications [equiv_g_pi_n_em]. *)
+  (** The action of [em_fmap f n.+1] on [Pi n.+1] agrees with [f] under the identifications [equiv_g_pi_n_em]. *)
   Definition pi_em_fmap {G G' : AbGroup}
     (f : GroupHomomorphism G G') (n : nat)
     : fmap (Pi n.+1) (em_fmap f n.+1) o equiv_g_pi_n_em G n
@@ -250,17 +241,6 @@ Section EilenbergMacLane.
       exact (ap tr (contr a)).
   Defined.
 
-  (** Any pointed map into a contractible type is homotopic to the constant
-      map. *)
-  Local Definition phomotopy_pconst_contr {X Y : pType} `{Contr Y}
-    (f : X ->* Y)
-    : f ==* pconst.
-  Proof.
-    snapply Build_pHomotopy.
-    - intro x; apply path_contr.
-    - apply path_contr.
-  Defined.
-
   (** [em_fmap] sends the constant homomorphism to the constant map. *)
   Definition em_fmap_const {G G' : AbGroup} (n : nat)
     : em_fmap (G:=G) (G':=G') grp_homo_const n ==* pconst.
@@ -268,14 +248,12 @@ Section EilenbergMacLane.
     refine (phomotopy_path (ap (fun h => em_fmap h n) _)
             @* em_fmap_compose (G':=abgroup_trivial)
                  (grp_trivial_corec G) (grp_trivial_rec G') n
-            @* pmap_postwhisker _ (phomotopy_pconst_contr _)
+            @* pmap_postwhisker _ ((phomotopy_pconst_contr _)^*)
             @* precompose_pconst _).
     napply equiv_path_grouphomomorphism; intro x; reflexivity.
   Defined.
 
-  (** [em_fmap f n.+1] of a surjective homomorphism is an [n]-connected
-      map.  Both surjectivity of the map and of its [ap]s reduce to the
-      previous level through the loop-space identifications. *)
+  (** [em_fmap f n.+1] of a surjective homomorphism is an [n]-connected map.  Both surjectivity of the map and of its [ap]s reduce to the previous level through the loop-space identifications. *)
   #[export] Instance isconnmap_em_fmap {G G' : AbGroup}
     (f : GroupHomomorphism G G') `{!IsSurjection f} (n : nat)
     : IsConnMap n (em_fmap f n.+1).
@@ -303,17 +281,13 @@ Section EilenbergMacLane.
                  (c _)).
   Defined.
 
-  (** [em_fmap] is an equivalence from group homomorphisms to pointed maps,
-      extending [isequiv_fmap_pclassifyingspace] to all levels.  In
-      particular, pointed maps between Eilenberg-Mac Lane spaces of the same
-      level are determined by their effect on homotopy groups. *)
+  (** [em_fmap] is an equivalence from group homomorphisms to pointed maps, extending [isequiv_fmap_pclassifyingspace] to all levels.  In particular, pointed maps between Eilenberg-Mac Lane spaces of the same level are determined by their effect on homotopy groups. *)
   #[export] Instance isequiv_em_fmap (G G' : AbGroup) (n : nat)
     : IsEquiv (fun f : GroupHomomorphism G G' => em_fmap f n.+1).
   Proof.
     induction n as [|n IHn].
     - exact (isequiv_fmap_pclassifyingspace G G').
-    - (* The ladder [pequiv_ptr_rec], [loop_susp_adjoint], postcomposition
-         with [pequiv_loops_em_em], and the inductive hypothesis. *)
+    - (* The ladder [pequiv_ptr_rec], [loop_susp_adjoint], postcomposition with [pequiv_loops_em_em], and the inductive hypothesis. *)
       pose (L := ((Build_Equiv _ _ _ IHn)^-1%equiv)
         oE (pequiv_pequiv_postcompose (pequiv_loops_em_em G' n.+1)^-1*
             : (K(G, n.+1) ->** loops K(G', n.+2)) <~> _)
@@ -341,8 +315,7 @@ Section EilenbergMacLane.
       apply pmap_postcompose_idmap.
   Defined.
 
-  (** Pointed maps between Eilenberg-Mac Lane spaces of the same level
-      which agree on homotopy groups are equal. *)
+  (** Pointed maps between Eilenberg-Mac Lane spaces of the same level which agree on homotopy groups are equal. *)
   Definition path_em_pmap_pi {G G' : AbGroup} (n : nat)
     (phi psi : K(G, n.+1) ->* K(G', n.+1))
     (h : fmap (Pi n.+1) phi == fmap (Pi n.+1) psi)
@@ -412,23 +385,10 @@ End EilenbergMacLane.
 
 (** ** Delooping Eilenberg-Mac Lane mapping types *)
 
-(** The [n.+2]-nd homotopy group of an [n.+1]-truncated type vanishes. *)
-Definition contr_pi_succ_istrunc `{Univalence} (n : nat) (X : pType)
-  `{IsTrunc n.+1 X}
-  : Contr (Pi n.+2 X).
-Proof.
-  pose proof (c := equiv_istrunc_contr_iterated_loops n.+2 X _ (point _)).
-  apply (Build_Contr _ (tr (center _))).
-  srapply Trunc_ind; intro a.
-  exact (ap tr (contr a)).
-Defined.
-
 Section Deloop.
   Context `{Univalence} (B A : AbGroup@{u}).
 
-  (** By Freudenthal, the loop-suspension unit of [K(B,2)] is 2-connected,
-      so [Pi 3] of the unit is surjective; since [Pi 3 K(B,2)] is trivial,
-      [psusp K(B,2)] has trivial [Pi 4]. *)
+  (** By Freudenthal, the loop-suspension unit of [K(B,2)] is 2-connected, so [Pi 3] of the unit is surjective; since [Pi 3 K(B,2)] is trivial, [psusp K(B,2)] has trivial [Pi 4]. *)
   Local Instance contr_pi4_psusp_em : Contr (Pi 4 (psusp K(B, 2))).
   Proof.
     nrefine (contr_equiv' (Pi 3 (loops (psusp K(B, 2)))) _).
@@ -466,9 +426,7 @@ Section Deloop.
     exact _.
   Defined.
 
-  (** [K(B,3)] sits inside the 3-truncation of [pTr 4 (psusp K(B,2))]
-      via [fmap (pTr 3) ptr]; this is an equivalence since the source is
-      already 3-truncated. *)
+  (** [K(B,3)] sits inside the 3-truncation of [pTr 4 (psusp K(B,2))] via [fmap (pTr 3) ptr]; this is an equivalence since the source is already 3-truncated. *)
   Local Definition pequiv_ptr3_ptr4_psusp_em
     : K(B, 3) <~>* pTr 3 (pTr 4 (psusp K(B, 2))).
   Proof.
@@ -483,8 +441,7 @@ Section Deloop.
     : pTr 4 (psusp K(B, 2)) <~>* K(B, 3)
     := pequiv_ptr3_ptr4_psusp_em^-1* o*E pequiv_ptr (n:=3).
 
-  (** The comparison map collapses the two truncation units of
-      [psusp K(B,2)], by naturality of [ptr]. *)
+  (** The comparison map collapses the two truncation units of [psusp K(B,2)], by naturality of [ptr]. *)
   Local Definition tau_ptr4_ptr3_psusp_em
     : pequiv_ptr4_ptr3_psusp_em o* ptr ==* ptr.
   Proof.
@@ -496,8 +453,7 @@ Section Deloop.
     apply pmap_postcompose_idmap.
   Defined.
 
-  (** Pointed maps [K(B,3) ->* K(A,4)] are equivalent to pointed maps
-      [K(B,2) ->* K(A,3)], by looping. *)
+  (** Pointed maps [K(B,3) ->* K(A,4)] are equivalent to pointed maps [K(B,2) ->* K(A,3)], by looping. *)
   Definition equiv_deloop_em_pmap
     : (K(B, 3) ->* K(A, 4)) <~> (K(B, 2) ->* K(A, 3))
     := pequiv_pequiv_postcompose (pequiv_loops_em_em A 3)^-1*
@@ -505,8 +461,7 @@ Section Deloop.
        oE pequiv_ptr_rec
        oE pequiv_pequiv_precompose pequiv_ptr4_ptr3_psusp_em.
 
-  (** The delooping equivalence, unfolded: postcompose by the inverse loop
-      identification, loop the map, precompose by the loop identification. *)
+  (** The delooping equivalence, unfolded: postcompose by the inverse loop identification, loop the map, precompose by the loop identification. *)
   Definition equiv_deloop_em_pmap_unfold (psi : K(B, 3) ->* K(A, 4))
     : equiv_deloop_em_pmap psi
       ==* (pequiv_loops_em_em A 3)^-1*
@@ -529,8 +484,7 @@ Section Deloop.
 
 End Deloop.
 
-(** Pointed maps from an Eilenberg-Mac Lane space to a connected truncated
-    type of the same level which agree on homotopy groups are equal. *)
+(** Pointed maps from an Eilenberg-Mac Lane space to a connected truncated type of the same level which agree on homotopy groups are equal. *)
 Definition path_em_pmap_pi_connected `{Univalence} {G : AbGroup@{u}}
   (n : nat) {Y : pType} `{IsConnected n.+1 Y} `{IsTrunc n.+2 Y}
   (phi psi : K(G, n.+2) ->* Y)

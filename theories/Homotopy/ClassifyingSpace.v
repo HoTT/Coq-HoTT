@@ -459,8 +459,7 @@ Instance isconnmap_fmap_pclassifyingspace `{Univalence} {G K : Group}
   (f : GroupHomomorphism G K) `{!IsSurjection f}
   : IsConnMap 0 (fmap B f).
 Proof.
-  (* By [isconnmap_isconnmap_ap_surj] it suffices to show that [fmap B f]
-     and its [ap]s are surjective; both follow from surjectivity of [f]. *)
+  (* By [isconnmap_isconnmap_ap_surj] it suffices to show that [fmap B f] and its [ap]s are surjective; both follow from surjectivity of [f]. *)
   snapply isconnmap_isconnmap_ap_surj.
   - rapply (isconnmap_isconnected (-1)).
   - rapply (conn_point_elim (-1) (A:=B G)).
