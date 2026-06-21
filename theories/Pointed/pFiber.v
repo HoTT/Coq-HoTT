@@ -73,9 +73,13 @@ Definition functor_pfiber {A B C D}
 Proof.
   srapply Build_pMap.
   + cbn. exact (functor_hfiber2 p (point_eq k)).
-  + srapply path_hfiber. 
-    - apply point_eq.
-    - refine (concat_pp_p _ _ _ @ _). apply moveR_Vp. exact (point_htpy p)^.
+  + snapply path_sigma'.
+    - exact (point_eq h).
+    - lhs napply transport_paths_Fl.
+      lhs napply (whiskerL _ (concat_pp_p _ _ _)).
+      lhs napply (whiskerL _ (whiskerL _ (point_htpy p)^)).
+      lhs napply (whiskerL _ (concat_V_pp _ _)).
+      napply concat_V_pp.
 Defined.
 
 Definition pequiv_pfiber {A B C D}
