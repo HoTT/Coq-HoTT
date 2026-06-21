@@ -1,5 +1,5 @@
 From HoTT Require Import Basics Types.
-From HoTT.WildCat Require Import Core Universe Equiv.
+From HoTT.WildCat Require Import Core Universe Equiv PointedCat.
 Require Import Pointed.
 Require Import Cubical.DPath.
 Require Import Algebra.AbGroups.AbelianGroup.
@@ -162,6 +162,27 @@ Section EilenbergMacLane.
       exact (pointed_htpy IH).
   Defined.
 
+  (** [K(-,n)] is a functor from abelian groups to pointed types, with [em_fmap] as its action on morphisms. *)
+  #[export] Instance is0functor_em (n : nat)
+    : Is0Functor (fun G : AbGroup => K(G, n)).
+  Proof.
+    napply Build_Is0Functor.
+    intros G G' f; exact (em_fmap f n).
+  Defined.
+
+  #[export] Instance is1functor_em (n : nat)
+    : Is1Functor (fun G : AbGroup => K(G, n)).
+  Proof.
+    napply Build_Is1Functor.
+    - intros G G' f g p.
+      napply phomotopy_path.
+      napply (ap (fun h => em_fmap h n)).
+      apply equiv_path_grouphomomorphism.
+      exact p.
+    - intros G; exact (em_fmap_idmap n).
+    - intros G G' G'' f g; exact (em_fmap_compose f g n).
+  Defined.
+
   (** At positive levels, [pequiv_loops_em_em] is the canonical comparison map: the loop-suspension unit followed by [loops] of the truncation map.  This presentation makes its naturality transparent, without reference to the Hopf-construction input used to show that it is an equivalence. *)
   Definition loops_em_em_ptr_unit (G : AbGroup) (n : nat)
     : pequiv_loops_em_em G n.+1
@@ -240,17 +261,20 @@ Section EilenbergMacLane.
       exact (ap tr (contr a)).
   Defined.
 
+  (** [K(-,n)] is a pointed functor: it sends the trivial group to a contractible space. *)
+  #[export] Instance ispointedfunctor_em (n : nat)
+    : IsPointedFunctor (fun G : AbGroup => K(G, n)).
+  Proof.
+    rapply Build_IsPointedFunctor'.
+    snapply Build_pEquiv.
+    1: exact pconst.
+    rapply isequiv_contr_contr.
+  Defined.
+
   (** [em_fmap] sends the constant homomorphism to the constant map. *)
   Definition em_fmap_const {G G' : AbGroup} (n : nat)
-    : em_fmap (G:=G) (G':=G') grp_homo_const n ==* pconst.
-  Proof.
-    refine (phomotopy_path (ap (fun h => em_fmap h n) _)
-            @* em_fmap_compose (G':=abgroup_trivial)
-                 (grp_trivial_corec G) (grp_trivial_rec G') n
-            @* pmap_postwhisker _ ((phomotopy_pconst_contr _)^*)
-            @* precompose_pconst _).
-    napply equiv_path_grouphomomorphism; intro x; reflexivity.
-  Defined.
+    : em_fmap (G:=G) (G':=G') grp_homo_const n ==* pconst
+    := fmap_zero_morphism (fun G : AbGroup => K(G, n)).
 
   (** [em_fmap f n.+1] of a surjective homomorphism is an [n]-connected map.  Both surjectivity of the map and of its [ap]s reduce to the previous level through the loop-space identifications. *)
   #[export] Instance isconnmap_em_fmap {G G' : AbGroup}
@@ -333,25 +357,8 @@ Section EilenbergMacLane.
   (** [em_fmap] of a group isomorphism is a pointed equivalence. *)
   Definition pequiv_em_fmap {G G' : AbGroup}
     (e : GroupIsomorphism G G') (n : nat)
-    : K(G, n) <~>* K(G', n).
-  Proof.
-    snapply Build_pEquiv.
-    1: exact (em_fmap e n).
-    snapply isequiv_adjointify.
-    1: exact (em_fmap (grp_iso_inverse e) n).
-    - intro x.
-      lhs_V exact (em_fmap_compose (G':=G) (grp_iso_inverse e) e n x).
-      refine (phomotopy_path
-        (ap (fun h => em_fmap h n) (_ : _ = grp_homo_id)) x
-        @ em_fmap_idmap n x).
-      by apply equiv_path_grouphomomorphism; intro g; apply eisretr.
-    - intro x.
-      lhs_V exact (em_fmap_compose (G':=G') e (grp_iso_inverse e) n x).
-      refine (phomotopy_path
-        (ap (fun h => em_fmap h n) (_ : _ = grp_homo_id)) x
-        @ em_fmap_idmap n x).
-      by apply equiv_path_grouphomomorphism; intro g; apply eissect.
-  Defined.
+    : K(G, n) <~>* K(G', n)
+    := emap (fun G : AbGroup => K(G, n)) (Build_CatEquiv e).
 
   (** Every pointed (n-1)-connected n-type is an Eilenberg-Mac Lane space. *)
   Definition pequiv_em_connected_truncated (X : pType)
