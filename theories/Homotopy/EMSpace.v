@@ -262,7 +262,7 @@ Section EilenbergMacLane.
       exact (ap tr (contr a)).
   Defined.
 
-  (** [K(-,n)] is a pointed functor: it sends the trivial group to a contractible space. *)
+  (** [K(-,n)] is a pointed functor. *)
   #[export] Instance ispointedfunctor_em (n : nat)
     : IsPointedFunctor (fun G : AbGroup => K(G, n)).
   Proof.
@@ -324,18 +324,18 @@ Section EilenbergMacLane.
       apply moveR_equiv_V; symmetry.
       apply moveR_equiv_V.
       apply path_pforall.
-      refine (pmap_postwhisker _
-        (pmap_prewhisker _ (fmap2 loops (ptr_natural _ _))) @* _).
-      refine (pmap_postwhisker _
-        (pmap_prewhisker _ (fmap_comp loops _ _)) @* _).
-      refine (pmap_postwhisker _ (pmap_compose_assoc _ _ _) @* _).
-      refine (pmap_postwhisker _
-        (pmap_postwhisker _ (loop_susp_unit_natural _)^*) @* _).
-      refine (pmap_postwhisker _ (pmap_compose_assoc _ _ _)^* @* _).
-      refine (pmap_postwhisker _
-        (pmap_prewhisker _ (loops_em_em_ptr_unit G' n)^*) @* _).
-      refine ((pmap_compose_assoc _ _ _)^* @* _).
-      refine (pmap_prewhisker _ (peissect _) @* _).
+      lhs' refine (pmap_postwhisker _
+        (pmap_prewhisker _ (fmap2 loops (ptr_natural _ _)))).
+      lhs' refine (pmap_postwhisker _
+        (pmap_prewhisker _ (fmap_comp loops _ _))).
+      lhs' refine (pmap_postwhisker _ (pmap_compose_assoc _ _ _)).
+      lhs' refine (pmap_postwhisker _
+        (pmap_postwhisker _ (loop_susp_unit_natural _)^*)).
+      lhs' refine (pmap_postwhisker _ (pmap_compose_assoc _ _ _)^*).
+      lhs' refine (pmap_postwhisker _
+        (pmap_prewhisker _ (loops_em_em_ptr_unit G' n)^*)).
+      lhs_V' refine (pmap_compose_assoc _ _ _).
+      lhs' refine (pmap_prewhisker _ (peissect _)).
       apply pmap_postcompose_idmap.
   Defined.
 
@@ -392,21 +392,32 @@ End EilenbergMacLane.
 
 (** ** Delooping Eilenberg-Mac Lane mapping types *)
 
-Section Deloop.
-  Context `{Univalence} (B A : AbGroup@{u}).
+(** The [k]-fold loop space of a [k]-truncated type is a set. *)
+Definition istrunc_iterated_loops_O `{Funext} (k : nat) (X : pType) `{H0 : IsTrunc k X}
+  : IsTrunc 0 (iterated_loops k X).
+Proof.
+  revert X H0; induction k as [|k IH]; intros X H0.
+  - exact H0.
+  - rewrite (unfold_iterated_loops k X).
+    rapply IH.
+Defined.
 
-  (** By Freudenthal, the loop-suspension unit of [K(B,2)] is 2-connected, so [Pi 3] of the unit is surjective; since [Pi 3 K(B,2)] is trivial, [psusp K(B,2)] has trivial [Pi 4]. *)
-  Local Instance contr_pi4_psusp_em : Contr (Pi 4 (psusp K(B, 2))).
+Section Deloop.
+  Context `{Univalence} (B A : AbGroup@{u}) (n : nat).
+
+  (** [Pi n.+4 (psusp K(B,n.+2))] is trivial. *)
+  Local Instance contr_pi_psusp_em : Contr (Pi n.+4 (psusp K(B, n.+2))).
   Proof.
-    nrefine (contr_equiv' (Pi 3 (loops (psusp K(B, 2)))) _).
-    1: exact (grp_iso_inverse (groupiso_pi_loops 2 (psusp K(B, 2)))).
-    pose proof (C := @conn_map_loop_susp_unit _ 0 K(B, 2)
-      (isconnected_em 1)
-      : IsConnMap 2 (loop_susp_unit K(B, 2))).
-    pose proof (contr_pi_succ_istrunc 1 K(B, 2)).
-    pose proof (S := issurj_pi_connmap 2 (loop_susp_unit K(B, 2))).
-    pose (fu := fmap (pPi 3) (loop_susp_unit K(B, 2))
-      : Pi 3 K(B, 2) -> Pi 3 (loops (psusp K(B, 2)))).
+    nrefine (contr_equiv' (Pi n.+3 (loops (psusp K(B, n.+2)))) _).
+    1: exact (grp_iso_inverse (groupiso_pi_loops n.+2 (psusp K(B, n.+2)))).
+    assert (C : IsConnMap n.+2 (loop_susp_unit K(B, n.+2))).
+    { napply (isconnmap_pred_add n.-2).
+      rewrite 2 trunc_index_add_succ.
+      exact (conn_map_loop_susp_unit n K(B, n.+2)). }
+    pose proof (contr_pi_succ_istrunc n.+1 K(B, n.+2)).
+    pose proof (S := issurj_pi_connmap n.+2 (loop_susp_unit K(B, n.+2))).
+    pose (fu := fmap (pPi n.+3) (loop_susp_unit K(B, n.+2))
+      : Pi n.+3 K(B, n.+2) -> Pi n.+3 (loops (psusp K(B, n.+2)))).
     apply (Build_Contr _ (fu (center _))).
     intro y.
     pose proof (m := @center _ (S y)).
@@ -416,77 +427,78 @@ Section Deloop.
     exact (ap _ (path_contr _ x)).
   Defined.
 
-  (** Hence the 4-truncation of [psusp K(B,2)] is already 3-truncated. *)
-  Local Instance istrunc_ptr4_psusp_em
-    : IsTrunc 3 (pTr 4 (psusp K(B, 2))).
+  (** [pTr n.+4 (psusp K(B,n.+2))] is [n.+3]-truncated. *)
+  Local Instance istrunc_ptr_psusp_em
+    : IsTrunc n.+3 (pTr n.+4 (psusp K(B, n.+2))).
   Proof.
-    apply (equiv_istrunc_contr_iterated_loops 4 _)^-1.
-    pose proof (@isconnected_susp 1 K(B, 2) (isconnected_em 1)).
-    pose proof (is0connected_isconnected 0 (psusp K(B, 2))).
-    pose proof (isconnected_trunc 0 4 (X := psusp K(B, 2))).
+    apply (equiv_istrunc_contr_iterated_loops n.+4 _)^-1.
+    pose proof (istrunc_iterated_loops_O n.+4 (pTr n.+4 (psusp K(B, n.+2)))).
+    pose proof (@isconnected_susp n.+1 K(B, n.+2) (isconnected_em n.+1)).
+    pose proof (is0connected_isconnected n (psusp K(B, n.+2))).
+    pose proof (isconnected_trunc 0 n.+4 (X := psusp K(B, n.+2))).
     snapply (conn_point_elim (-1)).
     1,2: exact _.
-    nrefine (contr_equiv' (Pi 4 (pTr 4 (psusp K(B, 2)))) _).
+    nrefine (contr_equiv' (Pi n.+4 (pTr n.+4 (psusp K(B, n.+2)))) _).
     1: exact (equiv_tr 0 _)^-1%equiv.
-    nrefine (contr_equiv' (Pi 4 (psusp K(B, 2))) _).
-    1: exact (grp_iso_pi_Tr 3 (psusp K(B, 2))).
+    nrefine (contr_equiv' (Pi n.+4 (psusp K(B, n.+2))) _).
+    1: exact (grp_iso_pi_Tr n.+3 (psusp K(B, n.+2))).
     exact _.
   Defined.
 
-  (** [K(B,3)] sits inside the 3-truncation of [pTr 4 (psusp K(B,2))] via [fmap (pTr 3) ptr]; this is an equivalence since the source is already 3-truncated. *)
-  Local Definition pequiv_ptr3_ptr4_psusp_em
-    : K(B, 3) <~>* pTr 3 (pTr 4 (psusp K(B, 2))).
+  (** [K(B,n.+3)] is the [n.+3]-truncation of [pTr n.+4 (psusp K(B,n.+2))]. *)
+  Local Definition pequiv_ptr_ptr_psusp_em
+    : K(B, n.+3) <~>* pTr n.+3 (pTr n.+4 (psusp K(B, n.+2))).
   Proof.
     snapply Build_pEquiv.
-    1: exact (fmap (pTr 3) ptr).
+    1: exact (fmap (pTr n.+3) ptr).
     napply O_inverts_conn_map.
-    exact (isconnmap_pred' 4 _).
+    exact (isconnmap_pred' n.+4 _).
   Defined.
 
-  (** The canonical equivalence between the 4- and 3-truncations. *)
-  Local Definition pequiv_ptr4_ptr3_psusp_em
-    : pTr 4 (psusp K(B, 2)) <~>* K(B, 3)
-    := pequiv_ptr3_ptr4_psusp_em^-1* o*E pequiv_ptr (n:=3).
+  (** The canonical equivalence between the [n.+4]- and [n.+3]-truncations. *)
+  Local Definition pequiv_ptr_psusp_em
+    : pTr n.+4 (psusp K(B, n.+2)) <~>* K(B, n.+3)
+    := pequiv_ptr_ptr_psusp_em^-1* o*E pequiv_ptr (n:=n.+3).
 
-  (** The comparison map collapses the two truncation units of [psusp K(B,2)], by naturality of [ptr]. *)
-  Local Definition tau_ptr4_ptr3_psusp_em
-    : pequiv_ptr4_ptr3_psusp_em o* ptr ==* ptr.
+  (** [pequiv_ptr_psusp_em] commutes with the truncation unit [ptr]. *)
+  Local Definition tau_ptr_psusp_em
+    : pequiv_ptr_psusp_em o* ptr ==* ptr.
   Proof.
     refine (pmap_prewhisker ptr (compose_cate_fun (A:=pType) _ _) @* _).
     refine (pmap_compose_assoc _ _ _ @* _).
-    refine (pmap_postwhisker _ (ptr_natural 3 ptr)^* @* _).
+    refine (pmap_postwhisker _ (ptr_natural n.+3 ptr)^* @* _).
     refine ((pmap_compose_assoc _ _ _)^* @* _).
-    refine (pmap_prewhisker ptr (peissect pequiv_ptr3_ptr4_psusp_em) @* _).
+    refine (pmap_prewhisker ptr (peissect pequiv_ptr_ptr_psusp_em) @* _).
     apply pmap_postcompose_idmap.
   Defined.
 
-  (** Pointed maps [K(B,3) ->* K(A,4)] are equivalent to pointed maps [K(B,2) ->* K(A,3)], by looping. *)
+  (** Pointed maps [K(B,n.+3) ->* K(A,n.+4)] are equivalent to pointed maps [K(B,n.+2) ->* K(A,n.+3)]. *)
   Definition equiv_deloop_em_pmap
-    : (K(B, 3) ->* K(A, 4)) <~> (K(B, 2) ->* K(A, 3))
-    := pequiv_pequiv_postcompose (pequiv_loops_em_em A 3)^-1*
-       oE loop_susp_adjoint K(B, 2) K(A, 4)
+    : (K(B, n.+3) ->* K(A, n.+4)) <~> (K(B, n.+2) ->* K(A, n.+3))
+    := pequiv_pequiv_postcompose (pequiv_loops_em_em A n.+3)^-1*
+       oE loop_susp_adjoint K(B, n.+2) K(A, n.+4)
        oE pequiv_ptr_rec
-       oE pequiv_pequiv_precompose pequiv_ptr4_ptr3_psusp_em.
+       oE pequiv_pequiv_precompose pequiv_ptr_psusp_em.
 
-  (** The delooping equivalence, unfolded: postcompose by the inverse loop identification, loop the map, precompose by the loop identification. *)
-  Definition equiv_deloop_em_pmap_unfold (psi : K(B, 3) ->* K(A, 4))
+  (** [equiv_deloop_em_pmap] as looping conjugated by the loop identifications. *)
+  Definition equiv_deloop_em_pmap_unfold (psi : K(B, n.+3) ->* K(A, n.+4))
     : equiv_deloop_em_pmap psi
-      ==* (pequiv_loops_em_em A 3)^-1*
-          o* (fmap loops psi o* pequiv_loops_em_em B 2).
+      ==* (pequiv_loops_em_em A n.+3)^-1*
+          o* (fmap loops psi o* pequiv_loops_em_em B n.+2).
   Proof.
-    transitivity ((pequiv_loops_em_em A 3)^-1*
-              o* (fmap loops (psi o* pequiv_ptr4_ptr3_psusp_em o* ptr)
-                  o* loop_susp_unit K(B, 2))).
+    transitivity ((pequiv_loops_em_em A n.+3)^-1*
+              o* (fmap loops (psi o* pequiv_ptr_psusp_em o* ptr)
+                  o* loop_susp_unit K(B, n.+2))).
     1: reflexivity.
     symmetry.
     napply pmap_postwhisker.
-    refine (pmap_postwhisker _ (loops_em_em_ptr_unit B 1) @* _).
+    refine (pmap_postwhisker _ (loops_em_em_ptr_unit B n.+1) @* _).
     refine ((pmap_compose_assoc _ _ _)^* @* _).
     refine (pmap_prewhisker _ (fmap_comp loops _ _)^* @* _).
     napply pmap_prewhisker.
     tapply (fmap2 loops).
     exact (pmap_compose_assoc psi _ ptr
-           @* pmap_postwhisker psi tau_ptr4_ptr3_psusp_em)^*.
+           @* pmap_postwhisker psi tau_ptr_psusp_em)^*.
   Defined.
 
 End Deloop.

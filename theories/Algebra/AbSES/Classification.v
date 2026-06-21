@@ -676,10 +676,10 @@ Section PfiberDeloop.
       equivalence applied to [psi], twisted by [pequiv_neg_em]. *)
   Local Definition abses_classifying_pfiber_deloop
     : abses_classifying_map (abses_pfiber 1 psi)
-      ==* equiv_deloop_em_pmap B A psi o* pequiv_neg_em.
+      ==* equiv_deloop_em_pmap B A 0 psi o* pequiv_neg_em.
   Proof.
     refine (_ @* (pmap_prewhisker pequiv_neg_em
-                    (equiv_deloop_em_pmap_unfold B A psi)
+                    (equiv_deloop_em_pmap_unfold B A 0 psi)
                   @* pmap_compose_assoc _ _ _
                   @* pmap_postwhisker _ (pmap_compose_assoc _ _ _))^*).
     refine (pmap_prewhisker (pequiv_loops_em_em B 2)
@@ -940,14 +940,14 @@ Section Classification.
   (** A section of the classifying map. *)
   Local Definition abses_classifying_section (f : K(B, 2) ->* K(A, 3))
     : abses_classifying_map
-        (abses_pfiber 1 ((equiv_deloop_em_pmap B A)^-1
+        (abses_pfiber 1 ((equiv_deloop_em_pmap B A 0)^-1
            (f o* pequiv_neg_em^-1*)))
       = f.
   Proof.
     apply path_pforall.
     refine (abses_classifying_pfiber_deloop _ @* _).
     refine (pmap_prewhisker pequiv_neg_em
-              (phomotopy_path (eisretr (equiv_deloop_em_pmap B A) _)) @* _).
+              (phomotopy_path (eisretr (equiv_deloop_em_pmap B A 0) _)) @* _).
     refine (pmap_compose_assoc _ _ _ @* _).
     refine (pmap_postwhisker _ (peissect pequiv_neg_em) @* _).
     apply pmap_precompose_idmap.
@@ -958,7 +958,7 @@ Section Classification.
     : abses_classifying_map (abses_pfiber 0 f) = f.
   Proof.
     transitivity (abses_classifying_map
-      (abses_pfiber 1 ((equiv_deloop_em_pmap B A)^-1
+      (abses_pfiber 1 ((equiv_deloop_em_pmap B A 0)^-1
          (f o* pequiv_neg_em^-1*)))).
     - apply (ap abses_classifying_map).
       refine ((ap (abses_pfiber 0) (abses_classifying_section f))^ @ _).
