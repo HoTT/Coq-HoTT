@@ -334,76 +334,6 @@ Section EncodeDecode.
 
 End EncodeDecode.
 
-(** When [G] is an abelian group, [BG] is an H-space. *)
-Section HSpace_bg.
-
-  Context {G : AbGroup}.
-
-  Definition bg_mul : B G -> B G -> B G.
-  Proof.
-    intro b.
-    snapply ClassifyingSpace_rec.
-    1: exact _.
-    1: exact b.
-    { intro x.
-      revert b.
-      snapply ClassifyingSpace_ind_hset.
-      1: exact _.
-      1: exact (bloop x).
-      cbn; intro y.
-      apply dp_paths_lr.
-      refine (concat_pp_p _ _ _ @ _).
-      apply moveR_Vp.
-      refine ((bloop_pp _ _)^ @ _ @ bloop_pp _ _).
-      apply ap, commutativity. }
-    intros x y.
-    revert b.
-    srapply ClassifyingSpace_ind_hprop.
-    exact (bloop_pp x y).
-  Defined.
-
-  Definition bg_mul_symm : forall x y, bg_mul x y = bg_mul y x.
-  Proof.
-    intros x.
-    srapply ClassifyingSpace_ind_hset.
-    { simpl.
-      revert x.
-      srapply ClassifyingSpace_ind_hset.
-      1: reflexivity.
-      intros x.
-      apply sq_dp^-1, sq_1G.
-      refine (ap_idmap _ @ _^).
-      napply ClassifyingSpace_rec_beta_bloop. }
-    intros y; revert x.
-    simpl.
-    snapply ClassifyingSpace_ind_hprop.
-    1: exact _.
-    simpl.
-    transport_paths Flr.
-    apply equiv_p1_1q.
-    napply ClassifyingSpace_rec_beta_bloop.
-  Defined.
-
-  Definition bg_mul_left_id
-    : forall b : B G, bg_mul bbase b = b.
-  Proof.
-    apply bg_mul_symm.
-  Defined.
-
-  Definition bg_mul_right_id
-    : forall b : B G, bg_mul b bbase = b.
-  Proof.
-    reflexivity.
-  Defined.
-
-  #[export] Instance ishspace_bg : IsHSpace (B G)
-    := Build_IsHSpace _
-          bg_mul
-          bg_mul_left_id
-          bg_mul_right_id.
-
-End HSpace_bg.
-
 (** Functoriality of B(-) *)
 
 Instance is0functor_pclassifyingspace : Is0Functor B.
@@ -605,3 +535,73 @@ Proof.
   Opaque equiv_bg_pi1_adjoint.
 Defined.
 Transparent equiv_bg_pi1_adjoint.
+
+(** When [G] is an abelian group, [BG] is an H-space. *)
+Section HSpace_bg.
+
+  Context {G : AbGroup}.
+
+  Definition bg_mul : B G -> B G -> B G.
+  Proof.
+    intro b.
+    snapply ClassifyingSpace_rec.
+    1: exact _.
+    1: exact b.
+    { intro x.
+      revert b.
+      snapply ClassifyingSpace_ind_hset.
+      1: exact _.
+      1: exact (bloop x).
+      cbn; intro y.
+      apply dp_paths_lr.
+      refine (concat_pp_p _ _ _ @ _).
+      apply moveR_Vp.
+      refine ((bloop_pp _ _)^ @ _ @ bloop_pp _ _).
+      apply ap, commutativity. }
+    intros x y.
+    revert b.
+    srapply ClassifyingSpace_ind_hprop.
+    exact (bloop_pp x y).
+  Defined.
+
+  Definition bg_mul_symm : forall x y, bg_mul x y = bg_mul y x.
+  Proof.
+    intros x.
+    srapply ClassifyingSpace_ind_hset.
+    { simpl.
+      revert x.
+      srapply ClassifyingSpace_ind_hset.
+      1: reflexivity.
+      intros x.
+      apply sq_dp^-1, sq_1G.
+      refine (ap_idmap _ @ _^).
+      napply ClassifyingSpace_rec_beta_bloop. }
+    intros y; revert x.
+    simpl.
+    snapply ClassifyingSpace_ind_hprop.
+    1: exact _.
+    simpl.
+    transport_paths Flr.
+    apply equiv_p1_1q.
+    napply ClassifyingSpace_rec_beta_bloop.
+  Defined.
+
+  Definition bg_mul_left_id
+    : forall b : B G, bg_mul bbase b = b.
+  Proof.
+    apply bg_mul_symm.
+  Defined.
+
+  Definition bg_mul_right_id
+    : forall b : B G, bg_mul b bbase = b.
+  Proof.
+    reflexivity.
+  Defined.
+
+  #[export] Instance ishspace_bg : IsHSpace (B G)
+    := Build_IsHSpace _
+          bg_mul
+          bg_mul_left_id
+          bg_mul_right_id.
+
+End HSpace_bg.
