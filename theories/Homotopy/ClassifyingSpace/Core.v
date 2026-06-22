@@ -502,22 +502,21 @@ Proof.
   napply pClassifyingSpace_rec_beta_bloop.
 Defined.
 
+(** The classifying space functor and the fundamental group functor form an adjunction ([pType] needs to be restricted to the subcategory of 0-connected pointed types). Note that the full adjunction should also be natural in [X], but this was not needed yet. *)
 Lemma natequiv_bg_pi1_adjoint `{Univalence} (X : pType) `{IsConnected 0 X}
   : NatEquiv (opyon (Pi1 X)) (opyon X o B).
 Proof.
-  nrefine (natequiv_compose (G := opyon (Pi1 (pTr 1 X))) _ _).
-  2: exact (natequiv_opyon_equiv (A:=Group) (grp_iso_inverse (grp_iso_pi_Tr 0 X))).
   refine (natequiv_compose _ (natequiv_grp_homo_pmap_bg _)).
-  refine (natequiv_compose (G := opyon (pTr 1 X) o B) _ _); revgoals.
+  refine (natequiv_compose (G := opyon (pTr 1 X) o B) _ _).
+  { snapply Build_NatEquiv.
+    1: intro; exact pequiv_ptr_rec.
+    exact (is1natural_prewhisker (G:=opyon X) B (opyoneda _ _ _)). }
   { refine (natequiv_prewhisker _ _).
     refine (natequiv_opyon_equiv _^-1$).
-    rapply pequiv_pclassifyingspace_pi1. }
-  snapply Build_NatEquiv.
-  1: intro; exact pequiv_ptr_rec.
-  exact (is1natural_prewhisker (G:=opyon X) B (opyoneda _ _ _)).
+    refine (pequiv_pclassifyingspace_pi1 (pTr 1 X) o*E (emap B _)).
+    exact (grp_iso_pi_Tr 0 X). }
 Defined.
 
-(** The classifying space functor and the fundamental group functor form an adjunction ([pType] needs to be restricted to the subcategory of 0-connected pointed types). Note that the full adjunction should also be natural in [X], but this was not needed yet. *)
 Theorem equiv_bg_pi1_adjoint `{Univalence} (X : pType)
   `{IsConnected 0 X} (G : Group)
   : (Pi 1 X $-> G) <~> (X $-> B G).
@@ -535,6 +534,34 @@ Proof.
   Opaque equiv_bg_pi1_adjoint.
 Defined.
 Transparent equiv_bg_pi1_adjoint.
+
+(** There is also a natural equivalence for unpointed function types, which computes to the map defined above on pointed functions. *)
+Definition natequiv_map_bg `{Univalence}
+  (X : pType) `{IsConnected 0 X}
+  : NatEquiv (opyon (A:=Type) (B (Pi 1 X)) o B) (opyon (A:=Type) X o B).
+Proof.
+  unfold opyon.
+  refine (natequiv_compose (G := opyon (Tr 1 X) o B) _ _).
+  { snapply Build_NatEquiv.
+    1: intro; rapply (equiv_o_to_O (Tr 1) X).
+    by srapply Build_Is1Natural. }
+  { refine (natequiv_prewhisker _ _).
+    refine (natequiv_opyon_equiv _^-1$).
+    refine (pequiv_pclassifyingspace_pi1 (pTr 1 X) o*E (emap B _)).
+    exact (grp_iso_pi_Tr 0 X). }
+Defined.
+
+Definition equiv_map_bg `{Univalence}
+  (X : pType) `{IsConnected 0 X} (G : Group)
+  : (B (Pi 1 X) -> B G) <~> (X -> B G).
+Proof.
+  rapply natequiv_map_bg.
+Defined.
+
+Definition equiv_map_bg_pointed `{Univalence}
+  (X : pType) `{IsConnected 0 X} (G : Group) (f : Pi 1 X $-> G)
+  : equiv_map_bg X G (fmap B f) = equiv_bg_pi1_adjoint X G f
+  := @idpath (X -> B G) (equiv_bg_pi1_adjoint X G f).
 
 (** When [G] is an abelian group, [BG] is an H-space. *)
 Section HSpace_bg.
