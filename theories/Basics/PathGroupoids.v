@@ -768,8 +768,14 @@ Defined.
 
 (** ** [ap11] *)
 
-Definition ap11_is_ap10_ap01 {A B} {f g:A->B} (h:f=g) {x y:A} (p:x=y)
-: ap11 h p = ap10 h x @ ap g p.
+Definition ap11_is_ap10_ap01 {A B} {f g : A -> B} (h : f = g) {x y : A} (p : x = y)
+  : ap11 h p = ap10 h x @ ap g p.
+Proof.
+  by path_induction.
+Defined.
+
+Definition ap11_is_ap01_ap10 {A B} {f g : A -> B} (h : g = f) {x y : A} (p : x = y)
+  : ap11 h p = ap g p @ ap10 h y.
 Proof.
   by path_induction.
 Defined.
