@@ -346,21 +346,21 @@ Definition equiv_OO_pullback {A B C : Type} (f : B -> A) (g : C -> A)
   : O (Pullback f g) <~> O (Pullback (O_functor O' f) (O_functor O' g))
   := Build_Equiv _ _ _ (OO_inverts_functor_pullback_to_O f g).
 
-(** The "if" direction of CORS Proposition 2.31, and the nontrivial part of Theorem 3.1(xi) of RSS.  Note that we could also deduce Theorem 3.1(iii) of RSS from this. *)
+(** This is a strengthening of the "if" direction of CORS Proposition 2.31.  In 2.31, [g o f] is assumed to be [O']-connected, but here we only require it to be [O]-connected.  When [O = O'], this gives the nontrivial part of Theorem 3.1(xi) of RSS.  Note that we could also deduce Theorem 3.1(iii) of RSS from this. *)
 Definition OO_cancelL_conn_map
            {Y X Z : Type} (f : Y -> X) (g : X -> Z)
-           `{IsConnMap O' _ _ (g o f)} `{IsConnMap O' _ _ g}
+           `{IsConnMap O _ _ (g o f)} `{IsConnMap O' _ _ g}
   : IsConnMap O f.
 Proof.
-  apply conn_map_OO_inverts.
-  napply (cancelL_isequiv (O_functor O' g)).
-  1:exact _.
-  exact (isequiv_homotopic _ (O_functor_compose O' f g)).
+  intro x.
+  (* The fiber of [f] is equivalent to the fiber of a map between the fibers of [g o f] and [g], so this follows immediately from [OO_isconnected_hfiber]. *)
+  apply (isconnected_equiv' O _ (hfiber_hfiber_compose_map f g x)).
+  apply OO_isconnected_hfiber.
 Defined.
 
 End LeftExactness.
 
-(** Here's the "only if" direction of CORS Proposition 2.31.  Note that the hypotheses are different from those of the "if" direction, and the proof is shorter than the one given in CORS. *)
+(** Here's the "only if" direction of CORS Proposition 2.31.  Note that the hypotheses on [O] and [O'] are different from those of the "if" direction, and the proof is shorter than the one given in CORS.  Also note that it is not possible to weaken the assumption on [g o f] to being [O]-connected (e.g. take [f] to be the identity). *)
 Definition OO_cancelR_conn_map
        (O' O : ReflectiveSubuniverse@{u}) `{O_leq@{u u u} O O', O' <= Sep O}
        {Y X Z : Type} (f : Y -> X) (g : X -> Z)
