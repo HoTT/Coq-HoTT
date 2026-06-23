@@ -436,7 +436,7 @@ Proof.
   snapply cat_coprod_rec_eta; by intros [|].
 Defined.
 
-Definition cat_binbiprod {A : Type} `{HasBinaryBiproducts A} (x y : A) : A 
+Definition cat_binbiprod {A : Type} `{HasBinaryBiproducts A} (x y : A) : A
   := (has_binary_biproducts x y).(cat_biprod _ _).
 
 (** *** Binary biproduct bifunctor *)
@@ -471,47 +471,6 @@ Global Instance is1functor_cat_binbiprod_r {A : Type}
   `{HasBinaryBiproducts A} (x : A)
   : Is1Functor (fun y => cat_binbiprod x y)
   := is1functor01_bifunctor _ x.
-
-Definition cat_binbiprod_diag_fmap11 {A : Type}
-  `{HasBinaryBiproducts A} {x y : A} (f : x $-> y)
-  : cat_binprod_diag y _ $o f
-    $== fmap11 (fun x y => cat_binprod x y) f f $o cat_binprod_diag x _.
-Proof.
-  refine (_ $@ _^$).
-  2: napply cat_binprod_fmap11_corec.
-  napply cat_binprod_eta_pr.
-  - refine ((cat_assoc _ _ _)^$ $@ _).
-    refine ((_ $@R _) $@ cat_idl _ $@ (cat_idr _)^$ $@ _^$).
-    1,2: rapply cat_binprod_beta_pr1.
-  - refine ((cat_assoc _ _ _)^$ $@ _).
-    refine ((_ $@R _) $@ cat_idl _ $@ (cat_idr _)^$ $@ _^$).
-    1,2: rapply cat_binprod_beta_pr2.
-Defined.
-
-Definition cat_binbiprod_codiag_fmap11 {A : Type}
-  `{HasBinaryBiproducts A} {x y : A} (f : x $-> y)
-  : f $o cat_bincoprod_codiag x _
-    $== cat_bincoprod_codiag y _ $o fmap11 (fun x y => cat_bincoprod x y) f f.
-Proof.
-  napply cat_bincoprod_eta_in.
-  - refine (cat_assoc _ _ _ $@ (_ $@L _) $@ cat_idr _ $@ _).
-    1: napply cat_bincoprod_beta_inl.
-    refine (_ $@ (_ $@L _) $@ (cat_assoc _ _ _)^$).
-    2: { refine (_^$ $@ (cat_binbiprod_corec_rec _ _ $@R _)^$).
-         napply cat_bincoprod_beta_inl. }
-    nrefine (_ $@ cat_assoc _ _ _).
-    refine ((_ $@R _) $@ _)^$.
-    1: napply cat_bincoprod_beta_inl.
-    napply cat_idl.
-  - refine (cat_assoc _ _ _ $@ (_ $@L _) $@ cat_idr _ $@ _).
-    1: napply cat_bincoprod_beta_inr.
-    refine (_ $@ (_ $@L _) $@ (cat_assoc _ _ _)^$).
-    2: { refine (_^$ $@ (cat_binbiprod_corec_rec _ _ $@R _)^$). (* A proof for this statement shouldn't need to use anything specifically for biproducts. *)
-         1: napply cat_bincoprod_beta_inr. }
-    refine (_^$ $@ (_^$ $@R _) $@ cat_assoc _ _ _).
-    2: napply cat_bincoprod_beta_inr.
-    rapply cat_idl.
-  Defined.
 
 (** *** Symmetry *)
 

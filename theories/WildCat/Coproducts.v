@@ -364,6 +364,48 @@ Definition hasbinaryproducts_hasbinarycoproducts_op {A : Type}
   := hbc.
 Hint Immediate hasbinaryproducts_hasbinarycoproducts_op : typeclass_instances.
 
+(** *** Lemmas about [cat_bincoprod_rec] *)
+
+Definition cat_bincoprod_fmap01_rec {A : Type}
+  `{Is1Cat A, !HasBinaryCoproducts A} {w x y z : A}
+  (f : z $-> w) (g : y $-> x) (h : x $-> w)
+  : cat_bincoprod_rec f h
+      $o fmap01 cat_bincoprod z g
+    $== cat_bincoprod_rec f (h $o g)
+  := @cat_binprod_fmap01_corec A^op _ _ _ _
+      hasbinaryproducts_op_hasbinarycoproducts _ _ _ _ f g h.
+
+Definition cat_bincoprod_fmap10_rec {A : Type}
+  `{Is1Cat A, !HasBinaryCoproducts A} {w x y z : A}
+  (f : y $-> x) (g : x $-> w) (h : z $-> w)
+  : cat_bincoprod_rec g h
+      $o fmap10 (fun x y => cat_bincoprod x y) f z
+    $== cat_bincoprod_rec (g $o f) h
+  := @cat_binprod_fmap10_corec A^op _ _ _ _
+      hasbinaryproducts_op_hasbinarycoproducts _ _ _ _ f g h.
+
+Definition cat_bincoprod_fmap11_rec {A : Type}
+  `{Is1Cat A, !HasBinaryCoproducts A} {v w x y z : A}
+  (f : y $-> w) (g : z $-> x) (h : w $-> v) (i : x $-> v)
+  : cat_bincoprod_rec h i
+      $o fmap11 cat_bincoprod f g
+    $== cat_bincoprod_rec (h $o f) (i $o g)
+  := @cat_binprod_fmap11_corec A^op _ _ _ _
+      hasbinaryproducts_op_hasbinarycoproducts _ _ _ _ _ f g h i.
+
+(** *** Codiagonal *)
+
+Definition cat_bincoprod_codiag {A : Type} `{Is1Cat A} (x : A)
+  (cat_bincoprod : A) {isbincoprod : IsBinaryCoproduct x x cat_bincoprod}
+  : cat_bincoprod $-> x
+  := @cat_binprod_diag _ _ _ _ _ _ _ isbincoprod.
+
+Definition cat_bincoprod_fmap11_codiag {A : Type}
+  `{HasBinaryCoproducts A} {x y : A} (f : x $-> y)
+  : f $o cat_bincoprod_codiag x _
+    $== cat_bincoprod_codiag y _ $o fmap11 (fun x y => cat_bincoprod x y) f f
+  := cat_binprod_fmap11_diag (A:= A^op) _.
+
 (** *** Symmetry of coproducts *)
 
 Definition cat_bincoprod_swap {A : Type} `{Is1Cat A}
@@ -379,6 +421,20 @@ Definition cate_bincoprod_swap {A : Type} `{HasEquivs A}
 Proof.
   exact (@cate_binprod_swap A^op _ _ _ _ _ hbc _ _).
 Defined.
+
+Definition cat_bincoprod_swap_codiag {A : Type} `{Is1Cat A}
+  {hbc : HasBinaryCoproducts A} (x : A)
+  : cat_bincoprod_codiag x _ $o cat_bincoprod_swap x x
+    $== cat_bincoprod_codiag x _.
+Proof.
+  exact (cat_binprod_swap_diag (A := A^op) x).
+Defined.
+
+Definition cat_bincoprod_swap_rec {A : Type} `{Is1Cat A}
+  `{!HasBinaryCoproducts A} {a b c : A} (f : a $-> c) (g : b $-> c)
+  : cat_bincoprod_rec f g $o cat_bincoprod_swap b a $== cat_bincoprod_rec g f
+  := @cat_binprod_swap_corec A^op _ _ _ _
+      hasbinaryproducts_op_hasbinarycoproducts _ _ _ _ _.
 
 (** *** Associativity of coproducts *)
 
@@ -400,39 +456,6 @@ Proof.
   exact associator_cat_binprod.
 Defined.
 
-(** *** Codiagonal *)
-
-Definition cat_bincoprod_codiag {A : Type} `{Is1Cat A} (x : A)
-  (cat_bincoprod : A) {isbincoprod : IsBinaryCoproduct x x cat_bincoprod}
-  : cat_bincoprod $-> x
-  := @cat_binprod_diag _ _ _ _ _ _ _ isbincoprod.
-
-(** *** Lemmas about [cat_bincoprod_rec] *)
-
-Definition cat_bincoprod_fmap01_rec {A : Type}
-  `{Is1Cat A, !HasBinaryCoproducts A} {w x y z : A}
-  (f : z $-> w) (g : y $-> x) (h : x $-> w)
-  : cat_bincoprod_rec f h $o fmap01 (fun x y => cat_bincoprod x y) z g
-    $== cat_bincoprod_rec f (h $o g)
-  := @cat_binprod_fmap01_corec A^op _ _ _ _
-      hasbinaryproducts_op_hasbinarycoproducts _ _ _ _ f g h.
-
-Definition cat_bincoprod_fmap10_rec {A : Type}
-  `{Is1Cat A, !HasBinaryCoproducts A} {w x y z : A}
-  (f : y $-> x) (g : x $-> w) (h : z $-> w)
-  : cat_bincoprod_rec g h $o fmap10 (fun x y => cat_bincoprod x y) f z
-    $== cat_bincoprod_rec (g $o f) h
-  := @cat_binprod_fmap10_corec A^op _ _ _ _
-      hasbinaryproducts_op_hasbinarycoproducts _ _ _ _ f g h.
-
-Definition cat_bincoprod_fmap11_rec {A : Type}
-  `{Is1Cat A, !HasBinaryCoproducts A} {v w x y z : A}
-  (f : y $-> w) (g : z $-> x) (h : w $-> v) (i : x $-> v)
-  : cat_bincoprod_rec h i $o fmap11 cat_bincoprod f g
-    $== cat_bincoprod_rec (h $o f) (i $o g)
-  := @cat_binprod_fmap11_corec A^op _ _ _ _
-      hasbinaryproducts_op_hasbinarycoproducts _ _ _ _ _ f g h i.
-
 Definition cat_bincoprod_rec_associator {A : Type} `{HasEquivs A}
   {hbc : HasBinaryCoproducts A}
   {w x y z : A} (f : w $-> z) (g : x $-> z) (h : y $-> z)
@@ -445,12 +468,6 @@ Proof.
            (HasBinaryProducts0:=hasbinaryproducts_op_hasbinarycoproducts (hbc:=hbc))
            f g h).
 Defined.
-
-Definition cat_bincoprod_swap_rec {A : Type} `{Is1Cat A}
-  `{!HasBinaryCoproducts A} {a b c : A} (f : a $-> c) (g : b $-> c)
-  : cat_bincoprod_rec f g $o cat_bincoprod_swap b a $== cat_bincoprod_rec g f
-  := @cat_binprod_swap_corec A^op _ _ _ _
-      hasbinaryproducts_op_hasbinarycoproducts _ _ _ _ _.
 
 (** *** Cocartesian Monoidal Structure *)
 

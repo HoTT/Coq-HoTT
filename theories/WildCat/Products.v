@@ -644,16 +644,6 @@ Definition cat_pr2_fmap11_binprod {A : Type} `{HasBinaryProducts A}
   : cat_pr2 _ $o fmap11 (fun x y => cat_binprod x y) f g $== g $o cat_pr2 _
   := cat_binprod_beta_pr2 _ _ _.
 
-(** *** Diagonal *)
-
-(** Annoyingly this doesn't follow directly from the general diagonal since [Bool_rec _ x x] is not definitionally equal to [fun _ => x]. *)
-Definition cat_binprod_diag {A : Type} `{Is1Cat A} (x : A)
-  (cat_binprod : A) `{!IsBinaryProduct x x cat_binprod}
-  : x $-> cat_binprod.
-Proof.
-  rapply cat_binprod_corec; exact (Id _).
-Defined.
-
 (** *** Lemmas about [cat_binprod_corec] *)
 
 Definition cat_binprod_fmap01_corec {A : Type}
@@ -699,6 +689,32 @@ Proof.
   - nrefine (cat_assoc_opp _ _ _ $@ _).
     refine ((_ $@R _) $@ cat_assoc _ _ _ $@ (_ $@L _) $@ _^$).
     1-3: rapply cat_binprod_beta_pr2.
+Defined.
+
+(** *** Diagonal *)
+
+(** Annoyingly this doesn't follow directly from the general diagonal since [Bool_rec _ x x] is not definitionally equal to [fun _ => x]. *)
+Definition cat_binprod_diag {A : Type} `{Is1Cat A} (x : A)
+  (cat_binprod : A) `{!IsBinaryProduct x x cat_binprod}
+  : x $-> cat_binprod.
+Proof.
+  rapply cat_binprod_corec; exact (Id _).
+Defined.
+
+Definition cat_binprod_fmap11_diag {A : Type}
+  `{HasBinaryProducts A} {x y : A} (f : x $-> y)
+  : cat_binprod_diag y _ $o f
+    $== fmap11 (fun x y => cat_binprod x y) f f $o cat_binprod_diag x _.
+Proof.
+  refine (_ $@ _^$).
+  2: napply cat_binprod_fmap11_corec.
+  napply cat_binprod_eta_pr.
+  - refine ((cat_assoc _ _ _)^$ $@ _).
+    refine ((_ $@R _) $@ cat_idl _ $@ (cat_idr _)^$ $@ _^$).
+    1,2: rapply cat_binprod_beta_pr1.
+  - refine ((cat_assoc _ _ _)^$ $@ _).
+    refine ((_ $@R _) $@ cat_idl _ $@ (cat_idr _)^$ $@ _^$).
+    1,2: rapply cat_binprod_beta_pr2.
 Defined.
 
 (** *** Symmetry of binary products *)
@@ -759,6 +775,21 @@ Section Symmetry.
         intros [a b] [c d] [f g]; cbn in f, g.
         exact(cat_binprod_swap_nat f g).
     - exact cat_binprod_swap_cat_binprod_swap.
+  Defined.
+
+    (** The swap map preserves the diagonal. *)
+  Definition cat_binprod_swap_diag (x : A)
+    : cat_binprod_swap x x $o cat_binprod_diag x _ $== cat_binprod_diag x _.
+  Proof.
+    napply cat_binprod_eta_pr.
+    - refine ((cat_assoc _ _ _)^$ $@ (_ $@R _) $@ _).
+      1: napply cat_binprod_beta_pr1.
+      refine (cat_binprod_beta_pr2 _ _ _ $@ _^$).
+      napply cat_binprod_beta_pr1.
+    - refine ((cat_assoc _ _ _)^$ $@ (_ $@R _) $@ _).
+      1: napply cat_binprod_beta_pr2.
+      refine (cat_binprod_beta_pr1 _ _ _ $@ _^$).
+      napply cat_binprod_beta_pr2.
   Defined.
 
 End Symmetry.
