@@ -1,0 +1,14 @@
+N: 6 "ab_sum" [body=yes, kind=cnst, prop=no, path="FiniteSum", ];
+N: 5 "ab_sum_const" [body=yes, kind=cnst, prop=no, path="FiniteSum", ];
+N: 3 "ab_sum_plus" [body=yes, kind=cnst, prop=no, path="FiniteSum", ];
+N: 2 "ab_sum_sum" [body=yes, kind=cnst, prop=no, path="FiniteSum", ];
+N: 4 "ab_sum_zero" [body=yes, kind=cnst, prop=no, path="FiniteSum", ];
+N: 1 "path_ab_sum" [body=yes, kind=cnst, prop=no, path="FiniteSum", ];
+E: 1 6 [weight=9, ];
+E: 2 3 [weight=1, ];
+E: 2 4 [weight=1, ];
+E: 2 6 [weight=27, ];
+E: 3 6 [weight=63, ];
+E: 4 5 [weight=1, ];
+E: 4 6 [weight=2, ];
+E: 5 6 [weight=7, ];

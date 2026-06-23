@@ -1,0 +1,5111 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "Require Import HoTT.Basics HoTT.Types.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import HoTT.Basics HoTT.Types.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Idempotents.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import HoTT.Truncations.Core Universes.BAut Spaces.Cantor.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope equiv_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope path_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** * BAut(Cantor) *)\n\n(** ** A pre-idempotent on [BAut Cantor] that does not split *)\n\n(** We go into a non-exported module so that we can use short names for definitions without polluting the global namespace. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Module BAut_Cantor_Idempotent.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section Assumptions.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context `{Univalence}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition f : BAut Cantor -> BAut Cantor.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "BAut Cantor -> BAut Cantor",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "BAut Cantor -> BAut Cantor",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros Z.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "BAut Cantor",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "BAut Cantor"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    (** Here is the important part of this definition. *)\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exists (Z + Cantor).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "merely (Z + Cantor = Cantor)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "BAut Cantor"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    (** The rest is just a proof that [Z+Cantor] is again equivalent to [Cantor], using [cantor_fold] and the assumption that [Z] is equivalent to [Cantor]. *)\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "pose (e := Z.2); simpl in e; clearbody e.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "merely (Z + Cantor = Cantor)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "BAut Cantor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "Tr (-1) (Z.1 = Cantor)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "strip_truncations.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "merely (Z + Cantor = Cantor)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "BAut Cantor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "Z.1 = Cantor"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply tr.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Z + Cantor = Cantor",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "BAut Cantor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "Z.1 = Cantor"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply path_universe_uncurried.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Z + Cantor <~> Cantor",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "BAut Cantor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "Z.1 = Cantor"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (equiv_cantor_fold oE _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Z + Cantor <~> Cantor + Cantor",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "BAut Cantor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "Z.1 = Cantor"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (equiv_path _ _ e +E 1).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** For the pre-idempotence of [f], the main point is again the existence of the equivalence [fold_cantor]. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition preidem_f : IsPreIdempotent f.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsPreIdempotent f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsPreIdempotent f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros Z.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f (f Z) = f Z",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "BAut Cantor"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply path_baut.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f (f Z) <~> f Z",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "BAut Cantor"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold f; simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Z + Cantor + Cantor <~> Z + Cantor",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "BAut Cantor"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ oE equiv_sum_assoc Z Cantor Cantor).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Z + (Cantor + Cantor) <~> Z + Cantor",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "BAut Cantor"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (1 +E equiv_cantor_fold).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** We record how the action of [f] and [f o f] on paths corresponds to an action on equivalences. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition ap_f {Z Z' : BAut Cantor} (p : Z = Z')\n  : equiv_path _ _ (ap f p)..1\n    = equiv_path Z Z' p..1 +E 1.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "equiv_path (f Z).1 (f Z').1 (ap f p) ..1 = equiv_path Z Z' p ..1 +E 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z",
+                "Z'"
+              ],
+              "body": null,
+              "type": "BAut Cantor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "Z = Z'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "equiv_path (f Z).1 (f Z').1 (ap f p) ..1 = equiv_path Z Z' p ..1 +E 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z",
+                "Z'"
+              ],
+              "body": null,
+              "type": "BAut Cantor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "Z = Z'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct p.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "equiv_path (f Z).1 (f Z).1 (ap f 1) ..1 = equiv_path Z Z 1 ..1 +E 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "BAut Cantor"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply path_equiv, path_arrow.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "equiv_path (f Z).1 (f Z).1 (ap f 1) ..1 == equiv_path Z Z 1 ..1 +E 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "BAut Cantor"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros [z|a]; reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition ap_ff {Z Z' : BAut Cantor} (p : Z = Z')\n  : equiv_path _ _ (ap (f o f) p)..1\n    = equiv_path Z Z' p..1 +E 1 +E 1.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "equiv_path (f (f Z)).1 (f (f Z')).1 (ap (f o f) p) ..1 =\nequiv_path Z Z' p ..1 +E 1 +E 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z",
+                "Z'"
+              ],
+              "body": null,
+              "type": "BAut Cantor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "Z = Z'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "equiv_path (f (f Z)).1 (f (f Z')).1 (ap (f o f) p) ..1 =\nequiv_path Z Z' p ..1 +E 1 +E 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z",
+                "Z'"
+              ],
+              "body": null,
+              "type": "BAut Cantor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "Z = Z'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct p.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "equiv_path (f (f Z)).1 (f (f Z)).1\n  (ap (fun x : BAut Cantor => f (f x)) 1) ..1 =\nequiv_path Z Z 1 ..1 +E 1 +E 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "BAut Cantor"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply path_equiv, path_arrow.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "equiv_path (f (f Z)).1 (f (f Z)).1\n  (ap (fun x : BAut Cantor => f (f x)) 1) ..1 ==\nequiv_path Z Z 1 ..1 +E 1 +E 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "BAut Cantor"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros [[z|a]|a]; reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** Now let's assume [f] is quasi-idempotent, but not necessarily using the same witness of pre-idempotency. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context (Ip : IsPreIdempotent f) (Jp : @IsQuasiIdempotent _ f Ip).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition I (Z : BAut Cantor)\n  : (Z + Cantor) + Cantor <~> Z + Cantor\n    := equiv_path _ _ (Ip Z)..1.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition I0\n  : Cantor + Cantor + Cantor + Cantor <~> Cantor + Cantor + Cantor\n    := I (f (point (BAut Cantor))).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** We don't know much about [I0], but we can show that it maps the rightmost two summands to the rightmost one, using the naturality of [I].  Here is the naturality. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Inat (Z Z' : BAut Cantor) (e : Z <~> Z')\n  : I Z' oE (e +E 1 +E 1)\n    = (e +E 1) oE I Z.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "I Z' oE (e +E 1 +E 1) = (e +E 1) oE I Z",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z",
+                "Z'"
+              ],
+              "body": null,
+              "type": "BAut Cantor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "Z <~> Z'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "I Z' oE (e +E 1 +E 1) = (e +E 1) oE I Z",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z",
+                "Z'"
+              ],
+              "body": null,
+              "type": "BAut Cantor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": null,
+              "type": "Z <~> Z'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "revert e; equiv_intro (equiv_path Z Z') q.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "I Z' oE (equiv_path Z Z' q +E 1 +E 1) = (equiv_path Z Z' q +E 1) oE I Z",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z",
+                "Z'"
+              ],
+              "body": null,
+              "type": "BAut Cantor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "Z = Z'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "revert q; equiv_intro ((equiv_path_sigma_hprop Z Z')^-1) p.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "I Z' oE (equiv_path Z Z' ((equiv_path_sigma_hprop Z Z')^-1 p) +E 1 +E 1) =\n(equiv_path Z Z' ((equiv_path_sigma_hprop Z Z')^-1 p) +E 1) oE I Z",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z",
+                "Z'"
+              ],
+              "body": null,
+              "type": "BAut Cantor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "Z = Z'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "I Z' oE (equiv_path Z Z' p ..1 +E 1 +E 1) =\n(equiv_path Z Z' p ..1 +E 1) oE I Z",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z",
+                "Z'"
+              ],
+              "body": null,
+              "type": "BAut Cantor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "Z = Z'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite <- ap_ff, <- ap_f.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "I Z'\noE equiv_path (f (f Z)).1 (f (f Z')).1\n     (ap (fun x : BAut Cantor => f (f x)) p) ..1 =\nequiv_path (f Z).1 (f Z').1 (ap f p) ..1 oE I Z",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z",
+                "Z'"
+              ],
+              "body": null,
+              "type": "BAut Cantor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "Z = Z'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold I.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "equiv_path (f (f Z')).1 (f Z').1 (Ip Z') ..1\noE equiv_path (f (f Z)).1 (f (f Z')).1\n     (ap (fun x : BAut Cantor => f (f x)) p) ..1 =\nequiv_path (f Z).1 (f Z').1 (ap f p) ..1\noE equiv_path (f (f Z)).1 (f Z).1 (Ip Z) ..1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z",
+                "Z'"
+              ],
+              "body": null,
+              "type": "BAut Cantor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "Z = Z'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine ((equiv_path_pp _ _)^ @ _ @ (equiv_path_pp _ _)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "equiv_path (Z + Cantor + Cantor) (Z' + Cantor)\n  ((ap (fun x : BAut Cantor => f (f x)) p) ..1 @ (Ip Z') ..1) =\nequiv_path (Z + Cantor + Cantor) (Z' + Cantor) ((Ip Z) ..1 @ (ap f p) ..1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z",
+                "Z'"
+              ],
+              "body": null,
+              "type": "BAut Cantor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "Z = Z'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply ap.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(ap (fun x : BAut Cantor => f (f x)) p) ..1 @ (Ip Z') ..1 =\n(Ip Z) ..1 @ (ap f p) ..1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z",
+                "Z'"
+              ],
+              "body": null,
+              "type": "BAut Cantor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "Z = Z'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine ((pr1_path_pp (ap (f o f) p) (Ip Z'))^ @ _ @ pr1_path_pp _ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(ap (fun x : BAut Cantor => f (f x)) p @ Ip Z') ..1 = (Ip Z @ ap f p) ..1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z",
+                "Z'"
+              ],
+              "body": null,
+              "type": "BAut Cantor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "Z = Z'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply ap.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap (fun x : BAut Cantor => f (f x)) p @ Ip Z' = Ip Z @ ap f p",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z",
+                "Z'"
+              ],
+              "body": null,
+              "type": "BAut Cantor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "Z = Z'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (concat_Ap Ip).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** To show our claim about the action of [I0], we will apply this naturality to the flip automorphism of [Cantor + Cantor].  Here are the images of that automorphism under [f] and [f o f]. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition f_flip :=\n    equiv_sum_symm Cantor Cantor +E equiv_idmap Cantor.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition ff_flip :=\n    (equiv_sum_symm Cantor Cantor +E equiv_idmap Cantor) +E (equiv_idmap Cantor).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** The naturality of [I] implies that [I0] commutes with these images of the flip. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition I0nat_flip\n        (x : ((Cantor + Cantor) + Cantor) + Cantor)\n  : I0 (ff_flip x) = f_flip (I0 x)\n    := ap10_equiv\n         (Inat (f (point (BAut Cantor))) (f (point (BAut Cantor)))\n               (equiv_sum_symm Cantor Cantor))\n         x.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** The value of this is that we can detect which summand an element is in depending on whether or not it is fixed by [f_flip] or [ff_flip]. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition f_flip_fixed_iff_inr (x : Cantor + Cantor + Cantor)\n  : (f_flip x = x) <-> is_inr x.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f_flip x = x <-> is_inr x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Cantor + Cantor + Cantor"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f_flip x = x <-> is_inr x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Cantor + Cantor + Cantor"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "split; intros p; destruct x as [[c|c]|c]; simpl in p.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "is_inr (inl (inl c))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c"
+              ],
+              "body": null,
+              "type": "Cantor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "inl (inr c) = inl (inl c)"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "is_inr (inl (inr c))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c"
+              ],
+              "body": null,
+              "type": "Cantor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "inl (inl c) = inl (inr c)"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "is_inr (inr c)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c"
+              ],
+              "body": null,
+              "type": "Cantor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "inr c = inr c"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f_flip (inl (inl c)) = inl (inl c)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c"
+              ],
+              "body": null,
+              "type": "Cantor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "Empty"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f_flip (inl (inr c)) = inl (inr c)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c"
+              ],
+              "body": null,
+              "type": "Cantor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "Empty"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f_flip (inr c) = inr c",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c"
+              ],
+              "body": null,
+              "type": "Cantor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "Unit"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "is_inr (inl (inl c))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c"
+              ],
+              "body": null,
+              "type": "Cantor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "inl (inr c) = inl (inl c)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply path_sum_inl in p.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "is_inr (inl (inl c))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c"
+              ],
+              "body": null,
+              "type": "Cantor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "inr c = inl c"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "elim (inl_ne_inr _ _ p^).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "is_inr (inl (inr c))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c"
+              ],
+              "body": null,
+              "type": "Cantor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "inl (inl c) = inl (inr c)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply path_sum_inl in p.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "is_inr (inl (inr c))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c"
+              ],
+              "body": null,
+              "type": "Cantor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "inl c = inr c"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "elim (inl_ne_inr _ _ p).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "is_inr (inr c)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c"
+              ],
+              "body": null,
+              "type": "Cantor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "inr c = inr c"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact tt.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f_flip (inl (inl c)) = inl (inl c)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c"
+              ],
+              "body": null,
+              "type": "Cantor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "Empty"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "elim p.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f_flip (inl (inr c)) = inl (inr c)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c"
+              ],
+              "body": null,
+              "type": "Cantor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "Empty"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "elim p.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f_flip (inr c) = inr c",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c"
+              ],
+              "body": null,
+              "type": "Cantor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "Unit"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition ff_flip_fixed_iff_inr\n        (x : Cantor + Cantor + Cantor + Cantor)\n  : (ff_flip x = x) <-> (is_inr x + is_inl_and is_inr x).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ff_flip x = x <-> is_inr x + is_inl_and is_inr x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Cantor + Cantor + Cantor + Cantor"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ff_flip x = x <-> is_inr x + is_inl_and is_inr x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Cantor + Cantor + Cantor + Cantor"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "split; intros p; destruct x as [[[c|c]|c]|c]; simpl in p.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "is_inr (inl (inl (inl c))) + is_inl_and is_inr (inl (inl (inl c)))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c"
+              ],
+              "body": null,
+              "type": "Cantor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "inl (inl (inr c)) = inl (inl (inl c))"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "is_inr (inl (inl (inr c))) + is_inl_and is_inr (inl (inl (inr c)))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c"
+              ],
+              "body": null,
+              "type": "Cantor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "inl (inl (inl c)) = inl (inl (inr c))"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "is_inr (inl (inr c)) + is_inl_and is_inr (inl (inr c))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c"
+              ],
+              "body": null,
+              "type": "Cantor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "inl (inr c) = inl (inr c)"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "is_inr (inr c) + is_inl_and is_inr (inr c)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c"
+              ],
+              "body": null,
+              "type": "Cantor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "inr c = inr c"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ff_flip (inl (inl (inl c))) = inl (inl (inl c))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c"
+              ],
+              "body": null,
+              "type": "Cantor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "Empty + Empty"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ff_flip (inl (inl (inr c))) = inl (inl (inr c))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c"
+              ],
+              "body": null,
+              "type": "Cantor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "Empty + Empty"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ff_flip (inl (inr c)) = inl (inr c)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c"
+              ],
+              "body": null,
+              "type": "Cantor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "Empty + Unit"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ff_flip (inr c) = inr c",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c"
+              ],
+              "body": null,
+              "type": "Cantor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "Unit + Empty"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "is_inr (inl (inl (inl c))) + is_inl_and is_inr (inl (inl (inl c)))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c"
+              ],
+              "body": null,
+              "type": "Cantor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "inl (inl (inr c)) = inl (inl (inl c))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "do 2 apply path_sum_inl in p.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "is_inr (inl (inl (inl c))) + is_inl_and is_inr (inl (inl (inl c)))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c"
+              ],
+              "body": null,
+              "type": "Cantor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "inr c = inl c"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "elim (inl_ne_inr _ _ p^).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "is_inr (inl (inl (inr c))) + is_inl_and is_inr (inl (inl (inr c)))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c"
+              ],
+              "body": null,
+              "type": "Cantor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "inl (inl (inl c)) = inl (inl (inr c))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "do 2 apply path_sum_inl in p.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "is_inr (inl (inl (inr c))) + is_inl_and is_inr (inl (inl (inr c)))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c"
+              ],
+              "body": null,
+              "type": "Cantor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "inl c = inr c"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "elim (inl_ne_inr _ _ p).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "is_inr (inl (inr c)) + is_inl_and is_inr (inl (inr c))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c"
+              ],
+              "body": null,
+              "type": "Cantor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "inl (inr c) = inl (inr c)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (inr tt).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "is_inr (inr c) + is_inl_and is_inr (inr c)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c"
+              ],
+              "body": null,
+              "type": "Cantor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "inr c = inr c"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (inl tt).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ff_flip (inl (inl (inl c))) = inl (inl (inl c))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c"
+              ],
+              "body": null,
+              "type": "Cantor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "Empty + Empty"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct p as [e|e]; elim e.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ff_flip (inl (inl (inr c))) = inl (inl (inr c))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c"
+              ],
+              "body": null,
+              "type": "Cantor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "Empty + Empty"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct p as [e|e]; elim e.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ff_flip (inl (inr c)) = inl (inr c)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c"
+              ],
+              "body": null,
+              "type": "Cantor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "Empty + Unit"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct p as [e|_]; [ elim e | reflexivity ].",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ff_flip (inr c) = inr c",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "c"
+              ],
+              "body": null,
+              "type": "Cantor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "Unit + Empty"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "destruct p as [_|e]; [ reflexivity | elim e ].",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** And the naturality guarantees that [I0] preserves fixed points. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition I0_fixed_iff_fixed\n        (x : Cantor + Cantor + Cantor + Cantor)\n  : (ff_flip x = x) <-> (f_flip (I0 x) = I0 x).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ff_flip x = x <-> f_flip (I0 x) = I0 x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Cantor + Cantor + Cantor + Cantor"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ff_flip x = x <-> f_flip (I0 x) = I0 x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Cantor + Cantor + Cantor + Cantor"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "split; intros p.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f_flip (I0 x) = I0 x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Cantor + Cantor + Cantor + Cantor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "ff_flip x = x"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ff_flip x = x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Cantor + Cantor + Cantor + Cantor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "f_flip (I0 x) = I0 x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f_flip (I0 x) = I0 x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Cantor + Cantor + Cantor + Cantor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "ff_flip x = x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact ((I0nat_flip x)^ @ ap I0 p).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ff_flip x = x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Cantor + Cantor + Cantor + Cantor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "f_flip (I0 x) = I0 x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (equiv_inj I0).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "I0 (ff_flip x) = I0 x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Cantor + Cantor + Cantor + Cantor"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "f_flip (I0 x) = I0 x"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (I0nat_flip x @ p).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** Putting it all together, here is the proof of our claim about [I0]. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition I0_preserves_inr\n        (x : Cantor + Cantor + Cantor + Cantor)\n  : (is_inr x + is_inl_and is_inr x) <-> is_inr (I0 x).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "is_inr x + is_inl_and is_inr x <-> is_inr (I0 x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Cantor + Cantor + Cantor + Cantor"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "is_inr x + is_inl_and is_inr x <-> is_inr (I0 x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Cantor + Cantor + Cantor + Cantor"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (iff_compose _ (f_flip_fixed_iff_inr (I0 x))).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "is_inr x + is_inl_and is_inr x <-> f_flip (I0 x) = I0 x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Cantor + Cantor + Cantor + Cantor"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (iff_compose _ (I0_fixed_iff_fixed x)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "is_inr x + is_inl_and is_inr x <-> ff_flip x = x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "Cantor + Cantor + Cantor + Cantor"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply iff_inverse, ff_flip_fixed_iff_inr.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** Now we bring quasi-idempotence into play. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition J (Z : BAut Cantor)\n  : I Z +E 1\n    = I (f Z).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "I Z +E 1 = I (f Z)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "BAut Cantor"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "I Z +E 1 = I (f Z)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "BAut Cantor"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold I; simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "equiv_path (Z + Cantor + Cantor) (Z + Cantor) (Ip Z) ..1 +E 1 =\nequiv_path (Z + Cantor + Cantor + Cantor) (Z + Cantor + Cantor)\n  (Ip (f Z)) ..1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "BAut Cantor"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine ((ap_f (Ip Z))^ @ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "equiv_path (f (f (f Z))).1 (f (f Z)).1 (ap f (Ip Z)) ..1 =\nequiv_path (Z + Cantor + Cantor + Cantor) (Z + Cantor + Cantor)\n  (Ip (f Z)) ..1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "BAut Cantor"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "do 2 apply ap.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap f (Ip Z) = Ip (f Z)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "BAut Cantor"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply Jp.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** We reach a contradiction by showing that the two maps which [J] claims are equal send elements of the third summand of the domain into different summands of the codomain. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition impossible : Empty.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Empty",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Empty",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "pose (x := inl (inr (fun n => true))\n               : ((f (point (BAut Cantor))) + Cantor) + Cantor).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Empty",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": "inl (inr (fun _ : nat => true)) : f (point (BAut Cantor)) + Cantor + Cantor",
+              "type": "f (point (BAut Cantor)) + Cantor + Cantor"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (not_is_inl_and_inr' (I (f (point (BAut Cantor))) x)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "is_inl (I (f (point (BAut Cantor))) x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": "inl (inr (fun _ : nat => true)) : f (point (BAut Cantor)) + Cantor + Cantor",
+              "type": "f (point (BAut Cantor)) + Cantor + Cantor"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "is_inr (I (f (point (BAut Cantor))) x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": "inl (inr (fun _ : nat => true)) : f (point (BAut Cantor)) + Cantor + Cantor",
+              "type": "f (point (BAut Cantor)) + Cantor + Cantor"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "is_inl (I (f (point (BAut Cantor))) x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": "inl (inr (fun _ : nat => true)) : f (point (BAut Cantor)) + Cantor + Cantor",
+              "type": "f (point (BAut Cantor)) + Cantor + Cantor"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (transport is_inl\n                       (ap10_equiv (J (point (BAut Cantor))) x) tt).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "is_inr (I (f (point (BAut Cantor))) x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Univalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Ip"
+              ],
+              "body": null,
+              "type": "IsPreIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Jp"
+              ],
+              "body": null,
+              "type": "IsQuasiIdempotent f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": "inl (inr (fun _ : nat => true)) : f (point (BAut Cantor)) + Cantor + Cantor",
+              "type": "f (point (BAut Cantor)) + Cantor + Cantor"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (fst (I0_preserves_inr x) (inr tt)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End Assumptions.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End BAut_Cantor_Idempotent.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Let's make the important conclusions available globally. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition baut_cantor_idem `{Univalence}\n: BAut Cantor -> BAut Cantor\n  := BAut_Cantor_Idempotent.f.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition preidem_baut_cantor_idem `{Univalence}\n: IsPreIdempotent baut_cantor_idem\n  := BAut_Cantor_Idempotent.preidem_f.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition not_qidem_baut_cantor_idem `{Univalence}\n: ~ { I : IsPreIdempotent baut_cantor_idem\n        & IsQuasiIdempotent baut_cantor_idem }\n  := fun IJ => BAut_Cantor_Idempotent.impossible IJ.1 IJ.2.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

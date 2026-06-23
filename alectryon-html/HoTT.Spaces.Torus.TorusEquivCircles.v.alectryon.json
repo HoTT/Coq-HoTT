@@ -1,0 +1,2032 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "From HoTT Require Import Basics Types.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "From HoTT Require Import Basics Types.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Cubical.DPath Cubical.PathSquare Cubical.DPathSquare\n  Cubical.PathCube Cubical.DPathCube.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Spaces.Circle Spaces.Torus.Torus.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** In this file we prove that the torus is equivalent to the product of two circles. *)\n\n(** Here is a cube filler for help with circle recursion into the torus *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition c2t_square_and_cube\n  : {s : PathSquare loop_a loop_a\n      (ap (Circle_rec _ tbase loop_b) loop)\n      (ap (Circle_rec _ tbase loop_b) loop)\n    &  PathCube s surf hr hr\n       (sq_G1 (Circle_rec_beta_loop _ _ _))\n       (sq_G1 (Circle_rec_beta_loop _ _ _))}.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{s\n: PathSquare loop_a loop_a (ap (Circle_rec Torus tbase loop_b) loop)\n    (ap (Circle_rec Torus tbase loop_b) loop)\n&\nPathCube s surf hr hr (sq_G1 (Circle_rec_beta_loop Torus tbase loop_b))\n  (sq_G1 (Circle_rec_beta_loop Torus tbase loop_b))}",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{s\n: PathSquare loop_a loop_a (ap (Circle_rec Torus tbase loop_b) loop)\n    (ap (Circle_rec Torus tbase loop_b) loop)\n&\nPathCube s surf hr hr (sq_G1 (Circle_rec_beta_loop Torus tbase loop_b))\n  (sq_G1 (Circle_rec_beta_loop Torus tbase loop_b))}",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply cu_fill_left.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** We define the map from the Torus to the Circles *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition t2c : Torus -> Circle * Circle.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Torus -> Circle * Circle",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Torus -> Circle * Circle",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply Torus_rec.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Circle * Circle",
+          "hypotheses": []
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?pb = ?pb",
+          "hypotheses": []
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?pb = ?pb",
+          "hypotheses": []
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PathSquare ?pla ?pla ?plb ?plb",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Circle * Circle",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (base, base).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": " (* The point of the torus is taken to (base, base *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(base, base) = (base, base)",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (path_prod' loop 1).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": " (* loop_a is taken to loop in the first *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(base, base) = (base, base)",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (path_prod' 1 loop).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": " (* loop_b is taken to loop in the second *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PathSquare (path_prod' loop 1) (path_prod' loop 1) \n  (path_prod' 1 loop) (path_prod' 1 loop)",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (sq_prod (hr, vr)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": " (* The square is the obvious product of squares *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** We now define the curried function from the circles to the torus. *)\n(** TODO: It's easy to remove [Funext] from this definition by using [intro] and [revert] appropriately, but then the cube algebra in the proof of [c2t'_beta] would need to be updated. See https://github.com/HoTT/Coq-HoTT/pull/1824. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition c2t' `{Funext} : Circle -> Circle -> Torus.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Circle -> Circle -> Torus",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Circle -> Circle -> Torus",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply Circle_rec.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Circle -> Torus",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?b = ?b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Circle -> Torus",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply Circle_rec.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Torus",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?b = ?b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "     (* Double circle recursion *)\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Torus",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact tbase.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "      (* The basepoint is sent to the point of the torus *)\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "tbase = tbase",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact loop_b.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "     (* The second loop is sent to loop_b *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Circle_rec Torus tbase loop_b = Circle_rec Torus tbase loop_b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply path_forall.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Circle_rec Torus tbase loop_b == Circle_rec Torus tbase loop_b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "  (* We use function extensionality here to induct *)\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply Circle_ind.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun x : Circle =>\n Circle_rec Torus tbase loop_b x = Circle_rec Torus tbase loop_b x) base",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport\n  (fun x : Circle =>\n   Circle_rec Torus tbase loop_b x = Circle_rec Torus tbase loop_b x)\n  loop ?b =\n?b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "  (* Circle induction as a DPath *)\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun x : Circle =>\n Circle_rec Torus tbase loop_b x = Circle_rec Torus tbase loop_b x) base",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact loop_a.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "     (* The first loop is sent to loop_a *)\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport\n  (fun x : Circle =>\n   Circle_rec Torus tbase loop_b x = Circle_rec Torus tbase loop_b x)\n  loop loop_a =\nloop_a",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "srapply sq_dp^-1.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PathSquare loop_a loop_a (ap (Circle_rec Torus tbase loop_b) loop)\n  (ap (Circle_rec Torus tbase loop_b) loop)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " (* This DPath is actually a square *)\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (pr1 c2t_square_and_cube).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": " (* We apply the cap we found above *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Here is the uncurried version *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition c2t `{Funext} : Circle * Circle -> Torus.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Circle * Circle -> Torus",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Circle * Circle -> Torus",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply uncurry, c2t'.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Computation rules for c2t' as a cube filler *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition c2t'_beta `{Funext} :\n  {bl1 : PathSquare (ap (fun y => c2t' base y) loop) loop_b 1 1 &\n  {bl2 : PathSquare (ap (fun x => c2t' x base) loop) loop_a 1 1 &\n  PathCube (sq_ap011 c2t' loop loop) surf bl2 bl2 bl1 bl1}}.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{bl1 : PathSquare (ap (fun y : Circle => c2t' base y) loop) loop_b 1 1 &\n{bl2 : PathSquare (ap (fun x : Circle => c2t' x base) loop) loop_a 1 1 &\nPathCube (sq_ap011 c2t' loop loop) surf bl2 bl2 bl1 bl1}}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{bl1 : PathSquare (ap (fun y : Circle => c2t' base y) loop) loop_b 1 1 &\n{bl2 : PathSquare (ap (fun x : Circle => c2t' x base) loop) loop_a 1 1 &\nPathCube (sq_ap011 c2t' loop loop) surf bl2 bl2 bl1 bl1}}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "nrefine (_;_;_).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PathCube (sq_ap011 c2t' loop loop) surf ?Goal0 ?Goal0 ?Goal ?Goal",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold sq_ap011.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PathCube\n  (sq_dp (apD (fun y : Circle => ap (fun x : Circle => c2t' x y) loop) loop))\n  surf ?Goal0 ?Goal0 ?Goal ?Goal",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (* 1. Unfusing ap *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "nrefine (cu_concat_lr (cu_ds (dp_apD_nat\n    (fun y => ap_compose _ (fun f => f y) _) _)) _\n    (sji0:=?[X1]) (sji1:=?X1) (sj0i:=?[Y1]) (sj1i:=?Y1) (pj11:=1)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PathCube\n  (sq_dp\n     (apD\n        (fun y : Circle => ap (fun f : Circle -> Torus => f y) (ap c2t' loop))\n        loop))\n  surf ?X1 ?X1 ?Y1 ?Y1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (* 2. Reducing c2t' on loop *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "nrefine (cu_concat_lr (cu_ds (dp_apD_nat\n    (fun x => ap_apply_l _ _ @ apD10 (ap _(Circle_rec_beta_loop _ _ _)) x) _)) _\n    (sji0:=?[X2]) (sji1:=?X2) (sj0i:=?[Y2]) (sj1i:=?Y2) (pj11:=1)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PathCube\n  (sq_dp\n     (apD\n        (fun x : Circle =>\n         ap10\n           (path_forall (Circle_rec Torus tbase loop_b)\n              (Circle_rec Torus tbase loop_b)\n              (Circle_ind\n                 (fun x0 : Circle =>\n                  Circle_rec Torus tbase loop_b x0 =\n                  Circle_rec Torus tbase loop_b x0)\n                 loop_a (sq_dp^-1 c2t_square_and_cube.1)))\n           x)\n        loop))\n  surf ?X2 ?X2 ?Y2 ?Y2",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (* 3. Reducing ap10 on function extensionality *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "nrefine (cu_concat_lr (cu_ds (dp_apD_nat (ap10_path_forall _ _ _) _)) _\n    (sji0:=?[X3]) (sji1:=?X3) (sj0i:=?[Y3]) (sj1i:=?Y3) (pj11:=1)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PathCube\n  (sq_dp\n     (apD\n        (Circle_ind\n           (fun x : Circle =>\n            Circle_rec Torus tbase loop_b x = Circle_rec Torus tbase loop_b x)\n           loop_a (sq_dp^-1 c2t_square_and_cube.1))\n        loop))\n  surf ?X3 ?X3 ?Y3 ?Y3",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (* 4. Reducing Circle_ind on loop *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "nrefine (cu_concat_lr (cu_G11 (ap _ (Circle_ind_beta_loop _ _ _))) _\n    (sji0:=?[X4]) (sji1:=?X4) (sj0i:=?[Y4]) (sj1i:=?Y4) (pj11:=1)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PathCube (sq_dp (sq_dp^-1 c2t_square_and_cube.1)) surf ?X4 ?X4 ?Y4 ?Y4",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (* 5. collapsing equivalence *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "nrefine (cu_concat_lr (cu_G11 (eisretr _ _)) _\n    (sji0:=?[X5]) (sji1:=?X5) (sj0i:=?[Y5]) (sj1i:=?Y5) (pj11:=1)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PathCube c2t_square_and_cube.1 surf ?X5 ?X5 ?Y5 ?Y5",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (* 6. filling the cube *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply c2t_square_and_cube.2.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope path_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope cube_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** We now prove that t2c is a section of c2t *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition t2c2t `{Funext} : c2t o t2c == idmap.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "c2t o t2c == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "c2t o t2c == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (* We start with Torus induction *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "nrefine (Torus_ind _ 1 _ _ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "DPathSquare (fun x : Torus => c2t (t2c x) = x) surf ?Goal ?Goal ?Goal0 ?Goal0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (* Our DPathSquare is really just a cube *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply cu_ds^-1.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PathCube (sq_dp ?Goal) (sq_dp ?Goal) (sq_dp ?Goal0) \n  (sq_dp ?Goal0) (sq_ap (fun x : Torus => c2t (t2c x)) surf)\n  (sq_ap idmap surf)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (* We pretend that our sides have sq_dpath o sq_dpath^-1\n    and get rid of them *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (cu_GGGGcc (eisretr _ _)^ (eisretr _ _)^\n    (eisretr _ _)^ (eisretr _ _)^ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PathCube ?Goal ?Goal ?Goal0 ?Goal0\n  (sq_ap (fun x : Torus => c2t (t2c x)) surf) (sq_ap idmap surf)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (* Apply a symmetry to get the faces on the right side *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply cu_rot_tb_fb.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PathCube (sq_ap (fun x : Torus => c2t (t2c x)) surf) \n  (sq_ap idmap surf) (sq_tr ?Goal) (sq_tr ?Goal) (sq_tr ?Goal0)\n  (sq_tr ?Goal0)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (* Clean up other faces *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (cu_ccGGGG (eisretr _ _)^ (eisretr _ _)^\n    (eisretr _ _)^ (eisretr _ _)^ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PathCube (sq_ap (fun x : Torus => c2t (t2c x)) surf) \n  (sq_ap idmap surf) ?Goal ?Goal ?Goal0 ?Goal0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (* Now we finish the proof with the following composition of cubes *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact ((sq_ap_compose t2c c2t surf)\n    @lr (cu_ap c2t (Torus_rec_beta_surf _ _ _ _ _ ))\n    @lr (sq_ap_uncurry _ _ _)\n    @lr (pr2 (pr2 c2t'_beta))\n    @lr (cu_flip_lr (sq_ap_idmap _))).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* NOTE: The last step in the previous proof can be done as a sequence of\n   refines however Coq really struggles to unify this. Below is the original\n   way we proved the last statement before making it short and sweet. As can\n   be seen, we need to give refine hints using existential variables which is\n   tedious to write out, and perhaps motivates why we wrote it as one big\n   concatenation. Ideally the way below should be as smooth as the way above,\n   since above is difficult to write directly without having tried below.\n\n  (* Now we decompose the cube with middle sq_ap_compose *)\n  (* Note: coq sucks at unifying this so we have to explicitly give paths *)\n  refine (cu_concat_lr (sq_ap_compose t2c c2t surf) _\n    (sji0:=?[X1]) (sji1:=?X1) (sj0i:=?[Y1]) (sj1i:=?Y1) (pj11:=1)).\n  (* Now we reduce (sq_ap t2c surf) *)\n  refine (cu_concat_lr (cu_ap c2t (Torus_rec_beta_surf _ _ _ _ _ )) _\n    (sji0:=?[X2]) (sji1:=?X2) (sj0i:=?[Y2]) (sj1i:=?Y2) (pj11:=1)).\n  (* We now uncurry c2t inside sq_ap *)\n  refine (cu_concat_lr (sq_ap_uncurry _ _ _) _\n    (sji0:=?[X3]) (sji1:=?X3) (sj0i:=?[Y3]) (sj1i:=?Y3) (pj11:=1)).\n  (* Reduce sq_ap2 c2t' loop loop *)\n  refine (cu_concat_lr (pr2 (pr2 c2t'_beta)) _\n    (sji0:=?[X4]) (sji1:=?X4) (sj0i:=?[Y4]) (sj1i:=?Y4) (pj11:=1)).\n  (* Finally flip and sq_ap idmap *)\n  refine (cu_flip_lr (sq_ap_idmap _)).\n\n*)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Notation apcs := (ap_compose_sq _ _ _).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition sq_ap011_compose {A B C D : Type} (f : A -> B -> C) (g : C -> D)\n  {a a' : A} (p : a = a') {b b' : B} (q : b = b')\n  : PathCube (sq_ap011 (fun x y => g (f x y)) p q) (sq_ap g (sq_ap011 f p q))\n      apcs apcs apcs apcs.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PathCube (sq_ap011 (fun (x : A) (y : B) => g (f x y)) p q)\n  (sq_ap g (sq_ap011 f p q)) apcs apcs apcs apcs",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "C -> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "a'"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "a = a'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b",
+                "b'"
+              ],
+              "body": null,
+              "type": "B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "b = b'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PathCube (sq_ap011 (fun (x : A) (y : B) => g (f x y)) p q)\n  (sq_ap g (sq_ap011 f p q)) apcs apcs apcs apcs",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B -> C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "C -> D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "a'"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "a = a'"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b",
+                "b'"
+              ],
+              "body": null,
+              "type": "B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "b = b'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "by destruct p, q.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** We now prove t2c is a retraction of c2t *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition c2t2c `{Funext} : t2c o c2t == idmap.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "t2c o c2t == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "t2c o c2t == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "napply prod_ind.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall fst snd : Circle, t2c (c2t (fst, snd)) = (fst, snd)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (* Start with double circle induction *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snrefine (Circle_ind _ (Circle_ind _ 1 _) _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport (fun x : Circle => t2c (c2t (base, x)) = (base, x)) loop 1 = 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport\n  (fun x : Circle => forall snd : Circle, t2c (c2t (x, snd)) = (x, snd)) loop\n  (Circle_ind (fun x : Circle => t2c (c2t (base, x)) = (base, x)) 1 ?l) =\nCircle_ind (fun x : Circle => t2c (c2t (base, x)) = (base, x)) 1 ?l",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (* Change the second loop case into a square and shelve *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1: apply sq_dp^-1, sq_tr^-1; shelve.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport\n  (fun x : Circle => forall snd : Circle, t2c (c2t (x, snd)) = (x, snd)) loop\n  (Circle_ind (fun x : Circle => t2c (c2t (base, x)) = (base, x)) 1\n     (sq_dp^-1 (sq_tr^-1 ?Goal))) =\nCircle_ind (fun x : Circle => t2c (c2t (base, x)) = (base, x)) 1\n  (sq_dp^-1 (sq_tr^-1 ?Goal))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (* Take the forall out of the DPath *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply dp_forall_domain.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : Circle,\nDPath (fun t : Circle => t2c (c2t (t, x)) = (t, x)) loop\n  (Circle_ind (fun x0 : Circle => t2c (c2t (base, x0)) = (base, x0)) 1\n     (sq_dp^-1 (sq_tr^-1 ?Goal)) x)\n  (Circle_ind (fun x0 : Circle => t2c (c2t (base, x0)) = (base, x0)) 1\n     (sq_dp^-1 (sq_tr^-1 ?Goal)) x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro x; apply sq_dp^-1; revert x.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall x : Circle,\nPathSquare\n  (Circle_ind (fun x0 : Circle => t2c (c2t (base, x0)) = (base, x0)) 1\n     (sq_dp^-1 (sq_tr^-1 ?Goal)) x)\n  (Circle_ind (fun x0 : Circle => t2c (c2t (base, x0)) = (base, x0)) 1\n     (sq_dp^-1 (sq_tr^-1 ?Goal)) x)\n  (ap (fun x0 : Circle => t2c (c2t (x0, x))) loop)\n  (ap (fun x0 : Circle => (x0, x)) loop)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snrefine (Circle_ind _ _ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun x : Circle =>\n PathSquare\n   (Circle_ind (fun x0 : Circle => t2c (c2t (base, x0)) = (base, x0)) 1\n      (sq_dp^-1 (sq_tr^-1 ?Goal)) x)\n   (Circle_ind (fun x0 : Circle => t2c (c2t (base, x0)) = (base, x0)) 1\n      (sq_dp^-1 (sq_tr^-1 ?Goal)) x)\n   (ap (fun x0 : Circle => t2c (c2t (x0, x))) loop)\n   (ap (fun x0 : Circle => (x0, x)) loop))\n  base",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport\n  (fun x : Circle =>\n   PathSquare\n     (Circle_ind (fun x0 : Circle => t2c (c2t (base, x0)) = (base, x0)) 1\n        (sq_dp^-1 (sq_tr^-1 ?Goal)) x)\n     (Circle_ind (fun x0 : Circle => t2c (c2t (base, x0)) = (base, x0)) 1\n        (sq_dp^-1 (sq_tr^-1 ?Goal)) x)\n     (ap (fun x0 : Circle => t2c (c2t (x0, x))) loop)\n     (ap (fun x0 : Circle => (x0, x)) loop))\n  loop ?b =\n?b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1: apply sq_tr^-1; shelve.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport\n  (fun x : Circle =>\n   PathSquare\n     (Circle_ind (fun x0 : Circle => t2c (c2t (base, x0)) = (base, x0)) 1\n        (sq_dp^-1 (sq_tr^-1 ?Goal)) x)\n     (Circle_ind (fun x0 : Circle => t2c (c2t (base, x0)) = (base, x0)) 1\n        (sq_dp^-1 (sq_tr^-1 ?Goal)) x)\n     (ap (fun x0 : Circle => t2c (c2t (x0, x))) loop)\n     (ap (fun x0 : Circle => (x0, x)) loop))\n  loop (sq_tr^-1 ?Goal0) =\nsq_tr^-1 ?Goal0",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply dp_cu.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PathCube (sq_tr^-1 ?Goal0) (sq_tr^-1 ?Goal0)\n  (sq_dp\n     (apD\n        (Circle_ind (fun x : Circle => t2c (c2t (base, x)) = (base, x)) 1\n           (sq_dp^-1 (sq_tr^-1 ?Goal)))\n        loop))\n  (sq_dp\n     (apD\n        (Circle_ind (fun x : Circle => t2c (c2t (base, x)) = (base, x)) 1\n           (sq_dp^-1 (sq_tr^-1 ?Goal)))\n        loop))\n  (sq_dp\n     (apD (fun x : Circle => ap (fun x0 : Circle => t2c (c2t (x0, x))) loop)\n        loop))\n  (sq_dp (apD (fun x : Circle => ap (fun x0 : Circle => (x0, x)) loop) loop))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "nrefine (cu_ccGGcc _ _ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?Goal1 =\nsq_dp\n  (apD\n     (Circle_ind (fun x : Circle => t2c (c2t (base, x)) = (base, x)) 1\n        (sq_dp^-1 (sq_tr^-1 ?Goal)))\n     loop)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?Goal2 =\nsq_dp\n  (apD\n     (Circle_ind (fun x : Circle => t2c (c2t (base, x)) = (base, x)) 1\n        (sq_dp^-1 (sq_tr^-1 ?Goal)))\n     loop)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PathCube (sq_tr^-1 ?Goal0) (sq_tr^-1 ?Goal0) ?Goal1 \n  ?Goal2\n  (sq_dp\n     (apD (fun x : Circle => ap (fun x0 : Circle => t2c (c2t (x0, x))) loop)\n        loop))\n  (sq_dp (apD (fun x : Circle => ap (fun x0 : Circle => (x0, x)) loop) loop))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1,2: exact (ap sq_dp (Circle_ind_beta_loop _ _ _)\n    @ eisretr _ _)^.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PathCube (sq_tr^-1 ?Goal0) (sq_tr^-1 ?Goal0) (sq_tr^-1 ?Goal)\n  (sq_tr^-1 ?Goal)\n  (sq_dp\n     (apD (fun x : Circle => ap (fun x0 : Circle => t2c (c2t (x0, x))) loop)\n        loop))\n  (sq_dp (apD (fun x : Circle => ap (fun x0 : Circle => (x0, x)) loop) loop))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply cu_rot_tb_fb.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PathCube\n  (sq_dp\n     (apD (fun x : Circle => ap (fun x0 : Circle => t2c (c2t (x0, x))) loop)\n        loop))\n  (sq_dp (apD (fun x : Circle => ap (fun x0 : Circle => (x0, x)) loop) loop))\n  (sq_tr (sq_tr^-1 ?Goal0)) (sq_tr (sq_tr^-1 ?Goal0))\n  (sq_tr (sq_tr^-1 ?Goal)) (sq_tr (sq_tr^-1 ?Goal))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "nrefine (cu_ccGGGG _ _ _ _ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?Goal1 = sq_tr (sq_tr^-1 ?Goal0)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?Goal2 = sq_tr (sq_tr^-1 ?Goal0)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?Goal3 = sq_tr (sq_tr^-1 ?Goal)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?Goal4 = sq_tr (sq_tr^-1 ?Goal)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PathCube\n  (sq_dp\n     (apD (fun x : Circle => ap (fun x0 : Circle => t2c (c2t (x0, x))) loop)\n        loop))\n  (sq_dp (apD (fun x : Circle => ap (fun x0 : Circle => (x0, x)) loop) loop))\n  ?Goal1 ?Goal2 ?Goal3 ?Goal4",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1,2,3,4: exact (eisretr _ _)^.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "PathCube\n  (sq_dp\n     (apD (fun x : Circle => ap (fun x0 : Circle => t2c (c2t (x0, x))) loop)\n        loop))\n  (sq_dp (apD (fun x : Circle => ap (fun x0 : Circle => (x0, x)) loop) loop))\n  ?Goal0 ?Goal0 ?Goal ?Goal",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact ((sq_ap011_compose c2t' t2c loop loop)\n    @lr (cu_ap t2c (c2t'_beta.2.2))\n    @lr (Torus_rec_beta_surf _ _ _ _ _)\n    @lr (cu_flip_lr (sq_ap_idmap _))\n    @lr (sq_ap_uncurry _ _ _)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* refine (cu_concat_lr (sq_ap2_compose c2t' t2c loop loop) _\n    (sji0:=?[X1]) (sji1:=?X1) (sj0i:=?[Y1]) (sj1i:=?Y1) (pj11:=1)).\n  refine (cu_concat_lr (cu_ap t2c (c2t'_beta.2.2)) _\n    (sji0:=?[X2]) (sji1:=?X2) (sj0i:=?[Y2]) (sj1i:=?Y2) (pj11:=1)).\n  refine (cu_concat_lr (Torus_rec_beta_surf _ _ _ _ _) _\n    (sji0:=?[X3]) (sji1:=?X3) (sj0i:=?[Y3]) (sj1i:=?Y3) (pj11:=1)).\n  refine (cu_concat_lr (cu_flip_lr (sq_ap_idmap _)) _\n    (sji0:=?[X4]) (sji1:=?X4) (sj0i:=?[Y4]) (sj1i:=?Y4) (pj11:=1)).\n  apply sq_ap_uncurry. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition equiv_torus_prod_Circle `{Funext} : Torus <~> Circle * Circle\n  := equiv_adjointify t2c c2t c2t2c t2c2t.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

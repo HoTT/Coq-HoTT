@@ -1,0 +1,13 @@
+digraph HoTT_Diagrams_Sequence {
+  graph [ratio=0.5]
+  node [style=filled]
+Sequence_equiv_sequence [label="equiv_sequence", URL=<Sequence.html#equiv_sequence>, peripheries=3, fillcolor="#F070D1"] ;
+Sequence_Build_Sequence [label="Build_Sequence", URL=<Sequence.html#Build_Sequence>, peripheries=3, fillcolor="#F070D1"] ;
+Sequence_Sequence [label="Sequence", URL=<Sequence.html#Sequence>, fillcolor="#F070D1"] ;
+Sequence_sequence_graph [label="sequence_graph", URL=<Sequence.html#sequence_graph>, fillcolor="#F070D1"] ;
+  Sequence_equiv_sequence -> Sequence_Sequence [] ;
+  Sequence_Build_Sequence -> Sequence_Sequence [] ;
+  Sequence_Sequence -> Sequence_sequence_graph [] ;
+subgraph cluster_Sequence { label="Sequence"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Sequence_sequence_graph; Sequence_Sequence; Sequence_Build_Sequence; Sequence_equiv_sequence; };
+} /* END */

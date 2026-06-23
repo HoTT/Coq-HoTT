@@ -1,0 +1,9 @@
+digraph HoTT_Modalities_Notnot {
+  graph [ratio=0.5]
+  node [style=filled]
+Notnot_inO_notnot [label="inO_notnot", URL=<Notnot.html#inO_notnot>, peripheries=3, fillcolor="#F070D1"] ;
+Notnot_NotNot [label="NotNot", URL=<Notnot.html#NotNot>, fillcolor="#F070D1"] ;
+  Notnot_inO_notnot -> Notnot_NotNot [] ;
+subgraph cluster_Notnot { label="Notnot"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Notnot_NotNot; Notnot_inO_notnot; };
+} /* END */

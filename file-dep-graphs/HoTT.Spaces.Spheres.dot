@@ -1,0 +1,67 @@
+digraph HoTT_Spaces_Spheres {
+  graph [ratio=0.5]
+  node [style=filled]
+Spheres_pmap_from_psphere_iterated_loops [label="pmap_from_psphere_iterated_loops", URL=<Spheres.html#pmap_from_psphere_iterated_loops>, peripheries=3, fillcolor="#F070D1"] ;
+Spheres_istrunc_allnullhomot [label="istrunc_allnullhomot", URL=<Spheres.html#istrunc_allnullhomot>, peripheries=3, fillcolor="#F070D1"] ;
+Spheres_allnullhomot_trunc [label="allnullhomot_trunc", URL=<Spheres.html#allnullhomot_trunc>, peripheries=3, fillcolor="#F070D1"] ;
+Spheres_isconnected_sn [label="isconnected_sn", URL=<Spheres.html#isconnected_sn>, peripheries=3, fillcolor="#F070D1"] ;
+Spheres_istrunc_s1 [label="istrunc_s1", URL=<Spheres.html#istrunc_s1>, peripheries=3, fillcolor="#F070D1"] ;
+Spheres_istrunc_s0 [label="istrunc_s0", URL=<Spheres.html#istrunc_s0>, peripheries=3, fillcolor="#F070D1"] ;
+Spheres_equiv_S2_TwoSphere [label="equiv_S2_TwoSphere", URL=<Spheres.html#equiv_S2_TwoSphere>, peripheries=3, fillcolor="#F070D1"] ;
+Spheres_isequiv_S2_to_TwoSphere [label="isequiv_S2_to_TwoSphere", URL=<Spheres.html#isequiv_S2_to_TwoSphere>, fillcolor="#F070D1"] ;
+Spheres_issect_S2_to_TwoSphere [label="issect_S2_to_TwoSphere", URL=<Spheres.html#issect_S2_to_TwoSphere>, fillcolor="#F070D1"] ;
+Spheres_issect_TwoSphere_to_S2 [label="issect_TwoSphere_to_S2", URL=<Spheres.html#issect_TwoSphere_to_S2>, fillcolor="#F070D1"] ;
+Spheres_TwoSphere_to_S2 [label="TwoSphere_to_S2", URL=<Spheres.html#TwoSphere_to_S2>, fillcolor="#F070D1"] ;
+Spheres_S2_to_TwoSphere [label="S2_to_TwoSphere", URL=<Spheres.html#S2_to_TwoSphere>, fillcolor="#F070D1"] ;
+Spheres_pequiv_S1_Circle [label="pequiv_S1_Circle", URL=<Spheres.html#pequiv_S1_Circle>, peripheries=3, fillcolor="#F070D1"] ;
+Spheres_equiv_S1_Circle [label="equiv_S1_Circle", URL=<Spheres.html#equiv_S1_Circle>, fillcolor="#F070D1"] ;
+Spheres_isequiv_S1_to_Circle [label="isequiv_S1_to_Circle", URL=<Spheres.html#isequiv_S1_to_Circle>, fillcolor="#F070D1"] ;
+Spheres_Circle_to_S1 [label="Circle_to_S1", URL=<Spheres.html#Circle_to_S1>, fillcolor="#F070D1"] ;
+Spheres_S1_to_Circle [label="S1_to_Circle", URL=<Spheres.html#S1_to_Circle>, fillcolor="#F070D1"] ;
+Spheres_pmap_from_bool [label="pmap_from_bool", URL=<Spheres.html#pmap_from_bool>, fillcolor="#F070D1"] ;
+Spheres_pequiv_S0_Bool [label="pequiv_S0_Bool", URL=<Spheres.html#pequiv_S0_Bool>, fillcolor="#F070D1"] ;
+Spheres_pBool [label="pBool", URL=<Spheres.html#pBool>, fillcolor="#F070D1"] ;
+Spheres_ispointed_bool [label="ispointed_bool", URL=<Spheres.html#ispointed_bool>, peripheries=3, fillcolor="#F070D1"] ;
+Spheres_equiv_S0_Bool [label="equiv_S0_Bool", URL=<Spheres.html#equiv_S0_Bool>, fillcolor="#F070D1"] ;
+Spheres_isequiv_S0_to_Bool [label="isequiv_S0_to_Bool", URL=<Spheres.html#isequiv_S0_to_Bool>, fillcolor="#F070D1"] ;
+Spheres_Bool_to_S0 [label="Bool_to_S0", URL=<Spheres.html#Bool_to_S0>, fillcolor="#F070D1"] ;
+Spheres_S0_to_Bool [label="S0_to_Bool", URL=<Spheres.html#S0_to_Bool>, fillcolor="#F070D1"] ;
+Spheres_psphere [label="psphere", URL=<Spheres.html#psphere>, fillcolor="#F070D1"] ;
+Spheres_Sphere [label="Sphere", URL=<Spheres.html#Sphere>, fillcolor="#F070D1"] ;
+  Spheres_pmap_from_psphere_iterated_loops -> Spheres_pmap_from_bool [] ;
+  Spheres_pmap_from_psphere_iterated_loops -> Spheres_pequiv_S0_Bool [] ;
+  Spheres_istrunc_allnullhomot -> Spheres_S0_to_Bool [] ;
+  Spheres_allnullhomot_trunc -> Spheres_Sphere [] ;
+  Spheres_isconnected_sn -> Spheres_Sphere [] ;
+  Spheres_istrunc_s1 -> Spheres_isequiv_S1_to_Circle [] ;
+  Spheres_istrunc_s0 -> Spheres_isequiv_S0_to_Bool [] ;
+  Spheres_equiv_S2_TwoSphere -> Spheres_isequiv_S2_to_TwoSphere [] ;
+  Spheres_isequiv_S2_to_TwoSphere -> Spheres_issect_S2_to_TwoSphere [] ;
+  Spheres_isequiv_S2_to_TwoSphere -> Spheres_issect_TwoSphere_to_S2 [] ;
+  Spheres_issect_S2_to_TwoSphere -> Spheres_TwoSphere_to_S2 [] ;
+  Spheres_issect_S2_to_TwoSphere -> Spheres_S2_to_TwoSphere [] ;
+  Spheres_issect_TwoSphere_to_S2 -> Spheres_TwoSphere_to_S2 [] ;
+  Spheres_issect_TwoSphere_to_S2 -> Spheres_S2_to_TwoSphere [] ;
+  Spheres_TwoSphere_to_S2 -> Spheres_Sphere [] ;
+  Spheres_S2_to_TwoSphere -> Spheres_Sphere [] ;
+  Spheres_pequiv_S1_Circle -> Spheres_equiv_S1_Circle [] ;
+  Spheres_pequiv_S1_Circle -> Spheres_psphere [] ;
+  Spheres_equiv_S1_Circle -> Spheres_isequiv_S1_to_Circle [] ;
+  Spheres_isequiv_S1_to_Circle -> Spheres_Circle_to_S1 [] ;
+  Spheres_isequiv_S1_to_Circle -> Spheres_S1_to_Circle [] ;
+  Spheres_isequiv_S1_to_Circle -> Spheres_isequiv_S0_to_Bool [] ;
+  Spheres_Circle_to_S1 -> Spheres_Sphere [] ;
+  Spheres_S1_to_Circle -> Spheres_S0_to_Bool [] ;
+  Spheres_pmap_from_bool -> Spheres_pBool [] ;
+  Spheres_pequiv_S0_Bool -> Spheres_pBool [] ;
+  Spheres_pequiv_S0_Bool -> Spheres_equiv_S0_Bool [] ;
+  Spheres_pequiv_S0_Bool -> Spheres_psphere [] ;
+  Spheres_equiv_S0_Bool -> Spheres_isequiv_S0_to_Bool [] ;
+  Spheres_isequiv_S0_to_Bool -> Spheres_Bool_to_S0 [] ;
+  Spheres_isequiv_S0_to_Bool -> Spheres_S0_to_Bool [] ;
+  Spheres_Bool_to_S0 -> Spheres_Sphere [] ;
+  Spheres_S0_to_Bool -> Spheres_Sphere [] ;
+  Spheres_psphere -> Spheres_Sphere [] ;
+subgraph cluster_Spheres { label="Spheres"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Spheres_Sphere; Spheres_psphere; Spheres_S0_to_Bool; Spheres_Bool_to_S0; Spheres_isequiv_S0_to_Bool; Spheres_equiv_S0_Bool; Spheres_ispointed_bool; Spheres_pBool; Spheres_pequiv_S0_Bool; Spheres_pmap_from_bool; Spheres_S1_to_Circle; Spheres_Circle_to_S1; Spheres_isequiv_S1_to_Circle; Spheres_equiv_S1_Circle; Spheres_pequiv_S1_Circle; Spheres_S2_to_TwoSphere; Spheres_TwoSphere_to_S2; Spheres_issect_TwoSphere_to_S2; Spheres_issect_S2_to_TwoSphere; Spheres_isequiv_S2_to_TwoSphere; Spheres_equiv_S2_TwoSphere; Spheres_istrunc_s0; Spheres_istrunc_s1; Spheres_isconnected_sn; Spheres_allnullhomot_trunc; Spheres_istrunc_allnullhomot; Spheres_pmap_from_psphere_iterated_loops; };
+} /* END */

@@ -1,0 +1,10 @@
+N: 2 "iscoherent_hspace_pmap" [body=yes, kind=cnst, prop=no, path="Pointwise", ];
+N: 5 "iscoherent_ishspace_map" [body=yes, kind=cnst, prop=no, path="Pointwise", ];
+N: 6 "ishspace_map" [body=yes, kind=cnst, prop=no, path="Pointwise", ];
+N: 3 "ishspace_pmap" [body=yes, kind=cnst, prop=no, path="Pointwise", ];
+N: 4 "isleftinvertible_hspace_map" [body=yes, kind=cnst, prop=no, path="Pointwise", ];
+N: 1 "isleftinvertible_hspace_pmap" [body=yes, kind=cnst, prop=no, path="Pointwise", ];
+E: 1 3 [weight=13, ];
+E: 2 3 [weight=16, ];
+E: 4 6 [weight=2, ];
+E: 5 6 [weight=7, ];

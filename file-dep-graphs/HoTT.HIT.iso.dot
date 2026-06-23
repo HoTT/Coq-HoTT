@@ -1,0 +1,9 @@
+digraph HoTT_HIT_iso {
+  graph [ratio=0.5]
+  node [style=filled]
+iso_isequiv_isepi_ismono [label="isequiv_isepi_ismono", URL=<iso.html#isequiv_isepi_ismono>, peripheries=3, fillcolor="#F070D1"] ;
+iso_atmost1P_isinj [label="atmost1P_isinj", URL=<iso.html#atmost1P_isinj>, fillcolor="#F070D1"] ;
+  iso_isequiv_isepi_ismono -> iso_atmost1P_isinj [] ;
+subgraph cluster_iso { label="iso"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+iso_atmost1P_isinj; iso_isequiv_isepi_ismono; };
+} /* END */

@@ -1,0 +1,84 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Exponential Laws *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** We want to have the following as subdirectories/modules, not at top level.  Unfortunately, namespacing in Coq is kind-of broken (see, e.g., https://coq.inria.fr/bugs/show_bug.cgi?id=3676), so we don't get the ability to rename subfolders by [Including] into other modules. *)\n(** ** Laws about the initial category *)\n(** *** [x\u2070 \u2245 1] *)\n(** *** [0\u02e3 \u2245 0] if [x \u2260 0] *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require ExponentialLaws.Law0.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Laws about the terminal category *)\n(** *** [x\u00b9 \u2245 x] *)\n(** *** [1\u02e3 \u2245 1] *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require ExponentialLaws.Law1.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** The law that a sum in an exponent is a product *)\n(** *** [y\u207f\u207a\u1d50 \u2245 y\u207f \u00d7 y\u1d50] *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require ExponentialLaws.Law2.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** The law that exponentiation distributes over product *)\n(** *** [(y \u00d7 z)\u207f \u2245 y\u207f \u00d7 z\u207f] *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require ExponentialLaws.Law3.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Currying *)\n(** *** [(y\u207f)\u1d50 \u2245 y\u207f\u1d50] *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require ExponentialLaws.Law4.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require ExponentialLaws.Tactics.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include ExponentialLaws.Tactics.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

@@ -1,0 +1,4007 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Overture Basics.Tactics Basics.Equivalences Basics.Trunc.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Basics.Overture Basics.Tactics Basics.Equivalences Basics.Trunc.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Types.Sigma Types.Forall Types.Prod.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import WildCat.Core WildCat.Induced WildCat.Equiv WildCat.Universe\n  WildCat.Products.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import (notations) Classes.interfaces.canonical_names.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Export (hints) Classes.interfaces.abstract_algebra.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Export (hints) Classes.interfaces.canonical_names.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Export Classes.interfaces.canonical_names (SgOp, sg_op,\n    MonUnit, mon_unit, LeftIdentity, left_identity, RightIdentity, right_identity,\n    Associative, simple_associativity, associativity,\n    LeftInverse, left_inverse, RightInverse, right_inverse, Commutative, commutativity).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Export canonical_names.BinOpNotations.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Export Classes.interfaces.abstract_algebra (IsSemiGroup(..), sg_set, sg_ass,\n    IsMonoid(..), monoid_left_id, monoid_right_id, monoid_semigroup,\n    IsMonoidPreserving(..), monmor_unitmor, monmor_sgmor,\n    IsSemiGroupPreserving, preserves_sg_op, IsUnitPreserving, preserves_mon_unit).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Set Polymorphic Inductive Cumulativity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Set Universe Minimization ToSet.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope mc_mult_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** * Monoids *)\n\n(** ** Definition *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Record Monoid := {\n  monoid_type :> Type;\n  monoid_sgop :: SgOp monoid_type;\n  monoid_unit :: MonUnit monoid_type;\n  monoid_ismonoid :: IsMonoid monoid_type;\n}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments monoid_sgop {_}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments monoid_unit {_}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments monoid_ismonoid {_}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Global Opaque monoid_ismonoid.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition issig_monoid : _ <~> Monoid := ltac:(issig).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section MonoidLaws.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context {M : Monoid} (x y z : M).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "  \n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition mnd_assoc := associativity x y z.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition mnd_unit_l := left_identity x.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition mnd_unit_r := right_identity x.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End MonoidLaws.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Monoid homomorphisms *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Record MonoidHomomorphism (M N : Monoid) := {\n  mnd_homo_map :> monoid_type M -> monoid_type N;\n  ismonoidpreserving_mnd_homo :: IsMonoidPreserving mnd_homo_map;\n}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments mnd_homo_map {M N}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments Build_MonoidHomomorphism {M N} _ _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Arguments ismonoidpreserving_mnd_homo {M N} f : rename.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition issig_MonoidHomomorphism (M N : Monoid)\n  : _ <~> MonoidHomomorphism M N\n  := ltac:(issig).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Basics properties of monoid homomorphisms *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition mnd_homo_op {M N : Monoid} (f : MonoidHomomorphism M N)\n  : forall (x y : M), f (x * y) = f x * f y\n  := monmor_sgmor.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": " \n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition mnd_homo_unit {M N : Monoid} (f : MonoidHomomorphism M N)\n  : f mon_unit = mon_unit\n  := monmor_unitmor.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition equiv_path_monoidhomomorphism `{Funext} {M N : Monoid}\n  {f g : MonoidHomomorphism M N}\n  : f == g <~> f = g.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f == g <~> f = g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "MonoidHomomorphism M N"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f == g <~> f = g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "MonoidHomomorphism M N"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine ((equiv_ap (issig_MonoidHomomorphism M N)^-1 _ _)^-1 oE _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f == g <~>\n(issig_MonoidHomomorphism M N)^-1 f = (issig_MonoidHomomorphism M N)^-1 g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "MonoidHomomorphism M N"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (equiv_path_sigma_hprop _ _ oE _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f == g <~>\n((issig_MonoidHomomorphism M N)^-1 f).1 =\n((issig_MonoidHomomorphism M N)^-1 g).1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "MonoidHomomorphism M N"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply equiv_path_forall.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance ishset_monoidhomomorphism `{Funext} {M N : Monoid}\n  : IsHSet (MonoidHomomorphism M N).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsHSet (MonoidHomomorphism M N)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsHSet (MonoidHomomorphism M N)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply istrunc_S.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "is_mere_relation (MonoidHomomorphism M N) paths",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros f g; apply (istrunc_equiv_istrunc _ equiv_path_monoidhomomorphism).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition mnd_homo_id {M : Monoid} : MonoidHomomorphism M M\n  := Build_MonoidHomomorphism idmap _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition mnd_homo_compose {M N P : Monoid}\n  : MonoidHomomorphism N P -> MonoidHomomorphism M N\n  -> MonoidHomomorphism M P\n  := fun f g => Build_MonoidHomomorphism (f o g) _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Monoid Isomorphisms *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Record MonoidIsomorphism (M N : Monoid) := {\n  mnd_iso_homo :> MonoidHomomorphism M N;\n  isequiv_mnd_iso :: IsEquiv mnd_iso_homo;\n}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Build_MonoidIsomorphism' {M N : Monoid}\n  (f : M <~> N) (h : IsMonoidPreserving f)\n  : MonoidHomomorphism M N.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "MonoidHomomorphism M N",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "M <~> N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "IsMonoidPreserving f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "MonoidHomomorphism M N",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "M <~> N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "IsMonoidPreserving f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply Build_MonoidIsomorphism.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "MonoidHomomorphism M N",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "M <~> N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "IsMonoidPreserving f"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv ?mnd_iso_homo",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "M <~> N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "IsMonoidPreserving f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1: srapply Build_MonoidHomomorphism.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv {| mnd_homo_map := f; ismonoidpreserving_mnd_homo := h |}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "M <~> N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "IsMonoidPreserving f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition issig_MonoidIsomorphism (M N : Monoid)\n  : _ <~> MonoidIsomorphism M N\n  := ltac:(issig).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Coercion equiv_mnd_iso {M N : Monoid}\n  : MonoidIsomorphism M N -> M <~> N\n  := fun f => Build_Equiv M N f _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": " \n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition mnd_iso_id {M : Monoid} : MonoidIsomorphism M M\n  := Build_MonoidIsomorphism _ _ mnd_homo_id _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition mnd_iso_compose {M N P : Monoid}\n  : MonoidIsomorphism N P -> MonoidIsomorphism M N\n  -> MonoidIsomorphism M P\n  := fun g f => Build_MonoidIsomorphism _ _ (mnd_homo_compose g f) _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition mnd_iso_inverse {M N : Monoid}\n  : MonoidIsomorphism M N -> MonoidIsomorphism N M\n  := fun f => Build_MonoidIsomorphism _ _ (Build_MonoidHomomorphism f^-1 _) _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance reflexive_monoidisomorphism\n  : Reflexive MonoidIsomorphism\n  := fun M => mnd_iso_id.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance symmetric_monoidisomorphism\n  : Symmetric MonoidIsomorphism\n  := fun M N => mnd_iso_inverse.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance transitive_monoidisomorphism\n  : Transitive MonoidIsomorphism\n  := fun M N P f g => mnd_iso_compose g f.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** The category of monoids *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance isgraph_monoid : IsGraph Monoid\n  := Build_IsGraph Monoid MonoidHomomorphism.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance is01cat_monoid : Is01Cat Monoid\n  := Build_Is01Cat Monoid _ (@mnd_homo_id) (@mnd_homo_compose).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Notation mnd_homo_map' M N\n  := (@mnd_homo_map M N : _ -> (monoid_type M $-> _)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance is2graph_monoid : Is2Graph Monoid\n  := fun M N => isgraph_induced (mnd_homo_map' M N).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance isgraph_monoidhomomorphism {M N : Monoid} : IsGraph (M $-> N)\n  := isgraph_induced (mnd_homo_map' M N).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance is01cat_monoidhomomorphism {M N : Monoid} : Is01Cat (M $-> N)\n  := is01cat_induced (mnd_homo_map' M N).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance is0gpd_monoidhomomorphism {M N : Monoid} : Is0Gpd (M $-> N)\n  := is0gpd_induced (mnd_homo_map' M N).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance is0functor_postcomp_monoidhomomorphism\n  {M N P : Monoid} (h : N $-> P)\n  : Is0Functor (@cat_postcomp Monoid _ _ M N P h).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Is0Functor (cat_postcomp M h)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "N $-> P"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Is0Functor (cat_postcomp M h)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "N $-> P"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply Build_Is0Functor.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall a b : M $-> N, (a $-> b) -> cat_postcomp M h a $-> cat_postcomp M h b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "N $-> P"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros ? ? p a; exact (ap h (p a)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance is0functor_precomp_monoidhomomorphism\n  {M N P : Monoid} (h : M $-> N)\n  : Is0Functor (@cat_precomp Monoid _ _ M N P h).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Is0Functor (cat_precomp P h)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "M $-> N"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Is0Functor (cat_precomp P h)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "M $-> N"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply Build_Is0Functor.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall a b : N $-> P, (a $-> b) -> cat_precomp P h a $-> cat_precomp P h b",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "M $-> N"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros ? ? p; exact (p o h).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance is1cat_monoid : Is1Cat Monoid.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Is1Cat Monoid",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Is1Cat Monoid",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "by rapply Build_Is1Cat.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance hasequivs_monoid : HasEquivs Monoid.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "HasEquivs Monoid",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "HasEquivs Monoid",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply Build_HasEquivs.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Monoid -> Monoid -> Type",
+          "hypotheses": []
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall a b : Monoid, (a $-> b) -> Type",
+          "hypotheses": []
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall a b : Monoid, ?CatEquiv' a b -> a $-> b",
+          "hypotheses": []
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (a b : Monoid) (f : ?CatEquiv' a b),\n?CatIsEquiv' a b (?cate_fun' a b f)",
+          "hypotheses": []
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (a b : Monoid) (f : a $-> b), ?CatIsEquiv' a b f -> ?CatEquiv' a b",
+          "hypotheses": []
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (a b : Monoid) (f : a $-> b) (fe : ?CatIsEquiv' a b f),\n?cate_fun' a b (?cate_buildequiv' a b f fe) $== f",
+          "hypotheses": []
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall a b : Monoid, ?CatEquiv' a b -> b $-> a",
+          "hypotheses": []
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (a b : Monoid) (f : ?CatEquiv' a b),\n?cate_inv' a b f $o ?cate_fun' a b f $== Id a",
+          "hypotheses": []
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (a b : Monoid) (f : ?CatEquiv' a b),\n?cate_fun' a b f $o ?cate_inv' a b f $== Id b",
+          "hypotheses": []
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (a b : Monoid) (f : a $-> b) (g : b $-> a),\nf $o g $== Id b -> g $o f $== Id a -> ?CatIsEquiv' a b f",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Monoid -> Monoid -> Type",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact MonoidIsomorphism.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall a b : Monoid, (a $-> b) -> Type",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (fun M N f => IsEquiv f).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall a b : Monoid, MonoidIsomorphism a b -> a $-> b",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros M N f; exact f.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (a b : Monoid) (f : MonoidIsomorphism a b),\n(fun (M N : Monoid) (f0 : M $-> N) => IsEquiv f0) a b\n  ((fun (M N : Monoid) (f0 : MonoidIsomorphism M N) => mnd_iso_homo M N f0) a\n     b f)",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "cbn; exact _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (a b : Monoid) (f : a $-> b),\n(fun (M N : Monoid) (f0 : M $-> N) => IsEquiv f0) a b f ->\nMonoidIsomorphism a b",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact Build_MonoidIsomorphism.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (a b : Monoid) (f : a $-> b)\n(fe : (fun (M N : Monoid) (f0 : M $-> N) => IsEquiv f0) a b f),\n(fun (M N : Monoid) (f0 : MonoidIsomorphism M N) => mnd_iso_homo M N f0) a b\n  {| mnd_iso_homo := f; isequiv_mnd_iso := fe |} $==\nf",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall a b : Monoid, MonoidIsomorphism a b -> b $-> a",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros M N; exact mnd_iso_inverse.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (a b : Monoid) (f : MonoidIsomorphism a b),\n(fun (M N : Monoid) (x : MonoidIsomorphism M N) =>\n mnd_iso_homo N M (mnd_iso_inverse x)) a b f $o\n(fun (M N : Monoid) (f0 : MonoidIsomorphism M N) => mnd_iso_homo M N f0) a b\n  f $==\nId a",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros ????; apply eissect.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (a b : Monoid) (f : MonoidIsomorphism a b),\n(fun (M N : Monoid) (f0 : MonoidIsomorphism M N) => mnd_iso_homo M N f0) a b\n  f $o\n(fun (M N : Monoid) (x : MonoidIsomorphism M N) =>\n mnd_iso_homo N M (mnd_iso_inverse x)) a b f $==\nId b",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros ????; apply eisretr.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (a b : Monoid) (f : a $-> b) (g : b $-> a),\nf $o g $== Id b ->\ng $o f $== Id a -> (fun (M N : Monoid) (f0 : M $-> N) => IsEquiv f0) a b f",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros M N; exact isequiv_adjointify.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance is0functor_monoid_type : Is0Functor monoid_type\n  := Build_Is0Functor monoid_type (@mnd_homo_map).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance is1functor_monoid_type : Is1Functor monoid_type.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Is1Functor monoid_type",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Is1Functor monoid_type",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "by apply Build_Is1Functor.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Direct product of monoids *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition mnd_prod : Monoid -> Monoid -> Monoid.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Monoid -> Monoid -> Monoid",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Monoid -> Monoid -> Monoid",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros M N.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Monoid",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply (Build_Monoid (M * N)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "SgOp (M * N)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "MonUnit (M * N)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsMonoid (M * N)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "3: repeat split.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "SgOp (M * N)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "MonUnit (M * N)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsHSet (M * N)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Associative sg_op",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "LeftIdentity sg_op 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "RightIdentity sg_op 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "SgOp (M * N)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros [m1 n1] [m2 n2].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "M * N",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m1"
+              ],
+              "body": null,
+              "type": "M"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n1"
+              ],
+              "body": null,
+              "type": "N"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "m2"
+              ],
+              "body": null,
+              "type": "M"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n2"
+              ],
+              "body": null,
+              "type": "N"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (m1 * m2, n1 * n2).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "MonUnit (M * N)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (mon_unit, mon_unit).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsHSet (M * N)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Associative sg_op",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros x y z; snapply path_prod; napply mnd_assoc.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "LeftIdentity sg_op 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros x; snapply path_prod; napply mnd_unit_l.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "RightIdentity sg_op 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros x; snapply path_prod; napply mnd_unit_r.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition mnd_prod_pr1 {M N : Monoid}\n  : MonoidHomomorphism (mnd_prod M N) M.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "MonoidHomomorphism (mnd_prod M N) M",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "MonoidHomomorphism (mnd_prod M N) M",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply Build_MonoidHomomorphism.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "mnd_prod M N -> M",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsMonoidPreserving ?mnd_homo_map",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1: exact fst.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsMonoidPreserving fst",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "split; hnf; reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition mnd_prod_pr2 {M N : Monoid}\n  : MonoidHomomorphism (mnd_prod M N) N.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "MonoidHomomorphism (mnd_prod M N) N",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "MonoidHomomorphism (mnd_prod M N) N",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply Build_MonoidHomomorphism.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "mnd_prod M N -> N",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsMonoidPreserving ?mnd_homo_map",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1: exact snd.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsMonoidPreserving snd",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "split; hnf; reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition mnd_prod_corec {M N P : Monoid}\n  (f : MonoidHomomorphism P M)\n  (g : MonoidHomomorphism P N)\n  : MonoidHomomorphism P (mnd_prod M N).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "MonoidHomomorphism P (mnd_prod M N)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "MonoidHomomorphism P M"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "MonoidHomomorphism P N"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "MonoidHomomorphism P (mnd_prod M N)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "MonoidHomomorphism P M"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "MonoidHomomorphism P N"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply Build_MonoidHomomorphism.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "P -> mnd_prod M N",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "MonoidHomomorphism P M"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "MonoidHomomorphism P N"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsMonoidPreserving ?mnd_homo_map",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "MonoidHomomorphism P M"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "MonoidHomomorphism P N"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "2: split.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "P -> mnd_prod M N",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "MonoidHomomorphism P M"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "MonoidHomomorphism P N"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsSemiGroupPreserving ?mnd_homo_map",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "MonoidHomomorphism P M"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "MonoidHomomorphism P N"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsUnitPreserving ?mnd_homo_map",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "MonoidHomomorphism P M"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "MonoidHomomorphism P N"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "P -> mnd_prod M N",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "MonoidHomomorphism P M"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "MonoidHomomorphism P N"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (fun x => (f x, g x)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsSemiGroupPreserving (fun x : P => (f x, g x))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "MonoidHomomorphism P M"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "MonoidHomomorphism P N"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros x y; snapply path_prod; napply mnd_homo_op.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsUnitPreserving (fun x : P => (f x, g x))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P"
+              ],
+              "body": null,
+              "type": "Monoid"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "MonoidHomomorphism P M"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "MonoidHomomorphism P N"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply path_prod; napply mnd_homo_unit.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance hasbinaryproducts_monoid : HasBinaryProducts Monoid.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "HasBinaryProducts Monoid",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "HasBinaryProducts Monoid",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros M N.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "BinaryProduct M N",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M",
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply Build_BinaryProduct.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Monoid",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M",
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?cat_binprod' $-> M",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M",
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?cat_binprod' $-> N",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M",
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall z : Monoid, (z $-> M) -> (z $-> N) -> z $-> ?cat_binprod'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M",
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (z : Monoid) (f : z $-> M) (g : z $-> N),\n?cat_pr1 $o ?cat_binprod_corec z f g $== f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M",
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (z : Monoid) (f : z $-> M) (g : z $-> N),\n?cat_pr2 $o ?cat_binprod_corec z f g $== g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M",
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (z : Monoid) (f g : z $-> ?cat_binprod'),\n?cat_pr1 $o f $== ?cat_pr1 $o g -> ?cat_pr2 $o f $== ?cat_pr2 $o g -> f $== g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M",
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Monoid",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M",
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (mnd_prod M N).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "mnd_prod M N $-> M",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M",
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact mnd_prod_pr1.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "mnd_prod M N $-> N",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M",
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact mnd_prod_pr2.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall z : Monoid, (z $-> M) -> (z $-> N) -> z $-> mnd_prod M N",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M",
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros P; exact mnd_prod_corec.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (z : Monoid) (f : z $-> M) (g : z $-> N),\nmnd_prod_pr1 $o (fun P : Monoid => mnd_prod_corec) z f g $== f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M",
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros P f g; exact (Id _).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (z : Monoid) (f : z $-> M) (g : z $-> N),\nmnd_prod_pr2 $o (fun P : Monoid => mnd_prod_corec) z f g $== g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M",
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros P f g; exact (Id _).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (z : Monoid) (f g : z $-> mnd_prod M N),\nmnd_prod_pr1 $o f $== mnd_prod_pr1 $o g ->\nmnd_prod_pr2 $o f $== mnd_prod_pr2 $o g -> f $== g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "M",
+                "N"
+              ],
+              "body": null,
+              "type": "Monoid"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros P f g p q a; exact (path_prod' (p a) (q a)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

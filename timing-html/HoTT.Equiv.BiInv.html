@@ -1,0 +1,1123 @@
+<html>
+<head>
+<title>BiInv.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for BiInv.v</h1>
+
+<div class="code" title="File: BiInv.v
+Line: 1
+Time: 0.034s">
+<div class="time" style="width: 100%"></div>
+<pre>Require Import HoTT.Basics Types.Prod Types.Equiv Types.Sigma Types.Universe.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 1
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope path_scope.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Generalizable Variables A B f.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 4
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Bi-invertible maps *)
+
+(** A map is "bi-invertible" if it has both a section and a retraction, not necessarily the same.  This definition of equivalence was proposed by Andre Joyal. *)
+
+</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 9
+Time: 0.002s">
+<div class="time" style="width: 5.8823529411765%"></div>
+<pre>Class IsBiInv {A B : Type} (e : A -&gt; B) := {
+  sect_biinv : B -&gt; A ;
+  retr_biinv : B -&gt; A ;
+  eisretr_biinv : e o sect_biinv == idmap ;
+  eissect_biinv : retr_biinv o e == idmap ;
+}.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments sect_biinv {A B}%_type_scope e%_function_scope {_} _.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 16
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments retr_biinv {A B}%_type_scope e%_function_scope {_} _.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 17
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments eisretr_biinv {A B}%_type_scope e%_function_scope {_} _.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments eissect_biinv {A B}%_type_scope e%_function_scope {_} _.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 19
+Time: 0.001s">
+<div class="time" style="width: 2.9411764705882%"></div>
+<pre>
+
+Record BiInv A B := {
+  biinv_fun : A -&gt; B ;
+  biinv_isbiinv :: IsBiInv biinv_fun
+}.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Coercion biinv_fun : BiInv &gt;-&gt; Funclass.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 26
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Arguments biinv_fun {A B} _ _.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Arguments biinv_isbiinv {A B} _.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** If [e] is bi-invertible, then the retraction and the section of [e] are equal. *)</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition sect_retr_homotopic_isbiinv {A B : Type} (f : A -&gt; B) `{bi : !IsBiInv f}
+  : sect_biinv f == retr_biinv f.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 32
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  revert bi.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [h g r s].</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (fun y =&gt; (s (h y))^ @ ap g (r y)).</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 36
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition retr_is_sect_isbiinv {A B : Type} (f : A -&gt; B) `{bi : !IsBiInv f}
+  : f o retr_biinv f == idmap.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 41
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro z.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lhs_V napply (ap f (sect_retr_homotopic_isbiinv f z)).</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 43
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply eisretr_biinv.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 44
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition sect_is_retr_isbiinv {A B : Type} (f : A -&gt; B) `{bi : !IsBiInv f}
+  : sect_biinv f o f == idmap.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 48
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intro z.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lhs napply sect_retr_homotopic_isbiinv.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply eissect_biinv.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 52
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** The record is equivalent to a product type.  This is used below in a 'product of contractible types is contractible' argument. *)</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 55
+Time: 0.001s">
+<div class="time" style="width: 2.9411764705882%"></div>
+<pre>Definition prod_isbiinv (A B : Type) `{f : A -&gt; B}
+  : {g : B -&gt; A &amp; g o f == idmap} * {h : B -&gt; A &amp; f o h == idmap} &lt;~&gt; IsBiInv f.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 56
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 57
+Time: 0.006s">
+<div class="time" style="width: 17.647058823529%"></div>
+<pre>
+  make_equiv.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 58
+Time: 0.002s">
+<div class="time" style="width: 5.8823529411765%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 59
+Time: 0.004s">
+<div class="time" style="width: 11.764705882353%"></div>
+<pre>
+
+Definition issig_biinv (A B : Type) : {f : A -&gt; B &amp; IsBiInv f} &lt;~&gt; BiInv A B
+  := ltac:(issig).</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** From a bi-invertible map, we can construct a half-adjoint equivalence in two ways.  Here we take the inverse to be the retraction. *)</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 64
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[export] Instance isequiv_isbiinv {A B : Type} (f : A -&gt; B) `{bi : !IsBiInv f}
+  : IsEquiv f.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct bi as [h g r s].</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (isequiv_adjointify f g
+    (fun x =&gt; ap f (ap g (r x)^ @ s (h x)) @ r x)
+    s).</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 71
+Time: 0.001s">
+<div class="time" style="width: 2.9411764705882%"></div>
+<pre>
+
+#[export] Instance isequiv_isbiinv_retr {A B : Type} (f : A -&gt; B) `{bi : !IsBiInv f}
+  : IsEquiv (retr_biinv f)
+  := isequiv_inverse f.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 75
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Here we take the inverse to be the section. *)</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 77
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition isequiv_isbiinv' {A B : Type} (f : A -&gt; B) `{bi : !IsBiInv f}
+  : IsEquiv f.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 79
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply isequiv_adjointify.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (sect_biinv f).</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 81
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply eisretr_biinv.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>  (* We provide proof of eissect, but it gets modified. *)
+ </pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>-</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intro a.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    lhs napply sect_retr_homotopic_isbiinv.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 84
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply eissect_biinv.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+#[export] Instance isequiv_isbiinv_sect {A B : Type} (f : A -&gt; B) `{bi : !IsBiInv f}
+  : IsEquiv (sect_biinv f)
+  := isequiv_inverse f (feq:=isequiv_isbiinv' f).</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 90
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition isbiinv_isequiv {A B : Type} (f : A -&gt; B)
+  : IsEquiv f -&gt; IsBiInv f.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 93
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 94
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros [g s r adj].</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (Build_IsBiInv _ _ f g g s r).</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 96
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition iff_isbiinv_isequiv {A B : Type} (f : A -&gt; B)
+  : IsBiInv f &lt;-&gt; IsEquiv f.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 100
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  split.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 102
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply isequiv_isbiinv.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 103
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply isbiinv_isequiv.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+#[export] Instance ishprop_isbiinv `{Funext} {A B : Type} (f : A -&gt; B)
+  : IsHProp (IsBiInv f) | 0.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 109
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply hprop_inhabited_contr.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 110
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros bif.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 111
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (* This uses implicitly that the product of contractible types is contractible: *)
+ </pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 113
+Time: 0.001s">
+<div class="time" style="width: 2.9411764705882%"></div>
+<pre>srapply (contr_equiv' _ (prod_isbiinv A B)).</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition equiv_isbiinv_isequiv `{Funext} {A B : Type} (f : A -&gt; B)
+  : IsBiInv f &lt;~&gt; IsEquiv f.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 118
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply equiv_iff_hprop_uncurried, iff_isbiinv_isequiv.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Some lemmas to send equivalences and biinvertible maps back and forth. *)
+
+</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 123
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition equiv_biinv A B (f : BiInv A B) : A &lt;~&gt; B
+  := Build_Equiv A B f _.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 124
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition biinv_equiv A B (e : A &lt;~&gt; B) : BiInv A B
+  := Build_BiInv A B e (isbiinv_isequiv e (equiv_isequiv e)).</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 127
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition equiv_biinv_equiv `{Funext} A B
+  : BiInv A B &lt;~&gt; (A &lt;~&gt; B).</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 130
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 131
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  nrefine ((issig_equiv A B) oE _ oE (issig_biinv A B)^-1).</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  napply (equiv_functor_sigma_id equiv_isbiinv_isequiv).</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 133
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 134
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition biinv_idmap (A : Type) : BiInv A A.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 136
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 137
+Time: 0.001s">
+<div class="time" style="width: 2.9411764705882%"></div>
+<pre>
+  by nrefine (Build_BiInv A A idmap (Build_IsBiInv A A idmap idmap idmap _ _)).</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 138
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 139
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** Assume we have a commutative square [e' o f == g o e] in which [e] and [e'] are bi-invertible.  Then [f] and [g] also commute with the retractions and sections, and the homotopies in these new squares each satisfy a coherence condition. *)
+
+</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section EquivalenceCompatibility.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 142
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {A B C D : Type}.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 144
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Context (e : BiInv A B) (e' : BiInv C D) (f : A -&gt; C) (g : B -&gt; D).</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 145
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Let s := sect_biinv e.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 147
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Let r := retr_biinv e.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 148
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Let re := eissect_biinv e : r o e == idmap.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 149
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Let es := eisretr_biinv e : e o s == idmap.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 150
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Let s' := sect_biinv e'.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 151
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Let r' := retr_biinv e'.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 152
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Let re' := eissect_biinv e' : r' o e' == idmap.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 153
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Let es' := eisretr_biinv e' : e' o s' == idmap.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 154
+Time: 0.002s">
+<div class="time" style="width: 5.8823529411765%"></div>
+<pre>
+
+  Definition helper_r (pe : e' o f == g o e) : r' o g o e == f o r o e.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 156
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro x.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact ((ap r' (pe x))^ @ (re' (f x) @ (ap f (re x))^)).</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 160
+Time: 0.001s">
+<div class="time" style="width: 2.9411764705882%"></div>
+<pre>
+
+  Definition helper_s (pe : e' o f == g o e) : e' o s' o g == e' o f o s.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 162
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 163
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro y.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 164
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (es' (g y) @ (ap g (es y))^ @ (pe (s y))^).</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 165
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 166
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The following lemmas express the coherence conditions mentioned above. *)
+
+ </pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 170
+Time: 0.001s">
+<div class="time" style="width: 2.9411764705882%"></div>
+<pre>Definition biinv_compat_pr (pe : forall (x : A), e' (f x) = g (e x))
+    : r' o g == f o r.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 171
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 172
+Time: 0.001s">
+<div class="time" style="width: 2.9411764705882%"></div>
+<pre>
+    rapply (equiv_ind e).</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (helper_r pe).</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 174
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 175
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition biinv_compat_ps (pe : forall (x : A), e' (f x) = g (e x))
+    : s' o g == f o s.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 179
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intro y.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 180
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (equiv_inj e').</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 181
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (helper_s pe).</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 182
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 183
+Time: 0.001s">
+<div class="time" style="width: 2.9411764705882%"></div>
+<pre>
+
+  Definition biinv_compat_pre (pe : forall (x : A), e' (f x) = g (e x)) (x : A)
+    : re' (f x) = ap r' (pe x) @ (biinv_compat_pr pe) (e x) @ ap f (re x).</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 186
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    unfold biinv_compat_pr.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rewrite equiv_ind_comp.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 189
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply moveL_pM.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 190
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply moveL_Mp.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 191
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    reflexivity.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 192
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 193
+Time: 0.001s">
+<div class="time" style="width: 2.9411764705882%"></div>
+<pre>
+
+  Definition biinv_compat_pes (pe : forall (x : A), e' (f x) = g (e x)) (y : B)
+    : es' (g y) = ap e' ((biinv_compat_ps pe) y) @ pe (s y) @ ap g (es y).</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 196
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 197
+Time: 0.004s">
+<div class="time" style="width: 11.764705882353%"></div>
+<pre>
+    rewrite ap_equiv_inj.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply moveL_pM.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 199
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply moveL_pM.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    reflexivity.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 201
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 202
+Time: 0.001s">
+<div class="time" style="width: 2.9411764705882%"></div>
+<pre>
+
+End EquivalenceCompatibility.</pre>
+</div>
+<div class="code" title="File: BiInv.v
+Line: 205
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

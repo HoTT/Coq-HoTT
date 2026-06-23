@@ -1,0 +1,4847 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "From HoTT Require Import Basics Types.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "From HoTT Require Import Basics Types.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "From HoTT.WildCat Require Import Core Equiv.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import HFiber.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Pointed.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Pointed.pEquiv.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Pointed.Loops.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope pointed_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Pointed fibers *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance ispointed_fiber {A B : pType} (f : A ->* B) : IsPointed (hfiber f (point B))\n  := (point A; point_eq f).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition pfiber {A B : pType} (f : A ->* B) : pType := [hfiber f (point B), _].",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition pfib {A B : pType} (f : A ->* B) : pfiber f ->* A\n  := Build_pMap pr1 1.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The double fiber object is equivalent to loops on the base. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition pfiber2_loops {A B : pType} (f : A ->* B)\n  : pfiber (pfib f) <~>* loops B.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "pfiber (pfib f) <~>* loops B",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "pfiber (pfib f) <~>* loops B",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "pointed_reduce_pmap f.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "pfiber (pfib {| pointed_fun := f; dpoint_eq := 1 |}) <~>* loops [B, f pt]",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply Build_pEquiv'.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "pfiber (pfib {| pointed_fun := f; dpoint_eq := 1 |}) <~> loops [B, f pt]",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?f pt = pt",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1: make_equiv_contr_basedpaths.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "equiv_adjointify\n  (fun H : pfiber (pfib {| pointed_fun := f; dpoint_eq := 1 |}) =>\n   (fun H0 : hfiber f (f pt) =>\n    (fun (H1 : A) (H2 : f H1 = f pt) (H3 : (H1; H2).1 = pt) =>\n     paths_ind_r pt\n       (fun (y : A) (_ : y = pt) => f y = f pt -> loops [B, f pt])\n       (fun H4 : f pt = f pt => H4 : loops [B, f pt]) H1 H3 H2)\n      H0.1 H0.2)\n     H.1 H.2)\n  (fun H : loops [B, f pt] =>\n   ((let H0 := pt in H0; H : f (let H0 := pt in H0) = f pt) : hfiber f (f pt);\n   1\n   :\n   ((let H0 := pt in H0; H : f (let H0 := pt in H0) = f pt) : hfiber f (f pt)).1 =\n   pt)\n   :\n   pfiber (pfib {| pointed_fun := f; dpoint_eq := 1 |}))\n  ((fun H : loops [B, f pt] => 1)\n   :\n   (fun H : pfiber (pfib {| pointed_fun := f; dpoint_eq := 1 |}) =>\n    (fun H0 : hfiber f (f pt) =>\n     (fun (H1 : A) (H2 : f H1 = f pt) (H3 : (H1; H2).1 = pt) =>\n      paths_ind_r pt\n        (fun (y : A) (_ : y = pt) => f y = f pt -> loops [B, f pt])\n        (fun H4 : f pt = f pt => H4 : loops [B, f pt]) H1 H3 H2)\n       H0.1 H0.2)\n      H.1 H.2)\n   o (fun H : loops [B, f pt] =>\n      ((let H0 := pt in H0; H : f (let H0 := pt in H0) = f pt)\n       :\n       hfiber f (f pt);\n      1\n      :\n      ((let H0 := pt in H0; H : f (let H0 := pt in H0) = f pt)\n       :\n       hfiber f (f pt)).1 =\n      pt)\n      :\n      pfiber (pfib {| pointed_fun := f; dpoint_eq := 1 |})) ==\n   idmap)\n  ((fun H : pfiber (pfib {| pointed_fun := f; dpoint_eq := 1 |}) =>\n    (fun H0 : hfiber f (f pt) =>\n     (fun (H1 : A) (H2 : f H1 = f pt) (H3 : (H1; H2).1 = pt) =>\n      paths_ind_r pt\n        (fun (y : A) (p : y = pt) =>\n         forall H4 : f y = f pt,\n         ((let H5 := pt in H5;\n          paths_ind_r pt\n            (fun (y0 : A) (_ : y0 = pt) => f y0 = f pt -> loops [B, f pt])\n            idmap y p H4);\n         1) = ((y; H4); p))\n        (fun H4 : f pt = f pt => 1) H1 H3 H2)\n       H0.1 H0.2)\n      H.1 H.2)\n   :\n   (fun H : loops [B, f pt] =>\n    ((let H0 := pt in H0; H : f (let H0 := pt in H0) = f pt)\n     :\n     hfiber f (f pt);\n    1\n    :\n    ((let H0 := pt in H0; H : f (let H0 := pt in H0) = f pt)\n     :\n     hfiber f (f pt)).1 =\n    pt)\n    :\n    pfiber (pfib {| pointed_fun := f; dpoint_eq := 1 |}))\n   o (fun H : pfiber (pfib {| pointed_fun := f; dpoint_eq := 1 |}) =>\n      (fun H0 : hfiber f (f pt) =>\n       (fun (H1 : A) (H2 : f H1 = f pt) (H3 : (H1; H2).1 = pt) =>\n        paths_ind_r pt\n          (fun (y : A) (_ : y = pt) => f y = f pt -> loops [B, f pt])\n          (fun H4 : f pt = f pt => H4 : loops [B, f pt]) H1 H3 H2)\n         H0.1 H0.2)\n        H.1 H.2) ==\n   idmap)\n  pt =\npt",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition pfiber_fmap_loops {A B : pType} (f : A ->* B)\n  : pfiber (fmap loops f) <~>* loops (pfiber f).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "pfiber (fmap loops f) <~>* loops (pfiber f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "pfiber (fmap loops f) <~>* loops (pfiber f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "srapply Build_pEquiv'.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "pfiber (fmap loops f) <~> loops (pfiber f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?f pt = pt",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "{",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "pfiber (fmap loops f) <~> loops (pfiber f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "etransitivity.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "pfiber (fmap loops f) <~> ?Goal",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?Goal <~> loops (pfiber f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "2: srapply equiv_path_sigma.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "pfiber (fmap loops f) <~>\n{p : pt.1 = pt.1 & transport (fun x : A => f x = pt) p pt.2 = pt.2}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simpl; unfold hfiber.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{x : pt = pt & (point_eq f)^ @ (ap f x @ point_eq f) = pt} <~>\n{p : pt = pt & transport (fun x : A => f x = pt) p (point_eq f) = point_eq f}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "srapply equiv_functor_sigma_id.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall a : pt = pt,\n(fun x : pt = pt => (point_eq f)^ @ (ap f x @ point_eq f) = pt) a <~>\n(fun p : pt = pt =>\n transport (fun x : A => f x = pt) p (point_eq f) = point_eq f) a",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro p; cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(point_eq f)^ @ (ap f p @ point_eq f) = pt <~>\ntransport (fun x : A => f x = pt) p (point_eq f) = point_eq f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "pt = pt"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ oE equiv_moveL_Mp _ _ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap f p @ point_eq f = point_eq f @ pt <~>\ntransport (fun x : A => f x = pt) p (point_eq f) = point_eq f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "pt = pt"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ oE equiv_concat_r (concat_p1 _) _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap f p @ point_eq f = point_eq f <~>\ntransport (fun x : A => f x = pt) p (point_eq f) = point_eq f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "pt = pt"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ oE equiv_moveL_Vp _ _ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "point_eq f = (ap f p)^ @ point_eq f <~>\ntransport (fun x : A => f x = pt) p (point_eq f) = point_eq f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "pt = pt"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ oE equiv_path_inverse _ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(ap f p)^ @ point_eq f = point_eq f <~>\ntransport (fun x : A => f x = pt) p (point_eq f) = point_eq f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "pt = pt"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply equiv_concat_l.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport (fun x : A => f x = pt) p (point_eq f) = (ap f p)^ @ point_eq f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "pt = pt"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply transport_paths_Fl.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "}",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun (x y z : Type) (f0 : x <~> y) (g : y <~> z) => equiv_compose g f0)\n  (pfiber (fmap loops f))\n  {p : pt.1 = pt.1 & transport (fun x : A => f x = pt) p pt.2 = pt.2}\n  (loops (pfiber f))\n  ((equiv_functor_sigma_id\n      (fun p : pt = pt =>\n       equiv_concat_l (transport_paths_Fl p (point_eq f)) (point_eq f)\n       oE equiv_path_inverse (point_eq f) ((ap f p)^ @ point_eq f)\n       oE equiv_moveL_Vp (point_eq f) (point_eq f) (ap f p)\n       oE equiv_concat_r (concat_p1 (point_eq f)) (ap f p @ point_eq f)\n       oE equiv_moveL_Mp pt (ap f p @ point_eq f) (point_eq f)\n       :\n       (fun x : pt = pt => (point_eq f)^ @ (ap f x @ point_eq f) = pt) p <~>\n       (fun p0 : pt = pt =>\n        transport (fun x : A => f x = pt) p0 (point_eq f) = point_eq f) p)\n    :\n    hfiber (fun p : pt = pt => (point_eq f)^ @ (ap f p @ point_eq f)) pt <~>\n    {p : pt = pt &\n    transport (fun x : A => f x = pt) p (point_eq f) = point_eq f})\n   :\n   pfiber (fmap loops f) <~>\n   {p : pt.1 = pt.1 & transport (fun x : A => f x = pt) p pt.2 = pt.2})\n  (equiv_path_sigma (fun x : A => f x = pt) pt pt) pt =\npt",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "by pointed_reduce.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition pr1_pfiber_fmap_loops {A B} (f : A ->* B)\n  : fmap loops (pfib f) o* pfiber_fmap_loops f\n    ==* pfib (fmap loops f).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fmap loops (pfib f) o* pfiber_fmap_loops f ==* pfib (fmap loops f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fmap loops (pfib f) o* pfiber_fmap_loops f ==* pfib (fmap loops f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "srapply Build_pHomotopy.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fmap loops (pfib f) o* pfiber_fmap_loops f == pfib (fmap loops f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?p pt =\ndpoint_eq (fmap loops (pfib f) o* pfiber_fmap_loops f) @\n(dpoint_eq (pfib (fmap loops f)))^",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fmap loops (pfib f) o* pfiber_fmap_loops f == pfib (fmap loops f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros [u v].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fmap loops (pfib f) o* pfiber_fmap_loops f) (u; v) =\npfib (fmap loops f) (u; v)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "loops A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "fmap loops f u = pt"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (concat_1p _ @ concat_p1 _ @ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap (pfib f) (pfiber_fmap_loops f (u; v)) = pfib (fmap loops f) (u; v)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "u"
+              ],
+              "body": null,
+              "type": "loops A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "v"
+              ],
+              "body": null,
+              "type": "fmap loops f u = pt"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (@ap_pr1_path_sigma _ _ (point A; point_eq f) (point A;point_eq f) _ _).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "((fun x : pfiber (fmap loops f) =>\n  (fun (u : loops A) (v : fmap loops f u = pt) =>\n   (concat_1p (ap (pfib f) (pfiber_fmap_loops f (u; v)) @ 1) @\n    concat_p1 (ap (pfib f) (pfiber_fmap_loops f (u; v)))) @\n   ap_pr1_path_sigma (1%equiv (u; v).1)\n     ((fun p : pt = pt =>\n       equiv_concat_l (transport_paths_Fl p (point_eq f)) (point_eq f)\n       oE equiv_path_inverse (point_eq f) ((ap f p)^ @ point_eq f)\n       oE equiv_moveL_Vp (point_eq f) (point_eq f) (ap f p)\n       oE equiv_concat_r (concat_p1 (point_eq f)) (ap f p @ point_eq f)\n       oE equiv_moveL_Mp pt (ap f p @ point_eq f) (point_eq f)\n       :\n       (fun x0 : pt = pt => (point_eq f)^ @ (ap f x0 @ point_eq f) = pt) p <~>\n       (fun p0 : pt = pt =>\n        transport (fun x0 : A => f x0 = pt) p0 (point_eq f) = point_eq f) p)\n        (u; v).1 (u; v).2))\n    x.1 x.2)\n :\n fmap loops (pfib f) o* pfiber_fmap_loops f == pfib (fmap loops f)) pt =\ndpoint_eq (fmap loops (pfib f) o* pfiber_fmap_loops f) @\n(dpoint_eq (pfib (fmap loops f)))^",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "abstract (pointed_reduce_rewrite; reflexivity).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition pfiber_fmap_iterated_loops {A B : pType} (n : nat) (f : A ->* B)\n  : pfiber (fmap (iterated_loops n) f) <~>* iterated_loops n (pfiber f).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "pfiber (fmap (iterated_loops n) f) <~>* iterated_loops n (pfiber f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "pfiber (fmap (iterated_loops n) f) <~>* iterated_loops n (pfiber f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "induction n.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "pfiber (fmap (iterated_loops 0) f) <~>* iterated_loops 0 (pfiber f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "pfiber (fmap (iterated_loops n.+1) f) <~>* iterated_loops n.+1 (pfiber f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "pfiber (fmap (iterated_loops n) f) <~>* iterated_loops n (pfiber f)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1: reflexivity.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "pfiber (fmap (iterated_loops n.+1) f) <~>* iterated_loops n.+1 (pfiber f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "pfiber (fmap (iterated_loops n) f) <~>* iterated_loops n (pfiber f)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ o*E pfiber_fmap_loops _ ).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "loops (pfiber (fmap (iterated_loops n) f)) <~>*\niterated_loops n.+1 (pfiber f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "pfiber (fmap (iterated_loops n) f) <~>* iterated_loops n (pfiber f)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "tapply (emap loops).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "pfiber (fmap (iterated_loops n) f) $<~>\n(fix F (m : nat) : pType :=\n   match m with\n   | 0%nat => pfiber f\n   | m'.+1%nat => loops (F m')\n   end)\n  n",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "n"
+              ],
+              "body": null,
+              "type": "nat"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IHn"
+              ],
+              "body": null,
+              "type": "pfiber (fmap (iterated_loops n) f) <~>* iterated_loops n (pfiber f)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact IHn.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition functor_pfiber {A B C D}\n           {f : A ->* B} {g : C ->* D} {h : A ->* C} {k : B ->* D}\n           (p : k o* f ==* g o* h)\n  : pfiber f ->* pfiber g.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "pfiber f ->* pfiber g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "C ->* D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "A ->* C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "B ->* D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "k o* f ==* g o* h"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "pfiber f ->* pfiber g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "C ->* D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "A ->* C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "B ->* D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "k o* f ==* g o* h"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "srapply Build_pMap.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "pfiber f -> pfiber g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "C ->* D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "A ->* C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "B ->* D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "k o* f ==* g o* h"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?f pt = pt",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "C ->* D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "A ->* C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "B ->* D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "k o* f ==* g o* h"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "pfiber f -> pfiber g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "C ->* D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "A ->* C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "B ->* D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "k o* f ==* g o* h"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "hfiber f pt -> hfiber g pt",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "C ->* D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "A ->* C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "B ->* D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "k o* f ==* g o* h"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (functor_hfiber2 p (point_eq k)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(functor_hfiber2 p (point_eq k) : pfiber f -> pfiber g) pt = pt",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "C ->* D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "A ->* C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "B ->* D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "k o* f ==* g o* h"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "srapply path_hfiber.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(functor_hfiber2 p (point_eq k) pt).1 = pt.1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "C ->* D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "A ->* C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "B ->* D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "k o* f ==* g o* h"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(functor_hfiber2 p (point_eq k) pt).2 = ap g ?q @ pt.2",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "C ->* D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "A ->* C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "B ->* D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "k o* f ==* g o* h"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " \n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(functor_hfiber2 p (point_eq k) pt).1 = pt.1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "C ->* D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "A ->* C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "B ->* D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "k o* f ==* g o* h"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply point_eq.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(functor_hfiber2 p (point_eq k) pt).2 = ap g (point_eq h) @ pt.2",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "C ->* D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "A ->* C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "B ->* D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "k o* f ==* g o* h"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (concat_pp_p _ _ _ @ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(p pt.1)^ @ (ap k pt.2 @ point_eq k) = ap g (point_eq h) @ pt.2",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "C ->* D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "A ->* C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "B ->* D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "k o* f ==* g o* h"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply moveR_Vp.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap k pt.2 @ point_eq k = p pt.1 @ (ap g (point_eq h) @ pt.2)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "C ->* D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "A ->* C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "B ->* D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "k o* f ==* g o* h"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (point_htpy p)^.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition pequiv_pfiber {A B C D}\n           {f : A ->* B} {g : C ->* D} (h : A <~>* C) (k : B <~>* D)\n           (p : k o* f ==* g o* h)\n  : pfiber f $<~> pfiber g\n  := Build_pEquiv (functor_pfiber p) _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition square_functor_pfiber {A B C D}\n           {f : A ->* B} {g : C ->* D} {h : A ->* C} {k : B ->* D}\n           (p : k o* f ==* g o* h)\n  : h o* pfib f ==* pfib g o* functor_pfiber p.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "h o* pfib f ==* pfib g o* functor_pfiber p",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "C ->* D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "A ->* C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "B ->* D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "k o* f ==* g o* h"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "h o* pfib f ==* pfib g o* functor_pfiber p",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "C ->* D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "A ->* C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "B ->* D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "k o* f ==* g o* h"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "srapply Build_pHomotopy.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "h o* pfib f == pfib g o* functor_pfiber p",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "C ->* D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "A ->* C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "B ->* D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "k o* f ==* g o* h"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?p pt = dpoint_eq (h o* pfib f) @ (dpoint_eq (pfib g o* functor_pfiber p))^",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "C ->* D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "A ->* C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "B ->* D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "k o* f ==* g o* h"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "h o* pfib f == pfib g o* functor_pfiber p",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "C ->* D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "A ->* C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "B ->* D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "k o* f ==* g o* h"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros x; reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "((fun x : pfiber f => 1) : h o* pfib f == pfib g o* functor_pfiber p) pt =\ndpoint_eq (h o* pfib f) @ (dpoint_eq (pfib g o* functor_pfiber p))^",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "C ->* D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "A ->* C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "B ->* D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "k o* f ==* g o* h"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply moveL_pV.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "1 @ dpoint_eq (pfib g o* functor_pfiber p) = dpoint_eq (h o* pfib f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "C ->* D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "A ->* C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "B ->* D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "k o* f ==* g o* h"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "cbn; unfold functor_sigma; cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "1 @\n(ap pr1\n   (path_sigma_uncurried (fun x : C => g x = pt)\n      (functor_hfiber2 p (point_eq k) (ispointed_fiber f))\n      (ispointed_fiber g)\n      (point_eq h;\n      transport_paths_Fl (point_eq h)\n        (((p pt)^ @ ap k (point_eq f)) @ point_eq k) @\n      moveR_Vp (((p pt)^ @ ap k (point_eq f)) @ point_eq k) \n        (point_eq g) (ap g (point_eq h))\n        (concat_pp_p (p pt)^ (ap k (point_eq f)) (point_eq k) @\n         moveR_Vp (ap k (point_eq f) @ point_eq k)\n           (ap g (point_eq h) @ point_eq g) (p pt) \n           (point_htpy p)^))) @\n 1) =\n1 @ point_eq h",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "C"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "D"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "C ->* D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "A ->* C"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "k"
+              ],
+              "body": null,
+              "type": "B ->* D"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "k o* f ==* g o* h"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "abstract (rewrite ap_pr1_path_sigma, concat_p1; reflexivity).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition square_pequiv_pfiber {A B C D}\n           {f : A ->* B} {g : C ->* D} (h : A <~>* C) (k : B <~>* D)\n           (p : k o* f ==* g o* h)\n  : h o* pfib f ==* pfib g o* pequiv_pfiber h k p\n  := square_functor_pfiber p.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The triple-fiber functor is equal to the negative of the loop space functor. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition pfiber2_fmap_loops {A B : pType} (f : A ->* B)\n: pfiber2_loops f o* pfib (pfib (pfib f))\n  ==* fmap loops f o* (loops_inv _ o* pfiber2_loops (pfib f)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "pfiber2_loops f o* pfib (pfib (pfib f)) ==*\nfmap loops f o* (loops_inv A o* pfiber2_loops (pfib f))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "pfiber2_loops f o* pfib (pfib (pfib f)) ==*\nfmap loops f o* (loops_inv A o* pfiber2_loops (pfib f))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A ->* B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "pointed_reduce.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Build_pMap\n  (fun H : hfiber pr1 point0 =>\n   paths_ind_r point0\n     (fun (y : A) (_ : y = point0) => f y = f point0 -> f point0 = f point0)\n     idmap (H.1).1 H.2 (H.1).2)\n  1\no* pfib (pfib (pfib {| pointed_fun := f; dpoint_eq := 1 |})) ==*\nBuild_pMap (fun p : point0 = point0 => 1 @ (ap f p @ 1)) 1\no* (Build_pMap inverse 1\n    o* Build_pMap\n         (fun\n            H : hfiber pr1\n                  (ispointed_fiber {| pointed_fun := f; dpoint_eq := 1 |}) =>\n          paths_ind_r\n            (ispointed_fiber {| pointed_fun := f; dpoint_eq := 1 |})\n            (fun (y : hfiber f (f point0))\n               (_ : y =\n                    ispointed_fiber {| pointed_fun := f; dpoint_eq := 1 |}) =>\n             y.1 = point0 -> point0 = point0)\n            idmap (H.1).1 H.2 (H.1).2)\n         1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "point0"
+              ],
+              "body": null,
+              "type": "IsPointed A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simple refine (Build_pHomotopy _ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Build_pMap\n  (fun H : hfiber pr1 point0 =>\n   paths_ind_r point0\n     (fun (y : A) (_ : y = point0) => f y = f point0 -> f point0 = f point0)\n     idmap (H.1).1 H.2 (H.1).2)\n  1\no* pfib (pfib (pfib {| pointed_fun := f; dpoint_eq := 1 |})) ==\nBuild_pMap (fun p : point0 = point0 => 1 @ (ap f p @ 1)) 1\no* (Build_pMap inverse 1\n    o* Build_pMap\n         (fun\n            H : hfiber pr1\n                  (ispointed_fiber {| pointed_fun := f; dpoint_eq := 1 |}) =>\n          paths_ind_r\n            (ispointed_fiber {| pointed_fun := f; dpoint_eq := 1 |})\n            (fun (y : hfiber f (f point0))\n               (_ : y =\n                    ispointed_fiber {| pointed_fun := f; dpoint_eq := 1 |}) =>\n             y.1 = point0 -> point0 = point0)\n            idmap (H.1).1 H.2 (H.1).2)\n         1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "point0"
+              ],
+              "body": null,
+              "type": "IsPointed A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?p pt =\ndpoint_eq\n  (Build_pMap\n     (fun H : hfiber pr1 point0 =>\n      paths_ind_r point0\n        (fun (y : A) (_ : y = point0) =>\n         f y = f point0 -> f point0 = f point0)\n        idmap (H.1).1 H.2 (H.1).2)\n     1\n   o* pfib (pfib (pfib {| pointed_fun := f; dpoint_eq := 1 |}))) @\n(dpoint_eq\n   (Build_pMap (fun p : point0 = point0 => 1 @ (ap f p @ 1)) 1\n    o* (Build_pMap inverse 1\n        o* Build_pMap\n             (fun\n                H : hfiber pr1\n                      (ispointed_fiber {| pointed_fun := f; dpoint_eq := 1 |}) =>\n              paths_ind_r\n                (ispointed_fiber {| pointed_fun := f; dpoint_eq := 1 |})\n                (fun (y : hfiber f (f point0))\n                   (_ : y =\n                        ispointed_fiber\n                          {| pointed_fun := f; dpoint_eq := 1 |}) =>\n                 y.1 = point0 -> point0 = point0)\n                idmap (H.1).1 H.2 (H.1).2)\n             1)))^",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "point0"
+              ],
+              "body": null,
+              "type": "IsPointed A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Build_pMap\n  (fun H : hfiber pr1 point0 =>\n   paths_ind_r point0\n     (fun (y : A) (_ : y = point0) => f y = f point0 -> f point0 = f point0)\n     idmap (H.1).1 H.2 (H.1).2)\n  1\no* pfib (pfib (pfib {| pointed_fun := f; dpoint_eq := 1 |})) ==\nBuild_pMap (fun p : point0 = point0 => 1 @ (ap f p @ 1)) 1\no* (Build_pMap inverse 1\n    o* Build_pMap\n         (fun\n            H : hfiber pr1\n                  (ispointed_fiber {| pointed_fun := f; dpoint_eq := 1 |}) =>\n          paths_ind_r\n            (ispointed_fiber {| pointed_fun := f; dpoint_eq := 1 |})\n            (fun (y : hfiber f (f point0))\n               (_ : y =\n                    ispointed_fiber {| pointed_fun := f; dpoint_eq := 1 |}) =>\n             y.1 = point0 -> point0 = point0)\n            idmap (H.1).1 H.2 (H.1).2)\n         1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "point0"
+              ],
+              "body": null,
+              "type": "IsPointed A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros [[[x p] q] r].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(Build_pMap\n   (fun H : hfiber pr1 point0 =>\n    paths_ind_r point0\n      (fun (y : A) (_ : y = point0) => f y = f point0 -> f point0 = f point0)\n      idmap (H.1).1 H.2 (H.1).2)\n   1\n o* pfib (pfib (pfib {| pointed_fun := f; dpoint_eq := 1 |})))\n  (((x; p); q); r) =\n(Build_pMap (fun p0 : point0 = point0 => 1 @ (ap f p0 @ 1)) 1\n o* (Build_pMap inverse 1\n     o* Build_pMap\n          (fun\n             H : hfiber pr1\n                   (ispointed_fiber {| pointed_fun := f; dpoint_eq := 1 |}) =>\n           paths_ind_r\n             (ispointed_fiber {| pointed_fun := f; dpoint_eq := 1 |})\n             (fun (y : hfiber f (f point0))\n                (_ : y =\n                     ispointed_fiber {| pointed_fun := f; dpoint_eq := 1 |}) =>\n              y.1 = point0 -> point0 = point0)\n             idmap (H.1).1 H.2 (H.1).2)\n          1))\n  (((x; p); q); r)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "point0"
+              ],
+              "body": null,
+              "type": "IsPointed A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "[A, point0]"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "{| pointed_fun := f; dpoint_eq := 1 |} x = pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "pfib {| pointed_fun := f; dpoint_eq := 1 |} (x; p) = pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "pfib (pfib {| pointed_fun := f; dpoint_eq := 1 |}) ((x; p); q) = pt"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simpl in *.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "paths_ind_r point0\n  (fun (y : A) (_ : y = point0) => f y = f point0 -> f point0 = f point0)\n  idmap x q p =\n1 @\n(ap f\n   (paths_ind_r (ispointed_fiber {| pointed_fun := f; dpoint_eq := 1 |})\n      (fun (y : hfiber f (f point0))\n         (_ : y = ispointed_fiber {| pointed_fun := f; dpoint_eq := 1 |}) =>\n       y.1 = point0 -> point0 = point0)\n      idmap (x; p) r q)^ @\n 1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "point0"
+              ],
+              "body": null,
+              "type": "IsPointed A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "f x = pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "q"
+              ],
+              "body": null,
+              "type": "x = pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "(x; p) = pt"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    (** Apparently [destruct q] isn't smart enough to generalize over [p]. *)\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "move q before x; revert dependent x;\n      refine (paths_ind_r _ _ _); intros p r; cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "p =\n1 @\n(ap f\n   (paths_ind_r (ispointed_fiber {| pointed_fun := f; dpoint_eq := 1 |})\n      (fun (y : hfiber f (f point0))\n         (_ : y = ispointed_fiber {| pointed_fun := f; dpoint_eq := 1 |}) =>\n       y.1 = point0 -> point0 = point0)\n      idmap (pt; p) r 1)^ @\n 1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "point0"
+              ],
+              "body": null,
+              "type": "IsPointed A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "f pt = pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "(pt; p) = pt"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite !concat_1p, concat_p1.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "p =\nap f\n  (paths_ind_r (ispointed_fiber {| pointed_fun := f; dpoint_eq := 1 |})\n     (fun (y : hfiber f (f point0))\n        (_ : y = ispointed_fiber {| pointed_fun := f; dpoint_eq := 1 |}) =>\n      y.1 = point0 -> point0 = point0)\n     idmap (pt; p) r 1)^",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "point0"
+              ],
+              "body": null,
+              "type": "IsPointed A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "f pt = pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "(pt; p) = pt"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite paths_ind_r_transport.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "p =\nap f\n  (transport (fun b : hfiber f (f point0) => b.1 = point0 -> point0 = point0)\n     r^ idmap 1)^",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "point0"
+              ],
+              "body": null,
+              "type": "IsPointed A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "f pt = pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "(pt; p) = pt"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite transport_arrow_toconst, transport_paths_Fl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "p = ap f ((ap (fun x : hfiber f (f point0) => x.1) (r^)^)^ @ 1)^",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "point0"
+              ],
+              "body": null,
+              "type": "IsPointed A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "f pt = pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "(pt; p) = pt"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " \n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite concat_p1, inv_V, ap_V.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "p = ap f (ap (fun x : hfiber f (f point0) => x.1) r^)^",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "point0"
+              ],
+              "body": null,
+              "type": "IsPointed A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "f pt = pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "(pt; p) = pt"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (((r^)..2)^ @ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport (fun x : A => f x = pt) (r^) ..1 pt.2 =\nap f (ap (fun x : hfiber f (f point0) => x.1) r^)^",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "point0"
+              ],
+              "body": null,
+              "type": "IsPointed A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "f pt = pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "(pt; p) = pt"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite transport_paths_Fl; cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(ap f (r^) ..1)^ @ 1 = ap f (ap (fun x : hfiber f (f point0) => x.1) r^)^",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "point0"
+              ],
+              "body": null,
+              "type": "IsPointed A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "f pt = pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "(pt; p) = pt"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite pr1_path_V, !ap_V, !inv_V.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap f r ..1 @ 1 = ap f (ap (fun x : hfiber f (f point0) => x.1) r)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "point0"
+              ],
+              "body": null,
+              "type": "IsPointed A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "f pt = pt"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "r"
+              ],
+              "body": null,
+              "type": "(pt; p) = pt"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply concat_p1.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "((fun x0 : pfiber (pfib (pfib {| pointed_fun := f; dpoint_eq := 1 |})) =>\n  (fun proj1 : pfiber (pfib {| pointed_fun := f; dpoint_eq := 1 |}) =>\n   (fun proj0 : pfiber {| pointed_fun := f; dpoint_eq := 1 |} =>\n    (fun (x : [A, point0])\n       (p : {| pointed_fun := f; dpoint_eq := 1 |} x = pt)\n       (q : pfib {| pointed_fun := f; dpoint_eq := 1 |} (x; p) = pt)\n       (r : pfib (pfib {| pointed_fun := f; dpoint_eq := 1 |}) ((x; p); q) =\n            pt) =>\n     paths_ind_r pt\n       (fun (y : A) (p0 : y = pt) =>\n        forall (p1 : f y = pt) (r0 : (y; p1) = pt),\n        paths_ind_r point0\n          (fun (y0 : A) (_ : y0 = point0) =>\n           f y0 = f point0 -> f point0 = f point0)\n          idmap y p0 p1 =\n        1 @\n        (ap f\n           (paths_ind_r\n              (ispointed_fiber {| pointed_fun := f; dpoint_eq := 1 |})\n              (fun (y0 : hfiber f (f point0))\n                 (_ : y0 =\n                      ispointed_fiber {| pointed_fun := f; dpoint_eq := 1 |}) =>\n               y0.1 = point0 -> point0 = point0)\n              idmap (y; p1) r0 p0)^ @\n         1))\n       (fun (p0 : f pt = pt) (r0 : (pt; p0) = pt) =>\n        internal_paths_rew_r (fun p1 : f point0 = f point0 => p0 = p1)\n          (internal_paths_rew_r (fun p1 : f point0 = f point0 => p0 = p1)\n             (internal_paths_rew_r\n                (fun p1 : (pt; p0).1 = point0 -> point0 = point0 =>\n                 p0 = ap f (p1 1)^)\n                (internal_paths_rew_r\n                   (fun p1 : point0 = point0 => p0 = ap f p1^)\n                   (internal_paths_rew_r\n                      (fun\n                         p1 : (ispointed_fiber\n                                 {| pointed_fun := f; dpoint_eq := 1 |}).1 =\n                              point0 =>\n                       p0 = ap f p1^)\n                      (internal_paths_rew_r\n                         (fun\n                            p1 : (ispointed_fiber\n                                    {| pointed_fun := f; dpoint_eq := 1 |}).1 =\n                                 (pt; p0).1 =>\n                          p0 = ap f p1^)\n                         (internal_paths_rew_r\n                            (fun p1 : point0 = point0 => p0 = ap f p1)\n                            (internal_paths_rew_r\n                               (fun\n                                  p1 : (pt; p0).1 =\n                                       (ispointed_fiber\n                                          {|\n                                            pointed_fun := f; dpoint_eq := 1\n                                          |}).1 =>\n                                p0 = ap f p1)\n                               (((r0^) ..2)^ @\n                                internal_paths_rew_r\n                                  (fun p1 : f (pt; p0).1 = pt =>\n                                   p1 =\n                                   ap f\n                                     (ap\n                                        (fun x1 : hfiber f (f point0) => x1.1)\n                                        r0^)^)\n                                  (internal_paths_rew_r\n                                     (fun p1 : pt.1 = (pt; p0).1 =>\n                                      (ap f p1)^ @ 1 =\n                                      ap f\n                                        (ap\n                                           (fun x1 : hfiber f (f point0) =>\n                                            x1.1)\n                                           r0^)^)\n                                     (internal_paths_rew_r\n                                        (fun p1 : f pt.1 = f (pt; p0).1 =>\n                                         p1^ @ 1 =\n                                         ap f\n                                           (ap\n                                              (fun x1 : hfiber f (f point0) =>\n                                               x1.1)\n                                              r0^)^)\n                                        (internal_paths_rew_r\n                                           (fun p1 : f pt = f point0 =>\n                                            ((ap f r0 ..1)^)^ @ 1 = p1)\n                                           (internal_paths_rew_r\n                                              (fun\n                                                 p1 : \n                                                 (ispointed_fiber\n                                                 {|\n                                                 pointed_fun := f;\n                                                 dpoint_eq := 1\n                                                 |}).1 = \n                                                 (pt; p0).1 =>\n                                               ((ap f r0 ..1)^)^ @ 1 =\n                                               (ap f p1)^)\n                                              (internal_paths_rew_r\n                                                 (fun\n                                                 p1 : \n                                                 f\n                                                 (ispointed_fiber\n                                                 {|\n                                                 pointed_fun := f;\n                                                 dpoint_eq := 1\n                                                 |}).1 = \n                                                 f (pt; p0).1 =>\n                                                 ((ap f r0 ..1)^)^ @ 1 = p1^)\n                                                 (internal_paths_rew_r\n                                                 (fun p1 : f pt = f point0 =>\n                                                 p1 @ 1 =\n                                                 ((ap f\n                                                 (ap\n                                                 (fun\n                                                 x1 : hfiber f (f point0) =>\n                                                 x1.1) r0))^)^)\n                                                 (internal_paths_rew_r\n                                                 (fun p1 : f pt = f point0 =>\n                                                 ap f r0 ..1 @ 1 = p1)\n                                                 (concat_p1\n                                                 (ap f\n                                                 (ap\n                                                 (fun\n                                                 x1 : hfiber f (f point0) =>\n                                                 x1.1) r0)))\n                                                 (inv_V\n                                                 (ap f\n                                                 (ap\n                                                 (fun\n                                                 x1 : hfiber f (f point0) =>\n                                                 x1.1) r0))))\n                                                 (inv_V (ap f r0 ..1)))\n                                                 (ap_V f\n                                                 (ap\n                                                 (fun\n                                                 x1 : hfiber f (f point0) =>\n                                                 x1.1) r0)))\n                                              (ap_V\n                                                 (fun\n                                                 x1 : hfiber f (f point0) =>\n                                                 x1.1) r0))\n                                           (ap_V f\n                                              (ap\n                                                 (fun\n                                                 x1 : hfiber f (f point0) =>\n                                                 x1.1) r0^)))\n                                        (ap_V f r0 ..1))\n                                     (pr1_path_V r0)\n                                   :\n                                   (ap f (r0^) ..1)^ @ pt.2 =\n                                   ap f\n                                     (ap\n                                        (fun x1 : hfiber f (f point0) => x1.1)\n                                        r0^)^)\n                                  (transport_paths_Fl (r0^) ..1 pt.2))\n                               (ap_V (fun x1 : hfiber f (f point0) => x1.1)\n                                  r0^))\n                            (inv_V\n                               (ap (fun x1 : hfiber f (f point0) => x1.1)\n                                  (r0^)^)))\n                         (concat_p1\n                            (ap (fun x1 : hfiber f (f point0) => x1.1) (r0^)^)^))\n                      (transport_paths_Fl (r0^)^ 1))\n                   (transport_arrow_toconst r0^ idmap 1))\n                (paths_ind_r_transport\n                   (fun b : hfiber f (f point0) =>\n                    b.1 = point0 -> point0 = point0)\n                   r0 idmap))\n             (concat_p1\n                (ap f\n                   (paths_ind_r\n                      (ispointed_fiber {| pointed_fun := f; dpoint_eq := 1 |})\n                      (fun (y : hfiber f (f point0))\n                         (_ : y =\n                              ispointed_fiber\n                                {| pointed_fun := f; dpoint_eq := 1 |}) =>\n                       y.1 = point0 -> point0 = point0)\n                      idmap (pt; p0) r0 1)^)))\n          (concat_1p\n             (ap f\n                (paths_ind_r\n                   (ispointed_fiber {| pointed_fun := f; dpoint_eq := 1 |})\n                   (fun (y : hfiber f (f point0))\n                      (_ : y =\n                           ispointed_fiber\n                             {| pointed_fun := f; dpoint_eq := 1 |}) =>\n                    y.1 = point0 -> point0 = point0)\n                   idmap (pt; p0) r0 1)^ @\n              1))\n        :\n        paths_ind_r point0\n          (fun (y : A) (_ : y = point0) =>\n           f y = f point0 -> f point0 = f point0)\n          idmap pt 1 p0 =\n        1 @\n        (ap f\n           (paths_ind_r\n              (ispointed_fiber {| pointed_fun := f; dpoint_eq := 1 |})\n              (fun (y : hfiber f (f point0))\n                 (_ : y =\n                      ispointed_fiber {| pointed_fun := f; dpoint_eq := 1 |}) =>\n               y.1 = point0 -> point0 = point0)\n              idmap (pt; p0) r0 1)^ @\n         1))\n       x q p r\n     :\n     (Build_pMap\n        (fun H : hfiber pr1 point0 =>\n         paths_ind_r point0\n           (fun (y : A) (_ : y = point0) =>\n            f y = f point0 -> f point0 = f point0)\n           idmap (H.1).1 H.2 (H.1).2)\n        1\n      o* pfib (pfib (pfib {| pointed_fun := f; dpoint_eq := 1 |})))\n       (((x; p); q); r) =\n     (Build_pMap (fun p0 : point0 = point0 => 1 @ (ap f p0 @ 1)) 1\n      o* (Build_pMap inverse 1\n          o* Build_pMap\n               (fun\n                  H : hfiber pr1\n                        (ispointed_fiber\n                           {| pointed_fun := f; dpoint_eq := 1 |}) =>\n                paths_ind_r\n                  (ispointed_fiber {| pointed_fun := f; dpoint_eq := 1 |})\n                  (fun (y : hfiber f (f point0))\n                     (_ : y =\n                          ispointed_fiber\n                            {| pointed_fun := f; dpoint_eq := 1 |}) =>\n                   y.1 = point0 -> point0 = point0)\n                  idmap (H.1).1 H.2 (H.1).2)\n               1))\n       (((x; p); q); r))\n      proj0.1 proj0.2)\n     proj1.1 proj1.2)\n    x0.1 x0.2)\n :\n Build_pMap\n   (fun H : hfiber pr1 point0 =>\n    paths_ind_r point0\n      (fun (y : A) (_ : y = point0) => f y = f point0 -> f point0 = f point0)\n      idmap (H.1).1 H.2 (H.1).2)\n   1\n o* pfib (pfib (pfib {| pointed_fun := f; dpoint_eq := 1 |})) ==\n Build_pMap (fun p : point0 = point0 => 1 @ (ap f p @ 1)) 1\n o* (Build_pMap inverse 1\n     o* Build_pMap\n          (fun\n             H : hfiber pr1\n                   (ispointed_fiber {| pointed_fun := f; dpoint_eq := 1 |}) =>\n           paths_ind_r\n             (ispointed_fiber {| pointed_fun := f; dpoint_eq := 1 |})\n             (fun (y : hfiber f (f point0))\n                (_ : y =\n                     ispointed_fiber {| pointed_fun := f; dpoint_eq := 1 |}) =>\n              y.1 = point0 -> point0 = point0)\n             idmap (H.1).1 H.2 (H.1).2)\n          1))\n  pt =\ndpoint_eq\n  (Build_pMap\n     (fun H : hfiber pr1 point0 =>\n      paths_ind_r point0\n        (fun (y : A) (_ : y = point0) =>\n         f y = f point0 -> f point0 = f point0)\n        idmap (H.1).1 H.2 (H.1).2)\n     1\n   o* pfib (pfib (pfib {| pointed_fun := f; dpoint_eq := 1 |}))) @\n(dpoint_eq\n   (Build_pMap (fun p : point0 = point0 => 1 @ (ap f p @ 1)) 1\n    o* (Build_pMap inverse 1\n        o* Build_pMap\n             (fun\n                H : hfiber pr1\n                      (ispointed_fiber {| pointed_fun := f; dpoint_eq := 1 |}) =>\n              paths_ind_r\n                (ispointed_fiber {| pointed_fun := f; dpoint_eq := 1 |})\n                (fun (y : hfiber f (f point0))\n                   (_ : y =\n                        ispointed_fiber\n                          {| pointed_fun := f; dpoint_eq := 1 |}) =>\n                 y.1 = point0 -> point0 = point0)\n                idmap (H.1).1 H.2 (H.1).2)\n             1)))^",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "point0"
+              ],
+              "body": null,
+              "type": "IsPointed A"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A -> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

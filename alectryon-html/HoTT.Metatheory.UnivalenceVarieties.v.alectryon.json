@@ -1,0 +1,2701 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Varieties of univalence *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import HoTT.Basics HoTT.Types.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Idempotents.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Metatheory.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope path_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** A weaker form that only asserts that we can make equivalences into paths with a computation rule (no uniqueness rule). *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition WeakUnivalence :=\n  { etop : forall A B, (A <~> B) -> (A = B) &\n    forall A B (f : A <~> B), equiv_path A B (etop A B f) = f }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The same thing, stated with an incoherent notion of equivalence but a pointwise equality for the computation rule.  *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition IncoherentWeakUnivalence :=\n  { etop : forall A B (f : A -> B) (g : B -> A),\n      (f o g == idmap) -> (g o f == idmap) -> (A = B) &\n    forall A B f g H K, equiv_path A B (etop A B f g H K) == f }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Finally, it even suffices to consider only just a few special cases. This is due to Ian Orton and Andrew Pitts. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Record VeryWeakUnivalence :=\n  { unit : forall A, A = { a : A & Unit };\n    flip : forall A B (C : A -> B -> Type),\n        { a : A & { b : B & C a b }} = { b : B & { a : A & C a b }};\n    contract : forall A, Contr A -> A = Unit;\n    unit_comp : forall A a, transport idmap (unit A) a = (a;tt);\n    flip_comp : forall A B C (a:A) (b:B) (c : C a b),\n        transport idmap (flip A B C) (a ; (b ; c)) = (b ; (a ; c))\n  }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Theorem WeakUnivalence_implies_Univalence :\n  WeakUnivalence -> Univalence_type.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "WeakUnivalence -> Univalence_type",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "WeakUnivalence -> Univalence_type",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros [etop H] A.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall B : Type, IsEquiv (equiv_path A B)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "etop"
+              ],
+              "body": null,
+              "type": "forall A0 B : Type, A0 <~> B -> A0 = B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall (A0 B : Type) (f : A0 <~> B), equiv_path A0 B (etop A0 B f) = f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply isequiv_from_functor_sigma.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv (functor_sigma idmap (equiv_path A))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "etop"
+              ],
+              "body": null,
+              "type": "forall A0 B : Type, A0 <~> B -> A0 = B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall (A0 B : Type) (f : A0 <~> B), equiv_path A0 B (etop A0 B f) = f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "srapply isequiv_contr_contr.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Contr {x : _ & A <~> x}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "etop"
+              ],
+              "body": null,
+              "type": "forall A0 B : Type, A0 <~> B -> A0 = B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall (A0 B : Type) (f : A0 <~> B), equiv_path A0 B (etop A0 B f) = f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "srapply (contr_retracttype\n            (Build_RetractOf _ _\n                             (fun Be => (Be.1 ; equiv_path A Be.1 Be.2))\n                             (fun Bf => (Bf.1 ; etop A Bf.1 Bf.2))\n                             _)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun Be : {x : _ & A = x} => (Be.1; equiv_path A Be.1 Be.2))\no (fun Bf : {x : _ & A <~> x} => (Bf.1; etop A Bf.1 Bf.2)) == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "etop"
+              ],
+              "body": null,
+              "type": "forall A0 B : Type, A0 <~> B -> A0 = B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall (A0 B : Type) (f : A0 <~> B), equiv_path A0 B (etop A0 B f) = f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros [B f].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(((B; f).1; etop A (B; f).1 (B; f).2).1;\nequiv_path A ((B; f).1; etop A (B; f).1 (B; f).2).1\n  ((B; f).1; etop A (B; f).1 (B; f).2).2) =\n(B; f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "etop"
+              ],
+              "body": null,
+              "type": "forall A0 B0 : Type, A0 <~> B0 -> A0 = B0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall (A0 B0 : Type) (f0 : A0 <~> B0), equiv_path A0 B0 (etop A0 B0 f0) = f0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A <~> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (path_sigma' (fun B => A <~> B) 1 (H A B f)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** For this one and the next one, we need to assume funext to start with (so that these forms of univalence, unlike the usual one, probably don't suffice to prove funext from). *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Theorem IncoherentWeakUnivalence_implies_Univalence `{Funext} :\n  IncoherentWeakUnivalence -> Univalence_type.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IncoherentWeakUnivalence -> Univalence_type",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IncoherentWeakUnivalence -> Univalence_type",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros [etop K].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Univalence_type",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "etop"
+              ],
+              "body": null,
+              "type": "forall (A B : Type) (f : A -> B) (g : B -> A),\n(fun x : B => f (g x)) == idmap -> (fun x : A => g (f x)) == idmap -> A = B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "K"
+              ],
+              "body": null,
+              "type": "forall (A B : Type) (f : A -> B) (g : B -> A)\n(H0 : (fun x : B => f (g x)) == idmap)\n(K0 : (fun x : A => g (f x)) == idmap),\nequiv_path A B (etop A B f g H0 K0) == f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply WeakUnivalence_implies_Univalence.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "WeakUnivalence",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "etop"
+              ],
+              "body": null,
+              "type": "forall (A B : Type) (f : A -> B) (g : B -> A),\n(fun x : B => f (g x)) == idmap -> (fun x : A => g (f x)) == idmap -> A = B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "K"
+              ],
+              "body": null,
+              "type": "forall (A B : Type) (f : A -> B) (g : B -> A)\n(H0 : (fun x : B => f (g x)) == idmap)\n(K0 : (fun x : A => g (f x)) == idmap),\nequiv_path A B (etop A B f g H0 K0) == f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "transparent assert (etop' : (forall A B, (A <~> B) -> (A = B))).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall A B : Type, A <~> B -> A = B",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "etop"
+              ],
+              "body": null,
+              "type": "forall (A B : Type) (f : A -> B) (g : B -> A),\n(fun x : B => f (g x)) == idmap -> (fun x : A => g (f x)) == idmap -> A = B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "K"
+              ],
+              "body": null,
+              "type": "forall (A B : Type) (f : A -> B) (g : B -> A)\n(H0 : (fun x : B => f (g x)) == idmap)\n(K0 : (fun x : A => g (f x)) == idmap),\nequiv_path A B (etop A B f g H0 K0) == f"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "WeakUnivalence",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "etop"
+              ],
+              "body": null,
+              "type": "forall (A B : Type) (f : A -> B) (g : B -> A),\n(fun x : B => f (g x)) == idmap -> (fun x : A => g (f x)) == idmap -> A = B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "K"
+              ],
+              "body": null,
+              "type": "forall (A B : Type) (f : A -> B) (g : B -> A)\n(H0 : (fun x : B => f (g x)) == idmap)\n(K0 : (fun x : A => g (f x)) == idmap),\nequiv_path A B (etop A B f g H0 K0) == f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "etop'"
+              ],
+              "body": "?Goal",
+              "type": "forall A B : Type, A <~> B -> A = B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "{",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall A B : Type, A <~> B -> A = B",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "etop"
+              ],
+              "body": null,
+              "type": "forall (A B : Type) (f : A -> B) (g : B -> A),\n(fun x : B => f (g x)) == idmap -> (fun x : A => g (f x)) == idmap -> A = B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "K"
+              ],
+              "body": null,
+              "type": "forall (A B : Type) (f : A -> B) (g : B -> A)\n(H0 : (fun x : B => f (g x)) == idmap)\n(K0 : (fun x : A => g (f x)) == idmap),\nequiv_path A B (etop A B f g H0 K0) == f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros A B f.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "A = B",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "etop"
+              ],
+              "body": null,
+              "type": "forall (A0 B0 : Type) (f0 : A0 -> B0) (g : B0 -> A0),\n(fun x : B0 => f0 (g x)) == idmap ->\n(fun x : A0 => g (f0 x)) == idmap -> A0 = B0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "K"
+              ],
+              "body": null,
+              "type": "forall (A0 B0 : Type) (f0 : A0 -> B0) (g : B0 -> A0)\n(H0 : (fun x : B0 => f0 (g x)) == idmap)\n(K0 : (fun x : A0 => g (f0 x)) == idmap),\nequiv_path A0 B0 (etop A0 B0 f0 g H0 K0) == f0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A <~> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (etop A B f f^-1 _ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun x : B => f (f^-1 x)) == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "etop"
+              ],
+              "body": null,
+              "type": "forall (A0 B0 : Type) (f0 : A0 -> B0) (g : B0 -> A0),\n(fun x : B0 => f0 (g x)) == idmap ->\n(fun x : A0 => g (f0 x)) == idmap -> A0 = B0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "K"
+              ],
+              "body": null,
+              "type": "forall (A0 B0 : Type) (f0 : A0 -> B0) (g : B0 -> A0)\n(H0 : (fun x : B0 => f0 (g x)) == idmap)\n(K0 : (fun x : A0 => g (f0 x)) == idmap),\nequiv_path A0 B0 (etop A0 B0 f0 g H0 K0) == f0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A <~> B"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun x : A => f^-1 (f x)) == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "etop"
+              ],
+              "body": null,
+              "type": "forall (A0 B0 : Type) (f0 : A0 -> B0) (g : B0 -> A0),\n(fun x : B0 => f0 (g x)) == idmap ->\n(fun x : A0 => g (f0 x)) == idmap -> A0 = B0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "K"
+              ],
+              "body": null,
+              "type": "forall (A0 B0 : Type) (f0 : A0 -> B0) (g : B0 -> A0)\n(H0 : (fun x : B0 => f0 (g x)) == idmap)\n(K0 : (fun x : A0 => g (f0 x)) == idmap),\nequiv_path A0 B0 (etop A0 B0 f0 g H0 K0) == f0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A <~> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun x : B => f (f^-1 x)) == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "etop"
+              ],
+              "body": null,
+              "type": "forall (A0 B0 : Type) (f0 : A0 -> B0) (g : B0 -> A0),\n(fun x : B0 => f0 (g x)) == idmap ->\n(fun x : A0 => g (f0 x)) == idmap -> A0 = B0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "K"
+              ],
+              "body": null,
+              "type": "forall (A0 B0 : Type) (f0 : A0 -> B0) (g : B0 -> A0)\n(H0 : (fun x : B0 => f0 (g x)) == idmap)\n(K0 : (fun x : A0 => g (f0 x)) == idmap),\nequiv_path A0 B0 (etop A0 B0 f0 g H0 K0) == f0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A <~> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros x; apply eisretr.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun x : A => f^-1 (f x)) == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "etop"
+              ],
+              "body": null,
+              "type": "forall (A0 B0 : Type) (f0 : A0 -> B0) (g : B0 -> A0),\n(fun x : B0 => f0 (g x)) == idmap ->\n(fun x : A0 => g (f0 x)) == idmap -> A0 = B0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "K"
+              ],
+              "body": null,
+              "type": "forall (A0 B0 : Type) (f0 : A0 -> B0) (g : B0 -> A0)\n(H0 : (fun x : B0 => f0 (g x)) == idmap)\n(K0 : (fun x : A0 => g (f0 x)) == idmap),\nequiv_path A0 B0 (etop A0 B0 f0 g H0 K0) == f0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A <~> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros x; apply eissect.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "}",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "WeakUnivalence",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "etop"
+              ],
+              "body": null,
+              "type": "forall (A B : Type) (f : A -> B) (g : B -> A),\n(fun x : B => f (g x)) == idmap -> (fun x : A => g (f x)) == idmap -> A = B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "K"
+              ],
+              "body": null,
+              "type": "forall (A B : Type) (f : A -> B) (g : B -> A)\n(H0 : (fun x : B => f (g x)) == idmap)\n(K0 : (fun x : A => g (f x)) == idmap),\nequiv_path A B (etop A B f g H0 K0) == f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "etop'"
+              ],
+              "body": "fun (A B : Type) (f : A <~> B) =>\netop A B f f^-1\n  ((fun x : B => eisretr f x) : (fun x : B => f (f^-1 x)) == idmap)\n  ((fun x : A => eissect f x) : (fun x : A => f^-1 (f x)) == idmap)",
+              "type": "forall A B : Type, A <~> B -> A = B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exists etop'.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall (A B : Type) (f : A <~> B), equiv_path A B (etop' A B f) = f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "etop"
+              ],
+              "body": null,
+              "type": "forall (A B : Type) (f : A -> B) (g : B -> A),\n(fun x : B => f (g x)) == idmap -> (fun x : A => g (f x)) == idmap -> A = B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "K"
+              ],
+              "body": null,
+              "type": "forall (A B : Type) (f : A -> B) (g : B -> A)\n(H0 : (fun x : B => f (g x)) == idmap)\n(K0 : (fun x : A => g (f x)) == idmap),\nequiv_path A B (etop A B f g H0 K0) == f"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "etop'"
+              ],
+              "body": "fun (A B : Type) (f : A <~> B) =>\netop A B f f^-1\n  ((fun x : B => eisretr f x) : (fun x : B => f (f^-1 x)) == idmap)\n  ((fun x : A => eissect f x) : (fun x : A => f^-1 (f x)) == idmap)",
+              "type": "forall A B : Type, A <~> B -> A = B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros A B f.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "equiv_path A B (etop' A B f) = f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "etop"
+              ],
+              "body": null,
+              "type": "forall (A0 B0 : Type) (f0 : A0 -> B0) (g : B0 -> A0),\n(fun x : B0 => f0 (g x)) == idmap ->\n(fun x : A0 => g (f0 x)) == idmap -> A0 = B0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "K"
+              ],
+              "body": null,
+              "type": "forall (A0 B0 : Type) (f0 : A0 -> B0) (g : B0 -> A0)\n(H0 : (fun x : B0 => f0 (g x)) == idmap)\n(K0 : (fun x : A0 => g (f0 x)) == idmap),\nequiv_path A0 B0 (etop A0 B0 f0 g H0 K0) == f0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "etop'"
+              ],
+              "body": "fun (A0 B0 : Type) (f0 : A0 <~> B0) =>\netop A0 B0 f0 f0^-1\n  ((fun x : B0 => eisretr f0 x) : (fun x : B0 => f0 (f0^-1 x)) == idmap)\n  ((fun x : A0 => eissect f0 x) : (fun x : A0 => f0^-1 (f0 x)) == idmap)",
+              "type": "forall A0 B0 : Type, A0 <~> B0 -> A0 = B0"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A <~> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply path_equiv, path_arrow, K.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Theorem VeryWeakUnivalence_implies_Univalence `{Funext} :\n  VeryWeakUnivalence -> Univalence_type.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "VeryWeakUnivalence -> Univalence_type",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "VeryWeakUnivalence -> Univalence_type",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros vwu.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Univalence_type",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "vwu"
+              ],
+              "body": null,
+              "type": "VeryWeakUnivalence"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply WeakUnivalence_implies_Univalence.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "WeakUnivalence",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "vwu"
+              ],
+              "body": null,
+              "type": "VeryWeakUnivalence"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simple refine (_;_).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall A B : Type, A <~> B -> A = B",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "vwu"
+              ],
+              "body": null,
+              "type": "VeryWeakUnivalence"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun etop : forall A B : Type, A <~> B -> A = B =>\n forall (A B : Type) (f : A <~> B), equiv_path A B (etop A B f) = f) \n  ?proj1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "vwu"
+              ],
+              "body": null,
+              "type": "VeryWeakUnivalence"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "{",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall A B : Type, A <~> B -> A = B",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "vwu"
+              ],
+              "body": null,
+              "type": "VeryWeakUnivalence"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros A B f.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "A = B",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "vwu"
+              ],
+              "body": null,
+              "type": "VeryWeakUnivalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A <~> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (unit vwu A @ _ @ (unit vwu B)^).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{_ : A & Unit} = {_ : B & Unit}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "vwu"
+              ],
+              "body": null,
+              "type": "VeryWeakUnivalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A <~> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (_ @ flip vwu A B (fun a b => f a = b) @ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{_ : A & Unit} = {a : A & {b : B & f a = b}}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "vwu"
+              ],
+              "body": null,
+              "type": "VeryWeakUnivalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A <~> B"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{b : B & {a : A & f a = b}} = {_ : B & Unit}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "vwu"
+              ],
+              "body": null,
+              "type": "VeryWeakUnivalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A <~> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{_ : A & Unit} = {a : A & {b : B & f a = b}}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "vwu"
+              ],
+              "body": null,
+              "type": "VeryWeakUnivalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A <~> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply ap, path_arrow; intros a.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Unit = {b : B & f a = b}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "vwu"
+              ],
+              "body": null,
+              "type": "VeryWeakUnivalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A <~> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "symmetry; rapply (contract vwu).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{b : B & {a : A & f a = b}} = {_ : B & Unit}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "vwu"
+              ],
+              "body": null,
+              "type": "VeryWeakUnivalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A <~> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply ap, path_arrow; intros b.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{a : A & f a = b} = Unit",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "vwu"
+              ],
+              "body": null,
+              "type": "VeryWeakUnivalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A <~> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "b"
+              ],
+              "body": null,
+              "type": "B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (contract vwu); exact _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "}",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun etop : forall A B : Type, A <~> B -> A = B =>\n forall (A B : Type) (f : A <~> B), equiv_path A B (etop A B f) = f)\n  (fun (A B : Type) (f : A <~> B) =>\n   (unit vwu A @\n    ((ap sig\n        (path_arrow (fun _ : A => Unit) (fun a : A => {b : B & f a = b})\n           ((fun a : A =>\n             (contract vwu {b : B & f a = b} (contr_basedpaths (f a)))^)\n            :\n            (fun _ : A => Unit) == (fun a : A => {b : B & f a = b}))) @\n      flip vwu A B (fun (a : A) (b : B) => f a = b)) @\n     ap sig\n       (path_arrow (fun b : B => {a : A & f a = b}) \n          (fun _ : B => Unit)\n          ((fun b : B => contract vwu {a : A & f a = b} (istruncmap_fiber b))\n           :\n           (fun b : B => {a : A & f a = b}) == (fun _ : B => Unit))))) @\n   (unit vwu B)^)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "vwu"
+              ],
+              "body": null,
+              "type": "VeryWeakUnivalence"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "{",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun etop : forall A B : Type, A <~> B -> A = B =>\n forall (A B : Type) (f : A <~> B), equiv_path A B (etop A B f) = f)\n  (fun (A B : Type) (f : A <~> B) =>\n   (unit vwu A @\n    ((ap sig\n        (path_arrow (fun _ : A => Unit) (fun a : A => {b : B & f a = b})\n           ((fun a : A =>\n             (contract vwu {b : B & f a = b} (contr_basedpaths (f a)))^)\n            :\n            (fun _ : A => Unit) == (fun a : A => {b : B & f a = b}))) @\n      flip vwu A B (fun (a : A) (b : B) => f a = b)) @\n     ap sig\n       (path_arrow (fun b : B => {a : A & f a = b}) \n          (fun _ : B => Unit)\n          ((fun b : B => contract vwu {a : A & f a = b} (istruncmap_fiber b))\n           :\n           (fun b : B => {a : A & f a = b}) == (fun _ : B => Unit))))) @\n   (unit vwu B)^)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "vwu"
+              ],
+              "body": null,
+              "type": "VeryWeakUnivalence"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros A B f.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "equiv_path A B\n  ((unit vwu A @\n    ((ap sig\n        (path_arrow (fun _ : A => Unit) (fun a : A => {b : B & f a = b})\n           (fun a : A =>\n            (contract vwu {b : B & f a = b} (contr_basedpaths (f a)))^)) @\n      flip vwu A B (fun (a : A) (b : B) => f a = b)) @\n     ap sig\n       (path_arrow (fun b : B => {a : A & f a = b}) \n          (fun _ : B => Unit)\n          (fun b : B => contract vwu {a : A & f a = b} (istruncmap_fiber b))))) @\n   (unit vwu B)^) =\nf",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "vwu"
+              ],
+              "body": null,
+              "type": "VeryWeakUnivalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A <~> B"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply path_equiv, path_arrow; intros a; cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport idmap\n  ((unit vwu A @\n    ((ap sig\n        (path_arrow (fun _ : A => Unit) (fun a0 : A => {b : B & f a0 = b})\n           (fun a0 : A =>\n            (contract vwu {b : B & f a0 = b} (contr_basedpaths (f a0)))^)) @\n      flip vwu A B (fun (a0 : A) (b : B) => f a0 = b)) @\n     ap sig\n       (path_arrow (fun b : B => {a0 : A & f a0 = b}) \n          (fun _ : B => Unit)\n          (fun b : B => contract vwu {a0 : A & f a0 = b} (istruncmap_fiber b))))) @\n   (unit vwu B)^)\n  a =\nf a",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "vwu"
+              ],
+              "body": null,
+              "type": "VeryWeakUnivalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A <~> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite !transport_pp.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport idmap (unit vwu B)^\n  (transport idmap\n     (ap sig\n        (path_arrow (fun b : B => {a0 : A & f a0 = b}) \n           (fun _ : B => Unit)\n           (fun b : B =>\n            contract vwu {a0 : A & f a0 = b} (istruncmap_fiber b))))\n     (transport idmap (flip vwu A B (fun (a0 : A) (b : B) => f a0 = b))\n        (transport idmap\n           (ap sig\n              (path_arrow (fun _ : A => Unit)\n                 (fun a0 : A => {b : B & f a0 = b})\n                 (fun a0 : A =>\n                  (contract vwu {b : B & f a0 = b} (contr_basedpaths (f a0)))^)))\n           (transport idmap (unit vwu A) a)))) =\nf a",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "vwu"
+              ],
+              "body": null,
+              "type": "VeryWeakUnivalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A <~> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (moveR_transport_V idmap (unit vwu B) _ (f a) _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport idmap\n  (ap sig\n     (path_arrow (fun b : B => {a0 : A & f a0 = b}) \n        (fun _ : B => Unit)\n        (fun b : B => contract vwu {a0 : A & f a0 = b} (istruncmap_fiber b))))\n  (transport idmap (flip vwu A B (fun (a0 : A) (b : B) => f a0 = b))\n     (transport idmap\n        (ap sig\n           (path_arrow (fun _ : A => Unit) (fun a0 : A => {b : B & f a0 = b})\n              (fun a0 : A =>\n               (contract vwu {b : B & f a0 = b} (contr_basedpaths (f a0)))^)))\n        (transport idmap (unit vwu A) a))) =\ntransport idmap (unit vwu B) (f a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "vwu"
+              ],
+              "body": null,
+              "type": "VeryWeakUnivalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A <~> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite !(unit_comp vwu).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport idmap\n  (ap sig\n     (path_arrow (fun b : B => {a0 : A & f a0 = b}) \n        (fun _ : B => Unit)\n        (fun b : B => contract vwu {a0 : A & f a0 = b} (istruncmap_fiber b))))\n  (transport idmap (flip vwu A B (fun (a0 : A) (b : B) => f a0 = b))\n     (transport idmap\n        (ap sig\n           (path_arrow (fun _ : A => Unit) (fun a0 : A => {b : B & f a0 = b})\n              (fun a0 : A =>\n               (contract vwu {b : B & f a0 = b} (contr_basedpaths (f a0)))^)))\n        (a; tt))) =\n(f a; tt)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "vwu"
+              ],
+              "body": null,
+              "type": "VeryWeakUnivalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A <~> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite <- !(transport_compose idmap sig).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport (fun x : B -> Type => {x0 : _ & x x0})\n  (path_arrow (fun b : B => {a0 : A & f a0 = b}) (fun _ : B => Unit)\n     (fun b : B => contract vwu {a0 : A & f a0 = b} (istruncmap_fiber b)))\n  (transport idmap (flip vwu A B (fun (a0 : A) (b : B) => f a0 = b))\n     (transport (fun x : A -> Type => {x0 : _ & x x0})\n        (path_arrow (fun _ : A => Unit) (fun a0 : A => {b : B & f a0 = b})\n           (fun a0 : A =>\n            (contract vwu {b : B & f a0 = b} (contr_basedpaths (f a0)))^))\n        (a; tt))) =\n(f a; tt)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "vwu"
+              ],
+              "body": null,
+              "type": "VeryWeakUnivalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A <~> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite (transport_sigma' (C := fun P (a0:A) => P a0)); cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport (fun x : B -> Type => {x0 : _ & x x0})\n  (path_arrow (fun b : B => {a0 : A & f a0 = b}) (fun _ : B => Unit)\n     (fun b : B => contract vwu {a0 : A & f a0 = b} (istruncmap_fiber b)))\n  (transport idmap (flip vwu A B (fun (a0 : A) (b : B) => f a0 = b))\n     (a;\n     transport (fun x : A -> Type => x a)\n       (path_arrow (fun _ : A => Unit) (fun a0 : A => {b : B & f a0 = b})\n          (fun a0 : A =>\n           (contract vwu {b : B & f a0 = b} (contr_basedpaths (f a0)))^))\n       tt)) =\n(f a; tt)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "vwu"
+              ],
+              "body": null,
+              "type": "VeryWeakUnivalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A <~> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (ap _ _ @ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport idmap (flip vwu A B (fun (a0 : A) (b : B) => f a0 = b))\n  (a;\n  transport (fun x : A -> Type => x a)\n    (path_arrow (fun _ : A => Unit) (fun a0 : A => {b : B & f a0 = b})\n       (fun a0 : A =>\n        (contract vwu {b : B & f a0 = b} (contr_basedpaths (f a0)))^))\n    tt) =\n?Goal",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "vwu"
+              ],
+              "body": null,
+              "type": "VeryWeakUnivalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A <~> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport (fun x : B -> Type => {x0 : _ & x x0})\n  (path_arrow (fun b : B => {a0 : A & f a0 = b}) (fun _ : B => Unit)\n     (fun b : B => contract vwu {a0 : A & f a0 = b} (istruncmap_fiber b)))\n  ?Goal =\n(f a; tt)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "vwu"
+              ],
+              "body": null,
+              "type": "VeryWeakUnivalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A <~> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1:{",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport idmap (flip vwu A B (fun (a0 : A) (b : B) => f a0 = b))\n  (a;\n  transport (fun x : A -> Type => x a)\n    (path_arrow (fun _ : A => Unit) (fun a0 : A => {b : B & f a0 = b})\n       (fun a0 : A =>\n        (contract vwu {b : B & f a0 = b} (contr_basedpaths (f a0)))^))\n    tt) =\n?Goal",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "vwu"
+              ],
+              "body": null,
+              "type": "VeryWeakUnivalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A <~> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply ap, ap.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport (fun x : A -> Type => x a)\n  (path_arrow (fun _ : A => Unit) (fun a0 : A => {b : B & f a0 = b})\n     (fun a0 : A =>\n      (contract vwu {b : B & f a0 = b} (contr_basedpaths (f a0)))^))\n  tt =\n?y",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "vwu"
+              ],
+              "body": null,
+              "type": "VeryWeakUnivalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A <~> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n        "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (path_contr _ (f a ; 1)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "}",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport (fun x : B -> Type => {x0 : _ & x x0})\n  (path_arrow (fun b : B => {a0 : A & f a0 = b}) (fun _ : B => Unit)\n     (fun b : B => contract vwu {a0 : A & f a0 = b} (istruncmap_fiber b)))\n  (transport idmap (flip vwu A B (fun (a0 : A) (b : B) => f a0 = b))\n     (a; f a; 1)) =\n(f a; tt)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "vwu"
+              ],
+              "body": null,
+              "type": "VeryWeakUnivalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A <~> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite (flip_comp vwu).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "transport (fun x : B -> Type => {x0 : _ & x x0})\n  (path_arrow (fun b : B => {a0 : A & f a0 = b}) (fun _ : B => Unit)\n     (fun b : B => contract vwu {a0 : A & f a0 = b} (istruncmap_fiber b)))\n  (f a; a; 1) =\n(f a; tt)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "vwu"
+              ],
+              "body": null,
+              "type": "VeryWeakUnivalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A <~> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite transport_sigma'; cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(f a;\ntransport (fun x : B -> Type => x (f a))\n  (path_arrow (fun b : B => {a0 : A & f a0 = b}) (fun _ : B => Unit)\n     (fun b : B => contract vwu {a0 : A & f a0 = b} (istruncmap_fiber b)))\n  (a; 1)) =\n(f a; tt)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "vwu"
+              ],
+              "body": null,
+              "type": "VeryWeakUnivalence"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A",
+                "B"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "A <~> B"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply ap, path_contr.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "}",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

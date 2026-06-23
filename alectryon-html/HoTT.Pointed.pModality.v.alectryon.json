@@ -1,0 +1,1429 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "From HoTT Require Import Basics Types ReflectiveSubuniverse Pointed.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "From HoTT Require Import Basics Types ReflectiveSubuniverse Pointed.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope pointed_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** * Modalities, reflective subuniverses and pointed types *)\n\n(** So far, everything is about general reflective subuniverses, but in the future results about modalities can be placed here as well. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance ispointed_O `{O : ReflectiveSubuniverse} (X : Type)\n  `{IsPointed X} : IsPointed (O X) := to O _ (point X).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition pto (O : ReflectiveSubuniverse@{u}) (X : pType@{u})\n  : X ->* [O X, _]\n  := Build_pMap (to O X) idpath.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** If [A] is already [O]-local, then Coq knows that [pto] is an equivalence, so we can simply define: *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition pequiv_pto `{O : ReflectiveSubuniverse} {X : pType} `{In O X}\n  : X <~>* [O X, _] := Build_pEquiv (pto O X) _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Applying [O_rec] to a pointed map yields a pointed map. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition pO_rec `{O : ReflectiveSubuniverse} {X Y : pType}\n  `{In O Y} (f : X ->* Y) : [O X, _] ->* Y\n  := Build_pMap (O_rec f) (O_rec_beta _ _ @ point_eq f).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition pO_rec_beta `{O : ReflectiveSubuniverse} {X Y : pType}\n  `{In O Y} (f : X ->* Y)\n  : pO_rec f o* pto O X ==* f.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "pO_rec f o* pto O X ==* f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "ReflectiveSubuniverse"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X",
+                "Y"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "In O Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X ->* Y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "pO_rec f o* pto O X ==* f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "ReflectiveSubuniverse"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X",
+                "Y"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "In O Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X ->* Y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "srapply Build_pHomotopy.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "pO_rec f o* pto O X == f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "ReflectiveSubuniverse"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X",
+                "Y"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "In O Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X ->* Y"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?p pt = dpoint_eq (pO_rec f o* pto O X) @ (dpoint_eq f)^",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "ReflectiveSubuniverse"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X",
+                "Y"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "In O Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X ->* Y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1: napply O_rec_beta.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "O_rec_beta f pt = dpoint_eq (pO_rec f o* pto O X) @ (dpoint_eq f)^",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "ReflectiveSubuniverse"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X",
+                "Y"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "In O Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X ->* Y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "O_rec_beta f pt = (1 @ (O_rec_beta f pt @ point_eq f)) @ (dpoint_eq f)^",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "ReflectiveSubuniverse"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X",
+                "Y"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "In O Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X ->* Y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply moveL_pV.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "O_rec_beta f pt @ dpoint_eq f = 1 @ (O_rec_beta f pt @ point_eq f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "ReflectiveSubuniverse"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X",
+                "Y"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "In O Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X ->* Y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (concat_1p _)^.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** A pointed version of the universal property. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition pequiv_o_pto_O `{Funext}\n  (O : ReflectiveSubuniverse) (P Q : pType) `{In O Q}\n  : ([O P, _] ->** Q) <~>* (P ->** Q).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "([O P, ispointed_O P] ->** Q) <~>* (P ->** Q)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "ReflectiveSubuniverse"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P",
+                "Q"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "In O Q"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "([O P, ispointed_O P] ->** Q) <~>* (P ->** Q)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "ReflectiveSubuniverse"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P",
+                "Q"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "In O Q"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply Build_pEquiv.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "([O P, ispointed_O P] ->** Q) ->* (P ->** Q)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "ReflectiveSubuniverse"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P",
+                "Q"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "In O Q"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv ?pointed_equiv_fun",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "ReflectiveSubuniverse"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P",
+                "Q"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "In O Q"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (* We could just use the map [e] defined in the next bullet, but we want Coq to immediately unfold the underlying map to this. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "([O P, ispointed_O P] ->** Q) ->* (P ->** Q)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "ReflectiveSubuniverse"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P",
+                "Q"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "In O Q"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (Build_pMap (fun f => f o* pto O P) 1).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (* We'll give an equivalence that definitionally has the same underlying map. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv (Build_pMap (fun f : [O P, ispointed_O P] ->** Q => f o* pto O P) 1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "ReflectiveSubuniverse"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P",
+                "Q"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "In O Q"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "transparent assert (e : (([O P, _] ->* Q) <~> (P ->* Q))).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "([O P, ispointed_O P] ->* Q) <~> (P ->* Q)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "ReflectiveSubuniverse"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P",
+                "Q"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "In O Q"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv (Build_pMap (fun f : [O P, ispointed_O P] ->** Q => f o* pto O P) 1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "ReflectiveSubuniverse"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P",
+                "Q"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "In O Q"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": "?Goal",
+              "type": "([O P, ispointed_O P] ->* Q) <~> (P ->* Q)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "([O P, ispointed_O P] ->* Q) <~> (P ->* Q)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "ReflectiveSubuniverse"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P",
+                "Q"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "In O Q"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (issig_pmap P Q oE _ oE (issig_pmap [O P, _] Q)^-1%equiv).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{f : [O P, ispointed_O P] -> Q & f pt = pt} <~> {f : P -> Q & f pt = pt}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "ReflectiveSubuniverse"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P",
+                "Q"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "In O Q"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply equiv_functor_sigma'.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "([O P, ispointed_O P] -> Q) <~> (P -> Q)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "ReflectiveSubuniverse"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P",
+                "Q"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "In O Q"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall a : [O P, ispointed_O P] -> Q,\n(fun f : [O P, ispointed_O P] -> Q => f pt = pt) a <~>\n(fun f : P -> Q => f pt = pt) (?f a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "ReflectiveSubuniverse"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P",
+                "Q"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "In O Q"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "*",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "([O P, ispointed_O P] -> Q) <~> (P -> Q)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "ReflectiveSubuniverse"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P",
+                "Q"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "In O Q"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rapply equiv_o_to_O.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "*",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall a : [O P, ispointed_O P] -> Q,\n(fun f : [O P, ispointed_O P] -> Q => f pt = pt) a <~>\n(fun f : P -> Q => f pt = pt) (equiv_o_to_O O P Q a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "ReflectiveSubuniverse"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P",
+                "Q"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "In O Q"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intro f; cbn.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f (ispointed_O P) = pt <~> f (to O P pt) = pt",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "ReflectiveSubuniverse"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P",
+                "Q"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "In O Q"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "[O P, ispointed_O P] -> Q"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      (* [reflexivity] works here, but then the underlying map won't agree definitionally with precomposition by [pto P], since pointed composition inserts a reflexivity path here. *)\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (equiv_concat_l 1).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv (Build_pMap (fun f : [O P, ispointed_O P] ->** Q => f o* pto O P) 1)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Funext"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "ReflectiveSubuniverse"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "P",
+                "Q"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H0"
+              ],
+              "body": null,
+              "type": "In O Q"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "e"
+              ],
+              "body": "issig_pmap P Q\noE equiv_functor_sigma' (equiv_o_to_O O P Q)\n     (fun f : [O P, ispointed_O P] -> Q =>\n      equiv_concat_l 1 pt\n      :\n      (fun f0 : [O P, ispointed_O P] -> Q => f0 pt = pt) f <~>\n      (fun f0 : P -> Q => f0 pt = pt) (equiv_o_to_O O P Q f))\noE (issig_pmap [O P, ispointed_O P] Q)^-1",
+              "type": "([O P, ispointed_O P] ->* Q) <~> (P ->* Q)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (equiv_isequiv e).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Pointed functoriality *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition O_pfunctor `(O : ReflectiveSubuniverse) {X Y : pType}\n  (f : X ->* Y) : [O X, _] ->* [O Y, _]\n  := pO_rec (pto O Y o* f).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Coq knows that [O_pfunctor O f] is an equivalence whenever [f] is. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition equiv_O_pfunctor `(O : ReflectiveSubuniverse) {X Y : pType}\n  (f : X ->* Y) `{IsEquiv _ _ f} : [O X, _] <~>* [O Y, _]\n  := Build_pEquiv (O_pfunctor O f) _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Pointed naturality of [O_pfunctor]. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition pto_O_natural `(O : ReflectiveSubuniverse) {X Y : pType}\n  (f : X ->* Y) : O_pfunctor O f o* pto O X ==* pto O Y o* f.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "O_pfunctor O f o* pto O X ==* pto O Y o* f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "ReflectiveSubuniverse"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X",
+                "Y"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X ->* Y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "O_pfunctor O f o* pto O X ==* pto O Y o* f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "O"
+              ],
+              "body": null,
+              "type": "ReflectiveSubuniverse"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X",
+                "Y"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X ->* Y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "napply pO_rec_beta.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition pequiv_O_inverts `(O : ReflectiveSubuniverse) {X Y : pType}\n  (f : X ->* Y) `{O_inverts O f}\n  : [O X, _] <~>* [O Y, _]\n  := Build_pEquiv (O_pfunctor O f) _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

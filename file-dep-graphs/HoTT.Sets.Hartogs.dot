@@ -1,0 +1,40 @@
+digraph HoTT_Sets_Hartogs {
+  graph [ratio=0.5]
+  node [style=filled]
+Hartogs_hartogs_number_no_injection [label="hartogs_number_no_injection", URL=<Hartogs.html#hartogs_number_no_injection>, peripheries=3, fillcolor="#F070D1"] ;
+Hartogs_hartogs_number_injection [label="hartogs_number_injection", URL=<Hartogs.html#hartogs_number_injection>, peripheries=3, fillcolor="#F070D1"] ;
+Hartogs_hartogs_number [label="hartogs_number", URL=<Hartogs.html#hartogs_number>, fillcolor="#F070D1"] ;
+Hartogs_hartogs_equiv [label="hartogs_equiv", URL=<Hartogs.html#hartogs_equiv>, fillcolor="#F070D1"] ;
+Hartogs_hartogs_number_carrier [label="hartogs_number_carrier", URL=<Hartogs.html#hartogs_number_carrier>, fillcolor="#F070D1"] ;
+Hartogs_injective_uni_fix [label="injective_uni_fix", URL=<Hartogs.html#injective_uni_fix>, fillcolor="#F070D1"] ;
+Hartogs_uni_fix [label="uni_fix", URL=<Hartogs.html#uni_fix>, fillcolor="#F070D1"] ;
+Hartogs_hartogs_number__injection [label="hartogs_number'_injection", URL=<Hartogs.html#hartogs_number'_injection>, fillcolor="#F070D1"] ;
+Hartogs_proper_subtype_inclusion [label="proper_subtype_inclusion", URL=<Hartogs.html#proper_subtype_inclusion>, fillcolor="#F070D1"] ;
+Hartogs_hartogs_number_ [label="hartogs_number'", URL=<Hartogs.html#hartogs_number'>, fillcolor="#F070D1"] ;
+Hartogs_subtype_as_type_ [label="subtype_as_type'", URL=<Hartogs.html#subtype_as_type'>, fillcolor="#F070D1"] ;
+Hartogs_le_Cardinal_lt_Ordinal [label="le_Cardinal_lt_Ordinal", URL=<Hartogs.html#le_Cardinal_lt_Ordinal>, fillcolor="#F070D1"] ;
+Hartogs_injective_power_morph [label="injective_power_morph", URL=<Hartogs.html#injective_power_morph>, fillcolor="#F070D1"] ;
+Hartogs_power_morph [label="power_morph", URL=<Hartogs.html#power_morph>, fillcolor="#F070D1"] ;
+Hartogs_injective_power_inj [label="injective_power_inj", URL=<Hartogs.html#injective_power_inj>, fillcolor="#F070D1"] ;
+Hartogs_power_inj [label="power_inj", URL=<Hartogs.html#power_inj>, fillcolor="#F070D1"] ;
+  Hartogs_hartogs_number_no_injection -> Hartogs_hartogs_number [] ;
+  Hartogs_hartogs_number_no_injection -> Hartogs_le_Cardinal_lt_Ordinal [] ;
+  Hartogs_hartogs_number_injection -> Hartogs_hartogs_number [] ;
+  Hartogs_hartogs_number -> Hartogs_hartogs_equiv [] ;
+  Hartogs_hartogs_equiv -> Hartogs_hartogs_number_carrier [] ;
+  Hartogs_hartogs_equiv -> Hartogs_injective_uni_fix [] ;
+  Hartogs_hartogs_number_carrier -> Hartogs_uni_fix [] ;
+  Hartogs_hartogs_number_carrier -> Hartogs_hartogs_number__injection [] ;
+  Hartogs_injective_uni_fix -> Hartogs_uni_fix [] ;
+  Hartogs_injective_uni_fix -> Hartogs_injective_power_morph [] ;
+  Hartogs_injective_uni_fix -> Hartogs_injective_power_inj [] ;
+  Hartogs_uni_fix -> Hartogs_power_morph [] ;
+  Hartogs_uni_fix -> Hartogs_power_inj [] ;
+  Hartogs_hartogs_number__injection -> Hartogs_proper_subtype_inclusion [] ;
+  Hartogs_hartogs_number__injection -> Hartogs_hartogs_number_ [] ;
+  Hartogs_hartogs_number__injection -> Hartogs_subtype_as_type_ [] ;
+  Hartogs_injective_power_morph -> Hartogs_power_morph [] ;
+  Hartogs_injective_power_inj -> Hartogs_power_inj [] ;
+subgraph cluster_Hartogs { label="Hartogs"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Hartogs_power_inj; Hartogs_injective_power_inj; Hartogs_power_morph; Hartogs_injective_power_morph; Hartogs_le_Cardinal_lt_Ordinal; Hartogs_subtype_as_type_; Hartogs_hartogs_number_; Hartogs_proper_subtype_inclusion; Hartogs_hartogs_number__injection; Hartogs_uni_fix; Hartogs_injective_uni_fix; Hartogs_hartogs_number_carrier; Hartogs_hartogs_equiv; Hartogs_hartogs_number; Hartogs_hartogs_number_injection; Hartogs_hartogs_number_no_injection; };
+} /* END */

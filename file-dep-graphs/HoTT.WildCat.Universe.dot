@@ -1,0 +1,57 @@
+digraph HoTT_WildCat_Universe {
+  graph [ratio=0.5]
+  node [style=filled]
+Universe_is21cat_type [label="is21cat_type", URL=<Universe.html#is21cat_type>, peripheries=3, fillcolor="#F070D1"] ;
+Universe_is1functor_cat_precomp [label="is1functor_cat_precomp", URL=<Universe.html#is1functor_cat_precomp>, fillcolor="#F070D1"] ;
+Universe_is1functor_cat_postcomp [label="is1functor_cat_postcomp", URL=<Universe.html#is1functor_cat_postcomp>, fillcolor="#F070D1"] ;
+Universe_is1gpd_type_hom [label="is1gpd_type_hom", URL=<Universe.html#is1gpd_type_hom>, fillcolor="#F070D1"] ;
+Universe_is1cat_type_hom [label="is1cat_type_hom", URL=<Universe.html#is1cat_type_hom>, fillcolor="#F070D1"] ;
+Universe_is3graph_type [label="is3graph_type", URL=<Universe.html#is3graph_type>, fillcolor="#F070D1"] ;
+Universe_isterminal_unit [label="isterminal_unit", URL=<Universe.html#isterminal_unit>, peripheries=3, fillcolor="#F070D1"] ;
+Universe_isinitial_zero [label="isinitial_zero", URL=<Universe.html#isinitial_zero>, peripheries=3, fillcolor="#F070D1"] ;
+Universe_catie_isequiv [label="catie_isequiv", URL=<Universe.html#catie_isequiv>, peripheries=3, fillcolor="#F070D1"] ;
+Universe_hasmorext_core_type [label="hasmorext_core_type", URL=<Universe.html#hasmorext_core_type>, peripheries=3, fillcolor="#F070D1"] ;
+Universe_hasequivs_type [label="hasequivs_type", URL=<Universe.html#hasequivs_type>, fillcolor="#F070D1"] ;
+Universe_hasmorext_type [label="hasmorext_type", URL=<Universe.html#hasmorext_type>, fillcolor="#F070D1"] ;
+Universe_is1cat_strong_type [label="is1cat_strong_type", URL=<Universe.html#is1cat_strong_type>, fillcolor="#F070D1"] ;
+Universe_is0functor_type_precomp [label="is0functor_type_precomp", URL=<Universe.html#is0functor_type_precomp>, fillcolor="#F070D1"] ;
+Universe_is0functor_type_postcomp [label="is0functor_type_postcomp", URL=<Universe.html#is0functor_type_postcomp>, fillcolor="#F070D1"] ;
+Universe_is0gpd_arrow [label="is0gpd_arrow", URL=<Universe.html#is0gpd_arrow>, fillcolor="#F070D1"] ;
+Universe_is01cat_arrow [label="is01cat_arrow", URL=<Universe.html#is01cat_arrow>, fillcolor="#F070D1"] ;
+Universe_is2graph_type [label="is2graph_type", URL=<Universe.html#is2graph_type>, fillcolor="#F070D1"] ;
+Universe_is01cat_type [label="is01cat_type", URL=<Universe.html#is01cat_type>, fillcolor="#F070D1"] ;
+Universe_isgraph_type [label="isgraph_type", URL=<Universe.html#isgraph_type>, fillcolor="#F070D1"] ;
+  Universe_is21cat_type -> Universe_is1functor_cat_precomp [] ;
+  Universe_is21cat_type -> Universe_is1functor_cat_postcomp [] ;
+  Universe_is21cat_type -> Universe_is1gpd_type_hom [] ;
+  Universe_is21cat_type -> Universe_is1cat_strong_type [] ;
+  Universe_is1functor_cat_precomp -> Universe_is1cat_type_hom [] ;
+  Universe_is1functor_cat_precomp -> Universe_is0functor_type_precomp [] ;
+  Universe_is1functor_cat_postcomp -> Universe_is1cat_type_hom [] ;
+  Universe_is1functor_cat_postcomp -> Universe_is0functor_type_postcomp [] ;
+  Universe_is1gpd_type_hom -> Universe_is1cat_type_hom [] ;
+  Universe_is1gpd_type_hom -> Universe_is0gpd_arrow [] ;
+  Universe_is1cat_type_hom -> Universe_is3graph_type [] ;
+  Universe_is1cat_type_hom -> Universe_is01cat_arrow [] ;
+  Universe_is3graph_type -> Universe_is2graph_type [] ;
+  Universe_isterminal_unit -> Universe_is1cat_strong_type [] ;
+  Universe_isinitial_zero -> Universe_is1cat_strong_type [] ;
+  Universe_catie_isequiv -> Universe_hasequivs_type [] ;
+  Universe_hasmorext_core_type -> Universe_hasequivs_type [] ;
+  Universe_hasmorext_core_type -> Universe_hasmorext_type [] ;
+  Universe_hasequivs_type -> Universe_is1cat_strong_type [] ;
+  Universe_hasmorext_type -> Universe_is1cat_strong_type [] ;
+  Universe_is1cat_strong_type -> Universe_is0functor_type_precomp [] ;
+  Universe_is1cat_strong_type -> Universe_is0functor_type_postcomp [] ;
+  Universe_is1cat_strong_type -> Universe_is0gpd_arrow [] ;
+  Universe_is0functor_type_precomp -> Universe_is2graph_type [] ;
+  Universe_is0functor_type_precomp -> Universe_is01cat_type [] ;
+  Universe_is0functor_type_postcomp -> Universe_is2graph_type [] ;
+  Universe_is0functor_type_postcomp -> Universe_is01cat_type [] ;
+  Universe_is0gpd_arrow -> Universe_is01cat_arrow [] ;
+  Universe_is01cat_arrow -> Universe_is2graph_type [] ;
+  Universe_is2graph_type -> Universe_isgraph_type [] ;
+  Universe_is01cat_type -> Universe_isgraph_type [] ;
+subgraph cluster_Universe { label="Universe"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Universe_isgraph_type; Universe_is01cat_type; Universe_is2graph_type; Universe_is01cat_arrow; Universe_is0gpd_arrow; Universe_is0functor_type_postcomp; Universe_is0functor_type_precomp; Universe_is1cat_strong_type; Universe_hasmorext_type; Universe_hasequivs_type; Universe_hasmorext_core_type; Universe_catie_isequiv; Universe_isinitial_zero; Universe_isterminal_unit; Universe_is3graph_type; Universe_is1cat_type_hom; Universe_is1gpd_type_hom; Universe_is1functor_cat_postcomp; Universe_is1functor_cat_precomp; Universe_is21cat_type; };
+} /* END */

@@ -1,0 +1,36 @@
+digraph HoTT_Algebra_AbGroups_Coequalizer {
+  graph [ratio=0.5]
+  node [style=filled]
+Coequalizer_grp_iso_ab_coeq [label="grp_iso_ab_coeq", URL=<Coequalizer.html#grp_iso_ab_coeq>, peripheries=3, fillcolor="#F070D1"] ;
+Coequalizer_functor_ab_coeq_id [label="functor_ab_coeq_id", URL=<Coequalizer.html#functor_ab_coeq_id>, fillcolor="#F070D1"] ;
+Coequalizer_functor_ab_coeq_compose [label="functor_ab_coeq_compose", URL=<Coequalizer.html#functor_ab_coeq_compose>, fillcolor="#F070D1"] ;
+Coequalizer_functor2_ab_coeq [label="functor2_ab_coeq", URL=<Coequalizer.html#functor2_ab_coeq>, fillcolor="#F070D1"] ;
+Coequalizer_functor_ab_coeq [label="functor_ab_coeq", URL=<Coequalizer.html#functor_ab_coeq>, fillcolor="#F070D1"] ;
+Coequalizer_ab_coeq_ind_homotopy [label="ab_coeq_ind_homotopy", URL=<Coequalizer.html#ab_coeq_ind_homotopy>, fillcolor="#F070D1"] ;
+Coequalizer_ab_coeq_ind_hprop [label="ab_coeq_ind_hprop", URL=<Coequalizer.html#ab_coeq_ind_hprop>, fillcolor="#F070D1"] ;
+Coequalizer_ab_coeq_rec_beta_in [label="ab_coeq_rec_beta_in", URL=<Coequalizer.html#ab_coeq_rec_beta_in>, peripheries=3, fillcolor="#F070D1"] ;
+Coequalizer_ab_coeq_rec [label="ab_coeq_rec", URL=<Coequalizer.html#ab_coeq_rec>, fillcolor="#F070D1"] ;
+Coequalizer_ab_coeq_glue [label="ab_coeq_glue", URL=<Coequalizer.html#ab_coeq_glue>, fillcolor="#F070D1"] ;
+Coequalizer_ab_coeq_in [label="ab_coeq_in", URL=<Coequalizer.html#ab_coeq_in>, fillcolor="#F070D1"] ;
+Coequalizer_ab_coeq [label="ab_coeq", URL=<Coequalizer.html#ab_coeq>, fillcolor="#F070D1"] ;
+  Coequalizer_grp_iso_ab_coeq -> Coequalizer_functor_ab_coeq_id [] ;
+  Coequalizer_grp_iso_ab_coeq -> Coequalizer_functor_ab_coeq_compose [] ;
+  Coequalizer_grp_iso_ab_coeq -> Coequalizer_functor2_ab_coeq [] ;
+  Coequalizer_functor_ab_coeq_id -> Coequalizer_functor_ab_coeq [] ;
+  Coequalizer_functor_ab_coeq_id -> Coequalizer_ab_coeq_ind_homotopy [] ;
+  Coequalizer_functor_ab_coeq_compose -> Coequalizer_functor_ab_coeq [] ;
+  Coequalizer_functor_ab_coeq_compose -> Coequalizer_ab_coeq_ind_homotopy [] ;
+  Coequalizer_functor2_ab_coeq -> Coequalizer_functor_ab_coeq [] ;
+  Coequalizer_functor2_ab_coeq -> Coequalizer_ab_coeq_ind_homotopy [] ;
+  Coequalizer_functor_ab_coeq -> Coequalizer_ab_coeq_rec [] ;
+  Coequalizer_functor_ab_coeq -> Coequalizer_ab_coeq_glue [] ;
+  Coequalizer_ab_coeq_ind_homotopy -> Coequalizer_ab_coeq_ind_hprop [] ;
+  Coequalizer_ab_coeq_ind_hprop -> Coequalizer_ab_coeq_in [] ;
+  Coequalizer_ab_coeq_rec_beta_in -> Coequalizer_ab_coeq_rec [] ;
+  Coequalizer_ab_coeq_rec_beta_in -> Coequalizer_ab_coeq_in [] ;
+  Coequalizer_ab_coeq_rec -> Coequalizer_ab_coeq [] ;
+  Coequalizer_ab_coeq_glue -> Coequalizer_ab_coeq_in [] ;
+  Coequalizer_ab_coeq_in -> Coequalizer_ab_coeq [] ;
+subgraph cluster_Coequalizer { label="Coequalizer"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Coequalizer_ab_coeq; Coequalizer_ab_coeq_in; Coequalizer_ab_coeq_glue; Coequalizer_ab_coeq_rec; Coequalizer_ab_coeq_rec_beta_in; Coequalizer_ab_coeq_ind_hprop; Coequalizer_ab_coeq_ind_homotopy; Coequalizer_functor_ab_coeq; Coequalizer_functor2_ab_coeq; Coequalizer_functor_ab_coeq_compose; Coequalizer_functor_ab_coeq_id; Coequalizer_grp_iso_ab_coeq; };
+} /* END */

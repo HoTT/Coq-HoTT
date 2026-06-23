@@ -1,0 +1,724 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * Category Theory *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** To get all of the category theory library in scope with the proper qualified names, you should [Require Import Categories.] or [Require Import HoTT.Categories.] *)\n\n(** First we give modules to all of the kinds of category theory constructions (corresponding to directories), so that we can refer to them as [Category.foo] or [Functor.foo] after [Require Import Categories.] *)\n(** ** Categories *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require HoTT.Categories.Category.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** Functors *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require HoTT.Categories.Functor.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** Natural Transformations *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require HoTT.Categories.NaturalTransformation.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** Functor Categories *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require HoTT.Categories.FunctorCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** Groupoids *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require HoTT.Categories.GroupoidCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** Precategory of Groupoids *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require HoTT.Categories.CategoryOfGroupoids.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** Discrete Categories *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require HoTT.Categories.DiscreteCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** Indiscrete Categories *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require HoTT.Categories.IndiscreteCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** Finite Discrete Categories (natural numbers as categories) *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require HoTT.Categories.NatCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** Chain Categories [[n]] *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require HoTT.Categories.ChainCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** Initial and Terminal Categories *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require HoTT.Categories.InitialTerminalCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** The Category of Sets *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require HoTT.Categories.SetCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** The Category of Simplicial Sets *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require HoTT.Categories.SimplicialSets.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** The Category of Semi-Simplicial Sets *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require HoTT.Categories.SemiSimplicialSets.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** The Hom Functor *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require HoTT.Categories.HomFunctor.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** Profunctors *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require HoTT.Categories.Profunctor.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** The Category of Categories *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require HoTT.Categories.Cat.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** Laws about Functor Categories *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require HoTT.Categories.ExponentialLaws.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** Laws about Product Categories *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require HoTT.Categories.ProductLaws.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** Comma Categories *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require HoTT.Categories.Comma.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** Universal Properties and Universal Morphisms *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require HoTT.Categories.UniversalProperties.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** Kan Extensions *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require HoTT.Categories.KanExtensions.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** Adjunctions *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require HoTT.Categories.Adjoint.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** Limits *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require HoTT.Categories.Limits.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** Pseudofunctors *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require HoTT.Categories.Pseudofunctor.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** Pseudonatural Transformations *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require HoTT.Categories.PseudonaturalTransformation.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** Lax Comma Categories *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require HoTT.Categories.LaxComma.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** Duality as a Functor *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require HoTT.Categories.DualFunctor.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** The Grothendieck Construction *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require HoTT.Categories.Grothendieck.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** The Category of Sections of a Functor *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require HoTT.Categories.CategoryOfSections.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** The Dependent Product *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require HoTT.Categories.DependentProduct.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** The Yoneda Lemma *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require HoTT.Categories.Yoneda.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** The Structure Identity Principle *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require HoTT.Categories.Structure.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** Fundamental Pregroupoids *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require HoTT.Categories.FundamentalPreGroupoidCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** ** Homotopy precategory *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require HoTT.Categories.HomotopyPreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* We bind the record structures for [PreCategory], [IsCategory], [IsStrictCategory], [Functor], and eventually [NaturalTransformation] at top level. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Set Warnings \"-notation-overridden\".",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include HoTT.Categories.Category.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include HoTT.Categories.Category.Strict.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include HoTT.Categories.Category.Univalent.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include HoTT.Categories.Functor.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include HoTT.Categories.NaturalTransformation.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include HoTT.Categories.FunctorCategory.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include HoTT.Categories.GroupoidCategory.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include HoTT.Categories.CategoryOfGroupoids.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include HoTT.Categories.DiscreteCategory.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include HoTT.Categories.IndiscreteCategory.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include HoTT.Categories.NatCategory.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include HoTT.Categories.ChainCategory.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include HoTT.Categories.InitialTerminalCategory.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include HoTT.Categories.SetCategory.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include HoTT.Categories.SimplicialSets.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include HoTT.Categories.SemiSimplicialSets.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include HoTT.Categories.HomFunctor.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include HoTT.Categories.Profunctor.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include HoTT.Categories.Cat.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include HoTT.Categories.Comma.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include HoTT.Categories.UniversalProperties.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include HoTT.Categories.KanExtensions.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include HoTT.Categories.Adjoint.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include HoTT.Categories.Limits.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include HoTT.Categories.Pseudofunctor.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include HoTT.Categories.PseudonaturalTransformation.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include HoTT.Categories.LaxComma.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include HoTT.Categories.DualFunctor.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include HoTT.Categories.CategoryOfSections.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include HoTT.Categories.DependentProduct.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include HoTT.Categories.Yoneda.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include HoTT.Categories.Structure.Core.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include HoTT.Categories.FundamentalPreGroupoidCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Include HoTT.Categories.HomotopyPreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Export HoTT.Categories.Notations.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Some checks that should pass, if all of the importing went correctly. *)\n(*Check PreCategory.\nCheck IsStrictCategory _.\nCheck Category.compose.\nCheck Category.sum.\nCheck Category.Sum.sum_compose.\nCheck Functor.sum.\nCheck Functor.Prod.Core.unique.\nCheck (_ o _)%morphism.\nCheck (_ o _)%functor.*)\n"
+    }
+  ]
+]

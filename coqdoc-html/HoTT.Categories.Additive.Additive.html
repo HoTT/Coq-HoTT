@@ -1,0 +1,235 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Categories.Additive.Additive</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Categories.Additive.Additive</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+<a id="lab407"></a><h1 class="section">Additive categories</h1>
+
+
+<div class="paragraph"> </div>
+
+    Semi-additive categories in which morphism addition admits inverses,
+    so that hom-sets are abelian groups and composition is bilinear. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">HoTT</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.Overture.html#"><span class="id" title="library">Basics.Overture</span></a> <a class="idref" href="HoTT.Basics.Tactics.html#"><span class="id" title="library">Basics.Tactics</span></a>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">HoTT.Classes.interfaces</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#"><span class="id" title="library">canonical_names</span></a> <a class="idref" href="HoTT.Classes.interfaces.abstract_algebra.html#"><span class="id" title="library">abstract_algebra</span></a>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">HoTT.Categories</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.Category.Core.html#"><span class="id" title="library">Category.Core</span></a> <a class="idref" href="HoTT.Categories.Functor.Core.html#"><span class="id" title="library">Functor.Core</span></a>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">HoTT.Categories.Functor</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.Functor.Identity.html#"><span class="id" title="library">Identity</span></a> <a class="idref" href="HoTT.Categories.Functor.Composition.Core.html#"><span class="id" title="library">Composition.Core</span></a>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">HoTT.Categories.Additive</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Categories.Additive.ZeroObjects.html#"><span class="id" title="library">ZeroObjects</span></a> <a class="idref" href="HoTT.Categories.Additive.SemiAdditive.html#"><span class="id" title="library">SemiAdditive</span></a>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">HoTT.Algebra.AbGroups</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Algebra.AbGroups.AbelianGroup.html#"><span class="id" title="library">AbelianGroup</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">morphism_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+This lets us use "+", "-" and "0" notation for the commutative monoid
+    structure on hom-sets defined in SemiAdditive.v. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">mc_add_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab408"></a><h2 class="section">Definition of additive category</h2>
+
+
+<div class="paragraph"> </div>
+
+    The commutative monoid structure on hom-sets of a semi-additive category
+    is canonical, so an additive category only needs to assume that each
+    morphism has an additive inverse. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Class</span> <a id="AdditiveCategory" class="idref" href="#AdditiveCategory"><span class="id" title="definition, record"><span id="AdditiveCategory_rect" class="id"><span id="AdditiveCategory_ind" class="id"><span id="AdditiveCategory_rec" class="id"><span id="AdditiveCategory_sind" class="id">AdditiveCategory</span></span></span></span></span></a> := {<br/>
+&nbsp;&nbsp;<a id="additive_semiadditive" class="idref" href="#additive_semiadditive"><span class="id" title="projection">additive_semiadditive</span></a> :: <a class="idref" href="HoTT.Categories.Additive.SemiAdditive.html#SemiAdditiveCategory"><span class="id" title="class">SemiAdditiveCategory</span></a>;<br/>
+<br/>
+&nbsp;&nbsp;<a id="additive_inverse" class="idref" href="#additive_inverse"><span class="id" title="projection">additive_inverse</span></a> :: <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">(</span></a><a id="X:3" class="idref" href="#X:3"><span class="id" title="binder">X</span></a> <a id="Y:4" class="idref" href="#Y:4"><span class="id" title="binder">Y</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#object"><span class="id" title="projection">object</span></a> <a class="idref" href="HoTT.Categories.Additive.Additive.html#additive_semiadditive:2"><span class="id" title="method">additive_semiadditive</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">),</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Inverse"><span class="id" title="class">Inverse</span></a> (<a class="idref" href="HoTT.Categories.Category.Core.html#morphism"><span class="id" title="projection">morphism</span></a> <a class="idref" href="HoTT.Categories.Additive.Additive.html#additive_semiadditive:2"><span class="id" title="method">additive_semiadditive</span></a> <a class="idref" href="HoTT.Categories.Additive.Additive.html#X:3"><span class="id" title="variable">X</span></a> <a class="idref" href="HoTT.Categories.Additive.Additive.html#Y:4"><span class="id" title="variable">Y</span></a>);<br/>
+<br/>
+&nbsp;&nbsp;<a id="additive_inverse_l" class="idref" href="#additive_inverse_l"><span class="id" title="projection">additive_inverse_l</span></a> : <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">{</span></a><a id="X:6" class="idref" href="#X:6"><span class="id" title="binder">X</span></a> <a id="Y:7" class="idref" href="#Y:7"><span class="id" title="binder">Y</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#object"><span class="id" title="projection">object</span></a> <a class="idref" href="HoTT.Categories.Additive.Additive.html#additive_semiadditive:2"><span class="id" title="method">additive_semiadditive</span></a>}<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<a id="f:8" class="idref" href="#f:8"><span class="id" title="binder">f</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#morphism"><span class="id" title="projection">morphism</span></a> <a class="idref" href="HoTT.Categories.Additive.Additive.html#additive_semiadditive:2"><span class="id" title="method">additive_semiadditive</span></a> <a class="idref" href="HoTT.Categories.Additive.Additive.html#X:6"><span class="id" title="variable">X</span></a> <a class="idref" href="HoTT.Categories.Additive.Additive.html#Y:7"><span class="id" title="variable">Y</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">),</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#bf5a294baaba05398b1e9b95e91f2799"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#AdditiveNotations.::mc_add_scope:'-'_x"><span class="id" title="notation">-</span></a> <a class="idref" href="HoTT.Categories.Additive.Additive.html#f:8"><span class="id" title="variable">f</span></a><a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#bf5a294baaba05398b1e9b95e91f2799"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#bf5a294baaba05398b1e9b95e91f2799"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Categories.Additive.Additive.html#f:8"><span class="id" title="variable">f</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> 0;<br/>
+}.<br/>
+
+<br/>
+<span class="id" title="keyword">Coercion</span> <a class="idref" href="HoTT.Categories.Additive.Additive.html#additive_semiadditive"><span class="id" title="method">additive_semiadditive</span></a> <a class="idref" href="HoTT.Categories.Additive.Additive.html#additive_semiadditive"><span class="id" title="method">:</span></a> <a class="idref" href="HoTT.Categories.Additive.Additive.html#additive_semiadditive"><span class="id" title="method">AdditiveCategory</span></a> <a class="idref" href="HoTT.Categories.Additive.Additive.html#additive_semiadditive"><span class="id" title="method">&gt;-&gt;</span></a> <a class="idref" href="HoTT.Categories.Additive.Additive.html#additive_semiadditive"><span class="id" title="method">SemiAdditiveCategory</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab409"></a><h2 class="section">Hom-sets are abelian groups</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="HomAbGroup" class="idref" href="#HomAbGroup"><span class="id" title="section">HomAbGroup</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> {<a id="HomAbGroup.A" class="idref" href="#HomAbGroup.A"><span class="id" title="variable">A</span></a> : <a class="idref" href="HoTT.Categories.Additive.Additive.html#AdditiveCategory"><span class="id" title="class">AdditiveCategory</span></a>} (<a id="HomAbGroup.X" class="idref" href="#HomAbGroup.X"><span class="id" title="variable">X</span></a> <a id="HomAbGroup.Y" class="idref" href="#HomAbGroup.Y"><span class="id" title="variable">Y</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#object"><span class="id" title="projection">object</span></a> <a class="idref" href="HoTT.Categories.Additive.Additive.html#A:10"><span class="id" title="variable">A</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The bundled abelian group of morphisms from <span class="inlinecode"><a class="idref" href="HoTT.WildCat.HomologicalAlgebra.html#Snail.X"><span class="id" title="variable">X</span></a></span> to <span class="inlinecode"><a class="idref" href="HoTT.WildCat.EpiStable.html#EpiStableLemmas.Y"><span class="id" title="variable">Y</span></a></span>. 
+</div>
+<div class="code">
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="abgroup_hom" class="idref" href="#abgroup_hom"><span class="id" title="definition">abgroup_hom</span></a> : <a class="idref" href="HoTT.Algebra.AbGroups.AbelianGroup.html#AbGroup"><span class="id" title="record">AbGroup</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;:= <a class="idref" href="HoTT.Algebra.AbGroups.AbelianGroup.html#Build_AbGroup'"><span class="id" title="definition">Build_AbGroup'</span></a> (<a class="idref" href="HoTT.Categories.Category.Core.html#morphism"><span class="id" title="projection">morphism</span></a> <a class="idref" href="HoTT.Categories.Additive.Additive.html#HomAbGroup.A"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Categories.Additive.Additive.html#HomAbGroup.X"><span class="id" title="variable">X</span></a> <a class="idref" href="HoTT.Categories.Additive.Additive.html#HomAbGroup.Y"><span class="id" title="variable">Y</span></a>) <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <a class="idref" href="HoTT.Categories.Additive.Additive.html#additive_inverse_l"><span class="id" title="method">additive_inverse_l</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="isabgroup_morphisms" class="idref" href="#isabgroup_morphisms"><span class="id" title="instance">isabgroup_morphisms</span></a> : <a class="idref" href="HoTT.Classes.interfaces.abstract_algebra.html#IsAbGroup"><span class="id" title="class">IsAbGroup</span></a> (<a class="idref" href="HoTT.Categories.Category.Core.html#morphism"><span class="id" title="projection">morphism</span></a> <a class="idref" href="HoTT.Categories.Additive.Additive.html#HomAbGroup.A"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Categories.Additive.Additive.html#HomAbGroup.X"><span class="id" title="variable">X</span></a> <a class="idref" href="HoTT.Categories.Additive.Additive.html#HomAbGroup.Y"><span class="id" title="variable">Y</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;:= @<a class="idref" href="HoTT.Algebra.AbGroups.AbelianGroup.html#isabgroup_abgroup"><span class="id" title="instance">isabgroup_abgroup</span></a> <a class="idref" href="HoTT.Categories.Additive.Additive.html#abgroup_hom"><span class="id" title="definition">abgroup_hom</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="HoTT.Categories.Additive.Additive.html#HomAbGroup"><span class="id" title="section">HomAbGroup</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab410"></a><h2 class="section">Negation and composition</h2>
+
+<div class="paragraph"> </div>
+
+ A left additive inverse equals the negation. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="hom_moveL_1V" class="idref" href="#hom_moveL_1V"><span class="id" title="definition">hom_moveL_1V</span></a> {<a id="A:13" class="idref" href="#A:13"><span class="id" title="binder">A</span></a> : <a class="idref" href="HoTT.Categories.Additive.Additive.html#AdditiveCategory"><span class="id" title="class">AdditiveCategory</span></a>} {<a id="X:14" class="idref" href="#X:14"><span class="id" title="binder">X</span></a> <a id="Y:15" class="idref" href="#Y:15"><span class="id" title="binder">Y</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#object"><span class="id" title="projection">object</span></a> <a class="idref" href="HoTT.Categories.Additive.Additive.html#A:13"><span class="id" title="variable">A</span></a>}<br/>
+&nbsp;&nbsp;{<a id="f:16" class="idref" href="#f:16"><span class="id" title="binder">f</span></a> <a id="g:17" class="idref" href="#g:17"><span class="id" title="binder">g</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#morphism"><span class="id" title="projection">morphism</span></a> <a class="idref" href="HoTT.Categories.Additive.Additive.html#A:13"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Categories.Additive.Additive.html#X:14"><span class="id" title="variable">X</span></a> <a class="idref" href="HoTT.Categories.Additive.Additive.html#Y:15"><span class="id" title="variable">Y</span></a>} (<a id="H:18" class="idref" href="#H:18"><span class="id" title="binder">H</span></a> : <a class="idref" href="HoTT.Categories.Additive.Additive.html#g:17"><span class="id" title="variable">g</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#bf5a294baaba05398b1e9b95e91f2799"><span class="id" title="notation">+</span></a> <a class="idref" href="HoTT.Categories.Additive.Additive.html#f:16"><span class="id" title="variable">f</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> 0)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Categories.Additive.Additive.html#g:17"><span class="id" title="variable">g</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#AdditiveNotations.::mc_add_scope:'-'_x"><span class="id" title="notation">-</span></a> <a class="idref" href="HoTT.Categories.Additive.Additive.html#f:16"><span class="id" title="variable">f</span></a><br/>
+&nbsp;&nbsp;:= <a class="idref" href="HoTT.Algebra.Groups.Group.html#grp_moveL_1V"><span class="id" title="definition">grp_moveL_1V</span></a> (<span class="id" title="var">G</span>:=<a class="idref" href="HoTT.Categories.Additive.Additive.html#abgroup_hom"><span class="id" title="definition">abgroup_hom</span></a> <a class="idref" href="HoTT.Categories.Additive.Additive.html#X:14"><span class="id" title="variable">X</span></a> <a class="idref" href="HoTT.Categories.Additive.Additive.html#Y:15"><span class="id" title="variable">Y</span></a>) <a class="idref" href="HoTT.Categories.Additive.Additive.html#H:18"><span class="id" title="variable">H</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Negation is compatible with precomposition. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="inverse_precompose" class="idref" href="#inverse_precompose"><span class="id" title="definition">inverse_precompose</span></a> {<a id="A:19" class="idref" href="#A:19"><span class="id" title="binder">A</span></a> : <a class="idref" href="HoTT.Categories.Additive.Additive.html#AdditiveCategory"><span class="id" title="class">AdditiveCategory</span></a>} {<a id="X:20" class="idref" href="#X:20"><span class="id" title="binder">X</span></a> <a id="Y:21" class="idref" href="#Y:21"><span class="id" title="binder">Y</span></a> <a id="W:22" class="idref" href="#W:22"><span class="id" title="binder">W</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#object"><span class="id" title="projection">object</span></a> <a class="idref" href="HoTT.Categories.Additive.Additive.html#A:19"><span class="id" title="variable">A</span></a>}<br/>
+&nbsp;&nbsp;(<a id="f:23" class="idref" href="#f:23"><span class="id" title="binder">f</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#morphism"><span class="id" title="projection">morphism</span></a> <a class="idref" href="HoTT.Categories.Additive.Additive.html#A:19"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Categories.Additive.Additive.html#X:20"><span class="id" title="variable">X</span></a> <a class="idref" href="HoTT.Categories.Additive.Additive.html#Y:21"><span class="id" title="variable">Y</span></a>) (<a id="a:24" class="idref" href="#a:24"><span class="id" title="binder">a</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#morphism"><span class="id" title="projection">morphism</span></a> <a class="idref" href="HoTT.Categories.Additive.Additive.html#A:19"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Categories.Additive.Additive.html#W:22"><span class="id" title="variable">W</span></a> <a class="idref" href="HoTT.Categories.Additive.Additive.html#X:20"><span class="id" title="variable">X</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Categories.Category.Core.html#CategoryCoreNotations.::morphism_scope:x_'o'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#AdditiveNotations.::mc_add_scope:'-'_x"><span class="id" title="notation">-</span></a> <a class="idref" href="HoTT.Categories.Additive.Additive.html#f:23"><span class="id" title="variable">f</span></a><a class="idref" href="HoTT.Categories.Category.Core.html#CategoryCoreNotations.::morphism_scope:x_'o'_x"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Categories.Category.Core.html#CategoryCoreNotations.::morphism_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Categories.Additive.Additive.html#a:24"><span class="id" title="variable">a</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#AdditiveNotations.::mc_add_scope:'-'_x"><span class="id" title="notation">-</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#AdditiveNotations.::mc_add_scope:'-'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Categories.Additive.Additive.html#f:23"><span class="id" title="variable">f</span></a> <a class="idref" href="HoTT.Categories.Category.Core.html#CategoryCoreNotations.::morphism_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Categories.Additive.Additive.html#a:24"><span class="id" title="variable">a</span></a><a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#AdditiveNotations.::mc_add_scope:'-'_x"><span class="id" title="notation">)</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Categories.Additive.Additive.html#hom_moveL_1V"><span class="id" title="definition">hom_moveL_1V</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">lhs_V</span> <span class="id" title="var">napply</span> <a class="idref" href="HoTT.Categories.Additive.SemiAdditive.html#addition_precompose"><span class="id" title="lemma">addition_precompose</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">lhs</span> <span class="id" title="var">napply</span> (<a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a> (<span class="id" title="keyword">fun</span> <a id="g:25" class="idref" href="#g:25"><span class="id" title="binder"><span id="g:26" class="id">g</span></span></a> ⇒ <a class="idref" href="HoTT.Categories.Additive.Additive.html#g:25"><span class="id" title="variable">g</span></a> <a class="idref" href="HoTT.Categories.Category.Core.html#CategoryCoreNotations.::morphism_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <span class="id" title="var">a</span>) (<a class="idref" href="HoTT.Categories.Additive.Additive.html#additive_inverse_l"><span class="id" title="method">additive_inverse_l</span></a> <span class="id" title="var">f</span>)).<br/>
+&nbsp;&nbsp;<span class="id" title="var">napply</span> <a class="idref" href="HoTT.Categories.Additive.ZeroObjects.html#zero_morphism_left"><span class="id" title="lemma">zero_morphism_left</span></a>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Negation is compatible with postcomposition. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="inverse_postcompose" class="idref" href="#inverse_postcompose"><span class="id" title="definition">inverse_postcompose</span></a> {<a id="A:27" class="idref" href="#A:27"><span class="id" title="binder">A</span></a> : <a class="idref" href="HoTT.Categories.Additive.Additive.html#AdditiveCategory"><span class="id" title="class">AdditiveCategory</span></a>} {<a id="X:28" class="idref" href="#X:28"><span class="id" title="binder">X</span></a> <a id="Y:29" class="idref" href="#Y:29"><span class="id" title="binder">Y</span></a> <a id="W:30" class="idref" href="#W:30"><span class="id" title="binder">W</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#object"><span class="id" title="projection">object</span></a> <a class="idref" href="HoTT.Categories.Additive.Additive.html#A:27"><span class="id" title="variable">A</span></a>}<br/>
+&nbsp;&nbsp;(<a id="a:31" class="idref" href="#a:31"><span class="id" title="binder">a</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#morphism"><span class="id" title="projection">morphism</span></a> <a class="idref" href="HoTT.Categories.Additive.Additive.html#A:27"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Categories.Additive.Additive.html#Y:29"><span class="id" title="variable">Y</span></a> <a class="idref" href="HoTT.Categories.Additive.Additive.html#W:30"><span class="id" title="variable">W</span></a>) (<a id="f:32" class="idref" href="#f:32"><span class="id" title="binder">f</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#morphism"><span class="id" title="projection">morphism</span></a> <a class="idref" href="HoTT.Categories.Additive.Additive.html#A:27"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Categories.Additive.Additive.html#X:28"><span class="id" title="variable">X</span></a> <a class="idref" href="HoTT.Categories.Additive.Additive.html#Y:29"><span class="id" title="variable">Y</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Categories.Additive.Additive.html#a:31"><span class="id" title="variable">a</span></a> <a class="idref" href="HoTT.Categories.Category.Core.html#CategoryCoreNotations.::morphism_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Categories.Category.Core.html#CategoryCoreNotations.::morphism_scope:x_'o'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#AdditiveNotations.::mc_add_scope:'-'_x"><span class="id" title="notation">-</span></a> <a class="idref" href="HoTT.Categories.Additive.Additive.html#f:32"><span class="id" title="variable">f</span></a><a class="idref" href="HoTT.Categories.Category.Core.html#CategoryCoreNotations.::morphism_scope:x_'o'_x"><span class="id" title="notation">)</span></a> <a class="idref" href="HoTT.Basics.Overture.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#AdditiveNotations.::mc_add_scope:'-'_x"><span class="id" title="notation">-</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#AdditiveNotations.::mc_add_scope:'-'_x"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Categories.Additive.Additive.html#a:31"><span class="id" title="variable">a</span></a> <a class="idref" href="HoTT.Categories.Category.Core.html#CategoryCoreNotations.::morphism_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Categories.Additive.Additive.html#f:32"><span class="id" title="variable">f</span></a><a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#AdditiveNotations.::mc_add_scope:'-'_x"><span class="id" title="notation">)</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Categories.Additive.Additive.html#hom_moveL_1V"><span class="id" title="definition">hom_moveL_1V</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">lhs_V</span> <span class="id" title="var">napply</span> <a class="idref" href="HoTT.Categories.Additive.SemiAdditive.html#addition_postcompose"><span class="id" title="lemma">addition_postcompose</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">lhs</span> <span class="id" title="var">napply</span> (<a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a> (<span class="id" title="keyword">fun</span> <a id="g:33" class="idref" href="#g:33"><span class="id" title="binder"><span id="g:34" class="id">g</span></span></a> ⇒ <span class="id" title="var">a</span> <a class="idref" href="HoTT.Categories.Category.Core.html#CategoryCoreNotations.::morphism_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <a class="idref" href="HoTT.Categories.Additive.Additive.html#g:33"><span class="id" title="variable">g</span></a>) (<a class="idref" href="HoTT.Categories.Additive.Additive.html#additive_inverse_l"><span class="id" title="method">additive_inverse_l</span></a> <span class="id" title="var">f</span>)).<br/>
+&nbsp;&nbsp;<span class="id" title="var">napply</span> <a class="idref" href="HoTT.Categories.Additive.ZeroObjects.html#zero_morphism_right"><span class="id" title="lemma">zero_morphism_right</span></a>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab411"></a><h2 class="section">Additive functors</h2>
+
+
+<div class="paragraph"> </div>
+
+    A functor between additive categories is additive when its action on
+    each hom-set is a monoid homomorphism for the canonical addition.
+    Such functors automatically preserve zero morphisms and negation. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Record</span> <a id="AdditiveFunctor" class="idref" href="#AdditiveFunctor"><span class="id" title="definition, record"><span id="AdditiveFunctor_rect" class="id"><span id="AdditiveFunctor_ind" class="id"><span id="AdditiveFunctor_rec" class="id"><span id="AdditiveFunctor_sind" class="id">AdditiveFunctor</span></span></span></span></span></a> (<a id="A:35" class="idref" href="#A:35"><span class="id" title="binder">A</span></a> <a id="B:36" class="idref" href="#B:36"><span class="id" title="binder">B</span></a> : <a class="idref" href="HoTT.Categories.Additive.Additive.html#AdditiveCategory"><span class="id" title="class">AdditiveCategory</span></a>) := {<br/>
+&nbsp;&nbsp;<a id="addfunctor" class="idref" href="#addfunctor"><span class="id" title="projection">addfunctor</span></a> :&gt; <a class="idref" href="HoTT.Categories.Functor.Core.html#Functor"><span class="id" title="record">Functor</span></a> <a class="idref" href="HoTT.Categories.Additive.Additive.html#A:35"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Categories.Additive.Additive.html#B:36"><span class="id" title="variable">B</span></a>;<br/>
+<br/>
+&nbsp;&nbsp;<a id="ismonoidpreserving_addfunctor" class="idref" href="#ismonoidpreserving_addfunctor"><span class="id" title="projection">ismonoidpreserving_addfunctor</span></a> :: <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">∀</span></a> <a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">(</span></a><a id="X:39" class="idref" href="#X:39"><span class="id" title="binder">X</span></a> <a id="Y:40" class="idref" href="#Y:40"><span class="id" title="binder">Y</span></a> : <a class="idref" href="HoTT.Categories.Category.Core.html#object"><span class="id" title="projection">object</span></a> <a class="idref" href="HoTT.Categories.Additive.Additive.html#A:35"><span class="id" title="variable">A</span></a><a class="idref" href="HoTT.Basics.Notations.html#adf9957462624adc9c2c94f56add3958"><span class="id" title="notation">),</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.Classes.interfaces.abstract_algebra.html#IsMonoidPreserving"><span class="id" title="class">IsMonoidPreserving</span></a> (@<a class="idref" href="HoTT.Categories.Functor.Core.html#morphism_of"><span class="id" title="projection">morphism_of</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <a class="idref" href="HoTT.Categories.Additive.Additive.html#addfunctor:38"><span class="id" title="method">addfunctor</span></a> <a class="idref" href="HoTT.Categories.Additive.Additive.html#X:39"><span class="id" title="variable">X</span></a> <a class="idref" href="HoTT.Categories.Additive.Additive.html#Y:40"><span class="id" title="variable">Y</span></a>);<br/>
+}.<br/>
+
+<br/>
+<span class="id" title="keyword">Arguments</span> <a class="idref" href="HoTT.Categories.Additive.Additive.html#addfunctor"><span class="id" title="projection">addfunctor</span></a> {<span class="id" title="var">A</span> <span class="id" title="var">B</span>} <span class="id" title="var">F</span> : <span class="id" title="tactic">rename</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <a class="idref" href="HoTT.Categories.Additive.Additive.html#ismonoidpreserving_addfunctor"><span class="id" title="projection">ismonoidpreserving_addfunctor</span></a> {<span class="id" title="var">A</span> <span class="id" title="var">B</span>} <span class="id" title="var">F</span> <span class="id" title="var">X</span> <span class="id" title="var">Y</span> : <span class="id" title="tactic">rename</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The identity functor is additive. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="id_additive_functor" class="idref" href="#id_additive_functor"><span class="id" title="definition">id_additive_functor</span></a> (<a id="A:42" class="idref" href="#A:42"><span class="id" title="binder">A</span></a> : <a class="idref" href="HoTT.Categories.Additive.Additive.html#AdditiveCategory"><span class="id" title="class">AdditiveCategory</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Categories.Additive.Additive.html#AdditiveFunctor"><span class="id" title="record">AdditiveFunctor</span></a> <a class="idref" href="HoTT.Categories.Additive.Additive.html#A:42"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Categories.Additive.Additive.html#A:42"><span class="id" title="variable">A</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">snapply</span> <a class="idref" href="HoTT.Categories.Additive.Additive.html#Build_AdditiveFunctor"><span class="id" title="constructor">Build_AdditiveFunctor</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> 1%<span class="id" title="var">functor</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">X</span> <span class="id" title="var">Y</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">rapply</span> <a class="idref" href="HoTT.Classes.interfaces.abstract_algebra.html#id_monoid_morphism"><span class="id" title="instance">id_monoid_morphism</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Additive functors compose. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="compose_additive_functors" class="idref" href="#compose_additive_functors"><span class="id" title="definition">compose_additive_functors</span></a> {<a id="A:43" class="idref" href="#A:43"><span class="id" title="binder">A</span></a> <a id="B:44" class="idref" href="#B:44"><span class="id" title="binder">B</span></a> <a id="C:45" class="idref" href="#C:45"><span class="id" title="binder">C</span></a> : <a class="idref" href="HoTT.Categories.Additive.Additive.html#AdditiveCategory"><span class="id" title="class">AdditiveCategory</span></a>}<br/>
+&nbsp;&nbsp;(<a id="G:46" class="idref" href="#G:46"><span class="id" title="binder">G</span></a> : <a class="idref" href="HoTT.Categories.Additive.Additive.html#AdditiveFunctor"><span class="id" title="record">AdditiveFunctor</span></a> <a class="idref" href="HoTT.Categories.Additive.Additive.html#B:44"><span class="id" title="variable">B</span></a> <a class="idref" href="HoTT.Categories.Additive.Additive.html#C:45"><span class="id" title="variable">C</span></a>) (<a id="F:47" class="idref" href="#F:47"><span class="id" title="binder">F</span></a> : <a class="idref" href="HoTT.Categories.Additive.Additive.html#AdditiveFunctor"><span class="id" title="record">AdditiveFunctor</span></a> <a class="idref" href="HoTT.Categories.Additive.Additive.html#A:43"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Categories.Additive.Additive.html#B:44"><span class="id" title="variable">B</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Categories.Additive.Additive.html#AdditiveFunctor"><span class="id" title="record">AdditiveFunctor</span></a> <a class="idref" href="HoTT.Categories.Additive.Additive.html#A:43"><span class="id" title="variable">A</span></a> <a class="idref" href="HoTT.Categories.Additive.Additive.html#C:45"><span class="id" title="variable">C</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">snapply</span> <a class="idref" href="HoTT.Categories.Additive.Additive.html#Build_AdditiveFunctor"><span class="id" title="constructor">Build_AdditiveFunctor</span></a>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">exact</span> (<span class="id" title="var">G</span> <a class="idref" href="HoTT.Categories.Functor.Composition.Core.html#FunctorCompositionCoreNotations.::functor_scope:x_'o'_x"><span class="id" title="notation">o</span></a> <span class="id" title="var">F</span>)%<span class="id" title="var">functor</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> <span class="id" title="var">X</span> <span class="id" title="var">Y</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">rapply</span> <a class="idref" href="HoTT.Classes.interfaces.abstract_algebra.html#compose_monoid_morphism"><span class="id" title="instance">compose_monoid_morphism</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://rocq-prover.org/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

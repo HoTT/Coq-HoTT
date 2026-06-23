@@ -1,0 +1,2 @@
+N: 2 "functor_option" [body=yes, kind=cnst, prop=no, path="Option", ];
+N: 1 "isinj_some" [body=yes, kind=cnst, prop=no, path="Option", ];

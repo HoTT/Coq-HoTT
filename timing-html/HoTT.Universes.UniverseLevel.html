@@ -1,0 +1,339 @@
+<html>
+<head>
+<title>UniverseLevel.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for UniverseLevel.v</h1>
+
+<div class="code" title="File: UniverseLevel.v
+Line: 1
+Time: 0.025s">
+<div class="time" style="width: 100%"></div>
+<pre>From HoTT Require Import Basics.Overture Basics.PathGroupoids.</pre>
+</div>
+<div class="code" title="File: UniverseLevel.v
+Line: 1
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Universe Levels *)
+
+(** We provide casting definitions for raising universe levels. *)
+
+(** Because we have cumulativity (that [T : U@{i}] gives us [T : U@{j}] when [i &lt; j]), we may define [Lift : U@{i} → U@{j}] to be the identity function. *)</pre>
+</div>
+<div class="code" title="File: UniverseLevel.v
+Line: 7
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Lift@{i j | i &lt; j} (A : Type@{i}) : Type@{j}
+  := A.</pre>
+</div>
+<div class="code" title="File: UniverseLevel.v
+Line: 8
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition lift {A} : A -&gt; Lift A := fun x =&gt; x.</pre>
+</div>
+<div class="code" title="File: UniverseLevel.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition lower {A} : Lift A -&gt; A := fun x =&gt; x.</pre>
+</div>
+<div class="code" title="File: UniverseLevel.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition lift2 {A B} (f : forall x : A, B x) : forall x : Lift A, Lift (B (lower x))
+  := f.</pre>
+</div>
+<div class="code" title="File: UniverseLevel.v
+Line: 15
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition lower2 {A B} (f : forall x : Lift A, Lift (B (lower x))) : forall x : A, B x
+  := f.</pre>
+</div>
+<div class="code" title="File: UniverseLevel.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We make [lift] and [lower] opaque so that typeclass resolution doesn't pick up [isequiv_lift] as an instance of [IsEquiv idmap] and wreak havoc. *)</pre>
+</div>
+<div class="code" title="File: UniverseLevel.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[global] Typeclasses Opaque lift lower lift2 lower2.</pre>
+</div>
+<div class="code" title="File: UniverseLevel.v
+Line: 20
+Time: 0.001s">
+<div class="time" style="width: 4%"></div>
+<pre>
+
+Instance isequiv_lift T : IsEquiv (@lift T)
+  := @Build_IsEquiv
+       _ _
+       (@lift T)
+       (@lower T)
+       (fun _ =&gt; idpath)
+       (fun _ =&gt; idpath)
+       (fun _ =&gt; idpath).</pre>
+</div>
+<div class="code" title="File: UniverseLevel.v
+Line: 29
+Time: 0.001s">
+<div class="time" style="width: 4%"></div>
+<pre>
+
+Instance isequiv_lift2 A B : IsEquiv (@lift2 A B)
+  := @Build_IsEquiv
+       _ _
+       (@lift2 A B)
+       (@lower2 A B)
+       (fun _ =&gt; idpath)
+       (fun _ =&gt; idpath)
+       (fun _ =&gt; idpath).</pre>
+</div>
+<div class="code" title="File: UniverseLevel.v
+Line: 38
+Time: 0.005s">
+<div class="time" style="width: 20%"></div>
+<pre>
+
+Instance lift_isequiv {A B} (f : A -&gt; B) {H : IsEquiv f} : @IsEquiv (Lift A) (Lift B) (lift2 f)
+  := @Build_IsEquiv
+       (Lift A) (Lift B)
+       (lift2 f)
+       (lift2 (f^-1))
+       (fun x =&gt; ap lift (eisretr f (lower x)))
+       (fun x =&gt; ap lift (eissect f (lower x)))
+       (fun x =&gt; ((ap (ap lift) (eisadj f (lower x)))
+                    @ (ap_compose f lift _)^)
+                   @ (@ap_compose A (Lift A) (Lift B) lift (lift2 f) _ _ _)).</pre>
+</div>
+<div class="code" title="File: UniverseLevel.v
+Line: 49
+Time: 0.006s">
+<div class="time" style="width: 24%"></div>
+<pre>
+
+Instance lower_isequiv {A B} (f : Lift A -&gt; Lift B) {H : IsEquiv f} : @IsEquiv A B (lower2 f)
+  := @Build_IsEquiv
+       _ _
+       (lower2 f)
+       (lower2 (f^-1))
+       (fun x =&gt; ap lower (eisretr f (lift x)))
+       (fun x =&gt; ap lower (eissect f (lift x)))
+       (fun x =&gt; ((ap (ap lower) (eisadj f (lift x)))
+                    @ (ap_compose f lower _)^)
+                   @ (@ap_compose (Lift A) A B lower (lower2 f) _ _ _)).</pre>
+</div>
+<div class="code" title="File: UniverseLevel.v
+Line: 60
+Time: 0.001s">
+<div class="time" style="width: 4%"></div>
+<pre>
+
+Definition lower_equiv {A B} (e : Equiv (Lift A) (Lift B)) : Equiv A B
+  := @Build_Equiv A B (lower2 e) _.</pre>
+</div>
+<div class="code" title="File: UniverseLevel.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** This version doesn't force strict containment, i.e. it allows the two universes to possibly be the same. *)</pre>
+</div>
+<div class="code" title="File: UniverseLevel.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition Lift'@{i j | i &lt;= j} (A : Type@{i}) : Type@{j} := A.</pre>
+</div>
+<div class="code" title="File: UniverseLevel.v
+Line: 65
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** However, if we don't give the universes as explicit arguments here, then Coq collapses them. *)</pre>
+</div>
+<div class="code" title="File: UniverseLevel.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition lift'@{i j} {A : Type@{i}} : A -&gt; Lift'@{i j} A := fun x =&gt; x.</pre>
+</div>
+<div class="code" title="File: UniverseLevel.v
+Line: 67
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition lower'@{i j} {A : Type@{i}} : Lift'@{i j} A -&gt; A := fun x =&gt; x.</pre>
+</div>
+<div class="code" title="File: UniverseLevel.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition lift'2@{i i' j j'} {A : Type@{i}} {B : A -&gt; Type@{i'}} (f : forall x : A, B x)
+  : forall x : Lift'@{i j} A, Lift'@{i' j'} (B (lower' x))
+  := f.</pre>
+</div>
+<div class="code" title="File: UniverseLevel.v
+Line: 73
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition lower'2@{i i' j j'} {A : Type@{i}} {B : A -&gt; Type@{i'}}
+           (f : forall x : Lift'@{i j} A, Lift'@{i' j'} (B (lower' x)))
+  : forall x : A, B x
+  := f.</pre>
+</div>
+<div class="code" title="File: UniverseLevel.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** We make [lift] and [lower] opaque so that typeclass resolution doesn't pick up [isequiv_lift] as an instance of [IsEquiv idmap] and wreak havoc. *)</pre>
+</div>
+<div class="code" title="File: UniverseLevel.v
+Line: 80
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>#[global] Typeclasses Opaque lift' lower' lift'2 lower'2.</pre>
+</div>
+<div class="code" title="File: UniverseLevel.v
+Line: 80
+Time: 0.001s">
+<div class="time" style="width: 4%"></div>
+<pre>
+
+Instance isequiv_lift'@{i j} (T : Type@{i})
+  : IsEquiv (@lift'@{i j} T)
+  := @Build_IsEquiv
+       _ _
+       (@lift' T)
+       (@lower' T)
+       (fun _ =&gt; idpath)
+       (fun _ =&gt; idpath)
+       (fun _ =&gt; idpath).</pre>
+</div>
+<div class="code" title="File: UniverseLevel.v
+Line: 90
+Time: 0.001s">
+<div class="time" style="width: 4%"></div>
+<pre>
+
+Instance isequiv_lift'2@{e0 e1 i i' j j'} (A : Type@{i}) (B : A -&gt; Type@{j})
+  : IsEquiv@{e0 e1} (@lift'2@{i i' j j'} A B)
+  := @Build_IsEquiv
+       _ _
+       (@lift'2 A B)
+       (@lower'2 A B)
+       (fun _ =&gt; idpath)
+       (fun _ =&gt; idpath)
+       (fun _ =&gt; idpath).</pre>
+</div>
+<div class="code" title="File: UniverseLevel.v
+Line: 100
+Time: 0.006s">
+<div class="time" style="width: 24%"></div>
+<pre>
+
+Instance lift'_isequiv@{a b i j i' j'}  {A : Type@{a}} {B : Type@{b}}
+  (f : A -&gt; B) {H : IsEquiv f}
+  : @IsEquiv (Lift'@{i j} A) (Lift'@{i' j'} B) (lift'2 f)
+  := @Build_IsEquiv
+       (Lift' A) (Lift' B)
+       (lift'2 f)
+       (lift'2 (f^-1))
+       (fun x =&gt; ap lift' (eisretr f (lower' x)))
+       (fun x =&gt; ap lift' (eissect f (lower' x)))
+       (fun x =&gt; ((ap (ap lift') (eisadj f (lower' x)))
+                    @ (ap_compose f lift' _)^)
+                   @ (@ap_compose A (Lift' A) (Lift' B) lift' (lift'2 f) _ _ _)).</pre>
+</div>
+<div class="code" title="File: UniverseLevel.v
+Line: 113
+Time: 0.006s">
+<div class="time" style="width: 24%"></div>
+<pre>
+
+Instance lower'_isequiv@{i j i' j'} {A : Type@{i}} {B : Type@{j}}
+  (f : Lift'@{i j} A -&gt; Lift'@{i' j'} B) {H : IsEquiv f}
+  : @IsEquiv A B (lower'2 f)
+  := @Build_IsEquiv
+       _ _
+       (lower'2 f)
+       (lower'2 (f^-1))
+       (fun x =&gt; ap lower' (eisretr f (lift' x)))
+       (fun x =&gt; ap lower' (eissect f (lift' x)))
+       (fun x =&gt; ((ap (ap lower') (eisadj f (lift' x)))
+                    @ (ap_compose f lower' _)^)
+                   @ (@ap_compose (Lift' A) A B lower' (lower'2 f) _ _ _)).</pre>
+</div>
+<div class="code" title="File: UniverseLevel.v
+Line: 126
+Time: 0.001s">
+<div class="time" style="width: 4%"></div>
+<pre>
+
+Definition lower'_equiv@{i j i' j'} {A : Type@{i}} {B : Type@{j}}
+  (e : Equiv (Lift'@{i j} A) (Lift'@{i' j'} B))
+  : Equiv A B
+  := @Build_Equiv A B (lower'2 e) _.</pre>
+</div>
+<div class="code" title="File: UniverseLevel.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

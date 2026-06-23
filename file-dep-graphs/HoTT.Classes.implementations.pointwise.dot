@@ -1,0 +1,22 @@
+digraph HoTT_Classes_implementations_pointwise {
+  graph [ratio=0.5]
+  node [style=filled]
+pointwise_boundedlattice_fun [label="boundedlattice_fun", URL=<pointwise.html#boundedlattice_fun>, peripheries=3, fillcolor="#F070D1"] ;
+pointwise_boundedmeetsemilattice_fun [label="boundedmeetsemilattice_fun", URL=<pointwise.html#boundedmeetsemilattice_fun>, fillcolor="#F070D1"] ;
+pointwise_boundedjoinsemilattice_fun [label="boundedjoinsemilattice_fun", URL=<pointwise.html#boundedjoinsemilattice_fun>, fillcolor="#F070D1"] ;
+pointwise_lattice_fun [label="lattice_fun", URL=<pointwise.html#lattice_fun>, peripheries=3, fillcolor="#F070D1"] ;
+pointwise_meet_fun [label="meet_fun", URL=<pointwise.html#meet_fun>, fillcolor="#F070D1"] ;
+pointwise_join_fun [label="join_fun", URL=<pointwise.html#join_fun>, fillcolor="#F070D1"] ;
+pointwise_top_fun [label="top_fun", URL=<pointwise.html#top_fun>, fillcolor="#F070D1"] ;
+pointwise_bot_fun [label="bot_fun", URL=<pointwise.html#bot_fun>, fillcolor="#F070D1"] ;
+  pointwise_boundedlattice_fun -> pointwise_boundedmeetsemilattice_fun [] ;
+  pointwise_boundedlattice_fun -> pointwise_boundedjoinsemilattice_fun [] ;
+  pointwise_boundedmeetsemilattice_fun -> pointwise_meet_fun [] ;
+  pointwise_boundedmeetsemilattice_fun -> pointwise_top_fun [] ;
+  pointwise_boundedjoinsemilattice_fun -> pointwise_join_fun [] ;
+  pointwise_boundedjoinsemilattice_fun -> pointwise_bot_fun [] ;
+  pointwise_lattice_fun -> pointwise_meet_fun [] ;
+  pointwise_lattice_fun -> pointwise_join_fun [] ;
+subgraph cluster_pointwise { label="pointwise"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+pointwise_bot_fun; pointwise_top_fun; pointwise_join_fun; pointwise_meet_fun; pointwise_lattice_fun; pointwise_boundedjoinsemilattice_fun; pointwise_boundedmeetsemilattice_fun; pointwise_boundedlattice_fun; };
+} /* END */

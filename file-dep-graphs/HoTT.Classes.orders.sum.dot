@@ -1,0 +1,15 @@
+digraph HoTT_Classes_orders_sum {
+  graph [ratio=0.5]
+  node [style=filled]
+sum_sum_tricho [label="sum_tricho", URL=<sum.html#sum_tricho>, peripheries=3, fillcolor="#F070D1"] ;
+sum_sum_lt [label="sum_lt", URL=<sum.html#sum_lt>, fillcolor="#F070D1"] ;
+sum_unit_tricho [label="unit_tricho", URL=<sum.html#unit_tricho>, peripheries=3, fillcolor="#F070D1"] ;
+sum_empty_tricho [label="empty_tricho", URL=<sum.html#empty_tricho>, peripheries=3, fillcolor="#F070D1"] ;
+sum_Unit_lt [label="Unit_lt", URL=<sum.html#Unit_lt>, fillcolor="#F070D1"] ;
+sum_Empty_lt [label="Empty_lt", URL=<sum.html#Empty_lt>, fillcolor="#F070D1"] ;
+  sum_sum_tricho -> sum_sum_lt [] ;
+  sum_unit_tricho -> sum_Unit_lt [] ;
+  sum_empty_tricho -> sum_Empty_lt [] ;
+subgraph cluster_sum { label="sum"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+sum_Empty_lt; sum_Unit_lt; sum_empty_tricho; sum_unit_tricho; sum_sum_lt; sum_sum_tricho; };
+} /* END */

@@ -1,0 +1,10 @@
+N: 5 "FamilyProd" [body=yes, kind=cnst, prop=no, path="family_prod", ];
+N: 2 "for_all_2_family_prod" [body=yes, kind=cnst, prop=no, path="family_prod", ];
+N: 3 "for_all_family_prod" [body=yes, kind=cnst, prop=no, path="family_prod", ];
+N: 4 "map_family_prod" [body=yes, kind=cnst, prop=no, path="family_prod", ];
+N: 1 "reflexive_for_all_2_family_prod" [body=yes, kind=cnst, prop=no, path="family_prod", ];
+E: 1 2 [weight=4, ];
+E: 1 5 [weight=6, ];
+E: 2 5 [weight=10, ];
+E: 3 5 [weight=5, ];
+E: 4 5 [weight=9, ];

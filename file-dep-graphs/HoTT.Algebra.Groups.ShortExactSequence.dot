@@ -1,0 +1,16 @@
+digraph HoTT_Algebra_Groups_ShortExactSequence {
+  graph [ratio=0.5]
+  node [style=filled]
+ShortExactSequence_equiv_grp_isexact_kernel [label="equiv_grp_isexact_kernel", URL=<ShortExactSequence.html#equiv_grp_isexact_kernel>, peripheries=3, fillcolor="#F070D1"] ;
+ShortExactSequence_iff_grp_isexact_isembedding [label="iff_grp_isexact_isembedding", URL=<ShortExactSequence.html#iff_grp_isexact_isembedding>, fillcolor="#F070D1"] ;
+ShortExactSequence_grp_iscomplex_trivial [label="grp_iscomplex_trivial", URL=<ShortExactSequence.html#grp_iscomplex_trivial>, fillcolor="#F070D1"] ;
+ShortExactSequence_grp_iso_cxfib_beta [label="grp_iso_cxfib_beta", URL=<ShortExactSequence.html#grp_iso_cxfib_beta>, peripheries=3, fillcolor="#F070D1"] ;
+ShortExactSequence_grp_iso_cxfib [label="grp_iso_cxfib", URL=<ShortExactSequence.html#grp_iso_cxfib>, fillcolor="#F070D1"] ;
+ShortExactSequence_grp_cxfib [label="grp_cxfib", URL=<ShortExactSequence.html#grp_cxfib>, fillcolor="#F070D1"] ;
+  ShortExactSequence_equiv_grp_isexact_kernel -> ShortExactSequence_iff_grp_isexact_isembedding [] ;
+  ShortExactSequence_iff_grp_isexact_isembedding -> ShortExactSequence_grp_iscomplex_trivial [] ;
+  ShortExactSequence_grp_iso_cxfib_beta -> ShortExactSequence_grp_iso_cxfib [] ;
+  ShortExactSequence_grp_iso_cxfib -> ShortExactSequence_grp_cxfib [] ;
+subgraph cluster_ShortExactSequence { label="ShortExactSequence"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+ShortExactSequence_grp_cxfib; ShortExactSequence_grp_iso_cxfib; ShortExactSequence_grp_iso_cxfib_beta; ShortExactSequence_grp_iscomplex_trivial; ShortExactSequence_iff_grp_isexact_isembedding; ShortExactSequence_equiv_grp_isexact_kernel; };
+} /* END */

@@ -1,0 +1,77 @@
+digraph HoTT_Modalities_Localization {
+  graph [ratio=0.5]
+  node [style=filled]
+Localization_LocalizationHIT_Localize_ind_islocal_localize_beta [label="Localize_ind_islocal_localize_beta", URL=<Localization.html#LocalizationHIT.Localize_ind_islocal_localize_beta>, peripheries=3, fillcolor="#FACDEF"] ;
+Localization_LocalizationHIT_Localize_ind [label="Localize_ind", URL=<Localization.html#LocalizationHIT.Localize_ind>, fillcolor="#F070D1"] ;
+Localization_LocalizationHIT_islocal_localize [label="islocal_localize", URL=<Localization.html#LocalizationHIT.islocal_localize>, fillcolor="#FACDEF"] ;
+Localization_LocalizationHIT_loc [label="loc", URL=<Localization.html#LocalizationHIT.loc>, fillcolor="#7FAAFF"] ;
+Localization_LocalizationHIT_Localize [label="Localize", URL=<Localization.html#LocalizationHIT.Localize>, fillcolor="#E2CDFA"] ;
+Localization_O_inverts_O_leq_ [label="O_inverts_O_leq'", URL=<Localization.html#O_inverts_O_leq'>, peripheries=3, fillcolor="#F070D1"] ;
+Localization_conn_map_O_leq_ [label="conn_map_O_leq'", URL=<Localization.html#conn_map_O_leq'>, peripheries=3, fillcolor="#F070D1"] ;
+Localization_isconnected_O_leq_ [label="isconnected_O_leq'", URL=<Localization.html#isconnected_O_leq'>, fillcolor="#F070D1"] ;
+Localization_O_leq_lift_accrsu [label="O_leq_lift_accrsu", URL=<Localization.html#O_leq_lift_accrsu>, fillcolor="#F070D1"] ;
+Localization_O_eq_lift_accrsu [label="O_eq_lift_accrsu", URL=<Localization.html#O_eq_lift_accrsu>, fillcolor="#F070D1"] ;
+Localization_lift_accrsu [label="lift_accrsu", URL=<Localization.html#lift_accrsu>, fillcolor="#F070D1"] ;
+Localization_accrsu_loc [label="accrsu_loc", URL=<Localization.html#accrsu_loc>, peripheries=3, fillcolor="#F070D1"] ;
+Localization_local_indpaths_beta [label="local_indpaths_beta", URL=<Localization.html#local_indpaths_beta>, peripheries=3, fillcolor="#F070D1"] ;
+Localization_local_indpaths [label="local_indpaths", URL=<Localization.html#local_indpaths>, fillcolor="#F070D1"] ;
+Localization_local_rec_beta [label="local_rec_beta", URL=<Localization.html#local_rec_beta>, peripheries=3, fillcolor="#F070D1"] ;
+Localization_local_rec [label="local_rec", URL=<Localization.html#local_rec>, fillcolor="#F070D1"] ;
+Localization_Localize_rec [label="Localize_rec", URL=<Localization.html#Localize_rec>, peripheries=3, fillcolor="#F070D1"] ;
+Localization_isequiv_precomp_islocal [label="isequiv_precomp_islocal", URL=<Localization.html#isequiv_precomp_islocal>, peripheries=3, fillcolor="#F070D1"] ;
+Localization_islocal_loc [label="islocal_loc", URL=<Localization.html#islocal_loc>, fillcolor="#F070D1"] ;
+Localization_ooextendable_islocal [label="ooextendable_islocal", URL=<Localization.html#ooextendable_islocal>, fillcolor="#F070D1"] ;
+Localization_Loc [label="Loc", URL=<Localization.html#Loc>, fillcolor="#F070D1"] ;
+Localization_ext_localize_ind [label="ext_localize_ind", URL=<Localization.html#ext_localize_ind>, fillcolor="#F070D1"] ;
+Localization_islocal_equiv_islocal [label="islocal_equiv_islocal", URL=<Localization.html#islocal_equiv_islocal>, fillcolor="#F070D1"] ;
+Localization_ooextendable_over_homotopy [label="ooextendable_over_homotopy", URL=<Localization.html#ooextendable_over_homotopy>, fillcolor="#F070D1"] ;
+Localization_ooextendable_over_const [label="ooextendable_over_const", URL=<Localization.html#ooextendable_over_const>, fillcolor="#F070D1"] ;
+Localization_ooExtendableAlong_Over [label="ooExtendableAlong_Over", URL=<Localization.html#ooExtendableAlong_Over>, fillcolor="#F070D1"] ;
+Localization_apD_extendable_eq [label="apD_extendable_eq", URL=<Localization.html#apD_extendable_eq>, fillcolor="#F070D1"] ;
+Localization_extendable_over_const [label="extendable_over_const", URL=<Localization.html#extendable_over_const>, fillcolor="#F070D1"] ;
+Localization_extendable_over_postcompose [label="extendable_over_postcompose", URL=<Localization.html#extendable_over_postcompose>, peripheries=3, fillcolor="#F070D1"] ;
+Localization_extendable_over_postcompose_ [label="extendable_over_postcompose'", URL=<Localization.html#extendable_over_postcompose'>, fillcolor="#F070D1"] ;
+Localization_ExtendableAlong_Over [label="ExtendableAlong_Over", URL=<Localization.html#ExtendableAlong_Over>, fillcolor="#F070D1"] ;
+  Localization_LocalizationHIT_Localize_ind_islocal_localize_beta -> Localization_LocalizationHIT_Localize_ind [] ;
+  Localization_LocalizationHIT_Localize_ind_islocal_localize_beta -> Localization_apD_extendable_eq [] ;
+  Localization_LocalizationHIT_Localize_ind -> Localization_LocalizationHIT_islocal_localize [] ;
+  Localization_LocalizationHIT_Localize_ind -> Localization_LocalizationHIT_loc [] ;
+  Localization_LocalizationHIT_Localize_ind -> Localization_ooExtendableAlong_Over [] ;
+  Localization_LocalizationHIT_islocal_localize -> Localization_LocalizationHIT_Localize [] ;
+  Localization_O_inverts_O_leq_ -> Localization_O_leq_lift_accrsu [] ;
+  Localization_O_inverts_O_leq_ -> Localization_O_eq_lift_accrsu [] ;
+  Localization_O_inverts_O_leq_ -> Localization_islocal_loc [] ;
+  Localization_conn_map_O_leq_ -> Localization_isconnected_O_leq_ [] ;
+  Localization_isconnected_O_leq_ -> Localization_O_leq_lift_accrsu [] ;
+  Localization_isconnected_O_leq_ -> Localization_O_eq_lift_accrsu [] ;
+  Localization_O_leq_lift_accrsu -> Localization_lift_accrsu [] ;
+  Localization_O_eq_lift_accrsu -> Localization_lift_accrsu [] ;
+  Localization_lift_accrsu -> Localization_Loc [] ;
+  Localization_accrsu_loc -> Localization_Loc [] ;
+  Localization_local_indpaths_beta -> Localization_local_indpaths [] ;
+  Localization_local_indpaths -> Localization_ooextendable_islocal [] ;
+  Localization_local_rec_beta -> Localization_local_rec [] ;
+  Localization_local_rec -> Localization_ooextendable_islocal [] ;
+  Localization_Localize_rec -> Localization_ooextendable_islocal [] ;
+  Localization_isequiv_precomp_islocal -> Localization_ooextendable_islocal [] ;
+  Localization_islocal_loc -> Localization_Loc [] ;
+  Localization_ooextendable_islocal -> Localization_Loc [] ;
+  Localization_Loc -> Localization_ext_localize_ind [] ;
+  Localization_Loc -> Localization_islocal_equiv_islocal [] ;
+  Localization_Loc -> Localization_ooextendable_over_const [] ;
+  Localization_ext_localize_ind -> Localization_LocalizationHIT_Localize_ind [] ;
+  Localization_ext_localize_ind -> Localization_ooextendable_over_homotopy [] ;
+  Localization_ooextendable_over_homotopy -> Localization_ooExtendableAlong_Over [] ;
+  Localization_ooextendable_over_homotopy -> Localization_extendable_over_postcompose_ [] ;
+  Localization_ooextendable_over_const -> Localization_ooExtendableAlong_Over [] ;
+  Localization_ooextendable_over_const -> Localization_extendable_over_const [] ;
+  Localization_ooExtendableAlong_Over -> Localization_ExtendableAlong_Over [] ;
+  Localization_apD_extendable_eq -> Localization_ExtendableAlong_Over [] ;
+  Localization_extendable_over_const -> Localization_extendable_over_postcompose_ [] ;
+  Localization_extendable_over_postcompose -> Localization_extendable_over_postcompose_ [] ;
+  Localization_extendable_over_postcompose_ -> Localization_ExtendableAlong_Over [] ;
+subgraph cluster_Localization { label="Localization"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+subgraph cluster_Localization_LocalizationHIT { label="LocalizationHIT"; fillcolor="#FFFFA3"; labeljust=l; style=filled 
+Localization_LocalizationHIT_Localize; Localization_LocalizationHIT_loc; Localization_LocalizationHIT_islocal_localize; Localization_LocalizationHIT_Localize_ind; Localization_LocalizationHIT_Localize_ind_islocal_localize_beta; };
+Localization_ExtendableAlong_Over; Localization_extendable_over_postcompose_; Localization_extendable_over_postcompose; Localization_extendable_over_const; Localization_apD_extendable_eq; Localization_ooExtendableAlong_Over; Localization_ooextendable_over_const; Localization_ooextendable_over_homotopy; Localization_islocal_equiv_islocal; Localization_ext_localize_ind; Localization_Loc; Localization_ooextendable_islocal; Localization_islocal_loc; Localization_isequiv_precomp_islocal; Localization_Localize_rec; Localization_local_rec; Localization_local_rec_beta; Localization_local_indpaths; Localization_local_indpaths_beta; Localization_accrsu_loc; Localization_lift_accrsu; Localization_O_eq_lift_accrsu; Localization_O_leq_lift_accrsu; Localization_isconnected_O_leq_; Localization_conn_map_O_leq_; Localization_O_inverts_O_leq_; };
+} /* END */

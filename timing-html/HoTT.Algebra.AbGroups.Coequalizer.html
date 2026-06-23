@@ -1,0 +1,650 @@
+<html>
+<head>
+<title>Coequalizer.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for Coequalizer.v</h1>
+
+<div class="code" title="File: Coequalizer.v
+Line: 1
+Time: 0.039s">
+<div class="time" style="width: 68.421052631579%"></div>
+<pre>From HoTT Require Import Basics Types.</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 1
+Time: 0.027s">
+<div class="time" style="width: 47.368421052632%"></div>
+<pre>
+Require Import WildCat.Core WildCat.Square WildCat.Equiv Truncations.Core.</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 2
+Time: 0.057s">
+<div class="time" style="width: 100%"></div>
+<pre>
+Require Import Groups.Group Groups.QuotientGroup AbelianGroup AbHom.</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope mc_add_scope.</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Coequalizers of maps [f g : A $-&gt; B] between abelian groups *)
+
+(** Using the cokernel and addition and negation for the homs of abelian groups, we can define the coequalizer of two group homomorphisms as the cokernel of their difference. *)</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 9
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>Definition ab_coeq {A B : AbGroup} (f g : A $-&gt; B)
+  := ab_cokernel ((-f) + g).</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 10
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition ab_coeq_in {A B : AbGroup} {f g : A $-&gt; B} : B $-&gt; ab_coeq f g.</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 12
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 13
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact grp_quotient_map.</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 15
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>
+
+Definition ab_coeq_glue {A B : AbGroup} {f g : A $-&gt; B}
+  : ab_coeq_in (f:=f) (g:=g) $o f $== ab_coeq_in $o g.</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 18
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 19
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x.</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 20
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  napply qglue.</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 21
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  apply tr.</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 22
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  by exists x.</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 23
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 24
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>
+
+Definition ab_coeq_rec {A B : AbGroup} {f g : A $-&gt; B}
+  {C : AbGroup} (i : B $-&gt; C) (p : i $o f $== i $o g)
+  : ab_coeq f g $-&gt; C.</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 28
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 29
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply (grp_quotient_rec _ _ i).</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 30
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  cbn.</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 31
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros b H.</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 32
+Time: 0.017s">
+<div class="time" style="width: 29.824561403509%"></div>
+<pre>
+  strip_truncations.</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 33
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct H as [a q].</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 34
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  destruct q; simpl.</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 35
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  lhs napply grp_homo_op.</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 36
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>
+  lhs napply (ap (+ _)).</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 37
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: apply grp_homo_inv.</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 38
+Time: 0.003s">
+<div class="time" style="width: 5.2631578947368%"></div>
+<pre>
+  apply grp_moveL_M1^-1.</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (p a)^.</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 40
+Time: 0.002s">
+<div class="time" style="width: 3.5087719298246%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 41
+Time: 0.003s">
+<div class="time" style="width: 5.2631578947368%"></div>
+<pre>
+
+Definition ab_coeq_rec_beta_in {A B : AbGroup} {f g : A $-&gt; B}
+  {C : AbGroup} (i : B $-&gt; C) (p : i $o f $== i $o g)
+  : ab_coeq_rec i p $o ab_coeq_in $== i
+  := fun _ =&gt; idpath.</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 46
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Definition ab_coeq_ind_hprop {A B f g} (P : @ab_coeq A B f g -&gt; Type)
+  `{forall x, IsHProp (P x)}
+  (i : forall b, P (ab_coeq_in b))
+  : forall x, P x.</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 51
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 52
+Time: 0.002s">
+<div class="time" style="width: 3.5087719298246%"></div>
+<pre>
+  rapply Quotient_ind_hprop.</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 53
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact i.</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 55
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>
+
+Definition ab_coeq_ind_homotopy {A B C f g}
+  {l r : @ab_coeq A B f g $-&gt; C}
+  (p : l $o ab_coeq_in $== r $o ab_coeq_in)
+  : l $== r.</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 60
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 61
+Time: 0.011s">
+<div class="time" style="width: 19.298245614035%"></div>
+<pre>
+  srapply ab_coeq_ind_hprop.</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact p.</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 63
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 64
+Time: 0.003s">
+<div class="time" style="width: 5.2631578947368%"></div>
+<pre>
+
+Definition functor_ab_coeq {A B : AbGroup} {f g : A $-&gt; B} {A' B' : AbGroup} {f' g' : A' $-&gt; B'}
+  (a : A $-&gt; A') (b : B $-&gt; B') (p : f' $o a $== b $o f) (q : g' $o a $== b $o g)
+  : ab_coeq f g $-&gt; ab_coeq f' g'.</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 68
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  snapply ab_coeq_rec.</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 70
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  1: exact (ab_coeq_in $o b).</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 71
+Time: 0.005s">
+<div class="time" style="width: 8.7719298245614%"></div>
+<pre>
+  refine (cat_assoc _ _ _ $@ _ $@ cat_assoc_opp _ _ _).</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 72
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>
+  refine ((_ $@L p^$) $@ _ $@ (_ $@L q)).</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 73
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>
+  refine (cat_assoc_opp _ _ _ $@ (_ $@R a) $@ cat_assoc _ _ _).</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 74
+Time: 0.002s">
+<div class="time" style="width: 3.5087719298246%"></div>
+<pre>
+  exact ab_coeq_glue.</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 75
+Time: 0.002s">
+<div class="time" style="width: 3.5087719298246%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 76
+Time: 0.006s">
+<div class="time" style="width: 10.526315789474%"></div>
+<pre>
+
+Definition functor2_ab_coeq {A B : AbGroup} {f g : A $-&gt; B} {A' B' : AbGroup} {f' g' : A' $-&gt; B'}
+  {a a' : A $-&gt; A'} {b b' : B $-&gt; B'}
+  (p : f' $o a $== b $o f) (q : g' $o a $== b $o g)
+  (p' : f' $o a' $== b' $o f) (q' : g' $o a' $== b' $o g)
+  (s : b $== b')
+  : functor_ab_coeq a b p q $== functor_ab_coeq a' b' p' q'.</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 84
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>
+  snapply ab_coeq_ind_homotopy.</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  intros x.</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 86
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  exact (ap ab_coeq_in (s x)).</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 87
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 88
+Time: 0.036s">
+<div class="time" style="width: 63.157894736842%"></div>
+<pre>
+
+Definition functor_ab_coeq_compose {A B : AbGroup} {f g : A $-&gt; B}
+  {A' B' : AbGroup} {f' g' : A' $-&gt; B'}
+  (a : A $-&gt; A') (b : B $-&gt; B') (p : f' $o a $== b $o f) (q : g' $o a $== b $o g)
+  {A'' B'' : AbGroup} {f'' g'' : A'' $-&gt; B''}
+  (a' : A' $-&gt; A'') (b' : B' $-&gt; B'')
+  (p' : f'' $o a' $== b' $o f') (q' : g'' $o a' $== b' $o g')
+  : functor_ab_coeq a' b' p' q' $o functor_ab_coeq a b p q
+  $== functor_ab_coeq (a' $o a) (b' $o b) (hconcat p p') (hconcat q q').</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 98
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>
+  snapply ab_coeq_ind_homotopy.</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 99
+Time: 0.005s">
+<div class="time" style="width: 8.7719298245614%"></div>
+<pre>
+  simpl; reflexivity.</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 100
+Time: 0.002s">
+<div class="time" style="width: 3.5087719298246%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 101
+Time: 0.002s">
+<div class="time" style="width: 3.5087719298246%"></div>
+<pre>
+
+Definition functor_ab_coeq_id {A B : AbGroup} (f g : A $-&gt; B)
+  : functor_ab_coeq (Id _) (Id _) (hrefl f) (hrefl g) $== Id _.</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 105
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>
+  snapply ab_coeq_ind_homotopy.</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 106
+Time: 0.001s">
+<div class="time" style="width: 1.7543859649123%"></div>
+<pre>
+  reflexivity.</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 108
+Time: 0.005s">
+<div class="time" style="width: 8.7719298245614%"></div>
+<pre>
+
+Definition grp_iso_ab_coeq {A B : AbGroup} {f g : A $-&gt; B}
+  {A' B' : AbGroup} {f' g' : A' $-&gt; B'}
+  (a : A $&lt;~&gt; A') (b : B $&lt;~&gt; B') (p : f' $o a $== b $o f) (q : g' $o a $== b $o g)
+  : ab_coeq f g $&lt;~&gt; ab_coeq f' g'.</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 113
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+Proof.</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 114
+Time: 0.002s">
+<div class="time" style="width: 3.5087719298246%"></div>
+<pre>
+  snapply cate_adjointify.</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 115
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (functor_ab_coeq a b p q).</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 116
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 117
+Time: 0.002s">
+<div class="time" style="width: 3.5087719298246%"></div>
+<pre> exact (functor_ab_coeq a^-1$ b^-1$ (hinverse a _ p) (hinverse a _ q)).</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 117
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 118
+Time: 0.006s">
+<div class="time" style="width: 10.526315789474%"></div>
+<pre> nrefine (functor_ab_coeq_compose _ _ _ _ _ _ _ _
+      $@ functor2_ab_coeq _ _ _ _ _ $@ functor_ab_coeq_id _ _).</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 119
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (cate_isretr b).</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 120
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  -</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 121
+Time: 0.006s">
+<div class="time" style="width: 10.526315789474%"></div>
+<pre> nrefine (functor_ab_coeq_compose _ _ _ _ _ _ _ _
+      $@ functor2_ab_coeq _ _ _ _ _ $@ functor_ab_coeq_id _ _).</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 122
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (cate_issect b).</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 123
+Time: 0.007s">
+<div class="time" style="width: 12.280701754386%"></div>
+<pre>
+Defined.</pre>
+</div>
+<div class="code" title="File: Coequalizer.v
+Line: 125
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

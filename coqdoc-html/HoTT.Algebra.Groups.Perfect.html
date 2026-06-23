@@ -1,0 +1,152 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>HoTT.Algebra.Groups.Perfect</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library HoTT.Algebra.Groups.Perfect</h1>
+
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Basics.Overture.html#"><span class="id" title="library">Basics.Overture</span></a> <a class="idref" href="HoTT.Basics.Tactics.html#"><span class="id" title="library">Basics.Tactics</span></a> <a class="idref" href="HoTT.Basics.Equivalences.html#"><span class="id" title="library">Basics.Equivalences</span></a> <a class="idref" href="HoTT.Basics.Iff.html#"><span class="id" title="library">Basics.Iff</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Types.Universe.html#"><span class="id" title="library">Types.Universe</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.Algebra.Groups.Group.html#"><span class="id" title="library">Groups.Group</span></a> <a class="idref" href="HoTT.Algebra.AbGroups.Abelianization.html#"><span class="id" title="library">AbGroups.Abelianization</span></a> <a class="idref" href="HoTT.Algebra.AbGroups.AbelianGroup.html#"><span class="id" title="library">AbGroups.AbelianGroup</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="HoTT.Algebra.Groups.Commutator.html#"><span class="id" title="library">Groups.Commutator</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#"><span class="id" title="library">Groups.QuotientGroup</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="HoTT.WildCat.Core.html#"><span class="id" title="library">WildCat.Core</span></a> <a class="idref" href="HoTT.WildCat.Equiv.html#"><span class="id" title="library">WildCat.Equiv</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">mc_scope</span>.<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">mc_mult_scope</span>.<br/>
+<span class="id" title="keyword">Local Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">group_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab129"></a><h1 class="section">Perfect Groups</h1>
+
+<div class="paragraph"> </div>
+
+<a id="lab130"></a><h2 class="section">Definition</h2>
+
+<div class="paragraph"> </div>
+
+ A group is perfect if its abelianization is trivial. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Class</span> <a id="IsPerfect" class="idref" href="#IsPerfect"><span class="id" title="inductive, record"><span id="IsPerfect" class="id">IsPerfect</span></span></a> (<a id="G:1" class="idref" href="#G:1"><span class="id" title="binder">G</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Group.html#Group"><span class="id" title="record">Group</span></a>) := <a id="contr_abel_isperfect" class="idref" href="#contr_abel_isperfect"><span class="id" title="constructor, projection"><span id="contr_abel_isperfect" class="id">contr_abel_isperfect</span></span></a> :: <a class="idref" href="HoTT.Algebra.Groups.Subgroup.html#IsTrivialGroup"><span class="id" title="class">IsTrivialGroup</span></a> (<a class="idref" href="HoTT.Algebra.AbGroups.Abelianization.html#abel"><span class="id" title="definition">abel</span></a> <a class="idref" href="HoTT.Algebra.Groups.Perfect.html#G:1"><span class="id" title="variable">G</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+A group is perfect if its commutator subgroup is the maximal subgroup. 
+</div>
+<div class="code">
+#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="isperfect_maximal_commutator" class="idref" href="#isperfect_maximal_commutator"><span class="id" title="instance">isperfect_maximal_commutator</span></a> (<a id="G:4" class="idref" href="#G:4"><span class="id" title="binder">G</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Group.html#Group"><span class="id" title="record">Group</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Algebra.Groups.Subgroup.html#IsMaximalSubgroup"><span class="id" title="class">IsMaximalSubgroup</span></a> <a class="idref" href="HoTT.Algebra.Groups.Commutator.html#bb10e176250b4f1ffaaa35d27554cfef"><span class="id" title="notation">[</span></a><a class="idref" href="HoTT.Algebra.Groups.Perfect.html#G:4"><span class="id" title="variable">G</span></a><a class="idref" href="HoTT.Algebra.Groups.Commutator.html#bb10e176250b4f1ffaaa35d27554cfef"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Algebra.Groups.Perfect.html#G:4"><span class="id" title="variable">G</span></a><a class="idref" href="HoTT.Algebra.Groups.Commutator.html#bb10e176250b4f1ffaaa35d27554cfef"><span class="id" title="notation">]</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Algebra.Groups.Perfect.html#IsPerfect"><span class="id" title="class">IsPerfect</span></a> <a class="idref" href="HoTT.Algebra.Groups.Perfect.html#G:4"><span class="id" title="variable">G</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">max</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Groups.Subgroup.html#istrivial_iff_grp_iso_trivial"><span class="id" title="definition">istrivial_iff_grp_iso_trivial</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">nrefine</span> (<span class="id" title="var">_</span> <a class="idref" href="HoTT.WildCat.Equiv.html#a460302f2c80129ddd8181f2eff89c4c"><span class="id" title="notation">$</span></a><a class="idref" href="HoTT.WildCat.Equiv.html#a460302f2c80129ddd8181f2eff89c4c"><span class="id" title="notation">oE</span></a> <a class="idref" href="HoTT.Algebra.Groups.Subgroup.html#grp_iso_subgroup_group_maximal"><span class="id" title="definition">grp_iso_subgroup_group_maximal</span></a> <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">refine</span> (<span class="id" title="var">_</span> <a class="idref" href="HoTT.WildCat.Equiv.html#a460302f2c80129ddd8181f2eff89c4c"><span class="id" title="notation">$</span></a><a class="idref" href="HoTT.WildCat.Equiv.html#a460302f2c80129ddd8181f2eff89c4c"><span class="id" title="notation">oE</span></a> <a class="idref" href="HoTT.WildCat.Equiv.html#emap"><span class="id" title="definition">emap</span></a> <a class="idref" href="HoTT.Algebra.AbGroups.AbelianGroup.html#abgroup_group"><span class="id" title="projection">abgroup_group</span></a> (@<a class="idref" href="HoTT.Algebra.AbGroups.Abelianization.html#groupiso_isabelianization"><span class="id" title="lemma">groupiso_isabelianization</span></a> <span class="id" title="var">G</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="HoTT.Algebra.Groups.Commutator.html#isabelianization_derived_quotient"><span class="id" title="definition">isabelianization_derived_quotient</span></a> <span class="id" title="var">_</span>))).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.Basics.Overture.html#fst"><span class="id" title="projection">fst</span></a> (<a class="idref" href="HoTT.Algebra.Groups.Subgroup.html#istrivial_iff_grp_iso_trivial"><span class="id" title="definition">istrivial_iff_grp_iso_trivial</span></a> (<a class="idref" href="HoTT.Algebra.Groups.Commutator.html#abgroup_derived_quotient"><span class="id" title="definition">abgroup_derived_quotient</span></a> <span class="id" title="var">G</span>)) <span class="id" title="var">_</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="HoTT.WildCat.Equiv.html#a460302f2c80129ddd8181f2eff89c4c"><span class="id" title="notation">$</span></a><a class="idref" href="HoTT.WildCat.Equiv.html#a460302f2c80129ddd8181f2eff89c4c"><span class="id" title="notation">oE</span></a> <a class="idref" href="HoTT.WildCat.Equiv.html#7d05958368842391a80db4d665c8f1e0"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Algebra.Groups.Subgroup.html#grp_iso_subgroup_group_maximal"><span class="id" title="definition">grp_iso_subgroup_group_maximal</span></a> <span class="id" title="var">_</span><a class="idref" href="HoTT.WildCat.Equiv.html#7d05958368842391a80db4d665c8f1e0"><span class="id" title="notation">)^-1$</span></a>).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Conversely, the commutator subgroup of any perfect group is the maximal subgroup. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="ismaximalsubgroup_commutator_isperfect" class="idref" href="#ismaximalsubgroup_commutator_isperfect"><span class="id" title="definition">ismaximalsubgroup_commutator_isperfect</span></a> `{<a id="H:5" class="idref" href="#H:5"><span class="id" title="binder">Univalence</span></a>} (<a id="G:6" class="idref" href="#G:6"><span class="id" title="binder">G</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Group.html#Group"><span class="id" title="record">Group</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Algebra.Groups.Perfect.html#IsPerfect"><span class="id" title="class">IsPerfect</span></a> <a class="idref" href="HoTT.Algebra.Groups.Perfect.html#G:6"><span class="id" title="variable">G</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Algebra.Groups.Subgroup.html#IsMaximalSubgroup"><span class="id" title="class">IsMaximalSubgroup</span></a> <a class="idref" href="HoTT.Algebra.Groups.Commutator.html#bb10e176250b4f1ffaaa35d27554cfef"><span class="id" title="notation">[</span></a><a class="idref" href="HoTT.Algebra.Groups.Perfect.html#G:6"><span class="id" title="variable">G</span></a><a class="idref" href="HoTT.Algebra.Groups.Commutator.html#bb10e176250b4f1ffaaa35d27554cfef"><span class="id" title="notation">,</span></a> <a class="idref" href="HoTT.Algebra.Groups.Perfect.html#G:6"><span class="id" title="variable">G</span></a><a class="idref" href="HoTT.Algebra.Groups.Commutator.html#bb10e176250b4f1ffaaa35d27554cfef"><span class="id" title="notation">]</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">p</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">napply</span> (<a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#ismaximalsubgroup_istrivial_grp_quotient"><span class="id" title="definition">ismaximalsubgroup_istrivial_grp_quotient</span></a> <span class="id" title="var">_</span> (<a class="idref" href="HoTT.Algebra.Groups.Commutator.html#normalsubgroup_derived"><span class="id" title="definition">normalsubgroup_derived</span></a> <span class="id" title="var">_</span>)).<br/>
+&nbsp;&nbsp;<span class="id" title="var">srapply</span> (<a class="idref" href="HoTT.Algebra.Groups.Subgroup.html#istrivial_grp_iso"><span class="id" title="definition">istrivial_grp_iso</span></a> (<a class="idref" href="HoTT.Algebra.AbGroups.Abelianization.html#abel"><span class="id" title="definition">abel</span></a> <span class="id" title="var">G</span>)).<br/>
+&nbsp;&nbsp;<span class="id" title="var">nrefine</span> (<span class="id" title="var">_</span><a class="idref" href="HoTT.WildCat.Equiv.html#7d05958368842391a80db4d665c8f1e0"><span class="id" title="notation">^-1$</span></a> <a class="idref" href="HoTT.WildCat.Equiv.html#a460302f2c80129ddd8181f2eff89c4c"><span class="id" title="notation">$</span></a><a class="idref" href="HoTT.WildCat.Equiv.html#a460302f2c80129ddd8181f2eff89c4c"><span class="id" title="notation">oE</span></a> <span class="id" title="var">_</span> <a class="idref" href="HoTT.WildCat.Equiv.html#a460302f2c80129ddd8181f2eff89c4c"><span class="id" title="notation">$</span></a><a class="idref" href="HoTT.WildCat.Equiv.html#a460302f2c80129ddd8181f2eff89c4c"><span class="id" title="notation">oE</span></a> <span class="id" title="var">_</span>).<br/>
+&nbsp;&nbsp;1,3: <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Groups.Subgroup.html#grp_iso_subgroup_group_maximal"><span class="id" title="definition">grp_iso_subgroup_group_maximal</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">exact</span> (<a class="idref" href="HoTT.WildCat.Equiv.html#emap"><span class="id" title="definition">emap</span></a> <a class="idref" href="HoTT.Algebra.AbGroups.AbelianGroup.html#abgroup_group"><span class="id" title="projection">abgroup_group</span></a> (@<a class="idref" href="HoTT.Algebra.AbGroups.Abelianization.html#groupiso_isabelianization"><span class="id" title="lemma">groupiso_isabelianization</span></a> <span class="id" title="var">G</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="HoTT.Algebra.Groups.Commutator.html#isabelianization_derived_quotient"><span class="id" title="definition">isabelianization_derived_quotient</span></a> <span class="id" title="var">_</span>))).<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab131"></a><h2 class="section">Basic properties</h2>
+
+<div class="paragraph"> </div>
+
+ All simple non-abelian groups are perfect. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="isperfect_simple_nonabelian" class="idref" href="#isperfect_simple_nonabelian"><span class="id" title="definition">isperfect_simple_nonabelian</span></a> `{<a id="H:7" class="idref" href="#H:7"><span class="id" title="binder">Univalence</span></a>}<br/>
+&nbsp;&nbsp;(<a id="G:8" class="idref" href="#G:8"><span class="id" title="binder">G</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Group.html#Group"><span class="id" title="record">Group</span></a>) {<a id="s:9" class="idref" href="#s:9"><span class="id" title="binder">s</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Subgroup.html#IsSimpleGroup"><span class="id" title="class">IsSimpleGroup</span></a> <a class="idref" href="HoTT.Algebra.Groups.Perfect.html#G:8"><span class="id" title="variable">G</span></a>}<br/>
+&nbsp;&nbsp;(<a id="na:10" class="idref" href="#na:10"><span class="id" title="binder">na</span></a> : <a class="idref" href="HoTT.Basics.Overture.html#63a68285c81db8f9bc456233bb9ed181"><span class="id" title="notation">¬</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#Commutative"><span class="id" title="class">Commutative</span></a> (<span class="id" title="var">A</span>:=<a class="idref" href="HoTT.Algebra.Groups.Perfect.html#G:8"><span class="id" title="variable">G</span></a>) <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#f022ceacf061b73b559b9e748556662a"><span class="id" title="notation">(.*.)</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Algebra.Groups.Perfect.html#IsPerfect"><span class="id" title="class">IsPerfect</span></a> <a class="idref" href="HoTT.Algebra.Groups.Perfect.html#G:8"><span class="id" title="variable">G</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="comment">(*&nbsp;Since&nbsp;<span class="inlinecode"><span class="id" title="var">G</span></span>&nbsp;is&nbsp;simple,&nbsp;we&nbsp;can&nbsp;assume&nbsp;the&nbsp;commutator&nbsp;<span class="inlinecode"></span> <span class="inlinecode">[<span class="id" title="var">G</span>,</span> <span class="inlinecode"><span class="id" title="var">G</span>]</span> <span class="inlinecode"></span>&nbsp;is&nbsp;either&nbsp;trivial&nbsp;or&nbsp;maximal.&nbsp;*)</span><br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">s</span> <a class="idref" href="HoTT.Algebra.Groups.Commutator.html#bb10e176250b4f1ffaaa35d27554cfef"><span class="id" title="notation">[</span></a><span class="id" title="var">G</span><a class="idref" href="HoTT.Algebra.Groups.Commutator.html#bb10e176250b4f1ffaaa35d27554cfef"><span class="id" title="notation">,</span></a> <span class="id" title="var">G</span><a class="idref" href="HoTT.Algebra.Groups.Commutator.html#bb10e176250b4f1ffaaa35d27554cfef"><span class="id" title="notation">]</span></a> <span class="id" title="var">_</span>) <span class="id" title="keyword">as</span> [<span class="id" title="var">triv</span> | <span class="id" title="var">max</span>].<br/>
+&nbsp;&nbsp;2: <span class="id" title="tactic">by</span> <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Groups.Perfect.html#isperfect_maximal_commutator"><span class="id" title="instance">isperfect_maximal_commutator</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">contradiction</span> <span class="id" title="var">na</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">lhs</span> <span class="id" title="var">napply</span> <a class="idref" href="HoTT.Algebra.Groups.Commutator.html#grp_commutator_swap_op"><span class="id" title="definition">grp_commutator_swap_op</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">lhs_V</span> <span class="id" title="var">napply</span> <a class="idref" href="HoTT.Algebra.Groups.Group.html#grp_assoc"><span class="id" title="definition">grp_assoc</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">rhs_V</span> <span class="id" title="var">napply</span> <a class="idref" href="HoTT.Algebra.Groups.Group.html#grp_unit_l"><span class="id" title="definition">grp_unit_l</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<a class="idref" href="HoTT.Basics.Overture.html#ap"><span class="id" title="definition">ap</span></a> <a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#88d5a430de4386acb8c608871d35c9fd"><span class="id" title="notation">(.*</span></a> <span class="id" title="var">_</span><a class="idref" href="HoTT.Classes.interfaces.canonical_names.html#88d5a430de4386acb8c608871d35c9fd"><span class="id" title="notation">)</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">triv</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Groups.Commutator.html#subgroup_commutator_in"><span class="id" title="definition">subgroup_commutator_in</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+A quotient of a perfect group is perfect. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="isperfect_grp_quotient" class="idref" href="#isperfect_grp_quotient"><span class="id" title="definition">isperfect_grp_quotient</span></a> `{<a id="H:11" class="idref" href="#H:11"><span class="id" title="binder">Univalence</span></a>}<br/>
+&nbsp;&nbsp;(<a id="G:12" class="idref" href="#G:12"><span class="id" title="binder">G</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Group.html#Group"><span class="id" title="record">Group</span></a>) (<a id="N:13" class="idref" href="#N:13"><span class="id" title="binder">N</span></a> : <a class="idref" href="HoTT.Algebra.Groups.Subgroup.html#NormalSubgroup"><span class="id" title="record">NormalSubgroup</span></a> <a class="idref" href="HoTT.Algebra.Groups.Perfect.html#G:12"><span class="id" title="variable">G</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="HoTT.Algebra.Groups.Perfect.html#IsPerfect"><span class="id" title="class">IsPerfect</span></a> <a class="idref" href="HoTT.Algebra.Groups.Perfect.html#G:12"><span class="id" title="variable">G</span></a> <a class="idref" href="HoTT.Basics.Overture.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="HoTT.Algebra.Groups.Perfect.html#IsPerfect"><span class="id" title="class">IsPerfect</span></a> (<a class="idref" href="HoTT.Algebra.Groups.Perfect.html#G:12"><span class="id" title="variable">G</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#3e65ad3edf5f7fb3ea6bc63a878112a8"><span class="id" title="notation">/</span></a> <a class="idref" href="HoTT.Algebra.Groups.Perfect.html#N:13"><span class="id" title="variable">N</span></a>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">perf</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Groups.Perfect.html#isperfect_maximal_commutator"><span class="id" title="instance">isperfect_maximal_commutator</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">rapply</span> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#grp_quotient_ind_hprop"><span class="id" title="definition">grp_quotient_ind_hprop</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">x</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Groups.Perfect.html#ismaximalsubgroup_commutator_isperfect"><span class="id" title="definition">ismaximalsubgroup_commutator_isperfect</span></a> <span class="id" title="tactic">in</span> <span class="id" title="var">perf</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">generalize</span> (<span class="id" title="var">perf</span> <span class="id" title="var">x</span>); <span class="id" title="var">revert</span> <span class="id" title="var">x</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">change</span> (<a class="idref" href="HoTT.Algebra.Groups.Commutator.html#bb10e176250b4f1ffaaa35d27554cfef"><span class="id" title="notation">[</span></a><span class="id" title="var">G</span> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#3e65ad3edf5f7fb3ea6bc63a878112a8"><span class="id" title="notation">/</span></a> <span class="id" title="var">N</span><a class="idref" href="HoTT.Algebra.Groups.Commutator.html#bb10e176250b4f1ffaaa35d27554cfef"><span class="id" title="notation">,</span></a> <span class="id" title="var">G</span> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#3e65ad3edf5f7fb3ea6bc63a878112a8"><span class="id" title="notation">/</span></a> <span class="id" title="var">N</span><a class="idref" href="HoTT.Algebra.Groups.Commutator.html#bb10e176250b4f1ffaaa35d27554cfef"><span class="id" title="notation">]</span></a> <a class="idref" href="HoTT.Algebra.Groups.Commutator.html#bb10e176250b4f1ffaaa35d27554cfef"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Algebra.Groups.Commutator.html#bb10e176250b4f1ffaaa35d27554cfef"><span class="id" title="notation">grp_quotient_map</span></a> <a class="idref" href="HoTT.Algebra.Groups.Commutator.html#bb10e176250b4f1ffaaa35d27554cfef"><span class="id" title="notation">?</span></a><a class="idref" href="HoTT.Algebra.Groups.Commutator.html#bb10e176250b4f1ffaaa35d27554cfef"><span class="id" title="notation">x</span></a><a class="idref" href="HoTT.Algebra.Groups.Commutator.html#bb10e176250b4f1ffaaa35d27554cfef"><span class="id" title="notation">)</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">with</span> (<a class="idref" href="HoTT.Algebra.Groups.Subgroup.html#subgroup_preimage"><span class="id" title="definition">subgroup_preimage</span></a> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#grp_quotient_map"><span class="id" title="definition">grp_quotient_map</span></a> <a class="idref" href="HoTT.Algebra.Groups.Commutator.html#bb10e176250b4f1ffaaa35d27554cfef"><span class="id" title="notation">[</span></a><span class="id" title="var">G</span> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#3e65ad3edf5f7fb3ea6bc63a878112a8"><span class="id" title="notation">/</span></a> <span class="id" title="var">N</span><a class="idref" href="HoTT.Algebra.Groups.Commutator.html#bb10e176250b4f1ffaaa35d27554cfef"><span class="id" title="notation">,</span></a> <span class="id" title="var">G</span> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#3e65ad3edf5f7fb3ea6bc63a878112a8"><span class="id" title="notation">/</span></a> <span class="id" title="var">N</span><a class="idref" href="HoTT.Algebra.Groups.Commutator.html#bb10e176250b4f1ffaaa35d27554cfef"><span class="id" title="notation">]</span></a> <span class="id" title="var">x</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="var">snapply</span> <a class="idref" href="HoTT.Algebra.Groups.Commutator.html#subgroup_commutator_rec"><span class="id" title="definition">subgroup_commutator_rec</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">change</span> (<a class="idref" href="HoTT.Algebra.Groups.Commutator.html#bb10e176250b4f1ffaaa35d27554cfef"><span class="id" title="notation">[</span></a><span class="id" title="var">G</span> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#3e65ad3edf5f7fb3ea6bc63a878112a8"><span class="id" title="notation">/</span></a> <span class="id" title="var">N</span><a class="idref" href="HoTT.Algebra.Groups.Commutator.html#bb10e176250b4f1ffaaa35d27554cfef"><span class="id" title="notation">,</span></a> <span class="id" title="var">G</span> <a class="idref" href="HoTT.Algebra.Groups.QuotientGroup.html#3e65ad3edf5f7fb3ea6bc63a878112a8"><span class="id" title="notation">/</span></a> <span class="id" title="var">N</span><a class="idref" href="HoTT.Algebra.Groups.Commutator.html#bb10e176250b4f1ffaaa35d27554cfef"><span class="id" title="notation">]</span></a> <a class="idref" href="HoTT.Algebra.Groups.Commutator.html#bb10e176250b4f1ffaaa35d27554cfef"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Algebra.Groups.Commutator.html#bb10e176250b4f1ffaaa35d27554cfef"><span class="id" title="notation">grp_quotient_map</span></a> <a class="idref" href="HoTT.Algebra.Groups.Commutator.html#bb10e176250b4f1ffaaa35d27554cfef"><span class="id" title="notation">(</span></a><a class="idref" href="HoTT.Algebra.Groups.Commutator.html#bb10e176250b4f1ffaaa35d27554cfef"><span class="id" title="notation">grp_commutator</span></a> <a class="idref" href="HoTT.Algebra.Groups.Commutator.html#bb10e176250b4f1ffaaa35d27554cfef"><span class="id" title="notation">x</span></a> <a class="idref" href="HoTT.Algebra.Groups.Commutator.html#bb10e176250b4f1ffaaa35d27554cfef"><span class="id" title="notation">y</span></a><a class="idref" href="HoTT.Algebra.Groups.Commutator.html#bb10e176250b4f1ffaaa35d27554cfef"><span class="id" title="notation">))</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="HoTT.Algebra.Groups.Commutator.html#grp_homo_commutator"><span class="id" title="definition">grp_homo_commutator</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">by</span> <span class="id" title="tactic">apply</span> <a class="idref" href="HoTT.Algebra.Groups.Commutator.html#subgroup_commutator_in"><span class="id" title="definition">subgroup_commutator_in</span></a>.<br/>
+<span class="id" title="keyword">Defined</span>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://rocq-prover.org/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

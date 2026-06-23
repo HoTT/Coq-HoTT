@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html class="alectryon-standalone"><head><title>HoTT.WildCat.Category.v.alectryon.json</title><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta content="Alectryon" name="generator"><link href="alectryon.css" rel="stylesheet"><link href="pygments.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" /><script src="alectryon.js"></script></head><body><article class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Basics.Overture.</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Basics.Overture.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> WildCat.Core WildCat.NatTrans WildCat.FunctorCat.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+<span class="sd">(** * Category of categories *)</span>
+
+<span class="sd">(** TODO: make into a bicategory; define equivalences *)</span>
+
+<span class="sd">(** ** Definition *)</span>
+
+<span class="sd">(** A category is a [Type] together with a proof that it is a 1-category. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Record</span> <span class="nf">Category</span> := {
+  category_carrier :&gt; <span class="kt">Type</span>;
+  isgraph_category_carrier :: IsGraph category_carrier;
+  is01cat_category_carrier :: Is01Cat category_carrier;
+  is2graph_category_carrier :: Is2Graph category_carrier;
+  is1cat_category_carrier :: Is1Cat category_carrier
+}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+<span class="sd">(** Morphisms of categories are given by functors. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Instance</span> <span class="nf">isgraph_cat</span> : IsGraph Category
+  := { Hom A B := Fun11 A B }.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+<span class="sd">(** 2-morphisms of categories are given by natural transformations. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Instance</span> <span class="nf">is2graph_cat</span> : Is2Graph Category
+  := <span class="k">fun</span> <span class="nv">A</span> <span class="nv">B</span> =&gt; _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+<span class="sd">(** 3-morphisms of categories are given by &quot;wild modifications&quot; - the underlying data of a modification, subject to no coherence conditions. *)</span>
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Instance</span> <span class="nf">is3graph_cat</span> : Is3Graph Category
+  := <span class="k">fun</span> <span class="nv">A</span> <span class="nv">B</span> =&gt; _.</span><span class="alectryon-wsp">
+</span></span></pre></article></body></html>

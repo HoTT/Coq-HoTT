@@ -1,0 +1,4 @@
+N: 3 "nat_distance_unique" [body=yes, kind=cnst, prop=no, path="nat_distance", ];
+N: 2 "natdistance_cut_minus" [body=yes, kind=cnst, prop=no, path="nat_distance", ];
+N: 1 "natdistance_default" [body=yes, kind=cnst, prop=no, path="nat_distance", ];
+E: 1 2 [weight=1, ];

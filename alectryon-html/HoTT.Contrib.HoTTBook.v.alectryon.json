@@ -1,0 +1,3235 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** The HoTT Book formalization. *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** This file links the results of the HoTT Book with their formalizations\n    in the HoTT library. You can lookup definitions and theorems by their\n    number in the HoTT Book. *)\n\n(*  IMPORTANT NOTE FOR THE HoTT DEVELOPERS:\n\n    This files is processed automagically by the etc/Book.py script. The\n    script parses the file according to the markers present in it (the\n    comment lines with many = signs followed by a LaTeX label). It\n    reorders the entries according to entry number X.Y.Z and inserts\n    missing entries. You must therefore obey the following rules:\n\n    0. Read the description below of what the correct procedure is.\n\n    1. Do not mess with the markers and do not insert new entries by hand.\n       If a LaTeX label has been renamed you may rename the corresponding\n       marker, but for addition of new entries you have to use the\n       etc/Book.py script, as described below.\n\n    2. If a theorem is gone, you may delete the corresponding entry,\n       but make sure first that it was not just moved elsewhere.\n\n    3. Make entries independent of other entries, as they may get\n       reordered or deleted.\n\n    4. If you need to import anything, do it before the first entry.\n\n    5. Each entry should define Book_X_Y_Z, but you can also\n       put in auxiliary definitions and lemmas (keep it short please).\n       The script renames the Book_X_Y_Z to whatever the correct number\n       is, so initially you can use whatever number you like.\n\n       If you are formalizing a Lemma with several part, use\n       Book_X_Y_Z_item_i, Book_X_Y_Z_item_ii, or some such.\n\n    6. If there is a corresponding HoTT library theorem or definition,\n       please use that one, even if it is not exactly the same.\n\n\n   PROCEDURE FOR UPDATING THE FILE:\n\n   1. Compile the latest version of the HoTT Book to update the LaTeX\n      labels. Do not forget to pull in changes from HoTT/HoTT.\n\n   2. Run `cat ../book/*.aux | etc/Book.py contrib/HoTTBook.v`.\n      If it complains, fix things.\n\n   3. Add contents to new entries.\n\n   4. Run `etc/Book.py` again to make sure it is happy.\n\n   5. Compile this file with `make contrib` or `make contrib/HoTTBook.vo`.\n\n   6. Do the git thing to submit your changes.\n\n*)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "From HoTT Require Import Basics Truncations.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "From HoTT Require Idempotents Spaces.No Spaces.Nat.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "From HoTT Require HIT.V HIT.Flattening Homotopy.WhiteheadsPrinciple Homotopy.Hopf.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "From HoTT Require Categories.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "From HoTT Require Metatheory.IntervalImpliesFunext Metatheory.UnivalenceImpliesFunext.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "From HoTT Require Classes.theory.premetric.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n\n(* END OF PREAMBLE *)\n(* ================================================== lem:opp *)\n(** Lemma 2.1.1 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_2_1_1 := @HoTT.Basics.Overture.inverse.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== lem:concat *)\n(** Lemma 2.1.2 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_2_1_2 := @HoTT.Basics.Overture.transitive_paths.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:omg *)\n(** Lemma 2.1.4 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_2_1_4_item_i := @HoTT.Basics.PathGroupoids.concat_p1.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_2_1_4_item_i' := @HoTT.Basics.PathGroupoids.concat_1p.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_2_1_4_item_ii := @HoTT.Basics.PathGroupoids.concat_Vp.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_2_1_4_item_ii' := @HoTT.Basics.PathGroupoids.concat_pV.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_2_1_4_item_iii := @HoTT.Basics.PathGroupoids.inv_V.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_2_1_4_item_iv := @HoTT.Basics.PathGroupoids.concat_p_pp.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:EckmannHilton *)\n(** Theorem 2.1.6 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_2_1_6 := @HoTT.Basics.PathGroupoids.eckmann_hilton.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== def:pointedtype *)\n(** Definition 2.1.7 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_2_1_7 := @HoTT.Basics.Overture.pType.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== def:loopspace *)\n(** Definition 2.1.8 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_2_1_8 := @HoTT.Pointed.Loops.iterated_loops.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== lem:map *)\n(** Lemma 2.2.1 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_2_2_1 := @HoTT.Basics.Overture.ap.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== lem:ap-functor *)\n(** Lemma 2.2.2 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_2_2_2_item_i   := @HoTT.Basics.PathGroupoids.ap_pp.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_2_2_2_item_ii  := @HoTT.Basics.PathGroupoids.inverse_ap.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_2_2_2_item_iii := @HoTT.Basics.PathGroupoids.ap_compose.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_2_2_2_item_iv  := @HoTT.Basics.PathGroupoids.ap_idmap.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== lem:transport *)\n(** Lemma 2.3.1 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_2_3_1 := @HoTT.Basics.Overture.transport.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:path-lifting *)\n(** Lemma 2.3.2 *)\n\n(* special case of *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_2_3_2 := @HoTT.Types.Sigma.equiv_path_sigma.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== lem:mapdep *)\n(** Lemma 2.3.4 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_2_3_4 := @HoTT.Basics.Overture.apD.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:trans-trivial *)\n(** Lemma 2.3.5 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_2_3_5 := @HoTT.Basics.PathGroupoids.transport_const.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:apd-const *)\n(** Lemma 2.3.8 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_2_3_8 := @HoTT.Basics.PathGroupoids.apD_const.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:transport-concat *)\n(** Lemma 2.3.9 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_2_3_9 := @HoTT.Basics.PathGroupoids.transport_compose.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:transport-compose *)\n(** Lemma 2.3.10 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_2_3_10 := @HoTT.Basics.PathGroupoids.ap_transport.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:ap-transport *)\n(** Lemma 2.3.11 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_2_3_11 := @HoTT.Basics.PathGroupoids.transport_pp.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== defn:homotopy *)\n(** Definition 2.4.1 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_2_4_1 := @HoTT.Basics.Overture.pointwise_paths.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== lem:homotopy-props *)\n(** Lemma 2.4.2 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_2_4_2 := @HoTT.Basics.Overture.pointwise_paths.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== lem:htpy-natural *)\n(** Lemma 2.4.3 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_2_4_3 := @HoTT.Basics.PathGroupoids.concat_Ap.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== cor:hom-fg *)\n(** Corollary 2.4.4 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_2_4_4 := @HoTT.Basics.PathGroupoids.concat_A1p.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== defn:quasi-inverse *)\n(** Definition 2.4.6 *)\n\n(** Quasi-inverses do not occur explicitly in the library since\n    they are `not good'. They do only occur implicitly as input to\n    isequiv_adjointify : IsEquiv f. Therefore we link to the half\n    adjoint equivalence extending the quasi-inverse *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_2_4_6 := @HoTT.Basics.Equivalences.isequiv_adjointify.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== eg:idequiv *)\n(** Example 2.4.7 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_2_4_7 := @HoTT.Basics.Equivalences.equiv_idmap.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== eg:concatequiv *)\n(** Example 2.4.8 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_2_4_8_i := @HoTT.Types.Paths.isequiv_concat_l.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_2_4_8_ii := @HoTT.Types.Paths.isequiv_concat_r.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:transportequiv *)\n(** Example 2.4.9 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_2_4_9 := @HoTT.Basics.Equivalences.isequiv_transport.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:equiv-eqrel *)\n(** Lemma 2.4.12 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_2_4_12_item_i   := @HoTT.Basics.Equivalences.reflexive_equiv.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_2_4_12_item_ii  := @HoTT.Basics.Equivalences.symmetric_equiv.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_2_4_12_item_iii := @HoTT.Basics.Equivalences.transitive_equiv.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:path-prod *)\n(** Theorem 2.6.2 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_2_6_2 := @HoTT.Types.Prod.equiv_path_prod.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:trans-prod *)\n(** Theorem 2.6.4 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_2_6_4 := @HoTT.Types.Prod.transport_prod.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:ap-prod *)\n(** Theorem 2.6.5 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_2_6_5 := @HoTT.Types.Prod.ap_functor_prod.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:path-sigma *)\n(** Theorem 2.7.2 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_2_7_2 := @HoTT.Types.Sigma.equiv_path_sigma.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:eta-sigma *)\n(** Corollary 2.7.3 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_2_7_3 := @HoTT.Types.Sigma.eta_sigma.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== transport-Sigma *)\n(** Theorem 2.7.4 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_2_7_4 := @HoTT.Types.Sigma.transportD_is_transport.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:path-unit *)\n(** Theorem 2.8.1 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_2_8_1 := @HoTT.Types.Unit.equiv_path_unit.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== axiom:funext *)\n(** Axiom 2.9.3 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_2_9_3 := @HoTT.Basics.Overture.path_forall.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:dpath-arrow *)\n(** Lemma 2.9.6 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_2_9_6 := @HoTT.Types.Arrow.dpath_arrow.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:dpath-forall *)\n(** Lemma 2.9.7 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_2_9_7 := @HoTT.Types.Forall.dpath_forall.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:idtoeqv *)\n(** Lemma 2.10.1 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_2_10_1 := @HoTT.Types.Universe.equiv_path.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== axiom:univalence *)\n(** Axiom 2.10.3 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_2_10_3 := @HoTT.Types.Universe.isequiv_equiv_path.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:transport-is-ap *)\n(** Lemma 2.10.5 *)\n\n(** Lemma 2.10.5 is a special case of Lemma 2.3.10, but also of: *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_2_10_5 := @HoTT.Types.Universe.transport_path_universe'.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:paths-respects-equiv *)\n(** Theorem 2.11.1 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_2_11_1 := @HoTT.Basics.Equivalences.isequiv_ap.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== cor:transport-path-prepost *)\n(** Lemma 2.11.2 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_2_11_2_item_1 := @HoTT.Types.Paths.transport_paths_l.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_2_11_2_item_2 := @HoTT.Types.Paths.transport_paths_r.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_2_11_2_item_3 := @HoTT.Types.Paths.transport_paths_lr.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:transport-path *)\n(** Theorem 2.11.3 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_2_11_3 := @HoTT.Types.Paths.transport_paths_FlFr.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:transport-path2 *)\n(** Theorem 2.11.4 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_2_11_4 := @HoTT.Types.Paths.transport_paths_FlFr_D.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:dpath-path *)\n(** Theorem 2.11.5 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_2_11_5 := @HoTT.Types.Paths.dpath_path_lr.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:path-coprod *)\n(** Theorem 2.12.5 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_2_12_5 := @HoTT.Types.Sum.equiv_path_sum.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:path-nat *)\n(** Theorem 2.13.1 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_2_13_1 := @HoTT.Spaces.Nat.Paths.equiv_path_nat.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:prod-ump *)\n(** Theorem 2.15.2 *)\n\n(** non-dependent as special case of dependent, Theorem 2.15.5 *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_2_15_2 := @HoTT.Types.Prod.isequiv_prod_coind.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:prod-umpd *)\n(** Theorem 2.15.5 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_2_15_5 := @HoTT.Types.Prod.isequiv_prod_coind.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:ttac *)\n(** Theorem 2.15.7 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_2_15_7 := @HoTT.Types.Sigma.isequiv_sig_coind.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== defn:set *)\n(** Definition 3.1.1 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_3_1_1 := fun A => @HoTT.Basics.Overture.IsTrunc 0 A.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== eg:isset-unit *)\n(** Example 3.1.2 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_3_1_2 := @HoTT.Types.Unit.contr_unit.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== eg:isset-empty *)\n(** Example 3.1.3 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_3_1_3 := @HoTT.Types.Empty.istrunc_Empty (-2).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:nat-set *)\n(** Example 3.1.4 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_3_1_4 := @HoTT.Spaces.Nat.Core.ishset_nat.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:isset-prod *)\n(** Example 3.1.5 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_3_1_5 := @HoTT.Types.Prod.istrunc_prod.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:isset-forall *)\n(** Example 3.1.6 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_3_1_6 `{Funext} A P := @HoTT.Basics.Trunc.istrunc_forall _ A P 0.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== defn:1type *)\n(** Definition 3.1.7 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_3_1_7 := fun A => @HoTT.Basics.Overture.IsTrunc 1 A.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:isset-is1type *)\n(** Lemma 3.1.8 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_3_1_8 := @HoTT.Basics.Trunc.istrunc_succ 0.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:type-is-not-a-set *)\n(** Example 3.1.9 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_3_1_9 := @HoTT.Types.Universe.not_hset_Type.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:not-dneg *)\n(** Theorem 3.2.2 *)\n\n\n\n(* ================================================== thm:not-lem *)\n(** Corollary 3.2.7 *)\n\n\n\n(* ================================================== defn:isprop *)\n(** Definition 3.3.1 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_3_3_1 := fun A => @HoTT.Basics.Overture.IsTrunc (-1) A.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:inhabprop-eqvunit *)\n(** Lemma 3.3.2 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_3_3_2 := @HoTT.Universes.HProp.if_hprop_then_equiv_Unit.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== lem:equiv-iff-hprop *)\n(** Lemma 3.3.3 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_3_3_3 := @HoTT.Basics.Trunc.equiv_iff_hprop.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:prop-set *)\n(** Lemma 3.3.4 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_3_3_4 := @HoTT.Basics.Trunc.istrunc_succ (-1).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:isprop-isset *)\n(** Lemma 3.3.5 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_3_3_5_i := @HoTT.Basics.Trunc.ishprop_istrunc.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:isprop-isprop *)\n(** Lemma 3.3.5 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_3_3_5_ii := @HoTT.Basics.Trunc.ishprop_istrunc.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== defn:decidable-equality *)\n(** Definition 3.4.3 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_3_4_3_part_i   := @HoTT.Basics.Decidable.Decidable.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** Definition Book_3_4_3_part_ii  :=  *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_3_4_3_part_iii := @HoTT.Basics.Decidable.DecidablePaths.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== defn:setof *)\n(** Lemma 3.5 *)\n\n\n\n(* ================================================== thm:path-subset *)\n(** Lemma 3.5.1 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_3_5_1 := @HoTT.Types.Sigma.path_sigma_hprop.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:isprop-forall *)\n(** Example 3.6.2 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_3_6_2 `{Funext} (A : Type) (B : A -> Type)\n  := @HoTT.Basics.Trunc.istrunc_forall _ A B (-1).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== defn:logical-notation *)\n(** Definition 3.7.1 *)\n\n\n\n(* ================================================== thm:ac-epis-split *)\n(** Lemma 3.8.2 *)\n\n\n\n(* ================================================== thm:no-higher-ac *)\n(** Lemma 3.8.5 *)\n\n\n\n(* ================================================== thm:prop-equiv-trunc *)\n(** Lemma 3.9.1 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_3_9_1 := @HoTT.Modalities.ReflectiveSubuniverse.isequiv_to_O_inO (Tr (-1)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== cor:UC *)\n(** Corollary 3.9.2 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_3_9_2 := @HoTT.HIT.unique_choice.unique_choice.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== defn:contractible *)\n(** Definition 3.11.1 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_3_11_1 := fun A => @HoTT.Basics.Overture.IsTrunc (-2) A.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:contr-unit *)\n(** Lemma 3.11.3 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_3_11_3 := @HoTT.Types.Unit.contr_unit.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:isprop-iscontr *)\n(** Lemma 3.11.4 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_3_11_4 := @HoTT.Basics.Trunc.ishprop_istrunc.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:contr-contr *)\n(** Corollary 3.11.5 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_3_11_5 `{Funext} := @HoTT.Basics.Trunc.contr_istrunc _ (-2).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:contr-forall *)\n(** Lemma 3.11.6 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_3_11_6 `{Funext} A P := @HoTT.Basics.Trunc.istrunc_forall _ A P (-2).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:retract-contr *)\n(** Lemma 3.11.7 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_3_11_7a := @HoTT.Idempotents.contr_retracttype.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_3_11_7 := @HoTT.Modalities.ReflectiveSubuniverse.inO_to_O_retract (Tr (-2)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:contr-paths *)\n(** Lemma 3.11.8 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_3_11_8 := @HoTT.Basics.Contractible.contr_basedpaths.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:omit-contr *)\n(** Lemma 3.11.9 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_3_11_9_part_i  := @HoTT.Types.Sigma.equiv_sigma_contr.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_3_11_9_part_ii := @HoTT.Types.Sigma.equiv_contr_sigma.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:prop-minusonetype *)\n(** Lemma 3.11.10 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_3_11_10_if     := @HoTT.Basics.Trunc.path_ishprop.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_3_11_10_onlyif := @HoTT.Basics.Trunc.hprop_allpath.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== lem:qinv-autohtpy *)\n(** Lemma 4.1.1 *)\n\n\n\n(* ================================================== lem:autohtpy *)\n(** Lemma 4.1.2 *)\n\n\n\n(* ================================================== thm:qinv-notprop *)\n(** Theorem 4.1.3 *)\n\n\n\n(* ================================================== defn:ishae *)\n(** Definition 4.2.1 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_4_2_1 := @HoTT.Basics.Overture.IsEquiv.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== lem:coh-equiv *)\n(** Lemma 4.2.2 *)\n\n(* The proof of Lemma 4.2.2 is embedded in the proof of isequiv_inverse. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_4_2_2 := fun (A B : Type) (f : A -> B) (feq : IsEquiv f) (y : B) =>\n  @HoTT.Basics.Overture.eisadj B A f^-1\n    (@HoTT.Basics.Equivalences.isequiv_inverse A B f feq) y.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:equiv-iso-adj *)\n(** Theorem 4.2.3 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_4_2_3 := @HoTT.Basics.Equivalences.isequiv_adjointify.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== defn:homotopy-fiber *)\n(** Definition 4.2.4 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_4_2_4 := @HoTT.Basics.Overture.hfiber.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== lem:hfib *)\n(** Lemma 4.2.5 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_4_2_5 := @HoTT.HFiber.equiv_path_hfiber.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:contr-hae *)\n(** Theorem 4.2.6 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_4_2_6 := @HoTT.Types.Equiv.contr_map_isequiv.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== defn:linv-rinv *)\n(** Definition 4.2.7 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_4_2_7_i {A B} (f : A -> B) := {g : B -> A & g o f == idmap }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_4_2_7_ii {A B} (f : A -> B) := {g : B -> A & f o g == idmap }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:equiv-compose-equiv *)\n(** Lemma 4.2.8 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_4_2_8_i  := @HoTT.Basics.Equivalences.isequiv_postcompose.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_4_2_8_ii := @HoTT.Basics.Equivalences.isequiv_precompose.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== lem:inv-hprop *)\n(** Lemma 4.2.9 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_4_2_9_i  := @HoTT.Types.Equiv.contr_sect_equiv.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_4_2_9_ii := @HoTT.Types.Equiv.contr_retr_equiv.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== defn:lcoh-rcoh *)\n(** Definition 4.2.10 *)\n\n\n\n(* ================================================== lem:coh-hfib *)\n(** Lemma 4.2.11 *)\n\n\n\n(* ================================================== lem:coh-hprop *)\n(** Lemma 4.2.12 *)\n\n\n\n(* ================================================== thm:hae-hprop *)\n(** Theorem 4.2.13 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_4_2_13 := @HoTT.Types.Equiv.hprop_isequiv.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== defn:biinv *)\n(** Definition 4.3.1 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_4_3_1  := @HoTT.Equiv.BiInv.IsBiInv.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:isprop-biinv *)\n(** Theorem 4.3.2 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_4_3_2  := @HoTT.Equiv.BiInv.ishprop_isbiinv.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:equiv-biinv-isequiv *)\n(** Corollary 4.3.3 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_4_3_3  := @HoTT.Equiv.BiInv.equiv_isbiinv_isequiv.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== defn:equivalence *)\n(** Definition 4.4.1 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_4_4_1 := @HoTT.Basics.Trunc.IsTruncMap (-2).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:lequiv-contr-hae *)\n(** Theorem 4.4.3 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_4_4_3 := @HoTT.Types.Equiv.isequiv_contr_map.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:contr-hprop *)\n(** Lemma 4.4.4 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_4_4_4 := @HoTT.Basics.Trunc.ishprop_istrunc.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:equiv-contr-hae *)\n(** Theorem 4.4.5 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_4_4_5 := @HoTT.Types.Equiv.equiv_contr_map_isequiv.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:equiv-inhabcod *)\n(** Corollary 4.4.6 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_4_4_6 := @HoTT.Types.Equiv.isequiv_inhab_codomain.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== defn:surj-emb *)\n(** Definition 4.6.1 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_4_6_1 := @HoTT.Basics.Trunc.IsTruncMap (-1).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:mono-surj-equiv *)\n(** Theorem 4.6.3 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_4_6_3 := @HoTT.Modalities.ReflectiveSubuniverse.isequiv_conn_ino_map.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:two-out-of-three *)\n(** Theorem 4.7.1 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_4_7_1_part_i   := @HoTT.Basics.Equivalences.isequiv_compose.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_4_7_1_part_ii  := @HoTT.Basics.Equivalences.cancelR_isequiv.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_4_7_1_part_iii := @HoTT.Basics.Equivalences.cancelL_isequiv.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== defn:retract *)\n(** Definition 4.7.2 *)\n\n\n\n(* ================================================== lem:func_retract_to_fiber_retract *)\n(** Lemma 4.7.3 *)\n\n\n\n(* ================================================== thm:retract-equiv *)\n(** Theorem 4.7.4 *)\n\n\n\n(* ================================================== defn:total-map *)\n(** Definition 4.7.5 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_4_7_5 := @HoTT.Types.Sigma.functor_sigma.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== fibwise-fiber-total-fiber-equiv *)\n(** Theorem 4.7.6 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_4_7_6 := @HoTT.Types.Sigma.hfiber_functor_sigma.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:total-fiber-equiv *)\n(** Theorem 4.7.7 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_4_7_7 := @HoTT.Types.Equiv.equiv_total_iff_equiv_fiberwise.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:fiber-of-a-fibration *)\n(** Lemma 4.8.1 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_4_8_1 := @HoTT.HFiber.hfiber_fibration.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:total-space-of-the-fibers *)\n(** Lemma 4.8.2 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_4_8_2 := @HoTT.HFiber.equiv_fibration_replacement.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:nobject-classifier-appetizer *)\n(** Theorem 4.8.3 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_4_8_3 := @HoTT.Universes.ObjectClassifier.equiv_sigma_fibration.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:object-classifier *)\n(** Theorem 4.8.4 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_4_8_4 := @HoTT.Universes.ObjectClassifier.ispullback_objectclassifier_square.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== weakfunext *)\n(** Definition 4.9.1 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_4_9_1 := @HoTT.Metatheory.FunextVarieties.WeakFunext.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== UA-eqv-hom-eqv *)\n(** Lemma 4.9.2 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_4_9_2 := @HoTT.Metatheory.UnivalenceImpliesFunext.univalence_isequiv_postcompose.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== contrfamtotalpostcompequiv *)\n(** Corollary 4.9.3 *)\n\n\n\n(* ================================================== uatowfe *)\n(** Theorem 4.9.4 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_4_9_4 := @HoTT.Metatheory.UnivalenceImpliesFunext.Univalence_implies_WeakFunext.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== wfetofe *)\n(** Theorem 4.9.5 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_4_9_5 := @HoTT.Metatheory.FunextVarieties.WeakFunext_implies_Funext.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:nat-uniq *)\n(** Theorem 5.1.1 *)\n\n\n\n(* ================================================== thm:w-uniq *)\n(** Theorem 5.3.1 *)\n\n\n\n(* ================================================== defn:nalg *)\n(** Definition 5.4.1 *)\n\n\n\n(* ================================================== defn:nhom *)\n(** Definition 5.4.2 *)\n\n\n\n(* ================================================== thm:nat-hinitial *)\n(** Theorem 5.4.5 *)\n\n\n\n(* ================================================== thm:w-hinit *)\n(** Theorem 5.4.7 *)\n\n\n\n(* ================================================== lem:homotopy-induction-times-3 *)\n(** Lemma 5.5.4 *)\n\n\n\n(* ================================================== defn:identity-systems *)\n(** Definition 5.8.1 *)\n\n\n\n(* ================================================== thm:identity-systems *)\n(** Theorem 5.8.2 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_5_8_2_i_implies_ii := @HoTT.Homotopy.IdentitySystems.homocontr_pfammap_identitysystem.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_5_8_2_ii_implies_iii := @HoTT.Homotopy.IdentitySystems.equiv_path_homocontr_pfammap.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_5_8_2_iii_implies_iv := @HoTT.Homotopy.IdentitySystems.contr_sigma_equiv_path.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_5_8_2_iv_implies_i := @HoTT.Homotopy.IdentitySystems.identitysystem_contr_sigma.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:ML-identity-systems *)\n(** Theorem 5.8.4 *)\n\n\n\n(* ================================================== thm:equiv-induction *)\n(** Corollary 5.8.5 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_5_8_5 := @HoTT.Types.Universe.equiv_induction'.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_5_8_5_comp := @HoTT.Types.Universe.equiv_induction'_comp.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:htpy-induction *)\n(** Corollary 5.8.6 *)\n\n\n\n(* ================================================== thm:S1rec *)\n(** Lemma 6.2.5 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_6_2_5 := @HoTT.Spaces.Circle.Circle_rec.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:uniqueness-for-functions-on-S1 *)\n(** Lemma 6.2.8 *)\n\n\n\n(* ================================================== thm:S1ump *)\n(** Lemma 6.2.9 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_6_2_9 := @HoTT.Spaces.Circle.isequiv_Circle_rec_uncurried.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:contr-interval *)\n(** Lemma 6.3.1 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_6_3_1 := @HoTT.HIT.Interval.contr_interval.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:interval-funext *)\n(** Lemma 6.3.2 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_6_3_2 := @HoTT.Metatheory.IntervalImpliesFunext.funext_type_from_interval.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:loop-nontrivial *)\n(** Lemma 6.4.1 *)\n\n\n\n(* ================================================== thm:S1-autohtpy *)\n(** Lemma 6.4.2 *)\n\n\n\n(* ================================================== thm:ap2 *)\n(** Lemma 6.4.4 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_6_4_4 := @HoTT.Basics.PathGroupoids.ap02.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:transport2 *)\n(** Lemma 6.4.5 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_6_4_5 := @HoTT.Basics.PathGroupoids.transport2.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:apd2 *)\n(** Lemma 6.4.6 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_6_4_6 := @HoTT.Basics.PathGroupoids.apD02.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:suspbool *)\n(** Lemma 6.5.1 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_6_5_1 := @HoTT.Spaces.Spheres.isequiv_S1_to_Circle.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== lem:susp-loop-adj *)\n(** Lemma 6.5.4 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_6_5_4 := @HoTT.Pointed.pSusp.loop_susp_adjoint.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== defn:cocone *)\n(** Definition 6.8.1 *)\n\n\n\n(* ================================================== thm:pushout-ump *)\n(** Lemma 6.8.2 *)\n\n\n\n(* ================================================== thm:trunc0-ind *)\n(** Lemma 6.9.1 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_6_9_1 := @HoTT.Truncations.Core.Trunc.Trunc_ind 0.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:trunc0-lump *)\n(** Lemma 6.9.2 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_6_9_2 := @HoTT.Modalities.ReflectiveSubuniverse.isequiv_o_to_O.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:set-pushout *)\n(** Lemma 6.9.3 *)\n\n\n\n(* ================================================== thm:quotient-surjective *)\n(** Lemma 6.10.2 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_6_10_2 := @HoTT.HIT.quotient.quotient_surjective.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:quotient-ump *)\n(** Lemma 6.10.3 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_6_10_3 := @HoTT.HIT.quotient.quotient_ump.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== def:VVquotient *)\n(** Definition 6.10.5 *)\n\n\n\n(* ================================================== lem:quotient-when-canonical-representatives *)\n(** Lemma 6.10.8 *)\n\n\n\n(* ================================================== thm:retraction-quotient *)\n(** Corollary 6.10.10 *)\n\n\n\n(* ================================================== thm:sign-induction *)\n(** Lemma 6.10.12 *)\n\n\n\n(* ================================================== thm:looptothe *)\n(** Corollary 6.10.13 *)\n\n\n\n(* ================================================== thm:homotopy-groups *)\n(** Example 6.11.4 *)\n\n\n\n(* ================================================== thm:free-monoid *)\n(** Lemma 6.11.5 *)\n\n\n\n(* ================================================== thm:transport-is-given *)\n(** Lemma 6.12.1 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_6_12_1 := @HoTT.Types.Universe.transport_path_universe'.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:flattening *)\n(** Lemma 6.12.2 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_6_12_2 := @HoTT.HIT.Flattening.equiv_flattening.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:flattening-cp *)\n(** Lemma 6.12.3 *)\n\n\n\n(* ================================================== thm:flattening-rect *)\n(** Lemma 6.12.4 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_6_12_4 := @HoTT.HIT.Flattening.sWtil_ind.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:flattening-rectnd *)\n(** Lemma 6.12.5 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_6_12_5 := @HoTT.HIT.Flattening.sWtil_rec.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:ap-sigma-rect-path-pair *)\n(** Lemma 6.12.7 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_6_12_7 := @HoTT.Types.Sigma.ap_sig_rec_path_sigma.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:flattening-rectnd-beta-ppt *)\n(** Lemma 6.12.8 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_6_12_8 := @HoTT.HIT.Flattening.sWtil_rec_beta_ppt.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== eg:unnatural-hit *)\n(** Example 6.13.1 *)\n\n\n\n(* ================================================== def:hlevel *)\n(** Definition 7.1.1 *)\n\n\n\n(* ================================================== thm:h-level-retracts *)\n(** Theorem 7.1.4 *)\n\n\n\n(* ================================================== cor:preservation-hlevels-weq *)\n(** Corollary 7.1.5 *)\n\n\n\n(* ================================================== thm:isntype-mono *)\n(** Theorem 7.1.6 *)\n\n\n\n(* ================================================== thm:hlevel-cumulative *)\n(** Theorem 7.1.7 *)\n\n\n\n(* ================================================== thm:ntypes-sigma *)\n(** Theorem 7.1.8 *)\n\n\n\n(* ================================================== thm:hlevel-prod *)\n(** Theorem 7.1.9 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_7_1_9 := @HoTT.Basics.Trunc.istrunc_forall.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:isaprop-isofhlevel *)\n(** Theorem 7.1.10 *)\n\n\n\n(* ================================================== thm:hleveln-of-hlevelSn *)\n(** Theorem 7.1.11 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book7_1_11 := @HoTT.Universes.TruncType.istrunc_trunctype.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:h-set-uip-K *)\n(** Theorem 7.2.1 *)\n\n\n\n(* ================================================== thm:h-set-refrel-in-paths-sets *)\n(** Theorem 7.2.2 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_7_2_2 := @HoTT.Universes.HSet.ishset_hrel_subpaths.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== notnotstable-equality-to-set *)\n(** Corollary 7.2.3 *)\n\n\n\n(* ================================================== lem:hedberg-helper *)\n(** Lemma 7.2.4 *)\n\n\n\n(* ================================================== thm:hedberg *)\n(** Theorem 7.2.5 *)\n\n\n\n(* ================================================== prop:nat-is-set *)\n(** Theorem 7.2.6 *)\n\n\n\n(* ================================================== thm:hlevel-loops *)\n(** Theorem 7.2.7 *)\n\n\n\n(* ================================================== lem:hlevel-if-inhab-hlevel *)\n(** Lemma 7.2.8 *)\n\n\n\n(* ================================================== thm:ntype-nloop *)\n(** Theorem 7.2.9 *)\n\n\n\n(* ================================================== thm:truncn-ind *)\n(** Theorem 7.3.2 *)\n\n\n\n(* ================================================== thm:trunc-reflective *)\n(** Lemma 7.3.3 *)\n\n\n\n(* ================================================== thm:trunc-htpy *)\n(** Lemma 7.3.5 *)\n\n\n\n(* ================================================== cor:trunc-prod *)\n(** Theorem 7.3.8 *)\n\n\n\n(* ================================================== thm:trunc-in-truncated-sigma *)\n(** Theorem 7.3.9 *)\n\n\n\n(* ================================================== thm:refl-over-ntype-base *)\n(** Corollary 7.3.10 *)\n\n\n\n(* ================================================== thm:path-truncation *)\n(** Theorem 7.3.12 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_7_3_12 := @HoTT.Truncations.SeparatedTrunc.equiv_path_Tr.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== lem:truncation-le *)\n(** Lemma 7.3.15 *)\n\n\n\n(* ================================================== thm:conemap-funct *)\n(** Lemma 7.4.10 *)\n\n\n\n(* ================================================== reflectcommutespushout *)\n(** Theorem 7.4.12 *)\n\n\n\n(* ================================================== thm:minusoneconn-surjective *)\n(** Lemma 7.5.2 *)\n\n\n\n(* ================================================== lem:nconnected_postcomp *)\n(** Lemma 7.5.6 *)\n\n\n\n(* ================================================== cor:totrunc-is-connected *)\n(** Corollary 7.5.8 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_7_5_8 := @HoTT.Modalities.Modality.conn_map_to_O.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:nconn-to-ntype-const *)\n(** Corollary 7.5.9 *)\n\n\n\n(* ================================================== connectedtotruncated *)\n(** Corollary 7.5.9 *)\n\n\n\n(* ================================================== lem:nconnected_to_leveln_to_equiv *)\n(** Lemma 7.5.10 *)\n\n\n\n(* ================================================== thm:connected-pointed *)\n(** Lemma 7.5.11 *)\n\n\n\n(* ================================================== lem:nconnected_postcomp_variation *)\n(** Lemma 7.5.12 *)\n\n\n\n(* ================================================== prop:nconn_fiber_to_total *)\n(** Lemma 7.5.13 *)\n\n\n\n(* ================================================== lem:connected-map-equiv-truncation *)\n(** Lemma 7.5.14 *)\n\n\n\n(* ================================================== thm:modal-mono *)\n(** Lemma 7.6.2 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_7_6_2 := @HoTT.HFiber.equiv_istruncmap_ap.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== defn:modal-image *)\n(** Definition 7.6.3 *)\n\n\n\n(* ================================================== prop:to_image_is_connected *)\n(** Lemma 7.6.4 *)\n\n\n\n(* ================================================== prop:factor_equiv_fiber *)\n(** Lemma 7.6.5 *)\n\n\n\n(* ================================================== thm:orth-fact *)\n(** Theorem 7.6.6 *)\n\n\n\n(* ================================================== lem:hfiber_wrt_pullback *)\n(** Lemma 7.6.8 *)\n\n\n\n(* ================================================== thm:stable-images *)\n(** Theorem 7.6.9 *)\n\n\n\n(* ================================================== defn:reflective-subuniverse *)\n(** Definition 7.7.1 *)\n\n\n\n(* ================================================== thm:reflsubunv-forall *)\n(** Theorem 7.7.2 *)\n\n\n\n(* ================================================== cor:trunc_prod *)\n(** Corollary 7.7.3 *)\n\n\n\n(* ================================================== thm:modal-char *)\n(** Theorem 7.7.4 *)\n\n\n\n(* ================================================== defn:modality *)\n(** Definition 7.7.5 *)\n\n\n\n(* ================================================== prop:lv_n_deptype_sec_equiv_by_precomp *)\n(** Theorem 7.7.7 *)\n\n\n\n(* ================================================== def-of-homotopy-groups *)\n(** Definition 8.0.1 *)\n\n\n\n(* ================================================== S1-universal-cover *)\n(** Definition 8.1.1 *)\n\n\n\n(* ================================================== lem:transport-s1-code *)\n(** Lemma 8.1.2 *)\n\n\n\n(* ================================================== thm:pi1s1-decode *)\n(** Definition 8.1.6 *)\n\n\n\n(* ================================================== lem:s1-decode-encode *)\n(** Lemma 8.1.7 *)\n\n\n\n(* ================================================== lem:s1-encode-decode *)\n(** Lemma 8.1.8 *)\n\n\n\n(* ================================================== cor:omega-s1 *)\n(** Corollary 8.1.10 *)\n\n\n\n(* ================================================== cor:pi1s1 *)\n(** Corollary 8.1.11 *)\n\n\n\n(* ================================================== thm:iscontr-s1cover *)\n(** Lemma 8.1.12 *)\n\n\n\n(* ================================================== thm:encode-total-equiv *)\n(** Corollary 8.1.13 *)\n\n\n\n(* ================================================== thm:suspension-increases-connectedness *)\n(** Theorem 8.2.1 *)\n\n\n\n(* ================================================== cor:sn-connected *)\n(** Corollary 8.2.2 *)\n\n\n\n(* ================================================== lem:pik-nconnected *)\n(** Lemma 8.3.2 *)\n\n\n\n(* ================================================== def:pointedmap *)\n(** Definition 8.4.1 *)\n\n\n\n(* ================================================== def:loopfunctor *)\n(** Definition 8.4.2 *)\n\n\n\n(* ================================================== thm:fiber-of-the-fiber *)\n(** Lemma 8.4.4 *)\n\n\n\n(* ================================================== thm:les *)\n(** Theorem 8.4.6 *)\n\n\n\n(* ================================================== thm:ses *)\n(** Lemma 8.4.7 *)\n\n\n\n(* ================================================== thm:conn-pik *)\n(** Corollary 8.4.8 *)\n\n\n\n(* ================================================== thm:hopf-fibration *)\n(** Theorem 8.5.1 *)\n\n\n\n(* ================================================== cor:pis2-hopf *)\n(** Corollary 8.5.2 *)\n\n\n\n(* ================================================== lem:fibration-over-pushout *)\n(** Lemma 8.5.3 *)\n\n\n\n(* ================================================== lem:hopf-construction *)\n(** Lemma 8.5.7 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_8_5_6 := @HoTT.Homotopy.Hopf.hopf_construction.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_8_5_7 := @HoTT.Homotopy.Hopf.pequiv_hopf_total_join.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== lem:hspace-S1 *)\n(** Lemma 8.5.8 *)\n\n\n\n(* ================================================== thm:conn-trunc-variable-ind *)\n(** Lemma 8.6.1 *)\n\n\n\n(* ================================================== thm:wedge-connectivity *)\n(** Lemma 8.6.2 *)\n\n\n\n(* ================================================== thm:freudenthal *)\n(** Theorem 8.6.4 *)\n\n\n\n(* ================================================== thm:freudcode *)\n(** Definition 8.6.5 *)\n\n\n\n(* ================================================== thm:freudlemma *)\n(** Lemma 8.6.10 *)\n\n\n\n(* ================================================== cor:freudenthal-equiv *)\n(** Corollary 8.6.14 *)\n\n\n\n(* ================================================== cor:stability-spheres *)\n(** Corollary 8.6.15 *)\n\n\n\n(* ================================================== thm:pinsn *)\n(** Theorem 8.6.17 *)\n\n\n\n(* ================================================== thm:pi3s2 *)\n(** Corollary 8.6.19 *)\n\n\n\n(* ================================================== thm:naive-van-kampen *)\n(** Theorem 8.7.4 *)\n\n\n\n(* ================================================== eg:circle *)\n(** Example 8.7.6 *)\n\n\n\n(* ================================================== eg:suspension *)\n(** Example 8.7.7 *)\n\n\n\n(* ================================================== eg:wedge *)\n(** Example 8.7.8 *)\n\n\n\n(* ================================================== thm:kbar *)\n(** Lemma 8.7.9 *)\n\n\n\n(* ================================================== thm:van-Kampen *)\n(** Theorem 8.7.12 *)\n\n\n\n(* ================================================== eg:clvk *)\n(** Example 8.7.13 *)\n\n\n\n(* ================================================== eg:cofiber *)\n(** Example 8.7.14 *)\n\n\n\n(* ================================================== eg:torus *)\n(** Example 8.7.15 *)\n\n\n\n(* ================================================== eg:kg1 *)\n(** Example 8.7.17 *)\n\n\n\n(* ================================================== thm:whitehead0 *)\n(** Theorem 8.8.1 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_8_8_1 := @HoTT.Homotopy.WhiteheadsPrinciple.isequiv_issurj_tr0_isequiv_ap.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:whitehead1 *)\n(** Corollary 8.8.2 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_8_8_2 := @HoTT.Homotopy.WhiteheadsPrinciple.isequiv_isbij_tr0_isequiv_loops.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:whiteheadn *)\n(** Theorem 8.8.3 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_8_8_3 := @HoTT.Homotopy.WhiteheadsPrinciple.whiteheads_principle.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:whitehead-contr *)\n(** Corollary 8.8.4 *)\n\n\n\n(* ================================================== thm:pik-conn *)\n(** Corollary 8.8.5 *)\n\n\n\n(* ================================================== lem:encode-decode-loop *)\n(** Lemma 8.9.1 *)\n\n\n\n(* ================================================== Blakers-Massey *)\n(** Theorem 8.10.2 *)\n\n\n\n(* ================================================== Eilenberg-Mac-Lane-Spaces *)\n(** Theorem 8.10.3 *)\n\n\n\n(* ================================================== thm:covering-spaces *)\n(** Theorem 8.10.4 *)\n\n\n\n(* ================================================== ct:precategory *)\n(** Definition 9.1.1 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_9_1_1 := @HoTT.Categories.Category.Core.PreCategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== ct:isomorphism *)\n(** Definition 9.1.2 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_9_1_2 := @HoTT.Categories.Category.Morphisms.Isomorphic.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== ct:isoprop *)\n(** Lemma 9.1.3 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_9_1_3 := @HoTT.Categories.Category.Morphisms.istrunc_isisomorphism.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== ct:idtoiso *)\n(** Lemma 9.1.4 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_9_1_4 := @HoTT.Categories.Category.Morphisms.idtoiso.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== ct:precatset *)\n(** Example 9.1.5 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_9_1_5 := @HoTT.Categories.SetCategory.Core.set_cat.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== ct:category *)\n(** Definition 9.1.6 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_9_1_6 C := (HoTT.Categories.Category.Univalent.IsCategory C).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== ct:eg:set *)\n(** Example 9.1.7 *)\n\n(** Once this is proven, we will have\n<<\nDefinition Book_9_1_7 := @HoTT.Categories.SetCategory.Morphisms.iscategory_set_cat.\n>>\n*)\n\n(* ================================================== ct:obj-1type *)\n(** Lemma 9.1.8 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_9_1_8 := @HoTT.Categories.Category.Univalent.trunc_category.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== ct:idtoiso-trans *)\n(** Lemma 9.1.9 *)\n\n\n\n(* ================================================== ct:orders *)\n(** Example 9.1.14 *)\n\n\n\n(* ================================================== ct:gaunt *)\n(** Example 9.1.15 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_9_1_15 A `{H : HoTT.Categories.Category.Univalent.IsCategory A}\n: IsHSet (HoTT.Categories.Category.Core.object A)\n  <-> (forall a b, IsHProp (@HoTT.Categories.Category.Morphisms.Isomorphic A a b)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsHSet (Core.object A) <->\nis_mere_relation (Core.object A) Morphisms.Isomorphic",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Core.PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall s d : Core.object A, IsEquiv (Category.Morphisms.idtoiso A (y:=d))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsHSet (Core.object A) <->\nis_mere_relation (Core.object A) Morphisms.Isomorphic",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Core.PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall s d : Core.object A, IsEquiv (Category.Morphisms.idtoiso A (y:=d))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "split.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsHSet (Core.object A) ->\nis_mere_relation (Core.object A) Morphisms.Isomorphic",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Core.PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall s d : Core.object A, IsEquiv (Category.Morphisms.idtoiso A (y:=d))"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "is_mere_relation (Core.object A) Morphisms.Isomorphic ->\nIsHSet (Core.object A)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Core.PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall s d : Core.object A, IsEquiv (Category.Morphisms.idtoiso A (y:=d))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsHSet (Core.object A) ->\nis_mere_relation (Core.object A) Morphisms.Isomorphic",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Core.PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall s d : Core.object A, IsEquiv (Category.Morphisms.idtoiso A (y:=d))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros H' a b.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsHProp (Morphisms.Isomorphic a b)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Core.PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall s d : Core.object A, IsEquiv (Category.Morphisms.idtoiso A (y:=d))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H'"
+              ],
+              "body": null,
+              "type": "IsHSet (Core.object A)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "Core.object A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "eapply istrunc_isequiv_istrunc.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsHProp ?A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Core.PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall s d : Core.object A, IsEquiv (Category.Morphisms.idtoiso A (y:=d))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H'"
+              ],
+              "body": null,
+              "type": "IsHSet (Core.object A)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "Core.object A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv ?f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Core.PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall s d : Core.object A, IsEquiv (Category.Morphisms.idtoiso A (y:=d))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H'"
+              ],
+              "body": null,
+              "type": "IsHSet (Core.object A)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "Core.object A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsHProp ?A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Core.PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall s d : Core.object A, IsEquiv (Category.Morphisms.idtoiso A (y:=d))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H'"
+              ],
+              "body": null,
+              "type": "IsHSet (Core.object A)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "Core.object A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (H' a b).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv ?f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Core.PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall s d : Core.object A, IsEquiv (Category.Morphisms.idtoiso A (y:=d))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H'"
+              ],
+              "body": null,
+              "type": "IsHSet (Core.object A)"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "Core.object A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply H.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "is_mere_relation (Core.object A) Morphisms.Isomorphic ->\nIsHSet (Core.object A)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Core.PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall s d : Core.object A, IsEquiv (Category.Morphisms.idtoiso A (y:=d))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros H'; apply istrunc_S; intros a b.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsHProp (a = b)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Core.PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall s d : Core.object A, IsEquiv (Category.Morphisms.idtoiso A (y:=d))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H'"
+              ],
+              "body": null,
+              "type": "is_mere_relation (Core.object A) Morphisms.Isomorphic"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "Core.object A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "eapply istrunc_isequiv_istrunc.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsHProp ?A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Core.PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall s d : Core.object A, IsEquiv (Category.Morphisms.idtoiso A (y:=d))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H'"
+              ],
+              "body": null,
+              "type": "is_mere_relation (Core.object A) Morphisms.Isomorphic"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "Core.object A"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv ?f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Core.PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall s d : Core.object A, IsEquiv (Category.Morphisms.idtoiso A (y:=d))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H'"
+              ],
+              "body": null,
+              "type": "is_mere_relation (Core.object A) Morphisms.Isomorphic"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "Core.object A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsHProp ?A",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Core.PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall s d : Core.object A, IsEquiv (Category.Morphisms.idtoiso A (y:=d))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H'"
+              ],
+              "body": null,
+              "type": "is_mere_relation (Core.object A) Morphisms.Isomorphic"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "Core.object A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (H' a b).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "+",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsEquiv ?f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "A"
+              ],
+              "body": null,
+              "type": "Core.PreCategory"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "forall s d : Core.object A, IsEquiv (Category.Morphisms.idtoiso A (y:=d))"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H'"
+              ],
+              "body": null,
+              "type": "is_mere_relation (Core.object A) Morphisms.Isomorphic"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "Core.object A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (@isequiv_inverse _ _ _ (H _ _)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== ct:discrete *)\n(** Example 9.1.16 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_9_1_16 := @HoTT.Categories.GroupoidCategory.Core.groupoid_category.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== ct:fundgpd *)\n(** Example 9.1.17 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_9_1_17 := @HoTT.Categories.FundamentalPreGroupoidCategory.fundamental_pregroupoid_category.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== ct:hoprecat *)\n(** Example 9.1.18 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_9_1_18 := @HoTT.Categories.HomotopyPreCategory.homotopy_precategory.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== ct:rel *)\n(** Example 9.1.19 *)\n\n\n\n(* ================================================== ct:functor *)\n(** Definition 9.2.1 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_9_2_1 := @HoTT.Categories.Functor.Core.Functor.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== ct:nattrans *)\n(** Definition 9.2.2 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_9_2_2 := @HoTT.Categories.NaturalTransformation.Core.NaturalTransformation.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== ct:functor-precat *)\n(** Definition 9.2.3 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_9_2_3 := @HoTT.Categories.FunctorCategory.Core.functor_category.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== ct:natiso *)\n(** Lemma 9.2.4 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_9_2_4 := @HoTT.Categories.FunctorCategory.Morphisms.isisomorphism_natural_transformation.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== ct:functor-cat *)\n(** Theorem 9.2.5 *)\n\n(** When this is done, it will be\n<<\nDefinition Book_9_2_5 := @HoTT.Categories.FunctorCategory.Morphisms.iscategory_functor_category.\n>>\n*)\n\n(* ================================================== ct:functor-composition *)\n(** Definition 9.2.6 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_9_2_6 := @HoTT.Categories.Functor.Composition.Core.compose.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== ct:whisker *)\n(** Definition 9.2.7 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_9_2_7_l := @HoTT.Categories.NaturalTransformation.Composition.Core.whisker_l.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_9_2_7_r := @HoTT.Categories.NaturalTransformation.Composition.Core.whisker_r.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== ct:interchange *)\n(** Lemma 9.2.8 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_9_2_8 := @HoTT.Categories.NaturalTransformation.Composition.Laws.exchange_whisker.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== ct:functor-assoc *)\n(** Lemma 9.2.9 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_9_2_9 := @HoTT.Categories.Functor.Composition.Laws.associativity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== ct:pentagon *)\n(** Lemma 9.2.10 *)\n\n\n\n(* ================================================== ct:units *)\n(** Lemma 9.2.11 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_9_2_11_l := @HoTT.Categories.Functor.Composition.Laws.left_identity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_9_2_11_r := @HoTT.Categories.Functor.Composition.Laws.right_identity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_9_2_11 := @HoTT.Categories.Functor.Composition.Laws.triangle.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== ct:adjoints *)\n(** Definition 9.3.1 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_9_3_1 := @HoTT.Categories.Adjoint.UnitCounit.AdjunctionUnitCounit.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== ct:adjprop *)\n(** Lemma 9.3.2 *)\n\n\n\n(* ================================================== ct:equiv *)\n(** Definition 9.4.1 *)\n\n\n\n(* ================================================== ct:adjointification *)\n(** Lemma 9.4.2 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_9_4_2a := @HoTT.Categories.Functor.Attributes.IsFaithful.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_9_4_2b := @HoTT.Categories.Functor.Attributes.IsFull.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_9_4_2c := @HoTT.Categories.Functor.Attributes.IsFullyFaithful.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== ct:full-faithful *)\n(** Definition 9.4.3 *)\n\n\n\n(* ================================================== ct:split-essentially-surjective *)\n(** Definition 9.4.4 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_9_4_4 := @HoTT.Categories.Functor.Attributes.IsSplitEssentiallySurjective.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== ct:ffeso *)\n(** Lemma 9.4.5 *)\n\n\n\n(* ================================================== ct:essentially-surjective *)\n(** Definition 9.4.6 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_9_4_6_ess := @HoTT.Categories.Functor.Attributes.IsEssentiallySurjective.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_9_4_6_weq := @HoTT.Categories.Functor.Attributes.IsWeakEquivalence.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== ct:catweq *)\n(** Lemma 9.4.7 *)\n\n\n\n(* ================================================== ct:isocat *)\n(** Definition 9.4.8 *)\n\n\n\n(* ================================================== ct:isoprecat *)\n(** Lemma 9.4.9 *)\n\n\n\n(* ================================================== ct:chaotic *)\n(** Example 9.4.13 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_9_4_13 := @HoTT.Categories.IndiscreteCategory.Core.indiscrete_category.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== ct:eqv-levelwise *)\n(** Lemma 9.4.14 *)\n\n\n\n(* ================================================== ct:cat-eq-iso *)\n(** Lemma 9.4.15 *)\n\n\n\n(* ================================================== ct:cat-2cat *)\n(** Theorem 9.4.16 *)\n\n\n\n(* ================================================== ct:opposite-category *)\n(** Definition 9.5.1 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_9_5_1 := @HoTT.Categories.Category.Dual.opposite.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== ct:prod-cat *)\n(** Definition 9.5.2 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_9_5_2 := @HoTT.Categories.Category.Prod.prod.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== ct:functorexpadj *)\n(** Lemma 9.5.3 *)\n\n(** When we prove it, this should be mapped to the law, not the functor. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_9_5_3 := @HoTT.Categories.ExponentialLaws.Law4.Functors.functor.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== ct:yoneda *)\n(** Theorem 9.5.4 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_9_5_4 := @HoTT.Categories.Yoneda.yoneda_lemma.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== ct:yoneda-embedding *)\n(** Corollary 9.5.6 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_9_5_6 := @HoTT.Categories.Yoneda.yoneda_embedding.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== ct:yoneda-mono *)\n(** Corollary 9.5.7 *)\n\n\n\n(* ================================================== ct:representable *)\n(** Definition 9.5.8 *)\n\n\n\n(* ================================================== ct:representable-prop *)\n(** Theorem 9.5.9 *)\n\n\n\n(* ================================================== ct:adj-repr *)\n(** Lemma 9.5.10 *)\n\n\n\n(* ================================================== ct:adjprop2 *)\n(** Corollary 9.5.11 *)\n\n\n\n(* ================================================== ct:strict-category *)\n(** Definition 9.6.1 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_9_6_1 C := HoTT.Categories.Category.Strict.IsStrictCategory C.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== ct:mono-cat *)\n(** Example 9.6.2 *)\n\n\n\n(* ================================================== ct:galois *)\n(** Example 9.6.3 *)\n\n\n\n(* ================================================== ct:dagger-precategory *)\n(** Definition 9.7.1 *)\n\n\n\n(* ================================================== ct:unitary *)\n(** Definition 9.7.2 *)\n\n\n\n(* ================================================== ct:idtounitary *)\n(** Lemma 9.7.3 *)\n\n\n\n(* ================================================== ct:dagger-category *)\n(** Definition 9.7.4 *)\n\n\n\n(* ================================================== ct:rel-dagger-cat *)\n(** Example 9.7.5 *)\n\n\n\n(* ================================================== ct:groupoid-dagger-cat *)\n(** Example 9.7.6 *)\n\n\n\n(* ================================================== ct:hilb *)\n(** Example 9.7.7 *)\n\n\n\n(* ================================================== ct:sig *)\n(** Definition 9.8.1 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_9_8_1 := @HoTT.Categories.Structure.Core.NotionOfStructure.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:sip *)\n(** Theorem 9.8.2 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_9_8_2 := @HoTT.Categories.Structure.IdentityPrinciple.structure_identity_principle.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== ct:sip-functor-cat *)\n(** Example 9.8.3 *)\n\n\n\n(* ================================================== defn:fo-notion-of-structure *)\n(** Definition 9.8.4 *)\n\n\n\n(* ================================================== ct:esosurj-postcomp-faithful *)\n(** Lemma 9.9.1 *)\n\n\n\n(* ================================================== ct:esofull-precomp-ff *)\n(** Lemma 9.9.2 *)\n\n\n\n(* ================================================== ct:cat-weq-eq *)\n(** Theorem 9.9.4 *)\n\n\n\n(* ================================================== thm:rezk-completion *)\n(** Theorem 9.9.5 *)\n\n\n\n(* ================================================== ct:rezk-fundgpd-trunc1 *)\n(** Example 9.9.6 *)\n\n\n\n(* ================================================== ct:hocat *)\n(** Example 9.9.7 *)\n\n\n\n(* ================================================== ct:weq-iso-precat-cat *)\n(** Theorem 9.9.8 *)\n\n\n\n(* ================================================== thm:mono *)\n(** Lemma 10.1.1 *)\n\n(** The third notion in the book is called embedding. No complete equivalence yet, but see:*)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_10_1_1_iii := @HSet.isinj_embedding.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:inj-mono *)\n(** Lemma 10.1.2 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_10_1_2rl := @HSet.isinj_ismono.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_10_1_2lr := @HSet.ismono_isinj.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(* This one is not in the book, but close to 10.1.2:\n HSet.isembedding_isinj_hset*)\n\n(* ================================================== epis-surj *)\n(** Lemma 10.1.4 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_10_1_4_i_iii := @HIT.epi.isepi_issurj.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_10_1_4_i_ii := @HIT.epi.isepi'_contr_cone.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_10_1_4_iii_i := @HIT.epi.issurj_isepi.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== lem:images_are_coequalizers *)\n(** Theorem 10.1.5 *)\n\n\n\n(* ================================================== thm:set_regular *)\n(** Theorem 10.1.5 *)\n\n\n\n(* ================================================== lem:pb_of_coeq_is_coeq *)\n(** Lemma 10.1.6 *)\n\n\n\n(* ================================================== lem:sets_exact *)\n(** Lemma 10.1.8 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_10_1_8 := @HIT.quotient.sets_exact.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== prop:kernels_are_effective *)\n(** Theorem 10.1.9 *)\n\n(* See: HIT.unique_choice.unique_choice\ntheories.ObjectClassifier.PowisoPFam\nApparently closure under Pi and Sigma are still missing ? *)\n\n(* ================================================== thm:settopos *)\n(** Theorem 10.1.12 *)\n\n\n\n(* ================================================== prop:trunc_of_prop_is_set *)\n(** Lemma 10.1.13 *)\n\n\n\n(* ================================================== thm:1surj_to_surj_to_pem *)\n(** Theorem 10.1.14 *)\n\n\n\n(* ================================================== thm:ETCS *)\n(** Theorem 10.1.15 *)\n\n\n\n(* ================================================== defn:card *)\n(** Definition 10.2.1 *)\n\n\n\n(* ================================================== card:semiring *)\n(** Lemma 10.2.4 *)\n\n\n\n(* ================================================== card:exp *)\n(** Lemma 10.2.6 *)\n\n\n\n(* ================================================== thm:injsurj *)\n(** Lemma 10.2.9 *)\n\n\n\n(* ================================================== defn:accessibility *)\n(** Definition 10.3.1 *)\n\n\n\n(* ================================================== thm:nat-wf *)\n(** Example 10.3.5 *)\n\n\n\n(* ================================================== thm:wtype-wf *)\n(** Example 10.3.6 *)\n\n\n\n(* ================================================== thm:wfrec *)\n(** Lemma 10.3.7 *)\n\n\n\n(* ================================================== thm:wfmin *)\n(** Lemma 10.3.8 *)\n\n\n\n(* ================================================== def:simulation *)\n(** Definition 10.3.11 *)\n\n\n\n(* ================================================== thm:wfcat *)\n(** Corollary 10.3.15 *)\n\n\n\n(* ================================================== thm:ordord *)\n(** Theorem 10.3.20 *)\n\n\n\n(* ================================================== thm:ordsucc *)\n(** Lemma 10.3.21 *)\n\n\n\n(* ================================================== thm:ordunion *)\n(** Lemma 10.3.22 *)\n\n\n\n(* ================================================== thm:wellorder *)\n(** Theorem 10.4.3 *)\n\n\n\n(* ================================================== thm:wop *)\n(** Theorem 10.4.4 *)\n\n\n\n(* ================================================== defn:V *)\n(** Definition 10.5.1 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_10_5_1 := @HoTT.HIT.V.CumulativeHierarchy.V.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== def:bisimulation *)\n(** Definition 10.5.4 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_10_5_4 := @HoTT.HIT.V.bisimulation.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== lem:BisimEqualsId *)\n(** Lemma 10.5.5 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_10_5_5 := @HoTT.HIT.V.bisimulation_equiv_id.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== lem:MonicSetPresent *)\n(** Lemma 10.5.6 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_10_5_6 := @HoTT.HIT.V.monic_set_present.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== def:TypeOfElements *)\n(** Definition 10.5.7 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_10_5_7 := @HoTT.HIT.V.type_of_members.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:VisCST *)\n(** Theorem 10.5.8 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_10_5_8_item_i := @HoTT.HIT.V.extensionality.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_10_5_8_item_ii := @HoTT.HIT.V.not_mem_Vempty.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_10_5_8_item_iii := @HoTT.HIT.V.pairing.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_10_5_8_item_iv := @HoTT.HIT.V.infinity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_10_5_8_item_v := @HoTT.HIT.V.union.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_10_5_8_item_vi := @HoTT.HIT.V.function.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_10_5_8_item_vii := @HoTT.HIT.V.mem_induction.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_10_5_8_item_viii := @HoTT.HIT.V.replacement.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_10_5_8_item_ix := @HoTT.HIT.V.separation.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== cor:Delta0sep *)\n(** Corollary 10.5.9 *)\n\n\n\n(* ================================================== lem:fullsep *)\n(** Lemma 10.5.10 *)\n\n\n\n(* ================================================== thm:zfc *)\n(** Theorem 10.5.11 *)\n\n\n\n(* ================================================== defn:dedekind-reals *)\n(** Definition 11.2.1 *)\n\n\n\n(* ================================================== dedekind-in-cut-as-le *)\n(** Lemma 11.2.2 *)\n\n\n\n(* ================================================== RD-inverse-apart-0 *)\n(** Theorem 11.2.4 *)\n\n\n\n(* ================================================== RD-archimedean *)\n(** Theorem 11.2.6 *)\n\n\n\n(* ================================================== ordered-field *)\n(** Definition 11.2.7 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_11_2_7 := @HoTT.Classes.interfaces.abstract_algebra.IsField.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_11_2_7' := @HoTT.Classes.interfaces.orders.FullPseudoSemiRingOrder.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== RD-archimedean-ordered-field *)\n(** Theorem 11.2.8 *)\n\n\n\n(* ================================================== defn:cauchy-approximation *)\n(** Definition 11.2.10 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_11_2_10 := @HoTT.Classes.theory.premetric.Approximation.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== RD-cauchy-complete *)\n(** Theorem 11.2.12 *)\n\n\n\n(* ================================================== RD-final-field *)\n(** Theorem 11.2.14 *)\n\n\n\n(* ================================================== lem:cuts-preserve-admissibility *)\n(** Lemma 11.2.15 *)\n\n\n\n(* ================================================== RD-dedekind-complete *)\n(** Corollary 11.2.16 *)\n\n\n\n(* ================================================== defn:cauchy-reals *)\n(** Definition 11.3.2 *)\n\n\n\n(* ================================================== lem:close-reflexive *)\n(** Lemma 11.3.8 *)\n\n\n\n(* ================================================== thm:Cauchy-reals-are-a-set *)\n(** Theorem 11.3.9 *)\n\n\n\n(* ================================================== RC-lim-onto *)\n(** Lemma 11.3.10 *)\n\n\n\n(* ================================================== RC-lim-factor *)\n(** Lemma 11.3.11 *)\n\n\n\n(* ================================================== thm:RCsim-symmetric *)\n(** Lemma 11.3.12 *)\n\n\n\n(* ================================================== defn:lipschitz *)\n(** Definition 11.3.14 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_11_3_14 := @HoTT.Classes.theory.premetric.Lipschitz.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== RC-extend-Q-Lipschitz *)\n(** Lemma 11.3.15 *)\n\n\n\n(* ================================================== defn:RC-approx *)\n(** Theorem 11.3.16 *)\n\n\n\n(* ================================================== thm:RC-sim-characterization *)\n(** Theorem 11.3.32 *)\n\n\n\n(* ================================================== thm:RC-sim-lim *)\n(** Lemma 11.3.36 *)\n\n\n\n(* ================================================== thm:RC-sim-lim-term *)\n(** Lemma 11.3.37 *)\n\n\n\n(* ================================================== RC-continuous-eq *)\n(** Lemma 11.3.39 *)\n\n\n\n(* ================================================== RC-binary-nonexpanding-extension *)\n(** Lemma 11.3.40 *)\n\n\n\n(* ================================================== RC-archimedean *)\n(** Theorem 11.3.41 *)\n\n\n\n(* ================================================== thm:RC-le-grow *)\n(** Lemma 11.3.42 *)\n\n\n\n(* ================================================== thm:RC-lt-open *)\n(** Lemma 11.3.43 *)\n\n\n\n(* ================================================== RC-sim-eqv-le *)\n(** Theorem 11.3.44 *)\n\n\n\n(* ================================================== RC-squaring *)\n(** Theorem 11.3.46 *)\n\n\n\n(* ================================================== RC-archimedean-ordered-field *)\n(** Theorem 11.3.48 *)\n\n\n\n(* ================================================== RC-initial-Cauchy-complete *)\n(** Theorem 11.3.50 *)\n\n\n\n(* ================================================== lem:untruncated-linearity-reals-coincide *)\n(** Lemma 11.4.1 *)\n\n\n\n(* ================================================== when-reals-coincide *)\n(** Corollary 11.4.3 *)\n\n\n\n(* ================================================== defn:metric-space *)\n(** Definition 11.5.1 *)\n\n\n\n(* ================================================== defn:complete-metric-space *)\n(** Definition 11.5.2 *)\n\n\n\n(* ================================================== defn:total-bounded-metric-space *)\n(** Definition 11.5.3 *)\n\n\n\n(* ================================================== defn:uniformly-continuous *)\n(** Definition 11.5.5 *)\n\n\n\n(* ================================================== analysis-interval-ctb *)\n(** Theorem 11.5.6 *)\n\n\n\n(* ================================================== ctb-uniformly-continuous-sup *)\n(** Theorem 11.5.7 *)\n\n\n\n(* ================================================== analysis-bw-lpo *)\n(** Theorem 11.5.9 *)\n\n\n\n(* ================================================== classical-Heine-Borel *)\n(** Theorem 11.5.11 *)\n\n\n\n(* ================================================== defn:inductive-cover *)\n(** Definition 11.5.13 *)\n\n\n\n(* ================================================== reals-formal-topology-locally-compact *)\n(** Lemma 11.5.14 *)\n\n\n\n(* ================================================== interval-Heine-Borel *)\n(** Corollary 11.5.15 *)\n\n\n\n(* ================================================== inductive-cover-classical *)\n(** Theorem 11.5.16 *)\n\n\n\n(* ================================================== defn:surreals *)\n(** Definition 11.6.1 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_11_6_1 := @HoTT.Spaces.No.Core.No.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:NO-simplicity *)\n(** Theorem 11.6.2 *)\n\n\n\n(* ================================================== thm:NO-refl-opt *)\n(** Theorem 11.6.4 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_11_6_4_i := @HoTT.Spaces.No.Core.le_reflexive.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_11_6_4_ii_l := @HoTT.Spaces.No.Core.lt_lopt.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_11_6_4_ii_r := @HoTT.Spaces.No.Core.lt_ropt.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:NO-set *)\n(** Corollary 11.6.5 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_11_6_5 := @HoTT.Spaces.No.Core.isset_No.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== defn:No-codes *)\n(** Theorem 11.6.7 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_11_6_7 := @HoTT.Spaces.No.Core.No_codes_package.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:NO-encode-decode *)\n(** Theorem 11.6.16 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_11_6_16_i := @HoTT.Spaces.No.Core.No_encode_le_lt.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_11_6_16_ii := @HoTT.Spaces.No.Core.No_decode_le_lt.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== thm:NO-unstrict-transitive *)\n(** Corollary 11.6.17 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_11_6_17_i := @HoTT.Spaces.No.Core.lt_le.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_11_6_17_ii := @HoTT.Spaces.No.Core.le_le_trans.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_11_6_17_iii := @HoTT.Spaces.No.Core.le_lt_trans.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_11_6_17_iv := @HoTT.Spaces.No.Core.lt_le_trans.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(* ================================================== eg:surreal-addition *)\n(** Example 11.6.18 *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition Book_11_6_18 := @HoTT.Spaces.No.Addition.plus.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

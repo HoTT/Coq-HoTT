@@ -1,0 +1,6045 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "From HoTT Require Import Basics Types.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "sentence",
+      "contents": "From HoTT Require Import Basics Types.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "From HoTT.WildCat Require Import Core Induced.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Colimits.Quotient.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Pointed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Truncations.Core Truncations.Connectedness.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Homotopy.ClassifyingSpace.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Require Import Algebra.Groups.Group.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope trunc_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope path_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Open Scope pointed_scope.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Keyed unification makes [rewrite !loops_functor_group] take a really long time.  See https://coq.inria.fr/bugs/show_bug.cgi?id=4544 for more discussion. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Unset Keyed Unification.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** * oo-Groups *)\n\n(** We want a workable definition of \"oo-group\" (what a classical homotopy theorist would call a \"grouplike Aoo-space\"). The classical definitions using operads or Segal spaces involve infinitely much data, which we don't know how to handle in HoTT. But instead, we can invoke the theorem (which is a theorem in classical homotopy theory, and also in any oo-topos) that every oo-group is the loop space of some pointed connected object, and use it instead as a definition: we define an oo-group to be a pointed connected type (its classifying space or delooping). Then we make subsidiary definitions to allow us to treat such an object in the way we would expect, e.g. an oo-group homomorphism is a pointed map between classifying spaces. *)\n\n(** ** Definition *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Record ooGroup :=\n  { classifying_space : pType ;\n    isconn_classifying_space :: IsConnected 0 classifying_space\n  }.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Local Notation B := classifying_space.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition group_type (G : ooGroup) : Type\n  := point (B G) = point (B G).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The following is fundamental: we declare a coercion from oo-groups to types which takes a pointed connected type not to its underlying type, but to its loop space. Thus, if [G : ooGroup], then [g : G] means that [g] is an element of the oo-group that [G] is intended to denote, which is the loop space of the pointed connected type that is technically the data of which [G : ooGroup] consists. This makes it easier to really think of [G] as \"really being\" an oo-group rather than its classifying space.\n\nThis is also convenient because elements of oo-groups are, definitionally, loops in some type. Thus, the oo-group operations like multiplication, inverse, associativity, higher associativity, etc. are simply special cases of the corresponding operations for paths. *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Coercion group_type : ooGroup >-> Sortclass.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Every pointed type has a loop space that is an oo-group. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition group_loops (X : pType)\n  : ooGroup.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ooGroup",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ooGroup",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "pose (BG := [{ x:X & merely (x = pt) },\n               exist (fun x:X => merely (x = pt)) pt (tr 1)]).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ooGroup",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BG"
+              ],
+              "body": "[{x : X & merely (x = pt)}, (pt; tr 1)]",
+              "type": "pType"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  (** Using [cut] prevents Coq from looking for these facts with typeclass search, which is slow and (for some reason) introduces scads of extra universes. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "cut (IsConnected 0 BG).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsConnected (Tr 0) BG -> ooGroup",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BG"
+              ],
+              "body": "[{x : X & merely (x = pt)}, (pt; tr 1)]",
+              "type": "pType"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsConnected (Tr 0) BG",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BG"
+              ],
+              "body": "[{x : X & merely (x = pt)}, (pt; tr 1)]",
+              "type": "pType"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "{",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsConnected (Tr 0) BG -> ooGroup",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BG"
+              ],
+              "body": "[{x : X & merely (x = pt)}, (pt; tr 1)]",
+              "type": "pType"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (Build_ooGroup BG).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "}",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsConnected (Tr 0) BG",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BG"
+              ],
+              "body": "[{x : X & merely (x = pt)}, (pt; tr 1)]",
+              "type": "pType"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "cut (IsSurjection (unit_name (point BG))).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsConnMap (Tr (-1)) (unit_name pt) -> IsConnected (Tr 0) BG",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BG"
+              ],
+              "body": "[{x : X & merely (x = pt)}, (pt; tr 1)]",
+              "type": "pType"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsConnMap (Tr (-1)) (unit_name pt)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BG"
+              ],
+              "body": "[{x : X & merely (x = pt)}, (pt; tr 1)]",
+              "type": "pType"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "{",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsConnMap (Tr (-1)) (unit_name pt) -> IsConnected (Tr 0) BG",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BG"
+              ],
+              "body": "[{x : X & merely (x = pt)}, (pt; tr 1)]",
+              "type": "pType"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros; exact (conn_pointed_type pt).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "}",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "IsConnMap (Tr (-1)) (unit_name pt)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BG"
+              ],
+              "body": "[{x : X & merely (x = pt)}, (pt; tr 1)]",
+              "type": "pType"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply BuildIsSurjection; simpl; intros [x p].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Tr (-1) (hfiber (unit_name pt) (x; p))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BG"
+              ],
+              "body": "[{x0 : X & merely (x0 = pt)}, (pt; tr 1)]",
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "Tr (-1) (x = pt)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "strip_truncations; apply tr; exists tt.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "pt = (x; tr p)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BG"
+              ],
+              "body": "[{x0 : X & merely (x0 = pt)}, (pt; tr 1)]",
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "x = pt"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply path_sigma_hprop; simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "pt = x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "BG"
+              ],
+              "body": "[{x0 : X & merely (x0 = pt)}, (pt; tr 1)]",
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "x = pt"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (p^).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Unfortunately, the underlying type of that oo-group is not *definitionally* the same as the ordinary loop space, but it is equivalent to it. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition loops_group (X : pType)\n  : loops X <~> group_loops X.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "loops X <~> group_loops X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "loops X <~> group_loops X",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold loops, group_type.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "[pt = pt, 1] <~> pt = pt",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "pt = pt <~> pt = pt",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (equiv_path_sigma_hprop (point X ; tr 1) (point X ; tr 1)).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Homomorphisms *)\n\n(** *** Definition *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition ooGroupHom (G H : ooGroup)\n  := B G ->* B H.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition grouphom_fun {G H} (phi : ooGroupHom G H) : G -> H\n  := fmap loops phi.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Coercion grouphom_fun : ooGroupHom >-> Funclass.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The loop group functor takes values in oo-group homomorphisms. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition group_loops_functor\n           {X Y : pType} (f : X ->* Y)\n: ooGroupHom (group_loops X) (group_loops Y).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ooGroupHom (group_loops X) (group_loops Y)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X ->* Y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ooGroupHom (group_loops X) (group_loops Y)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X ->* Y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply Build_pMap; simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{x : X & Tr (-1) (x = pt)} -> {x : Y & Tr (-1) (x = pt)}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X ->* Y"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?Goal pt = pt",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X ->* Y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{x : X & Tr (-1) (x = pt)} -> {x : Y & Tr (-1) (x = pt)}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X ->* Y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros [x p].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{x0 : Y & Tr (-1) (x0 = pt)}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X ->* Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "Tr (-1) (x = pt)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exists (f x).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Tr (-1) (f x = pt)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X ->* Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "Tr (-1) (x = pt)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "strip_truncations; apply tr.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f x = pt",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X ->* Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "x = pt"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (ap f p @ point_eq f).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun X0 : {x : X & Tr (-1) (x = pt)} =>\n (fun (x : X) (p : Tr (-1) (x = pt)) =>\n  (f x;\n  Trunc_ind (fun _ : Trunc (-1) (x = pt) => Tr (-1) (f x = pt))\n    (fun p0 : x = pt => tr (ap f p0 @ point_eq f)) p))\n   X0.1 X0.2)\n  pt =\npt",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X ->* Y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply path_sigma_hprop; simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "f pt = pt",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X ->* Y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply point_eq.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** And this functor \"is\" the same as the ordinary loop space functor. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition loops_functor_group\n           {X Y : pType} (f : X ->* Y)\n: fmap loops (group_loops_functor f) o loops_group X\n  == loops_group Y o fmap loops f.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fmap loops (group_loops_functor f) o loops_group X ==\nloops_group Y o fmap loops f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X ->* Y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fmap loops (group_loops_functor f) o loops_group X ==\nloops_group Y o fmap loops f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X ->* Y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros x.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fmap loops (group_loops_functor f) (loops_group X x) =\nloops_group Y (fmap loops f x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X ->* Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "loops X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply (equiv_inj (equiv_path_sigma_hprop _ _)^-1).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(equiv_path_sigma_hprop pt pt)^-1\n  (fmap loops (group_loops_functor f) (loops_group X x)) =\n(equiv_path_sigma_hprop pt pt)^-1 (loops_group Y (fmap loops f x))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X ->* Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "loops X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "((path_sigma_hprop (f pt; tr (1 @ point_eq f)) pt (point_eq f))^ @\n (ap\n    (fun X0 : {x0 : X & Tr (-1) (x0 = pt)} =>\n     (f X0.1;\n     Trunc_ind (fun _ : Trunc (-1) (X0.1 = pt) => Tr (-1) (f X0.1 = pt))\n       (fun p : X0.1 = pt => tr (ap f p @ point_eq f)) X0.2))\n    (path_sigma_hprop (pt; tr 1) (pt; tr 1) x) @\n  path_sigma_hprop (f pt; tr (1 @ point_eq f)) pt (point_eq f)))\n..1 =\n(path_sigma_hprop (pt; tr 1) (pt; tr 1)\n   ((point_eq f)^ @ (ap f x @ point_eq f)))\n..1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X ->* Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "loops X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold pr1_path; rewrite !ap_pp.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap pr1 (path_sigma_hprop (f pt; tr (1 @ point_eq f)) pt (point_eq f))^ @\n(ap pr1\n   (ap\n      (fun X0 : {x0 : X & Tr (-1) (x0 = pt)} =>\n       (f X0.1;\n       Trunc_ind (fun _ : Trunc (-1) (X0.1 = pt) => Tr (-1) (f X0.1 = pt))\n         (fun p : X0.1 = pt => tr (ap f p @ point_eq f)) X0.2))\n      (path_sigma_hprop (pt; tr 1) (pt; tr 1) x)) @\n ap pr1 (path_sigma_hprop (f pt; tr (1 @ point_eq f)) pt (point_eq f))) =\nap pr1\n  (path_sigma_hprop (pt; tr 1) (pt; tr 1)\n     ((point_eq f)^ @ (ap f x @ point_eq f)))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X ->* Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "loops X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite ap_V, !ap_pr1_path_sigma_hprop.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(point_eq f)^ @\n(ap pr1\n   (ap\n      (fun X0 : {x0 : X & Tr (-1) (x0 = pt)} =>\n       (f X0.1;\n       Trunc_ind (fun _ : Trunc (-1) (X0.1 = pt) => Tr (-1) (f X0.1 = pt))\n         (fun p : X0.1 = pt => tr (ap f p @ point_eq f)) X0.2))\n      (path_sigma_hprop (pt; tr 1) (pt; tr 1) x)) @\n point_eq f) =\n(point_eq f)^ @ (ap f x @ point_eq f)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X ->* Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "loops X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply whiskerL, whiskerR.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap pr1\n  (ap\n     (fun X0 : {x0 : X & Tr (-1) (x0 = pt)} =>\n      (f X0.1;\n      Trunc_ind (fun _ : Trunc (-1) (X0.1 = pt) => Tr (-1) (f X0.1 = pt))\n        (fun p : X0.1 = pt => tr (ap f p @ point_eq f)) X0.2))\n     (path_sigma_hprop (pt; tr 1) (pt; tr 1) x)) =\nap f x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X ->* Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "loops X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "transitivity (ap (fun X0 : {x0 : X & merely (x0 = point X)} => f X0.1)\n                   (path_sigma_hprop (point X; tr 1) (point X; tr 1) x)).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap pr1\n  (ap\n     (fun X0 : {x0 : X & Tr (-1) (x0 = pt)} =>\n      (f X0.1;\n      Trunc_ind (fun _ : Trunc (-1) (X0.1 = pt) => Tr (-1) (f X0.1 = pt))\n        (fun p : X0.1 = pt => tr (ap f p @ point_eq f)) X0.2))\n     (path_sigma_hprop (pt; tr 1) (pt; tr 1) x)) =\nap (fun X0 : {x0 : X & merely (x0 = pt)} => f X0.1)\n  (path_sigma_hprop (pt; tr 1) (pt; tr 1) x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X ->* Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "loops X"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap (fun X0 : {x0 : X & merely (x0 = pt)} => f X0.1)\n  (path_sigma_hprop (pt; tr 1) (pt; tr 1) x) =\nap f x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X ->* Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "loops X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap pr1\n  (ap\n     (fun X0 : {x0 : X & Tr (-1) (x0 = pt)} =>\n      (f X0.1;\n      Trunc_ind (fun _ : Trunc (-1) (X0.1 = pt) => Tr (-1) (f X0.1 = pt))\n        (fun p : X0.1 = pt => tr (ap f p @ point_eq f)) X0.2))\n     (path_sigma_hprop (pt; tr 1) (pt; tr 1) x)) =\nap (fun X0 : {x0 : X & merely (x0 = pt)} => f X0.1)\n  (path_sigma_hprop (pt; tr 1) (pt; tr 1) x)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X ->* Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "loops X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "match goal with\n        |- ap ?f (ap ?g ?p) = ?z =>\n        symmetry; exact (ap_compose g f p)\n    end.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap (fun X0 : {x0 : X & merely (x0 = pt)} => f X0.1)\n  (path_sigma_hprop (pt; tr 1) (pt; tr 1) x) =\nap f x",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X ->* Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "loops X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite ap_compose; apply ap.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap (fun x0 : {x0 : X & merely (x0 = pt)} => x0.1)\n  (path_sigma_hprop (pt; tr 1) (pt; tr 1) x) =\nx",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "X ->* Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "x"
+              ],
+              "body": null,
+              "type": "loops X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply ap_pr1_path_sigma_hprop.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition grouphom_compose {G H K : ooGroup}\n           (psi : ooGroupHom H K) (phi : ooGroupHom G H)\n: ooGroupHom G K\n  := pmap_compose psi phi.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** *** Functoriality *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition group_loops_functor_compose\n           {X Y Z : pType}\n           (psi : Y ->* Z) (phi : X ->* Y)\n: grouphom_compose (group_loops_functor psi) (group_loops_functor phi)\n  == group_loops_functor (pmap_compose psi phi).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "grouphom_compose (group_loops_functor psi) (group_loops_functor phi) ==\ngroup_loops_functor (psi o* phi)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "psi"
+              ],
+              "body": null,
+              "type": "Y ->* Z"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "phi"
+              ],
+              "body": null,
+              "type": "X ->* Y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "grouphom_compose (group_loops_functor psi) (group_loops_functor phi) ==\ngroup_loops_functor (psi o* phi)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "psi"
+              ],
+              "body": null,
+              "type": "Y ->* Z"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "phi"
+              ],
+              "body": null,
+              "type": "X ->* Y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros g.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "grouphom_compose (group_loops_functor psi) (group_loops_functor phi) g =\ngroup_loops_functor (psi o* phi) g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "psi"
+              ],
+              "body": null,
+              "type": "Y ->* Z"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "phi"
+              ],
+              "body": null,
+              "type": "X ->* Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "group_loops X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold grouphom_fun, grouphom_compose.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fmap loops (group_loops_functor psi o* group_loops_functor phi) g =\nfmap loops (group_loops_functor (psi o* phi)) g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "psi"
+              ],
+              "body": null,
+              "type": "Y ->* Z"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "phi"
+              ],
+              "body": null,
+              "type": "X ->* Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "group_loops X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (pointed_htpy (fmap_comp loops _ _) g @ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fmap loops (group_loops_functor psi) $o fmap loops (group_loops_functor phi))\n  g =\nfmap loops (group_loops_functor (psi o* phi)) g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "psi"
+              ],
+              "body": null,
+              "type": "Y ->* Z"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "phi"
+              ],
+              "body": null,
+              "type": "X ->* Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "group_loops X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "pose (p := eisretr (loops_group X) g).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fmap loops (group_loops_functor psi) $o fmap loops (group_loops_functor phi))\n  g =\nfmap loops (group_loops_functor (psi o* phi)) g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "psi"
+              ],
+              "body": null,
+              "type": "Y ->* Z"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "phi"
+              ],
+              "body": null,
+              "type": "X ->* Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "group_loops X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": "eisretr (loops_group X) g",
+              "type": "(loops_group X o (loops_group X)^-1) g = idmap g"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "change (fmap loops (group_loops_functor psi)\n            (fmap loops (group_loops_functor phi) g)\n          = fmap loops (group_loops_functor\n                                 (pmap_compose psi phi)) g).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fmap loops (group_loops_functor psi) (fmap loops (group_loops_functor phi) g) =\nfmap loops (group_loops_functor (psi o* phi)) g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "psi"
+              ],
+              "body": null,
+              "type": "Y ->* Z"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "phi"
+              ],
+              "body": null,
+              "type": "X ->* Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "group_loops X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": "eisretr (loops_group X) g",
+              "type": "(loops_group X o (loops_group X)^-1) g = idmap g"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite <- p.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fmap loops (group_loops_functor psi)\n  (fmap loops (group_loops_functor phi)\n     (loops_group X ((loops_group X)^-1 g))) =\nfmap loops (group_loops_functor (psi o* phi))\n  (loops_group X ((loops_group X)^-1 g))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Y"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "Z"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "psi"
+              ],
+              "body": null,
+              "type": "Y ->* Z"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "phi"
+              ],
+              "body": null,
+              "type": "X ->* Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "group_loops X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": "eisretr (loops_group X) g",
+              "type": "(loops_group X o (loops_group X)^-1) g = idmap g"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite !loops_functor_group.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "loops_group Z (fmap loops psi (fmap loops phi ((loops_group X)^-1 g))) =\nloops_group Z (fmap loops (psi o* phi) ((loops_group X)^-1 g))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X",
+                "Y",
+                "Z"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "psi"
+              ],
+              "body": null,
+              "type": "Y ->* Z"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "phi"
+              ],
+              "body": null,
+              "type": "X ->* Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "group_loops X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": "eisretr (loops_group X) g",
+              "type": "(loops_group X o (loops_group X)^-1) g = idmap g"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply ap.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fmap loops psi (fmap loops phi ((loops_group X)^-1 g)) =\nfmap loops (psi o* phi) ((loops_group X)^-1 g)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X",
+                "Y",
+                "Z"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "psi"
+              ],
+              "body": null,
+              "type": "Y ->* Z"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "phi"
+              ],
+              "body": null,
+              "type": "X ->* Y"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "group_loops X"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": "eisretr (loops_group X) g",
+              "type": "(loops_group X o (loops_group X)^-1) g = idmap g"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "symmetry; tapply (fmap_comp loops).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition grouphom_idmap (G : ooGroup) : ooGroupHom G G\n  := pmap_idmap.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition group_loops_functor_idmap {X : pType}\n: grouphom_idmap (group_loops X)\n  == group_loops_functor (Id (A:=pType) _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "grouphom_idmap (group_loops X) == group_loops_functor (Id X)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "grouphom_idmap (group_loops X) == group_loops_functor (Id X)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros g.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "grouphom_idmap (group_loops X) g = group_loops_functor (Id X) g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "group_loops X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine (fmap_id loops _ g @ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Id (loops (B (group_loops X))) g = group_loops_functor (Id X) g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "group_loops X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite <- (eisretr (loops_group X) g).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Id (loops (B (group_loops X))) (loops_group X ((loops_group X)^-1 g)) =\ngroup_loops_functor (Id X) (loops_group X ((loops_group X)^-1 g))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "group_loops X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "unfold grouphom_fun, grouphom_idmap.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Id (loops (B (group_loops X))) (loops_group X ((loops_group X)^-1 g)) =\nfmap loops (group_loops_functor (Id X))\n  (loops_group X ((loops_group X)^-1 g))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "group_loops X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "rewrite !loops_functor_group.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Id (loops (B (group_loops X))) (loops_group X ((loops_group X)^-1 g)) =\nloops_group X (fmap loops (Id X) ((loops_group X)^-1 g))",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "pType"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "group_loops X"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (ap (loops_group X) (fmap_id loops _ _)^).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** *** Homomorphic properties *)\n\n(** The following tactic often allows us to \"pretend\" that phi preserves basepoints strictly.  This is basically a simple extension of [pointed_reduce_rewrite] (see Pointed.v). *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Ltac grouphom_reduce :=\n  unfold grouphom_fun; cbn;\n  repeat match goal with\n           | [ G : ooGroup |- _ ] => destruct G as [G ?]\n           | [ phi : ooGroupHom ?G ?H |- _ ] => destruct phi as [phi ?]\n         end;\n  pointed_reduce_rewrite.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition compose_grouphom {G H K : ooGroup}\n           (psi : ooGroupHom H K) (phi : ooGroupHom G H)\n: grouphom_compose psi phi == psi o phi.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "grouphom_compose psi phi == psi o phi",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H",
+                "K"
+              ],
+              "body": null,
+              "type": "ooGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "psi"
+              ],
+              "body": null,
+              "type": "ooGroupHom H K"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "phi"
+              ],
+              "body": null,
+              "type": "ooGroupHom G H"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "grouphom_compose psi phi == psi o phi",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H",
+                "K"
+              ],
+              "body": null,
+              "type": "ooGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "psi"
+              ],
+              "body": null,
+              "type": "ooGroupHom H K"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "phi"
+              ],
+              "body": null,
+              "type": "ooGroupHom G H"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros g; grouphom_reduce.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap (fun x : G => psi (phi x)) g = ap psi (ap phi g)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "point1"
+              ],
+              "body": null,
+              "type": "IsPointed G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "isconn_classifying_space2"
+              ],
+              "body": null,
+              "type": "IsConnected (Tr 0) G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "isconn_classifying_space1"
+              ],
+              "body": null,
+              "type": "IsConnected (Tr 0) H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "K"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "isconn_classifying_space0"
+              ],
+              "body": null,
+              "type": "IsConnected (Tr 0) K"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "psi"
+              ],
+              "body": null,
+              "type": "H -> K"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "phi"
+              ],
+              "body": null,
+              "type": "G -> H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "{|\n  classifying_space := [G, point1];\n  isconn_classifying_space := isconn_classifying_space2\n|}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (ap_compose phi psi g).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition idmap_grouphom (G : ooGroup)\n: grouphom_idmap G == idmap.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "grouphom_idmap G == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "ooGroup"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "grouphom_idmap G == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "ooGroup"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros g; grouphom_reduce.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap idmap g = g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "point"
+              ],
+              "body": null,
+              "type": "IsPointed G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "isconn_classifying_space0"
+              ],
+              "body": null,
+              "type": "IsConnected (Tr 0) G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "{|\n  classifying_space := [G, point];\n  isconn_classifying_space := isconn_classifying_space0\n|}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (ap_idmap g).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition grouphom_pp {G H} (phi : ooGroupHom G H) (g1 g2 : G)\n: phi (g1 @ g2) = phi g1 @ phi g2.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "phi (g1 @ g2) = phi g1 @ phi g2",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "ooGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "phi"
+              ],
+              "body": null,
+              "type": "ooGroupHom G H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g1",
+                "g2"
+              ],
+              "body": null,
+              "type": "G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "phi (g1 @ g2) = phi g1 @ phi g2",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "ooGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "phi"
+              ],
+              "body": null,
+              "type": "ooGroupHom G H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g1",
+                "g2"
+              ],
+              "body": null,
+              "type": "G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "grouphom_reduce.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap phi (g1 @ g2) = ap phi g1 @ ap phi g2",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "point0"
+              ],
+              "body": null,
+              "type": "IsPointed G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "isconn_classifying_space1"
+              ],
+              "body": null,
+              "type": "IsConnected (Tr 0) G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "isconn_classifying_space0"
+              ],
+              "body": null,
+              "type": "IsConnected (Tr 0) H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "phi"
+              ],
+              "body": null,
+              "type": "G -> H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g1",
+                "g2"
+              ],
+              "body": null,
+              "type": "{|\n  classifying_space := [G, point0];\n  isconn_classifying_space := isconn_classifying_space1\n|}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (ap_pp phi g1 g2).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition grouphom_V {G H} (phi : ooGroupHom G H) (g : G)\n: phi g^ = (phi g)^.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "phi g^ = (phi g)^",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "ooGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "phi"
+              ],
+              "body": null,
+              "type": "ooGroupHom G H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "phi g^ = (phi g)^",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "ooGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "phi"
+              ],
+              "body": null,
+              "type": "ooGroupHom G H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "grouphom_reduce.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "ap phi g^ = (ap phi g)^",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "point0"
+              ],
+              "body": null,
+              "type": "IsPointed G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "isconn_classifying_space1"
+              ],
+              "body": null,
+              "type": "IsConnected (Tr 0) G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "isconn_classifying_space0"
+              ],
+              "body": null,
+              "type": "IsConnected (Tr 0) H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "phi"
+              ],
+              "body": null,
+              "type": "G -> H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "{|\n  classifying_space := [G, point0];\n  isconn_classifying_space := isconn_classifying_space1\n|}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (ap_V phi g).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition grouphom_1 {G H} (phi : ooGroupHom G H)\n: phi 1 = 1.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "phi 1 = 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "ooGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "phi"
+              ],
+              "body": null,
+              "type": "ooGroupHom G H"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "phi 1 = 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "ooGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "phi"
+              ],
+              "body": null,
+              "type": "ooGroupHom G H"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "grouphom_reduce.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "1 = 1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "point0"
+              ],
+              "body": null,
+              "type": "IsPointed G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "isconn_classifying_space1"
+              ],
+              "body": null,
+              "type": "IsConnected (Tr 0) G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "isconn_classifying_space0"
+              ],
+              "body": null,
+              "type": "IsConnected (Tr 0) H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "phi"
+              ],
+              "body": null,
+              "type": "G -> H"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Qed.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition grouphom_pp_p {G H} (phi : ooGroupHom G H) (g1 g2 g3 : G)\n: grouphom_pp phi (g1 @ g2) g3\n  @ whiskerR (grouphom_pp phi g1 g2) (phi g3)\n  @ concat_pp_p (phi g1) (phi g2) (phi g3)\n  = ap phi (concat_pp_p g1 g2 g3)\n    @ grouphom_pp phi g1 (g2 @ g3)\n    @ whiskerL (phi g1) (grouphom_pp phi g2 g3).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(grouphom_pp phi (g1 @ g2) g3 @ whiskerR (grouphom_pp phi g1 g2) (phi g3)) @\nconcat_pp_p (phi g1) (phi g2) (phi g3) =\n(ap phi (concat_pp_p g1 g2 g3) @ grouphom_pp phi g1 (g2 @ g3)) @\nwhiskerL (phi g1) (grouphom_pp phi g2 g3)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "ooGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "phi"
+              ],
+              "body": null,
+              "type": "ooGroupHom G H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g1",
+                "g2",
+                "g3"
+              ],
+              "body": null,
+              "type": "G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(grouphom_pp phi (g1 @ g2) g3 @ whiskerR (grouphom_pp phi g1 g2) (phi g3)) @\nconcat_pp_p (phi g1) (phi g2) (phi g3) =\n(ap phi (concat_pp_p g1 g2 g3) @ grouphom_pp phi g1 (g2 @ g3)) @\nwhiskerL (phi g1) (grouphom_pp phi g2 g3)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "ooGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "phi"
+              ],
+              "body": null,
+              "type": "ooGroupHom G H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g1",
+                "g2",
+                "g3"
+              ],
+              "body": null,
+              "type": "G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "grouphom_reduce.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(grouphom_pp {| pointed_fun := phi; dpoint_eq := 1 |} (g1 @ g2) g3 @\n whiskerR (grouphom_pp {| pointed_fun := phi; dpoint_eq := 1 |} g1 g2)\n   (1 @ (ap phi g3 @ 1))) @\nconcat_pp_p (1 @ (ap phi g1 @ 1)) (1 @ (ap phi g2 @ 1)) (1 @ (ap phi g3 @ 1)) =\n(ap (fun p : point0 = point0 => 1 @ (ap phi p @ 1)) (concat_pp_p g1 g2 g3) @\n grouphom_pp {| pointed_fun := phi; dpoint_eq := 1 |} g1 (g2 @ g3)) @\nwhiskerL (1 @ (ap phi g1 @ 1))\n  (grouphom_pp {| pointed_fun := phi; dpoint_eq := 1 |} g2 g3)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "point0"
+              ],
+              "body": null,
+              "type": "IsPointed G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "isconn_classifying_space1"
+              ],
+              "body": null,
+              "type": "IsConnected (Tr 0) G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "H"
+              ],
+              "body": null,
+              "type": "Type"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "isconn_classifying_space0"
+              ],
+              "body": null,
+              "type": "IsConnected (Tr 0) H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "phi"
+              ],
+              "body": null,
+              "type": "G -> H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g1",
+                "g2",
+                "g3"
+              ],
+              "body": null,
+              "type": "{|\n  classifying_space := [G, point0];\n  isconn_classifying_space := isconn_classifying_space1\n|}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Abort.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Subgroups *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Section Subgroups.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Context {G H : ooGroup} (incl : ooGroupHom H G) `{IsEmbedding incl}.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** A subgroup induces an equivalence relation on the ambient group, whose equivalence classes are called \"cosets\". *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition in_coset : G -> G -> Type\n    := fun g1 g2 => hfiber incl (g1 @ g2^).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance ishprop_in_coset : is_mere_relation G in_coset.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "is_mere_relation G in_coset",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "ooGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "incl"
+              ],
+              "body": null,
+              "type": "ooGroupHom H G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEmbedding0"
+              ],
+              "body": null,
+              "type": "IsEmbedding incl"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "is_mere_relation G in_coset",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "ooGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "incl"
+              ],
+              "body": null,
+              "type": "ooGroupHom H G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEmbedding0"
+              ],
+              "body": null,
+              "type": "IsEmbedding incl"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance reflexive_coset : Reflexive in_coset.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Reflexive in_coset",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "ooGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "incl"
+              ],
+              "body": null,
+              "type": "ooGroupHom H G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEmbedding0"
+              ],
+              "body": null,
+              "type": "IsEmbedding incl"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Reflexive in_coset",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "ooGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "incl"
+              ],
+              "body": null,
+              "type": "ooGroupHom H G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEmbedding0"
+              ],
+              "body": null,
+              "type": "IsEmbedding incl"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros g.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "in_coset g g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "ooGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "incl"
+              ],
+              "body": null,
+              "type": "ooGroupHom H G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEmbedding0"
+              ],
+              "body": null,
+              "type": "IsEmbedding incl"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (1 ; grouphom_1 incl @ (concat_pV g)^).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance symmetric_coset : Symmetric in_coset.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Symmetric in_coset",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "ooGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "incl"
+              ],
+              "body": null,
+              "type": "ooGroupHom H G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEmbedding0"
+              ],
+              "body": null,
+              "type": "IsEmbedding incl"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Symmetric in_coset",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "ooGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "incl"
+              ],
+              "body": null,
+              "type": "ooGroupHom H G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEmbedding0"
+              ],
+              "body": null,
+              "type": "IsEmbedding incl"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros g1 g2 [h p].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "in_coset g2 g1",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "ooGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "incl"
+              ],
+              "body": null,
+              "type": "ooGroupHom H G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEmbedding0"
+              ],
+              "body": null,
+              "type": "IsEmbedding incl"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g1",
+                "g2"
+              ],
+              "body": null,
+              "type": "G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "incl h = g1 @ g2^"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exists (h^).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "incl h^ = g2 @ g1^",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "ooGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "incl"
+              ],
+              "body": null,
+              "type": "ooGroupHom H G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEmbedding0"
+              ],
+              "body": null,
+              "type": "IsEmbedding incl"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g1",
+                "g2"
+              ],
+              "body": null,
+              "type": "G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "incl h = g1 @ g2^"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (grouphom_V incl h @ inverse2 p @ inv_pp _ _ @ whiskerR (inv_V _) _).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Instance transitive_coset : Transitive in_coset.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Transitive in_coset",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "ooGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "incl"
+              ],
+              "body": null,
+              "type": "ooGroupHom H G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEmbedding0"
+              ],
+              "body": null,
+              "type": "IsEmbedding incl"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Transitive in_coset",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "ooGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "incl"
+              ],
+              "body": null,
+              "type": "ooGroupHom H G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEmbedding0"
+              ],
+              "body": null,
+              "type": "IsEmbedding incl"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros g1 g2 g3 [h1 p1] [h2 p2].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "in_coset g1 g3",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "ooGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "incl"
+              ],
+              "body": null,
+              "type": "ooGroupHom H G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEmbedding0"
+              ],
+              "body": null,
+              "type": "IsEmbedding incl"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g1",
+                "g2",
+                "g3"
+              ],
+              "body": null,
+              "type": "G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h1"
+              ],
+              "body": null,
+              "type": "H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p1"
+              ],
+              "body": null,
+              "type": "incl h1 = g1 @ g2^"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h2"
+              ],
+              "body": null,
+              "type": "H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p2"
+              ],
+              "body": null,
+              "type": "incl h2 = g2 @ g3^"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exists (h1 @ h2).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "incl (h1 @ h2) = g1 @ g3^",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "ooGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "incl"
+              ],
+              "body": null,
+              "type": "ooGroupHom H G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEmbedding0"
+              ],
+              "body": null,
+              "type": "IsEmbedding incl"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g1",
+                "g2",
+                "g3"
+              ],
+              "body": null,
+              "type": "G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h1"
+              ],
+              "body": null,
+              "type": "H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p1"
+              ],
+              "body": null,
+              "type": "incl h1 = g1 @ g2^"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h2"
+              ],
+              "body": null,
+              "type": "H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p2"
+              ],
+              "body": null,
+              "type": "incl h2 = g2 @ g3^"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (grouphom_pp incl h1 h2\n            @ (p1 @@ p2)\n            @ concat_p_pp _ _ _\n            @ whiskerR (concat_pV_p _ _) _).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  (** Every coset is equivalent (as a type) to the subgroup itself. *)\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition equiv_coset_subgroup (g : G)\n  : { g' : G & in_coset g g'} <~> H.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{g' : G & in_coset g g'} <~> H",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "ooGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "incl"
+              ],
+              "body": null,
+              "type": "ooGroupHom H G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEmbedding0"
+              ],
+              "body": null,
+              "type": "IsEmbedding incl"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{g' : G & in_coset g g'} <~> H",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "ooGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "incl"
+              ],
+              "body": null,
+              "type": "ooGroupHom H G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEmbedding0"
+              ],
+              "body": null,
+              "type": "IsEmbedding incl"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "simple refine (equiv_adjointify _ _ _ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{g' : G & in_coset g g'} -> H",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "ooGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "incl"
+              ],
+              "body": null,
+              "type": "ooGroupHom H G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEmbedding0"
+              ],
+              "body": null,
+              "type": "IsEmbedding incl"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "G"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "H -> {g' : G & in_coset g g'}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "ooGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "incl"
+              ],
+              "body": null,
+              "type": "ooGroupHom H G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEmbedding0"
+              ],
+              "body": null,
+              "type": "IsEmbedding incl"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "G"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?f o ?g == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "ooGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "incl"
+              ],
+              "body": null,
+              "type": "ooGroupHom H G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEmbedding0"
+              ],
+              "body": null,
+              "type": "IsEmbedding incl"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "G"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "?g o ?f == idmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "ooGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "incl"
+              ],
+              "body": null,
+              "type": "ooGroupHom H G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEmbedding0"
+              ],
+              "body": null,
+              "type": "IsEmbedding incl"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "{g' : G & in_coset g g'} -> H",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "ooGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "incl"
+              ],
+              "body": null,
+              "type": "ooGroupHom H G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEmbedding0"
+              ],
+              "body": null,
+              "type": "IsEmbedding incl"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros [? [h ?]]; exact h.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "H -> {g' : G & in_coset g g'}",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "ooGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "incl"
+              ],
+              "body": null,
+              "type": "ooGroupHom H G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEmbedding0"
+              ],
+              "body": null,
+              "type": "IsEmbedding incl"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros h; exists (incl h^ @ g); exists h; simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "incl h = g @ (incl h^ @ g)^",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "ooGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "incl"
+              ],
+              "body": null,
+              "type": "ooGroupHom H G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEmbedding0"
+              ],
+              "body": null,
+              "type": "IsEmbedding incl"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "H"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "abstract (rewrite inv_pp, grouphom_V, inv_V, concat_p_Vp; reflexivity).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun X : {g' : G & in_coset g g'} =>\n (fun (proj1 : G) (proj2 : in_coset g proj1) =>\n  (fun (h : H) (_ : incl h = g @ proj1^) => h) proj2.1 proj2.2) X.1 X.2)\no (fun h : H =>\n   (incl h^ @ g; h;\n   equiv_coset_subgroup_subproof g h : incl h = g @ (incl h^ @ g)^)) ==\nidmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "ooGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "incl"
+              ],
+              "body": null,
+              "type": "ooGroupHom H G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEmbedding0"
+              ],
+              "body": null,
+              "type": "IsEmbedding incl"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros h; reflexivity.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n    "
+    },
+    {
+      "_type": "sentence",
+      "contents": "-",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(fun h : H =>\n (incl h^ @ g; h;\n equiv_coset_subgroup_subproof g h : incl h = g @ (incl h^ @ g)^))\no (fun X : {g' : G & in_coset g g'} =>\n   (fun (proj1 : G) (proj2 : in_coset g proj1) =>\n    (fun (h : H) (_ : incl h = g @ proj1^) => h) proj2.1 proj2.2) X.1 X.2) ==\nidmap",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "ooGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "incl"
+              ],
+              "body": null,
+              "type": "ooGroupHom H G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEmbedding0"
+              ],
+              "body": null,
+              "type": "IsEmbedding incl"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros [g' [h p]].",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(incl h^ @ g; h; equiv_coset_subgroup_subproof g h) = (g'; h; p)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "ooGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "incl"
+              ],
+              "body": null,
+              "type": "ooGroupHom H G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEmbedding0"
+              ],
+              "body": null,
+              "type": "IsEmbedding incl"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g",
+                "g'"
+              ],
+              "body": null,
+              "type": "G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "incl h = g @ g'^"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply path_sigma_hprop; simpl.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "incl h^ @ g = g'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "ooGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "incl"
+              ],
+              "body": null,
+              "type": "ooGroupHom H G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEmbedding0"
+              ],
+              "body": null,
+              "type": "IsEmbedding incl"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g",
+                "g'"
+              ],
+              "body": null,
+              "type": "G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "incl h = g @ g'^"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "refine ((grouphom_V incl h @@ 1) @ _).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "(incl h)^ @ g = g'",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "ooGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "incl"
+              ],
+              "body": null,
+              "type": "ooGroupHom H G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEmbedding0"
+              ],
+              "body": null,
+              "type": "IsEmbedding incl"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g",
+                "g'"
+              ],
+              "body": null,
+              "type": "G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "incl h = g @ g'^"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n      "
+    },
+    {
+      "_type": "sentence",
+      "contents": "apply moveR_Vp, moveL_pM.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "g @ g'^ = incl h",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "ooGroup"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "incl"
+              ],
+              "body": null,
+              "type": "ooGroupHom H G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "IsEmbedding0"
+              ],
+              "body": null,
+              "type": "IsEmbedding incl"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g",
+                "g'"
+              ],
+              "body": null,
+              "type": "G"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "h"
+              ],
+              "body": null,
+              "type": "H"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "p"
+              ],
+              "body": null,
+              "type": "incl h = g @ g'^"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": " "
+    },
+    {
+      "_type": "sentence",
+      "contents": "exact (p^).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition cosets := Quotient in_coset.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "End Subgroups.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** The wild category of oo-groups is induced by the wild category of pTypes *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance isgraph_oogroup : IsGraph ooGroup\n  := Build_IsGraph _ ooGroupHom.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance is01cat_oogroup : Is01Cat ooGroup\n  := Build_Is01Cat _ _ grouphom_idmap (@grouphom_compose).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance is2graph_oogroup : Is2Graph ooGroup\n  := is2graph_induced classifying_space.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance is1cat_oogroup : Is1Cat ooGroup\n  := is1cat_induced classifying_space.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** 1-groups as oo-groups *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Definition group_to_oogroup : Group -> ooGroup\n  := fun G => Build_ooGroup (pClassifyingSpace G) _.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance is0functor_group_to_oogroup : Is0Functor group_to_oogroup.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Is0Functor group_to_oogroup",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Is0Functor group_to_oogroup",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply Build_Is0Functor.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "forall a b : Group, (a $-> b) -> group_to_oogroup a $-> group_to_oogroup b",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "intros G H f.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "group_to_oogroup G $-> group_to_oogroup H",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "G",
+                "H"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "G $-> H"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "by tapply (fmap pClassifyingSpace).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Instance is1functor_group_to_oogroup : Is1Functor group_to_oogroup.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Is1Functor group_to_oogroup",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Proof.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "Is1Functor group_to_oogroup",
+          "hypotheses": []
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "snapply Build_Is1Functor; hnf; intros.",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fmap group_to_oogroup f $== fmap group_to_oogroup g",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f",
+                "g"
+              ],
+              "body": null,
+              "type": "a $-> b"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "X"
+              ],
+              "body": null,
+              "type": "f $== g"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fmap group_to_oogroup (Id a) $== Id (group_to_oogroup a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "Group"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fmap group_to_oogroup (g $o f) $==\nfmap group_to_oogroup g $o fmap group_to_oogroup f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "a $-> b"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "b $-> c"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1: by tapply (fmap2 pClassifyingSpace).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fmap group_to_oogroup (Id a) $== Id (group_to_oogroup a)",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a"
+              ],
+              "body": null,
+              "type": "Group"
+            }
+          ]
+        },
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fmap group_to_oogroup (g $o f) $==\nfmap group_to_oogroup g $o fmap group_to_oogroup f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "a $-> b"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "b $-> c"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "1: by tapply (fmap_id pClassifyingSpace).",
+      "messages": [],
+      "goals": [
+        {
+          "_type": "goal",
+          "name": null,
+          "conclusion": "fmap group_to_oogroup (g $o f) $==\nfmap group_to_oogroup g $o fmap group_to_oogroup f",
+          "hypotheses": [
+            {
+              "_type": "hypothesis",
+              "names": [
+                "a",
+                "b",
+                "c"
+              ],
+              "body": null,
+              "type": "Group"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "f"
+              ],
+              "body": null,
+              "type": "a $-> b"
+            },
+            {
+              "_type": "hypothesis",
+              "names": [
+                "g"
+              ],
+              "body": null,
+              "type": "b $-> c"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "text",
+      "contents": "\n  "
+    },
+    {
+      "_type": "sentence",
+      "contents": "by tapply (fmap_comp pClassifyingSpace).",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Defined.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]

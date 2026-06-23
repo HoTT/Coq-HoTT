@@ -1,0 +1,4336 @@
+<html>
+<head>
+<title>HomologicalAlgebra.v</title>
+<style>
+.time {
+  background-color: #ffaaaa;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+.code {
+  z-index: 0;
+  position: relative;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+}
+.code:hover {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+pre {
+  margin: 1px;
+}
+</style>
+</head>
+<body>
+<h1>Timings for HomologicalAlgebra.v</h1>
+
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 1
+Time: 0.026s">
+<div class="time" style="width: 41.935483870968%"></div>
+<pre>From HoTT.Basics Require Import Overture Equivalences Tactics.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 1
+Time: 0.062s">
+<div class="time" style="width: 100%"></div>
+<pre>
+From HoTT.WildCat Require Import Core SetoidRewrite AbEnriched EpiStable.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 2
+Time: 0.002s">
+<div class="time" style="width: 3.2258064516129%"></div>
+<pre>
+From HoTT.Spaces Require Import Nat.Core Finite.Fin.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 3
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+Local Open Scope mc_add_scope.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 5
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** * Homological algebra *)
+
+(** Various "diagram lemmas" are proved, usually assuming the wild category satisfies [IsAbEpiStable].  The proofs use the diagram chasing method provided by WildCat.EpiStable. *)
+
+(** We will often use the convention that a map [bc : B $-&gt; C] is named as the juxtaposition of the domain and codomain.  When we want to highlight the importance of certain maps, they will be given different names. *)
+
+(** ** The weak four lemmas *)
+
+</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section FourLemma.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 14
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {A : Type} `{IsAbEpiStable A}.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 16
+Time: 0.004s">
+<div class="time" style="width: 6.4516129032258%"></div>
+<pre>
+
+  Context {B C D E B' C' D' E' : A}
+    (bc : B $-&gt; C) (cd : C $-&gt; D) (de : D $-&gt; E)
+    (bc' : B' $-&gt; C') (cd' : C' $-&gt; D') (de' : D' $-&gt; E')
+    (g : B $-&gt; B') (h : C $-&gt; C') (i : D $-&gt; D') (j : E $-&gt; E')
+    (sq2 : h $o bc $== bc' $o g) (sq3 : i $o cd $== cd' $o h)
+    (sq4 : j $o de $== de' $o i)
+    `{!CatIsAbExact cd de} `{!CatIsAbExact bc' cd'} `{!Epic g} `{!Monic j}.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 24
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The diagram has the following shape:
+&lt;&lt;
+  B ---&gt; C ---&gt; D ---&gt; E
+  |      |      |      v
+  |g     |h     |i     |j
+  v      |      |      |
+  v      v      v      v
+  B' --&gt; C' --&gt; D' --&gt; E'
+&gt;&gt;
+  The common assumptions are that the map [B $-&gt; B'] is epi, the map [E $-&gt; E'] is mono, and the sequences [C $-&gt; D] + [D $-&gt; E] and [B' $-&gt; C'] + [C' $-&gt; D'] are exact. *)
+
+  (** If in addition the composite of [C' $-&gt; D'] and [D' $-&gt; C'] is zero and the map [D $-&gt; D'] is epi, then the map [C $-&gt; C'] is epi. *)
+ </pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 38
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>Definition weak_four_epi {complex_cde' : de' $o cd' $== 0} `{!Epic i}
+    : Epic h.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 39
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 40
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (* To show that [h : C $-&gt; C'] is epi, we must show that an arbitrary generalized element [c' : elt P C'] lifts along [h : C $-&gt; C']. *)
+   </pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>apply epic_elt_lift; intros P c'.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 42
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+    (* Since the map [i : D $-&gt; D'] is assumed epi, we can lift the element [cd' $o c' : elt P D'] to an element [d : elt _ D].  [ld] will be the name given to the proof that [d] is a lift. *)
+   </pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 45
+Time: 0.013s">
+<div class="time" style="width: 20.967741935484%"></div>
+<pre>elt_lift_epic i (cd' $o c') d ld.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 45
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+    (* Using exactness of the top row, we can further lift the element [d] to an element [c : elt _ C].  This step involves verifying that [d] is mapped to zero by [de : D $-&gt; E], which requires the map [j] to be mono. *)
+    (* We clear 2-cells and elements when they are no longer needed, to speed up the lifts.  The [using clear] clause is applied *after* the hypothesis is proved. *)
+   </pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 49
+Time: 0.021s">
+<div class="time" style="width: 33.870967741935%"></div>
+<pre>elt_lift_exact cd de d c lc using clear sq4 complex_cde'.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 49
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 50
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (ismonic' j).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 50
+Time: 0.006s">
+<div class="time" style="width: 9.6774193548387%"></div>
+<pre>
+      rewrite_with_assoc sq4.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 51
+Time: 0.004s">
+<div class="time" style="width: 6.4516129032258%"></div>
+<pre>
+      rewrite ld.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 52
+Time: 0.004s">
+<div class="time" style="width: 6.4516129032258%"></div>
+<pre>
+      rewrite cat_assoc_opp.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 53
+Time: 0.005s">
+<div class="time" style="width: 8.0645161290323%"></div>
+<pre>
+      rewrite complex_cde'.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 54
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply precomp_zero.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 55
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+    (* The element [c] is not necessarily the correct lift of [c'].  We correct this by lifting the element [c' - h $o c] using exactness of the bottom row. This yields an element [b' : elt _ B']. *)
+   </pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 58
+Time: 0.022s">
+<div class="time" style="width: 35.483870967742%"></div>
+<pre>elt_lift_exact bc' cd' (c' - h $o c) b' lb' using clear sq3 lc ld d.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 58
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 59
+Time: 0.024s">
+<div class="time" style="width: 38.709677419355%"></div>
+<pre>
+      rewrite postcomp_op_inv.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 60
+Time: 0.007s">
+<div class="time" style="width: 11.290322580645%"></div>
+<pre>
+      rewrite_with_assoc sq3^$.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 61
+Time: 0.01s">
+<div class="time" style="width: 16.129032258065%"></div>
+<pre>
+      rewrite lc, ld.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 62
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply inverse_r_0gpd.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 63
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+    (* Since we know that the map [g : B $-&gt; B'] is epi, we can lift [b'] to an element [b : elt _ B]. *)
+   </pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 66
+Time: 0.032s">
+<div class="time" style="width: 51.612903225806%"></div>
+<pre>elt_lift_epic g b' b lb.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 66
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+    (* We obtain the correct lift by adding together the incorrect lift and its correction. *)
+   </pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 69
+Time: 0.003s">
+<div class="time" style="width: 4.8387096774194%"></div>
+<pre>provide_lift (c + bc $o b).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 69
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (* It remains to show that this is indeed a lift of [c']. *)
+   </pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 71
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>lhs' napply postcomp_op.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 71
+Time: 0.007s">
+<div class="time" style="width: 11.290322580645%"></div>
+<pre>
+    rewrite_with_assoc sq2.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 72
+Time: 0.009s">
+<div class="time" style="width: 14.516129032258%"></div>
+<pre>
+    rewrite lb, lb'.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 73
+Time: 0.004s">
+<div class="time" style="width: 6.4516129032258%"></div>
+<pre>
+    rewrite (comm_0gpd c').</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 74
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+    lhs_V' napply assoc_0gpd.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 75
+Time: 0.005s">
+<div class="time" style="width: 8.0645161290323%"></div>
+<pre>
+    rewrite inverse_r_0gpd.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 76
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply mon_unit_l_0gpd.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 77
+Time: 0.011s">
+<div class="time" style="width: 17.741935483871%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 78
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** If, in addition to the common assumptions, the composite of [B $-&gt; C] and [C $-&gt; D] is zero and the map [C $-&gt; C'] is mono, then the map [D $-&gt; D'] is mono. *)
+ </pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 81
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>Definition weak_four_mono {complex_bcd : cd $o bc $== 0} `{!Monic h}
+    : Monic i.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 82
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 83
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    (* To show that a map is mono, it suffices to show that an arbitrary generalized element [d : elt P D] that goes to [0 : elt P D'] is homotopic to [0 : elt P D]. *)
+   </pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>apply monic_via_elt_isemb_ab; intros P d p.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 85
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+    (* Using exactness, we lift the element [d] to [c : elt _ C]. *)
+   </pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 88
+Time: 0.021s">
+<div class="time" style="width: 33.870967741935%"></div>
+<pre>elt_lift_exact cd de d c lc using clear sq4.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 88
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 89
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (ismonic' j).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 89
+Time: 0.005s">
+<div class="time" style="width: 8.0645161290323%"></div>
+<pre>
+      rewrite_with_assoc sq4.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 90
+Time: 0.003s">
+<div class="time" style="width: 4.8387096774194%"></div>
+<pre>
+      rewrite p.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 91
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply postcomp_zero.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 92
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+    (* Next we lift [h $o c] to [b' : elt _ B']. *)
+   </pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 95
+Time: 0.025s">
+<div class="time" style="width: 40.322580645161%"></div>
+<pre>elt_lift_exact bc' cd' (h $o c) b' lb' using clear sq3 p.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 95
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 96
+Time: 0.006s">
+<div class="time" style="width: 9.6774193548387%"></div>
+<pre> rewrite_with_assoc sq3^$.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 96
+Time: 0.004s">
+<div class="time" style="width: 6.4516129032258%"></div>
+<pre>
+      rewrite lc.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 97
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact p.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 98
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+    (* We lift [b'] to [b : elt _ B]. *)
+   </pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 101
+Time: 0.032s">
+<div class="time" style="width: 51.612903225806%"></div>
+<pre>elt_lift_epic g b' b lb.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 101
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+    (* Since [h] is monic, it follows that [b] is a lift of [c]. *)
+   </pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 104
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>assert (p' : bc $o b $== c).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 104
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 105
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (ismonic h).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 105
+Time: 0.005s">
+<div class="time" style="width: 8.0645161290323%"></div>
+<pre>
+      rewrite_with_assoc sq2.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 106
+Time: 0.004s">
+<div class="time" style="width: 6.4516129032258%"></div>
+<pre>
+      rewrite lb.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 107
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact lb'.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 108
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+    (* So [d] lifts all the way to [B].  Since [B -&gt; C -&gt; D] is a complex, [d] is zero. *)
+   </pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 111
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>lhs_V' napply lc.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 111
+Time: 0.005s">
+<div class="time" style="width: 8.0645161290323%"></div>
+<pre>
+    rewrite &lt;- p'.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 112
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+    lhs' napply cat_assoc_opp.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 113
+Time: 0.005s">
+<div class="time" style="width: 8.0645161290323%"></div>
+<pre>
+    rewrite complex_bcd.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 114
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply precomp_zero.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 115
+Time: 0.008s">
+<div class="time" style="width: 12.903225806452%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 116
+Time: 0.008s">
+<div class="time" style="width: 12.903225806452%"></div>
+<pre>
+
+End FourLemma.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 118
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** The 3x3-lemmas as presented in Mac Lane's book "Homology" *)
+
+</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 121
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section ThreeByThree.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 121
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {A : Type} `{Is1Cat A}.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 123
+Time: 0.004s">
+<div class="time" style="width: 6.4516129032258%"></div>
+<pre>
+
+  Context {X00 X01 X02 X10 X11 X12 X20 X21 X22 : A}
+    (f0i : X00 $-&gt; X01) (f0j : X01 $-&gt; X02)
+    (fi0 : X00 $-&gt; X10) (fi1 : X01 $-&gt; X11) (fi2 : X02 $-&gt; X12)
+    (f1i : X10 $-&gt; X11) (f1j : X11 $-&gt; X12)
+    (fj0 : X10 $-&gt; X20) (fj1 : X11 $-&gt; X21) (fj2 : X12 $-&gt; X22)
+    (f2i : X20 $-&gt; X21) (f2j : X21 $-&gt; X22)
+    (sq1 : fi1 $o f0i $== f1i $o fi0) (sq2 : fi2 $o f0j $== f1j $o fi1)
+    (sq3 : fj1 $o f1i $== f2i $o fj0) (sq4 : fj2 $o f1j $== f2j $o fj1).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 132
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The diagram has the following shape:
+&lt;&lt;
+  X00 ----f0i----&gt; X01 ----f0j----&gt; X02
+   |                |                |
+   |                |                |
+  fi0     sq1      fi1     sq2      fi2
+   |                |                |
+   |                |                |
+   v                v                v
+  X10 ----f1i----&gt; X11 ----f1j----&gt; X12
+   |                |                |
+   |                |                |
+  fj0     sq3      fj1     sq4      fj2
+   |                |                |
+   |                |                |
+   v                v                v
+  X20 ----f2i----&gt; X21 ----f2j----&gt; X22
+&gt;&gt;
+  *)
+
+  (** If all three columns and the last two rows are short exact, then the top row is short exact.  We prove the three parts of the conclusion as separate results, each requiring a different subset of the hypotheses (and in fact not all of the hypotheses are needed). *)
+
+ </pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 156
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>Definition three_by_three_monic `{!Monic f1i} `{!Monic fi0} `{!Monic fi1}
+    : Monic f0i.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 157
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 158
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    napply (monic_cancel f0i fi1).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 159
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact (monic_homotopic _ _ sq1^$).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 160
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 161
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** For the remaining results, we need this assumption. *)
+ </pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 164
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Context `{!IsAbEpiStable A}.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 164
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The hypotheses aren't entirely minimal here.  Instead of the two exactness hypotheses, we really only need that the lifting property holds. *)
+ </pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 167
+Time: 0.003s">
+<div class="time" style="width: 4.8387096774194%"></div>
+<pre>Definition three_by_three_ex `{!Monic f2i} `{!Monic fi1} `{!Monic fi2}
+    `{!CatIsAbExact fi0 fj0} `{!CatIsAbExact f1i f1j}
+    {q : fj1 $o fi1 $== 0}
+    : CatIsAbExact f0i f0j.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 170
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 171
+Time: 0.003s">
+<div class="time" style="width: 4.8387096774194%"></div>
+<pre>
+    snapply Build_CatIsAbExact.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 172
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 173
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (ismonic' fi2).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 173
+Time: 0.005s">
+<div class="time" style="width: 8.0645161290323%"></div>
+<pre>
+      rewrite_with_assoc sq2.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 174
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      lhs' napply (_ $@L sq1).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 175
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+      lhs' napply cat_assoc_opp.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 176
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+      lhs' apply (isabcomplex $@R _).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 177
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply precomp_zero.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 178
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 179
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros P x01 p.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 179
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      clear sq4.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 180
+Time: 0.012s">
+<div class="time" style="width: 19.354838709677%"></div>
+<pre>
+
+      elt_lift_exact f1i f1j (fi1 $o x01) x10 lx10 using clear sq2 p.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 182
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      {</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 183
+Time: 0.006s">
+<div class="time" style="width: 9.6774193548387%"></div>
+<pre> rewrite_with_assoc sq2^$.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 183
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+        lhs' napply (_ $@L p).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 184
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply postcomp_zero.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 185
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 185
+Time: 0.044s">
+<div class="time" style="width: 70.967741935484%"></div>
+<pre>
+
+      elt_lift_exact fi0 fj0 x10 x00 lx00 using clear sq3 q.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 187
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      {</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 188
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (ismonic' f2i).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 188
+Time: 0.006s">
+<div class="time" style="width: 9.6774193548387%"></div>
+<pre>
+        rewrite_with_assoc sq3^$.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 189
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+        lhs' napply (_ $@L lx10).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 190
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+        lhs' napply cat_assoc_opp.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 191
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        lhs' napply (q $@R _).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 192
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply precomp_zero.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 193
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 193
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+
+      provide_lift x00.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 195
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply (ismonic fi1).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 196
+Time: 0.005s">
+<div class="time" style="width: 8.0645161290323%"></div>
+<pre>
+      rewrite_with_assoc sq1.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 197
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      refine (_ $@ lx10).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 198
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact (_ $@L lx00).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 199
+Time: 0.006s">
+<div class="time" style="width: 9.6774193548387%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 200
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** We could also do away with some hypothesis here. *)
+ </pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 203
+Time: 0.004s">
+<div class="time" style="width: 6.4516129032258%"></div>
+<pre>Definition three_by_three_epi `{!Monic fi2} `{!Epic f1j} `{!Epic fj0}
+    {complex_f_2 : fj2 $o fi2 $== 0} {complex_f1_ : f1j $o f1i $== 0}
+    `{!CatIsAbExact fi1 fj1} `{!CatIsAbExact f2i f2j}
+    : Epic f0j.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 206
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 207
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    clear sq1.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 208
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply epic_elt_lift; intros P x02.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 209
+Time: 0.012s">
+<div class="time" style="width: 19.354838709677%"></div>
+<pre>
+
+    elt_lift_epic f1j (fi2 $o x02) x11 lx11.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 211
+Time: 0.024s">
+<div class="time" style="width: 38.709677419355%"></div>
+<pre>
+
+    elt_lift_exact f2i f2j (fj1 $o x11) x20 lx20 using clear sq4 complex_f_2.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 213
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 214
+Time: 0.006s">
+<div class="time" style="width: 9.6774193548387%"></div>
+<pre> rewrite_with_assoc sq4^$.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 214
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+      lhs' napply (_ $@L lx11).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 215
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+      lhs_V' napply cat_assoc.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 216
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      lhs' napply (complex_f_2 $@R _).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 217
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply precomp_zero.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 218
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 218
+Time: 0.046s">
+<div class="time" style="width: 74.193548387097%"></div>
+<pre>
+
+    elt_lift_epic fj0 x20 x10 lx10.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 220
+Time: 0.036s">
+<div class="time" style="width: 58.064516129032%"></div>
+<pre>
+
+    elt_lift_exact fi1 fj1 (x11 - f1i $o x10) x01 lx01 using clear sq3 lx10 lx20 x20.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 222
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 223
+Time: 0.002s">
+<div class="time" style="width: 3.2258064516129%"></div>
+<pre> lhs' rapply postcomp_op_inv.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 223
+Time: 0.007s">
+<div class="time" style="width: 11.290322580645%"></div>
+<pre>
+      rewrite_with_assoc sq3.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 224
+Time: 0.006s">
+<div class="time" style="width: 9.6774193548387%"></div>
+<pre>
+      rewrite lx10.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 225
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+      apply (inverse_r_homotopy_0gpd lx20^$).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 226
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 226
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+
+    provide_lift x01.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 228
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (ismonic fi2).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 229
+Time: 0.005s">
+<div class="time" style="width: 8.0645161290323%"></div>
+<pre>
+    rewrite_with_assoc sq2.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 230
+Time: 0.004s">
+<div class="time" style="width: 6.4516129032258%"></div>
+<pre>
+    rewrite lx01.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 231
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+    lhs' napply postcomp_op_inv.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 232
+Time: 0.012s">
+<div class="time" style="width: 19.354838709677%"></div>
+<pre>
+    rewrite &lt;- cat_assoc.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 233
+Time: 0.007s">
+<div class="time" style="width: 11.290322580645%"></div>
+<pre>
+    rewrite complex_f1_.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 234
+Time: 0.005s">
+<div class="time" style="width: 8.0645161290323%"></div>
+<pre>
+    rewrite precomp_zero.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 235
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+    lhs' napply mon_unit_l_inv_0gpd.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 236
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact lx11.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 237
+Time: 0.012s">
+<div class="time" style="width: 19.354838709677%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 238
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** If every column is exact, the top and bottom rows are short exact, and the middle row is a complex, then the middle row is short exact.  Like above, we prove the three parts of this separately, with fewer hypotheses. *)
+
+ </pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 242
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>Definition middle_three_by_three_mono
+    `{!Monic f0i} `{!Monic f2i} `{!Monic fi1}
+    `{!CatIsAbExact fi0 fj0}
+    : Monic f1i.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 245
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 246
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    clear sq2 sq4.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 247
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply monic_via_elt_isemb_ab; intros P x10 p.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 248
+Time: 0.023s">
+<div class="time" style="width: 37.096774193548%"></div>
+<pre>
+
+    elt_lift_exact fi0 fj0 x10 x00 lx00 using clear sq3.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 250
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 251
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (ismonic' f2i).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 251
+Time: 0.005s">
+<div class="time" style="width: 8.0645161290323%"></div>
+<pre>
+      rewrite_with_assoc sq3^$.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 252
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+      lhs' napply (_ $@L p).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 253
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply postcomp_zero.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 254
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 254
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+
+    lhs_V' napply lx00.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 256
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    rhs_V' napply (postcomp_zero fi0).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 257
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply cat_postwhisker.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 258
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+    rapply (ismonic' (fi1 $o f0i)).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 259
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    lhs' napply (sq1 $@R _).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 260
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+    lhs' napply cat_assoc.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 261
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    lhs' napply (_ $@L lx00).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 262
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact p.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 263
+Time: 0.003s">
+<div class="time" style="width: 4.8387096774194%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 264
+Time: 0.003s">
+<div class="time" style="width: 4.8387096774194%"></div>
+<pre>
+
+  Definition middle_three_by_three_ex {cpx : f1j $o f1i $== 0}
+    `{!Epic fj0} `{!Monic fi2} `{!CatIsAbExact f0i f0j}
+    `{!CatIsAbExact f2i f2j} `{!CatIsAbExact fi1 fj1}
+    : CatIsAbExact f1i f1j.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 269
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 270
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    snapply (Build_CatIsAbExact _ _ _ _ _ cpx).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 271
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros P x11 p.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 272
+Time: 0.022s">
+<div class="time" style="width: 35.483870967742%"></div>
+<pre>
+
+    elt_lift_exact f2i f2j (fj1 $o x11) x20 lx20 using clear sq4.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 274
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 275
+Time: 0.006s">
+<div class="time" style="width: 9.6774193548387%"></div>
+<pre> rewrite_with_assoc sq4^$.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 275
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+      lhs' napply (_ $@L p).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 276
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply postcomp_zero.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 277
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 277
+Time: 0.033s">
+<div class="time" style="width: 53.225806451613%"></div>
+<pre>
+
+    elt_lift_epic fj0 x20 x10 lx10.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 279
+Time: 0.035s">
+<div class="time" style="width: 56.451612903226%"></div>
+<pre>
+
+    elt_lift_exact fi1 fj1 (x11 - (f1i $o x10)) x01 lx01 using clear sq3 lx10 lx20 x20.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 281
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 282
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre> lhs' napply postcomp_op_inv.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 282
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply inverse_r_homotopy_0gpd.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 283
+Time: 0.005s">
+<div class="time" style="width: 8.0645161290323%"></div>
+<pre>
+      rewrite_with_assoc sq3.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 284
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+      rhs' napply (_ $@L lx10).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 285
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact lx20^$.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 286
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 286
+Time: 0.033s">
+<div class="time" style="width: 53.225806451613%"></div>
+<pre>
+
+    elt_lift_exact f0i f0j x01 x00 lx00 using clear sq2 p cpx.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 288
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 289
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (ismonic' fi2).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 289
+Time: 0.006s">
+<div class="time" style="width: 9.6774193548387%"></div>
+<pre>
+      rewrite_with_assoc sq2.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 290
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+      lhs' napply (_ $@L lx01).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 291
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+      lhs' napply postcomp_op_inv.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 292
+Time: 0.006s">
+<div class="time" style="width: 9.6774193548387%"></div>
+<pre>
+      rewrite p.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 293
+Time: 0.005s">
+<div class="time" style="width: 8.0645161290323%"></div>
+<pre>
+      rewrite cat_assoc_opp.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 294
+Time: 0.009s">
+<div class="time" style="width: 14.516129032258%"></div>
+<pre>
+      rewrite cpx.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 295
+Time: 0.005s">
+<div class="time" style="width: 8.0645161290323%"></div>
+<pre>
+      rewrite precomp_zero.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 296
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply inverse_r_0gpd.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 297
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 297
+Time: 0.002s">
+<div class="time" style="width: 3.2258064516129%"></div>
+<pre>
+
+    provide_lift ((fi0 $o x00) + x10).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 299
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+    lhs' napply postcomp_op.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 300
+Time: 0.008s">
+<div class="time" style="width: 12.903225806452%"></div>
+<pre>
+    rewrite_with_assoc sq1^$.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 301
+Time: 0.006s">
+<div class="time" style="width: 9.6774193548387%"></div>
+<pre>
+    rewrite lx00.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 302
+Time: 0.005s">
+<div class="time" style="width: 8.0645161290323%"></div>
+<pre>
+    rewrite lx01.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 303
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+    lhs' napply assoc_0gpd.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 304
+Time: 0.004s">
+<div class="time" style="width: 6.4516129032258%"></div>
+<pre>
+    rewrite inverse_l_0gpd.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 305
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    napply mon_unit_r_0gpd.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 306
+Time: 0.021s">
+<div class="time" style="width: 33.870967741935%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 307
+Time: 0.002s">
+<div class="time" style="width: 3.2258064516129%"></div>
+<pre>
+
+  Definition middle_three_by_three_epi `{!Epic f0j} `{!Epic f2j}
+    `{!Epic fj1} `{!CatIsAbExact fi2 fj2}
+    : Epic f1j.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 311
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 312
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    clear sq1 sq3.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 313
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply epic_elt_lift; intros P x12.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 314
+Time: 0.011s">
+<div class="time" style="width: 17.741935483871%"></div>
+<pre>
+
+    elt_lift_epic (f2j $o fj1) (fj2 $o x12) x11 lx11.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 316
+Time: 0.018s">
+<div class="time" style="width: 29.032258064516%"></div>
+<pre>
+
+    elt_lift_exact fi2 fj2 (x12 - (f1j $o x11)) x02 lx02 using clear sq4 lx11.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 318
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 319
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre> lhs' napply postcomp_op_inv.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 319
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply inverse_r_homotopy_0gpd.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 320
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+      rhs_V' napply cat_assoc.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 321
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+      rhs' napply (sq4 $@R _).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 322
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact lx11^$.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 323
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 323
+Time: 0.028s">
+<div class="time" style="width: 45.161290322581%"></div>
+<pre>
+
+    elt_lift_epic f0j x02 x01 lx01.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 325
+Time: 0.002s">
+<div class="time" style="width: 3.2258064516129%"></div>
+<pre>
+
+    provide_lift ((fi1 $o x01) + x11).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 327
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+    lhs' napply postcomp_op.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 328
+Time: 0.008s">
+<div class="time" style="width: 12.903225806452%"></div>
+<pre>
+    rewrite_with_assoc sq2^$.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 329
+Time: 0.006s">
+<div class="time" style="width: 9.6774193548387%"></div>
+<pre>
+    rewrite lx01.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 330
+Time: 0.004s">
+<div class="time" style="width: 6.4516129032258%"></div>
+<pre>
+    rewrite lx02.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 331
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+    lhs' napply assoc_0gpd.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 332
+Time: 0.007s">
+<div class="time" style="width: 11.290322580645%"></div>
+<pre>
+    rewrite inverse_l_0gpd.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 333
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply mon_unit_r_0gpd.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 334
+Time: 0.007s">
+<div class="time" style="width: 11.290322580645%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 335
+Time: 0.018s">
+<div class="time" style="width: 29.032258064516%"></div>
+<pre>
+
+End ThreeByThree.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 337
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** The spider lemma *)
+
+</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 340
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section Spider.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 340
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {A : Type} `{IsAbEpiStable A}.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 342
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Given a diagram
+&lt;&lt;
+    A1 -&gt; A2
+      \   ^
+       v /
+        X
+       ^ \
+      /   v
+    B1 -&gt; B2
+&gt;&gt;
+  where the diagonals are exact, if the map [B1 $-&gt; B2] is mono/epi, so is the map [A1 $-&gt; A2]. *)
+
+ </pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 356
+Time: 0.003s">
+<div class="time" style="width: 4.8387096774194%"></div>
+<pre>Context {A1 A2 X B1 B2 : A} (a : A1 $-&gt; A2) (ax : A1 $-&gt; X)
+    (xa : X $-&gt; A2) (b : B1 $-&gt; B2) (bx : B1 $-&gt; X) (xb : X $-&gt; B2)
+    {tr1 : xa $o ax $== a} {tr2 : xb $o bx $== b}
+    `{!Monic ax} `{!CatIsAbExact ax xb} `{!Epic xb}
+    `{!Monic bx} `{!CatIsAbExact bx xa} `{!Epic xa}.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 360
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition spider_mono `{!Monic b} : Monic a.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 362
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 363
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply monic_via_elt_isemb_ab; intros P a1 p.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 364
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (ismonic' ax a1).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 365
+Time: 0.015s">
+<div class="time" style="width: 24.193548387097%"></div>
+<pre>
+
+    elt_lift_exact bx xa (ax $o a1) b1 lb1 using clear tr1 p.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 367
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 368
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre> lhs' napply cat_assoc_opp.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 368
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      lhs' napply (tr1 $@R _).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 369
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact p.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 370
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 370
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+
+    assert (b1_is_zero : b1 $== 0).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 372
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 373
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (ismonic' b).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 373
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+      lhs_V' napply (tr2 $@R _).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 374
+Time: 0.004s">
+<div class="time" style="width: 6.4516129032258%"></div>
+<pre>
+      rewrite_with_assoc_opp lb1.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 375
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+      lhs' apply (isabcomplex $@R _).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 376
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply precomp_zero.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 377
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 377
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+
+    lhs_V' napply lb1.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 379
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    lhs' napply (_ $@L b1_is_zero).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 380
+Time: 0.03s">
+<div class="time" style="width: 48.387096774194%"></div>
+<pre>
+    apply postcomp_zero.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 381
+Time: 0.003s">
+<div class="time" style="width: 4.8387096774194%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 382
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Definition spider_epi `{!Epic b} : Epic a.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 384
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 385
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply epic_elt_lift; intros P a2.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 386
+Time: 0.006s">
+<div class="time" style="width: 9.6774193548387%"></div>
+<pre>
+
+    elt_lift_epic xa a2 x lx.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 388
+Time: 0.017s">
+<div class="time" style="width: 27.41935483871%"></div>
+<pre>
+
+    elt_lift_epic b (xb $o x) b1 lb1.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 390
+Time: 0.031s">
+<div class="time" style="width: 50%"></div>
+<pre>
+
+    elt_lift_exact ax xb (x - (bx $o b1)) a1 la1 using clear tr2 lb1.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 392
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 393
+Time: 0.003s">
+<div class="time" style="width: 4.8387096774194%"></div>
+<pre> rewrite postcomp_op_inv.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 393
+Time: 0.012s">
+<div class="time" style="width: 19.354838709677%"></div>
+<pre>
+      rewrite &lt;- cat_assoc, tr2.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 394
+Time: 0.006s">
+<div class="time" style="width: 9.6774193548387%"></div>
+<pre>
+      rewrite &lt;- lb1.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 395
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply inverse_r_0gpd.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 396
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 396
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+
+    provide_lift a1.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 398
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+    lhs_V' napply (tr1 $@R _).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 399
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+    lhs' napply cat_assoc.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 400
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    lhs' napply (_ $@L la1).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 401
+Time: 0.003s">
+<div class="time" style="width: 4.8387096774194%"></div>
+<pre>
+    rewrite postcomp_op_inv.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 402
+Time: 0.028s">
+<div class="time" style="width: 45.161290322581%"></div>
+<pre>
+    rewrite &lt;- cat_assoc, isabcomplex.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 403
+Time: 0.006s">
+<div class="time" style="width: 9.6774193548387%"></div>
+<pre>
+    rewrite precomp_zero.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 404
+Time: 0.003s">
+<div class="time" style="width: 4.8387096774194%"></div>
+<pre>
+    rewrite mon_unit_l_inv_0gpd.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 405
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    exact lx.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 406
+Time: 0.009s">
+<div class="time" style="width: 14.516129032258%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 407
+Time: 0.005s">
+<div class="time" style="width: 8.0645161290323%"></div>
+<pre>
+
+End Spider.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 409
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** The incomplete snail lemma *)
+
+</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 412
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section Snail.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 412
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {A : Type} `{IsAbEpiStable A}.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 414
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Here we will prove the incomplete snail lemma.  The complete snail lemma was developed as a more general analogue of the snake lemma that holds in certain non-abelian contexts.  The incomplete snail lemma is a lemma that one can use to prove the complete snail lemma.  In fact, if the incomplete snail lemma is true and if every kernel map in the category has a cokernel, then the complete snail lemma is true.  See Janelidze, Vitale; The snail lemma in a pointed regular category. *)
+
+ </pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 418
+Time: 0.002s">
+<div class="time" style="width: 3.2258064516129%"></div>
+<pre>Context {W1 W2 X Y1 Y2 Z : A} (w : W1 $-&gt; W2) (wx : W1 $-&gt; X)
+    (wz : W2 $-&gt; Z) (xw : X $-&gt; W2) (xy : X $-&gt; Y2)
+    (y : Y1 $-&gt; Y2) (yx : Y1 $-&gt; X) (yz : Y2 $-&gt; Z)
+    (tr1 :  w $== xw $o wx) (tr2 : y $== xy $o yx)
+    (sq1 : wz $o xw $== yz $o xy).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 422
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** We assume that we have a diagram of shape:
+&lt;&lt;
+        W1 = = W1
+        |      |
+        |      |
+        v      v
+  Y1 -&gt; X ---&gt; W2 ---&gt; 0
+  ||    |      |
+  ||    |      |
+  ||    v      v
+  Y1 -&gt; Y2 --&gt; Z
+&gt;&gt;
+  Each row and the first column is assumed to be exact.  We will show that the last column is exact as well. *)
+
+ </pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 438
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>Definition incomplete_snail `{!Epic xw} `{!CatIsAbExact wx xy}
+    `{!CatIsAbExact yx xw} `{!CatIsAbExact y yz}
+    : CatIsAbExact w wz.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 440
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 441
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+    snapply Build_CatIsAbExact.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 442
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 443
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> lhs' napply (_ $@L tr1).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 443
+Time: 0.004s">
+<div class="time" style="width: 6.4516129032258%"></div>
+<pre>
+      rewrite_with_assoc sq1.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 444
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+      lhs' apply (_ $@L isabcomplex).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 445
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply postcomp_zero.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 446
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 447
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros P w2 p.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 447
+Time: 0.02s">
+<div class="time" style="width: 32.258064516129%"></div>
+<pre>
+      elt_lift_epic xw w2 x lx.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 448
+Time: 0.017s">
+<div class="time" style="width: 27.41935483871%"></div>
+<pre>
+
+      elt_lift_exact y yz (xy $o x) y1 ly1 using clear sq1 p.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 450
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      {</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 451
+Time: 0.006s">
+<div class="time" style="width: 9.6774193548387%"></div>
+<pre> rewrite_with_assoc sq1^$.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 451
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+        lhs' napply (_ $@L lx).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 452
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        exact p.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 453
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 453
+Time: 0.029s">
+<div class="time" style="width: 46.774193548387%"></div>
+<pre>
+
+      elt_lift_exact wx xy (x - yx $o y1) w1 lw1 using clear tr2 ly1.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 455
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      {</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 456
+Time: 0.002s">
+<div class="time" style="width: 3.2258064516129%"></div>
+<pre> lhs' rapply postcomp_op_inv.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 456
+Time: 0.015s">
+<div class="time" style="width: 24.193548387097%"></div>
+<pre>
+        rewrite &lt;- cat_assoc, &lt;- tr2.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 457
+Time: 0.005s">
+<div class="time" style="width: 8.0645161290323%"></div>
+<pre>
+        rewrite ly1.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 458
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply inverse_r_0gpd.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 459
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 459
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+
+      provide_lift w1.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 461
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+      lhs' napply (tr1 $@R _).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 462
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+      lhs' napply cat_assoc.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 463
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      lhs' napply (_ $@L lw1).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 464
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+      lhs' rapply postcomp_op_inv.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 465
+Time: 0.019s">
+<div class="time" style="width: 30.645161290323%"></div>
+<pre>
+      rewrite &lt;- cat_assoc, isabcomplex.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 466
+Time: 0.005s">
+<div class="time" style="width: 8.0645161290323%"></div>
+<pre>
+      rewrite precomp_zero.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 467
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+      lhs' napply mon_unit_l_inv_0gpd.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 468
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact lx.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 469
+Time: 0.01s">
+<div class="time" style="width: 16.129032258065%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 470
+Time: 0.004s">
+<div class="time" style="width: 6.4516129032258%"></div>
+<pre>
+
+End Snail.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 472
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** Two-by-three lemmas *)
+
+</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 475
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section TwoByThree.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 475
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {A : Type} `{IsAbEpiStable A}.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 477
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** Here we will show how to transport the structure of an exact sequence across a morphism of composable pairs satisfying some properties. *)
+
+ </pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 481
+Time: 0.002s">
+<div class="time" style="width: 3.2258064516129%"></div>
+<pre>Context {A1 A2 B1 B2 C1 C2 : A}
+    (f1 : A1 $-&gt; B1) (g1 : B1 $-&gt; C1)
+    (f2 : A2 $-&gt; B2) (g2 : B2 $-&gt; C2)
+    (a : A1 $-&gt; A2) (b : B1 $-&gt; B2) (c : C1 $-&gt; C2)
+    (sq1 : b $o f1 $== f2 $o a) (sq2 : c $o g1 $== g2 $o b)
+    `{!Epic a} `{!Monic c}.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 486
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** In general, the diagrams will be of the shape:
+&lt;&lt;
+  A1 ---&gt; B1 ---&gt; C1
+  |        |       v
+  |        |       |
+  v        |       |
+  v        v       v
+  A2 ---&gt; B2 ---&gt; C2
+&gt;&gt;
+  In particular the map [A1 $-&gt; A2] is epi and the map [C1 $-&gt; C2] is mono. *)
+
+  (** If the middle map [B1 $-&gt; B2] is also epi and the upper morphisms [A1 $-&gt; B1] and [B1 $-&gt; C1] form an exact sequence, then the lower morphisms [A2 $-&gt; B2] and [B2 $-&gt; C2] form an exact sequence. *)
+ </pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 500
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition two_by_three_epi `{!Epic b} `{!CatIsAbExact f1 g1}
+    : CatIsAbExact f2 g2.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 501
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 502
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+    napply Build_CatIsAbExact.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 503
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 504
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (isepic a).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 504
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+      rhs' napply precomp_zero.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 505
+Time: 0.005s">
+<div class="time" style="width: 8.0645161290323%"></div>
+<pre>
+      rewrite_with_assoc_opp sq1^$.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 506
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+      lhs_V' napply (sq2 $@R _).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 507
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+      lhs' napply cat_assoc.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 508
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+      lhs' apply (_ $@L isabcomplex).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 509
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply postcomp_zero.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 510
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 511
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros P b2 p.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 511
+Time: 0.016s">
+<div class="time" style="width: 25.806451612903%"></div>
+<pre>
+
+      elt_lift_epic b b2 b1 lb1.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 513
+Time: 0.024s">
+<div class="time" style="width: 38.709677419355%"></div>
+<pre>
+
+      elt_lift_exact f1 g1 b1 a1 la1 using clear sq2.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 515
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      {</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 516
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (ismonic' c).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 516
+Time: 0.005s">
+<div class="time" style="width: 8.0645161290323%"></div>
+<pre>
+        rewrite_with_assoc sq2.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 517
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+        by lhs' napply (_ $@L lb1).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 518
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 518
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+
+      provide_lift (a $o a1).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 520
+Time: 0.005s">
+<div class="time" style="width: 8.0645161290323%"></div>
+<pre>
+      rewrite_with_assoc sq1^$.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 521
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+      by lhs' napply (_ $@L la1).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 522
+Time: 0.006s">
+<div class="time" style="width: 9.6774193548387%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 523
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** If the middle map [B1 $-&gt; B2] is now mono and the lower morphisms [A2 $-&gt; B2] and [B2 $-&gt; C2] form an exact sequence, then the upper morphisms [A1 $-&gt; B1] and [B1 $-&gt; C1] form an exact sequence. *)
+ </pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 526
+Time: 0.004s">
+<div class="time" style="width: 6.4516129032258%"></div>
+<pre>Definition two_by_three_mono `{!Monic b} `{!CatIsAbExact f2 g2}
+    : CatIsAbExact f1 g1.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 527
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 528
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+    napply Build_CatIsAbExact.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 529
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 530
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (ismonic' c).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 530
+Time: 0.004s">
+<div class="time" style="width: 6.4516129032258%"></div>
+<pre>
+      rewrite_with_assoc sq2.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 531
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      lhs' napply (_ $@L sq1).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 532
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+      lhs_V' napply cat_assoc.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 533
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+      lhs' apply (isabcomplex $@R _).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 534
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply precomp_zero.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 535
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 536
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> intros P b1 p.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 536
+Time: 0.008s">
+<div class="time" style="width: 12.903225806452%"></div>
+<pre>
+
+      elt_lift_exact f2 g2 (b $o b1) a2 la2 using clear sq2 p.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 538
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      {</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 539
+Time: 0.005s">
+<div class="time" style="width: 8.0645161290323%"></div>
+<pre> rewrite_with_assoc sq2^$.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 539
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        lhs' napply (_ $@L p).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 540
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply postcomp_zero.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 541
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 541
+Time: 0.016s">
+<div class="time" style="width: 25.806451612903%"></div>
+<pre>
+
+      elt_lift_epic a a2 a1 la1.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 543
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+
+      provide_lift a1.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 545
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply (ismonic b).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 546
+Time: 0.007s">
+<div class="time" style="width: 11.290322580645%"></div>
+<pre>
+      rewrite_with_assoc sq1.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 547
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+      lhs' napply (_ $@L la1).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 548
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact la2.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 549
+Time: 0.004s">
+<div class="time" style="width: 6.4516129032258%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 550
+Time: 0.003s">
+<div class="time" style="width: 4.8387096774194%"></div>
+<pre>
+
+End TwoByThree.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 552
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** The diamond lemma *)
+
+</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 555
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section Diamond.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 555
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  Context {Ae : Type} `{H0 : Is1Cat Ae} `{!IsAbEpiStable Ae}.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 557
+Time: 0.005s">
+<div class="time" style="width: 8.0645161290323%"></div>
+<pre>
+
+  Context {A B C D E F G H : Ae}
+    (ab : A $-&gt; B) (bc : B $-&gt; C) (cd : C $-&gt; D) (de : D $-&gt; E)
+    (ah : A $-&gt; H) (hg : H $-&gt; G) (gf : G $-&gt; F) (fe : F $-&gt; E)
+    (hb : H $-&gt; B) (bd : B $-&gt; D) (hf : H $-&gt; F) (fd : F $-&gt; D)
+    (tru : ab $== hb $o ah) (trr : bd $== cd $o bc)
+    (trd : fe $== de $o fd) (trl : hf $== gf $o hg)
+    (sq : bd $o hb $== fd $o hf)
+    `{!CatIsAbExact ab bc} `{!CatIsAbExact cd de}
+    `{!CatIsAbExact ah hg} `{!CatIsAbExact gf fe}
+    `{!Epic hg} `{!Monic cd}.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 568
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The diagram has the shape:
+&lt;&lt;
+          A
+         / \
+        /   \
+       v     v
+      H ----&gt; B
+     /|       |\
+    / |       | \
+   v  |       |  v
+  G   |       |   C
+   \  |       |  /
+    \ |       | /
+     vv       vv
+      F ----&gt; D
+       \     /
+        \   /
+         v v
+          E
+&gt;&gt;
+  where each diagonal is assumed to be exact. *)
+
+  (** If the map [H $-&gt; B] is mono, then so is [G $-&gt; F]. *)
+ </pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 593
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition diamond_lemma_mono `{!Monic hb} : Monic gf.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 593
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 594
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    clear trd.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 595
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply monic_via_elt_isemb_ab.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 596
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    intros P g p.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 597
+Time: 0.022s">
+<div class="time" style="width: 35.483870967742%"></div>
+<pre>
+
+    elt_lift_epic hg g h lh.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 599
+Time: 0.025s">
+<div class="time" style="width: 40.322580645161%"></div>
+<pre>
+
+    elt_lift_exact ab bc (hb $o h) a la using clear trr trl p sq.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 601
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 602
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (ismonic' cd).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 602
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+      lhs_V' napply cat_assoc.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 603
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+      lhs_V' napply (trr $@R _).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 604
+Time: 0.005s">
+<div class="time" style="width: 8.0645161290323%"></div>
+<pre>
+      rewrite_with_assoc sq.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 605
+Time: 0.005s">
+<div class="time" style="width: 8.0645161290323%"></div>
+<pre>
+      rewrite trl.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 606
+Time: 0.013s">
+<div class="time" style="width: 20.967741935484%"></div>
+<pre>
+      rewrite cat_assoc, lh, p.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 607
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply postcomp_zero.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 608
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 608
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+    assert (la' : ah $o a $== h).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 610
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 611
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply (ismonic hb).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 611
+Time: 0.006s">
+<div class="time" style="width: 9.6774193548387%"></div>
+<pre>
+      lhs_V' napply cat_assoc.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 612
+Time: 0.006s">
+<div class="time" style="width: 9.6774193548387%"></div>
+<pre>
+      rewrite &lt;- tru.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 613
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact la.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 614
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 614
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+
+    lhs_V' napply lh.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 616
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+    lhs_V' napply (_ $@L la').</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 617
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+    lhs' napply cat_assoc_opp.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 618
+Time: 0.002s">
+<div class="time" style="width: 3.2258064516129%"></div>
+<pre>
+    lhs' rapply (isabcomplex $@R _).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 619
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply precomp_zero.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 620
+Time: 0.006s">
+<div class="time" style="width: 9.6774193548387%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 621
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** If the map [F $-&gt; D] is epi, then so is the map [B $-&gt; C]. *)
+ </pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 624
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition diamond_lemma_epi `{!Epic fd} : Epic bc.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 624
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 625
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    clear tru.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 626
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply epic_elt_lift; intros P c.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 627
+Time: 0.011s">
+<div class="time" style="width: 17.741935483871%"></div>
+<pre>
+
+    elt_lift_epic fd (cd $o c) f lf.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 629
+Time: 0.02s">
+<div class="time" style="width: 32.258064516129%"></div>
+<pre>
+
+    elt_lift_exact gf fe f g lg using clear trd.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 631
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    {</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 632
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre> lhs' napply (trd $@R f).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 632
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+      lhs' napply cat_assoc.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 633
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      lhs' napply (de $@L lf).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 634
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+      lhs_V' napply cat_assoc.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 635
+Time: 0.002s">
+<div class="time" style="width: 3.2258064516129%"></div>
+<pre>
+      lhs' rapply (isabcomplex $@R c).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 636
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      napply precomp_zero.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 637
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 637
+Time: 0.029s">
+<div class="time" style="width: 46.774193548387%"></div>
+<pre>
+
+    elt_lift_epic hg g h lh.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 639
+Time: 0.002s">
+<div class="time" style="width: 3.2258064516129%"></div>
+<pre>
+
+    provide_lift (hb $o h).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 641
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    apply (ismonic cd).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 642
+Time: 0.003s">
+<div class="time" style="width: 4.8387096774194%"></div>
+<pre>
+    lhs' napply cat_assoc_opp.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 643
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+    lhs_V' napply (trr $@R _).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 644
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+    lhs' napply cat_assoc_opp.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 645
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    lhs' napply (sq $@R _).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 646
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+    lhs' napply cat_assoc.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 647
+Time: 0.005s">
+<div class="time" style="width: 8.0645161290323%"></div>
+<pre>
+    rewrite trl.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 648
+Time: 0.018s">
+<div class="time" style="width: 29.032258064516%"></div>
+<pre>
+    by rewrite cat_assoc, lh, lg, lf.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 649
+Time: 0.006s">
+<div class="time" style="width: 9.6774193548387%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 650
+Time: 0.005s">
+<div class="time" style="width: 8.0645161290323%"></div>
+<pre>
+
+End Diamond.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 652
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+(** ** The baby dragon lemmas *)
+
+</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 655
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Section Baby_Dragon.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 655
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The dragon lemmas involve diagrams which in general have the same shape, but can be elongated or shortened.  For example, the case [n = 2] below has shape:
+&lt;&lt;
+          top 0     top 1    top 2
+          /   \     /  \     /  \
+         /     \   /    \   /    \
+        v       v v      v v      v
+       mid 0   mid 1    mid 2    mid 3
+         \     /   \     /  \     /
+          \   /     \   /    \   /
+           v v       v v      v v
+          bot 0     bot 1    bot 2
+&gt;&gt;
+  where all the diagonal sequences are exact, the maps [top 0 $-&gt; middle 0], [middle 1 $-&gt; bot 1], and [middle 2 $-&gt; bot 2] are epic, and the maps [top 0 $-&gt; middle 1], [top 1 $-&gt; middle 2], and [middle 3 $-&gt; bot 2] are mono.
+
+  For general [n], the diagram will have a similar shape, with [n + 1] objects in the top and bottom rows. *)
+
+  (** The baby dragon lemma has an epi statement and a mono statement.  We shall first prove the epi part, then the mono part.  To do the epi part, we will show that if the map [middle 0 $-&gt; bot 0] is epi, then so is [top 2 $-&gt; middle 3].  Due to the lack of symmetry at the edges of the diagram, we need to prove a more general statement first to make the induction go through. *)
+
+ </pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 675
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Context {A : Type} `{IsAbEpiStable A}.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 675
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** We make a datatype for the above diagram with [n+1] squares. *)
+ </pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 678
+Time: 0.006s">
+<div class="time" style="width: 9.6774193548387%"></div>
+<pre>Record BabyDragon {n : nat} := {
+    top : Fin n.+1 -&gt; A;
+    mid : Fin n.+2 -&gt; A;
+    bot : Fin n.+1 -&gt; A;
+    top_l (k : Fin n.+1) : top k $-&gt; mid (fin_incl k);
+    top_r (k : Fin n.+1) : top k $-&gt; mid (fsucc k);
+    bot_l (k : Fin n.+1) : mid (fin_incl k) $-&gt; bot k;
+    bot_r (k : Fin n.+1) : mid (fsucc k) $-&gt; bot k;
+    sq (k : Fin n.+1) : (bot_l k) $o (top_l k) $== (bot_r k) $o (top_r k);
+    exact_r (k : Fin n) :: CatIsAbExact (top_r (fin_incl k)) (bot_l (fsucc k));
+    exact_l (k : Fin n) :: CatIsAbExact (top_l (fsucc k)) (bot_r (fin_incl k))
+  }.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 689
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  (** Note that [bot_l k] refers to the bottom-left map in the [k]th square, which points down and to the *right*. *)
+
+ </pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 692
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Arguments BabyDragon : clear implicits.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 692
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** In order to make an inductive argument, we need two ways of truncating a diagram.  This one drops the right-hand square, keeping the left [n+1] squares. *)
+ </pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 695
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition baby_dragon_trunc_left (n : nat) (D : BabyDragon n.+1)
+    : BabyDragon n.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 696
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 697
+Time: 0.002s">
+<div class="time" style="width: 3.2258064516129%"></div>
+<pre>
+    snapply Build_BabyDragon; intro k; cbn.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 698
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 699
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (top D (fin_incl k)).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 699
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 700
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (mid D (fin_incl k)).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 700
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 701
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (bot D (fin_incl k)).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 701
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 702
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (top_l _ (fin_incl k)).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 702
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 703
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (top_r _ (fin_incl k)).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 703
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 704
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (bot_l _ (fin_incl k)).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 704
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 705
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (bot_r _ (fin_incl k)).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 705
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 706
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (sq _ (fin_incl k)).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 706
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 707
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (exact_r _ (fin_incl k)).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 707
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 708
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (exact_l _ (fin_incl k)).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 708
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 709
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** This one drops the left-hand square, keeping the right [n+1] squares. *)
+ </pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 712
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>Definition baby_dragon_trunc_right (n : nat) (D : BabyDragon n.+1)
+    : BabyDragon n.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 713
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 714
+Time: 0.035s">
+<div class="time" style="width: 56.451612903226%"></div>
+<pre>
+    snapply Build_BabyDragon; intro k; cbn.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 715
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 716
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (top D (fsucc k)).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 716
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 717
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (mid D (fsucc k)).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 717
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 718
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (bot D (fsucc k)).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 718
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 719
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (top_l _ (fsucc k)).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 719
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 720
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (top_r _ (fsucc k)).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 720
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 721
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (bot_l _ (fsucc k)).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 721
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 722
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (bot_r _ (fsucc k)).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 722
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 723
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (sq _ (fsucc k)).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 723
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 724
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (exact_r _ (fsucc k)).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 724
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 725
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> exact (exact_l _ (fsucc k)).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 725
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 726
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** This is a helper lemma that can be proved by induction.  The epi part of the dragon lemma follows immediately. *)
+ </pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 729
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>Local Instance baby_dragon_aux_left (n : nat) (D : BabyDragon n)
+    `{!forall k : Fin (n.+1), Epic (bot_l D k)} `{!Epic (top_l D fin_zero)}
+    : Epic (bot_r D fin_last $o top_r D fin_last).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 731
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 732
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    induction n.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 733
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 734
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre> rapply (epic_homotopic _ _ (sq _ fin_zero)).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 734
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 735
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply epic_elt_lift; intros P b_last.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 735
+Time: 0.005s">
+<div class="time" style="width: 8.0645161290323%"></div>
+<pre>
+
+      elt_lift_epic (bot_l D fin_last) b_last m_last lm_last.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 737
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+      pose (D' := baby_dragon_trunc_left n D).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 739
+Time: 0.023s">
+<div class="time" style="width: 37.096774193548%"></div>
+<pre>
+      elt_lift_epic (bot_r D' fin_last $o top_r D' fin_last)
+                    (bot_r D' fin_last $o m_last) t_penult lt_penult.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 741
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      unfold D' in t_penult, lt_penult; clear D'.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 742
+Time: 0.048s">
+<div class="time" style="width: 77.41935483871%"></div>
+<pre>
+
+      elt_lift_exact (top_l D (fsucc fin_last)) (bot_r D (fin_incl fin_last))
+        (m_last - top_r D (fin_incl fin_last) $o t_penult) t_last lt_last
+        using clear IHn lt_penult.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 746
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      {</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 747
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre> lhs' napply postcomp_op_inv.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 747
+Time: 0.012s">
+<div class="time" style="width: 19.354838709677%"></div>
+<pre>
+        rewrite &lt;- cat_assoc.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 748
+Time: 0.027s">
+<div class="time" style="width: 43.548387096774%"></div>
+<pre>
+        rewrite &lt;- lt_penult.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 749
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        apply inverse_r_0gpd.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 750
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 750
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+
+      provide_lift t_last.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 752
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+      lhs_V' napply (sq D fin_last $@R _).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 753
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+      lhs' napply cat_assoc.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 754
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+      lhs' napply (_ $@L lt_last).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 755
+Time: 0.005s">
+<div class="time" style="width: 8.0645161290323%"></div>
+<pre>
+      rewrite postcomp_op_inv.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 756
+Time: 0.01s">
+<div class="time" style="width: 16.129032258065%"></div>
+<pre>
+      rewrite &lt;- cat_assoc.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 757
+Time: 0.013s">
+<div class="time" style="width: 20.967741935484%"></div>
+<pre>
+      rewrite isabcomplex.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 758
+Time: 0.013s">
+<div class="time" style="width: 20.967741935484%"></div>
+<pre>
+      rewrite precomp_zero.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 759
+Time: 0.006s">
+<div class="time" style="width: 9.6774193548387%"></div>
+<pre>
+      rewrite mon_unit_l_inv_0gpd.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 760
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      exact lm_last.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 761
+Time: 0.019s">
+<div class="time" style="width: 30.645161290323%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 762
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The epi form of the baby dragon lemma states that the map [top fin_last $-&gt; middle fin_last] is epic. *)
+ </pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 765
+Time: 0.004s">
+<div class="time" style="width: 6.4516129032258%"></div>
+<pre>Definition baby_dragon_epi (n : nat) (D : BabyDragon n)
+    `{!forall k : Fin (n.+1), Epic (bot_l D k)}
+    `{!Epic (top_l D fin_zero)} `{!Monic (bot_r D fin_last)}
+    : Epic (top_r D fin_last)
+    := epic_cancel_monic _ _.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 769
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** This is a helper lemma that can be proved by induction.  The mono part of the dragon lemma follows immediately. *)
+ </pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 772
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>Local Instance baby_dragon_aux_right (n : nat) (D : BabyDragon n)
+    `{!forall k : Fin (n.+1), Monic (top_r D k)}
+    `{!Monic (bot_r D fin_last)}
+    : Monic (bot_l D fin_zero $o top_l D fin_zero).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 775
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+  Proof.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 776
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    induction n.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 777
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 778
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre> rapply (monic_homotopic _ _ (sq _ _)^$).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 778
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+    -</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 779
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> apply monic_via_elt_isemb_ab; intros P t zero_t.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 779
+Time: 0.017s">
+<div class="time" style="width: 27.41935483871%"></div>
+<pre>
+
+      elt_lift_exact (top_l D (fsucc fin_zero)) (bot_r D fin_zero)
+        (top_r D fin_zero $o t) t' lift_t'
+        using clear zero_t.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 783
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      {</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 784
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre> lhs' napply cat_assoc_opp.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 784
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre>
+        lhs_V' napply (sq D fin_zero $@R _).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 785
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+        exact zero_t.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 786
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 786
+Time: 0.002s">
+<div class="time" style="width: 3.2258064516129%"></div>
+<pre>
+
+      rapply (ismonic' (top_r D fin_zero)).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 788
+Time: 0.003s">
+<div class="time" style="width: 4.8387096774194%"></div>
+<pre>
+      lhs_V' napply lift_t'.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 789
+Time: 0.002s">
+<div class="time" style="width: 3.2258064516129%"></div>
+<pre>
+      rhs_V' napply (postcomp_zero (top_l D (fsucc fin_zero))).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 790
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply cat_postwhisker.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 791
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      set (D' := baby_dragon_trunc_right n D).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 792
+Time: 0.003s">
+<div class="time" style="width: 4.8387096774194%"></div>
+<pre>
+      rapply (ismonic' (bot_r D' fin_zero $o top_r D' fin_zero)).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 793
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      {</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 794
+Time: 0.001s">
+<div class="time" style="width: 1.6129032258065%"></div>
+<pre> rapply (monic_homotopic _ _ (sq _ _)).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 794
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre> }</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 794
+Time: 0.003s">
+<div class="time" style="width: 4.8387096774194%"></div>
+<pre>
+      lhs_V' napply (sq D' fin_zero $@R _).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 795
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      unfold D'; clear D'.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 796
+Time: 0.008s">
+<div class="time" style="width: 12.903225806452%"></div>
+<pre>
+      rewrite_with_assoc_opp lift_t'.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 797
+Time: 0.002s">
+<div class="time" style="width: 3.2258064516129%"></div>
+<pre>
+      lhs' apply (isabcomplex $@R _).</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 798
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+      apply precomp_zero.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 799
+Time: 0.009s">
+<div class="time" style="width: 14.516129032258%"></div>
+<pre>
+  Defined.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 800
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+  (** The mono form of the baby dragon lemma states that the map [middle fin_zero $-&gt; bot fin_zero] is monic. *)
+ </pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 803
+Time: 0.003s">
+<div class="time" style="width: 4.8387096774194%"></div>
+<pre>Definition baby_dragon_mono (n : nat) (D : BabyDragon n)
+    `{!forall k : Fin (n.+1), Monic (top_r D k)}
+    `{!Monic (bot_r D fin_last)} `{!Epic (top_l D fin_zero)}
+    : Monic (bot_l D fin_zero)
+    := monic_cancel_epic _ _.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 807
+Time: 0.017s">
+<div class="time" style="width: 27.41935483871%"></div>
+<pre>
+
+End Baby_Dragon.</pre>
+</div>
+<div class="code" title="File: HomologicalAlgebra.v
+Line: 810
+Time: 0s">
+<div class="time" style="width: 0%"></div>
+<pre>
+
+</pre>
+</div>
+</body>
+</html>
+

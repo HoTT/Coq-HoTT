@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html class="alectryon-standalone"><head><title>HoTT.Categories.Category.Sigma.OnObjects.v.alectryon.json</title><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta content="Alectryon" name="generator"><link href="alectryon.css" rel="stylesheet"><link href="pygments.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" /><script src="alectryon.js"></script></head><body><article class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><pre class="alectryon-io highlight"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="sd">(** * ∑-categories on objects - a generalization of subcategories *)</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> HoTT.Basics HoTT.Types.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Category.Core Functor.Core Category.Sigma.Core.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require</span> Functor.Composition.Core Functor.Identity.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Require Import</span> Functor.Paths.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Import</span> Functor.Identity.FunctorIdentityNotations.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Import</span> Functor.Composition.Core.FunctorCompositionCoreNotations.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Set Implicit Arguments</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Generalizable All Variables</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Notation</span> <span class="nf">sig_type</span> := Overture.sig.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local Notation</span> <span class="nf">pr1_type</span> := Overture.pr1.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> morphism_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> functor_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Section</span> <span class="nf">sig_obj</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">A</span> : PreCategory.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Variable</span> <span class="nv">Pobj</span> : A -&gt; <span class="kt">Type</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+  <span class="sd">(** ** Definition of [sig_obj]-precategory *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">sig_obj</span> : PreCategory
+    := @Build_PreCategory
+         (sig_type Pobj)
+         (<span class="k">fun</span> <span class="nv">s</span> <span class="nv">d</span> =&gt; morphism A (pr1_type s) (pr1_type d))
+         (<span class="k">fun</span> <span class="nv">x</span> =&gt; @identity A (pr1_type x))
+         (<span class="k">fun</span> <span class="nv">s</span> <span class="nv">d</span> <span class="nv">d&#39;</span> <span class="nv">m1</span> <span class="nv">m2</span> =&gt; m1 o m2)%morphism
+         (<span class="k">fun</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> =&gt; associativity A _ _ _ _)
+         (<span class="k">fun</span> <span class="nv">_</span> <span class="nv">_</span> =&gt; left_identity A _ _)
+         (<span class="k">fun</span> <span class="nv">_</span> <span class="nv">_</span> =&gt; right_identity A _ _)
+         _.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+  <span class="sd">(** ** First projection functor *)</span>
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">pr1_obj</span> : Functor sig_obj A
+    := Build_Functor
+         sig_obj A
+         (@pr1_type _ _)
+         (<span class="k">fun</span> <span class="nv">s</span> <span class="nv">d</span> <span class="nv">m</span> =&gt; m)
+         (<span class="k">fun</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> =&gt; idpath)
+         (<span class="k">fun</span> <span class="nv">_</span> =&gt; idpath).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">sig_obj_as_sig</span> : PreCategory
+    := @sig A Pobj (<span class="k">fun</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> =&gt; Unit) _ (<span class="k">fun</span> <span class="nv">_</span> =&gt; tt) (<span class="k">fun</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> =&gt; tt).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">sig_functor_obj</span> : Functor sig_obj_as_sig sig_obj
+    := Build_Functor sig_obj_as_sig sig_obj
+                     (<span class="k">fun</span> <span class="nv">x</span> =&gt; x)
+                     (<span class="k">fun</span> <span class="nv">_</span> <span class="nv">_</span> =&gt; @pr1_type _ _)
+                     (<span class="k">fun</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> =&gt; idpath)
+                     (<span class="k">fun</span> <span class="nv">_</span> =&gt; idpath).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">sig_functor_obj_inv</span> : Functor sig_obj sig_obj_as_sig
+    := Build_Functor sig_obj sig_obj_as_sig
+                     (<span class="k">fun</span> <span class="nv">x</span> =&gt; x)
+                     (<span class="k">fun</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">m</span> =&gt; exist _ m tt)
+                     (<span class="k">fun</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> <span class="nv">_</span> =&gt; idpath)
+                     (<span class="k">fun</span> <span class="nv">_</span> =&gt; idpath).</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Local</span> <span class="kn">Open Scope</span> functor_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-Category-Sigma-OnObjects-v-alectryon-json-chk0" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-Category-Sigma-OnObjects-v-alectryon-json-chk0"><span class="kn">Lemma</span> <span class="nf">sig_obj_eq</span> `{Funext}
+  : sig_functor_obj o sig_functor_obj_inv = <span class="mi">1</span>
+    /\ sig_functor_obj_inv o sig_functor_obj = <span class="mi">1</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>Pobj</var><span class="hyp-type"><b>: </b><span>A -&gt; <span class="kt">Type</span></span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(sig_functor_obj o sig_functor_obj_inv = <span class="mi">1</span>) *
+(sig_functor_obj_inv o sig_functor_obj = <span class="mi">1</span>)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-Category-Sigma-OnObjects-v-alectryon-json-chk1" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-Category-Sigma-OnObjects-v-alectryon-json-chk1"><span class="kn">Proof</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>Pobj</var><span class="hyp-type"><b>: </b><span>A -&gt; <span class="kt">Type</span></span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">(sig_functor_obj o sig_functor_obj_inv = <span class="mi">1</span>) *
+(sig_functor_obj_inv o sig_functor_obj = <span class="mi">1</span>)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-Category-Sigma-OnObjects-v-alectryon-json-chk2" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-Category-Sigma-OnObjects-v-alectryon-json-chk2"><span class="nb">split</span>; path_functor; <span class="nb">trivial</span>.</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>Pobj</var><span class="hyp-type"><b>: </b><span>A -&gt; <span class="kt">Type</span></span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport
+  (<span class="k">fun</span> <span class="nv">GO</span> : sig_type Pobj -&gt; sig_type Pobj =&gt;
+   <span class="k">forall</span> <span class="nv">s</span> <span class="nv">d</span> : sig_type Pobj,
+   sig_type (<span class="k">fun</span> <span class="nv">_</span> : morphism A (pr1_type s) (pr1_type d) =&gt; Unit) -&gt;
+   sig_type (<span class="k">fun</span> <span class="nv">_</span> : morphism A (pr1_type (GO s)) (pr1_type (GO d)) =&gt; Unit))
+  <span class="mi">1</span>
+  (<span class="k">fun</span> (<span class="nv">s</span> <span class="nv">d</span> : sig_type Pobj)
+     (<span class="nv">m</span> : sig_type (<span class="k">fun</span> <span class="nv">_</span> : morphism A (pr1_type s) (pr1_type d) =&gt; Unit)) =&gt;
+   (pr1_type m; tt)) =
+(<span class="k">fun</span> <span class="nv">s</span> <span class="nv">d</span> : sig_type Pobj =&gt; idmap)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-Category-Sigma-OnObjects-v-alectryon-json-chk3" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-Category-Sigma-OnObjects-v-alectryon-json-chk3"><span class="nb">apply</span> path_forall; <span class="nb">intros</span> [].</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>Pobj</var><span class="hyp-type"><b>: </b><span>A -&gt; <span class="kt">Type</span></span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>proj1</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>proj2</var><span class="hyp-type"><b>: </b><span>Pobj proj1</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport
+  (<span class="k">fun</span> <span class="nv">GO</span> : sig_type Pobj -&gt; sig_type Pobj =&gt;
+   <span class="k">forall</span> <span class="nv">s</span> <span class="nv">d</span> : sig_type Pobj,
+   sig_type (<span class="k">fun</span> <span class="nv">_</span> : morphism A (pr1_type s) (pr1_type d) =&gt; Unit) -&gt;
+   sig_type (<span class="k">fun</span> <span class="nv">_</span> : morphism A (pr1_type (GO s)) (pr1_type (GO d)) =&gt; Unit))
+  <span class="mi">1</span>
+  (<span class="k">fun</span> (<span class="nv">s</span> <span class="nv">d</span> : sig_type Pobj)
+     (<span class="nv">m</span> : sig_type (<span class="k">fun</span> <span class="nv">_</span> : morphism A (pr1_type s) (pr1_type d) =&gt; Unit)) =&gt;
+   (pr1_type m; tt))
+  (proj1; proj2) =
+(<span class="k">fun</span> <span class="nv">d</span> : sig_type Pobj =&gt; idmap)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-Category-Sigma-OnObjects-v-alectryon-json-chk4" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-Category-Sigma-OnObjects-v-alectryon-json-chk4"><span class="nb">apply</span> path_forall; <span class="nb">intros</span> [].</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>Pobj</var><span class="hyp-type"><b>: </b><span>A -&gt; <span class="kt">Type</span></span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>proj1</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>proj2</var><span class="hyp-type"><b>: </b><span>Pobj proj1</span></span></span><br><span><var>proj0</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>proj3</var><span class="hyp-type"><b>: </b><span>Pobj proj0</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport
+  (<span class="k">fun</span> <span class="nv">GO</span> : sig_type Pobj -&gt; sig_type Pobj =&gt;
+   <span class="k">forall</span> <span class="nv">s</span> <span class="nv">d</span> : sig_type Pobj,
+   sig_type (<span class="k">fun</span> <span class="nv">_</span> : morphism A (pr1_type s) (pr1_type d) =&gt; Unit) -&gt;
+   sig_type (<span class="k">fun</span> <span class="nv">_</span> : morphism A (pr1_type (GO s)) (pr1_type (GO d)) =&gt; Unit))
+  <span class="mi">1</span>
+  (<span class="k">fun</span> (<span class="nv">s</span> <span class="nv">d</span> : sig_type Pobj)
+     (<span class="nv">m</span> : sig_type (<span class="k">fun</span> <span class="nv">_</span> : morphism A (pr1_type s) (pr1_type d) =&gt; Unit)) =&gt;
+   (pr1_type m; tt))
+  (proj1; proj2) (proj0; proj3) =
+idmap</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><input class="alectryon-toggle" id="HoTT-Categories-Category-Sigma-OnObjects-v-alectryon-json-chk5" style="display: none" type="checkbox"><label class="alectryon-input" for="HoTT-Categories-Category-Sigma-OnObjects-v-alectryon-json-chk5"><span class="nb">apply</span> path_forall; <span class="nb">intros</span> [? []].</label><small class="alectryon-output"><div><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span><var>A</var><span class="hyp-type"><b>: </b><span>PreCategory</span></span></span><br><span><var>Pobj</var><span class="hyp-type"><b>: </b><span>A -&gt; <span class="kt">Type</span></span></span></span><br><span><var>H</var><span class="hyp-type"><b>: </b><span>Funext</span></span></span><br><span><var>proj1</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>proj2</var><span class="hyp-type"><b>: </b><span>Pobj proj1</span></span></span><br><span><var>proj0</var><span class="hyp-type"><b>: </b><span>A</span></span></span><br><span><var>proj3</var><span class="hyp-type"><b>: </b><span>Pobj proj0</span></span></span><br><span><var>proj4</var><span class="hyp-type"><b>: </b><span>morphism A (pr1_type (proj1; proj2)) (pr1_type (proj0; proj3))</span></span></span><br></div><span class="goal-separator"><hr></span><div class="goal-conclusion">transport
+  (<span class="k">fun</span> <span class="nv">GO</span> : sig_type Pobj -&gt; sig_type Pobj =&gt;
+   <span class="k">forall</span> <span class="nv">s</span> <span class="nv">d</span> : sig_type Pobj,
+   sig_type (<span class="k">fun</span> <span class="nv">_</span> : morphism A (pr1_type s) (pr1_type d) =&gt; Unit) -&gt;
+   sig_type (<span class="k">fun</span> <span class="nv">_</span> : morphism A (pr1_type (GO s)) (pr1_type (GO d)) =&gt; Unit))
+  <span class="mi">1</span>
+  (<span class="k">fun</span> (<span class="nv">s</span> <span class="nv">d</span> : sig_type Pobj)
+     (<span class="nv">m</span> : sig_type (<span class="k">fun</span> <span class="nv">_</span> : morphism A (pr1_type s) (pr1_type d) =&gt; Unit)) =&gt;
+   (pr1_type m; tt))
+  (proj1; proj2) (proj0; proj3) (proj4; tt) =
+(proj4; tt)</div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">    </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="bp">reflexivity</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Qed</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Definition</span> <span class="nf">sig_obj_compat</span> : pr1_obj o sig_functor_obj = pr1&#39;
+    := idpath.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">sig_obj</span>.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Arguments</span> pr1_obj {A Pobj}.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-txt">
+</span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Module</span> <span class="nf">Export</span> CategorySigmaOnObjectsNotations.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp">  </span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">Notation</span> <span class="s2">&quot;{ x : A | P }&quot;</span> := (sig_obj A (<span class="k">fun</span> <span class="nv">x</span> =&gt; P)) : category_scope.</span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="kn">End</span> <span class="nf">CategorySigmaOnObjectsNotations</span>.</span><span class="alectryon-wsp">
+</span></span></pre></article></body></html>

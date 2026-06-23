@@ -1,0 +1,9 @@
+N: 3 "is01cat_sum" [body=yes, kind=cnst, prop=no, path="Sum", ];
+N: 1 "is1cat_sum" [body=yes, kind=cnst, prop=no, path="Sum", ];
+N: 2 "is2graph_sum" [body=yes, kind=cnst, prop=no, path="Sum", ];
+N: 4 "isgraph_sum" [body=yes, kind=cnst, prop=no, path="Sum", ];
+E: 1 2 [weight=1060, ];
+E: 1 3 [weight=196, ];
+E: 1 4 [weight=2292, ];
+E: 2 4 [weight=17, ];
+E: 3 4 [weight=50, ];

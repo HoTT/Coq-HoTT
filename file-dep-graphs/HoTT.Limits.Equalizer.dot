@@ -1,0 +1,11 @@
+digraph HoTT_Limits_Equalizer {
+  graph [ratio=0.5]
+  node [style=filled]
+Equalizer_equiv_functor_equalizer [label="equiv_functor_equalizer", URL=<Equalizer.html#equiv_functor_equalizer>, peripheries=3, fillcolor="#F070D1"] ;
+Equalizer_functor_equalizer [label="functor_equalizer", URL=<Equalizer.html#functor_equalizer>, peripheries=3, fillcolor="#F070D1"] ;
+Equalizer_Equalizer [label="Equalizer", URL=<Equalizer.html#Equalizer>, fillcolor="#F070D1"] ;
+  Equalizer_equiv_functor_equalizer -> Equalizer_Equalizer [] ;
+  Equalizer_functor_equalizer -> Equalizer_Equalizer [] ;
+subgraph cluster_Equalizer { label="Equalizer"; fillcolor="#FFFFC3"; labeljust=l; style=filled 
+Equalizer_Equalizer; Equalizer_functor_equalizer; Equalizer_equiv_functor_equalizer; };
+} /* END */

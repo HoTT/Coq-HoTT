@@ -1,0 +1,244 @@
+[
+  [
+    {
+      "_type": "sentence",
+      "contents": "(** * General Settings *)",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** This file contains all the tweaks and settings we make to Coq. *)\n\n(** ** Plugins *)\n\n(** Load the Ltac plugin. This is the tactic language we use for proofs. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Declare ML Module \"rocq-runtime.plugins.ltac\".",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** If you want to use Ltac2 in a file, there is no need to declare a module.  You just use [From Ltac2 Require Import Ltac2.] *)\n\n(** Load the number string notation plugin. Allowing us to write numbers like [1234]. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Declare ML Module \"rocq-runtime.plugins.number_string_notation\".",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Proofs *)\n\n(** Activate the Ltac tactics language for proofs. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Global Set Default Proof Mode \"Classic\".",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Force use of bullets in proofs. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Global Set Default Goal Selector \"!\".",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Universes *)\n\n(** Activate universe polymorphism everywhere. This means that whenever you see a [Type], it's actually a [Type@{i}] for some universe level [i]. This allows us to reuse definitions for each universe level without having to redefine them. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Global Set Universe Polymorphism.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** This command makes it so that you don't have to declare universes explicitly when mentioning them in the type.  (Without this command, if you want to say [Definition foo := Type@{i}.], you must instead say [Definition foo@{i} := Type@{i}.]. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Global Unset Strict Universe Declaration.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** This command makes it so that when we say something like [IsHSet nat] we get [IsHSet@{i} nat] instead of [IsHSet@{Set} nat]. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Global Unset Universe Minimization ToSet.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Primitive Projections *)\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Global Set Primitive Projections.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Global Set Nonrecursive Elimination Schemes.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** Currently Coq doesn't print equivalences correctly (8.6). This fixes that. See https://github.com/HoTT/HoTT/issues/1000 *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Global Set Printing Primitive Projection Parameters.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Pattern Matching *)\n\n(** This flag removes parameters from constructors in patterns that appear in a match statement. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Global Set Asymmetric Patterns.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n(** The warning clause here can be removed once our minimum Rocq version is 9.3. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[warning=\"-unknown-option\"]\nGlobal Set Asymmetric Patterns No Implicits.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Unification *)\n\n(** This command changes Coq's subterm selection to always use full conversion after finding a subterm whose head/key matches the key of the term we're looking for.  This applies to [rewrite] and higher-order unification in [apply]/[elim]/[destruct].  Again, if you don't know what that means, ignore it. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Global Set Keyed Unification.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Typeclasses and Hint settings *)\n\n(** This tells Coq that when we [Require] a module without [Import]ing it, typeclass instances defined in that module should also not be imported.  In other words, the only effect of [Require] without [Import] is to make qualified names available. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Global Set Loose Hint Behavior \"Strict\".",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Create HintDb rewrite discriminated.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[export] Hint Variables Opaque : rewrite.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Create HintDb typeclass_instances discriminated.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Reversible Coercions *)\n\n(** Coercions in Coq since 8.16 have the ability to be reversible. These are coercions that are not regular functions but rely on some meta-procedure like typeclass resolution to fill in missing pieces. Examples include marking fields of a record with [:>] which allows Coq to elaborate the projected term to the original term.\n\nThis behaviour can have some surprising effects in some places, where you might not expect a term to be elaborated. When inspecting proofs with [Set Printing All] you will not be able to see the reversible coercion. In order to help with inspecting such situations, Coq exposes a register for a dummy term called [reverse_coercion] which gets inserted during an application of a reversible coercion. This way you can see the application clearly in a proof term.\n\nWe register this here. This is standard from the Coq Stdlib prelude.*)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[universes(polymorphic=yes)] Definition ReverseCoercionSource (T : Type) := T.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[universes(polymorphic=yes)] Definition ReverseCoercionTarget (T : Type) := T.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "#[warning=\"-uniform-inheritance\", reversible=no, universes(polymorphic=yes)]\nCoercion reverse_coercion {T' T} (x' : T') (x : ReverseCoercionSource T)\n  : ReverseCoercionTarget T' := x'.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Register reverse_coercion as core.coercion.reverse_coercion.",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Search Settings *)\n\n(** Keywords for blacklisting from search function *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Add Search Blacklist \"_admitted\" \"_subproof\" \"Private_\".",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n\n(** ** Warnings *)\n\n(** Rocq 9.2 complains if you use \"Notation\" when you could use \"Abbreviation\".  However, Rocq 9.1 doesn't support the Abbreviation command, so unless Rocq 9.2 is our minimum, we will continue to use \"Notation\".  This suppresses the resulting warnings. *)\n"
+    },
+    {
+      "_type": "sentence",
+      "contents": "Global Set Warnings \"-notation-for-abbreviation\".",
+      "messages": [],
+      "goals": []
+    },
+    {
+      "_type": "text",
+      "contents": "\n"
+    }
+  ]
+]
