@@ -19,19 +19,20 @@ Proof.
   exact (fmap (fun x => yon_0gpd x z) (pr i)).
 Defined.
 
-(** A product of an [I]-indexed family of objects of a category is an object of the category with an [I]-indexed family of projections such that the induced map is an equivalence. *)
-Class Product (I : Type) {A : Type} `{Is1Cat A} {x : I -> A} := Build_Product' {
-  cat_prod : A;
+(** An object is a product of an [I]-indexed family of objects of a category if there is an [I]-indexed family of projections such that the induced map is an equivalence. *)
+Class IsProduct (I : Type) {A : Type} `{Is1Cat A} (x : I -> A) (cat_prod : A)
+  := Build_IsProduct' {
   cat_pr : forall i : I, cat_prod $-> x i;
   cat_isequiv_cat_prod_corec_inv
     :: forall z : A, CatIsEquiv (cat_prod_corec_inv cat_prod x z cat_pr);
 }.
 
-Arguments Product I {A _ _ _ _} x.
-Arguments cat_prod I {A _ _ _ _} x {product} : rename.
+Arguments IsProduct I {A _ _ _ _} x cat_prod.
+Arguments cat_pr {I} {A _ _ _ _} x cat_prod {isprod} : rename.
+Arguments cat_isequiv_cat_prod_corec_inv {I} {A _ _ _ _} x cat_prod {isprod} : rename.
 
-(** A convenience wrapper for building products *)
-Definition Build_Product (I : Type) {A : Type} `{Is1Cat A} {x : I -> A}
+(** A convenience wrapper for building isproducts *)
+Definition Build_IsProduct (I : Type) {A : Type} `{Is1Cat A} (x : I -> A)
   (cat_prod : A) (cat_pr : forall i : I, cat_prod $-> x i)
   (cat_prod_corec : forall z : A,
     (forall i : I, z $-> x i) -> (z $-> cat_prod))
@@ -39,9 +40,9 @@ Definition Build_Product (I : Type) {A : Type} `{Is1Cat A} {x : I -> A}
     cat_pr i $o cat_prod_corec z f $== f i)
   (cat_prod_eta_pr : forall (z : A) (f g : z $-> cat_prod),
     (forall i : I, cat_pr i $o f $== cat_pr i $o g) -> f $== g)
-  : Product I x.
+  : IsProduct I x cat_prod.
 Proof.
-  snapply (Build_Product' I A _ _ _ _ _ cat_prod cat_pr).
+  snapply (Build_IsProduct' I A _ _ _ _ x cat_prod cat_pr).
   intros z.
   napply isequiv_0gpd_issurjinj.
   napply Build_IsSurjInj.
@@ -53,37 +54,58 @@ Proof.
     by napply cat_prod_eta_pr.
 Defined.
 
+(** A product is an object together with the data that it is a product. *)
+Class Product (I : Type) {A : Type} `{Is1Cat A} (x : I -> A) := Build_Product' {
+  cat_prod : A;
+  cat_isprod :: IsProduct I x cat_prod;
+}.
+
+Arguments Build_Product' I {A _ _ _ _} x cat_prod cat_isprod.
+Arguments Product I {A _ _ _ _} x.
+Arguments cat_prod I {A _ _ _ _} x {product} : rename.
+Arguments cat_isprod I {A _ _ _ _} x {product} : rename.
+
+(** A convenience wrapper for building products *)
+Definition Build_Product (I : Type) {A : Type} `{Is1Cat A} (x : I -> A)
+  (cat_prod : A) (cat_pr : forall i : I, cat_prod $-> x i)
+  (cat_prod_corec : forall z : A,
+    (forall i : I, z $-> x i) -> (z $-> cat_prod))
+  (cat_prod_beta_pr : forall (z : A) (f : forall i, z $-> x i) (i : I),
+    cat_pr i $o cat_prod_corec z f $== f i)
+  (cat_prod_eta_pr : forall (z : A) (f g : z $-> cat_prod),
+    (forall i : I, cat_pr i $o f $== cat_pr i $o g) -> f $== g)
+  : Product I x.
+Proof.
+  snapply (Build_Product' I _ cat_prod).
+  snapply (Build_IsProduct _ _ _ cat_pr cat_prod_corec cat_prod_beta_pr cat_prod_eta_pr).
+Defined.
+
 Section Lemmata.
 
-  Context (I : Type) {A : Type} {x : I -> A} `{Product I _ x}.
+  Context {I : Type} {A : Type} `{Is1Cat A} {x : I -> A}
+    (cat_prod : A) {cat_isprod : IsProduct I x cat_prod}.
 
   Definition cate_cat_prod_corec_inv {z : A}
-    : (yon_0gpd (cat_prod I x) z) $<~> prod_0gpd I (fun i => yon_0gpd (x i) z)
-    := Build_CatEquiv (cat_prod_corec_inv (cat_prod I x) x z cat_pr).
+    : (yon_0gpd cat_prod z) $<~> prod_0gpd I (fun i => yon_0gpd (x i) z)
+    := Build_CatEquiv (cat_prod_corec_inv cat_prod x z (cat_pr _ _)).
 
   Definition cate_cat_prod_corec {z : A}
-    : prod_0gpd I (fun i => yon_0gpd (x i) z) $<~> (yon_0gpd (cat_prod I x) z)
+    : prod_0gpd I (fun i => yon_0gpd (x i) z) $<~> (yon_0gpd cat_prod z)
     := cate_cat_prod_corec_inv^-1$.
 
   Definition cat_prod_corec {z : A}
-    : (forall i, z $-> x i) -> (z $-> cat_prod I x).
-  Proof.
-    apply cate_cat_prod_corec.
-  Defined.
+    : (forall i, z $-> x i) -> (z $-> cat_prod)
+    := cate_fun cate_cat_prod_corec.
 
   (** Applying the [i]th projection after a tuple of maps gives the [ith] map. *)
-  Lemma cat_prod_beta {z : A} (f : forall i, z $-> x i)
-    : forall i, cat_pr i $o cat_prod_corec f $== f i.
-  Proof.
-    exact (cate_isretr cate_cat_prod_corec_inv f).
-  Defined.
+  Definition cat_prod_beta {z : A} (f : forall i, z $-> x i)
+    : forall i, cat_pr _ _ i $o cat_prod_corec f $== f i
+    := cate_isretr cate_cat_prod_corec_inv f.
 
   (** The pairing map is the unique map that makes the following diagram commute. *)
-  Lemma cat_prod_eta {z : A} (f : z $-> cat_prod I x)
-    : cat_prod_corec (fun i => cat_pr i $o f) $== f.
-  Proof.
-    exact (cate_issect cate_cat_prod_corec_inv f).
-  Defined.
+  Definition cat_prod_eta {z : A} (f : z $-> cat_prod)
+    : cat_prod_corec (fun i => cat_pr _ _ i $o f) $== f
+    := cate_issect cate_cat_prod_corec_inv f.
 
   Local Instance is0functor_prod_0gpd_helper
     : Is0Functor (fun z : A^op => prod_0gpd I (fun i => yon_0gpd (x i) z)).
@@ -111,15 +133,14 @@ Section Lemmata.
   Defined.
 
   Definition natequiv_cat_prod_corec_inv
-    : NatEquiv (yon_0gpd (cat_prod I x))
+    : NatEquiv (yon_0gpd cat_prod)
       (fun z : A^op => prod_0gpd I (fun i => yon_0gpd (x i) z)).
   Proof.
     snapply Build_NatEquiv.
     1: intro; exact cate_cat_prod_corec_inv.
-    exact (is1natural_yoneda_0gpd
-      (cat_prod I x)
+    exact (is1natural_yoneda_0gpd cat_prod
       (fun z => prod_0gpd I (fun i => yon_0gpd (x i) z))
-      cat_pr).
+      (cat_pr _ _)).
   Defined.
 
   Lemma cat_prod_corec_eta {z : A} {f f' : forall i, z $-> x i}
@@ -132,26 +153,32 @@ Section Lemmata.
     exact p.
   Defined.
 
-  Lemma cat_prod_pr_eta {z : A} {f f' : z $-> cat_prod I x}
-    : (forall i, cat_pr i $o f $== cat_pr i $o f') -> f $== f'.
+  Lemma cat_prod_pr_eta {z : A} {f f' : z $-> cat_prod}
+    : (forall i, cat_pr _ _ i $o f $== cat_pr _ _ i $o f') -> f $== f'.
   Proof.
     intros p.
     refine ((cat_prod_eta _)^$ $@ _ $@ cat_prod_eta _).
     by napply cat_prod_corec_eta.
   Defined.
 
+End Lemmata.
+
+Section InducedFromEquiv.
+
+  Context {I A : Type} `{HasEquivs A} {x : I -> A}
+  (cat_prod : A) `{!IsProduct I x cat_prod}
+  (y : A) (f : y $<~> cat_prod).
+
   (** A categorical equivalence into a product induces a product structure on the domain. *)
-  Definition cat_prod_equiv_prod `{!HasEquivs A} (y : A) (f : y $<~> cat_prod I x)
-    : Product I x.
+  Local Instance cat_prod_equiv_prod : IsProduct I x y.
   Proof.
-    snapply Build_Product.
-    - exact y.
+    snapply Build_IsProduct.
     - intro i.
-      exact (cat_pr i $o f).
+      exact (cat_pr _ _ i $o f).
     - intros z D.
-      exact (f^-1$ $o cat_prod_corec D).
+      exact (f^-1$ $o cat_prod_corec _ D).
     - intros z D i; cbn beta.
-      refine (_ $@ cat_prod_beta _ _).
+      refine (_ $@ cat_prod_beta _ _ _).
       refine (cat_assoc _ _ _ $@ _).
       apply cat_postwhisker.
       apply compose_h_Vh.
@@ -164,25 +191,36 @@ Section Lemmata.
       exact (e i).
   Defined.
 
-End Lemmata.
+  (** The induced projection is given by the equivalence. *)
+  Definition cat_pr_comp (i : I)
+    : cat_pr _ y i $== cat_pr _ _ i $o f
+    := Id _.
+
+  (** The induced corecursion is given by the equivalence. *)
+  Definition cat_prod_corec_comp {z : A} (D : forall i, z $-> x i)
+    : f $o (@cat_prod_corec _ _ _ _ _ _ _ y cat_prod_equiv_prod _ D) $== cat_prod_corec _ D
+    := compose_h_Vh _ _.
+
+End InducedFromEquiv.
 
 (** *** Diagonal map *)
 
-Definition cat_prod_diag {I : Type} {A : Type} (x : A)
-  `{Product I _ (fun _ => x)}
-  : x $-> cat_prod I (fun _ => x)
-  := cat_prod_corec I (fun _ => Id x).
+Definition cat_prod_diag {I : Type} {A : Type} (x : A) (cat_prod : A)
+  `{IsProduct I _ (fun _ => x) cat_prod}
+  : x $-> cat_prod
+  := cat_prod_corec cat_prod (fun _ => Id x).
 
 (** *** Uniqueness of products *)
 
 Definition cate_cat_prod {I J : Type} (ie : I <~> J) {A : Type} `{HasEquivs A}
-  (x : I -> A) `{!Product I x} (y : J -> A) `{!Product J y}
+  (x : I -> A) (prod_x : A) `{!IsProduct I x prod_x}
+  (y : J -> A) (prod_y : A) `{!IsProduct J y prod_y}
   (e : forall i : I, x i $<~> y (ie i))
-  : cat_prod I x $<~> cat_prod J y.
+  : prod_x $<~> prod_y.
 Proof.
   napply yon_equiv_0gpd.
-  nrefine (natequiv_compose _ (natequiv_cat_prod_corec_inv _)).
-  nrefine (natequiv_compose
+  refine (natequiv_compose _ (natequiv_cat_prod_corec_inv _)).
+  refine (natequiv_compose
             (natequiv_inverse (natequiv_cat_prod_corec_inv _)) _).
   snapply Build_NatEquiv.
   - intros z.
@@ -196,14 +234,13 @@ Proof.
     exact (cat_assoc_opp _ _ _).
 Defined.
 
-(** [I]-indexed products are unique no matter how they are constructed. *)
+(** [I]-indexed products are unique. *)
 Definition cat_prod_unique {I A : Type} `{HasEquivs A}
-  (x : I -> A) `{!Product I x} (y : I -> A) `{!Product I y}
+  (x : I -> A) (prod_x : A) `{!IsProduct I x prod_x}
+  (y : I -> A) (prod_y : A) `{!IsProduct I y prod_y}
   (e : forall i : I, x i $<~> y i)
-  : cat_prod I x $<~> cat_prod I y.
-Proof.
-  exact (cate_cat_prod 1 x y e).
-Defined.
+  : prod_x $<~> prod_y
+  := cate_cat_prod 1 x _ y _ e.
 
 (** *** Existence of products *)
 
@@ -215,23 +252,23 @@ Class HasAllProducts (A : Type) `{Is1Cat A}
 
 (** *** Product functor *)
 
-Instance is0functor_cat_prod (I : Type) (A : Type) `{HasProducts I A}
+Global Instance is0functor_cat_prod (I : Type) (A : Type) `{HasProducts I A}
   : Is0Functor (fun x : I -> A => cat_prod I x).
 Proof.
   napply Build_Is0Functor.
   intros x y f.
-  exact (cat_prod_corec I (fun i => f i $o cat_pr i)).
+  exact (cat_prod_corec _ (fun i => f i $o cat_pr _ _ i)).
 Defined.
 
-Instance is1functor_cat_prod (I : Type) (A : Type) `{HasProducts I A}
+Global Instance is1functor_cat_prod (I : Type) (A : Type) `{HasProducts I A}
   : Is1Functor (fun x : I -> A => cat_prod I x).
 Proof.
   napply Build_Is1Functor.
   - intros x y f g p.
-    exact (cat_prod_corec_eta I (fun i => p i $@R cat_pr i)).
+    exact (cat_prod_corec_eta _ (fun i => p i $@R cat_pr _ _ i)).
   - intros x.
-    nrefine (_ $@ (cat_prod_eta I (Id _))).
-    exact (cat_prod_corec_eta I (fun i => cat_idl _ $@ (cat_idr _)^$)).
+    nrefine (_ $@ (cat_prod_eta _ (Id _))).
+    exact (cat_prod_corec_eta _ (fun i => cat_idl _ $@ (cat_idr _)^$)).
   - intros x y z f g.
     napply cat_prod_pr_eta.
     intros i.
@@ -246,12 +283,12 @@ Defined.
 
 (** *** An empty product is terminal *)
 
-Definition isterminal_prodempty {A : Type} {z : A}
-  `{Product Empty A (fun _ => z)}
-  : IsTerminal (cat_prod Empty (fun _ => z)).
+Definition isterminal_prodempty {A : Type} `{Is1Cat A} {z : A} {prod_empty : A}
+  `{!IsProduct Empty (fun _ => z) prod_empty}
+  : IsTerminal prod_empty.
 Proof.
   intros a.
-  snrefine (cat_prod_corec _ _; fun f => cat_prod_pr_eta _ _); intros [].
+  srefine (cat_prod_corec _ _; fun f => cat_prod_pr_eta _ _); intros [].
 Defined.
 
 (** ** Binary products *)
@@ -263,7 +300,7 @@ Class BinaryProduct {A : Type} `{Is1Cat A} (x y : A)
 Class HasBinaryProducts (A : Type) `{Is1Cat A}
   := has_binary_products :: forall x y : A, BinaryProduct x y.
 
-Instance hasbinaryproducts_hasproductsbool {A : Type} `{HasProducts Bool A}
+Global Instance hasbinaryproducts_hasproductsbool {A : Type} `{HasProducts Bool A}
   : HasBinaryProducts A
   := fun x y => has_products (Bool_rec _ x y).
 
@@ -274,14 +311,14 @@ Section BinaryProducts.
   Definition cat_binprod' : A
     := cat_prod Bool (Bool_rec _ x y).
 
-  Definition cat_pr1 : cat_binprod' $-> x := cat_pr true.
+  Definition cat_pr1 : cat_binprod' $-> x := cat_pr (Bool_rec _ x y) _ true.
 
-  Definition cat_pr2 : cat_binprod' $-> y := cat_pr false.
+  Definition cat_pr2 : cat_binprod' $-> y := cat_pr (Bool_rec _ x y) _ false.
 
   Definition cat_binprod_corec {z : A} (f : z $-> x) (g : z $-> y)
     : z $-> cat_binprod'.
   Proof.
-    napply (cat_prod_corec Bool).
+    apply (cat_prod_corec _).
     intros [|].
     - exact f.
     - exact g.
@@ -299,7 +336,7 @@ Section BinaryProducts.
     : cat_binprod_corec (cat_pr1 $o f) (cat_pr2 $o f) $== f.
   Proof.
     unfold cat_binprod_corec.
-    napply cat_prod_pr_eta.
+    rapply cat_prod_pr_eta.
     intros [|].
     - exact (cat_binprod_beta_pr1 _ _).
     - exact (cat_binprod_beta_pr2 _ _).
@@ -341,7 +378,7 @@ Definition Build_BinaryProduct {A : Type} `{Is1Cat A} {x y : A}
     cat_pr1 $o f $== cat_pr1 $o g -> cat_pr2 $o f $== cat_pr2 $o g -> f $== g)
   : Product Bool (Bool_rec _ x y).
 Proof.
-  snapply (Build_Product _ cat_binprod').
+  snapply (Build_Product _ _ cat_binprod').
   - intros [|].
     + exact cat_pr1.
     + exact cat_pr2.
@@ -360,8 +397,8 @@ Defined.
 
 Definition cat_binprod {A: Type} `{HasBinaryProducts A} x y := cat_binprod' x y.
 
-Definition cat_binprod_eta_pr_x_xx {A : Type} `{HasBinaryProducts A} {w x y z : A}
-  (f g : w $-> cat_binprod x (cat_binprod y z))
+Definition cat_binprod_eta_pr_x_xx {A : Type} `{HasBinaryProducts A}
+  {w x y z : A} (f g : w $-> cat_binprod x (cat_binprod y z))
   : cat_pr1 $o f $== cat_pr1 $o g
   -> cat_pr1 $o cat_pr2 $o f $== cat_pr1 $o cat_pr2 $o g
   -> cat_pr2 $o cat_pr2 $o f $== cat_pr2 $o cat_pr2 $o g
@@ -431,28 +468,27 @@ Defined.
 (** We can take the disjoint union of the index set of an indexed product if we have all binary products. This is useful for associating products in a canonical way. This leads to symmetry and associativity of binary products. *)
 
 Definition cat_prod_index_sum {I J : Type} {A : Type} `{HasBinaryProducts A}
-  (x : I -> A) (y : J -> A)
-  : Product I x -> Product J y -> Product (I + J) (sum_ind _ x y).
+  (x : I -> A) {prod_x : A} (y : J -> A) {prod_y : A} `{!IsProduct I x prod_x} `{!IsProduct J y prod_y}
+  : Product (I + J) (sum_ind _ x y).
 Proof.
-  intros p q.
-  snapply Build_Product.
-  - exact (cat_binprod (cat_prod I x) (cat_prod J y)).
+  srapply Build_Product.
+  - exact (cat_binprod (prod_x) (prod_y)).
   - intros [i | j].
-    + exact (cat_pr _ $o cat_pr1).
-    + exact (cat_pr _ $o cat_pr2).
+    + exact (cat_pr x _ _ $o cat_pr1).
+    + exact (cat_pr y _ _ $o cat_pr2).
   - intros z f.
-    napply cat_binprod_corec.
-    + napply cat_prod_corec.
+    rapply cat_binprod_corec.
+    + rapply cat_prod_corec.
       exact (f o inl).
-    + napply cat_prod_corec.
+    + rapply cat_prod_corec.
       exact (f o inr).
   - intros z f [i | j].
     + nrefine (cat_assoc _ _ _ $@ _).
       nrefine ((_ $@L cat_binprod_beta_pr1 _ _) $@ _).
-      rapply cat_prod_beta.
+      tapply (cat_prod_beta prod_x).
     + nrefine (cat_assoc _ _ _ $@ _).
       nrefine ((_ $@L cat_binprod_beta_pr2 _ _) $@ _).
-      rapply cat_prod_beta.
+      tapply cat_prod_beta.
   - intros z f g r.
     rapply cat_binprod_eta_pr.
     + rapply  cat_prod_pr_eta.
@@ -737,7 +773,7 @@ Section Associativity.
     nrefine ((_ $@L cat_binprod_beta_pr2 _ _) $@ _).
     napply cat_pr2_fmap01_binprod.
   Defined.
-  
+
   Definition cat_binprod_twist_corec {w x y z : A}
     (f : w $-> x) (g : w $-> y) (h : w $-> z)
     : cat_binprod_twist x y z $o cat_binprod_corec f (cat_binprod_corec g h)
@@ -854,14 +890,14 @@ Section Associativity.
     nrefine (cat_assoc _ _ _ $@ (_ $@L cat_pr2_fmap01_binprod _ _) $@ _).
     exact (cat_assoc_opp _ _ _ $@ (cat_binprod_beta_pr1 _ _ $@R _)).
   Defined.
-  
+
   Definition cat_binprod_associator_corec {w x y z}
     (f : w $-> x) (g : w $-> y) (h : w $-> z)
     : associator_cat_binprod x y z $o cat_binprod_corec f (cat_binprod_corec g h)
-      $== cat_binprod_corec (cat_binprod_corec f g) h. 
+      $== cat_binprod_corec (cat_binprod_corec f g) h.
   Proof.
     nrefine ((associator_twist'_unfold _ _ _ _ _ _ _ _ $@R _) $@ _).
-    nrefine ((cat_assoc_opp _ _ _ $@R _) $@ cat_assoc _ _ _ $@ (_ $@L (_ $@ _)) $@ _). 
+    nrefine ((cat_assoc_opp _ _ _ $@R _) $@ cat_assoc _ _ _ $@ (_ $@L (_ $@ _)) $@ _).
     1: napply cat_binprod_fmap01_corec.
     1: rapply (cat_binprod_corec_eta _ _ _ _ (Id _)).
     1: napply cat_binprod_swap_corec.

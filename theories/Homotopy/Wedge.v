@@ -272,7 +272,7 @@ Defined.
 (** Wedge inclusions into the product can be defined if the indexing type has decidable paths. This is because we need to choose which factor a given wedge summand should land in. *)
 Definition fwedge_incl `{Funext} (I : Type) `(DecidablePaths I) (X : I -> pType)
   : FamilyWedge I X ->* pproduct X
-  := cat_coprod_prod X.
+  := cat_coprod_prod X _ _.
 
 (** ** The pinch map on the suspension *)
 

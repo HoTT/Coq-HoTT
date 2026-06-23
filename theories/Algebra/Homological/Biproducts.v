@@ -8,44 +8,215 @@ Require Import WildCat.Opposite WildCat.Monoidal WildCat.MonoidalTwistConstructi
 
 (** ** Biproducts *)
 
-Class Biproduct (I : Type) `{DecidablePaths I} {A : Type}
-  `{HasEquivs A, !IsPointedCat A} {x : I -> A}
-  := Build_Biproduct' {
-  biproduct_product :: Product I x;
-  biproduct_coproduct : Coproduct I x;
-  catie_cat_coprod_prod :: CatIsEquiv (cat_coprod_prod x);
+Class IsBiproduct (I : Type) `{DecidablePaths I} {A : Type}
+  `{IsPointedCat A} {x : I -> A} (cat_biprod : A)
+  := Build_IsBiproduct' {
+  isproduct_isbiproduct :: IsProduct I x cat_biprod;
+  iscoproduct_isbiproduct :: IsCoproduct I x cat_biprod;
+  cat_pr_in : forall i, cat_pr _ _ i $o cat_in _ _ i $== Id _;
+  cat_pr_in_ne : forall i j, i <> j -> cat_pr _ _ j $o cat_in _ _ i $== zero_morphism;
 }.
 
-Arguments Biproduct I {_ A _ _ _ _ _ _} x.
-Arguments Build_Biproduct' I {_ A _ _ _ _ _ _} x _ _ _.
+Arguments IsBiproduct I {_ A _ _ _ _ _} x cat_biprod.
+Arguments Build_IsBiproduct' I {_ A _ _ _ _ _} x _ _ _.
 
-Section Biproducts.
-  Context {I : Type} {A : Type} (x : I -> A) `{Biproduct I A x}.
+(** An (un)curried constructor for biproducts. *)
+Definition Build_IsBiproduct (I : Type) `{DecidablePaths I}
+  {A : Type} `{IsPointedCat A} (x : I -> A)
+  (cat_biprod : A)
+  (** A biproduct is a product. *)
+  (cat_pr : forall i, cat_biprod $-> x i)
+  (corec : forall z, (forall i, z $-> x i) -> z $-> cat_biprod)
+  (corec_beta : forall z f i, cat_pr i $o corec z f $== f i)
+  (corec_eta : forall z (f g : z $-> cat_biprod),
+    (forall i, cat_pr i $o f $== cat_pr i $o g) -> f $== g)
+  (** A biproduct is a coproduct. *)
+  (cat_in : forall i, x i $-> cat_biprod)
+  (rec : forall z, (forall i, x i $-> z) -> cat_biprod $-> z)
+  (rec_beta : forall z f i, rec z f $o cat_in i $== f i)
+  (rec_eta : forall z (f g : cat_biprod $-> z),
+    (forall i, f $o cat_in i $== g $o cat_in i) -> f $== g)
+  (** The projections and inclusion maps satisfy some further properties. *)
+  (cat_pr_in : forall i, cat_pr i $o cat_in i $== Id _)
+  (cat_pr_in_ne : forall i j, i <> j -> cat_pr j $o cat_in i $== zero_morphism)
+  : IsBiproduct I x cat_biprod.
+Proof.
+  snapply Build_IsBiproduct'.
+  - by napply Build_IsProduct.
+  - by napply Build_IsCoproduct.
+  - exact cat_pr_in.
+  - exact cat_pr_in_ne.
+Defined.
 
-  Definition cate_coprod_prod : cat_coprod I x $<~> cat_prod I x
-    := Build_CatEquiv (cat_coprod_prod x).
+(** Since [cat_biprod] is both a product and a coproduct there is an induced endomorphism on [cat_biprod].  We will show that this morphism is homotopic to the identity.  *)
+Section Induced.
+  Context (I : Type) `{DecidablePaths I}
+  {A : Type} `{IsPointedCat A}
+  {x : I -> A} (cat_biprod : A) `{!IsBiproduct I x cat_biprod}.
 
-  (** We define [cat_biprod] to be the object underlying the product structure given by [biproduct_product]. *)
-  Definition cat_biprod : A
-    := cat_prod I x.
+  Definition induced_isbiproduct : cat_biprod $-> cat_biprod
+  := cat_coprod_prod x cat_biprod cat_biprod.
 
-  (** Because of the equivalence [cate_coprod_prod], [cat_biprod] also carries a coproduct structure. *)
-  #[export] Instance cat_biprod_coprod : Coproduct I x
-    := cat_coprod_coprod_equiv _ cat_biprod cate_coprod_prod.
+  Definition homotopic_induced_isbiproduct : Id _ $== induced_isbiproduct.
+  Proof.
+    lhs_V' rapply cat_coprod_eta.
+    apply cat_coprod_rec_eta; intro i.
+    lhs' rapply cat_idl.
+    lhs_V' rapply cat_prod_eta.
+    apply cat_prod_corec_eta; intro j.
+    unfold cat_coprod_prod_component;
+    destruct (dec_paths i j) as [p|np]; cbn.
+    - destruct p.
+      exact (cat_pr_in i).
+    - exact (cat_pr_in_ne i j np).
+  Defined.
 
-  (** The inclusion map for this new coproduct structure is defined using [cate_coprod_prod], which computes to [cat_coprod_prod], giving the following. *)
-  Definition cat_in_comp (i : I)
-    : cat_in (H0:=cat_biprod_coprod) i $== cat_coprod_prod x $o cat_in (H0:=biproduct_coproduct) i
-    := cate_buildequiv_fun _ $@R _.
+  #[export]
+  Instance catie_induced_isbiproduct `{!HasEquivs A} : CatIsEquiv induced_isbiproduct
+    := catie_homotopic _ homotopic_induced_isbiproduct.
 
-End Biproducts.
+End Induced.
 
-Arguments cat_biprod I {A} x {_ _ _ _ _ _ _ _}.
-Arguments cate_coprod_prod {I A} x {_ _ _ _ _ _ _ _}.
+(** Compatability of [cat_biprod_rec] and [cat_prod_corec]. *)
+Definition cat_biprod_corec_rec I `{DecidablePaths I} {A : Type} `{IsPointedCat A}
+  {x y : I -> A} (biprod_x biprod_y : A) `{!IsBiproduct I x biprod_x, !IsBiproduct I y biprod_y}
+  (f : forall i, x i $-> y i)
+  : cat_prod_corec biprod_y (fun i => f i $o cat_pr _ _ i)
+    $== cat_coprod_rec _ biprod_x (fun i => cat_in _ _ i $o f i).
+Proof.
+  rapply cat_prod_pr_eta.
+  intro i.
+  refine (cat_prod_beta _ _ _ $@ _).
+  tapply (cat_coprod_in_eta (x:=x) I).
+  intro j.
+  refine (_ $@ (_ $@L (cat_coprod_beta _ _ _ _)^$) $@ cat_assoc_opp _ _ _).
+  refine (cat_assoc _ _ _ $@ _ $@ cat_assoc _ _ _).
+  (* This can probably be simplified by turning into components and proving some naturality statement. *)
+  destruct (dec_paths j i) as [p | np].
+  - destruct p.
+    refine ((_ $@L _) $@ cat_idr _ $@ (cat_idl _)^$ $@ (_^$ $@R _)).
+    1,2: napply cat_pr_in.
+  - refine ((_ $@L _) $@ cat_zero_r _ $@ (cat_zero_l _)^$ $@ (_^$ $@R _)).
+    1,2: napply cat_pr_in_ne; assumption.
+Defined.
 
-(** A smart constructor for biproducts. *)
-Definition Build_Biproduct (I : Type) `{DecidablePaths I}
+(** If [cat_biprod] is an object with both a product and coproduct structure, then it defines a biproduct whenever we have a homotopy [Id _ $== cat_coprod_prod x _ _].  *)
+Section HomotopyConstructor.
+  Context (I : Type) `{DecidablePaths I}
+  {A : Type} `{IsPointedCat A} (x : I -> A)
+  (cat_biprod : A) `{!IsProduct I x cat_biprod, !IsCoproduct I x cat_biprod}
+  (h : Id cat_biprod $== cat_coprod_prod x cat_biprod cat_biprod).
+
+  (** An inclusion followed by a projection has a computation law by the specified homotopy. *)
+  Definition cat_hbiprod_pr_in (i j : I)
+    : cat_pr _ _ j $o cat_in _ _ i $== cat_coprod_prod_component x i j.
+  Proof.
+    rhs_V' rapply cat_prod_beta.
+    apply cat_postwhisker.
+    rhs_V' rapply (cat_coprod_beta _ _ (fun _ => cat_prod_corec _ _)).
+    lhs_V' apply cat_idl.
+    by apply cat_prewhisker.
+  Defined.
+
+  (** An inclusion followed by a projection of the same index is the identity. *)
+  Definition cat_hbiprod_pr_in_eq (i : I)
+    : cat_pr _ _ i $o cat_in _ _ i $== Id _.
+  Proof.
+    refine (cat_hbiprod_pr_in i i $@ _).
+    unfold cat_coprod_prod_component.
+    generalize (dec_paths i i).
+    by napply decidable_paths_refl.
+  Defined.
+
+  (** An inclusion followed by a projection of a different index is zero. *)
+  Definition cat_hbiprod_pr_in_ne (i j : I) (p : i <> j)
+    : cat_pr _ _ j $o cat_in _ _ i $== zero_morphism.
+  Proof.
+    refine (cat_hbiprod_pr_in i j $@ _).
+    unfold cat_coprod_prod_component.
+    decidable_false (dec_paths i j) p.
+    reflexivity.
+  Defined.
+
+  Definition Build_hIsBiproduct : IsBiproduct I x cat_biprod.
+  Proof.
+    rapply Build_IsBiproduct'.
+    - apply cat_hbiprod_pr_in_eq.
+    - apply cat_hbiprod_pr_in_ne.
+  Defined.
+
+End HomotopyConstructor.
+
+(** If the canonical map from the coproduct to the product of [x] is an equivalence, then the product has a biproduct structure. *)
+Section EquivConstructor.
+
+  Context (I : Type) `{DecidablePaths I}
   {A : Type} `{HasEquivs A, !IsPointedCat A} (x : I -> A)
+  (cat_prod : A) `{!IsProduct I x cat_prod}
+  (cat_coprod : A) `{!IsCoproduct I x cat_coprod}
+  {e : CatIsEquiv (cat_coprod_prod x _ _)}.
+
+  Definition cate_cat_coprod_prod : cat_coprod $<~> cat_prod
+    := Build_CatEquiv (cat_coprod_prod x _ _).
+
+  (** We only want this instance locally. *)
+  Instance coprod_cat_prod : IsCoproduct I x cat_prod
+    := cat_coprod_coprod_equiv _ _ cat_prod cate_cat_coprod_prod.
+
+  (** Mapping out of the coproduct using the universal property for the coproduct commutes with the equivalence *)
+  Definition cat_coprod_coprod_equiv_comp {z : A} (f : forall i, x i $-> z)
+    : cat_coprod_rec _ cat_prod f $o cate_cat_coprod_prod $== cat_coprod_rec _ cat_coprod f
+    := compose_hV_h (cat_coprod_rec I cat_coprod f) cate_cat_coprod_prod.
+
+  Definition cat_biprod_pr_in (i j : I)
+    : cat_pr _ _ j $o cat_in _ _ i $== cat_coprod_prod_component x i j.
+  Proof.
+    refine ((_ $@L _) $@ _).
+    { refine (cat_in_comp _ _ _ _ _ $@ _).
+    lhs' apply (cate_buildequiv_fun (cat_coprod_prod x _ _) $@R _).
+    apply cat_coprod_beta. }
+    apply cat_prod_beta.
+  Defined.
+
+  Definition cat_biprod_pr_in_eq (i : I)
+    : cat_pr _ _ i $o cat_in _ _ i $== Id _.
+  Proof.
+    refine (cat_biprod_pr_in i i $@ _).
+    unfold cat_coprod_prod_component.
+    generalize (dec_paths i i).
+    by napply decidable_paths_refl.
+  Defined.
+
+  Definition cat_biprod_pr_in_ne (i j : I) (p : i <> j)
+    : cat_pr _ _ j $o cat_in _ _ i $== zero_morphism.
+  Proof.
+    refine (cat_biprod_pr_in i j $@ _).
+    unfold cat_coprod_prod_component.
+    decidable_false (dec_paths i j) p.
+    reflexivity.
+  Defined.
+
+  Definition Build_IsBiproduct'' : IsBiproduct I x cat_prod.
+  Proof.
+    srapply Build_IsBiproduct'.
+    - apply cat_biprod_pr_in_eq.
+    - apply cat_biprod_pr_in_ne.
+  Defined.
+
+End EquivConstructor.
+
+Class Biproduct (I : Type) `{DecidablePaths I} {A : Type}
+  `{IsPointedCat A} (x : I -> A) := Build_Biproduct' {
+    cat_biprod : A;
+    cat_isbiprod :: IsBiproduct I x cat_biprod;
+}.
+
+Arguments Build_Biproduct' I {_} _ {_ _ _ _ _} x cat_biprod cat_isbiprod.
+Arguments cat_biprod I {_ _ _ _ _ _ _} x.
+Arguments cat_isbiprod I {_ _ _ _ _ _ _} x.
+
+Definition Build_Biproduct (I : Type) `{DecidablePaths I}
+  {A : Type} `{IsPointedCat A} (x : I -> A)
   (cat_biprod : A)
   (** A biproduct is a product. *)
   (cat_pr : forall i, cat_biprod $-> x i)
@@ -64,85 +235,32 @@ Definition Build_Biproduct (I : Type) `{DecidablePaths I}
   (cat_pr_in_ne : forall i j, i <> j -> cat_pr j $o cat_in i $== zero_morphism)
   : Biproduct I x.
 Proof.
-  snapply Build_Biproduct'.
-  - by napply Build_Product.
-  - by napply Build_Coproduct.
-  - rapply (catie_homotopic (Id cat_biprod)).
-    napply rec_eta; intros i.
-    refine (cat_idl _ $@ _ $@ (rec_beta _ _ _)^$).
-    napply corec_eta; intros j.
-    refine (_ $@ (corec_beta _ _ _)^$).
-    unfold cat_coprod_prod_component.
-    destruct (dec_paths i j) as [p|np]; cbn.
-    * destruct p.
-      exact (cat_pr_in i).
-    * exact (cat_pr_in_ne i j np).
+  snapply (Build_Biproduct' _ _ _ cat_biprod).
+  exact (Build_IsBiproduct I x cat_biprod
+    cat_pr corec corec_beta corec_eta
+    cat_in rec rec_beta rec_eta
+    cat_pr_in cat_pr_in_ne).
 Defined.
 
-(** A biproduct is a product. *)
-
-(** An inclusion followed by a projection has a computation law. *)
-Definition cat_biprod_pr_in (I : Type) {A : Type} (x : I -> A)
-  `{Biproduct I A x} (i j : I)
-  : cat_pr j $o cat_in i $== cat_coprod_prod_component x i j.
+Definition Build_hBiproduct (I : Type) `{DecidablePaths I}
+  {A : Type} `{IsPointedCat A} (x : I -> A)
+  (cat_biprod : A) `{!IsProduct I x cat_biprod, !IsCoproduct I x cat_biprod}
+  (h : Id cat_biprod $== cat_coprod_prod x cat_biprod cat_biprod)
+  : Biproduct I x.
 Proof.
-  refine ((_ $@L _) $@ _).
-  { refine (cat_in_comp _ _ $@ _).
-    apply cat_coprod_beta. }
-  apply cat_prod_beta.
+  snapply (Build_Biproduct' _ _ _ cat_biprod).
+  by rapply Build_hIsBiproduct.
 Defined.
 
-(** An inclusion followed by a projection of the same index is the identity. *)
-Definition cat_biprod_pr_in_eq (I : Type) {A : Type} (x : I -> A)
-  `{Biproduct I A x} (i : I)
-  : cat_pr i $o cat_in i $== Id _.
+Definition Build_Biproduct'' (I : Type) `{DecidablePaths I}
+  {A : Type} `{HasEquivs A, !IsPointedCat A} (x : I -> A)
+  (cat_prod : A) `{!IsProduct I x cat_prod}
+  (cat_coprod : A) `{!IsCoproduct I x cat_coprod}
+  {e : CatIsEquiv (cat_coprod_prod x _ _)}
+  : Biproduct I x.
 Proof.
-  refine (cat_biprod_pr_in I x i i $@ _).
-  unfold cat_coprod_prod_component.
-  generalize (dec_paths i i).
-  by napply decidable_paths_refl.
-Defined.
-
-(** An inclusion followed by a projection of a different index is zero. *)
-Definition cat_biprod_pr_in_ne (I : Type) {A : Type} (x : I -> A)
-  `{Biproduct I A x} {i j : I} (p : i <> j)
-  : cat_pr j $o cat_in i $== zero_morphism.
-Proof.
-  refine (cat_biprod_pr_in I x i j $@ _).
-  unfold cat_coprod_prod_component.
-  decidable_false (dec_paths i j) p.
-  reflexivity.
-Defined.
-
-Definition cat_biprod_diag I {A} (x : A) `{Biproduct I A (fun _ => x)}
-  : x $-> cat_biprod I (fun _ => x)
-  := cat_prod_diag x.
-
-Definition cat_biprod_codiag I {A} (x : A) `{Biproduct I A (fun _ => x)}
-  : cat_biprod I (fun _ => x) $-> x
-  := cat_coprod_codiag x.
-
-(** Compatability of [cat_biprod_rec] and [cat_prod_corec]. *)
-Definition cat_biprod_corec_rec I `{DecidablePaths I} {A : Type}
-  `{HasEquivs A, !IsPointedCat A} {x y : I -> A}
-  `{!Biproduct I x, !Biproduct I y}
-  (f : forall i, x i $-> y i)
-  : cat_prod_corec _ (fun i => f i $o cat_pr i)
-    $== cat_coprod_rec _ (fun i => cat_in i $o f i).
-Proof.
-  napply cat_prod_pr_eta.
-  intros i.
-  refine (cat_prod_beta _ _ _ $@ _).
-  tapply (cat_coprod_in_eta (x:=x) I).
-  intros j.
-  refine (_ $@ (_ $@L (cat_coprod_beta _ _ _)^$) $@ cat_assoc_opp _ _ _).
-  refine (cat_assoc _ _ _ $@ _ $@ cat_assoc _ _ _).
-  destruct (dec_paths j i) as [p | np].
-  - destruct p.
-    refine ((_ $@L _) $@ cat_idr _ $@ (cat_idl _)^$ $@ (_^$ $@R _)).
-    1,2: napply cat_biprod_pr_in_eq.
-  - refine ((_ $@L _) $@ cat_zero_r _ $@ (cat_zero_l _)^$ $@ (_^$ $@R _)).
-    1,2: napply cat_biprod_pr_in_ne; assumption.
+  snapply (Build_Biproduct' _ _ _ cat_prod).
+  rapply Build_IsBiproduct''.
 Defined.
 
 (** *** Existence of biproducts *)
@@ -153,17 +271,11 @@ Class HasBiproducts (I A : Type)
 
 (** *** Binary biproducts *)
 
-Class BinaryBiproduct {A : Type} `{HasEquivs A, !IsPointedCat A} (x y : A)
+Class BinaryBiproduct {A : Type} `{IsPointedCat A} (x y : A)
   := binary_biproduct :: Biproduct Bool (fun b => if b then x else y).
 
-Definition Build_BinaryBiproduct' {A : Type} `{HasEquivs A, !IsPointedCat A}
-  {x y : A} {p : BinaryProduct x y} {c : BinaryCoproduct x y}
-  {ie : CatIsEquiv (cat_bincoprod_binprod x y)}
-  : BinaryBiproduct x y
-  := Build_Biproduct' _ _ p c ie.
-
 (** Smart constructor for binary biproducts. *)
-Definition Build_BinaryBiproduct {A : Type} `{HasEquivs A, !IsPointedCat A}
+Definition Build_BinaryBiproduct {A : Type} `{IsPointedCat A}
   {x y : A} (cat_biprod : A)
   (** A binary biproduct is a product. *)
   (cat_pr1 : cat_biprod $-> x) (cat_pr2 : cat_biprod $-> y)
@@ -217,7 +329,7 @@ Proof.
     + exact cat_pr1_inr.
 Defined.
 
-Class HasBinaryBiproducts (A : Type) `{HasEquivs A, !IsPointedCat A}
+Class HasBinaryBiproducts (A : Type) `{IsPointedCat A}
   := has_binary_biproducts :: forall (x y : A), BinaryBiproduct x y.
 
 Global Instance hasbinarybiproducts_hasbiproductsbool {A : Type}
@@ -230,7 +342,7 @@ Global Instance hasbinaryproducts_hasbinarybiproducts {A : Type}
   : HasBinaryProducts A.
 Proof.
   intros x y.
-  apply biproduct_product.
+  rapply Build_Product'.
 Defined.
 
 Global Instance hasbinarycoproducts_hasbinarybiproducts {A : Type}
@@ -238,11 +350,17 @@ Global Instance hasbinarycoproducts_hasbinarybiproducts {A : Type}
   : HasBinaryCoproducts A.
 Proof.
   intros x y.
-  napply biproduct_coproduct.
-  napply H.
+  napply Build_Product'.
+  napply Build_IsProduct'.
+  napply cat_isequiv_cat_coprod_rec_inv.
+  napply iscoproduct_isbiproduct.
+  napply cat_isbiprod.
+  exact (H x y).
 Defined.
 
-Section BinaryBiproducts.
+(* It doesn't make sense to make the rest of this file work, and then change everything after introducing IsBinaryBiproduct. *)
+
+(* Section BinaryBiproducts.
 
   Context {A : Type} `{HasEquivs A, !IsPointedCat A} {x y : A}
     `{!BinaryBiproduct x y}.
@@ -866,4 +984,4 @@ Proof.
   intros x y.
   rapply biproduct_op.
   exact (hbb x y).
-Defined.
+Defined. *)
