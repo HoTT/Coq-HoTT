@@ -29,6 +29,8 @@ Module Export ClassifyingSpace.
 
   Section ClassifyingSpace.
 
+    Local Set Polymorphic Inductive Cumulativity.
+
     Private Inductive ClassifyingSpace (G : Group) :=
       | bbase : ClassifyingSpace G.
 
@@ -404,6 +406,16 @@ Section HSpace_bg.
 
 End HSpace_bg.
 
+(** The classifying space of a contractible group is contractible. *)
+Instance contr_pclassifyingspace `{Univalence} (G : Group) `{Contr G}
+  : Contr (B G).
+Proof.
+  rapply (contr_equiv' pUnit (Build_Equiv _ _ pconst _)).
+  (* The map from [pUnit] is an equivalence, since it is one on loops, as both have contractible loop spaces. *)
+  pose proof (contr_equiv' G equiv_g_loops_bg).
+  rapply isequiv_is0connected_isequiv_loops.
+Defined.
+
 (** Functoriality of B(-) *)
 
 Instance is0functor_pclassifyingspace : Is0Functor B.
@@ -440,6 +452,26 @@ Proof.
   intros X Y f.
   symmetry.
   apply pbloop_natural.
+Defined.
+
+(** [fmap B] of a surjective group homomorphism is a 0-connected map. *)
+Instance isconnmap_fmap_pclassifyingspace `{Univalence} {G K : Group}
+  (f : GroupHomomorphism G K) `{!IsSurjection f}
+  : IsConnMap 0 (fmap B f).
+Proof.
+  (* By [isconnmap_isconnmap_ap_surj] it suffices to show that [fmap B f] and its [ap]s are surjective; both follow from surjectivity of [f]. *)
+  snapply isconnmap_isconnmap_ap_surj.
+  - rapply (isconnmap_isconnected (-1)).
+  - rapply (conn_point_elim (-1) (A:=B G)).
+    rapply (conn_point_elim (-1) (A:=B G)).
+    srapply (equiv_ind equiv_g_loops_bg).
+    intro h.
+    rapply contr_inhabited_hprop.
+    pose proof (m := center (Tr (-1) (hfiber f h))).
+    strip_truncations.
+    destruct m as [g p].
+    exact (tr (bloop g;
+               ClassifyingSpace_rec_beta_bloop _ _ _ _ g @ ap bloop p)).
 Defined.
 
 Instance is1functor_pclassifyingspace : Is1Functor B.

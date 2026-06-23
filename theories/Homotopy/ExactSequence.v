@@ -492,6 +492,164 @@ Proof.
   - reflexivity.
 Defined.
 
+(** ** Naturality and rotation of the connecting map *)
+
+(** The fiber functor of the tautological [cxfib] square is the identity. *)
+Definition pequiv_pfiber_cxfib_taut {X Y : pType} (f : X ->* Y)
+  : pequiv_pfiber pequiv_cxfib pequiv_pmap_idmap
+      (square_pfib_pequiv_cxfib (pfib f) f)
+    ==* pmap_idmap.
+Proof.
+  pointed_reduce_pmap f.
+  snapply Build_pHomotopy.
+  - intros [[x w] v].
+    snapply path_sigma'.
+    + reflexivity.
+    + cbn.
+      exact (concat_p1 _ @ (concat_1p _ @ ap_idmap v)).
+  - reflexivity.
+Defined.
+
+(** The connecting map of the tautological fiber sequence is natural in arbitrary squares of pointed maps. *)
+Definition connecting_map_natural_functor {X Y X' Y' : pType}
+  {f : X ->* Y} {f' : X' ->* Y'} {h : X' ->* X} {k : Y' ->* Y}
+  (q : k o* f' ==* f o* h)
+  : functor_pfiber q o* connecting_map (pfib f') f'
+    ==* connecting_map (pfib f) f o* fmap loops k.
+Proof.
+  (* The inverse-free square between the double-fiber identifications. *)
+  assert (S : ((pfiber2_loops f)
+                o*E (pequiv_pfiber _ _ (square_pfib_pequiv_cxfib (pfib f) f))
+                : _ ->* _)
+              o* functor_pfiber (square_functor_pfiber q)
+              ==* fmap loops k
+                  o* ((pfiber2_loops f')
+                      o*E (pequiv_pfiber _ _
+                             (square_pfib_pequiv_cxfib (pfib f') f'))
+                      : _ ->* _)).
+  { refine (pmap_prewhisker _ (compose_cate_fun (A:=pType) _ _) @* _
+            @* pmap_postwhisker _ (compose_cate_fun (A:=pType) _ _)^*).
+    refine (pmap_prewhisker _
+      (pmap_postwhisker _ (pequiv_pfiber_cxfib_taut f)
+       @* pmap_precompose_idmap _) @* _
+      @* pmap_postwhisker _
+           (pmap_postwhisker _ (pequiv_pfiber_cxfib_taut f')
+            @* pmap_precompose_idmap _)^*).
+    exact (pfiber2_loops_natural_functor q). }
+  refine ((pmap_compose_assoc _ _ _)^* @* _).
+  refine (pmap_prewhisker _
+    (square_functor_pfiber (square_functor_pfiber q)) @* _).
+  refine (pmap_compose_assoc _ _ _ @* _).
+  refine (_ @* (pmap_compose_assoc _ _ _)^*).
+  napply pmap_postwhisker.
+  napply moveL_pequiv_Vf.
+  refine ((pmap_compose_assoc _ _ _)^* @* _).
+  refine (pmap_prewhisker _ S @* _).
+  refine (pmap_compose_assoc _ _ _ @* _).
+  refine (pmap_postwhisker _ (peisretr _) @* _).
+  apply pmap_precompose_idmap.
+Defined.
+
+(** The same for an equivalence square. *)
+Definition connecting_map_natural {X Y X' Y' : pType}
+  {f : X ->* Y} {f' : X' ->* Y'} (h : X' <~>* X) (k : Y' <~>* Y)
+  (q : k o* f' ==* f o* h)
+  : pequiv_pfiber h k q o* connecting_map (pfib f') f'
+    ==* connecting_map (pfib f) f o* fmap loops k
+  := connecting_map_natural_functor q.
+
+(** Through [cxfib], the connecting map of an exact sequence agrees with the connecting map of the tautological fiber sequence. *)
+Definition connecting_map_cxfib {F X Y : pType}
+  (i : F ->* X) (f : X ->* Y) `{IsExact purely F X Y i f}
+  : pequiv_cxfib o* connecting_map i f ==* connecting_map (pfib f) f.
+Proof.
+  assert (WQV : ((pfiber2_loops f)
+                  o*E (pequiv_pfiber _ _
+                         (square_pfib_pequiv_cxfib (pfib f) f))
+                  : _ ->* _)
+                o* pequiv_pfiber _ _ (square_pfib_pequiv_cxfib i f)
+                ==* ((pfiber2_loops f)
+                     o*E (pequiv_pfiber _ _ (square_pfib_pequiv_cxfib i f))
+                     : _ ->* _)).
+  { refine (pmap_prewhisker _ (compose_cate_fun (A:=pType) _ _) @* _
+            @* (compose_cate_fun (A:=pType) _ _)^*).
+    refine (pmap_compose_assoc _ _ _ @* _).
+    napply pmap_postwhisker.
+    refine (pmap_prewhisker _ (pequiv_pfiber_cxfib_taut f) @* _).
+    apply pmap_postcompose_idmap. }
+  refine ((pmap_compose_assoc _ _ _)^* @* _).
+  refine (pmap_prewhisker _
+    (square_pequiv_pfiber _ _ (square_pfib_pequiv_cxfib i f)) @* _).
+  refine (pmap_compose_assoc _ _ _ @* _).
+  napply pmap_postwhisker.
+  refine (_ @* pmap_precompose_idmap _).
+  napply moveL_pequiv_Vf.
+  refine ((pmap_compose_assoc _ _ _)^* @* _).
+  refine (pmap_prewhisker _ WQV @* _).
+  exact (peisretr _).
+Defined.
+
+(** Through [pfiber2_loops], the connecting map of the doubly-iterated tautological fiber sequence is loop inversion followed by [loops] of the map. *)
+Definition connecting_map_pfib2 {F X : pType} (i : F ->* X)
+  : pfiber2_loops i o* connecting_map (pfib (pfib i)) (pfib i)
+    ==* fmap loops i o* loops_inv F.
+Proof.
+  assert (S : pfiber2_loops i o* pfib (pfib (pfib i))
+              ==* (fmap loops i o* loops_inv F)
+                  o* ((pfiber2_loops (pfib i))
+                      o*E (pequiv_pfiber _ _
+                             (square_pfib_pequiv_cxfib
+                                (pfib (pfib i)) (pfib i)))
+                      : _ ->* _)).
+  { refine (pfiber2_fmap_loops i @* _).
+    refine ((pmap_compose_assoc _ _ _)^* @* _).
+    napply pmap_postwhisker.
+    refine (_ @* (compose_cate_fun (A:=pType) _ _)^*).
+    refine (_ @* (pmap_postwhisker _ (pequiv_pfiber_cxfib_taut (pfib i))
+                  @* pmap_precompose_idmap _)^*).
+    reflexivity. }
+  refine ((pmap_compose_assoc _ _ _)^* @* _).
+  refine (pmap_prewhisker _ S @* _).
+  refine (pmap_compose_assoc _ _ _ @* _).
+  refine (pmap_postwhisker _ (peisretr _) @* _).
+  apply pmap_precompose_idmap.
+Defined.
+
+(** Through [pfiber2_loops], the double fiber projection of an exact sequence is loop inversion followed by [loops] of the projection. *)
+Definition pfiber2_loops_pfib2 {F X Y : pType}
+  (i : F ->* X) (f : X ->* Y) `{IsExact purely F X Y i f}
+  : ((pfiber2_loops f)
+     o*E (pequiv_pfiber _ _ (square_pfib_pequiv_cxfib i f)) : _ ->* _)
+    o* pfib (pfib i)
+    ==* fmap loops f o* (loops_inv X o* pfiber2_loops i).
+Proof.
+  destruct H as [cx conn]; revert conn.
+  destruct cx as [cxpw cxcell]; intro conn.
+  pointed_reduce.
+  snapply Build_pHomotopy.
+  - intros [[u w] v].
+    cbn in v.
+    revert w; revert v; revert u.
+    refine (paths_ind_r _ _ _).
+    intro w.
+    refine (pfiber2_loops_beta f 1 (i point1) (cxpw point1) _ @ _).
+    refine (whiskerL _ (whiskerL _ cxcell) @ _).
+    exact (ap (concat 1)
+      (whiskerR
+        (inverse2 (ap (ap f) (concat_p1 _ @ (concat_1p _ @ ap_idmap w)))
+         @ (ap_V f w)^) _)).
+  - cbn; cbv beta iota delta
+      [point_htpy square_pfib_pequiv_cxfib phomotopy_transitive
+       phomotopy_symmetric pmap_postcompose_idmap pfib_cxfib pequiv_cxfib
+       cxfib HFiber.functor_hfiber2 ispointed_fiber functor_sigma
+       functor_pfiber pmap_compose pointed_htpy point_eq];
+    cbn.
+    generalize dependent (cxpw point1).
+    refine (paths_ind_r _ _ _).
+    cbn.
+    reflexivity.
+Defined.
+
 (** ** Long exact sequences *)
 
 Record LongExactSequence (k : Modality) (N : SuccStr) : Type :=
