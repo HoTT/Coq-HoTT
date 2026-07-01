@@ -119,10 +119,13 @@ Section EilenbergMacLane.
     by destruct (equiv_path_group e).
   Defined.
 
-  (** The action of [K(-,n)] on group homomorphisms, giving the functoriality of [K(-,n)].  Note that [fmap B] and the WildCat functoriality of [psusp] and [pTr] constrain the two groups to a single universe. *)
-  Definition em_fmap {G G' : AbGroup} (f : GroupHomomorphism G G') (n : nat)
-    : K(G, n) ->* K(G', n).
+  (** [K(-, n)] as a functor from abelian groups to pointed types.  [fmap B] and the WildCat functoriality of [psusp] and [pTr] constrain the two groups to a single universe. *)
+  Definition K' (n : nat) (G : AbGroup) : pType := K(G, n).
+
+  #[export] Instance is0functor_em (n : nat) : Is0Functor (K' n).
   Proof.
+    napply Build_Is0Functor.
+    intros G G' f.
     induction n as [|n IHn].
     - exact (Build_pMap f (grp_homo_unit f)).
     - destruct n as [|m].
@@ -130,59 +133,45 @@ Section EilenbergMacLane.
       + exact (fmap (pTr m.+2) (fmap psusp IHn)).
   Defined.
 
-  (** [em_fmap] preserves the identity. *)
-  Definition em_fmap_idmap {G : AbGroup} (n : nat)
-    : em_fmap (G:=G) grp_homo_id n ==* pmap_idmap.
+  #[export] Instance is1functor_em (n : nat) : Is1Functor (K' n).
   Proof.
-    induction n as [|[|m] IH].
-    - snapply Build_pHomotopy.
-      + reflexivity.
-      + rapply path_ishprop.
-    - exact (fmap_id B G).
-    - refine (_ @* fmap_id (pTr m.+2) _).
-      tapply (fmap2 (pTr m.+2)).
-      refine (_ @* fmap_id psusp _).
-      tapply (fmap2 psusp).
-      exact (pointed_htpy IH).
+    napply Build_Is1Functor.
+    - intros G G' f g p.
+      exact (phomotopy_path (ap (fun h : G $-> G' => fmap (K' n) h)
+        (equiv_path_grouphomomorphism p))).
+    - intros G.
+      induction n as [|[|m] IH].
+      + snapply Build_pHomotopy.
+        * reflexivity.
+        * rapply path_ishprop.
+      + exact (fmap_id B G).
+      + refine (_ @* fmap_id (pTr m.+2) _).
+        tapply (fmap2 (pTr m.+2)).
+        refine (_ @* fmap_id psusp _).
+        tapply (fmap2 psusp).
+        exact (pointed_htpy IH).
+    - intros G G' G'' f g.
+      induction n as [|[|m] IH].
+      + snapply Build_pHomotopy.
+        * reflexivity.
+        * rapply path_ishprop.
+      + exact (fmap_comp B f g).
+      + refine (_ @* fmap_comp (pTr m.+2) _ _).
+        tapply (fmap2 (pTr m.+2)).
+        refine (_ @* fmap_comp psusp _ _).
+        tapply (fmap2 psusp).
+        exact (pointed_htpy IH).
   Defined.
+
+  (** The action of [K' n] on group homomorphisms. *)
+  Definition em_fmap {G G' : AbGroup} (f : GroupHomomorphism G G') (n : nat)
+    : K(G, n) ->* K(G', n) := fmap (K' n) f.
 
   (** [em_fmap] preserves composition. *)
   Definition em_fmap_compose {G G' G'' : AbGroup}
     (f : GroupHomomorphism G G') (g : GroupHomomorphism G' G'') (n : nat)
-    : em_fmap (grp_homo_compose g f) n ==* em_fmap g n o* em_fmap f n.
-  Proof.
-    induction n as [|[|m] IH].
-    - snapply Build_pHomotopy.
-      + reflexivity.
-      + rapply path_ishprop.
-    - exact (fmap_comp B f g).
-    - refine (_ @* fmap_comp (pTr m.+2) _ _).
-      tapply (fmap2 (pTr m.+2)).
-      refine (_ @* fmap_comp psusp _ _).
-      tapply (fmap2 psusp).
-      exact (pointed_htpy IH).
-  Defined.
-
-  (** [K(-,n)] is a functor from abelian groups to pointed types, with [em_fmap] as its action on morphisms. *)
-  #[export] Instance is0functor_em (n : nat)
-    : Is0Functor (fun G : AbGroup => K(G, n)).
-  Proof.
-    napply Build_Is0Functor.
-    intros G G' f; exact (em_fmap f n).
-  Defined.
-
-  #[export] Instance is1functor_em (n : nat)
-    : Is1Functor (fun G : AbGroup => K(G, n)).
-  Proof.
-    napply Build_Is1Functor.
-    - intros G G' f g p.
-      napply phomotopy_path.
-      napply (ap (fun h => em_fmap h n)).
-      apply equiv_path_grouphomomorphism.
-      exact p.
-    - intros G; exact (em_fmap_idmap n).
-    - intros G G' G'' f g; exact (em_fmap_compose f g n).
-  Defined.
+    : em_fmap (grp_homo_compose g f) n ==* em_fmap g n o* em_fmap f n
+    := fmap_comp (K' n) f g.
 
   (** At positive levels, [pequiv_loops_em_em] is the canonical comparison map: the loop-suspension unit followed by [loops] of the truncation map.  This presentation makes its naturality transparent, without reference to the Hopf-construction input used to show that it is an equivalence. *)
   Definition loops_em_em_ptr_unit (G : AbGroup) (n : nat)
@@ -264,7 +253,7 @@ Section EilenbergMacLane.
 
   (** [K(-,n)] is a pointed functor. *)
   #[export] Instance ispointedfunctor_em (n : nat)
-    : IsPointedFunctor (fun G : AbGroup => K(G, n)).
+    : IsPointedFunctor (K' n).
   Proof.
     rapply Build_IsPointedFunctor'.
     snapply Build_pEquiv.
@@ -275,7 +264,7 @@ Section EilenbergMacLane.
   (** [em_fmap] sends the constant homomorphism to the constant map. *)
   Definition em_fmap_const {G G' : AbGroup} (n : nat)
     : em_fmap (G:=G) (G':=G') grp_homo_const n ==* pconst
-    := fmap_zero_morphism (fun G : AbGroup => K(G, n)).
+    := fmap_zero_morphism (K' n).
 
   (** [em_fmap f n.+1] of a surjective homomorphism is an [n]-connected map.  Both surjectivity of the map and of its [ap]s reduce to the previous level through the loop-space identifications. *)
   #[export] Instance isconnmap_em_fmap {G G' : AbGroup}
@@ -359,7 +348,7 @@ Section EilenbergMacLane.
   Definition pequiv_em_fmap {G G' : AbGroup}
     (e : GroupIsomorphism G G') (n : nat)
     : K(G, n) <~>* K(G', n)
-    := emap (fun G : AbGroup => K(G, n)) (Build_CatEquiv e).
+    := emap (K' n) (Build_CatEquiv e).
 
   (** Every pointed (n-1)-connected n-type is an Eilenberg-Mac Lane space. *)
   Definition pequiv_em_connected_truncated (X : pType)
@@ -393,7 +382,7 @@ End EilenbergMacLane.
 (** ** Delooping Eilenberg-Mac Lane mapping types *)
 
 (** The [k]-fold loop space of a [k]-truncated type is a set. *)
-Definition istrunc_iterated_loops_O `{Funext} (k : nat) (X : pType) `{H0 : IsTrunc k X}
+Definition istrunc_iterated_loops `{Funext} (k : nat) (X : pType) `{H0 : IsTrunc k X}
   : IsTrunc 0 (iterated_loops k X).
 Proof.
   revert X H0; induction k as [|k IH]; intros X H0.
@@ -432,7 +421,7 @@ Section Deloop.
     : IsTrunc n.+3 (pTr n.+4 (psusp K(B, n.+2))).
   Proof.
     apply (equiv_istrunc_contr_iterated_loops n.+4 _)^-1.
-    pose proof (istrunc_iterated_loops_O n.+4 (pTr n.+4 (psusp K(B, n.+2)))).
+    pose proof (istrunc_iterated_loops n.+4 (pTr n.+4 (psusp K(B, n.+2)))).
     pose proof (@isconnected_susp n.+1 K(B, n.+2) (isconnected_em n.+1)).
     pose proof (is0connected_isconnected n (psusp K(B, n.+2))).
     pose proof (isconnected_trunc 0 n.+4 (X := psusp K(B, n.+2))).
