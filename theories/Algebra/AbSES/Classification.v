@@ -739,16 +739,12 @@ Section ClassifyingRoundTrip.
 
   (** The fiber of the classifying map is [loops K(E,3)]. *)
   Local Definition pequiv_pfiber_classifying
-    : pfiber (abses_classifying_map E) <~>* loops K(E, 3).
-  Proof.
-    snapply Build_pEquiv.
-    1: exact (loops_inv _
-       o* (pfiber2_loops (em_fmap (inclusion E) 3)
-       o* (rt1_pfiber_delta
-           o* pequiv_pfiber (pequiv_loops_em_em B 2) pequiv_pmap_idmap
-                rt1_square))).
-    exact _.
-  Defined.
+    : pfiber (abses_classifying_map E) <~>* loops K(E, 3)
+    := loops_inv _
+       o*E (pfiber2_loops (em_fmap (inclusion E) 3)
+       o*E (rt1_pfiber_delta
+           o*E pequiv_pfiber (pequiv_loops_em_em B 2) pequiv_pmap_idmap
+                rt1_square)).
 
   (** Through this identification, the fiber inclusion of the classifying
       map is [loops] of the projection. *)
