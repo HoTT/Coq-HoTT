@@ -73,6 +73,7 @@ Definition functor_pfiber {A B C D}
 Proof.
   srapply Build_pMap.
   + cbn. exact (functor_hfiber2 p (point_eq k)).
+  (** A shorter proof of this component via [path_hfiber] is possible, but this [path_sigma'] form compiles faster. *)
   + snapply path_sigma'.
     - exact (point_eq h).
     - lhs napply transport_paths_Fl.
