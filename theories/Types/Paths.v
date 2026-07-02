@@ -98,6 +98,14 @@ Proof.
   exact ((concat_1p q)^ @ (concat_p1 (1 @ q))^).
 Defined.
 
+(** When the same function appears twice, there is a special computation rule for transporting [idpath]. *)
+Definition transport_paths_FlFr_1 {A B : Type} {f : A -> B} {x1 x2 : A}
+  (p : x1 = x2)
+  : transport (fun x => f x = f x) p 1 = 1.
+Proof.
+  by destruct p.
+Defined.
+
 Definition transport_paths_FlFr_D {A : Type} {B : A -> Type}
   {f g : forall a, B a} {x1 x2 : A} (p : x1 = x2) (q : f x1 = g x1)
 : transport (fun x => f x = g x) p q
@@ -226,6 +234,7 @@ Tactic Notation "transport_paths" "Fr" := lhs napply transport_paths_Fr.
 Tactic Notation "transport_paths" "FFl" := transport_paths' transport_paths_FFl.
 Tactic Notation "transport_paths" "FFlr" := transport_paths transport_paths_FFlr.
 Tactic Notation "transport_paths" "FlFr" := transport_paths transport_paths_FlFr.
+Tactic Notation "transport_paths" "FlFr_D" := transport_paths transport_paths_FlFr_D.
 Tactic Notation "transport_paths" "lFFr" := transport_paths transport_paths_lFFr.
 Tactic Notation "transport_paths" "FFr" := lhs napply transport_paths_FFr.
 
