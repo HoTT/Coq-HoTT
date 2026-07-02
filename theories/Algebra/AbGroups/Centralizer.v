@@ -51,6 +51,25 @@ Defined.
 Definition centralizer_subgroup {G : Group} (g : G)
   := Build_Subgroup G (centralizer g) _.
 
+(** Homomorphisms preserve centralizers. *)
+Definition centralizer_hom {G H : Group} (f : GroupHomomorphism G H) (g g' : G)
+  : centralizer g g' -> centralizer (f g) (f g').
+Proof.
+  unfold centralizer.
+  intro p.
+  lhs_V napply grp_homo_op; rhs_V napply grp_homo_op.
+  exact (ap f p).
+Defined.
+
+(** Isomorphisms reflect centralizers. *)
+Definition centralizer_iso {G H : Group} (f : GroupIsomorphism G H) (g g' : G)
+  : centralizer (f g) (f g') -> centralizer g g'.
+Proof.
+  intro p.
+  rewrite <- (eissect f g), <- (eissect f g').
+  exact (centralizer_hom (grp_iso_inverse f) _ _ p).
+Defined.
+
 (* Now we define cyclic subgroups.  We allow any map [Unit -> G] in this definition, because in applications (such as [Z_commutative]) we have no control over the map. *)
 Definition cyclic_subgroup_from_unit {G : Group} (gen : Unit -> G) := subgroup_generated (hfiber gen).
 
@@ -87,3 +106,33 @@ Defined.
 
 Definition abgroup_cyclic_subgroup {G : Group} (g : G) : AbGroup
   := Build_AbGroup (cyclic_subgroup g) _.
+
+(** ** Centralizers of general subsets *)
+
+(** The centralizer of the elements of [G] for which [H] holds. *)
+Definition subtype_centralizer {G : Group} (H : G -> Type)
+  : G -> Type
+  (* Note the order of operations here.  We do this to match the original proofs for the centraliser of an element. *)
+  := fun g => merely (forall h : G, H h -> centralizer h g).
+
+(** The centralizer of any subset of [G] is a subgroup of [G]. *)
+Instance issubgroup_subtype_centralizer {G : Group} (H : G -> Type)
+  : IsSubgroup (subtype_centralizer H).
+Proof.
+  srapply Build_IsSubgroup.
+  - apply tr.
+    intros h Hh.
+    exact (centralizer_unit h).
+  - intros x y cx cy.
+    strip_truncations; apply tr.
+    intros h Hh.
+    exact (centralizer_sgop _ _ _ (cx h Hh) (cy h Hh)).
+  - intros x Hx.
+    strip_truncations; apply tr.
+    intros h Hh.
+    exact (centralizer_inverse h x (Hx h Hh)).
+Defined.
+
+Definition subtype_centralizer_subgroup
+  {G : Group} (H : G -> Type)
+  := Build_Subgroup G (subtype_centralizer H) _.
