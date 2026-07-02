@@ -3,7 +3,7 @@ From HoTT.WildCat Require Import Core Induced.
 Require Import Colimits.Quotient.
 Require Import Pointed.
 Require Import Truncations.Core Truncations.Connectedness.
-Require Import Homotopy.ClassifyingSpace.
+Require Import Homotopy.ClassifyingSpace.Core.
 Require Import Algebra.Groups.Group.
 
 Local Open Scope trunc_scope.

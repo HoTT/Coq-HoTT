@@ -4,7 +4,7 @@ Require Import Pointed.
 From HoTT.Algebra.Groups Require Import Group FreeGroup.
 Require Import Modalities.ReflectiveSubuniverse Truncations.Core.
 Require Import Homotopy.Suspension.
-Require Import Homotopy.ClassifyingSpace.
+Require Import Homotopy.ClassifyingSpace.Core.
 Require Import Homotopy.HomotopyGroup.
 
 Local Open Scope trunc_scope.
