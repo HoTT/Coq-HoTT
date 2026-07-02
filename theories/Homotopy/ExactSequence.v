@@ -623,31 +623,22 @@ Definition pfiber2_loops_pfib2 {F X Y : pType}
     o* pfib (pfib i)
     ==* fmap loops f o* (loops_inv X o* pfiber2_loops i).
 Proof.
-  destruct H as [cx conn]; revert conn.
-  destruct cx as [cxpw cxcell]; intro conn.
-  pointed_reduce.
-  snapply Build_pHomotopy.
-  - intros [[u w] v].
-    cbn in v.
-    revert w; revert v; revert u.
-    refine (paths_ind_r _ _ _).
-    intro w.
-    refine (pfiber2_loops_beta f 1 (i point1) (cxpw point1) _ @ _).
-    refine (whiskerL _ (whiskerL _ cxcell) @ _).
-    exact (ap (concat 1)
-      (whiskerR
-        (inverse2 (ap (ap f) (concat_p1 _ @ (concat_1p _ @ ap_idmap w)))
-         @ (ap_V f w)^) _)).
-  - cbn; cbv beta iota delta
-      [point_htpy square_pfib_pequiv_cxfib phomotopy_transitive
-       phomotopy_symmetric pmap_postcompose_idmap pfib_cxfib pequiv_cxfib
-       cxfib HFiber.functor_hfiber2 ispointed_fiber functor_sigma
-       functor_pfiber pmap_compose pointed_htpy point_eq];
-    cbn.
-    generalize dependent (cxpw point1).
-    refine (paths_ind_r _ _ _).
-    cbn.
-    reflexivity.
+  refine (pmap_prewhisker _ (compose_cate_fun (A:=pType) _ _) @* _).
+  refine (pmap_compose_assoc _ _ _ @* _).
+  refine (pmap_postwhisker _
+    (square_pequiv_pfiber _ _
+      (square_pequiv_pfiber _ _ (square_pfib_pequiv_cxfib i f))) @* _).
+  refine ((pmap_compose_assoc _ _ _)^* @* _).
+  refine (pmap_prewhisker _ (pfiber2_fmap_loops f) @* _).
+  refine (pmap_compose_assoc _ _ _ @* _).
+  refine (pmap_postwhisker _ (pmap_compose_assoc _ _ _) @* _).
+  refine (pmap_postwhisker _ (pmap_postwhisker _
+    (pfiber2_loops_natural pequiv_cxfib pequiv_pmap_idmap
+      (square_pfib_pequiv_cxfib i f))) @* _).
+  napply pmap_postwhisker.
+  napply pmap_postwhisker.
+  refine (pmap_prewhisker _ (fmap_id loops X) @* _).
+  apply pmap_postcompose_idmap.
 Defined.
 
 (** ** Long exact sequences *)
