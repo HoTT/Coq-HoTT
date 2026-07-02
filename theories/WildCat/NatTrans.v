@@ -200,6 +200,17 @@ Definition nattrans_postwhisker {A B C : Type} {F G : A -> B} (K : B -> C)
   : NatTrans F G -> NatTrans (K o F) (K o G)
   := fun alpha => Build_NatTrans (trans_postwhisker K alpha) _.
 
+Definition nattrans_comp2 {A B C : Type} {F G : B -> C} {H K : A -> B}
+  `{IsGraph A, Is1Cat B, Is1Cat C,
+    !Is0Functor F, !Is1Functor F, !Is0Functor G, !Is0Functor H, !Is0Functor K}
+  : NatTrans F G -> NatTrans H K -> NatTrans (F o H) (G o K).
+Proof.
+  intros alpha beta.
+  napply (nattrans_comp (G := F o K)).
+  - exact (nattrans_prewhisker alpha K).
+  - exact (nattrans_postwhisker F beta).
+Defined.
+
 Definition nattrans_op {A B : Type} `{Is01Cat A} `{Is1Cat B}
   {F G : A -> B} `{!Is0Functor F, !Is0Functor G}
   : NatTrans F G
