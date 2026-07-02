@@ -458,7 +458,7 @@ Section Deloop.
     refine ((pmap_compose_assoc _ _ _)^* @* _).
     refine (pmap_prewhisker ptr (peissect pequiv_ptr_ptr_psusp_em) @* _).
     apply pmap_postcompose_idmap.
-  Defined.
+  Qed.
 
   (** Pointed maps [K(B,n.+3) ->* K(A,n.+4)] are equivalent to pointed maps [K(B,n.+2) ->* K(A,n.+3)]. *)
   Definition equiv_deloop_em_pmap
@@ -487,7 +487,7 @@ Section Deloop.
     tapply (fmap2 loops).
     exact (pmap_compose_assoc psi _ ptr
            @* pmap_postwhisker psi tau_ptr_psusp_em)^*.
-  Defined.
+  Qed.
 
 End Deloop.
 
@@ -509,4 +509,4 @@ Proof.
     ((pequiv_em_connected_truncated Y n.+1)^-1* : _ ->* _) x)^%path.
   Unshelve.
   all: exact _.
-Defined.
+Qed.
