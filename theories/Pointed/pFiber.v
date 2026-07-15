@@ -96,8 +96,8 @@ Definition square_functor_pfiber {A B C D}
 Proof.
   srapply Build_pHomotopy.
   - intros x; reflexivity.
-  - apply moveL_pV. cbn; unfold functor_sigma; cbn.
-    refine (ap (concat 1) (concat_p1 _ @ _)).
+  - apply moveL_pV. cbn.
+    refine (1 @@ (concat_p1 _ @ _)).
     exact (ap_pr1_path_sigma
              (u := functor_hfiber2 p (point_eq k) (ispointed_fiber f))
              (v := ispointed_fiber g) (point_eq h) _).
@@ -143,12 +143,11 @@ Proof.
 Defined.
 
 (** The path algebra underlying the pointwise part of [pfiber2_loops_natural], with all endpoints free. *)
-Local Definition pfiber2_loops_natural_core {D : Type} {y x : D}
-  (X : y = x) (l : x = x)
-  : X^ @ (1 @ (((1 @ (1 @ X)^)^ @ l) @ 1)) = 1 @ (l @ 1).
+Local Definition pfiber2_loops_natural_functor_helper {D : Type} {x y z : D}
+  (p : x = y) (q : y = z)
+  : p^ @ (1 @ (((1 @ (1 @ p)^)^ @ q) @ 1)) = 1 @ (q @ 1).
 Proof.
-  destruct X.
-  exact (ap (concat 1) (concat_1p _ @ whiskerR (concat_1p l) 1)).
+  by destruct p, q.
 Defined.
 
 (** [pfiber2_loops] commutes with the fiber functor of a square, for an arbitrary square of pointed maps. *)
@@ -159,25 +158,25 @@ Definition pfiber2_loops_natural_functor {A B C D : pType}
     ==* fmap loops k o* pfiber2_loops f.
 Proof.
   pointed_reduce.
+  cbn in H.
   snapply Build_pHomotopy.
   - intros [[c w] v].
-    cbn in v.
-    revert w; revert v; revert c.
-    napply paths_ind_r.
-    intro w.
+    cbn in c, w, v.
+    destruct v.
     refine (pfiber2_loops_beta _ _ _ _ _ @ _).
-    refine (ap (fun q => dpoint_eq1^ @ (1 @ ((q^ @ ap k w) @ 1))) H @ _).
-    exact (pfiber2_loops_natural_core dpoint_eq1 (ap k w)).
+    cbn.
+    destruct H^; clear H p.
+    exact (pfiber2_loops_natural_functor_helper dpoint_eq1 (ap k w)).
   - cbn; cbv beta iota delta
       [point_htpy square_functor_pfiber
-       HFiber.functor_hfiber2 ispointed_fiber functor_sigma
-       functor_pfiber pmap_compose pointed_htpy point_eq];
+       functor_hfiber2 ispointed_fiber functor_sigma
+       functor_pfiber pmap_compose pointed_htpy point_eq].
     cbn.
     generalize dependent (p point2).
     napply paths_ind_r.
     cbn.
     generalize dependent (k (f point2)).
-    intros x dpe; destruct dpe.
+    apply paths_ind.
     reflexivity.
 Defined.
 
