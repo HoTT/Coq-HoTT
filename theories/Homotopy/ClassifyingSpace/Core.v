@@ -450,7 +450,7 @@ Proof.
     apply bloop_pp.
 Defined.
 
-Definition ap_fmap_b {G H : Group} (u : G $-> H) (g : G)
+Definition ap_fmap_b_beta_bloop {G H : Group} (u : G $-> H) (g : G)
   : ap (fmap B u) (bloop g) = bloop (u g)
   := ClassifyingSpace_rec_beta_bloop _ _ _ _ _.
 
@@ -638,7 +638,7 @@ Proof.
 Defined.
 Transparent equiv_bg_pi1_adjoint.
 
-(** There is also a natural equivalence for unpointed function types, which computes to the map defined above on pointed functions. *)
+(** There is also a natural equivalence for unpointed function types, which computes to the map defined above on pointed functions: [equiv_bg_pi1_adjoint X G f] is definitionally equal to [equiv_map_bg X G (fmap B f)] *)
 Definition natequiv_map_bg `{Univalence}
   (X : pType) `{IsConnected 0 X}
   : NatEquiv (opyon (A:=Type) (B (Pi 1 X)) o B) (opyon (A:=Type) X o B).
@@ -660,11 +660,6 @@ Definition equiv_map_bg `{Univalence}
 Proof.
   rapply natequiv_map_bg.
 Defined.
-
-Definition equiv_map_bg_pointed `{Univalence}
-  (X : pType) `{IsConnected 0 X} (G : Group) (f : Pi 1 X $-> G)
-  : equiv_map_bg X G (fmap B f) = equiv_bg_pi1_adjoint X G f
-  := @idpath (X -> B G) (equiv_bg_pi1_adjoint X G f).
 
 (** ** H-space structure on [B G] when [G] is abelian *)
 

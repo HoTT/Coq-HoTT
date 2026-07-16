@@ -79,7 +79,7 @@ Proof.
   rewrite bloop_inv.
   (* [h] is defined by applying [equiv_g_loops_bg^-1] and [bloop] is the inverse of that function. *)
   rewrite eisretr.
-  rewrite <- 2 ap_fmap_b.
+  rewrite <- 2 ap_fmap_b_beta_bloop.
   exact (ap_homotopic (ap10 p) (bloop x)).
 Defined.
 
@@ -178,7 +178,7 @@ Proof.
     rewrite (eisretr bloop).
     strip_truncations.
     destruct sh as [g []]; clear h.
-    rewrite <- ap_fmap_b.
+    rewrite <- ap_fmap_b_beta_bloop.
     unfold centralizer.
     cbn; napply concat_Ap.
 Defined.
