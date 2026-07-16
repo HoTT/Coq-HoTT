@@ -719,12 +719,13 @@ Section HSpace_bg.
   Proof.
     intros x.
     srapply ClassifyingSpace_ind_hset; cbn beta.
-    1: reflexivity. (* Surprising. *)
+    1: reflexivity. (* [bg_mul x bbase] and [bg_mul bbase x] are definitionally equal! *)
     intros g; revert x.
     srapply ClassifyingSpace_ind_hprop; cbn beta.
     unfold DPath.
-    (* The next step also uses the surprising definitional equality. *)
-    exact (transport_paths_FlFr_1 (bloop g)).
+    (* Rocq rewrites the output of this step using the above definitional equality again: *)
+    transport_paths FlFr.
+    apply concat_p1_1p.
   Defined.
 
   (** This is not definitionally true, but [bg_mul b bbase] is definitionally equal to [fmap B grp_homo_id], so we can use [fmap_id] to prove this. *)
