@@ -32,7 +32,7 @@ Module Export ClassifyingSpace.
     (** [ClassifyingSpace] is a cumulative inductive, so that WildCat machinery (e.g. [fmap B]) relates groups in different universes. *)
     Local Set Polymorphic Inductive Cumulativity.
 
-    Private Inductive ClassifyingSpace (G : Group) :=
+    Private Inductive ClassifyingSpace@{u} (G : Group@{u}) : Type@{u} :=
       | bbase : ClassifyingSpace G.
 
     Context {G : Group}.

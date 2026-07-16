@@ -20,7 +20,7 @@ Local Open Scope mc_mult_scope.
 Fixpoint EilenbergMacLane@{u v | u <= v} (G : Group@{u}) (n : nat) : pType@{v}
   := match n with
       | 0    => G
-      | 1    => pClassifyingSpace@{u v} G
+      | 1    => pClassifyingSpace@{u} G
       | m.+1 => pTr m.+1 (psusp (EilenbergMacLane G m))
      end.
 
