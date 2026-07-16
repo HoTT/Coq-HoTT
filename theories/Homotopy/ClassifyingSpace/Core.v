@@ -229,7 +229,7 @@ Proof.
     apply bloop1_pp.
 Defined.
 
-(* Computation rule for ClassifyingSpace_rec2. *)
+(** Computation rule for ClassifyingSpace_rec2. *)
 Definition ClassifyingSpace_rec2_beta_bloop1_bbase {G H : Group}
   (P : Type) `{IsTrunc 1 P} (bbase' : P)
   (bloop1 : G -> bbase' = bbase')
@@ -718,17 +718,13 @@ Section HSpace_bg.
   Definition bg_mul_symm : forall x y, bg_mul x y = bg_mul y x.
   Proof.
     intros x.
-    srapply ClassifyingSpace_ind_hset.
-    { simpl.
-      revert x.
-      srapply ClassifyingSpace_ind_hset; cbn.
-      1: reflexivity.
-      intros x.
-      exact (transport_paths_FlFr_1 (bloop x)). }
-    intros y; revert x.
-    srapply ClassifyingSpace_ind_hprop.
-    simpl.
-    exact (transport_paths_FlFr_1 (bloop y)).
+    srapply ClassifyingSpace_ind_hset; cbn beta.
+    1: reflexivity. (* Surprising. *)
+    intros g; revert x.
+    srapply ClassifyingSpace_ind_hprop; cbn beta.
+    unfold DPath.
+    (* The next step also uses the surprising definitional equality. *)
+    exact (transport_paths_FlFr_1 (bloop g)).
   Defined.
 
   (** This is not definitionally true, but [bg_mul b bbase] is definitionally equal to [fmap B grp_homo_id], so we can use [fmap_id] to prove this. *)
