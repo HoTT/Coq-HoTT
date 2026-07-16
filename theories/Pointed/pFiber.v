@@ -151,6 +151,7 @@ Proof.
 Defined.
 
 (** [pfiber2_loops] commutes with the fiber functor of a square, for an arbitrary square of pointed maps. *)
+(** TODO:  The second half of this proof and the Defined line are a bit slow. *)
 Definition pfiber2_loops_natural_functor {A B C D : pType}
   {f : A ->* B} {g : C ->* D} {h : A ->* C} {k : B ->* D}
   (p : k o* f ==* g o* h)
@@ -163,20 +164,19 @@ Proof.
   - intros [[c w] v].
     cbn in c, w, v.
     destruct v.
-    refine (pfiber2_loops_beta _ _ _ _ _ @ _).
+    lhs napply pfiber2_loops_beta.
     cbn.
     destruct H^; clear H p.
     exact (pfiber2_loops_natural_functor_helper dpoint_eq1 (ap k w)).
-  - cbn; cbv beta iota delta
+  - cbn; cbv delta
       [point_htpy square_functor_pfiber
-       functor_hfiber2 ispointed_fiber functor_sigma
-       functor_pfiber pmap_compose pointed_htpy point_eq].
+       functor_hfiber2 functor_sigma
+       functor_pfiber];
     cbn.
+    (* The next two lines are essentially [destruct H^], with [H] also replaced by [idpath]. *)
     generalize dependent (p point2).
     napply paths_ind_r.
-    cbn.
-    generalize dependent (k (f point2)).
-    apply paths_ind.
+    destruct dpoint_eq1.
     reflexivity.
 Defined.
 
