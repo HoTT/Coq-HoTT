@@ -132,20 +132,19 @@ Proof.
 Qed.
 
 (** The value of [pfiber2_loops] on a general element of the double fiber. *)
-Definition pfiber2_loops_beta {C D : Type} {c0 : C} {d0 : D}
-  (g : C -> D) (de : g c0 = d0) (c : C) (w : g c = d0) (v : c = c0)
-  : pfiber2_loops (Build_pMap (A:=[C, c0]) (B:=[D, d0]) g de)
-      (((c; w); v))
-    = de^ @ ((ap g v)^ @ w).
+Definition pfiber2_loops_beta {C D : pType}
+  (g : C ->* D) (c : C) (w : g c = pt) (v : c = pt)
+  : pfiber2_loops g ((c; w); v) = (point_eq g)^ @ (ap g v)^ @ w.
 Proof.
-  destruct v; destruct de.
-  exact ((concat_1p w)^ @ ap (concat 1) (concat_1p w)^).
+  pointed_reduce_pmap g.
+  destruct v; cbn.
+  exact (concat_1p w)^.
 Defined.
 
-(** The path algebra underlying the pointwise part of [pfiber2_loops_natural], with all endpoints free. *)
+(** The path algebra underlying the pointwise part of [pfiber2_loops_natural_functor], with all endpoints free. *)
 Local Definition pfiber2_loops_natural_functor_helper {D : Type} {x y z : D}
   (p : x = y) (q : y = z)
-  : p^ @ (1 @ (((1 @ (1 @ p)^)^ @ q) @ 1)) = 1 @ (q @ 1).
+  : (p^ @ 1) @ (((1 @ (1 @ p)^)^ @ q) @ 1) = 1 @ (q @ 1).
 Proof.
   by destruct p, q.
 Defined.
