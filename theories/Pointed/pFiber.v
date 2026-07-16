@@ -17,16 +17,6 @@ Definition pfiber {A B : pType} (f : A ->* B) : pType := [hfiber f (point B), _]
 Definition pfib {A B : pType} (f : A ->* B) : pfiber f ->* A
   := Build_pMap pr1 1.
 
-(** The double fiber object is equivalent to loops on the base. *)
-Definition pfiber2_loops {A B : pType} (f : A ->* B)
-  : pfiber (pfib f) <~>* loops B.
-Proof.
-  pointed_reduce_pmap f.
-  snapply Build_pEquiv'.
-  1: make_equiv_contr_basedpaths.
-  reflexivity.
-Defined.
-
 Definition pfiber_fmap_loops {A B : pType} (f : A ->* B)
   : pfiber (fmap loops f) <~>* loops (pfiber f).
 Proof.
@@ -52,7 +42,7 @@ Proof.
   srapply Build_pHomotopy.
   - intros [u v].
     refine (concat_1p _ @ concat_p1 _ @ _).
-    exact (@ap_pr1_path_sigma _ _ (point A; point_eq f) (point A;point_eq f) _ _).
+    exact (@ap_pr1_path_sigma _ _ (point A; point_eq f) (point A; point_eq f) _ _).
   - abstract (pointed_reduce_rewrite; reflexivity).
 Defined.
 
@@ -109,6 +99,26 @@ Definition square_pequiv_pfiber {A B C D}
   : h o* pfib f ==* pfib g o* pequiv_pfiber h k p
   := square_functor_pfiber p.
 
+(** The double fiber object is equivalent to loops on the base. *)
+Definition pfiber2_loops {A B : pType} (f : A ->* B)
+  : pfiber (pfib f) <~>* loops B.
+Proof.
+  pointed_reduce_pmap f.
+  snapply Build_pEquiv'.
+  1: make_equiv_contr_basedpaths.
+  reflexivity.
+Defined.
+
+(** The value of [pfiber2_loops] on a general element of the double fiber. *)
+Definition pfiber2_loops_beta {A B : pType} (f : A ->* B)
+  (a : A) (w : f a = pt) (v : a = pt)
+  : pfiber2_loops f ((a; w); v) = (point_eq f)^ @ (ap f v)^ @ w.
+Proof.
+  pointed_reduce_pmap f.
+  destruct v; cbn.
+  exact (concat_1p w)^.
+Defined.
+
 (** The triple-fiber functor is equal to the negative of the loop space functor. *)
 Definition pfiber2_fmap_loops {A B : pType} (f : A ->* B)
 : pfiber2_loops f o* pfib (pfib (pfib f))
@@ -117,7 +127,7 @@ Proof.
   pointed_reduce.
   simple refine (Build_pHomotopy _ _).
   - intros [[[x p] q] r]. simpl in *.
-    (** Apparently [destruct q] isn't smart enough to generalize over [p]. *)
+    (* Apparently [destruct q] isn't smart enough to generalize over [p]. *)
     move q before x; revert dependent x;
       refine (paths_ind_r _ _ _); intros p r; cbn.
     rewrite !concat_1p, concat_p1.
@@ -130,16 +140,6 @@ Proof.
     apply concat_p1.
   - reflexivity.
 Qed.
-
-(** The value of [pfiber2_loops] on a general element of the double fiber. *)
-Definition pfiber2_loops_beta {C D : pType}
-  (g : C ->* D) (c : C) (w : g c = pt) (v : c = pt)
-  : pfiber2_loops g ((c; w); v) = (point_eq g)^ @ (ap g v)^ @ w.
-Proof.
-  pointed_reduce_pmap g.
-  destruct v; cbn.
-  exact (concat_1p w)^.
-Defined.
 
 (** The path algebra underlying the pointwise part of [pfiber2_loops_natural_functor], with all endpoints free. *)
 Local Definition pfiber2_loops_natural_functor_helper {D : Type} {x y z : D}
