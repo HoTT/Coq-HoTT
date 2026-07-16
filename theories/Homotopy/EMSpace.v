@@ -126,7 +126,7 @@ Section EilenbergMacLane.
     napply Build_Is0Functor.
     intros G G' f.
     induction n as [|n IHn].
-    - exact (Build_pMap f (grp_homo_unit f)).
+    - exact f.
     - destruct n as [|m].
       + exact (fmap B f).
       + exact (fmap (pTr m.+2) (fmap psusp IHn)).
@@ -140,26 +140,26 @@ Section EilenbergMacLane.
         (equiv_path_grouphomomorphism p))).
     - intros G.
       induction n as [|[|m] IH].
-      + snapply Build_pHomotopy.
-        * reflexivity.
-        * rapply path_ishprop.
+      + rapply phomotopy_homotopy_hset.
+        reflexivity.
       + exact (fmap_id B G).
-      + refine (_ @* fmap_id (pTr m.+2) _).
+      + change (fmap (pTr m.+2) (fmap psusp (fmap (K' m.+1) (Id G))) ==* Id (K' m.+2 G)).
+        refine (_ @* fmap_id (pTr m.+2) _).
         tapply (fmap2 (pTr m.+2)).
         refine (_ @* fmap_id psusp _).
         tapply (fmap2 psusp).
-        exact (pointed_htpy IH).
+        exact IH.
     - intros G G' G'' f g.
       induction n as [|[|m] IH].
-      + snapply Build_pHomotopy.
-        * reflexivity.
-        * rapply path_ishprop.
+      + rapply phomotopy_homotopy_hset.
+        reflexivity.
       + exact (fmap_comp B f g).
-      + refine (_ @* fmap_comp (pTr m.+2) _ _).
+      + change (fmap (K' m.+2) ?f) with (fmap (pTr m.+2) (fmap psusp (fmap (K' m.+1) f))).
+        refine (_ @* fmap_comp (pTr m.+2) _ _).
         tapply (fmap2 (pTr m.+2)).
         refine (_ @* fmap_comp psusp _ _).
         tapply (fmap2 psusp).
-        exact (pointed_htpy IH).
+        exact IH.
   Defined.
 
   (** The action of [K' n] on group homomorphisms. *)
@@ -245,16 +245,14 @@ Section EilenbergMacLane.
     induction n as [|[|n] IHn].
     - exact _.
     - exact _.
-    - apply (Build_Contr _ (tr (center _))).
-      srapply Trunc_ind; intro a.
-      exact (ap tr (contr a)).
+    - rapply contr_O_contr.
   Defined.
 
   (** [K(-,n)] is a pointed functor. *)
   #[export] Instance ispointedfunctor_em (n : nat)
     : IsPointedFunctor (K' n).
   Proof.
-    rapply Build_IsPointedFunctor'.
+    rapply Build_IsPointedFunctor'; cbn.
     snapply Build_pEquiv.
     1: exact pconst.
     rapply isequiv_contr_contr.
@@ -281,10 +279,8 @@ Section EilenbergMacLane.
             (fun p =>
               (moveR_pequiv_fV _ _ _ (em_fmap_loops_natural f n.+1))^* p)).
           exact _. }
-        snapply (conn_point_elim (-1) (A:=K(G, n.+2))).
-        1,2: exact _.
-        snapply (conn_point_elim (-1) (A:=K(G, n.+2))).
-        1,2: exact _.
+        rapply (conn_point_elim (-1) (A:=K(G, n.+2))).
+        rapply (conn_point_elim (-1) (A:=K(G, n.+2))).
         intro q.
         pose (e2 := equiv_concat_l (point_eq (em_fmap f n.+2))^ _
                     oE equiv_concat_r (point_eq (em_fmap f n.+2)) _).
@@ -310,7 +306,8 @@ Section EilenbergMacLane.
       napply (isequiv_homotopic' L^-1%equiv).
       intro f.
       apply moveR_equiv_V; symmetry.
-      apply moveR_equiv_V.
+      unfold L; clear L.
+      apply moveR_equiv_V; unfold equiv_fun.
       apply path_pforall.
       lhs' refine (pmap_postwhisker _
         (pmap_prewhisker _ (fmap2 loops (ptr_natural _ _)))).
@@ -334,7 +331,7 @@ Section EilenbergMacLane.
     : phi = psi.
   Proof.
     pose (e := Build_Equiv _ _ _ (isequiv_em_fmap G G' n)).
-    refine ((eisretr e phi)^ @ ap e _ @ eisretr e psi).
+    apply (equiv_inj e^-1).
     apply equiv_path_grouphomomorphism; intro g.
     apply (equiv_inj (equiv_g_pi_n_em G' n)).
     refine ((pi_em_fmap _ n g)^ @ _ @ pi_em_fmap _ n g).
