@@ -1268,3 +1268,44 @@ Defined.
 Definition grp_iso_conj {G : Group} (x : G) : G $<~> G
   := cate_adjointify (grp_conj x) (grp_conj x^)
       (grp_conj_inv_r _) (grp_conj_inv_l _).
+
+(** ** Conjugate group homomorphisms *)
+
+Definition conj_grp_homo {G H : Group} (u v : G $-> H)
+  := merely {h : H & forall g : G, u g = grp_conj h (v g)}.
+
+(** Conjugacy is an equivalence relation. *)
+Instance reflexive_conj_grp_homo {G H : Group}
+  : Reflexive (conj_grp_homo (G:=G) (H:=H)).
+Proof.
+  intro u.
+  apply tr.
+  exists group_unit.
+  intro g.
+  symmetry; exact (grp_conj_unit (u g)).
+Defined.
+
+Instance symmetric_conj_grp_homo {G H : Group}
+  : Symmetric (conj_grp_homo (G:=G) (H:=H)).
+Proof.
+  intros u v cuv.
+  strip_truncations; apply tr.
+  destruct cuv as [h ch].
+  exists (inv h).
+  intro g.
+  rewrite (ch g).
+  symmetry; napply grp_conj_inv_l.
+Defined.
+
+Instance transitive_conj_grp_homo {G H : Group}
+  : Transitive (conj_grp_homo (G:=G) (H:=H)).
+Proof.
+  intros u v w cuv cvw.
+  strip_truncations; apply tr.
+  destruct cuv as [h1 ch1]; destruct cvw as [h2 ch2].
+  exists (h1 * h2).
+  intro g.
+  lhs apply ch1.
+  rewrite ch2.
+  symmetry; napply grp_conj_op.
+Defined.

@@ -226,6 +226,7 @@ Tactic Notation "transport_paths" "Fr" := lhs napply transport_paths_Fr.
 Tactic Notation "transport_paths" "FFl" := transport_paths' transport_paths_FFl.
 Tactic Notation "transport_paths" "FFlr" := transport_paths transport_paths_FFlr.
 Tactic Notation "transport_paths" "FlFr" := transport_paths transport_paths_FlFr.
+Tactic Notation "transport_paths" "FlFr_D" := transport_paths transport_paths_FlFr_D.
 Tactic Notation "transport_paths" "lFFr" := transport_paths transport_paths_lFFr.
 Tactic Notation "transport_paths" "FFr" := lhs napply transport_paths_FFr.
 
