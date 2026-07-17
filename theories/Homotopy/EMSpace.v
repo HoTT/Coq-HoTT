@@ -8,7 +8,8 @@ Require Import Homotopy.ClassifyingSpace.Core.
 Require Import Homotopy.HSpace.Coherent.
 Require Import Homotopy.HomotopyGroup.
 Require Import Homotopy.Hopf.
-Require Import Truncations.Core Truncations.Connectedness.
+Require Import Modalities.Descent.
+Require Import Truncations.Core Truncations.Connectedness Truncations.SeparatedTrunc.
 
 (** * Eilenberg-Mac Lane spaces *)
 
@@ -394,22 +395,19 @@ Section Deloop.
   Local Instance contr_pi_psusp_em : Contr (Pi n.+4 (psusp K(B, n.+2))).
   Proof.
     nrefine (contr_equiv' (Pi n.+3 (loops (psusp K(B, n.+2)))) _).
-    1: exact (grp_iso_inverse (groupiso_pi_loops n.+2 (psusp K(B, n.+2)))).
-    assert (C : IsConnMap n.+2 (loop_susp_unit K(B, n.+2))).
-    { napply (isconnmap_pred_add n.-2).
+    1: exact (groupiso_pi_loops n.+2 (psusp K(B, n.+2)))^-1%equiv.
+    (* Since [Pi n.+3] is a set, it's enough to show it's 0-connected. *)
+    napply (contr_trunc_conn 0); only 1: exact _.
+    (* And for that, it's enough to show it's the target of a (-1)-connected map from a 0-connected type. *)
+    pose (fu := fmap (pPi n.+3) (loop_susp_unit K(B, n.+2))).
+    napply (OO_isconnected_from_conn_map 0 (Tr (-1)) fu).
+    1, 2: exact _.
+    - napply isconnected_contr.
+      rapply contr_pi_succ_istrunc.
+    - apply (issurj_pi_connmap n.+2).
+      napply (isconnmap_pred_add n.-2).
       rewrite 2 trunc_index_add_succ.
-      exact (conn_map_loop_susp_unit n K(B, n.+2)). }
-    pose proof (contr_pi_succ_istrunc n.+1 K(B, n.+2)).
-    pose proof (S := issurj_pi_connmap n.+2 (loop_susp_unit K(B, n.+2))).
-    pose (fu := fmap (pPi n.+3) (loop_susp_unit K(B, n.+2))
-      : Pi n.+3 K(B, n.+2) -> Pi n.+3 (loops (psusp K(B, n.+2)))).
-    apply (Build_Contr _ (fu (center _))).
-    intro y.
-    pose proof (m := @center _ (S y)).
-    strip_truncations.
-    destruct m as [x p].
-    refine (_ @ p).
-    exact (ap _ (path_contr _ x)).
+      exact (conn_map_loop_susp_unit n K(B, n.+2)).
   Defined.
 
   (** [pTr n.+4 (psusp K(B,n.+2))] is [n.+3]-truncated. *)
