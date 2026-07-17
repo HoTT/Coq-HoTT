@@ -419,7 +419,7 @@ Section Deloop.
     pose proof (@isconnected_susp n.+1 K(B, n.+2) (isconnected_em n.+1)).
     pose proof (is0connected_isconnected n (psusp K(B, n.+2))).
     pose proof (isconnected_trunc 0 n.+4 (X := psusp K(B, n.+2))).
-    snapply (conn_point_elim (-1)).
+    snapply (conn_point_elim (-1)); cbn beta.
     1,2: exact _.
     nrefine (contr_equiv' (Pi n.+4 (pTr n.+4 (psusp K(B, n.+2)))) _).
     1: exact (equiv_tr 0 _)^-1%equiv.
@@ -428,31 +428,28 @@ Section Deloop.
     exact _.
   Defined.
 
-  (** [K(B,n.+3)] is the [n.+3]-truncation of [pTr n.+4 (psusp K(B,n.+2))]. *)
+  (** [K(B, n.+3)] is the [n.+3]-truncation of [pTr n.+4 (psusp K(B, n.+2))]. *)
   Local Definition pequiv_ptr_ptr_psusp_em
     : K(B, n.+3) <~>* pTr n.+3 (pTr n.+4 (psusp K(B, n.+2))).
   Proof.
-    snapply Build_pEquiv.
-    1: exact (fmap (pTr n.+3) ptr).
-    napply O_inverts_conn_map.
-    exact (isconnmap_pred' n.+4 _).
+    snapply Build_pEquiv'.
+    - rapply equiv_O_functor_to_O_O_leq.
+    - reflexivity.
   Defined.
 
   (** The canonical equivalence between the [n.+4]- and [n.+3]-truncations. *)
   Local Definition pequiv_ptr_psusp_em
     : pTr n.+4 (psusp K(B, n.+2)) <~>* K(B, n.+3)
-    := pequiv_ptr_ptr_psusp_em^-1* o*E pequiv_ptr (n:=n.+3).
+    := pequiv_ptr_ptr_psusp_em^-1* o*E pequiv_ptr.
 
   (** [pequiv_ptr_psusp_em] commutes with the truncation unit [ptr]. *)
   Local Definition tau_ptr_psusp_em
     : pequiv_ptr_psusp_em o* ptr ==* ptr.
   Proof.
-    refine (pmap_prewhisker ptr (compose_cate_fun (A:=pType) _ _) @* _).
-    refine (pmap_compose_assoc _ _ _ @* _).
-    refine (pmap_postwhisker _ (ptr_natural n.+3 ptr)^* @* _).
-    refine ((pmap_compose_assoc _ _ _)^* @* _).
-    refine (pmap_prewhisker ptr (peissect pequiv_ptr_ptr_psusp_em) @* _).
-    apply pmap_postcompose_idmap.
+    unfold pequiv_ptr_psusp_em.
+    lhs' napply pmap_compose_assoc.
+    rapply (cate_moveR_Ve (H0:=hasequivs_ptype)).
+    apply ptr_natural.
   Qed.
 
   (** Pointed maps [K(B,n.+3) ->* K(A,n.+4)] are equivalent to pointed maps [K(B,n.+2) ->* K(A,n.+3)]. *)
@@ -469,19 +466,17 @@ Section Deloop.
       ==* (pequiv_loops_em_em A n.+3)^-1*
           o* (fmap loops psi o* pequiv_loops_em_em B n.+2).
   Proof.
-    transitivity ((pequiv_loops_em_em A n.+3)^-1*
-              o* (fmap loops (psi o* pequiv_ptr_psusp_em o* ptr)
-                  o* loop_susp_unit K(B, n.+2))).
-    1: reflexivity.
-    symmetry.
+    change (equiv_deloop_em_pmap psi) with
+      ((pequiv_loops_em_em A n.+3)^-1*
+         o* (fmap loops (psi o* pequiv_ptr_psusp_em o* ptr)
+               o* loop_susp_unit K(B, n.+2))).
     napply pmap_postwhisker.
-    refine (pmap_postwhisker _ (loops_em_em_ptr_unit B n.+1) @* _).
-    refine ((pmap_compose_assoc _ _ _)^* @* _).
-    refine (pmap_prewhisker _ (fmap_comp loops _ _)^* @* _).
-    napply pmap_prewhisker.
+    rhs' napply (pmap_postwhisker _ (loops_em_em_ptr_unit B n.+1)).
+    rhs_V' napply pmap_compose_assoc.
+    refine (pmap_prewhisker _ (_ @* fmap_comp loops _ _)).
     tapply (fmap2 loops).
     exact (pmap_compose_assoc psi _ ptr
-           @* pmap_postwhisker psi tau_ptr_psusp_em)^*.
+           @* pmap_postwhisker psi tau_ptr_psusp_em).
   Qed.
 
 End Deloop.
@@ -494,14 +489,14 @@ Definition path_em_pmap_pi_connected `{Univalence} {G : AbGroup@{u}}
   : phi = psi.
 Proof.
   apply (equiv_inj (pequiv_pequiv_postcompose
-    (pequiv_em_connected_truncated Y n.+1)^-1*)).
-  napply (path_em_pmap_pi (G' := Build_AbGroup (Pi n.+2 Y) _)).
+    (pequiv_em_connected_truncated Y n.+1)^-1* )).
+  change ((pequiv_em_connected_truncated Y n.+1)^-1* o* phi =
+            (pequiv_em_connected_truncated Y n.+1)^-1* o* psi).
+  rapply (path_em_pmap_pi (G' := Build_AbGroup (Pi n.+2 Y) _)).
   intro x.
   refine (fmap_comp (Pi n.+2) phi
     ((pequiv_em_connected_truncated Y n.+1)^-1* : _ ->* _) x @ _).
   refine (ap _ (h x) @ _).
   exact (fmap_comp (Pi n.+2) psi
     ((pequiv_em_connected_truncated Y n.+1)^-1* : _ ->* _) x)^%path.
-  Unshelve.
-  all: exact _.
 Qed.
