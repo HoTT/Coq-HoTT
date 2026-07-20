@@ -559,30 +559,18 @@ Definition connecting_map_cxfib {F X Y : pType}
   (i : F ->* X) (f : X ->* Y) `{IsExact purely F X Y i f}
   : pequiv_cxfib o* connecting_map i f ==* connecting_map (pfib f) f.
 Proof.
-  assert (WQV : ((pfiber2_loops f)
-                  o*E (pequiv_pfiber _ _
-                         (square_pfib_pequiv_cxfib (pfib f) f))
-                  : _ ->* _)
-                o* pequiv_pfiber _ _ (square_pfib_pequiv_cxfib i f)
-                ==* ((pfiber2_loops f)
-                     o*E (pequiv_pfiber _ _ (square_pfib_pequiv_cxfib i f))
-                     : _ ->* _)).
-  { refine (pmap_prewhisker _ (compose_cate_fun (A:=pType) _ _) @* _
-            @* (compose_cate_fun (A:=pType) _ _)^*).
-    refine (pmap_compose_assoc _ _ _ @* _).
-    napply pmap_postwhisker.
-    refine (pmap_prewhisker _ (pequiv_pfiber_cxfib_taut f) @* _).
-    apply pmap_postcompose_idmap. }
-  refine ((pmap_compose_assoc _ _ _)^* @* _).
-  refine (pmap_prewhisker _
-    (square_pequiv_pfiber _ _ (square_pfib_pequiv_cxfib i f)) @* _).
-  refine (pmap_compose_assoc _ _ _ @* _).
+  unfold connecting_map, i_fiberseq, connect_fiberseq, ".1", ".2".
+  lhs_V' napply pmap_compose_assoc.
+  lhs' napply (pmap_prewhisker _
+                 (square_pequiv_pfiber _ _ (square_pfib_pequiv_cxfib i f))).
+  lhs' napply pmap_compose_assoc.
   napply pmap_postwhisker.
-  refine (_ @* pmap_precompose_idmap _).
+  napply moveR_pequiv_fV.
   napply moveL_pequiv_Vf.
-  refine ((pmap_compose_assoc _ _ _)^* @* _).
-  refine (pmap_prewhisker _ WQV @* _).
-  exact (peisretr _).
+  lhs' napply pmap_compose_assoc.
+  napply pmap_postwhisker.
+  lhs' napply (pmap_prewhisker _ (pequiv_pfiber_cxfib_taut f)).
+  napply pmap_postcompose_idmap.
 Defined.
 
 (** Through [pfiber2_loops], the connecting map of the doubly-iterated tautological fiber sequence is loop inversion followed by [loops] of the map. *)
@@ -590,25 +578,16 @@ Definition connecting_map_pfib2 {F X : pType} (i : F ->* X)
   : pfiber2_loops i o* connecting_map (pfib (pfib i)) (pfib i)
     ==* fmap loops i o* loops_inv F.
 Proof.
-  assert (S : pfiber2_loops i o* pfib (pfib (pfib i))
-              ==* (fmap loops i o* loops_inv F)
-                  o* ((pfiber2_loops (pfib i))
-                      o*E (pequiv_pfiber _ _
-                             (square_pfib_pequiv_cxfib
-                                (pfib (pfib i)) (pfib i)))
-                      : _ ->* _)).
-  { refine (pfiber2_fmap_loops i @* _).
-    refine ((pmap_compose_assoc _ _ _)^* @* _).
-    napply pmap_postwhisker.
-    refine (_ @* (compose_cate_fun (A:=pType) _ _)^*).
-    refine (_ @* (pmap_postwhisker _ (pequiv_pfiber_cxfib_taut (pfib i))
-                  @* pmap_precompose_idmap _)^*).
-    reflexivity. }
-  refine ((pmap_compose_assoc _ _ _)^* @* _).
-  refine (pmap_prewhisker _ S @* _).
-  refine (pmap_compose_assoc _ _ _ @* _).
-  refine (pmap_postwhisker _ (peisretr _) @* _).
-  apply pmap_precompose_idmap.
+  unfold connecting_map, i_fiberseq, connect_fiberseq, ".1", ".2".
+  lhs_V' napply pmap_compose_assoc.
+  napply moveR_pequiv_fV.
+  lhs' napply (pfiber2_fmap_loops i).
+  rhs' napply pmap_compose_assoc.
+  napply pmap_postwhisker.
+  napply pmap_postwhisker.
+  rhs' napply (pmap_postwhisker _ (pequiv_pfiber_cxfib_taut (pfib i))
+               @* pmap_precompose_idmap _).
+  reflexivity.
 Defined.
 
 (** Through [pfiber2_loops], the double fiber projection of an exact sequence is loop inversion followed by [loops] of the projection. *)
@@ -619,21 +598,22 @@ Definition pfiber2_loops_pfib2 {F X Y : pType}
     o* pfib (pfib i)
     ==* fmap loops f o* (loops_inv X o* pfiber2_loops i).
 Proof.
-  refine (pmap_compose_assoc _ _ _ @* _).
-  refine (pmap_postwhisker _
-    (square_pequiv_pfiber _ _
-      (square_pequiv_pfiber _ _ (square_pfib_pequiv_cxfib i f))) @* _).
-  refine ((pmap_compose_assoc _ _ _)^* @* _).
-  refine (pmap_prewhisker _ (pfiber2_fmap_loops f) @* _).
-  refine (pmap_compose_assoc _ _ _ @* _).
-  refine (pmap_postwhisker _ (pmap_compose_assoc _ _ _) @* _).
-  refine (pmap_postwhisker _ (pmap_postwhisker _
-    (pfiber2_loops_natural pequiv_cxfib pequiv_pmap_idmap
-      (square_pfib_pequiv_cxfib i f))) @* _).
+  lhs' napply pmap_compose_assoc.
+  lhs' napply (pmap_postwhisker _
+                 (square_pequiv_pfiber _ _
+                    (square_pequiv_pfiber _ _
+                       (square_pfib_pequiv_cxfib i f)))).
+  lhs_V' napply pmap_compose_assoc.
+  lhs' napply (pmap_prewhisker _ (pfiber2_fmap_loops f)).
+  lhs' napply pmap_compose_assoc.
+  lhs' napply (pmap_postwhisker _ (pmap_compose_assoc _ _ _)).
+  lhs' napply (pmap_postwhisker _ (pmap_postwhisker _
+                 (pfiber2_loops_natural pequiv_cxfib pequiv_pmap_idmap
+                    (square_pfib_pequiv_cxfib i f)))).
   napply pmap_postwhisker.
   napply pmap_postwhisker.
-  refine (pmap_prewhisker _ (fmap_id loops X) @* _).
-  apply pmap_postcompose_idmap.
+  lhs' refine (pmap_prewhisker _ (fmap_id loops X)).
+  napply pmap_postcompose_idmap.
 Defined.
 
 (** ** Long exact sequences *)
