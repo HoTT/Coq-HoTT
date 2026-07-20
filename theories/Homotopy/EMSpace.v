@@ -354,16 +354,6 @@ End EilenbergMacLane.
 
 (** ** Delooping Eilenberg-Mac Lane mapping types *)
 
-(** The [k]-fold loop space of a [k]-truncated type is a set. *)
-Definition istrunc_iterated_loops `{Funext} (k : nat) (X : pType) `{H0 : IsTrunc k X}
-  : IsTrunc 0 (iterated_loops k X).
-Proof.
-  revert X H0; induction k as [|k IH]; intros X H0.
-  - exact H0.
-  - rewrite (unfold_iterated_loops k X).
-    rapply IH.
-Defined.
-
 Section Deloop.
   Context `{Univalence} (B A : AbGroup@{u}) (n : nat).
 
