@@ -5,6 +5,7 @@ Require Import Cubical.DPath.
 Require Import Algebra.AbGroups.AbelianGroup.
 Require Import Homotopy.Suspension.
 Require Import Homotopy.ClassifyingSpace.Core.
+Import ClassifyingSpaceNotation.
 Require Import Homotopy.HSpace.Coherent.
 Require Import Homotopy.HomotopyGroup.
 Require Import Homotopy.Hopf.
