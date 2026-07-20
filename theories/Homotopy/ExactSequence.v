@@ -389,7 +389,7 @@ Proof.
     symmetry; apply pfib_cxfib.
   - refine (_ @* pmap_compose_assoc _ _ _).
     refine (pmap_prewhisker (fmap loops (cxfib cx_isexact)) _).
-    apply moveR_pequiv_fV.
+    apply moveL_pequiv_fV.
     apply pr1_pfiber_fmap_loops.
 Defined.
 

@@ -257,7 +257,7 @@ Section EilenbergMacLane.
             ((pequiv_loops_em_em G' n.+1 o* fmap (K' n.+1) f)
              o* (pequiv_loops_em_em G n.+1)^-1*) _
             (fun p =>
-              (moveR_pequiv_fV _ _ _ (em_fmap_loops_natural f n.+1))^* p) _). }
+              (moveL_pequiv_fV _ _ _ (em_fmap_loops_natural f n.+1))^* p) _). }
         rapply (conn_point_elim (-1) (A:=K(G, n.+2))).
         rapply (conn_point_elim (-1) (A:=K(G, n.+2))).
         intro q.
