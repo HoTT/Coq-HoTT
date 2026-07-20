@@ -585,9 +585,8 @@ Proof.
   rhs' napply pmap_compose_assoc.
   napply pmap_postwhisker.
   napply pmap_postwhisker.
-  rhs' napply (pmap_postwhisker _ (pequiv_pfiber_cxfib_taut (pfib i))
-               @* pmap_precompose_idmap _).
-  reflexivity.
+  napply (pmap_postwhisker _ (pequiv_pfiber_cxfib_taut (pfib i))
+          @* pmap_precompose_idmap _)^*.
 Defined.
 
 (** Through [pfiber2_loops], the double fiber projection of an exact sequence is loop inversion followed by [loops] of the projection. *)
