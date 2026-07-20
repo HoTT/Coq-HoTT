@@ -168,7 +168,7 @@ Section EilenbergMacLane.
     2: refine (pmap_postwhisker _ (ptr_natural _ _) @* _).
     all: refine ((pmap_compose_assoc _ _ _)^* @* _).
     all: exact (pmap_prewhisker _ (ptr_loops_commutes _ _)).
-  Defined.
+  Qed.
 
   (** [fmap (K' n)] commutes with the loop-space identifications, so it is a map of spectra. *)
   Definition em_fmap_loops_natural {G G' : AbGroup}
@@ -187,7 +187,7 @@ Section EilenbergMacLane.
       refine (pmap_compose_assoc _ _ _ @* _).
       refine (pmap_postwhisker _ (loop_susp_unit_natural _)^* @* _).
       exact (pmap_compose_assoc _ _ _)^*.
-  Defined.
+  Qed.
 
   (** [equiv_g_pi_n_em] at level [n.+1] unfolds to the level-[n] map conjugated by [groupiso_pi_loops] and [pequiv_loops_em_em]. *)
   Local Definition equiv_g_pi_n_em_succ (G : AbGroup) (n : nat) (x : G)
@@ -220,7 +220,7 @@ Section EilenbergMacLane.
           (fmap (K' n.+1) f) (pequiv_loops_em_em G' n.+1 : _ ->* _)
           (equiv_g_pi_n_em G n g)).
       exact (ap _ (IHn g)).
-  Defined.
+  Qed.
 
   (** Eilenberg-Mac Lane spaces of a contractible group are contractible. *)
   #[export] Instance contr_em_contr {G : Group} `{Contr G} (n : nat)
@@ -266,7 +266,7 @@ Section EilenbergMacLane.
         exact (isconnected_equiv' n _
                  (equiv_functor_sigma_id (fun p => equiv_ap e2 _ _))^-1%equiv
                  (c _)).
-  Defined.
+  Qed.
 
   (** [fmap (K' n.+1)] is an equivalence from group homomorphisms to pointed maps, extending [isequiv_fmap_pclassifyingspace] to all levels.  In particular, pointed maps between Eilenberg-Mac Lane spaces of the same level are determined by their effect on homotopy groups. *)
   #[export] Instance isequiv_em_fmap (G G' : AbGroup) (n : nat)
@@ -301,7 +301,7 @@ Section EilenbergMacLane.
       lhs_V' refine (pmap_compose_assoc _ _ _).
       lhs' refine (pmap_prewhisker _ (peissect _)).
       apply pmap_postcompose_idmap.
-  Defined.
+  Qed.
 
   (** The equivalence between group homomorphisms and pointed maps of Eilenberg-Mac Lane spaces. *)
   Definition equiv_em_fmap (G G' : AbGroup) (n : nat)
@@ -322,7 +322,7 @@ Section EilenbergMacLane.
     refine (ap (fun m => fmap (Pi n.+1) m _) (eisretr e phi) @ _).
     refine (_ @ ap (fun m => fmap (Pi n.+1) m _) (eisretr e psi)^).
     apply h.
-  Defined.
+  Qed.
 
   (** Every pointed (n-1)-connected n-type is an Eilenberg-Mac Lane space. *)
   Definition pequiv_em_connected_truncated (X : pType)
