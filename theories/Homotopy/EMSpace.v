@@ -112,16 +112,8 @@ Section EilenbergMacLane.
     exact iscohhspace_loops.
   Defined.
 
-  (** If [G] and [G'] are isomorphic, then [K(G,n)] and [K(G',n)] are equivalent.  This also follows from [em_fmap] below. *)
-  Definition pequiv_em_group_iso {G G' : Group} (n : nat)
-    (e : G $<~> G')
-    : K(G, n) <~>* K(G', n).
-  Proof.
-    by destruct (equiv_path_group e).
-  Defined.
-
-  (** [K(-, n)] as a functor from abelian groups to pointed types.  [fmap B] and the WildCat functoriality of [psusp] and [pTr] constrain the two groups to a single universe. *)
-  Definition K' (n : nat) (G : AbGroup) : pType := K(G, n).
+  (** [K(-, n)] as a functor from groups to pointed types.  [fmap B] and the WildCat functoriality of [psusp] and [pTr] constrain the two groups to a single universe. *)
+  Definition K' (n : nat) (G : Group) : pType := K(G, n).
 
   #[export] Instance is0functor_em (n : nat) : Is0Functor (K' n).
   Proof.
@@ -164,16 +156,6 @@ Section EilenbergMacLane.
         exact IH.
   Defined.
 
-  (** The action of [K' n] on group homomorphisms. *)
-  Definition em_fmap {G G' : AbGroup} (f : GroupHomomorphism G G') (n : nat)
-    : K(G, n) ->* K(G', n) := fmap (K' n) f.
-
-  (** [em_fmap] preserves composition. *)
-  Definition em_fmap_compose {G G' G'' : AbGroup}
-    (f : GroupHomomorphism G G') (g : GroupHomomorphism G' G'') (n : nat)
-    : em_fmap (grp_homo_compose g f) n ==* em_fmap g n o* em_fmap f n
-    := fmap_comp (K' n) f g.
-
   (** At positive levels, [pequiv_loops_em_em] is the canonical comparison map: the loop-suspension unit followed by [loops] of the truncation map.  This presentation makes its naturality transparent, without reference to the Hopf-construction input used to show that it is an equivalence. *)
   Definition loops_em_em_ptr_unit (G : AbGroup) (n : nat)
     : pequiv_loops_em_em G n.+1
@@ -188,11 +170,11 @@ Section EilenbergMacLane.
     all: exact (pmap_prewhisker _ (ptr_loops_commutes _ _)).
   Defined.
 
-  (** [em_fmap] commutes with the loop-space identifications, so it is a map of spectra. *)
+  (** [fmap (K' n)] commutes with the loop-space identifications, so it is a map of spectra. *)
   Definition em_fmap_loops_natural {G G' : AbGroup}
     (f : GroupHomomorphism G G') (n : nat)
-    : fmap loops (em_fmap f n.+1) o* pequiv_loops_em_em G n
-      ==* pequiv_loops_em_em G' n o* em_fmap f n.
+    : fmap loops (fmap (K' n.+1) f) o* pequiv_loops_em_em G n
+      ==* pequiv_loops_em_em G' n o* fmap (K' n) f.
   Proof.
     destruct n as [|n].
     - exact (pbloop_natural G G' f).
@@ -215,10 +197,10 @@ Section EilenbergMacLane.
             (equiv_g_pi_n_em G n x))
     := idpath.
 
-  (** The action of [em_fmap f n.+1] on [Pi n.+1] agrees with [f] under the identifications [equiv_g_pi_n_em]. *)
+  (** The action of [fmap (K' n.+1) f] on [Pi n.+1] agrees with [f] under the identifications [equiv_g_pi_n_em]. *)
   Definition pi_em_fmap {G G' : AbGroup}
     (f : GroupHomomorphism G G') (n : nat)
-    : fmap (Pi n.+1) (em_fmap f n.+1) o equiv_g_pi_n_em G n
+    : fmap (Pi n.+1) (fmap (K' n.+1) f) o equiv_g_pi_n_em G n
       == equiv_g_pi_n_em G' n o f.
   Proof.
     induction n as [|n IHn]; intro g.
@@ -227,21 +209,21 @@ Section EilenbergMacLane.
       rhs napply (equiv_g_pi_n_em_succ G' n (f g)).
       apply (equiv_inj (groupiso_pi_loops n _)).
       rhs napply (eisretr (groupiso_pi_loops n _) _).
-      lhs napply (fmap_pi_loops n.+1 (em_fmap f n.+2) _).
+      lhs refine (fmap_pi_loops n.+1 (fmap (K' n.+2) f) _).
       lhs napply (ap _ (eisretr (groupiso_pi_loops n _) _)).
       lhs_V exact (fmap_comp (pPi n.+1)
           (pequiv_loops_em_em G n.+1 : _ ->* _)
-          (fmap loops (em_fmap f n.+2)) (equiv_g_pi_n_em G n g)).
+          (fmap loops (fmap (K' n.+2) f)) (equiv_g_pi_n_em G n g)).
       lhs exact (fmap2 (pPi n.+1) (em_fmap_loops_natural f n.+1)
           (equiv_g_pi_n_em G n g)).
       lhs exact (fmap_comp (pPi n.+1)
-          (em_fmap f n.+1) (pequiv_loops_em_em G' n.+1 : _ ->* _)
+          (fmap (K' n.+1) f) (pequiv_loops_em_em G' n.+1 : _ ->* _)
           (equiv_g_pi_n_em G n g)).
       exact (ap _ (IHn g)).
   Defined.
 
   (** Eilenberg-Mac Lane spaces of a contractible group are contractible. *)
-  #[export] Instance contr_em_contr {G : AbGroup} `{Contr G} (n : nat)
+  #[export] Instance contr_em_contr {G : Group} `{Contr G} (n : nat)
     : Contr K(G, n).
   Proof.
     induction n as [|[|n] IHn].
@@ -260,40 +242,35 @@ Section EilenbergMacLane.
     rapply isequiv_contr_contr.
   Defined.
 
-  (** [em_fmap] sends the constant homomorphism to the constant map. *)
-  Definition em_fmap_const {G G' : AbGroup} (n : nat)
-    : em_fmap (G:=G) (G':=G') grp_homo_const n ==* pconst
-    := fmap_zero_morphism (K' n).
 
-  (** [em_fmap f n.+1] of a surjective homomorphism is an [n]-connected map.  Both surjectivity of the map and of its [ap]s reduce to the previous level through the loop-space identifications. *)
+  (** [fmap (K' n.+1) f] of a surjective homomorphism is an [n]-connected map.  Both surjectivity of the map and of its [ap]s reduce to the previous level through the loop-space identifications. *)
   #[export] Instance isconnmap_em_fmap {G G' : AbGroup}
     (f : GroupHomomorphism G G') `{!IsSurjection f} (n : nat)
-    : IsConnMap n (em_fmap f n.+1).
+    : IsConnMap n (fmap (K' n.+1) f).
   Proof.
     induction n as [|n IHn].
     - exact (isconnmap_fmap_pclassifyingspace f).
     - snapply isconnmap_isconnmap_ap_surj.
       + rapply (isconnmap_isconnected (-1)).
-      + assert (c : IsConnMap n (fmap loops (em_fmap f n.+2))).
-        { napply (conn_map_homotopic _
-            ((pequiv_loops_em_em G' n.+1 o* em_fmap f n.+1)
+      + assert (c : IsConnMap n (fmap loops (fmap (K' n.+2) f))).
+        { refine (conn_map_homotopic _
+            ((pequiv_loops_em_em G' n.+1 o* fmap (K' n.+1) f)
              o* (pequiv_loops_em_em G n.+1)^-1*) _
             (fun p =>
-              (moveR_pequiv_fV _ _ _ (em_fmap_loops_natural f n.+1))^* p)).
-          exact _. }
+              (moveR_pequiv_fV _ _ _ (em_fmap_loops_natural f n.+1))^* p) _). }
         rapply (conn_point_elim (-1) (A:=K(G, n.+2))).
         rapply (conn_point_elim (-1) (A:=K(G, n.+2))).
         intro q.
-        pose (e2 := equiv_concat_l (point_eq (em_fmap f n.+2))^ _
-                    oE equiv_concat_r (point_eq (em_fmap f n.+2)) _).
+        pose (e2 := equiv_concat_l (point_eq (fmap (K' n.+2) f))^ _
+                    oE equiv_concat_r (point_eq (fmap (K' n.+2) f)) _).
         exact (isconnected_equiv' n _
                  (equiv_functor_sigma_id (fun p => equiv_ap e2 _ _))^-1%equiv
                  (c _)).
   Defined.
 
-  (** [em_fmap] is an equivalence from group homomorphisms to pointed maps, extending [isequiv_fmap_pclassifyingspace] to all levels.  In particular, pointed maps between Eilenberg-Mac Lane spaces of the same level are determined by their effect on homotopy groups. *)
+  (** [fmap (K' n.+1)] is an equivalence from group homomorphisms to pointed maps, extending [isequiv_fmap_pclassifyingspace] to all levels.  In particular, pointed maps between Eilenberg-Mac Lane spaces of the same level are determined by their effect on homotopy groups. *)
   #[export] Instance isequiv_em_fmap (G G' : AbGroup) (n : nat)
-    : IsEquiv (fun f : GroupHomomorphism G G' => em_fmap f n.+1).
+    : IsEquiv (fun f : GroupHomomorphism G G' => fmap (K' n.+1) f).
   Proof.
     induction n as [|n IHn].
     - exact (isequiv_fmap_pclassifyingspace G G').
@@ -326,13 +303,18 @@ Section EilenbergMacLane.
       apply pmap_postcompose_idmap.
   Defined.
 
+  (** The equivalence between group homomorphisms and pointed maps of Eilenberg-Mac Lane spaces. *)
+  Definition equiv_em_fmap (G G' : AbGroup) (n : nat)
+    : GroupHomomorphism G G' <~> (K(G, n.+1) ->* K(G', n.+1))
+    := Build_Equiv _ _ _ (isequiv_em_fmap G G' n).
+
   (** Pointed maps between Eilenberg-Mac Lane spaces of the same level which agree on homotopy groups are equal. *)
   Definition path_em_pmap_pi {G G' : AbGroup} (n : nat)
     (phi psi : K(G, n.+1) ->* K(G', n.+1))
     (h : fmap (Pi n.+1) phi == fmap (Pi n.+1) psi)
     : phi = psi.
   Proof.
-    pose (e := Build_Equiv _ _ _ (isequiv_em_fmap G G' n)).
+    pose (e := equiv_em_fmap G G' n).
     apply (equiv_inj e^-1).
     apply equiv_path_grouphomomorphism; intro g.
     apply (equiv_inj (equiv_g_pi_n_em G' n)).
@@ -341,12 +323,6 @@ Section EilenbergMacLane.
     refine (_ @ ap (fun (m : _ ->* _) => fmap (Pi n.+1) m _) (eisretr e psi)^).
     apply h.
   Defined.
-
-  (** [em_fmap] of a group isomorphism is a pointed equivalence. *)
-  Definition pequiv_em_fmap {G G' : AbGroup}
-    (e : GroupIsomorphism G G') (n : nat)
-    : K(G, n) <~>* K(G', n)
-    := emap (K' n) (Build_CatEquiv e).
 
   (** Every pointed (n-1)-connected n-type is an Eilenberg-Mac Lane space. *)
   Definition pequiv_em_connected_truncated (X : pType)
@@ -371,8 +347,7 @@ Section EilenbergMacLane.
     change (K(?G, n.+2)) with (pTr n.+2 (psusp K( G, n.+1 ))).
     refine (emap (pTr n.+2 o psusp) _).
     refine ((IHn (loops X) _ _) o*E _).
-    apply pequiv_em_group_iso.
-    apply groupiso_pi_loops.
+    exact (emap (K' n.+1) (groupiso_pi_loops _ _)).
   Defined.
 
 End EilenbergMacLane.
