@@ -319,8 +319,8 @@ Section EilenbergMacLane.
     apply equiv_path_grouphomomorphism; intro g.
     apply (equiv_inj (equiv_g_pi_n_em G' n)).
     refine ((pi_em_fmap _ n g)^ @ _ @ pi_em_fmap _ n g).
-    refine (ap (fun (m : _ ->* _) => fmap (Pi n.+1) m _) (eisretr e phi) @ _).
-    refine (_ @ ap (fun (m : _ ->* _) => fmap (Pi n.+1) m _) (eisretr e psi)^).
+    refine (ap (fun m => fmap (Pi n.+1) m _) (eisretr e phi) @ _).
+    refine (_ @ ap (fun m => fmap (Pi n.+1) m _) (eisretr e psi)^).
     apply h.
   Defined.
 
