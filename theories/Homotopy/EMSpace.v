@@ -380,15 +380,11 @@ Section Deloop.
   Local Instance istrunc_ptr_psusp_em
     : IsTrunc n.+3 (pTr n.+4 (psusp K(B, n.+2))).
   Proof.
-    apply (equiv_istrunc_contr_iterated_loops n.+4 _)^-1.
-    pose proof (istrunc_iterated_loops n.+4 (pTr n.+4 (psusp K(B, n.+2)))).
     pose proof (@isconnected_susp n.+1 K(B, n.+2) (isconnected_em n.+1)).
     pose proof (is0connected_isconnected n (psusp K(B, n.+2))).
     pose proof (isconnected_trunc 0 n.+4 (X := psusp K(B, n.+2))).
-    snapply (conn_point_elim (-1)); cbn beta.
+    napply (istrunc_contr_pi n.+3).
     1,2: exact _.
-    nrefine (contr_equiv' (Pi n.+4 (pTr n.+4 (psusp K(B, n.+2)))) _).
-    1: exact (equiv_tr 0 _)^-1%equiv.
     nrefine (contr_equiv' (Pi n.+4 (psusp K(B, n.+2))) _).
     1: exact (grp_iso_pi_Tr n.+3 (psusp K(B, n.+2))).
     exact _.

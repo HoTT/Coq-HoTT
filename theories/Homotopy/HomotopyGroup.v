@@ -1,6 +1,7 @@
 From HoTT Require Import Basics Types Pointed HSet.
 Require Import Modalities.Modality.
-Require Import Truncations.Core Truncations.SeparatedTrunc.
+Require Import Truncations.Core Truncations.SeparatedTrunc
+  Truncations.Connectedness.
 Require Import Algebra.AbGroups.AbelianGroup.
 From HoTT.WildCat Require Import Core Universe Equiv.
 
@@ -344,6 +345,20 @@ Definition contr_pi_succ_istrunc `{Univalence} (n : nat) (X : pType)
 Proof.
   rapply contr_O_contr.
   rapply (equiv_istrunc_contr_iterated_loops n.+2).
+Defined.
+
+(** An [n.+1]-truncated pointed [0]-connected type whose [n.+1]-st homotopy group vanishes is [n]-truncated. *)
+Definition istrunc_contr_pi `{Univalence} (n : nat) (X : pType)
+  `{IsConnected 0 X} `{IsTrunc n.+1 X} (c : Contr (Pi n.+1 X))
+  : IsTrunc n X.
+Proof.
+  apply (equiv_istrunc_contr_iterated_loops n.+1 X)^-1.
+  snapply (conn_point_elim (-1)%trunc).
+  1,2: exact _.
+  pose proof (istrunc_iterated_loops n.+1 X).
+  nrefine (contr_equiv' (Pi n.+1 X) _).
+  1: exact (equiv_tr 0 _)^-1%equiv.
+  exact c.
 Defined.
 
 (** Pointed sections induce embeddings on homotopy groups. *)
