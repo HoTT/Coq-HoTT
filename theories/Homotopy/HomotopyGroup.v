@@ -353,12 +353,9 @@ Definition istrunc_contr_pi `{Univalence} (n : nat) (X : pType)
   : IsTrunc n X.
 Proof.
   apply (equiv_istrunc_contr_iterated_loops n.+1 X)^-1.
-  snapply (conn_point_elim (-1)%trunc).
-  1,2: exact _.
+  rapply (conn_point_elim (-1)%trunc).
   pose proof (istrunc_iterated_loops n.+1 X).
-  nrefine (contr_equiv' (Pi n.+1 X) _).
-  1: exact (equiv_tr 0 _)^-1%equiv.
-  exact c.
+  exact (contr_equiv' (Pi n.+1 X) (equiv_tr 0 _)^-1%equiv).
 Defined.
 
 (** Pointed sections induce embeddings on homotopy groups. *)
