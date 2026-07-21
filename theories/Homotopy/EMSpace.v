@@ -350,6 +350,33 @@ Section EilenbergMacLane.
     exact (emap (K' n.+1) (groupiso_pi_loops _ _)).
   Defined.
 
+  (** Pointed maps between [n.+1]-connected [n.+2]-truncated types which agree on homotopy groups are equal. *)
+  Definition path_pmap_pi_connected (n : nat) {X Y : pType}
+    `{IsConnected n.+1 X} `{IsTrunc n.+2 X}
+    `{IsConnected n.+1 Y} `{IsTrunc n.+2 Y}
+    (phi psi : X ->* Y)
+    (h : fmap (Pi n.+2) phi == fmap (Pi n.+2) psi)
+    : phi = psi.
+  Proof.
+    apply (equiv_inj (pequiv_pequiv_precompose
+      (pequiv_em_connected_truncated X n.+1))).
+    change (phi o* pequiv_em_connected_truncated X n.+1
+            = psi o* pequiv_em_connected_truncated X n.+1).
+    apply (equiv_inj (pequiv_pequiv_postcompose
+      (pequiv_em_connected_truncated Y n.+1)^-1* )).
+    change ((pequiv_em_connected_truncated Y n.+1)^-1*
+              o* (phi o* pequiv_em_connected_truncated X n.+1)
+            = (pequiv_em_connected_truncated Y n.+1)^-1*
+              o* (psi o* pequiv_em_connected_truncated X n.+1)).
+    rapply (path_em_pmap_pi (G := Build_AbGroup (Pi n.+2 X) _)
+                            (G' := Build_AbGroup (Pi n.+2 Y) _)).
+    intro x.
+    refine (fmap_comp (Pi n.+2) _ _ x @ _ @ (fmap_comp (Pi n.+2) _ _ x)^).
+    refine (ap _ (fmap_comp (Pi n.+2) _ phi x) @ _
+            @ (ap _ (fmap_comp (Pi n.+2) _ psi x))^).
+    exact (ap _ (h _)).
+  Defined.
+
 End EilenbergMacLane.
 
 (** ** Delooping Eilenberg-Mac Lane mapping types *)
@@ -442,23 +469,3 @@ Section Deloop.
   Qed.
 
 End Deloop.
-
-(** Pointed maps from an Eilenberg-Mac Lane space to a connected truncated type of the same level which agree on homotopy groups are equal. *)
-Definition path_em_pmap_pi_connected `{Univalence} {G : AbGroup@{u}}
-  (n : nat) {Y : pType} `{IsConnected n.+1 Y} `{IsTrunc n.+2 Y}
-  (phi psi : K(G, n.+2) ->* Y)
-  (h : fmap (Pi n.+2) phi == fmap (Pi n.+2) psi)
-  : phi = psi.
-Proof.
-  apply (equiv_inj (pequiv_pequiv_postcompose
-    (pequiv_em_connected_truncated Y n.+1)^-1* )).
-  change ((pequiv_em_connected_truncated Y n.+1)^-1* o* phi =
-            (pequiv_em_connected_truncated Y n.+1)^-1* o* psi).
-  rapply (path_em_pmap_pi (G' := Build_AbGroup (Pi n.+2 Y) _)).
-  intro x.
-  refine (fmap_comp (Pi n.+2) phi
-    ((pequiv_em_connected_truncated Y n.+1)^-1* : _ ->* _) x @ _).
-  refine (ap _ (h x) @ _).
-  exact (fmap_comp (Pi n.+2) psi
-    ((pequiv_em_connected_truncated Y n.+1)^-1* : _ ->* _) x)^%path.
-Qed.
