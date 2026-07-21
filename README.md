@@ -63,7 +63,7 @@ further information, see the file [STYLE.md](/STYLE.md).
 
 # Timing
 
-See [TIMING.md](/TIMING.md) for tips about timing builds is various ways.
+See [TIMING.md](/TIMING.md) for tips about timing builds in various ways.
 
 # Licensing
 

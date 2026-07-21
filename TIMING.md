@@ -1,6 +1,6 @@
-**Timing:**
+# Timing
 
-This file contains miscellanous information about how to time the building of the library in various ways.
+This file contains miscellaneous information about how to time the building of the library in various ways.
 
 A few best practices for timing:
 
