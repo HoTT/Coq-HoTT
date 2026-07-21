@@ -61,6 +61,10 @@ which is linked to from the [wiki][23].
 Contributions to the HoTT library are very welcome! For style guidelines and
 further information, see the file [STYLE.md](/STYLE.md).
 
+# Timing
+
+See [TIMING.md](/TIMING.md) for tips about timing builds is various ways.
+
 # Licensing
 
 The library is released under the permissive BSD 2-clause license, see the file
