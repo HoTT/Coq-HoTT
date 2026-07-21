@@ -94,7 +94,7 @@ Proof.
   apply pmap_postcompose_idmap.
 Defined.
 
-Definition moveR_pequiv_fV {A B C} (f : B ->* C) (g : A <~>* B) (h : A ->* C)
+Definition moveL_pequiv_fV {A B C} (f : B ->* C) (g : A <~>* B) (h : A ->* C)
            (p : f o* g ==* h)
   : (f ==* h o* g^-1*).
 Proof.
@@ -103,6 +103,17 @@ Proof.
   refine ((pmap_precompose_idmap _)^* @* _).
   apply pmap_postwhisker.
   symmetry; apply peisretr.
+Defined.
+
+Definition moveR_pequiv_fV {A B C} (f : B ->* C) (g : A <~>* B) (h : A ->* C)
+           (p : h ==* f o* g)
+  : (h o* g^-1* ==* f).
+Proof.
+  refine (pmap_prewhisker g^-1* p @* _).
+  refine ((pmap_compose_assoc _ _ _) @* _).
+  refine (_ @* (pmap_precompose_idmap _)).
+  apply pmap_postwhisker.
+  apply peisretr.
 Defined.
 
 Definition pequiv_pequiv_precompose `{Funext} {A B C : pType} (f : A <~>* B)

@@ -17,16 +17,6 @@ Definition pfiber {A B : pType} (f : A ->* B) : pType := [hfiber f (point B), _]
 Definition pfib {A B : pType} (f : A ->* B) : pfiber f ->* A
   := Build_pMap pr1 1.
 
-(** The double fiber object is equivalent to loops on the base. *)
-Definition pfiber2_loops {A B : pType} (f : A ->* B)
-  : pfiber (pfib f) <~>* loops B.
-Proof.
-  pointed_reduce_pmap f.
-  snapply Build_pEquiv'.
-  1: make_equiv_contr_basedpaths.
-  reflexivity.
-Defined.
-
 Definition pfiber_fmap_loops {A B : pType} (f : A ->* B)
   : pfiber (fmap loops f) <~>* loops (pfiber f).
 Proof.
@@ -52,7 +42,7 @@ Proof.
   srapply Build_pHomotopy.
   - intros [u v].
     refine (concat_1p _ @ concat_p1 _ @ _).
-    exact (@ap_pr1_path_sigma _ _ (point A; point_eq f) (point A;point_eq f) _ _).
+    exact (@ap_pr1_path_sigma _ _ (point A; point_eq f) (point A; point_eq f) _ _).
   - abstract (pointed_reduce_rewrite; reflexivity).
 Defined.
 
@@ -73,9 +63,14 @@ Definition functor_pfiber {A B C D}
 Proof.
   srapply Build_pMap.
   + cbn. exact (functor_hfiber2 p (point_eq k)).
-  + srapply path_hfiber. 
-    - apply point_eq.
-    - refine (concat_pp_p _ _ _ @ _). apply moveR_Vp. exact (point_htpy p)^.
+  (** A shorter proof of this component via [path_hfiber] is possible, but this [path_sigma'] form compiles faster. *)
+  + snapply path_sigma'.
+    - exact (point_eq h).
+    - lhs napply transport_paths_Fl.
+      lhs napply (whiskerL _ (concat_pp_p _ _ _)).
+      lhs napply (whiskerL _ (whiskerL _ (point_htpy p)^)).
+      lhs napply (whiskerL _ (concat_V_pp _ _)).
+      napply concat_V_pp.
 Defined.
 
 Definition pequiv_pfiber {A B C D}
@@ -91,8 +86,11 @@ Definition square_functor_pfiber {A B C D}
 Proof.
   srapply Build_pHomotopy.
   - intros x; reflexivity.
-  - apply moveL_pV. cbn; unfold functor_sigma; cbn.
-    abstract (rewrite ap_pr1_path_sigma, concat_p1; reflexivity).
+  - apply moveL_pV. cbn.
+    refine (1 @@ (concat_p1 _ @ _)).
+    exact (ap_pr1_path_sigma
+             (u := functor_hfiber2 p (point_eq k) (ispointed_fiber f))
+             (v := ispointed_fiber g) (point_eq h) _).
 Defined.
 
 Definition square_pequiv_pfiber {A B C D}
@@ -100,6 +98,26 @@ Definition square_pequiv_pfiber {A B C D}
            (p : k o* f ==* g o* h)
   : h o* pfib f ==* pfib g o* pequiv_pfiber h k p
   := square_functor_pfiber p.
+
+(** The double fiber object is equivalent to loops on the base. *)
+Definition pfiber2_loops {A B : pType} (f : A ->* B)
+  : pfiber (pfib f) <~>* loops B.
+Proof.
+  pointed_reduce_pmap f.
+  snapply Build_pEquiv'.
+  1: make_equiv_contr_basedpaths.
+  reflexivity.
+Defined.
+
+(** The value of [pfiber2_loops] on a general element of the double fiber. *)
+Definition pfiber2_loops_beta {A B : pType} (f : A ->* B)
+  (a : A) (w : f a = pt) (v : a = pt)
+  : pfiber2_loops f ((a; w); v) = (point_eq f)^ @ (ap f v)^ @ w.
+Proof.
+  pointed_reduce_pmap f.
+  destruct v; cbn.
+  exact (concat_1p w)^.
+Defined.
 
 (** The triple-fiber functor is equal to the negative of the loop space functor. *)
 Definition pfiber2_fmap_loops {A B : pType} (f : A ->* B)
@@ -109,7 +127,7 @@ Proof.
   pointed_reduce.
   simple refine (Build_pHomotopy _ _).
   - intros [[[x p] q] r]. simpl in *.
-    (** Apparently [destruct q] isn't smart enough to generalize over [p]. *)
+    (* Apparently [destruct q] isn't smart enough to generalize over [p]. *)
     move q before x; revert dependent x;
       refine (paths_ind_r _ _ _); intros p r; cbn.
     rewrite !concat_1p, concat_p1.
@@ -122,3 +140,50 @@ Proof.
     apply concat_p1.
   - reflexivity.
 Qed.
+
+(** The path algebra underlying the pointwise part of [pfiber2_loops_natural_functor], with all endpoints free. *)
+Local Definition pfiber2_loops_natural_functor_helper {D : Type} {x y z : D}
+  (p : x = y) (q : y = z)
+  : (p^ @ 1) @ (((1 @ (1 @ p)^)^ @ q) @ 1) = 1 @ (q @ 1).
+Proof.
+  by destruct p, q.
+Defined.
+
+(** [pfiber2_loops] commutes with the fiber functor of a square, for an arbitrary square of pointed maps. *)
+(** TODO:  The second half of this proof and the Defined line are a bit slow. *)
+Definition pfiber2_loops_natural_functor {A B C D : pType}
+  {f : A ->* B} {g : C ->* D} {h : A ->* C} {k : B ->* D}
+  (p : k o* f ==* g o* h)
+  : pfiber2_loops g o* functor_pfiber (square_functor_pfiber p)
+    ==* fmap loops k o* pfiber2_loops f.
+Proof.
+  pointed_reduce.
+  cbn in H.
+  snapply Build_pHomotopy.
+  - intros [[c w] v].
+    cbn in c, w, v.
+    destruct v.
+    lhs napply pfiber2_loops_beta.
+    cbn.
+    destruct H^; clear H p.
+    exact (pfiber2_loops_natural_functor_helper dpoint_eq1 (ap k w)).
+  - cbn; cbv delta
+      [point_htpy square_functor_pfiber
+       functor_hfiber2 functor_sigma
+       functor_pfiber];
+    cbn.
+    (* The next two lines are essentially [destruct H^], with [H] also replaced by [idpath]. *)
+    generalize dependent (p point2).
+    napply paths_ind_r.
+    destruct dpoint_eq1.
+    reflexivity.
+Defined.
+
+(** The same for an equivalence square; the underlying double-fiber map is [functor_pfiber] of the same square. *)
+Definition pfiber2_loops_natural {A B C D : pType}
+  {f : A ->* B} {g : C ->* D} (h : A <~>* C) (k : B <~>* D)
+  (p : k o* f ==* g o* h)
+  : pfiber2_loops g
+      o* pequiv_pfiber (pequiv_pfiber h k p) h (square_pequiv_pfiber h k p)
+    ==* fmap loops k o* pfiber2_loops f
+  := pfiber2_loops_natural_functor p.

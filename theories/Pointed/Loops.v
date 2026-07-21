@@ -400,27 +400,49 @@ Proof.
   napply tr_loops.
 Defined.
 
-(* 7.2.9, with [n] here meaning the same as [n-1] there. Note that [n.-1] in the statement is short for [trunc_index_pred (nat_to_trunc_index n)] which is definitionally equal to [(trunc_index_inc minus_two n).+1]. *)
-Theorem equiv_istrunc_contr_iterated_loops `{Funext} (n : nat) (A : Type)
-  : IsTrunc n.-1 A <~> forall a : A, Contr (iterated_loops n [A, a]).
+(* A generalization of 7.2.9 to any truncation level of the loop space. *)
+Theorem equiv_istrunc_istrunc_iterated_loops `{Funext} (n : nat)
+  (m : trunc_index) (A : Type)
+  : IsTrunc (trunc_index_inc m n).+1 A
+    <~> forall a : A, IsTrunc m.+1 (iterated_loops n [A, a]).
 Proof.
   induction n in A |- *.
-  { cbn. exact equiv_hprop_inhabited_contr. }
-  refine (_ oE equiv_istrunc_istrunc_loops n.-2 _).
+  { srapply equiv_iff_hprop.
+    exact istrunc_inhabited_istrunc. }
+  refine (_ oE equiv_istrunc_istrunc_loops (trunc_index_inc m n) _).
   srapply equiv_functor_forall_id.
   intro a.
   cbn beta.
   refine (_ oE IHn (loops [A, a])).
-  refine (equiv_inO_equiv (-2) (unfold_iterated_loops' n [A,a])^-1 oE _).
+  refine (equiv_inO_equiv m.+1 (unfold_iterated_loops' n [A,a])^-1 oE _).
   rapply equiv_iff_hprop.
   intros X p.
-  refine (@contr_equiv' _ _ _ X).
+  refine (istrunc_equiv_istrunc _ _ (IsTrunc0:=X)).
   tapply (emap (iterated_loops _)).
   srapply Build_pEquiv'.
   1: exact (equiv_concat_lr p 1).
   cbn; unfold ispointed_loops.
   exact (concat_p1 _ @ concat_p1 _).
 Defined.
+
+(* 7.2.9, with [n] here meaning the same as [n-1] there. Note that [n.-1] in the statement is short for [trunc_index_pred (nat_to_trunc_index n)] which is definitionally equal to [(trunc_index_inc minus_two n).+1]. *)
+Theorem equiv_istrunc_contr_iterated_loops `{Funext} (n : nat) (A : Type)
+  : IsTrunc n.-1 A <~> forall a : A, Contr (iterated_loops n [A, a]).
+Proof.
+  refine (_ oE equiv_istrunc_istrunc_iterated_loops n (-2) A).
+  srapply equiv_functor_forall_id; intro a.
+  srapply equiv_iff_hprop.
+  intro h; exact (contr_inhabited_hprop _ (point _)).
+Defined.
+
+(** The [n]-fold loop space of an [n]-truncated type is a set. *)
+Definition istrunc_iterated_loops `{Funext} (n : nat) (X : pType)
+  `{H0 : IsTrunc n X}
+  : IsTrunc 0 (iterated_loops n X)
+  := equiv_istrunc_istrunc_iterated_loops n (-1) X
+       (transport (fun k => IsTrunc k X)
+          (ap trunc_S (trunc_index_inc_succ (-2) n))^ H0)
+       (point X).
 
 (** [loops_inv] is a natural transformation. *)
 Instance is1natural_loops_inv : Is1Natural loops loops loops_inv.

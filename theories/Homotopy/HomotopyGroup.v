@@ -1,6 +1,7 @@
 From HoTT Require Import Basics Types Pointed HSet.
 Require Import Modalities.Modality.
-Require Import Truncations.Core Truncations.SeparatedTrunc.
+Require Import Truncations.Core Truncations.SeparatedTrunc
+  Truncations.Connectedness.
 Require Import Algebra.AbGroups.AbelianGroup.
 From HoTT.WildCat Require Import Core Universe Equiv.
 
@@ -337,6 +338,26 @@ Proof.
   by apply issurj_iterated_loops_connmap.
 Defined.
 
+(** The [n.+2]-nd homotopy group of an [n.+1]-truncated type vanishes. *)
+Definition contr_pi_succ_istrunc `{Univalence} (n : nat) (X : pType)
+  `{IsTrunc n.+1 X}
+  : Contr (Pi n.+2 X).
+Proof.
+  rapply contr_O_contr.
+  rapply (equiv_istrunc_contr_iterated_loops n.+2).
+Defined.
+
+(** An [n.+1]-truncated pointed [0]-connected type whose [n.+1]-st homotopy group vanishes is [n]-truncated. *)
+Definition istrunc_contr_pi `{Univalence} (n : nat) (X : pType)
+  `{IsConnected 0 X} `{IsTrunc n.+1 X} (c : Contr (Pi n.+1 X))
+  : IsTrunc n X.
+Proof.
+  apply (equiv_istrunc_contr_iterated_loops n.+1 X)^-1.
+  rapply (conn_point_elim (-1)%trunc).
+  pose proof (istrunc_iterated_loops n.+1 X).
+  exact (contr_equiv' (Pi n.+1 X) (equiv_tr 0 _)^-1%equiv).
+Defined.
+
 (** Pointed sections induce embeddings on homotopy groups. *)
 Proposition isembedding_pi_psect {n : nat} {X Y : pType}
   (s : X ->* Y) (r : Y ->* X) (k : r o* s ==* pmap_idmap)
@@ -349,4 +370,3 @@ Proof.
   lhs exact (fmap2 (pPi n) k x).
   exact (fmap_id (pPi n) X x).
 Defined.
-
